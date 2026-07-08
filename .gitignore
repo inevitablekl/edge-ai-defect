@@ -1,0 +1,79 @@
+# Build outputs
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+compile_commands.json
+Testing/
+CTestTestfile.cmake
+cmake_install.cmake
+install_manifest.txt
+
+# Compiled artifacts
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Dataset and generated data
+data/**
+!data/
+!data/**/
+!data/**/.gitkeep
+!data/**/README.md
+
+# Model artifacts
+models/**/*.pt
+models/**/*.pth
+models/**/*.onnx
+models/**/*.engine
+models/**/*.plan
+models/**/*.trt
+
+# Experiment outputs
+experiments/logs/**
+experiments/results/**
+experiments/figures/**
+experiments/tables/**
+!experiments/logs/.gitkeep
+!experiments/results/.gitkeep
+!experiments/figures/.gitkeep
+!experiments/tables/.gitkeep
+
+# Media and large generated outputs
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.bag
+*.csv
+*.jsonl
+*.log
+
+# Keep curated JSON configuration files trackable.
+!configs/**/*.json
+!experiments/configs/**/*.json
