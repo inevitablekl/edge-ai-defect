@@ -366,18 +366,21 @@ Priority order:
 
 ```text
 AGENTS.md
-> docs/DECISIONS.md
+> docs/CODING_RULES.md
+> docs/personal/DECISIONS.md
 > docs/PROJECT_BRIEF.md
 > docs/ARCHITECTURE.md
 > docs/REQUIREMENTS.md
-> docs/TASKS.md
+> docs/personal/EXPERIMENT_PLAN.md
+> docs/personal/ENVIRONMENT.md
+> docs/personal/TASKS.md
 > README.md
 ```
 
 Major technical decisions must be recorded in:
 
 ```text
-docs/DECISIONS.md
+docs/personal/DECISIONS.md
 ```
 
 ---
@@ -398,7 +401,7 @@ The following items must not be invented by AI agents:
 | TensorRT engine generation method | TBD    |
 | Resource monitoring method        | TBD    |
 
-When finalized, these items should be recorded in `docs/DECISIONS.md`.
+When finalized, these items should be recorded in `docs/personal/DECISIONS.md` and `docs/personal/ENVIRONMENT.md` when they describe the runtime environment.
 
 ---
 

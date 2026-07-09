@@ -308,7 +308,7 @@ struct DetectionResult {
 };
 ```
 
-These structures may be adjusted during implementation, but major changes should be recorded in `docs/DECISIONS.md`.
+These structures may be adjusted during implementation, but major changes should be recorded in `docs/personal/DECISIONS.md`.
 
 ---
 
@@ -560,7 +560,7 @@ Forbidden unless explicitly approved:
 
 ## 19. Current TBD Items
 
-The following items must be decided later and recorded in `docs/DECISIONS.md`:
+The following items must be decided later and recorded in `docs/personal/DECISIONS.md` and environment-specific values should also be recorded in `docs/personal/ENVIRONMENT.md`:
 
 | Item                              | Status |
 | --------------------------------- | ------ |

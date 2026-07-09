@@ -667,7 +667,7 @@ The following items are not fixed yet:
 Final decisions should be recorded in:
 
 ```text
-docs/DECISIONS.md
+docs/personal/DECISIONS.md
 ```
 
 ---

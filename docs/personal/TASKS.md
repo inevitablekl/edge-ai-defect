@@ -1,0 +1,375 @@
+# TASKS.md
+
+## 1. 用途
+
+本文档用于记录项目开发任务、迭代状态、每日进展、阻塞问题和后续计划。
+
+项目名称：
+
+**边缘 AI 工业缺陷检测部署与优化项目**
+
+英文名称：
+
+**Edge AI Industrial Defect Detection Deployment and Optimization**
+
+本文档需要由 agent 在每天开发结束后，或每轮迭代完成后更新。
+
+记录形式要求：
+
+- 使用时间戳。
+- 使用中文描述。
+- 专业术语保留英文原文，例如 `ONNX Runtime`、`TensorRT FP16`、`SerialRunner`、`PipelineRunner`。
+- 只记录真实发生的进展，不编造完成状态。
+- 不删除历史记录，只追加或在任务状态表中更新状态。
+
+---
+
+## 2. 状态标记
+
+| 状态 | 含义 |
+|---|---|
+| TODO | 尚未开始 |
+| IN_PROGRESS | 正在进行 |
+| BLOCKED | 被阻塞 |
+| DONE | 已完成 |
+| CANCELED | 已取消 |
+| DEFERRED | 延后处理 |
+
+---
+
+## 3. 优先级标记
+
+| 优先级 | 含义 |
+|---|---|
+| P0 | 核心主线，必须完成 |
+| P1 | 重要功能，建议完成 |
+| P2 | 辅助功能，可后续完成 |
+| P3 | 扩展功能，非 v1 必需 |
+
+---
+
+## 4. 当前项目快照
+
+更新时间：
+
+```text
+2026-07-09
+```
+
+当前阶段：
+
+```text
+项目文档与仓库规范阶段
+```
+
+当前主线：
+
+```text
+NEU-DET
+→ YOLOv8n
+→ ONNX
+→ C++ ONNX Runtime baseline
+→ C++ TensorRT FP16
+→ Serial / Pipeline comparison
+→ CSV / JSON experiment logs
+```
+
+当前已确定信息：
+
+| 项目项               | 当前决策                              |
+| ----------------- | --------------------------------- |
+| 主数据集              | NEU-DET                           |
+| 主模型               | YOLOv8n                           |
+| 数据集划分             | train / val / test = 70 / 20 / 10 |
+| 输入尺寸              | 320, 416, 640                     |
+| 训练语言              | Python                            |
+| 部署语言              | C++                               |
+| 配置格式              | YAML                              |
+| 构建系统              | CMake                             |
+| baseline backend  | ONNX Runtime                      |
+| optimized backend | TensorRT FP16                     |
+| runtime modes     | Serial, Pipeline                  |
+| v1 GUI            | 不实现                               |
+| v1 ROS2           | 只预留接口                             |
+| INT8              | 后续可选，不进入当前主线                      |
+
+---
+
+## 5. 当前待确认事项
+
+| 事项                         | 状态   | 决策时机                         |
+| -------------------------- | ---- | ---------------------------- |
+| Jetson 具体型号                | TODO | 本地 ONNX Runtime baseline 跑通后 |
+| JetPack version            | TODO | Jetson 型号确定后                 |
+| CUDA version               | TODO | JetPack version 确定后          |
+| TensorRT version           | TODO | JetPack version 确定后          |
+| ONNX Runtime C++ version   | TODO | C++ ONNX Runtime 集成前         |
+| OpenCV version             | TODO | C++ 项目骨架创建前                  |
+| CMake minimum version      | TODO | C++ 项目骨架创建前                  |
+| TensorRT engine 生成方式       | TODO | Jetson TensorRT 部署前          |
+| Resource monitoring method | TODO | 性能实验前                        |
+
+---
+
+## 6. 任务总览
+
+### 6.1 文档任务
+
+| ID      | 优先级 | 状态          | 任务                      |
+| ------- | --- | ----------- | ----------------------- |
+| DOC-001 | P0  | DONE        | 确定 `AGENTS.md`          |
+| DOC-002 | P0  | DONE        | 确定 `PROJECT_BRIEF.md`   |
+| DOC-003 | P0  | DONE        | 确定 `REQUIREMENTS.md`    |
+| DOC-004 | P0  | DONE        | 确定 `ARCHITECTURE.md`    |
+| DOC-005 | P0  | DONE        | 确定 `CODING_RULES.md`    |
+| DOC-006 | P0  | DONE        | 确定 `TASKS.md`           |
+| DOC-007 | P0  | DONE        | 确定 `EXPERIMENT_PLAN.md` |
+| DOC-008 | P0  | DONE        | 确定 `DECISIONS.md`       |
+| DOC-009 | P1  | TODO        | 确定 `DATASET.md`         |
+| DOC-010 | P1  | DONE        | 确定 `ENVIRONMENT.md`     |
+| DOC-011 | P1  | TODO        | 初始化 `PROGRESS_LOG.md`   |
+
+---
+
+### 6.2 仓库与工程骨架任务
+
+| ID       | 优先级 | 状态   | 任务                                |
+| -------- | --- | ---- | --------------------------------- |
+| INIT-001 | P0  | DONE | 按确定目录结构整理仓库                       |
+| INIT-002 | P0  | DONE | 创建 `configs/` 目录                  |
+| INIT-003 | P0  | DONE | 创建 `scripts/` 子目录                 |
+| INIT-004 | P0  | TODO | 创建 `include/edge_ai_defect/` 模块目录 |
+| INIT-005 | P0  | DONE | 创建 `src/` 模块目录                    |
+| INIT-006 | P0  | DONE | 创建 `experiments/` 子目录             |
+| INIT-007 | P0  | TODO | 创建 `models/README.md`             |
+| INIT-008 | P0  | TODO | 创建 `data/README.md`               |
+| INIT-009 | P0  | DONE | 更新 `.gitignore`                   |
+| INIT-010 | P0  | TODO | 初始化 top-level `CMakeLists.txt`    |
+
+---
+
+### 6.3 数据集任务
+
+| ID       | 优先级 | 状态   | 任务                                      |
+| -------- | --- | ---- | --------------------------------------- |
+| DATA-001 | P0  | TODO | 获取 NEU-DET 数据集                          |
+| DATA-002 | P0  | TODO | 明确 NEU-DET 原始目录格式                       |
+| DATA-003 | P0  | TODO | 实现 NEU-DET 到 YOLO 格式转换脚本                |
+| DATA-004 | P0  | TODO | 实现 train / val / test = 70 / 20 / 10 划分 |
+| DATA-005 | P0  | TODO | 生成 `dataset.yaml`                       |
+| DATA-006 | P0  | TODO | 记录类别、数量、random seed                     |
+| DATA-007 | P1  | TODO | 检查缺失 label 和无效 annotation               |
+
+---
+
+### 6.4 训练与导出任务
+
+| ID         | 优先级 | 状态   | 任务                                       |
+| ---------- | --- | ---- | ---------------------------------------- |
+| TRAIN-001  | P0  | TODO | 编写 YOLOv8n 训练脚本                          |
+| TRAIN-002  | P0  | TODO | 在 RTX 3090 上训练 YOLOv8n                   |
+| TRAIN-003  | P0  | TODO | 记录 Precision、Recall、mAP@0.5、mAP@0.5:0.95 |
+| TRAIN-004  | P0  | TODO | 保存 `best.pt`                             |
+| EXPORT-001 | P0  | TODO | 编写 ONNX export 脚本                        |
+| EXPORT-002 | P0  | TODO | 导出 320 输入尺寸 ONNX                         |
+| EXPORT-003 | P0  | TODO | 导出 416 输入尺寸 ONNX                         |
+| EXPORT-004 | P0  | TODO | 导出 640 输入尺寸 ONNX                         |
+| EXPORT-005 | P0  | TODO | 记录 opset、shape、export command            |
+
+---
+
+### 6.5 C++ 部署任务
+
+| ID      | 优先级 | 状态   | 任务                              |
+| ------- | --- | ---- | ------------------------------- |
+| CPP-001 | P0  | TODO | 初始化 C++ CMake 工程                |
+| CPP-002 | P0  | TODO | 实现 `ConfigManager`              |
+| CPP-003 | P0  | TODO | 实现 `FrameSource` image sequence |
+| CPP-004 | P0  | TODO | 实现 `FrameSource` video file     |
+| CPP-005 | P0  | TODO | 实现 `Preprocessor`               |
+| CPP-006 | P0  | TODO | 定义 `InferenceEngine` 抽象接口       |
+| CPP-007 | P0  | TODO | 实现 `ONNXRuntimeEngine`          |
+| CPP-008 | P0  | TODO | 实现 `PostProcessor`              |
+| CPP-009 | P0  | TODO | 实现 `Profiler`                   |
+| CPP-010 | P0  | TODO | 实现 `ResultSink`                 |
+| CPP-011 | P0  | TODO | 实现 `SerialRunner`               |
+| CPP-012 | P1  | TODO | 实现 `PipelineRunner`             |
+| CPP-013 | P0  | TODO | 实现 command-line app             |
+| CPP-014 | P0  | TODO | 完成本地 ONNX Runtime baseline 验证   |
+| CPP-015 | P0  | TODO | 实现 `TensorRTEngine`             |
+| CPP-016 | P0  | TODO | 完成 Jetson TensorRT FP16 验证      |
+
+---
+
+### 6.6 实验任务
+
+| ID      | 优先级 | 状态   | 任务                                  |
+| ------- | --- | ---- | ----------------------------------- |
+| EXP-001 | P0  | TODO | 完成模型精度实验                            |
+| EXP-002 | P0  | TODO | 完成 ONNX Runtime vs TensorRT FP16 对比 |
+| EXP-003 | P0  | TODO | 完成 Serial vs Pipeline 对比            |
+| EXP-004 | P0  | TODO | 完成 320 / 416 / 640 输入尺寸对比           |
+| EXP-005 | P1  | TODO | 完成 10 分钟稳定性测试                       |
+| EXP-006 | P1  | TODO | 完成 30 分钟稳定性测试                       |
+| EXP-007 | P1  | TODO | 完成 60 分钟稳定性测试                       |
+| EXP-008 | P0  | TODO | 生成 CSV / JSON 实验日志                  |
+| EXP-009 | P1  | TODO | 生成论文表格和图表                           |
+
+---
+
+## 7. 每日 / 每轮迭代日志
+
+### 2026-07-09 - 文档规范化迭代
+
+当前工作：
+
+* 根据项目定位重新压缩并规范核心文档。
+* 明确 `AGENTS.md`、`PROJECT_BRIEF.md`、`REQUIREMENTS.md`、`ARCHITECTURE.md`、`CODING_RULES.md` 的内容边界。
+* 确定文档原则：只保留稳定、核心、全局信息。
+* 确定 `TASKS.md` 用于每天或每轮迭代记录开发状态。
+* 确定记录形式：时间戳 + 中文；专业术语保留英文原文。
+
+已完成：
+
+* `AGENTS.md` 初版内容已生成。
+* `PROJECT_BRIEF.md` 初版内容已生成。
+* `REQUIREMENTS.md` 初版内容已生成。
+* `ARCHITECTURE.md` 初版内容已生成。
+* `CODING_RULES.md` 初版内容已生成。
+* `TASKS.md` 当前版本已生成。
+
+当前状态：
+
+```text
+项目仍处于文档与工程骨架准备阶段，尚未进入正式编码阶段。
+```
+
+下一步建议：
+
+* 将以上文档写入仓库。
+* 让 agent 检查文档之间是否存在冲突。
+* 提交一次 git commit。
+* 继续生成 `EXPERIMENT_PLAN.md` 和 `DECISIONS.md`。
+
+阻塞问题：
+
+```text
+暂无阻塞。
+```
+
+---
+
+### 2026-07-09 - 文档闭环与环境记录迭代
+
+当前工作：
+
+* 统一 agent 约束文档中关于 `docs/personal/` 的记录路径。
+* 新增 `docs/personal/ENVIRONMENT.md`，作为环境信息和实验复现环境的记录入口。
+* 修正新增文档中的 Markdown 代码块格式。
+* 更新文档任务和已完成仓库初始化任务状态。
+
+修改文件：
+
+* `AGENTS.md`
+* `docs/ARCHITECTURE.md`
+* `docs/REQUIREMENTS.md`
+* `docs/CODING_RULES.md`
+* `docs/personal/DECISIONS.md`
+* `docs/personal/EXPERIMENT_PLAN.md`
+* `docs/personal/ENVIRONMENT.md`
+* `docs/personal/TASKS.md`
+
+已完成：
+
+* `CODING_RULES.md`、`DECISIONS.md`、`TASKS.md`、`EXPERIMENT_PLAN.md` 和 `ENVIRONMENT.md` 已形成当前文档闭环。
+* `AGENTS.md` 已明确文档优先级和 personal 文档路径。
+* 实验环境记录规则已建立。
+
+未完成：
+
+* `DATASET.md` 尚未创建。
+* `PROGRESS_LOG.md` 尚未初始化。
+* `CMakeLists.txt` 尚未初始化。
+
+阻塞问题：
+
+* 暂无阻塞。
+
+下一步计划：
+
+* 创建 `include/edge_ai_defect/` 模块目录。
+* 创建 `models/README.md` 和 `data/README.md`。
+* 初始化 CMake 工程骨架。
+
+备注：
+
+* 当前仍处于文档与工程骨架准备阶段，尚未进入正式编码阶段。
+
+---
+
+## 8. Agent 更新规则
+
+每次 agent 更新本文档时，应遵守以下规则：
+
+1. 不删除历史日志。
+2. 每次追加新的时间戳条目。
+3. 中文描述当前进展。
+4. 专业术语保留英文原文。
+5. 明确写出：
+
+   * 本轮完成了什么。
+   * 修改了哪些文件。
+   * 当前是否有 blocking issue。
+   * 下一步计划是什么。
+6. 如果任务完成，更新对应任务状态为 `DONE`。
+7. 如果任务受阻，更新状态为 `BLOCKED` 并说明原因。
+8. 不得把未完成任务标记为 `DONE`。
+9. 不得伪造实验数据。
+10. 不得替用户做未经确认的重大技术决策。
+
+---
+
+## 9. 标准迭代记录模板
+
+```markdown
+### YYYY-MM-DD HH:mm - 本轮迭代标题
+
+当前工作：
+
+- 
+
+修改文件：
+
+- 
+
+已完成：
+
+- 
+
+未完成：
+
+- 
+
+阻塞问题：
+
+- 
+
+下一步计划：
+
+- 
+
+备注：
+
+- 
+```
+
+---
+
+## 10. 当前最近计划
+
+近期优先级：
+
+1. 创建 `include/edge_ai_defect/` 模块目录。
+2. 创建 `models/README.md` 和 `data/README.md`。
+3. 初始化 top-level `CMakeLists.txt`。
+4. 开始 `ConfigManager` 的最小实现。

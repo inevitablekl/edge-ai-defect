@@ -1,0 +1,971 @@
+# DECISIONS.md
+
+## 1. 用途
+
+本文档用于记录本项目中的重要技术路线选择。
+
+项目名称：
+
+**边缘 AI 工业缺陷检测部署与优化项目**
+
+英文名称：
+
+**Edge AI Industrial Defect Detection Deployment and Optimization**
+
+本文档采用追加记录方式。
+
+每当项目发生重要技术决策时，都应新增一条记录，而不是删除历史记录。
+
+---
+
+## 2. 记录原则
+
+每条决策记录必须说明：
+
+- 决策时间。
+- 决策编号。
+- 决策标题。
+- 当前选择。
+- 备选方案。
+- 决策理由。
+- 影响范围。
+- 后续是否可调整。
+- 当前状态。
+
+记录语言：
+
+- 中文为主。
+- 专业术语保留英文原文，例如 `YOLOv8n`、`TensorRT FP16`、`ONNX Runtime`、`PipelineRunner`。
+
+不得记录虚假信息。
+
+不得把未确认事项写成已确认。
+
+---
+
+## 3. 状态标记
+
+| 状态 | 含义 |
+|---|---|
+| ACTIVE | 当前有效 |
+| SUPERSEDED | 已被后续决策替代 |
+| DEFERRED | 延后决定 |
+| REJECTED | 已明确不采用 |
+| TBD | 尚未确定 |
+
+---
+
+## 4. 当前稳定决策总览
+
+| ID | 决策项 | 当前选择 | 状态 |
+|---|---|---|---|
+| D001 | 项目定位 | Jetson 边缘 AI 工业缺陷检测部署与优化 | ACTIVE |
+| D002 | 主数据集 | NEU-DET | ACTIVE |
+| D003 | 主模型 | YOLOv8n | ACTIVE |
+| D004 | 数据集划分 | train / val / test = 70 / 20 / 10 | ACTIVE |
+| D005 | 输入尺寸 | 320, 416, 640 | ACTIVE |
+| D006 | 训练语言 | Python | ACTIVE |
+| D007 | 部署语言 | C++ | ACTIVE |
+| D008 | 配置格式 | YAML | ACTIVE |
+| D009 | 构建系统 | CMake | ACTIVE |
+| D010 | baseline backend | ONNX Runtime | ACTIVE |
+| D011 | optimized backend | TensorRT FP16 | ACTIVE |
+| D012 | runtime modes | Serial, Pipeline | ACTIVE |
+| D013 | v1 GUI | 不实现 GUI | ACTIVE |
+| D014 | v1 ROS2 | 只预留接口 | ACTIVE |
+| D015 | INT8 | 当前不做，后续可选 | ACTIVE |
+| D016 | 主平台 | NVIDIA Jetson | ACTIVE |
+
+---
+
+## 5. 决策记录
+
+---
+
+### D001 - 项目定位
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+本项目定位为：
+
+```text
+Jetson-based edge AI deployment and real-time inference optimization system for industrial visual defect detection
+```
+
+中文定位：
+
+```text
+面向工业视觉场景的 Jetson 边缘 AI 部署与实时推理优化系统
+```
+
+备选方案：
+
+* 核心 AI 算法研究项目。
+* 自研目标检测网络项目。
+* 完整机器人系统项目。
+* 工业视觉部署优化项目。
+
+选择理由：
+
+* 项目负责人背景更偏嵌入式、半导体设备软件、Qt 和工程部署。
+* 毕业设计、小论文和求职都更适合走工程部署路线。
+* 自研算法路线难度高、风险大，且与求职定位不完全匹配。
+* Jetson + TensorRT 能体现边缘部署、性能优化和工程落地能力。
+
+影响范围：
+
+* 项目整体叙事。
+* 论文创新点表述。
+* 简历项目描述。
+* Codex 任务边界。
+* 实验设计方向。
+
+后续调整：
+
+不建议调整。除非导师明确要求算法创新，否则项目应保持工程部署定位。
+
+---
+
+### D002 - 主数据集选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+主数据集选择：
+
+```text
+NEU-DET / NEU Surface Defect Database
+```
+
+备选方案：
+
+* COCO。
+* MVTec AD。
+* DAGM。
+* 自采集工业缺陷数据集。
+* NEU-DET。
+
+选择理由：
+
+* NEU-DET 属于工业表面缺陷检测场景。
+* 数据规模适中，适合有限时间内完成训练和实验。
+* 适合转换为 YOLO object detection 格式。
+* 与论文中的工业视觉、边缘质检叙事匹配。
+* 避免项目转向 anomaly detection、segmentation 或大规模标注。
+
+影响范围：
+
+* 数据处理脚本。
+* 训练流程。
+* 论文实验设计。
+* 模型精度实验。
+* 输入尺寸对比实验。
+
+后续调整：
+
+可增加其他数据集作为扩展实验，但不应替代 NEU-DET 主线。
+
+---
+
+### D003 - 主模型选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+主模型选择：
+
+```text
+YOLOv8n
+```
+
+备选方案：
+
+* YOLOv5n。
+* YOLOv8n。
+* YOLO11n。
+* 更大的 YOLO 模型。
+* 自研检测网络。
+
+选择理由：
+
+* YOLOv8n 轻量，适合 Jetson 边缘部署。
+* 生态成熟，训练、导出和部署资料较多。
+* 适合 NEU-DET 这类中小规模工业缺陷检测任务。
+* 复杂度可控，适合毕业设计和小论文周期。
+* 与项目“工程部署而非算法创新”的定位一致。
+
+影响范围：
+
+* 训练脚本。
+* ONNX export。
+* TensorRT engine 生成。
+* C++ PostProcessor。
+* 实验指标和论文表述。
+
+后续调整：
+
+YOLOv5n 或 YOLO11n 可作为可选对比模型，但不进入 v1 主线。
+
+---
+
+### D004 - 数据集划分比例
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+数据集划分比例为：
+
+```text
+train / val / test = 70 / 20 / 10
+```
+
+备选方案：
+
+* 80 / 10 / 10。
+* 70 / 20 / 10。
+* 训练集和验证集，不单独保留 test。
+* 随机临时划分。
+
+选择理由：
+
+* 保留独立 test split，有利于实验可信度。
+* 70 / 20 / 10 在小数据集上能提供相对充足的 validation 数据。
+* 有利于训练、调参和最终评估分离。
+* 便于论文说明实验流程。
+
+影响范围：
+
+* 数据集转换脚本。
+* 训练配置。
+* 精度实验。
+* 论文实验可信度。
+
+后续调整：
+
+原则上不调整。若数据量或类别分布导致某类样本过少，可记录原因后重新决策。
+
+---
+
+### D005 - 输入尺寸选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+输入尺寸对比选择：
+
+```text
+320 × 320
+416 × 416
+640 × 640
+```
+
+备选方案：
+
+* 只使用 640。
+* 320 / 640 两组。
+* 320 / 416 / 640 三组。
+* 额外增加 512 或 1280。
+
+选择理由：
+
+* 320、416、640 能形成清晰的 speed / accuracy trade-off。
+* 640 是 YOLO 常用输入尺寸。
+* 320 有利于边缘设备实时性能。
+* 416 作为中间点，有利于观察性能和精度变化趋势。
+* 三组实验复杂度可控，适合小论文表格。
+
+影响范围：
+
+* 训练配置。
+* ONNX export。
+* TensorRT engine。
+* 输入尺寸实验。
+* 论文表格。
+
+后续调整：
+
+原则上保持三组。若 Jetson 性能或时间不足，可优先完成 320 和 640，再补 416。
+
+---
+
+### D006 - 训练语言选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+训练部分使用：
+
+```text
+Python
+```
+
+备选方案：
+
+* Python。
+* C++。
+* 混合方式。
+
+选择理由：
+
+* YOLOv8n 训练生态主要基于 Python。
+* `ultralytics`、`torch` 等工具链成熟。
+* 训练不是本项目的核心工程创新点，使用 Python 可降低成本。
+* 有利于快速获得 `best.pt` 和 ONNX 模型。
+
+影响范围：
+
+* `scripts/train/`
+* `scripts/export/`
+* 数据集转换脚本。
+* 训练日志和精度结果。
+
+后续调整：
+
+不建议调整。Python 只负责训练、导出和分析，不作为部署主运行时。
+
+---
+
+### D007 - 部署语言选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+部署部分使用：
+
+```text
+C++
+```
+
+备选方案：
+
+* Python 部署。
+* C++ 部署。
+* Python 先部署，C++ 后迁移。
+* Python / C++ 混合部署。
+
+选择理由：
+
+* C++ 更符合嵌入式软件和边缘部署岗位定位。
+* TensorRT C++ 能更好体现部署能力。
+* 有利于面试中展示工程实现能力。
+* 有利于后续扩展到 ROS2 或设备软件场景。
+* 避免项目被理解为纯 Python demo。
+
+影响范围：
+
+* C++ 工程结构。
+* CMake。
+* ONNX Runtime C++ API。
+* TensorRT C++ API。
+* SerialRunner / PipelineRunner。
+* Profiler。
+* ResultSink。
+
+后续调整：
+
+不建议改为 Python 主部署。可以用 Python 做辅助脚本，但 C++ 是部署主线。
+
+---
+
+### D008 - 配置文件格式选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+配置文件格式选择：
+
+```text
+YAML
+```
+
+备选方案：
+
+* YAML。
+* JSON。
+* TOML。
+* 命令行参数硬编码。
+* C++ 源码中硬编码。
+
+选择理由：
+
+* YAML 可读性好，适合实验配置。
+* 便于 Codex 和人工同时维护。
+* 适合表达嵌套配置，例如 backend、runtime mode、paths、thresholds、profiling。
+* 有利于实验复现。
+
+影响范围：
+
+* `configs/`
+* `ConfigManager`
+* 实验运行方式。
+* 日志中的 config snapshot。
+* 论文实验复现。
+
+后续调整：
+
+不建议调整。JSON 可用于日志输出，但不作为主配置格式。
+
+---
+
+### D009 - 构建系统选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+C++ 构建系统选择：
+
+```text
+CMake
+```
+
+备选方案：
+
+* Makefile。
+* CMake。
+* Bazel。
+* Meson。
+* 手工编译命令。
+
+选择理由：
+
+* CMake 是 C++ 工程常用构建系统。
+* 适合管理 OpenCV、yaml-cpp、ONNX Runtime、TensorRT、CUDA Runtime 等依赖。
+* 适合 Jetson 和本地环境。
+* 对毕业设计和求职展示足够正式。
+
+影响范围：
+
+* `CMakeLists.txt`
+* C++ 工程结构。
+* 依赖管理。
+* 构建说明。
+* 测试集成。
+
+后续调整：
+
+不建议调整。CMake minimum version 后续根据环境确定。
+
+---
+
+### D010 - Baseline Backend 选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+Baseline backend 选择：
+
+```text
+ONNX Runtime
+```
+
+备选方案：
+
+* PyTorch。
+* ONNX Runtime。
+* TensorRT。
+* OpenCV DNN。
+* OpenVINO。
+
+选择理由：
+
+* ONNX Runtime 可作为跨平台推理 baseline。
+* 与 ONNX export 路线自然衔接。
+* 便于和 TensorRT FP16 进行对比。
+* 复杂度低于直接从 TensorRT 起步。
+* 适合先完成本地 baseline 验证。
+
+影响范围：
+
+* `ONNXRuntimeEngine`
+* C++ inference interface。
+* backend comparison 实验。
+* 论文 baseline 设计。
+
+后续调整：
+
+不建议取消。即使 TensorRT 是主优化，ONNX Runtime 仍应保留为 baseline。
+
+---
+
+### D011 - Optimized Backend 选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+Optimized backend 选择：
+
+```text
+TensorRT FP16
+```
+
+备选方案：
+
+* TensorRT FP32。
+* TensorRT FP16。
+* TensorRT INT8。
+* RKNN。
+* OpenVINO。
+* NCNN。
+
+选择理由：
+
+* TensorRT 是 NVIDIA Jetson 平台核心推理优化工具。
+* FP16 相比 INT8 复杂度更低，不需要 calibration。
+* FP16 更适合作为当前小论文和毕设主线。
+* TensorRT FP16 能体现边缘推理优化能力。
+
+影响范围：
+
+* `TensorRTEngine`
+* TensorRT engine 生成。
+* backend comparison 实验。
+* Jetson 部署。
+* 论文核心实验。
+
+后续调整：
+
+INT8 可作为后续扩展，但当前不进入 v1 主线。
+
+---
+
+### D012 - Runtime Mode 选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+实现两种 runtime mode：
+
+```text
+Serial mode
+Pipeline mode
+```
+
+备选方案：
+
+* 只做 Serial mode。
+* Serial mode + Pipeline mode。
+* 更复杂的多阶段异步框架。
+* 多进程架构。
+
+选择理由：
+
+* Serial mode 作为 baseline，结构清晰，容易测量。
+* Pipeline mode 用于分析 throughput / FPS 优化。
+* 两者对比适合形成论文工程实验。
+* 三线程 pipeline 复杂度可控。
+* 有利于面试中解释系统设计能力。
+
+影响范围：
+
+* `SerialRunner`
+* `PipelineRunner`
+* 队列设计。
+* profiling 设计。
+* runtime comparison 实验。
+* 论文实验章节。
+
+后续调整：
+
+可调整 pipeline 细节，但不应取消 Serial baseline。
+
+---
+
+### D013 - v1 GUI 决策
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+v1 不实现 GUI。
+
+所有核心功能必须支持 command-line 运行。
+
+备选方案：
+
+* v1 实现 Qt GUI。
+* v1 实现 Web UI。
+* v1 不实现 GUI，只保存结果。
+* 后续扩展 GUI。
+
+选择理由：
+
+* GUI 会消耗大量时间，但不是小论文核心。
+* 当前核心目标是推理部署、profiling 和实验。
+* 命令行方式更适合实验复现。
+* 可视化结果可以通过保存图片或视频实现。
+
+影响范围：
+
+* `ResultSink`
+* 项目范围。
+* 任务优先级。
+* 毕设 demo 计划。
+
+后续调整：
+
+GUI 可作为毕业设计后期扩展，但不能影响核心推理和实验框架。
+
+---
+
+### D014 - v1 ROS2 决策
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+v1 只预留 ROS2 接口，不实现完整 ROS2 publisher。
+
+备选方案：
+
+* v1 完整实现 ROS2 package。
+* v1 实现 ROS2 publisher。
+* v1 只预留接口。
+* 完全不考虑 ROS2。
+
+选择理由：
+
+* ROS2 对求职有一定加分，但不是当前小论文主线。
+* 引入 ROS2 会增加依赖和构建复杂度。
+* 预留 `DetectionResult` 输出结构即可支持后续扩展。
+* 避免项目在 v1 阶段跑偏。
+
+影响范围：
+
+* `ResultSink`
+* `DetectionResult`
+* 架构扩展点。
+* 后续机器人感知接口扩展。
+
+后续调整：
+
+核心系统稳定后，可新建 ROS2 publisher 扩展模块。
+
+---
+
+### D015 - INT8 决策
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+当前主线不做 INT8。
+
+INT8 仅作为后续可选优化项。
+
+备选方案：
+
+* 当前就做 INT8。
+* 只做 TensorRT FP16。
+* FP16 完成后再评估 INT8。
+* 不考虑 INT8。
+
+选择理由：
+
+* INT8 需要 calibration dataset 和校准流程。
+* INT8 会增加 TensorRT 部署复杂度。
+* FP16 已足够支撑小论文的优化实验。
+* 当前更重要的是完成可运行、可测量、可解释的主线。
+
+影响范围：
+
+* TensorRT engine 生成。
+* 实验设计。
+* 项目范围控制。
+* Codex 任务边界。
+
+后续调整：
+
+只有在 TensorRT FP16 完成并且时间充足时，才考虑 INT8。
+
+---
+
+### D016 - 主部署平台选择
+
+时间：
+
+```text
+2026-07-09
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+主部署平台选择：
+
+```text
+NVIDIA Jetson + TensorRT
+```
+
+备选方案：
+
+* NVIDIA Jetson + TensorRT。
+* RK3588 + RKNN。
+* x86 GPU + TensorRT。
+* 双平台同时推进。
+
+选择理由：
+
+* TensorRT 与 Jetson 平台匹配。
+* Jetson 更适合边缘 AI 部署叙事。
+* 双平台会显著增加项目复杂度。
+* 当前目标是完成一个可运行、可测、可写论文的系统。
+
+影响范围：
+
+* 硬件采购或借用。
+* TensorRT 部署。
+* 小论文实验数据。
+* 求职项目定位。
+
+后续调整：
+
+RK3588 / RKNN 可作为长期扩展，不进入当前主线。
+
+---
+
+## 6. 待决策事项
+
+以下事项尚未确定，后续确定后应追加新的决策记录。
+
+| 事项                         | 当前状态 | 决策时机                         |
+| -------------------------- | ---- | ---------------------------- |
+| Jetson 具体型号                | TBD  | 本地 ONNX Runtime baseline 跑通后 |
+| JetPack version            | TBD  | Jetson 型号确定后                 |
+| CUDA version               | TBD  | JetPack version 确定后          |
+| TensorRT version           | TBD  | JetPack version 确定后          |
+| ONNX Runtime C++ version   | TBD  | C++ ONNX Runtime 集成前         |
+| OpenCV version             | TBD  | C++ 项目骨架创建前                  |
+| CMake minimum version      | TBD  | C++ 项目骨架创建前                  |
+| TensorRT engine 生成方式       | TBD  | Jetson TensorRT 部署前          |
+| Resource monitoring method | TBD  | 性能实验前                        |
+| Pipeline queue size 最终值    | TBD  | PipelineRunner 实现与测试后        |
+| Warmup frames 最终值          | TBD  | 初步性能测试后                      |
+| Measured frames 最终值        | TBD  | 初步性能测试后                      |
+
+---
+
+## 7. 新决策记录模板
+
+后续追加新决策时，使用以下字段结构：
+
+* 标题：`### DXXX - 决策标题`
+* 时间：`YYYY-MM-DD HH:mm`
+* 状态：`ACTIVE` / `SUPERSEDED` / `DEFERRED` / `REJECTED` / `TBD`
+* 决策：填写最终选择，未确认时不得写成已确认。
+* 备选方案：列出至少两个被比较的方案。
+* 选择理由：说明为什么当前方案更适合本项目。
+* 影响范围：列出受影响的模块、文档或实验。
+* 后续调整：说明是否可调整，以及什么情况下调整。
+
+---
+
+## 8. 更新规则
+
+后续 agent 更新本文档时，必须遵守：
+
+1. 新决策只追加，不删除历史记录。
+2. 如果旧决策被替代，将旧记录状态改为 `SUPERSEDED`，并新增替代决策。
+3. 不得把未确认事项写成已确认。
+4. 不得伪造环境版本、实验数据或硬件信息。
+5. 重大技术路线变化必须同步更新相关文档：
+   - `AGENTS.md`
+   - `PROJECT_BRIEF.md`
+   - `REQUIREMENTS.md`
+   - `ARCHITECTURE.md`
+   - `docs/CODING_RULES.md`
+   - `docs/personal/EXPERIMENT_PLAN.md`
+   - `docs/personal/ENVIRONMENT.md`
+   - `docs/personal/TASKS.md`
+6. 影响实验的决策必须同步更新 `docs/personal/EXPERIMENT_PLAN.md`。
+7. 影响代码结构的决策必须同步更新 `ARCHITECTURE.md`。
+8. 影响需求边界的决策必须同步更新 `REQUIREMENTS.md`。
+9. 影响硬件、系统、驱动、依赖或测试环境的决策必须同步更新 `docs/personal/ENVIRONMENT.md`。
+
+---
+
+## 9. Final Summary
+
+当前项目的稳定技术路线是：
+
+```text
+NEU-DET
+→ YOLOv8n
+→ Python training
+→ ONNX export
+→ C++ ONNX Runtime baseline
+→ C++ TensorRT FP16 optimized inference
+→ Jetson deployment
+→ Serial / Pipeline comparison
+→ CSV / JSON experiment logs
+→ thesis, paper, and job-seeking evidence
+```
+
+所有后续决策都应服务于这个主线，不应把项目扩展成算法研究、GUI 应用、完整机器人系统或多平台部署项目。
