@@ -307,6 +307,58 @@ NEU-DET
 
 ---
 
+### 2026-07-09 - 第一阶段数据集与训练框架初始化
+
+当前工作：
+
+* 创建 `feature/dataset-training` 分支。
+* 初始化数据集、训练配置、训练实验和模型 artifact 的基础目录。
+* 新增 NEU-DET 到 YOLO 转换脚本骨架。
+* 新增 YOLOv8n 训练启动与实验记录脚本骨架。
+* 补充 `.gitignore`，忽略数据集、权重、训练缓存和大文件输出。
+
+修改文件：
+
+* `.gitignore`
+* `scripts/convert_neudet_to_yolo.py`
+* `scripts/train_yolo.py`
+* `configs/dataset/.gitkeep`
+* `configs/train/.gitkeep`
+* `data/interim/.gitkeep`
+* `data/yolo/.gitkeep`
+* `experiments/training/.gitkeep`
+* `models/pytorch/.gitkeep`
+
+已完成：
+
+* 第一阶段目录结构已建立。
+* 转换脚本支持参数解析、路径校验、YOLO 输出目录规划和 manifest 记录框架。
+* 训练脚本支持 dry-run、实验目录创建、git commit、环境信息、训练命令和配置快照记录框架。
+
+未完成：
+
+* 尚未实现 NEU-DET annotation 解析与实际 label 转换。
+* 尚未创建真实训练配置。
+* 尚未运行训练。
+* 尚未生成任何真实训练结果。
+
+阻塞问题：
+
+* 需要人工提供 NEU-DET 原始数据集路径。
+* 需要确认 NEU-DET 原始目录结构和类别顺序。
+
+下一步计划：
+
+* 根据人工提供的数据集路径和目录结构实现 annotation parser。
+* 创建 `configs/dataset/` 和 `configs/train/` 下的最小 YAML 配置。
+* 在确认数据后生成 `data/yolo/neu_det/dataset.yaml`。
+
+备注：
+
+* 本轮没有下载数据集，没有运行训练，没有生成伪造结果。
+
+---
+
 ## 8. Agent 更新规则
 
 每次 agent 更新本文档时，应遵守以下规则：
