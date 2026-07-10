@@ -1,0 +1,15 @@
+# Smoke training config for validating the NEU-DET YOLO training chain.
+experiment_name: yolov8n_neudet_smoke
+dataset_yaml: data/yolo/neu_det/dataset.yaml
+model: yolov8n.pt
+task: detect
+mode: train
+imgsz: 320
+epochs: 1
+batch: 2
+device: 0
+workers: 2
+patience: 10
+seed: 42
+optimizer: auto
+experiment_root: experiments/training

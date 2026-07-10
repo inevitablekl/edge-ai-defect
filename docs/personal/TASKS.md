@@ -166,7 +166,7 @@ NEU-DET
 
 | ID         | 优先级 | 状态   | 任务                                       |
 | ---------- | --- | ---- | ---------------------------------------- |
-| TRAIN-001  | P0  | TODO | 编写 YOLOv8n 训练脚本                          |
+| TRAIN-001  | P0  | DONE | 编写 YOLOv8n 训练脚本                          |
 | TRAIN-002  | P0  | TODO | 在 RTX 3090 上训练 YOLOv8n                   |
 | TRAIN-003  | P0  | TODO | 记录 Precision、Recall、mAP@0.5、mAP@0.5:0.95 |
 | TRAIN-004  | P0  | TODO | 保存 `best.pt`                             |
@@ -398,6 +398,52 @@ NEU-DET
 备注：
 
 * 本轮没有下载数据集，没有运行训练，没有伪造任何结果。
+
+---
+
+### 2026-07-10 - YOLOv8n 训练启动脚本与配置
+
+当前工作：
+
+* 新增 `configs/train/yolov8n_neudet_smoke.yaml`。
+* 新增 `configs/train/yolov8n_neudet_640.yaml`。
+* 完善 `scripts/train_yolo.py`，改为读取 YAML 配置驱动训练命令。
+* 支持 `--dry-run`，只检查配置和打印计划命令，不创建实验目录、不启动训练。
+* 支持 `--smoke`，覆盖 `epochs=1`、`imgsz=320`、`batch=2`。
+* 预留正式运行时的实验目录、配置快照、命令、git commit、环境、起止时间和 summary 记录。
+
+修改文件：
+
+* `configs/train/yolov8n_neudet_smoke.yaml`
+* `configs/train/yolov8n_neudet_640.yaml`
+* `scripts/train_yolo.py`
+* `docs/personal/TASKS.md`
+
+已完成：
+
+* 训练启动流程已具备可复现记录结构。
+* 训练参数从 YAML 读取，脚本不硬编码 epochs、imgsz、batch、dataset path 等训练参数。
+* `dataset.yaml` 缺失时会显式报错，不会自动伪造。
+
+未完成：
+
+* 尚未运行正式训练。
+* 尚未产生 Precision、Recall、mAP 或权重文件。
+* 尚未保存 `best.pt`。
+
+阻塞问题：
+
+* 需要先完成真实 NEU-DET 到 YOLO 转换，生成 `data/yolo/neu_det/dataset.yaml`。
+
+下一步计划：
+
+* 使用真实 `dataset.yaml` 执行 `--dry-run`。
+* 在训练环境准备完成后使用 smoke 配置验证训练链路。
+* smoke 通过后再执行 640 正式训练配置。
+
+备注：
+
+* 本轮没有下载数据集，没有运行训练，没有生成假结果，没有提交权重文件。
 
 ---
 
