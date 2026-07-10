@@ -447,6 +447,51 @@ NEU-DET
 
 ---
 
+### 2026-07-10 - 第一阶段正式训练前验证
+
+当前工作：
+
+* 检查 `scripts/convert_neudet_to_yolo.py` 的 CLI、dry-run、输出目录、`dataset.yaml` 和 `conversion_manifest.json`。
+* 检查 `scripts/train_yolo.py` 的 YAML 配置读取、dry-run、smoke 覆盖和实验记录逻辑。
+* 检查 `configs/train/*.yaml` 是否使用相对路径，适合本地 dry-run 和服务器训练。
+* 检查 `.gitignore` 是否忽略数据集、权重、runs、训练输出和大文件。
+* 使用 `/tmp` 临时样例验证转换 dry-run、转换输出、训练 dry-run 和 smoke dry-run。
+
+修改文件：
+
+* `docs/personal/TASKS.md`
+
+已完成：
+
+* `convert_neudet_to_yolo.py` dry-run 不写输出目录。
+* 转换脚本真实输出会生成 `images/train|val|test`、`labels/train|val|test`、`dataset.yaml` 和 `conversion_manifest.json`。
+* `train_yolo.py` 在 `dataset.yaml` 缺失时会清晰报错。
+* `train_yolo.py --dry-run` 和 `--smoke` 在临时配置下只打印计划命令，不创建实验目录，不启动训练。
+* 未发现硬编码绝对路径、Windows 路径或服务器私有路径。
+* `.gitignore` 已覆盖权重、ONNX、runs、`experiments/training/**` 和数据集输出。
+
+未完成：
+
+* 尚未使用真实 NEU-DET 数据集执行转换。
+* 尚未运行 smoke training。
+* 尚未运行 baseline training。
+
+阻塞问题：
+
+* 需要人工提供真实 NEU-DET 数据集路径。
+
+下一步计划：
+
+* 真实数据到位后先执行 conversion dry-run。
+* dry-run 统计无误后执行实际转换。
+* 转换完成后执行 training dry-run 和 smoke training。
+
+备注：
+
+* 本轮没有下载数据集，没有运行正式训练，没有生成伪造结果。
+
+---
+
 ## 8. Agent 更新规则
 
 每次 agent 更新本文档时，应遵守以下规则：
