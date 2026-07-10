@@ -153,12 +153,12 @@ NEU-DET
 | ID       | 优先级 | 状态   | 任务                                      |
 | -------- | --- | ---- | --------------------------------------- |
 | DATA-001 | P0  | TODO | 获取 NEU-DET 数据集                          |
-| DATA-002 | P0  | TODO | 明确 NEU-DET 原始目录格式                       |
-| DATA-003 | P0  | TODO | 实现 NEU-DET 到 YOLO 格式转换脚本                |
-| DATA-004 | P0  | TODO | 实现 train / val / test = 70 / 20 / 10 划分 |
-| DATA-005 | P0  | TODO | 生成 `dataset.yaml`                       |
-| DATA-006 | P0  | TODO | 记录类别、数量、random seed                     |
-| DATA-007 | P1  | TODO | 检查缺失 label 和无效 annotation               |
+| DATA-002 | P0  | DONE | 明确 NEU-DET 原始目录格式                       |
+| DATA-003 | P0  | DONE | 实现 NEU-DET 到 YOLO 格式转换脚本                |
+| DATA-004 | P0  | DONE | 实现 train / val / test = 70 / 20 / 10 划分 |
+| DATA-005 | P0  | DONE | 生成 `dataset.yaml`                       |
+| DATA-006 | P0  | DONE | 记录类别、数量、random seed                     |
+| DATA-007 | P1  | DONE | 检查缺失 label 和无效 annotation               |
 
 ---
 
@@ -356,6 +356,48 @@ NEU-DET
 备注：
 
 * 本轮没有下载数据集，没有运行训练，没有生成伪造结果。
+
+---
+
+### 2026-07-10 - NEU-DET 到 YOLO 转换脚本实现
+
+当前工作：
+
+* 补全 `scripts/convert_neudet_to_yolo.py`。
+* 按 NEU-DET 原始 `IMAGES/` 和 `ANNOTATIONS/` 目录读取图片与 Pascal VOC XML annotation。
+* 实现 bbox 到 YOLO `class_id x_center y_center width height` 的归一化转换。
+* 实现固定 random seed 的 train / val / test = 70 / 20 / 10 划分。
+* 实现图片复制、label 写入、`dataset.yaml` 和 `conversion_manifest.json` 生成。
+* 保留 `--dry-run`，dry-run 只输出统计，不写文件。
+
+修改文件：
+
+* `scripts/convert_neudet_to_yolo.py`
+* `docs/personal/TASKS.md`
+
+已完成：
+
+* 转换脚本已经从骨架变为可执行转换工具。
+* manifest 记录 `image_count`、`bbox_count`、`class_count`、`split_seed`、`split_counts` 和 class counts。
+* 缺失图片、未知类别、缺失 bbox、越界 bbox、空 annotation 会显式失败。
+
+未完成：
+
+* 尚未使用真实 NEU-DET 数据集运行转换。
+* 尚未人工确认本地 NEU-DET 数据集路径。
+
+阻塞问题：
+
+* 需要人工提供 NEU-DET 原始数据集路径。
+
+下一步计划：
+
+* 使用真实 NEU-DET 路径执行 dry-run。
+* dry-run 统计无误后执行实际转换，生成 `data/yolo/neu_det/`。
+
+备注：
+
+* 本轮没有下载数据集，没有运行训练，没有伪造任何结果。
 
 ---
 
