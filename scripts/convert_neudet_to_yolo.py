@@ -359,21 +359,62 @@ def split_samples(
     }
 
 
-def yolo_lines(sample: Sample, class_to_id: dict[str, int]) -> list[str]:
-    lines = []
-    for box in sample.boxes:
-        class_id = class_to_id[box.class_name]
-        x_center = ((box.xmin + box.xmax) / 2.0) / sample.width
-        y_center = ((box.ymin + box.ymax) / 2.0) / sample.height
-        box_width = (box.xmax - box.xmin) / sample.width
-        box_height = (box.ymax - box.ymin) / sample.height
-        normalized = (x_center, y_center, box_width, box_height)
-        if any(value < 0.0 or value > 1.0 for value in normalized):
-            raise ValueError(f"Normalized bbox out of range for {sample.annotation_path}: {normalized}")
-        lines.append(
-            f"{class_id} {x_center:.6f} {y_center:.6f} {box_width:.6f} {box_height:.6f}"
+def yolo_line(sample: Sample, box: BoundingBox, class_to_id: dict[str, int]) -> str:
+    class_id = class_to_id[box.class_name]
+    x_center = ((box.xmin + box.xmax) / 2.0) / sample.width
+    y_center = ((box.ymin + box.ymax) / 2.0) / sample.height
+    box_width = (box.xmax - box.xmin) / sample.width
+    box_height = (box.ymax - box.ymin) / sample.height
+    normalized = (x_center, y_center, box_width, box_height)
+    if any(value < 0.0 or value > 1.0 for value in normalized):
+        raise ValueError(
+            f"Normalized bbox out of range for {sample.annotation_path}: {normalized}"
         )
-    return lines
+    return f"{class_id} {x_center:.6f} {y_center:.6f} {box_width:.6f} {box_height:.6f}"
+
+
+def yolo_lines(sample: Sample, class_to_id: dict[str, int]) -> list[str]:
+    return [yolo_line(sample, box, class_to_id) for box in sample.boxes]
+
+
+def deduplicate_samples(
+    samples: Sequence[Sample],
+    class_to_id: dict[str, int],
+) -> tuple[list[Sample], list[dict[str, object]]]:
+    deduplicated: list[Sample] = []
+    duplicate_samples: list[dict[str, object]] = []
+
+    for sample in samples:
+        seen_lines: set[str] = set()
+        unique_boxes: list[BoundingBox] = []
+        duplicate_count = 0
+        for box in sample.boxes:
+            line = yolo_line(sample, box, class_to_id)
+            if line in seen_lines:
+                duplicate_count += 1
+                continue
+            seen_lines.add(line)
+            unique_boxes.append(box)
+
+        deduplicated.append(
+            Sample(
+                image_path=sample.image_path,
+                annotation_path=sample.annotation_path,
+                width=sample.width,
+                height=sample.height,
+                boxes=tuple(unique_boxes),
+            )
+        )
+        if duplicate_count:
+            duplicate_samples.append(
+                {
+                    "image": sample.image_path.name,
+                    "annotation": sample.annotation_path.name,
+                    "removed_bbox_count": duplicate_count,
+                }
+            )
+
+    return deduplicated, duplicate_samples
 
 
 def write_dataset(
@@ -432,11 +473,15 @@ def build_manifest(
     annotations_dir: Path,
     samples: Sequence[Sample],
     split_map: dict[str, list[Sample]],
+    bbox_count_before_dedup: int,
+    duplicate_samples: list[dict[str, object]],
 ) -> dict[str, object]:
     split_counts = {split_name: len(items) for split_name, items in split_map.items()}
     split_class_counts = {
         split_name: class_counts(items) for split_name, items in split_map.items()
     }
+    bbox_count_after_dedup = sum(len(sample.boxes) for sample in samples)
+    duplicate_bbox_count = bbox_count_before_dedup - bbox_count_after_dedup
     return {
         "source_dataset": "NEU-DET / NEU Surface Defect Database",
         "raw_root": str(args.raw_root),
@@ -445,7 +490,10 @@ def build_manifest(
         "output_dir": str(args.output_dir),
         "image_count": len(samples),
         "annotation_count": len(samples),
-        "bbox_count": sum(len(sample.boxes) for sample in samples),
+        "bbox_count": bbox_count_after_dedup,
+        "bbox_count_before_dedup": bbox_count_before_dedup,
+        "bbox_count_after_dedup": bbox_count_after_dedup,
+        "duplicate_bbox_count": duplicate_bbox_count,
         "class_count": len(args.class_names),
         "class_names": list(args.class_names),
         "class_counts": class_counts(samples),
@@ -453,13 +501,14 @@ def build_manifest(
         "split_seed": args.seed,
         "split_counts": split_counts,
         "split_class_counts": split_class_counts,
-        "abnormal_sample_count": 0,
+        "abnormal_sample_count": len(duplicate_samples),
         "abnormal_samples": {
             "missing_images": [],
             "images_without_annotations": [],
             "unknown_classes": [],
             "invalid_bboxes": [],
             "empty_annotations": [],
+            "duplicate_bboxes": duplicate_samples,
         },
         "dry_run": args.dry_run,
     }
@@ -480,7 +529,9 @@ def print_summary(manifest: dict[str, object]) -> None:
     print(f"  annotations_dir: {manifest['annotations_dir']}")
     print(f"  output_dir: {manifest['output_dir']}")
     print(f"  image_count: {manifest['image_count']}")
-    print(f"  bbox_count: {manifest['bbox_count']}")
+    print(f"  bbox_count_before_dedup: {manifest['bbox_count_before_dedup']}")
+    print(f"  bbox_count_after_dedup: {manifest['bbox_count_after_dedup']}")
+    print(f"  duplicate_bbox_count: {manifest['duplicate_bbox_count']}")
     print(f"  class_count: {manifest['class_count']}")
     print(f"  split_seed: {manifest['split_seed']}")
     print(f"  split_counts: {manifest['split_counts']}")
@@ -495,9 +546,19 @@ def main() -> int:
         validate_split(args.split)
         images_dir, annotations_dir = resolve_neudet_dirs(args)
         class_to_id = class_index(args.class_names)
-        samples = collect_samples(images_dir, annotations_dir, class_to_id)
+        raw_samples = collect_samples(images_dir, annotations_dir, class_to_id)
+        bbox_count_before_dedup = sum(len(sample.boxes) for sample in raw_samples)
+        samples, duplicate_samples = deduplicate_samples(raw_samples, class_to_id)
         split_map = split_samples(samples, args.split, args.seed)
-        manifest = build_manifest(args, images_dir, annotations_dir, samples, split_map)
+        manifest = build_manifest(
+            args,
+            images_dir,
+            annotations_dir,
+            samples,
+            split_map,
+            bbox_count_before_dedup,
+            duplicate_samples,
+        )
         print_summary(manifest)
 
         if args.dry_run:

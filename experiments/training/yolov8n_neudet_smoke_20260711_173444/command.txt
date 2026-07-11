@@ -1,0 +1,1 @@
+yolo detect train model=models/pretrained/yolov8n.pt data=data/yolo/neu_det/dataset.yaml imgsz=320 epochs=1 batch=2 device=0 project=/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/experiments/training/yolov8n_neudet_smoke_20260711_173444 name=train exist_ok=False workers=2 patience=10 seed=42 optimizer=auto amp=False

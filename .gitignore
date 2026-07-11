@@ -70,11 +70,22 @@ experiments/results/**
 experiments/figures/**
 experiments/tables/**
 experiments/training/**
+!experiments/training/**/
+!experiments/training/**/.gitkeep
+!experiments/training/**/config.yaml
+!experiments/training/**/command.txt
+!experiments/training/**/train_command.txt
+!experiments/training/**/git_commit.txt
+!experiments/training/**/environment.txt
+!experiments/training/**/environment_snapshot.txt
+!experiments/training/**/start_time.txt
+!experiments/training/**/end_time.txt
+!experiments/training/**/summary.json
+!experiments/training/**/README.md
 !experiments/logs/.gitkeep
 !experiments/results/.gitkeep
 !experiments/figures/.gitkeep
 !experiments/tables/.gitkeep
-!experiments/training/.gitkeep
 
 # Media and large generated outputs
 *.mp4

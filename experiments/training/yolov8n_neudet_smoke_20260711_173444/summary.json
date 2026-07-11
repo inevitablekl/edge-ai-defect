@@ -1,0 +1,49 @@
+{
+  "status": "completed",
+  "return_code": 0,
+  "start_time": "2026-07-11 17:34:44",
+  "end_time": "2026-07-11 17:36:47",
+  "config_path": "configs/train/yolov8n_neudet_smoke.yaml",
+  "run_dir": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/experiments/training/yolov8n_neudet_smoke_20260711_173444",
+  "dataset_yaml": "data/yolo/neu_det/dataset.yaml",
+  "command": [
+    "yolo",
+    "detect",
+    "train",
+    "model=models/pretrained/yolov8n.pt",
+    "data=data/yolo/neu_det/dataset.yaml",
+    "imgsz=320",
+    "epochs=1",
+    "batch=2",
+    "device=0",
+    "project=/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/experiments/training/yolov8n_neudet_smoke_20260711_173444",
+    "name=train",
+    "exist_ok=False",
+    "workers=2",
+    "patience=10",
+    "seed=42",
+    "optimizer=auto",
+    "amp=False"
+  ],
+  "metrics": {
+    "source": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/experiments/training/yolov8n_neudet_smoke_20260711_173444/train/results.csv",
+    "last_epoch": {
+      "epoch": 1,
+      "time": 97.5314,
+      "train/box_loss": 1.9133,
+      "train/cls_loss": 3.1751,
+      "train/dfl_loss": 1.80445,
+      "metrics/precision(B)": 0.40682,
+      "metrics/recall(B)": 0.34484,
+      "metrics/mAP50(B)": 0.27908,
+      "metrics/mAP50-95(B)": 0.12069,
+      "val/box_loss": 1.9758,
+      "val/cls_loss": 2.84945,
+      "val/dfl_loss": 1.89103,
+      "lr/pg0": 0.000332804,
+      "lr/pg1": 0.000332804,
+      "lr/pg2": 0.000332804
+    }
+  },
+  "note": "Metrics were read from the real Ultralytics results.csv."
+}

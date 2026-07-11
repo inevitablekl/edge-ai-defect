@@ -1,5 +1,5 @@
-# Main YOLOv8n training config for NEU-DET at 640 input size.
-experiment_name: yolov8n_neudet_640
+# Frozen YOLOv8n baseline config for NEU-DET.
+experiment_name: yolov8n_neudet_baseline
 dataset_yaml: data/yolo/neu_det/dataset.yaml
 model: models/pretrained/yolov8n.pt
 task: detect

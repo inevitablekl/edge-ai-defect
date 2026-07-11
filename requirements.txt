@@ -1,0 +1,9 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+torch==2.3.1+cu118
+torchvision==0.18.1+cu118
+ultralytics==8.4.50
+opencv-python==4.10.0.84
+numpy==1.26.4
+matplotlib==3.8.4
+PyYAML==6.0.2

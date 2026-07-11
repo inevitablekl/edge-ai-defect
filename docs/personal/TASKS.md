@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-09
+2026-07-11
 ```
 
 当前阶段：
 
 ```text
-项目文档与仓库规范阶段
+YOLOv8n + NEU-DET 正式 baseline 训练前置冻结完成
 ```
 
 当前主线：
@@ -128,6 +128,7 @@ NEU-DET
 | DOC-009 | P1  | TODO        | 确定 `DATASET.md`         |
 | DOC-010 | P1  | DONE        | 确定 `ENVIRONMENT.md`     |
 | DOC-011 | P1  | TODO        | 初始化 `PROGRESS_LOG.md`   |
+| DOC-012 | P1  | DONE        | 编写 `BASELINE_TRAINING.md` |
 
 ---
 
@@ -152,13 +153,14 @@ NEU-DET
 
 | ID       | 优先级 | 状态   | 任务                                      |
 | -------- | --- | ---- | --------------------------------------- |
-| DATA-001 | P0  | TODO | 获取 NEU-DET 数据集                          |
+| DATA-001 | P0  | DONE | 获取 NEU-DET 数据集                          |
 | DATA-002 | P0  | DONE | 明确 NEU-DET 原始目录格式                       |
 | DATA-003 | P0  | DONE | 实现 NEU-DET 到 YOLO 格式转换脚本                |
 | DATA-004 | P0  | DONE | 实现 train / val / test = 70 / 20 / 10 划分 |
 | DATA-005 | P0  | DONE | 生成 `dataset.yaml`                       |
 | DATA-006 | P0  | DONE | 记录类别、数量、random seed                     |
 | DATA-007 | P1  | DONE | 检查缺失 label 和无效 annotation               |
+| DATA-008 | P1  | DONE | 清理并记录完全重复 YOLO bbox                     |
 
 ---
 
@@ -170,6 +172,9 @@ NEU-DET
 | TRAIN-002  | P0  | TODO | 在 RTX 3090 上训练 YOLOv8n                   |
 | TRAIN-003  | P0  | TODO | 记录 Precision、Recall、mAP@0.5、mAP@0.5:0.95 |
 | TRAIN-004  | P0  | TODO | 保存 `best.pt`                             |
+| TRAIN-005  | P0  | DONE | 建立项目 `.venv` 并固定 Python 训练依赖             |
+| TRAIN-006  | P0  | DONE | 完成本地 YOLOv8n smoke training 链路验证           |
+| TRAIN-007  | P0  | DONE | 冻结 NEU-DET baseline 配置并通过 dry-run          |
 | EXPORT-001 | P0  | TODO | 编写 ONNX export 脚本                        |
 | EXPORT-002 | P0  | TODO | 导出 320 输入尺寸 ONNX                         |
 | EXPORT-003 | P0  | TODO | 导出 416 输入尺寸 ONNX                         |
@@ -492,6 +497,68 @@ NEU-DET
 
 ---
 
+### 2026-07-11 - NEU-DET 数据冻结与 baseline 训练前准备
+
+当前工作：
+
+* 使用真实 `data/raw/NEU-DET` 完成数据转换、重复 bbox 清理和全量 label 校验。
+* 建立项目级 `.venv`，固定 Python、PyTorch、Ultralytics、NumPy、Matplotlib 等依赖版本。
+* 在 GTX 1050 Ti 上完成 `epochs=1`、`imgsz=320`、`batch=2` 的本地 smoke training。
+* 冻结 `configs/train/yolov8n_neudet_baseline.yaml`，并完成正式训练命令 dry-run。
+* 调整训练实验记录与 Git 管理规则，保留轻量复现信息，忽略权重、缓存和大型输出。
+
+修改文件：
+
+* `.gitignore`
+* `scripts/convert_neudet_to_yolo.py`
+* `scripts/train_yolo.py`
+* `configs/train/yolov8n_neudet_smoke.yaml`
+* `configs/train/yolov8n_neudet_640.yaml`
+* `configs/train/yolov8n_neudet_baseline.yaml`
+* `requirements.txt`
+* `requirements-lock.txt`
+* `environment_snapshot.txt`
+* `docs/BASELINE_TRAINING.md`
+* `experiments/training/README.md`
+* `docs/personal/TASKS.md`
+* `docs/personal/EXPERIMENT_PLAN.md`
+* `docs/personal/ENVIRONMENT.md`
+
+已完成：
+
+* 数据集包含 1800 张图片，划分为 train 1260、val 360、test 180。
+* 原始转换统计为 4189 个 bbox；删除 3 个完全重复 bbox 后冻结为 4186 个。
+* 全量 YOLO label 校验结果为 `errors=0`，不存在重复 label 行。
+* `.venv` 中 PyTorch CUDA、cuDNN 和 Ultralytics 导入及依赖检查通过。
+* 最新隔离环境 smoke run 状态为 `completed`、return code 为 0；该结果仅验证训练链路，不作为正式 baseline 结果。
+* baseline 配置固定为 YOLOv8n、640、100 epochs、seed 42、`amp=false`。
+* baseline dry-run 已通过，未启动正式训练。
+
+未完成：
+
+* 尚未在 RTX 3090 上执行正式 baseline training。
+* 尚未产生正式 baseline 的 Precision、Recall、mAP 或 `best.pt`。
+* 尚未执行 ONNX export。
+
+阻塞问题：
+
+* 代码与数据准备无阻塞。
+* 正式训练需要在 RTX 3090 环境中确认依赖和显存后执行。
+
+下一步计划：
+
+* 在 RTX 3090 训练环境中安装 `requirements-lock.txt`。
+* 执行 baseline dry-run，确认 GPU、路径和 `batch=16`。
+* 使用冻结配置运行正式 baseline，并保存真实实验记录和 `best.pt`。
+* 正式训练完成后进入 ONNX export。
+
+备注：
+
+* 一次早期 smoke 尝试因 NumPy / Matplotlib 环境冲突失败，失败记录保留；随后在独立 `.venv` 中验证成功。
+* 本轮没有运行正式 baseline，没有上传数据，没有提交数据集或权重文件。
+
+---
+
 ## 8. Agent 更新规则
 
 每次 agent 更新本文档时，应遵守以下规则：
@@ -554,7 +621,7 @@ NEU-DET
 
 近期优先级：
 
-1. 创建 `include/edge_ai_defect/` 模块目录。
-2. 创建 `models/README.md` 和 `data/README.md`。
-3. 初始化 top-level `CMakeLists.txt`。
-4. 开始 `ConfigManager` 的最小实现。
+1. 在 RTX 3090 环境中复现 `.venv` 依赖并执行 baseline dry-run。
+2. 确认 `batch=16` 显存可用后运行正式 YOLOv8n baseline。
+3. 记录正式 Precision、Recall、mAP 和 `best.pt`。
+4. 正式训练完成后实现 ONNX export 脚本。

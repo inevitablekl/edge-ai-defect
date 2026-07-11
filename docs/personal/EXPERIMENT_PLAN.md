@@ -58,6 +58,8 @@
 | runtime modes | Serial, Pipeline |
 | 主实验平台 | NVIDIA Jetson |
 | 日志格式 | CSV / JSON |
+| 训练 split seed | 42 |
+| 正式 baseline 配置 | `configs/train/yolov8n_neudet_baseline.yaml` |
 | v1 GUI | 不实现 |
 | v1 ROS2 | 只预留接口 |
 | INT8 | 当前不做，后续可选 |
@@ -347,7 +349,23 @@ measured_frames: 500
 
 ---
 
-### 10.5 表格模板
+### 10.5 当前准备状态
+
+截至 2026-07-11，E1 正式实验尚未开始，当前只完成前置验证：
+
+* 真实 NEU-DET 已转换为 YOLO 格式，共 1800 张图片。
+* split 固定为 train 1260、val 360、test 180，random seed 为 42。
+* 删除 3 个完全重复 bbox 后，数据集包含 4186 个有效 bbox。
+* 全量 label 校验结果为 `errors=0`。
+* GTX 1050 Ti 本地 smoke training 已完成，用于验证 dataloader、预训练权重加载、forward/backward 和 checkpoint 保存链路。
+* smoke 指标不作为 E1 baseline 结果，不填入论文精度表。
+* 正式 baseline 配置已冻结为 640 输入、100 epochs、seed 42、`amp=false`，并已通过 dry-run。
+
+正式 Precision、Recall、mAP 和 `best.pt` 仍为待完成项。
+
+---
+
+### 10.6 表格模板
 
 | Model   | Input Size | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
 | ------- | ---------: | --------: | -----: | ------: | -----------: |

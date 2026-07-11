@@ -8,7 +8,9 @@ that the configured dataset.yaml exists before a dry-run or real run.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
+import os
 import platform
 import shlex
 import shutil
@@ -131,6 +133,13 @@ def validate_config(config: dict[str, Any]) -> None:
             "do not create a fake dataset.yaml."
         )
 
+    model_path = Path(str(config["model"]))
+    if not model_path.is_file():
+        raise FileNotFoundError(
+            f"Local model weights not found: {model_path}. "
+            "Provide the pretrained weights locally; automatic downloads are not allowed."
+        )
+
     for int_key in ("imgsz", "epochs", "batch"):
         value = config[int_key]
         if not isinstance(value, int) or value <= 0:
@@ -184,14 +193,16 @@ def timestamp_for_path() -> str:
 
 
 def build_run_dir(config: dict[str, Any]) -> Path:
-    experiment_root = Path(str(config["experiment_root"]))
+    experiment_root = Path(str(config["experiment_root"])).resolve()
     run_name = f"{config['experiment_name']}_{timestamp_for_path()}"
     return experiment_root / run_name
 
 
 def build_train_command(config: dict[str, Any], run_dir: Path) -> list[str]:
+    environment_yolo = Path(sys.executable).with_name("yolo")
+    yolo_executable = str(environment_yolo) if environment_yolo.is_file() else "yolo"
     command = [
-        "yolo",
+        yolo_executable,
         str(config["task"]),
         str(config["mode"]),
         f"model={config['model']}",
@@ -204,7 +215,7 @@ def build_train_command(config: dict[str, Any], run_dir: Path) -> list[str]:
         "name=train",
         "exist_ok=False",
     ]
-    optional_keys = ("workers", "patience", "seed", "optimizer")
+    optional_keys = ("workers", "patience", "seed", "optimizer", "amp")
     for key in optional_keys:
         if key in config and config[key] is not None:
             command.append(f"{key}={config[key]}")
@@ -223,12 +234,20 @@ def write_run_records(
 ) -> None:
     run_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(config_path, run_dir / "config.yaml")
-    (run_dir / "command.txt").write_text(shlex.join(command) + "\n", encoding="utf-8")
+    command_text = shlex.join(command) + "\n"
+    (run_dir / "command.txt").write_text(command_text, encoding="utf-8")
+    (run_dir / "train_command.txt").write_text(command_text, encoding="utf-8")
     (run_dir / "git_commit.txt").write_text(current_git_commit() + "\n", encoding="utf-8")
-    (run_dir / "environment.txt").write_text(collect_environment_text(), encoding="utf-8")
+    environment_text = collect_environment_text()
+    (run_dir / "environment.txt").write_text(environment_text, encoding="utf-8")
+    (run_dir / "environment_snapshot.txt").write_text(
+        environment_text,
+        encoding="utf-8",
+    )
     (run_dir / "start_time.txt").write_text(start_time + "\n", encoding="utf-8")
     if end_time is not None:
         (run_dir / "end_time.txt").write_text(end_time + "\n", encoding="utf-8")
+    metrics = read_metrics_summary(run_dir)
     summary = {
         "status": status,
         "return_code": return_code,
@@ -238,12 +257,43 @@ def write_run_records(
         "run_dir": str(run_dir),
         "dataset_yaml": str(config["dataset_yaml"]),
         "command": command,
-        "note": "No metrics are written by this launcher. Use real training logs only.",
+        "metrics": metrics,
+        "note": (
+            "Metrics were read from the real Ultralytics results.csv."
+            if metrics is not None
+            else "No Ultralytics metrics file was available when this record was written."
+        ),
     }
     (run_dir / "summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+
+
+def read_metrics_summary(run_dir: Path) -> dict[str, Any] | None:
+    results_path = run_dir / "train" / "results.csv"
+    if not results_path.is_file():
+        return None
+
+    with results_path.open(encoding="utf-8", newline="") as results_file:
+        rows = list(csv.DictReader(results_file))
+    if not rows:
+        return None
+
+    last_row: dict[str, int | float | str] = {}
+    for raw_key, raw_value in rows[-1].items():
+        key = raw_key.strip()
+        value = raw_value.strip()
+        try:
+            number = float(value)
+            last_row[key] = int(number) if key == "epoch" and number.is_integer() else number
+        except ValueError:
+            last_row[key] = value
+
+    return {
+        "source": str(results_path),
+        "last_epoch": last_row,
+    }
 
 
 def print_plan(config_path: Path, config: dict[str, Any], run_dir: Path, command: list[str]) -> None:
@@ -281,7 +331,17 @@ def main() -> int:
             return_code=None,
         )
         try:
-            completed = subprocess.run(command, check=False)
+            training_env = os.environ.copy()
+            training_env["YOLO_OFFLINE"] = "true"
+            training_env.pop("PYTHONPATH", None)
+            project_cache_dir = Path(".cache").resolve()
+            ultralytics_config_dir = project_cache_dir / "ultralytics"
+            matplotlib_config_dir = project_cache_dir / "matplotlib"
+            ultralytics_config_dir.mkdir(parents=True, exist_ok=True)
+            matplotlib_config_dir.mkdir(parents=True, exist_ok=True)
+            training_env["YOLO_CONFIG_DIR"] = str(ultralytics_config_dir)
+            training_env["MPLCONFIGDIR"] = str(matplotlib_config_dir)
+            completed = subprocess.run(command, check=False, env=training_env)
             return_code = completed.returncode
         except FileNotFoundError as exc:
             print(f"ERROR: training command not found: {command[0]}", file=sys.stderr)

@@ -1,0 +1,28 @@
+{
+  "status": "failed",
+  "return_code": 1,
+  "start_time": "2026-07-11 16:05:21",
+  "end_time": "2026-07-11 16:05:29",
+  "config_path": "configs/train/yolov8n_neudet_smoke.yaml",
+  "run_dir": "experiments/training/yolov8n_neudet_smoke_smoke_20260711_160521",
+  "dataset_yaml": "data/yolo/neu_det/dataset.yaml",
+  "command": [
+    "yolo",
+    "detect",
+    "train",
+    "model=models/pretrained/yolov8n.pt",
+    "data=data/yolo/neu_det/dataset.yaml",
+    "imgsz=320",
+    "epochs=1",
+    "batch=2",
+    "device=0",
+    "project=experiments/training/yolov8n_neudet_smoke_smoke_20260711_160521",
+    "name=train",
+    "exist_ok=False",
+    "workers=2",
+    "patience=10",
+    "seed=42",
+    "optimizer=auto"
+  ],
+  "note": "No metrics are written by this launcher. Use real training logs only."
+}

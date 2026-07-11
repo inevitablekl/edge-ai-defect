@@ -1,0 +1,11 @@
+python: 3.10.12 (main, Jun 22 2026, 18:55:27) [GCC 11.4.0]
+platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35
+machine: x86_64
+processor: x86_64
+git_commit: 797f6ac885fd814cba3aa1c85a1d3970cff76623
+git_status_short: M configs/train/yolov8n_neudet_640.yaml
+ M configs/train/yolov8n_neudet_smoke.yaml
+ M scripts/train_yolo.py
+?? yolo26n.pt
+ultralytics_version: 8.4.50
+torch_version: 2.3.1+cu118
