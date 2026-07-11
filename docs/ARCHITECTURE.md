@@ -242,7 +242,7 @@ The executable should:
 | Module            | Responsibility                                |
 | ----------------- | --------------------------------------------- |
 | ConfigManager     | Load and validate YAML configuration          |
-| FrameSource       | Read image sequence, video, optional camera   |
+| FrameSource       | Abstract image directory and video file input |
 | Preprocessor      | Convert image frame to inference input buffer |
 | InferenceEngine   | Abstract inference backend interface          |
 | ONNXRuntimeEngine | ONNX Runtime baseline inference               |
@@ -257,6 +257,28 @@ The executable should:
 Backend-specific details MUST stay inside backend modules.
 
 Runner logic MUST NOT contain ONNX Runtime or TensorRT-specific implementation details.
+
+### 9.1 FrameSource Input Abstraction Decision
+
+`FrameSource` uses an input abstraction design.
+
+The deployment pipeline should depend on a common `FrameSource` interface, not on concrete image, video, camera, or stream implementations.
+
+v1 supported input types:
+
+* Image directory / image sequence.
+* Video file.
+
+Future extension input types:
+
+* RTSP stream.
+* Camera device.
+
+RTSP and Camera input are extension points only.
+
+They are not core experiment dependencies in v1.
+
+The core backend comparison, runtime comparison, input size comparison, and stability test should be able to run with image directory or video file input.
 
 ---
 
