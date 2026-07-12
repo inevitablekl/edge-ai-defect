@@ -941,6 +941,50 @@ SHA256: 5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7
 
 ---
 
+### D018 - 正式训练 checkpoint 的离线保留边界
+
+时间：
+
+```text
+2026-07-12
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+* 全部 9 个正式训练实验的 `best.pt` 作为离线审计资产保存在独立 checkpoint archive 中。
+* Git 不保存任何模型权重或归档包，只保存轻量文档、SHA256、指标和 provenance。
+* 后续 ONNX、TensorRT 和 Jetson 部署只使用 frozen model；其余 checkpoint 不参与后续模型选择。
+* 在本地归档校验和 `feature/dataset-training` Git push 完成后，训练服务器可以释放。
+
+备选方案：
+
+* 仅保存 frozen model：体积更小，但无法完整离线审计其他正式实验 checkpoint。
+* 将全部 checkpoint 纳入 Git：可集中管理，但违反大模型资产边界并显著增大仓库。
+
+选择理由：
+
+* 独立归档同时满足完整审计、哈希校验和 Git 仓库轻量化要求。
+* 非冻结 checkpoint 仅用于历史复核或必要时重新 validation，不属于部署运行依赖。
+* seed=7 checkpoint 与 frozen model 哈希一致，冻结模型来源链可离线验证。
+
+影响范围：
+
+* `results/training/evidence/EXPERIMENT_PROVENANCE.json`
+* `docs/TRAINING_ARCHIVE_INDEX.md`
+* 训练服务器生命周期和后续 ONNX 分支起点
+
+后续调整：
+
+归档至少保留两份独立本地副本。除非新增正式训练决策，否则不再改变 checkpoint 集合或模型选择。
+
+---
+
 ## 6. 待决策事项
 
 以下事项尚未确定，后续确定后应追加新的决策记录。

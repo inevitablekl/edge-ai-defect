@@ -701,7 +701,7 @@ NEU-DET
 未完成：
 
 * 尚未执行 ONNX export。
-* 8 个非冻结 checkpoint 未进入离线归档，无法离线重复校验其 SHA256；该限制已在 provenance 中明确记录。
+* 历史状态：当时 8 个非冻结 checkpoint 尚未进入离线归档；该状态已由下方 2026-07-12 最终归档记录取代。
 
 阻塞问题：
 
@@ -716,6 +716,28 @@ NEU-DET
 
 * 本轮未运行训练、validation、ONNX export 或 TensorRT。
 * test split 未用于模型选择或训练调参。
+
+---
+
+### 2026-07-12 - 训练归档与 provenance 最终收尾
+
+已完成：
+
+* 原始 training stage archive、evidence patch 和 checkpoint patch 三组离线归档均已完成并通过外部 SHA256 与内部 MANIFEST 校验。
+* 全部 9 个正式实验的 `best.pt` 已归档并校验，9 个 checkpoint 哈希均唯一；seed=7 checkpoint 与 frozen model 哈希一致。
+* Git 中的轻量 provenance 已更新为 checkpoint archive 名称、成员路径、大小和真实 SHA256，不依赖服务器绝对路径定位。
+* 本地 Git、冻结模型和三组归档已覆盖全部必须保留的训练资产，训练服务器不再保存唯一必要资产。
+* 训练阶段证据链收尾完成，无需继续训练或 validation。
+
+下一步计划：
+
+* 合并训练阶段分支后，从更新后的 `main` 创建 `feature/onnx-export`。
+* 使用 frozen model 执行 ONNX export，并验证 PyTorch / ONNX Runtime 输出一致性。
+
+备注：
+
+* 模型权重和三组归档继续保留在 Git 之外。
+* 后续部署主线只使用 `models/pytorch/yolov8n_neudet_frozen.pt`。
 
 ---
 

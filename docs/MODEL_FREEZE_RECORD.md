@@ -17,6 +17,13 @@
 - **SHA256**: `5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7`
 - Verified: source and destination SHA256 match.
 
+## Offline Source Checkpoint
+
+- The source seed=7 `best.pt` is preserved in `edge-ai-defect_training_checkpoints_patch_20260712.tar.gz` as `checkpoints/seed7/best.pt`.
+- Checkpoint archive SHA256: `a50525dc3e68a569e81d6319b9bf9d9cc43f9db26c5df3d87e09f48b8a765847`.
+- The archived source checkpoint SHA256 equals the frozen model SHA256: `5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7`.
+- The archive is retained for offline audit; the frozen model remains the sole canonical input for subsequent ONNX and TensorRT work.
+
 ## Git Context
 
 - **Branch**: `feature/dataset-training`
@@ -120,4 +127,4 @@ This frozen model is the canonical training output and will be used for:
 
 The model must NOT be retrained, fine-tuned, or modified during the deployment comparison. All future work builds on this frozen artifact.
 
-Machine-readable effective args, validation metrics, test metrics, commands, and provenance are tracked in `results/training/evidence/`. The `.pt` model and external training/evidence archives remain local-only and are not committed to Git. The test split was evaluated only after model selection and was not used for tuning.
+Machine-readable effective args, validation metrics, test metrics, commands, and provenance are tracked in `results/training/evidence/`. The `.pt` model and all three external archives remain local-only and are not committed to Git. The test split was evaluated only after model selection and was not used for tuning.

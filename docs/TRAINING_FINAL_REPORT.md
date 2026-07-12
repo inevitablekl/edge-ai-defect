@@ -132,7 +132,7 @@ Using seeds {42, 7, 123}, all with `deterministic=true`.
 2. **Recall (Priority 2)**: 0.74469 — higher than seed=42 deterministic (0.73257), satisfying the tiebreaker criterion for equivalent models.
 3. **Repeatability setting**: `deterministic=true` improves repeatability for a fixed software stack and hardware environment, but does not guarantee bitwise-identical results across platforms, drivers, or framework versions.
 4. **Observed seed range**: The selected metrics fall inside the range observed in the three recorded seeds; three runs do not establish a general statistical bound.
-5. **Evidence boundary**: All runs retain archived `results.csv` and actual `args.yaml`. The seed=7 source checkpoint is preserved as the hash-identical frozen model; the other eight checkpoints remain historical server assets and are not part of the offline archive.
+5. **Evidence boundary**: All runs retain archived `results.csv` and actual `args.yaml`. All nine formal-training `best.pt` files are preserved in the independent checkpoint archive with verified, unique SHA256 values. The seed=7 checkpoint is byte-identical to the frozen model.
 
 ### Why Not Other Candidates
 
@@ -156,6 +156,12 @@ Using seeds {42, 7, 123}, all with `deterministic=true`.
 | Source | `experiments/training/yolov8n_neudet_baseline_seed7_20260712_140145/train/weights/best.pt` |
 | Source SHA256 (verified match) | `5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7` |
 | Freeze record | `docs/MODEL_FREEZE_RECORD.md` |
+
+### Offline Checkpoint Archive
+
+All nine formal-training `best.pt` checkpoints are preserved in the Git-excluded archive `edge-ai-defect_training_checkpoints_patch_20260712.tar.gz` (SHA256 `a50525dc3e68a569e81d6319b9bf9d9cc43f9db26c5df3d87e09f48b8a765847`). Its machine-readable manifest records one unique checkpoint SHA256 per experiment, together with effective args, `results.csv`, configuration, and source provenance.
+
+The archive supports offline audit and, if ever required, repeat validation of historical experiments. It is not a runtime dependency. ONNX export, TensorRT conversion, and deployment continue to use only `models/pytorch/yolov8n_neudet_frozen.pt`; the other checkpoints are not candidates for further model selection.
 
 ---
 
@@ -284,4 +290,4 @@ The frozen model `models/pytorch/yolov8n_neudet_frozen.pt` is the canonical outp
 - ✅ No TensorRT conversion (deferred)
 - ✅ No fabricated or estimated metrics
 
-The frozen model, original training archive, and external evidence patch are local-only assets and are intentionally excluded from Git. The next phase is ONNX export followed by PyTorch/ONNX Runtime consistency validation.
+The frozen model and all three offline archives (training stage, evidence patch, and checkpoint patch) are local-only assets and are intentionally excluded from Git. Their names and SHA256 values are indexed in `docs/TRAINING_ARCHIVE_INDEX.md`. The next phase is ONNX export followed by PyTorch/ONNX Runtime consistency validation.
