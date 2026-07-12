@@ -106,3 +106,10 @@ experiments/training/**
 # Keep curated JSON configuration files trackable.
 !configs/**/*.json
 !experiments/configs/**/*.json
+
+# Track lightweight training result summaries.
+!results/training/*.csv
+!results/training/*.json
+
+# Archive artifacts (local only, not committed).
+artifacts/transfer/

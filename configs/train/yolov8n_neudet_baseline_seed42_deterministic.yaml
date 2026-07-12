@@ -1,0 +1,19 @@
+# Baseline deterministic reproducibility run — seed=42.
+# All parameters identical to v1 baseline except deterministic=true.
+experiment_name: yolov8n_neudet_baseline_seed42_deterministic
+dataset_yaml: data/yolo/neu_det/dataset.yaml
+model: models/pretrained/yolov8n.pt
+task: detect
+mode: train
+imgsz: 640
+epochs: 100
+batch: 16
+device: 0
+workers: 4
+patience: 30
+seed: 42
+deterministic: true
+optimizer: auto
+amp: false
+mosaic: 1.0
+experiment_root: experiments/training

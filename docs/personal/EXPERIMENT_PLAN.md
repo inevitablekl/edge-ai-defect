@@ -365,6 +365,30 @@ measured_frames: 500
 
 ---
 
+### 10.7 2026-07-12 更新：E1 训练阶段已完成
+
+截至 2026-07-12，E1 模型精度实验（640 输入尺寸）已正式完成：
+
+* V1 baseline（seed=42）、seed=7 deterministic、seed=123 deterministic、seed=42 deterministic、V2 extended epochs、V3 no mosaic、V4 AdamW、V5 cosine LR、V6 no warmup 共 9 组实验全部完成。
+* V2～V6 变体均未在 mAP50-95 上获得超过 baseline 的稳定提升。
+* 最终冻结模型：seed=7 deterministic（`models/pytorch/yolov8n_neudet_frozen.pt`，SHA256 `5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7`）。
+* Test split 最终评价：mAP50=0.769，mAP50-95=0.431。
+* 320 和 416 输入尺寸的训练与评价不在训练阶段范围内 — 这些尺寸将仅在 ONNX/TensorRT 部署实验（E4）中通过输入 resize 评估推理性能差异，不重新训练模型。
+* 详细结果见 `docs/TRAINING_FINAL_REPORT.md`。
+
+E1 状态：
+
+```text
+DONE — 640 训练实验完成，模型冻结，后续实验重点转向：
+- PyTorch vs ONNX Runtime 输出一致性验证
+- ONNX Runtime vs TensorRT FP16 性能对比（E2）
+- Serial vs Pipeline 对比（E3）
+- 320 / 416 / 640 输入尺寸推理对比（E4，不重新训练）
+- 稳定性与资源占用测试（E5）
+```
+
+---
+
 ### 10.6 表格模板
 
 | Model   | Input Size | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |

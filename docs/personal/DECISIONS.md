@@ -891,6 +891,55 @@ RK3588 / RKNN 可作为长期扩展，不进入当前主线。
 
 ---
 
+### D017 - 冻结模型选择
+
+时间：
+
+```text
+2026-07-12
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+最终冻结模型选择：
+
+```text
+seed=7 deterministic baseline → models/pytorch/yolov8n_neudet_frozen.pt
+SHA256: 5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7
+```
+
+备选方案：
+
+- seed=42 deterministic baseline（mAP50 最高，mAP50-95 与 seed=7 仅差 0.001）。
+- seed=123 deterministic baseline（Recall 最高，但 mAP50-95 显著低于均值）。
+- V1 baseline（非 deterministic，不可复现）。
+- V2～V6 变体（均未在 mAP50-95 上获得稳定提升）。
+
+选择理由：
+
+- mAP50-95 在所有 deterministic baseline 中名义最高（0.45085），虽然与 seed=42 的 0.001 差距远小于三次实验观察到的波动范围（σ≈0.006）。
+- Recall 高于 seed=42 deterministic，满足性能相当模型优先选择较高 Recall 的工程规则。
+- deterministic=true，训练可复现。
+- 属于同一性能水平内的工程选择，不宣称统计显著优胜。
+
+影响范围：
+
+- 后续所有 ONNX export、TensorRT 转换、Jetson 部署实验统一使用此冻结模型及对应 SHA256。
+- test split 结果仅用于最终报告，不得反向用于训练调参或模型选择。
+- 训练阶段不再继续扩大超参数搜索。
+
+后续调整：
+
+原则上不调整。如需更换模型，必须记录新的决策并更新 SHA256。
+
+---
+
 ## 6. 待决策事项
 
 以下事项尚未确定，后续确定后应追加新的决策记录。

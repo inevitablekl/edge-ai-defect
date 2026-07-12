@@ -1,0 +1,19 @@
+# YOLOv8n NEU-DET v3: controlled experiment — disable Mosaic augmentation.
+# All parameters identical to v1 baseline except mosaic=0.0 and close_mosaic=0.
+experiment_name: yolov8n_neudet_v3_no_mosaic
+dataset_yaml: data/yolo/neu_det/dataset.yaml
+model: models/pretrained/yolov8n.pt
+task: detect
+mode: train
+imgsz: 640
+epochs: 100
+batch: 16
+device: 0
+workers: 4
+patience: 30
+seed: 42
+optimizer: auto
+amp: false
+mosaic: 0.0
+close_mosaic: 0
+experiment_root: experiments/training

@@ -109,14 +109,18 @@ Not available
 
 | 项目 | 当前值 |
 |---|---|
-| GPU | RTX 3090 |
-| OS | TBD |
-| CUDA version | TBD |
+| GPU | RTX 3090 (24 GB) |
+| OS | Ubuntu 22.04 (kernel 5.15.0-94-generic) |
+| CPU | TBD |
+| RAM | TBD |
+| CUDA version | 11.8 |
 | NVIDIA driver version | TBD |
-| Python version | TBD |
-| PyTorch version | TBD |
-| Ultralytics version | TBD |
+| Python version | 3.10.8 |
+| PyTorch version | 2.3.1+cu118 |
+| torchvision version | 0.18.1+cu118 |
+| Ultralytics version | 8.4.50 |
 | OpenCV Python version | TBD |
+| Virtual environment | `.venv` |
 
 说明：
 
@@ -263,6 +267,7 @@ experiments/logs/<run_id>/environment_snapshot.txt
 
 ## 11. 当前结论
 
-当前本地 Python 训练环境已经建立并通过真实 YOLO smoke training 验证。
-
-正式 baseline training 前仍需在 RTX 3090 平台采集独立环境快照。进入部署实验前，必须补齐 Jetson、JetPack、TensorRT、ONNX Runtime C++ 和资源监控方法等信息。
+* 本地 GTX 1050 Ti Python 训练环境已通过 smoke training 验证。
+* RTX 3090 训练环境已通过 9 组正式 YOLOv8n baseline 实验验证，环境信息已记录。
+* 训练阶段已完成，模型已冻结为 `models/pytorch/yolov8n_neudet_frozen.pt`。
+* 进入部署实验前，必须补齐 Jetson、JetPack、TensorRT、ONNX Runtime C++ 和资源监控方法等信息。

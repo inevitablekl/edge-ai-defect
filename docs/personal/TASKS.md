@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-11
+2026-07-12
 ```
 
 当前阶段：
 
 ```text
-YOLOv8n + NEU-DET 正式 baseline 训练前置冻结完成
+YOLOv8n + NEU-DET 训练阶段完成，模型已冻结，进入 ONNX export 阶段
 ```
 
 当前主线：
@@ -169,9 +169,9 @@ NEU-DET
 | ID         | 优先级 | 状态   | 任务                                       |
 | ---------- | --- | ---- | ---------------------------------------- |
 | TRAIN-001  | P0  | DONE | 编写 YOLOv8n 训练脚本                          |
-| TRAIN-002  | P0  | TODO | 在 RTX 3090 上训练 YOLOv8n                   |
-| TRAIN-003  | P0  | TODO | 记录 Precision、Recall、mAP@0.5、mAP@0.5:0.95 |
-| TRAIN-004  | P0  | TODO | 保存 `best.pt`                             |
+| TRAIN-002  | P0  | DONE | 在 RTX 3090 上训练 YOLOv8n                   |
+| TRAIN-003  | P0  | DONE | 记录 Precision、Recall、mAP@0.5、mAP@0.5:0.95 |
+| TRAIN-004  | P0  | DONE | 保存 `best.pt`                             |
 | TRAIN-005  | P0  | DONE | 建立项目 `.venv` 并固定 Python 训练依赖             |
 | TRAIN-006  | P0  | DONE | 完成本地 YOLOv8n smoke training 链路验证           |
 | TRAIN-007  | P0  | DONE | 冻结 NEU-DET baseline 配置并通过 dry-run          |
@@ -210,7 +210,7 @@ NEU-DET
 
 | ID      | 优先级 | 状态   | 任务                                  |
 | ------- | --- | ---- | ----------------------------------- |
-| EXP-001 | P0  | TODO | 完成模型精度实验                            |
+| EXP-001 | P0  | DONE | 完成模型精度实验                            |
 | EXP-002 | P0  | TODO | 完成 ONNX Runtime vs TensorRT FP16 对比 |
 | EXP-003 | P0  | TODO | 完成 Serial vs Pipeline 对比            |
 | EXP-004 | P0  | TODO | 完成 320 / 416 / 640 输入尺寸对比           |
@@ -498,6 +498,128 @@ NEU-DET
 ---
 
 ### 2026-07-11 - NEU-DET 数据冻结与 baseline 训练前准备
+
+当前工作：
+
+* 使用真实 `data/raw/NEU-DET` 完成数据转换、重复 bbox 清理和全量 label 校验。
+* 建立项目级 `.venv`，固定 Python、PyTorch、Ultralytics、NumPy、Matplotlib 等依赖版本。
+* 在 GTX 1050 Ti 上完成 `epochs=1`、`imgsz=320`、`batch=2` 的本地 smoke training。
+* 冻结 `configs/train/yolov8n_neudet_baseline.yaml`，并完成正式训练命令 dry-run。
+* 调整训练实验记录与 Git 管理规则，保留轻量复现信息，忽略权重、缓存和大型输出。
+
+修改文件：
+
+* `.gitignore`
+* `scripts/convert_neudet_to_yolo.py`
+* `scripts/train_yolo.py`
+* `configs/train/yolov8n_neudet_smoke.yaml`
+* `configs/train/yolov8n_neudet_640.yaml`
+* `configs/train/yolov8n_neudet_baseline.yaml`
+* `requirements.txt`
+* `requirements-lock.txt`
+* `environment_snapshot.txt`
+* `docs/BASELINE_TRAINING.md`
+* `experiments/training/README.md`
+* `docs/personal/TASKS.md`
+* `docs/personal/EXPERIMENT_PLAN.md`
+* `docs/personal/ENVIRONMENT.md`
+
+已完成：
+
+* 数据集包含 1800 张图片，划分为 train 1260、val 360、test 180。
+* 原始转换统计为 4189 个 bbox；删除 3 个完全重复 bbox 后冻结为 4186 个。
+* 全量 YOLO label 校验结果为 `errors=0`，不存在重复 label 行。
+* `.venv` 中 PyTorch CUDA、cuDNN 和 Ultralytics 导入及依赖检查通过。
+* 最新隔离环境 smoke run 状态为 `completed`、return code 为 0；该结果仅验证训练链路，不作为正式 baseline 结果。
+* baseline 配置固定为 YOLOv8n、640、100 epochs、seed 42、`amp=false`。
+* baseline dry-run 已通过，未启动正式训练。
+
+未完成：
+
+* 尚未在 RTX 3090 上执行正式 baseline training。
+* 尚未产生正式 baseline 的 Precision、Recall、mAP 或 `best.pt`。
+* 尚未执行 ONNX export。
+
+阻塞问题：
+
+* 代码与数据准备无阻塞。
+* 正式训练需要在 RTX 3090 环境中确认依赖和显存后执行。
+
+下一步计划：
+
+* 在 RTX 3090 训练环境中安装 `requirements-lock.txt`。
+* 执行 baseline dry-run，确认 GPU、路径和 `batch=16`。
+* 使用冻结配置运行正式 baseline，并保存真实实验记录和 `best.pt`。
+* 正式训练完成后进入 ONNX export。
+
+备注：
+
+* 一次早期 smoke 尝试因 NumPy / Matplotlib 环境冲突失败，失败记录保留；随后在独立 `.venv` 中验证成功。
+* 本轮没有运行正式 baseline，没有上传数据，没有提交数据集或权重文件。
+
+---
+
+### 2026-07-12 - NEU-DET 训练阶段完成与模型冻结
+
+当前工作：
+
+* 在 RTX 3090 上完成 V1～V6 及多 seed（seed=7、seed=123、seed=42 deterministic）共 9 组 YOLOv8n baseline 训练实验。
+* 完成三 seed deterministic baseline 稳定性统计（mAP50-95 σ≈0.006）。
+* 完成全部实验逐类别（6 类）validation AP50、AP50-95、Precision、Recall 指标提取。
+* 依据 mAP50-95 和 Recall 优先的工程规则，选定 seed=7 deterministic 为最终冻结模型。
+* 冻结模型路径：`models/pytorch/yolov8n_neudet_frozen.pt`，SHA256 已验证。
+* 完成 frozen model 在 test split 上的最终评价（mAP50-95=0.431）。
+* 生成训练实验汇总表（`results/training/training_experiment_summary.csv` / `.json`）。
+* 生成训练最终报告（`docs/TRAINING_FINAL_REPORT.md`）和模型冻结记录（`docs/MODEL_FREEZE_RECORD.md`）。
+* 创建训练阶段归档目录和压缩包。
+
+修改文件：
+
+* `configs/train/yolov8n_neudet_baseline_seed42_deterministic.yaml`（新增）
+* `configs/train/yolov8n_neudet_v2.yaml` 等 V2～V6 配置（新增）
+* `configs/train/yolov8n_neudet_baseline_seed7.yaml`、`_seed123.yaml`（新增）
+* `models/pytorch/yolov8n_neudet_frozen.pt`（新增，Git 忽略）
+* `docs/TRAINING_FINAL_REPORT.md`（新增）
+* `docs/MODEL_FREEZE_RECORD.md`（新增）
+* `results/training/training_experiment_summary.csv` / `.json`（新增）
+* `scripts/extract_per_class_metrics.py`（新增）
+* `scripts/run_seed42_deterministic_training.py`（新增）
+* `docs/personal/TASKS.md`、`EXPERIMENT_PLAN.md`、`DECISIONS.md`、`ENVIRONMENT.md`（更新）
+* `.gitignore`（更新）
+
+已完成：
+
+* NEU-DET 转换和全量 label 校验完成（4186 个有效 bbox）。
+* 本地 GTX 1050 Ti smoke test 完成。
+* RTX 3090 多 seed 和有限训练策略实验全部完成。
+* 所有实验 validation 指标（整体 + 六类别）完整提取，无估算数据。
+* 模型冻结完成，SHA256 已验证。
+* test split 最终评价完成（含 confusion matrix、PR/F1/P/R curves、预测图）。
+* 训练阶段正式结束。
+
+未完成：
+
+* 尚未执行 ONNX export。
+* 尚未执行 TensorRT 转换。
+* 尚未开始 C++ ONNX Runtime / TensorRT 部署代码。
+
+阻塞问题：
+
+* 无阻塞。
+
+下一步计划：
+
+* 进入 ONNX export 与 ONNX Runtime 推理一致性验证阶段。
+* 使用 frozen model 导出 ONNX（opset、动态/静态 shape 待定）。
+* 验证 PyTorch vs ONNX Runtime 输出一致性。
+
+备注：
+
+* V2～V6 均未在 mAP50-95 上超过 baseline，训练阶段不继续扩大超参数搜索。
+* seed=7 和 seed=42 deterministic 属于同一性能水平，选择基于工程规则而非统计显著差异。
+* test split 结果仅用于最终报告，未用于模型选择。
+
+---
 
 当前工作：
 

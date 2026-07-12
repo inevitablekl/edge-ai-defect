@@ -1,0 +1,16 @@
+# YOLOv8n NEU-DET v2: extended training (200 epochs) to evaluate mAP gains.
+experiment_name: yolov8n_neudet_v2
+dataset_yaml: data/yolo/neu_det/dataset.yaml
+model: models/pretrained/yolov8n.pt
+task: detect
+mode: train
+imgsz: 640
+epochs: 200
+batch: 16
+device: 0
+workers: 4
+patience: 50
+seed: 42
+optimizer: auto
+amp: false
+experiment_root: experiments/training
