@@ -917,15 +917,15 @@ SHA256: 5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7
 备选方案：
 
 - seed=42 deterministic baseline（mAP50 最高，mAP50-95 与 seed=7 仅差 0.001）。
-- seed=123 deterministic baseline（Recall 最高，但 mAP50-95 显著低于均值）。
-- V1 baseline（非 deterministic，不可复现）。
+- seed=123 deterministic baseline（Recall 最高，但名义 mAP50-95 低于另外两个 seed；不作显著性结论）。
+- V1 / seed=42 repeat（真实 `args.yaml` 均为 `deterministic=true`，两者有效参数和指标一致）。
 - V2～V6 变体（均未在 mAP50-95 上获得稳定提升）。
 
 选择理由：
 
 - mAP50-95 在所有 deterministic baseline 中名义最高（0.45085），虽然与 seed=42 的 0.001 差距远小于三次实验观察到的波动范围（σ≈0.006）。
 - Recall 高于 seed=42 deterministic，满足性能相当模型优先选择较高 Recall 的工程规则。
-- deterministic=true，训练可复现。
+- `deterministic=true` 提高固定软件栈和硬件条件下的可重复性，但不保证跨平台、驱动或框架版本的位级一致。
 - 属于同一性能水平内的工程选择，不宣称统计显著优胜。
 
 影响范围：
@@ -933,6 +933,7 @@ SHA256: 5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7
 - 后续所有 ONNX export、TensorRT 转换、Jetson 部署实验统一使用此冻结模型及对应 SHA256。
 - test split 结果仅用于最终报告，不得反向用于训练调参或模型选择。
 - 训练阶段不再继续扩大超参数搜索。
+- 轻量机器可读证据保存在 `results/training/evidence/`；冻结模型和完整归档不进入 Git。
 
 后续调整：
 

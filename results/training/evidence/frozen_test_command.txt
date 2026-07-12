@@ -1,0 +1,1 @@
+yolo detect val model=models/pytorch/yolov8n_neudet_frozen.pt data=data/yolo/neu_det/dataset.yaml split=test imgsz=640 batch=16 device=0

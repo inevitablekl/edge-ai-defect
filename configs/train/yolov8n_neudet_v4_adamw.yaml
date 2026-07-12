@@ -1,4 +1,4 @@
-# v4: AdamW optimizer experiment. All else = v1 baseline.
+# Combined optimizer policy and learning-rate experiment: AdamW, lr0=0.001.
 experiment_name: yolov8n_neudet_v4_adamw
 dataset_yaml: data/yolo/neu_det/dataset.yaml
 model: models/pretrained/yolov8n.pt

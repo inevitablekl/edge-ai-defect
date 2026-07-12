@@ -1,0 +1,69 @@
+{
+  "source_checkpoint": "models/pytorch/yolov8n_neudet_frozen.pt",
+  "source_checkpoint_sha256": "5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7",
+  "data_yaml": "data/yolo/neu_det/dataset.yaml",
+  "split": "test",
+  "imgsz": 640,
+  "batch": 16,
+  "image_count": 180,
+  "instance_count": 442,
+  "metric_source": "Existing frozen-model test evaluation metrics recorded by the training-stage evidence patch",
+  "source_command": "yolo detect val model=models/pytorch/yolov8n_neudet_frozen.pt data=data/yolo/neu_det/dataset.yaml split=test imgsz=640 batch=16 device=0",
+  "generated_from": {
+    "metrics": "edge-ai-defect_training_evidence_patch_20260712.tar.gz:frozen_test_metrics.json",
+    "image_count": "data/yolo/neu_det/images/test regular files",
+    "instance_count": "non-empty YOLO label lines in data/yolo/neu_det/labels/test/*.txt",
+    "artifacts": "edge-ai-defect_training_stage_20260712.tar.gz:E_test_evaluation"
+  },
+  "generated_at": "2026-07-12T18:28:50+08:00",
+  "original_test_started_at": "2026-07-12 16:33:56",
+  "original_test_ended_at": "2026-07-12 16:34:04",
+  "ultralytics_version": "8.4.50",
+  "pytorch_version": "2.3.1+cu118",
+  "cuda_version": "11.8",
+  "provenance_note": "This summary was reorganized during training closeout from the existing test evaluation and fixed dataset. It was not emitted automatically as the original test_summary.json. No training or validation was rerun, and the test split was not used for model selection or tuning.",
+  "overall": {
+    "mAP50": 0.769,
+    "mAP50_95": 0.431,
+    "precision": 0.724,
+    "recall": 0.728
+  },
+  "per_class": {
+    "crazing": {
+      "ap50": 0.405,
+      "ap50_95": 0.168,
+      "precision": 0.46,
+      "recall": 0.311
+    },
+    "inclusion": {
+      "ap50": 0.742,
+      "ap50_95": 0.396,
+      "precision": 0.676,
+      "recall": 0.673
+    },
+    "patches": {
+      "ap50": 0.921,
+      "ap50_95": 0.568,
+      "precision": 0.799,
+      "recall": 0.912
+    },
+    "pitted_surface": {
+      "ap50": 0.857,
+      "ap50_95": 0.541,
+      "precision": 0.831,
+      "recall": 0.848
+    },
+    "rolled-in_scale": {
+      "ap50": 0.729,
+      "ap50_95": 0.324,
+      "precision": 0.677,
+      "recall": 0.699
+    },
+    "scratches": {
+      "ap50": 0.963,
+      "ap50_95": 0.59,
+      "precision": 0.9,
+      "recall": 0.925
+    }
+  }
+}

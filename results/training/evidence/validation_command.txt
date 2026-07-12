@@ -1,0 +1,4 @@
+For each checkpoint listed in validation_metrics_by_experiment.json:
+model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0, verbose=False, plots=False)
+
+The validation was executed on the historical RTX 3090 training host while generating the external evidence patch. It was not rerun when these lightweight records were committed.

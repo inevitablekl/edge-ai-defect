@@ -369,12 +369,14 @@ measured_frames: 500
 
 截至 2026-07-12，E1 模型精度实验（640 输入尺寸）已正式完成：
 
-* V1 baseline（seed=42）、seed=7 deterministic、seed=123 deterministic、seed=42 deterministic、V2 extended epochs、V3 no mosaic、V4 AdamW、V5 cosine LR、V6 no warmup 共 9 组实验全部完成。
+* V1 baseline、两个 seed-only repeat、seed=42 同参数 repeat、V2 extended schedule、V3 Mosaic controls、V4 AdamW + lr0、V5 cosine LR、V6 no warmup 共 9 组实验全部完成；真实 `args.yaml` 均为 `deterministic=true`。
 * V2～V6 变体均未在 mAP50-95 上获得超过 baseline 的稳定提升。
 * 最终冻结模型：seed=7 deterministic（`models/pytorch/yolov8n_neudet_frozen.pt`，SHA256 `5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7`）。
 * Test split 最终评价：mAP50=0.769，mAP50-95=0.431。
 * 320 和 416 输入尺寸的训练与评价不在训练阶段范围内 — 这些尺寸将仅在 ONNX/TensorRT 部署实验（E4）中通过输入 resize 评估推理性能差异，不重新训练模型。
 * 详细结果见 `docs/TRAINING_FINAL_REPORT.md`。
+* V2 配置为 200 epochs、patience 50，early stopping 后实际完成 161 epochs；V3 同时关闭 `mosaic` 和 `close_mosaic`；V4 同时设置显式 AdamW 和 `lr0=0.001`。V5、V6 为严格单变量实验。
+* 真实 effective args、validation/test 指标、命令和 provenance 见 `results/training/evidence/`。test split 只在模型冻结后使用，未反向调参。
 
 E1 状态：
 

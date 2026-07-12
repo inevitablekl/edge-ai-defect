@@ -101,8 +101,8 @@ Evaluated with the frozen model at `experiments/evaluation/yolov8n_neudet_frozen
 
 1. **mAP50-95 (Priority 1)**: 0.45085 — 在三个 deterministic baseline 运行中名义最高。与 seed=42 deterministic 的差距（0.001）远小于三次种子实验观察到的波动范围（σ≈0.006），两者属于同一性能水平。
 2. **Recall (Priority 2)**: 0.74469 — 高于 seed=42 deterministic（0.73257），满足性能相当模型优先选择较高 Recall 的工程规则。
-3. **Deterministic**: Training used `deterministic=true`, ensuring full reproducibility.
-4. **Within baseline range**: All metrics fall within the 3-seed deterministic baseline fluctuation range.
+3. **Repeatability setting**: Training used `deterministic=true`, which improves repeatability under the recorded software stack and hardware but does not guarantee bitwise-identical results across platforms or driver/framework versions.
+4. **Observed seed range**: The metrics are within the range observed across three seeds; this limited sample is not a general statistical bound.
 5. **Complete records**: Training completed all 100 epochs with full training logs, results.csv, and best.pt.
 
 ## Known Weaknesses
@@ -118,4 +118,6 @@ This frozen model is the canonical training output and will be used for:
 2. **TensorRT conversion** — for NVIDIA Jetson inference
 3. **Edge deployment** — final integration on target hardware
 
-The model must NOT be retrained, fine-tuned, or modified. All future work builds on this frozen artifact.
+The model must NOT be retrained, fine-tuned, or modified during the deployment comparison. All future work builds on this frozen artifact.
+
+Machine-readable effective args, validation metrics, test metrics, commands, and provenance are tracked in `results/training/evidence/`. The `.pt` model and external training/evidence archives remain local-only and are not committed to Git. The test split was evaluated only after model selection and was not used for tuning.

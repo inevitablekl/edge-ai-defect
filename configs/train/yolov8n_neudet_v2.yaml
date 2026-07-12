@@ -1,4 +1,4 @@
-# YOLOv8n NEU-DET v2: extended training (200 epochs) to evaluate mAP gains.
+# Extended schedule: epochs=200 with patience=50; stopped after 161 epochs.
 experiment_name: yolov8n_neudet_v2
 dataset_yaml: data/yolo/neu_det/dataset.yaml
 model: models/pretrained/yolov8n.pt
@@ -11,6 +11,7 @@ device: 0
 workers: 4
 patience: 50
 seed: 42
+deterministic: true
 optimizer: auto
 amp: false
 experiment_root: experiments/training

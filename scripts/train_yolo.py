@@ -38,6 +38,19 @@ SMOKE_OVERRIDES = {
     "imgsz": 320,
     "batch": 2,
 }
+TRAIN_OPTION_KEYS = (
+    "workers",
+    "patience",
+    "seed",
+    "deterministic",
+    "optimizer",
+    "amp",
+    "mosaic",
+    "close_mosaic",
+    "lr0",
+    "cos_lr",
+    "warmup_epochs",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -215,8 +228,7 @@ def build_train_command(config: dict[str, Any], run_dir: Path) -> list[str]:
         "name=train",
         "exist_ok=False",
     ]
-    optional_keys = ("workers", "patience", "seed", "optimizer", "amp")
-    for key in optional_keys:
+    for key in TRAIN_OPTION_KEYS:
         if key in config and config[key] is not None:
             command.append(f"{key}={config[key]}")
     return command
@@ -247,7 +259,15 @@ def write_run_records(
     (run_dir / "start_time.txt").write_text(start_time + "\n", encoding="utf-8")
     if end_time is not None:
         (run_dir / "end_time.txt").write_text(end_time + "\n", encoding="utf-8")
-    metrics = read_metrics_summary(run_dir)
+    metrics = read_metrics_summary(run_dir, configured_epochs=int(config["epochs"]))
+    train_dir = run_dir / "train"
+    results_path = train_dir / "results.csv"
+    best_path = train_dir / "weights" / "best.pt"
+    last_path = train_dir / "weights" / "last.pt"
+    generated_args_path = train_dir / "args.yaml"
+    stable_args_path = run_dir / "effective_args.yaml"
+    if generated_args_path.is_file():
+        shutil.copy2(generated_args_path, stable_args_path)
     summary = {
         "status": status,
         "return_code": return_code,
@@ -256,10 +276,24 @@ def write_run_records(
         "config_path": str(config_path),
         "run_dir": str(run_dir),
         "dataset_yaml": str(config["dataset_yaml"]),
+        "configured_epochs": int(config["epochs"]),
+        "completed_epochs": metrics.get("completed_epochs") if metrics else None,
+        "last_epoch": metrics.get("last_epoch") if metrics else None,
+        "best_epoch_by_map50_95": metrics.get("best_epoch_by_map50_95") if metrics else None,
+        "last_epoch_metrics": metrics.get("last_epoch_metrics") if metrics else None,
+        "best_recorded_metrics": metrics.get("best_recorded_metrics") if metrics else None,
+        "results_csv": str(results_path),
+        "best_pt": str(best_path),
+        "last_pt": str(last_path),
+        "ultralytics_args_yaml": str(generated_args_path),
+        "effective_args_record": str(stable_args_path) if stable_args_path.is_file() else None,
+        "git_commit": current_git_commit(),
+        "environment_record": str(run_dir / "environment_snapshot.txt"),
         "command": command,
         "metrics": metrics,
         "note": (
-            "Metrics were read from the real Ultralytics results.csv."
+            "Best recorded metrics select the maximum recorded metrics/mAP50-95(B) row; "
+            "this does not claim to reproduce Ultralytics' internal checkpoint fitness."
             if metrics is not None
             else "No Ultralytics metrics file was available when this record was written."
         ),
@@ -270,7 +304,31 @@ def write_run_records(
     )
 
 
-def read_metrics_summary(run_dir: Path) -> dict[str, Any] | None:
+def parse_results_row(raw_row: dict[str, str]) -> dict[str, int | float | str]:
+    parsed: dict[str, int | float | str] = {}
+    for raw_key, raw_value in raw_row.items():
+        key = raw_key.strip()
+        value = raw_value.strip()
+        try:
+            number = float(value)
+            parsed[key] = int(number) if key == "epoch" and number.is_integer() else number
+        except ValueError:
+            parsed[key] = value
+    return parsed
+
+
+def recorded_metrics(row: dict[str, int | float | str]) -> dict[str, int | float | str]:
+    return {
+        key: value
+        for key, value in row.items()
+        if key == "epoch" or key.startswith("metrics/")
+    }
+
+
+def read_metrics_summary(
+    run_dir: Path,
+    configured_epochs: int,
+) -> dict[str, Any] | None:
     results_path = run_dir / "train" / "results.csv"
     if not results_path.is_file():
         return None
@@ -280,19 +338,28 @@ def read_metrics_summary(run_dir: Path) -> dict[str, Any] | None:
     if not rows:
         return None
 
-    last_row: dict[str, int | float | str] = {}
-    for raw_key, raw_value in rows[-1].items():
-        key = raw_key.strip()
-        value = raw_value.strip()
-        try:
-            number = float(value)
-            last_row[key] = int(number) if key == "epoch" and number.is_integer() else number
-        except ValueError:
-            last_row[key] = value
+    parsed_rows = [parse_results_row(row) for row in rows]
+    last_row = parsed_rows[-1]
+    metric_key = "metrics/mAP50-95(B)"
+    rows_with_metric = [
+        row for row in parsed_rows if isinstance(row.get(metric_key), (int, float))
+    ]
+    best_row = max(rows_with_metric, key=lambda row: float(row[metric_key])) if rows_with_metric else None
+    last_epoch = last_row.get("epoch")
 
     return {
         "source": str(results_path),
-        "last_epoch": last_row,
+        "configured_epochs": configured_epochs,
+        "completed_epochs": last_epoch,
+        "last_epoch": last_epoch,
+        "best_epoch_by_map50_95": best_row.get("epoch") if best_row else None,
+        "selection_metric": metric_key if best_row else None,
+        "last_epoch_metrics": recorded_metrics(last_row),
+        "best_recorded_metrics": recorded_metrics(best_row) if best_row else None,
+        "checkpoint_selection_limit": (
+            "The recorded best row is selected by validation mAP50-95 only; "
+            "Ultralytics may use a different internal fitness for best.pt."
+        ),
     }
 
 

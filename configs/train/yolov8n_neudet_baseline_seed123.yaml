@@ -1,5 +1,5 @@
 # Baseline multi-seed reproducibility run — seed=123.
-# All parameters identical to v1 baseline except seed and deterministic.
+# All effective training parameters are identical to v1 baseline except seed.
 experiment_name: yolov8n_neudet_baseline_seed123
 dataset_yaml: data/yolo/neu_det/dataset.yaml
 model: models/pretrained/yolov8n.pt

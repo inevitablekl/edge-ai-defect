@@ -70,6 +70,7 @@ experiments/results/**
 experiments/figures/**
 experiments/tables/**
 experiments/training/**
+experiments/evaluation/**
 !experiments/training/**/
 !experiments/training/**/.gitkeep
 !experiments/training/**/config.yaml
@@ -82,6 +83,7 @@ experiments/training/**
 !experiments/training/**/end_time.txt
 !experiments/training/**/summary.json
 !experiments/training/**/README.md
+!experiments/training/**/effective_args.yaml
 !experiments/logs/.gitkeep
 !experiments/results/.gitkeep
 !experiments/figures/.gitkeep
@@ -110,6 +112,14 @@ experiments/training/**
 # Track lightweight training result summaries.
 !results/training/*.csv
 !results/training/*.json
+!results/training/evidence/**/
+!results/training/evidence/**/*.json
+!results/training/evidence/**/*.csv
+!results/training/evidence/**/*.yaml
+!results/training/evidence/**/*.txt
+
+# Evaluation outputs are local-only; curated summaries live under results/.
+predictions.json
 
 # Archive artifacts (local only, not committed).
 artifacts/transfer/

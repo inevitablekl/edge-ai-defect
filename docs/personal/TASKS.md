@@ -582,8 +582,8 @@ NEU-DET
 * `docs/TRAINING_FINAL_REPORT.md`（新增）
 * `docs/MODEL_FREEZE_RECORD.md`（新增）
 * `results/training/training_experiment_summary.csv` / `.json`（新增）
-* `scripts/extract_per_class_metrics.py`（新增）
-* `scripts/run_seed42_deterministic_training.py`（新增）
+* `scripts/extract_per_class_metrics.py`（训练时临时使用；最终证据入库后已删除）
+* `scripts/run_seed42_deterministic_training.py`（训练时临时使用；最终收尾已删除，后续统一通过 `train_yolo.py`）
 * `docs/personal/TASKS.md`、`EXPERIMENT_PLAN.md`、`DECISIONS.md`、`ENVIRONMENT.md`（更新）
 * `.gitignore`（更新）
 
@@ -681,6 +681,44 @@ NEU-DET
 
 ---
 
+### 2026-07-12 18:30 - 训练阶段最终审计收尾
+
+当前工作：
+
+* 修复统一训练入口的配置参数传递和运行摘要。
+* 将轻量 effective args、validation/test 指标、命令和 provenance 纳入 Git。
+* 参数化重构 evidence archive utility，并补充纯单元测试。
+* 修正文档中的 deterministic、统计解释和实验变量描述。
+
+已完成：
+
+* 全部 9 组真实 `args.yaml` 确认为 `deterministic=true`。
+* V2 记录为 configured 200 / completed 161；V3、V4 记录为关联参数组合实验；V5、V6 记录为严格单变量实验。
+* test 摘要补充真实 `image_count=180`、`instance_count=442` 和来源说明。
+* 删除重复且硬编码服务器路径的 seed42 训练脚本，后续统一使用 `scripts/train_yolo.py --config ...`。
+* 冻结模型、原始训练归档和 evidence patch 继续作为 Git 外本地资产保存。
+
+未完成：
+
+* 尚未执行 ONNX export。
+* 8 个非冻结 checkpoint 未进入离线归档，无法离线重复校验其 SHA256；该限制已在 provenance 中明确记录。
+
+阻塞问题：
+
+* 训练阶段无阻塞；完成本轮提交后可合并 `main`。
+
+下一步计划：
+
+* 从更新后的 `main` 创建 `feature/onnx-export`。
+* 使用冻结模型导出 ONNX，并执行 PyTorch / ONNX Runtime 输出一致性验证。
+
+备注：
+
+* 本轮未运行训练、validation、ONNX export 或 TensorRT。
+* test split 未用于模型选择或训练调参。
+
+---
+
 ## 8. Agent 更新规则
 
 每次 agent 更新本文档时，应遵守以下规则：
@@ -743,7 +781,7 @@ NEU-DET
 
 近期优先级：
 
-1. 在 RTX 3090 环境中复现 `.venv` 依赖并执行 baseline dry-run。
-2. 确认 `batch=16` 显存可用后运行正式 YOLOv8n baseline。
-3. 记录正式 Precision、Recall、mAP 和 `best.pt`。
-4. 正式训练完成后实现 ONNX export 脚本。
+1. 合并训练阶段最终收尾提交到 `main`。
+2. 从 `main` 创建 `feature/onnx-export`。
+3. 使用冻结模型导出 ONNX，并记录 opset、shape 和导出环境。
+4. 验证 PyTorch 与 ONNX Runtime 的预处理、输出和后处理一致性。

@@ -11,6 +11,7 @@ device: 0
 workers: 4
 patience: 30
 seed: 42
+deterministic: true
 optimizer: auto
 amp: false
 experiment_root: experiments/training

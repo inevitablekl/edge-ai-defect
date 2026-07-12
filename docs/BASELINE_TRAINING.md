@@ -50,6 +50,7 @@ imgsz: 640
 epochs: 100
 batch: 16
 seed: 42
+deterministic: true
 amp: false
 ```
 
@@ -89,9 +90,12 @@ Each run is written to:
 experiments/training/yolov8n_neudet_baseline_<timestamp>/
 ```
 
-Git retains the resolved configuration, command, environment snapshot, timing,
-Git commit, and metrics summary. Checkpoints, caches, plots, prediction images,
-and large framework outputs remain ignored.
+Git retains the resolved configuration, actual Ultralytics `args.yaml`, command,
+environment snapshot, timing, Git commit, and metrics summary. The summary
+distinguishes configured/completed epochs, last-epoch metrics, and the best row
+recorded by mAP50-95; it does not claim that this reproduces Ultralytics'
+internal checkpoint fitness. Checkpoints, caches, plots, prediction images, and
+large framework outputs remain ignored.
 
 ## Evaluation Metrics
 

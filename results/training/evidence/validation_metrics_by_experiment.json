@@ -1,0 +1,533 @@
+[
+  {
+    "experiment_name": "V1 baseline",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_20260712_122943",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_20260712_122943/train/weights/best.pt",
+    "checkpoint_sha256": "390a377a57ec7339633d8c5e47d32c2ddaabe46317f9cdc60c9145f8733bfbee",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:20",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.776985,
+      "mAP50_95": 0.44983,
+      "precision": 0.732681,
+      "recall": 0.732567
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.498649,
+        "ap50_95": 0.196172,
+        "precision": 0.571031,
+        "recall": 0.431499
+      },
+      "inclusion": {
+        "ap50": 0.826447,
+        "ap50_95": 0.459298,
+        "precision": 0.760174,
+        "recall": 0.799065
+      },
+      "patches": {
+        "ap50": 0.935485,
+        "ap50_95": 0.628379,
+        "precision": 0.834146,
+        "recall": 0.915584
+      },
+      "pitted_surface": {
+        "ap50": 0.823291,
+        "ap50_95": 0.488981,
+        "precision": 0.792014,
+        "recall": 0.744124
+      },
+      "rolled-in_scale": {
+        "ap50": 0.629646,
+        "ap50_95": 0.313208,
+        "precision": 0.617332,
+        "recall": 0.572438
+      },
+      "scratches": {
+        "ap50": 0.948389,
+        "ap50_95": 0.612942,
+        "precision": 0.821392,
+        "recall": 0.932692
+      }
+    }
+  },
+  {
+    "experiment_name": "V2 extended epochs",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v2_20260712_125029",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v2_20260712_125029/train/weights/best.pt",
+    "checkpoint_sha256": "dcac254f51c75e4c43da551d92b894d46c7986f786d91989e27905e2cb66fff8",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:21",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.758164,
+      "mAP50_95": 0.440908,
+      "precision": 0.725328,
+      "recall": 0.710467
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.451132,
+        "ap50_95": 0.176971,
+        "precision": 0.528389,
+        "recall": 0.309085
+      },
+      "inclusion": {
+        "ap50": 0.806699,
+        "ap50_95": 0.466724,
+        "precision": 0.741791,
+        "recall": 0.794393
+      },
+      "patches": {
+        "ap50": 0.943597,
+        "ap50_95": 0.63294,
+        "precision": 0.869938,
+        "recall": 0.896104
+      },
+      "pitted_surface": {
+        "ap50": 0.805049,
+        "ap50_95": 0.486558,
+        "precision": 0.852811,
+        "recall": 0.724138
+      },
+      "rolled-in_scale": {
+        "ap50": 0.599224,
+        "ap50_95": 0.299092,
+        "precision": 0.592371,
+        "recall": 0.596774
+      },
+      "scratches": {
+        "ap50": 0.943284,
+        "ap50_95": 0.583163,
+        "precision": 0.766668,
+        "recall": 0.942308
+      }
+    }
+  },
+  {
+    "experiment_name": "V3 no mosaic",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v3_no_mosaic_20260712_133730",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v3_no_mosaic_20260712_133730/train/weights/best.pt",
+    "checkpoint_sha256": "9240d3fd59a5da3c801b450138671175cd48d26a26a31446d9e1ab90ca3f3b23",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:22",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.766214,
+      "mAP50_95": 0.43675,
+      "precision": 0.711626,
+      "recall": 0.733275
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.442023,
+        "ap50_95": 0.150984,
+        "precision": 0.559111,
+        "recall": 0.372414
+      },
+      "inclusion": {
+        "ap50": 0.830004,
+        "ap50_95": 0.451352,
+        "precision": 0.780403,
+        "recall": 0.813084
+      },
+      "patches": {
+        "ap50": 0.9394,
+        "ap50_95": 0.626964,
+        "precision": 0.828989,
+        "recall": 0.902597
+      },
+      "pitted_surface": {
+        "ap50": 0.78696,
+        "ap50_95": 0.479098,
+        "precision": 0.733278,
+        "recall": 0.695241
+      },
+      "rolled-in_scale": {
+        "ap50": 0.635186,
+        "ap50_95": 0.306969,
+        "precision": 0.595273,
+        "recall": 0.645161
+      },
+      "scratches": {
+        "ap50": 0.963711,
+        "ap50_95": 0.605134,
+        "precision": 0.7727,
+        "recall": 0.971154
+      }
+    }
+  },
+  {
+    "experiment_name": "seed=7 deterministic",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed7_20260712_140145",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed7_20260712_140145/train/weights/best.pt",
+    "checkpoint_sha256": "5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:23",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.7666,
+      "mAP50_95": 0.450849,
+      "precision": 0.692232,
+      "recall": 0.744685
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.471797,
+        "ap50_95": 0.182716,
+        "precision": 0.510759,
+        "recall": 0.417607
+      },
+      "inclusion": {
+        "ap50": 0.833004,
+        "ap50_95": 0.465528,
+        "precision": 0.732985,
+        "recall": 0.808411
+      },
+      "patches": {
+        "ap50": 0.93497,
+        "ap50_95": 0.637306,
+        "precision": 0.777089,
+        "recall": 0.922078
+      },
+      "pitted_surface": {
+        "ap50": 0.791566,
+        "ap50_95": 0.490776,
+        "precision": 0.681875,
+        "recall": 0.747126
+      },
+      "rolled-in_scale": {
+        "ap50": 0.605089,
+        "ap50_95": 0.30135,
+        "precision": 0.586101,
+        "recall": 0.620968
+      },
+      "scratches": {
+        "ap50": 0.963171,
+        "ap50_95": 0.627422,
+        "precision": 0.864581,
+        "recall": 0.951923
+      }
+    }
+  },
+  {
+    "experiment_name": "seed=123 deterministic",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed123_20260712_141510",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed123_20260712_141510/train/weights/best.pt",
+    "checkpoint_sha256": "badee99e9a5462aa5fb225ef9ca2a3c45ad082393d48657f3165c5ac82d06ed7",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:25",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.764807,
+      "mAP50_95": 0.440169,
+      "precision": 0.676943,
+      "recall": 0.760887
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.448431,
+        "ap50_95": 0.169545,
+        "precision": 0.479787,
+        "recall": 0.457976
+      },
+      "inclusion": {
+        "ap50": 0.807692,
+        "ap50_95": 0.449951,
+        "precision": 0.715405,
+        "recall": 0.82243
+      },
+      "patches": {
+        "ap50": 0.934143,
+        "ap50_95": 0.628014,
+        "precision": 0.789412,
+        "recall": 0.915584
+      },
+      "pitted_surface": {
+        "ap50": 0.817743,
+        "ap50_95": 0.495047,
+        "precision": 0.753798,
+        "recall": 0.781609
+      },
+      "rolled-in_scale": {
+        "ap50": 0.628539,
+        "ap50_95": 0.317534,
+        "precision": 0.548103,
+        "recall": 0.635797
+      },
+      "scratches": {
+        "ap50": 0.952295,
+        "ap50_95": 0.580921,
+        "precision": 0.775156,
+        "recall": 0.951923
+      }
+    }
+  },
+  {
+    "experiment_name": "seed=42 deterministic",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed42_deterministic_20260712_161806",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_baseline_seed42_deterministic_20260712_161806/train/weights/best.pt",
+    "checkpoint_sha256": "6ee529faaeea5596e99c76257031e82c4e2d4fb00996050c460716431edb2672",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:26",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.776985,
+      "mAP50_95": 0.44983,
+      "precision": 0.732681,
+      "recall": 0.732567
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.498649,
+        "ap50_95": 0.196172,
+        "precision": 0.571031,
+        "recall": 0.431499
+      },
+      "inclusion": {
+        "ap50": 0.826447,
+        "ap50_95": 0.459298,
+        "precision": 0.760174,
+        "recall": 0.799065
+      },
+      "patches": {
+        "ap50": 0.935485,
+        "ap50_95": 0.628379,
+        "precision": 0.834146,
+        "recall": 0.915584
+      },
+      "pitted_surface": {
+        "ap50": 0.823291,
+        "ap50_95": 0.488981,
+        "precision": 0.792014,
+        "recall": 0.744124
+      },
+      "rolled-in_scale": {
+        "ap50": 0.629646,
+        "ap50_95": 0.313208,
+        "precision": 0.617332,
+        "recall": 0.572438
+      },
+      "scratches": {
+        "ap50": 0.948389,
+        "ap50_95": 0.612942,
+        "precision": 0.821392,
+        "recall": 0.932692
+      }
+    }
+  },
+  {
+    "experiment_name": "V4 AdamW",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v4_adamw_20260712_142809",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v4_adamw_20260712_142809/train/weights/best.pt",
+    "checkpoint_sha256": "f72dc4908cb8ca2d6c252b1c5f2a6911561f7a816baf2b7270a1b48ff7345ffc",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:27",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.756644,
+      "mAP50_95": 0.43769,
+      "precision": 0.655287,
+      "recall": 0.759706
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.431384,
+        "ap50_95": 0.176281,
+        "precision": 0.469286,
+        "recall": 0.462069
+      },
+      "inclusion": {
+        "ap50": 0.794602,
+        "ap50_95": 0.442082,
+        "precision": 0.70393,
+        "recall": 0.836449
+      },
+      "patches": {
+        "ap50": 0.939164,
+        "ap50_95": 0.647113,
+        "precision": 0.791646,
+        "recall": 0.935065
+      },
+      "pitted_surface": {
+        "ap50": 0.773092,
+        "ap50_95": 0.463682,
+        "precision": 0.703662,
+        "recall": 0.735632
+      },
+      "rolled-in_scale": {
+        "ap50": 0.654538,
+        "ap50_95": 0.311865,
+        "precision": 0.517269,
+        "recall": 0.637097
+      },
+      "scratches": {
+        "ap50": 0.947084,
+        "ap50_95": 0.585118,
+        "precision": 0.745928,
+        "recall": 0.951923
+      }
+    }
+  },
+  {
+    "experiment_name": "V5 cosine LR",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v5_coslr_20260712_144107",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v5_coslr_20260712_144107/train/weights/best.pt",
+    "checkpoint_sha256": "39168666ccbdb29549ec20618e7bc64a5e050fda54e13b253f395ce68c803b0f",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:28",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.749548,
+      "mAP50_95": 0.443811,
+      "precision": 0.71953,
+      "recall": 0.703181
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.394455,
+        "ap50_95": 0.154626,
+        "precision": 0.536695,
+        "recall": 0.296552
+      },
+      "inclusion": {
+        "ap50": 0.843961,
+        "ap50_95": 0.485133,
+        "precision": 0.760976,
+        "recall": 0.794393
+      },
+      "patches": {
+        "ap50": 0.933895,
+        "ap50_95": 0.646726,
+        "precision": 0.805685,
+        "recall": 0.909091
+      },
+      "pitted_surface": {
+        "ap50": 0.791393,
+        "ap50_95": 0.481734,
+        "precision": 0.849239,
+        "recall": 0.712227
+      },
+      "rolled-in_scale": {
+        "ap50": 0.581531,
+        "ap50_95": 0.301856,
+        "precision": 0.564683,
+        "recall": 0.564516
+      },
+      "scratches": {
+        "ap50": 0.952055,
+        "ap50_95": 0.59279,
+        "precision": 0.799901,
+        "recall": 0.942308
+      }
+    }
+  },
+  {
+    "experiment_name": "V6 no warmup",
+    "experiment_dir": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v6_no_warmup_20260712_145401",
+    "checkpoint_path": "/root/wklproject/edge-ai-defect/experiments/training/yolov8n_neudet_v6_no_warmup_20260712_145401/train/weights/best.pt",
+    "checkpoint_sha256": "060892697313ee47b99bc3e9aaa53c62712d7018b430b07e889f2f345e9e00e5",
+    "validation_command": "model.val(data='data/yolo/neu_det/dataset.yaml', split='val', imgsz=640, batch=16, device=0)",
+    "validation_timestamp": "2026-07-12 17:49:30",
+    "data_yaml": "data/yolo/neu_det/dataset.yaml",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "ultralytics_version": "8.4.50",
+    "pytorch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "overall": {
+      "mAP50": 0.761007,
+      "mAP50_95": 0.441474,
+      "precision": 0.737115,
+      "recall": 0.707946
+    },
+    "per_class": {
+      "crazing": {
+        "ap50": 0.431438,
+        "ap50_95": 0.170255,
+        "precision": 0.537042,
+        "recall": 0.317241
+      },
+      "inclusion": {
+        "ap50": 0.807957,
+        "ap50_95": 0.450769,
+        "precision": 0.735586,
+        "recall": 0.799065
+      },
+      "patches": {
+        "ap50": 0.936088,
+        "ap50_95": 0.64224,
+        "precision": 0.860106,
+        "recall": 0.902597
+      },
+      "pitted_surface": {
+        "ap50": 0.802164,
+        "ap50_95": 0.492264,
+        "precision": 0.837156,
+        "recall": 0.724138
+      },
+      "rolled-in_scale": {
+        "ap50": 0.621366,
+        "ap50_95": 0.303056,
+        "precision": 0.600924,
+        "recall": 0.564516
+      },
+      "scratches": {
+        "ap50": 0.967032,
+        "ap50_95": 0.590259,
+        "precision": 0.851879,
+        "recall": 0.94012
+      }
+    }
+  }
+]

@@ -10,22 +10,23 @@
 
 ## 1. Experiment Overview
 
-| Experiment | Seed | Deterministic | Epochs | Variant | Best Epoch | mAP50 | mAP50-95 | Precision | Recall | Train Time |
+| Experiment | Seed | Deterministic | Configured / Completed Epochs | Variant | Best Epoch by mAP50-95 | mAP50 | mAP50-95 | Precision | Recall | Train Time |
 |---|---|---|---|---|---|---|---|---|---|---|
-| V1 baseline | 42 | no | 100 | baseline | 100 | 0.77699 | 0.44983 | 0.73268 | 0.73257 | 760s |
-| seed=7 | 7 | yes | 100 | baseline deterministic | 100 | 0.76660 | **0.45085** | 0.69223 | 0.74469 | 763s |
-| seed=123 | 123 | yes | 100 | baseline deterministic | 99 | 0.76481 | 0.44017 | 0.67694 | 0.76089 | 764s |
-| seed=42 det | 42 | yes | 100 | baseline deterministic | 100 | 0.77699 | 0.44983 | 0.73268 | 0.73257 | 761s |
-| V2 | 42 | no | 200 | extended epochs | 111 | 0.75816 | 0.44091 | 0.72533 | 0.71047 | 1221s |
-| V3 | 42 | no | 100 | no mosaic | 93 | 0.76621 | 0.43675 | 0.71163 | 0.73328 | 747s |
-| V4 | 42 | yes | 100 | AdamW | 98 | 0.75664 | 0.43769 | 0.65529 | 0.75971 | 765s |
-| V5 | 42 | yes | 100 | cosine LR | 78 | 0.74955 | 0.44381 | 0.71953 | 0.70318 | 760s |
-| V6 | 42 | yes | 100 | no warmup | 99 | 0.76101 | 0.44147 | 0.73712 | 0.70795 | 768s |
+| V1 baseline | 42 | yes | 100 / 100 | baseline | 100 | 0.77699 | 0.44983 | 0.73268 | 0.73257 | 760s |
+| seed=7 | 7 | yes | 100 / 100 | seed-only repeat | 100 | 0.76660 | **0.45085** | 0.69223 | 0.74469 | 763s |
+| seed=123 | 123 | yes | 100 / 100 | seed-only repeat | 99 | 0.76481 | 0.44017 | 0.67694 | 0.76089 | 764s |
+| seed=42 repeat | 42 | yes | 100 / 100 | same effective args as V1 | 100 | 0.77699 | 0.44983 | 0.73268 | 0.73257 | 761s |
+| V2 | 42 | yes | 200 / 161 | epochs=200 + patience=50 | 111 | 0.75816 | 0.44091 | 0.72533 | 0.71047 | 1221s |
+| V3 | 42 | yes | 100 / 100 | mosaic=0 + close_mosaic=0 | 93 | 0.76621 | 0.43675 | 0.71163 | 0.73328 | 747s |
+| V4 | 42 | yes | 100 / 100 | AdamW + lr0=0.001 | 98 | 0.75664 | 0.43769 | 0.65529 | 0.75971 | 765s |
+| V5 | 42 | yes | 100 / 100 | cosine LR | 78 | 0.74955 | 0.44381 | 0.71953 | 0.70318 | 760s |
+| V6 | 42 | yes | 100 / 100 | no warmup | 99 | 0.76101 | 0.44147 | 0.73712 | 0.70795 | 768s |
 
 **Key findings**:
-- V2 (extended epochs), V3 (no mosaic), V4 (AdamW), V5 (cosine LR), V6 (no warmup) did not improve over the baseline.
-- V1 and seed=42 deterministic produced identical results (deterministic=true had no effect on seed=42 outcomes for this workload).
-- Original V1 was non-deterministic but is identical to seed=42 deterministic.
+- All nine effective `args.yaml` records contain `deterministic=true`.
+- V1 and the seed=42 repeat used the same effective parameters and produced identical metrics, providing a same-stack repeatability check.
+- V2 adjusts both the configured training duration and early-stopping patience; V3 adjusts the two Mosaic controls; V4 combines explicit AdamW with `lr0=0.001`. V5 and V6 are strict single-variable comparisons.
+- None of V2-V6 improved validation mAP50-95 over the baseline range observed in this study.
 
 ---
 
@@ -129,17 +130,17 @@ Using seeds {42, 7, 123}, all with `deterministic=true`.
 
 1. **mAP50-95 (Priority 1)**: 0.45085 — highest among all deterministic baseline runs.
 2. **Recall (Priority 2)**: 0.74469 — higher than seed=42 deterministic (0.73257), satisfying the tiebreaker criterion for equivalent models.
-3. **Deterministic**: `deterministic=true` ensures full training reproducibility.
-4. **Within baseline range**: All metrics are within the normal fluctuation of the 3-seed deterministic baseline (mAP50-95 σ=0.006).
-5. **Complete records**: All training artifacts (results.csv, best.pt, logs) are intact.
+3. **Repeatability setting**: `deterministic=true` improves repeatability for a fixed software stack and hardware environment, but does not guarantee bitwise-identical results across platforms, drivers, or framework versions.
+4. **Observed seed range**: The selected metrics fall inside the range observed in the three recorded seeds; three runs do not establish a general statistical bound.
+5. **Evidence boundary**: All runs retain archived `results.csv` and actual `args.yaml`. The seed=7 source checkpoint is preserved as the hash-identical frozen model; the other eight checkpoints remain historical server assets and are not part of the offline archive.
 
 ### Why Not Other Candidates
 
 | Candidate | Why Not Selected |
 |---|---|
-| V1 (seed=42 non-det) | Not deterministic; no reproducibility guarantee. |
-| seed=42 deterministic | Slightly lower Recall (0.73257 vs 0.74469) and mAP50-95 (0.44983 vs 0.45085). |
-| seed=123 | Significantly lower mAP50-95 (0.44017, >2σ below the mean). |
+| V1 / seed=42 repeat | Same effective parameters and performance level; seed=7 was preferred by the stated engineering tie-break rule. |
+| seed=42 repeat | Slightly lower Recall (0.73257 vs 0.74469) and nominally lower mAP50-95 (0.44983 vs 0.45085). |
+| seed=123 | Lower nominal mAP50-95 (0.44017), about 1.15 sample standard deviations below the three-seed mean; this is not a significance claim. |
 | V2-V6 | None improved mAP50-95 over baseline. |
 
 **Note**: seed=7 和 seed=42 deterministic 在 mAP50-95 上仅差 0.001，属于同一性能水平，该差异远小于三次种子实验观察到的波动范围（σ=0.006）。seed=7 是根据优先考虑 mAP50-95（优先级 1）和 Recall（优先级 2）的工程规则选定，不宣称其相比 seed=42 具有统计显著的性能优势。
@@ -206,7 +207,9 @@ yolo detect val model=models/pytorch/yolov8n_neudet_frozen.pt data=data/yolo/neu
 | Precision | 0.6922 | 0.724 | +0.032 |
 | Recall | 0.7447 | 0.728 | -0.017 |
 
-考虑到数据集规模较小（train 1260 / val 360 / test 180 张图像）且 test split 仅含 180 张图像，val→test mAP50-95 下降 0.020 目前未显示明显异常的泛化问题，但也不应将其视为严格的泛化边界估计。
+Test split 仅在模型选择和冻结后使用，结果未反向用于训练或调参。由于 test 仅含 180 张图像，val→test mAP50-95 下降 0.020 只能作为本次固定划分的观察结果，不能据此声明一般化的“正常波动边界”。
+
+Machine-readable validation/test evidence, actual effective args, commands, and offline provenance are tracked under `results/training/evidence/`.
 
 ---
 
@@ -267,9 +270,9 @@ The frozen model `models/pytorch/yolov8n_neudet_frozen.pt` is the canonical outp
 | `docs/MODEL_FREEZE_RECORD.md` | New |
 | `docs/TRAINING_FINAL_REPORT.md` | New (this file) |
 | `experiments/evaluation/yolov8n_neudet_frozen_test_20260712_163356/` | New (test evaluation) |
-| `experiments/validation_per_class_metrics.json` | Updated (added seed=42 det) |
-| `scripts/extract_per_class_metrics.py` | New |
-| `scripts/run_seed42_deterministic_training.py` | New |
+| `results/training/evidence/` | Lightweight effective args, validation/test metrics, commands, and provenance |
+| `results/training/evidence/validation_metrics_by_experiment.json` | Canonical machine-readable validation record; the historical one-off extraction script was removed |
+| `scripts/train_yolo.py` | Canonical YAML-driven training entry point for all future reproductions |
 
 ### Constraints Upheld
 
@@ -279,5 +282,6 @@ The frozen model `models/pytorch/yolov8n_neudet_frozen.pt` is the canonical outp
 - ✅ No YOLO model replacement
 - ✅ No ONNX export (deferred to next phase)
 - ✅ No TensorRT conversion (deferred)
-- ✅ No Git commit
 - ✅ No fabricated or estimated metrics
+
+The frozen model, original training archive, and external evidence patch are local-only assets and are intentionally excluded from Git. The next phase is ONNX export followed by PyTorch/ONNX Runtime consistency validation.

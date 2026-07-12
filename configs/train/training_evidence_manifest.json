@@ -1,0 +1,66 @@
+{
+  "frozen_source_experiment": "seed=7 deterministic",
+  "validation_metrics_json": "results/training/evidence/validation_metrics_by_experiment.json",
+  "validation_metrics_csv": "results/training/evidence/validation_metrics_by_experiment.csv",
+  "validation_command": "results/training/evidence/validation_command.txt",
+  "test_metrics_json": "results/training/evidence/frozen_test_metrics.json",
+  "test_metrics_csv": "results/training/evidence/frozen_test_metrics.csv",
+  "test_command": "results/training/evidence/frozen_test_command.txt",
+  "test_environment": "results/training/evidence/frozen_test_environment.txt",
+  "experiments": [
+    {
+      "experiment_name": "V1 baseline",
+      "slug": "v1_baseline",
+      "directory": "experiments/training/yolov8n_neudet_baseline_20260712_122943",
+      "config_path": "configs/train/yolov8n_neudet_baseline.yaml"
+    },
+    {
+      "experiment_name": "V2 extended epochs",
+      "slug": "v2_extended",
+      "directory": "experiments/training/yolov8n_neudet_v2_20260712_125029",
+      "config_path": "configs/train/yolov8n_neudet_v2.yaml"
+    },
+    {
+      "experiment_name": "V3 no mosaic",
+      "slug": "v3_no_mosaic",
+      "directory": "experiments/training/yolov8n_neudet_v3_no_mosaic_20260712_133730",
+      "config_path": "configs/train/yolov8n_neudet_v3_no_mosaic.yaml"
+    },
+    {
+      "experiment_name": "seed=7 deterministic",
+      "slug": "seed7",
+      "directory": "experiments/training/yolov8n_neudet_baseline_seed7_20260712_140145",
+      "config_path": "configs/train/yolov8n_neudet_baseline_seed7.yaml"
+    },
+    {
+      "experiment_name": "seed=123 deterministic",
+      "slug": "seed123",
+      "directory": "experiments/training/yolov8n_neudet_baseline_seed123_20260712_141510",
+      "config_path": "configs/train/yolov8n_neudet_baseline_seed123.yaml"
+    },
+    {
+      "experiment_name": "seed=42 deterministic",
+      "slug": "seed42_deterministic",
+      "directory": "experiments/training/yolov8n_neudet_baseline_seed42_deterministic_20260712_161806",
+      "config_path": "configs/train/yolov8n_neudet_baseline_seed42_deterministic.yaml"
+    },
+    {
+      "experiment_name": "V4 AdamW",
+      "slug": "v4_adamw",
+      "directory": "experiments/training/yolov8n_neudet_v4_adamw_20260712_142809",
+      "config_path": "configs/train/yolov8n_neudet_v4_adamw.yaml"
+    },
+    {
+      "experiment_name": "V5 cosine LR",
+      "slug": "v5_coslr",
+      "directory": "experiments/training/yolov8n_neudet_v5_coslr_20260712_144107",
+      "config_path": "configs/train/yolov8n_neudet_v5_coslr.yaml"
+    },
+    {
+      "experiment_name": "V6 no warmup",
+      "slug": "v6_no_warmup",
+      "directory": "experiments/training/yolov8n_neudet_v6_no_warmup_20260712_145401",
+      "config_path": "configs/train/yolov8n_neudet_v6_no_warmup.yaml"
+    }
+  ]
+}

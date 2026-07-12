@@ -1,5 +1,4 @@
-# Baseline deterministic reproducibility run — seed=42.
-# All parameters identical to v1 baseline except deterministic=true.
+# Baseline repeatability run with the same effective parameters as v1.
 experiment_name: yolov8n_neudet_baseline_seed42_deterministic
 dataset_yaml: data/yolo/neu_det/dataset.yaml
 model: models/pretrained/yolov8n.pt
