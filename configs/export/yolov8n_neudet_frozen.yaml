@@ -1,0 +1,8 @@
+# Frozen NEU-DET baseline ONNX export configuration.
+source_model: models/pytorch/yolov8n_neudet_frozen.pt
+onnx_path: models/onnx/yolov8n_neudet_frozen.onnx
+metadata_path: results/onnx_export/export_metadata.json
+imgsz: 640
+opset: 17
+dynamic: false
+simplify: false

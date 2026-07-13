@@ -1,0 +1,21 @@
+captured_at: 2026-07-11T17:32:23+08:00
+git_commit: 797f6ac885fd814cba3aa1c85a1d3970cff76623
+virtual_environment: .venv
+python_executable: .venv/bin/python
+python_version: 3.10.12
+operating_system: Ubuntu 22.04.5 LTS (WSL2)
+kernel: Linux 6.18.33.2-microsoft-standard-WSL2 x86_64
+gpu: NVIDIA GeForce GTX 1050 Ti
+gpu_memory: 4096 MiB
+nvidia_driver: 582.28
+torch: 2.3.1+cu118
+torch_cuda: 11.8
+torchvision: 0.18.1+cu118
+cudnn: 8.7.0 (8700)
+ultralytics: 8.4.50
+numpy: 1.26.4
+matplotlib: 3.8.4
+opencv_python: 4.10.0.84
+pyyaml: 6.0.2
+dependency_check: No broken requirements found
+full_dependency_lock: requirements-lock.txt

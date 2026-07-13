@@ -7,3 +7,4 @@ opencv-python==4.10.0.84
 numpy==1.26.4
 matplotlib==3.8.4
 PyYAML==6.0.2
+onnx==1.16.1
