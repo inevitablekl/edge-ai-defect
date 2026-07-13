@@ -1,0 +1,1267 @@
+{
+  "timestamp": "2026-07-13T22:46:50+08:00",
+  "pytorch_model_path": "models/pytorch/yolov8n_neudet_frozen.pt",
+  "pytorch_model_sha256": "5e36ae9ec419a71d6cf726624450dc528f85fed39e398c07085eaf82dba8bbb7",
+  "onnx_model_path": "models/onnx/yolov8n_neudet_frozen.onnx",
+  "onnx_model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "versions": {
+    "torch": "2.3.1+cu118",
+    "ultralytics": "8.4.50",
+    "onnxruntime": "1.23.2"
+  },
+  "preprocess": {
+    "shared_input": true,
+    "image_size": [
+      640,
+      640
+    ],
+    "letterbox_auto": false,
+    "letterbox_stride": 32,
+    "color_conversion": "BGR to RGB",
+    "layout_conversion": "HWC to CHW",
+    "dtype": "float32",
+    "normalization": "divide by 255.0"
+  },
+  "postprocess": {
+    "shared_nms": true,
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "bbox_format": "xyxy in original image coordinates"
+  },
+  "selection": {
+    "strategy": "evenly spaced over sorted validation image paths",
+    "available_image_count": 360,
+    "selected_image_count": 10,
+    "images": [
+      "data/yolo/neu_det/images/val/crazing_10.jpg",
+      "data/yolo/neu_det/images/val/crazing_25.jpg",
+      "data/yolo/neu_det/images/val/inclusion_167.jpg",
+      "data/yolo/neu_det/images/val/inclusion_60.jpg",
+      "data/yolo/neu_det/images/val/patches_248.jpg",
+      "data/yolo/neu_det/images/val/pitted_surface_184.jpg",
+      "data/yolo/neu_det/images/val/pitted_surface_9.jpg",
+      "data/yolo/neu_det/images/val/rolled-in_scale_267.jpg",
+      "data/yolo/neu_det/images/val/scratches_184.jpg",
+      "data/yolo/neu_det/images/val/scratches_98.jpg"
+    ]
+  },
+  "tolerances": {
+    "raw_mae": 0.0001,
+    "raw_max_absolute_error": 0.01,
+    "bbox_max_absolute_error": 0.01,
+    "confidence_max_absolute_error": 0.0001,
+    "detection_counts_must_match": true,
+    "detection_classes_must_match": true
+  },
+  "summary": {
+    "raw_output_mae": 2.5397553604403036e-05,
+    "raw_output_max_absolute_error": 0.0087890625,
+    "detection_max_bbox_absolute_error": 0.0001220703125,
+    "detection_max_confidence_absolute_error": 2.5033950805664062e-06,
+    "all_detection_counts_equal": true,
+    "all_detection_classes_equal": true,
+    "raw_output_pass": true,
+    "detection_pass": true,
+    "consistency_pass": true
+  },
+  "images": [
+    {
+      "image_path": "data/yolo/neu_det/images/val/crazing_10.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.44734191894531,
+          "max": 634.53466796875
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.44734191894531,
+          "max": 634.53466796875
+        },
+        "mae": 1.8444781249068844e-05,
+        "max_absolute_error": 0.002960205078125,
+        "element_count": 84000,
+        "absolute_error_sum": 1.5493616249217828
+      },
+      "detections": {
+        "pytorch": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.3097493350505829,
+              "bbox_xyxy": [
+                1.6431236267089844,
+                145.8042449951172,
+                184.19223022460938,
+                199.6244354248047
+              ]
+            },
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.25740405917167664,
+              "bbox_xyxy": [
+                60.28421401977539,
+                76.18669891357422,
+                189.8882293701172,
+                141.09815979003906
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.3097495436668396,
+              "bbox_xyxy": [
+                1.6431236267089844,
+                145.8042449951172,
+                184.19210815429688,
+                199.6244354248047
+              ]
+            },
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.25740373134613037,
+              "bbox_xyxy": [
+                60.28421401977539,
+                76.18669128417969,
+                189.88829040527344,
+                141.09815979003906
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 3.2782554626464844e-07,
+          "max_bbox_absolute_error": 0.0001220703125,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 0,
+              "confidence_absolute_error": 2.086162567138672e-07,
+              "bbox_max_absolute_error": 0.0001220703125
+            },
+            {
+              "class_id": 0,
+              "confidence_absolute_error": 3.2782554626464844e-07,
+              "bbox_max_absolute_error": 6.103515625e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/crazing_25.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.4379653930664,
+          "max": 634.613525390625
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.4379653930664,
+          "max": 634.613525390625
+        },
+        "mae": 2.0139212450700588e-05,
+        "max_absolute_error": 0.0028076171875,
+        "element_count": 84000,
+        "absolute_error_sum": 1.6916938458588495
+      },
+      "detections": {
+        "pytorch": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.435039222240448,
+              "bbox_xyxy": [
+                64.12431335449219,
+                84.29813385009766,
+                169.04632568359375,
+                147.2275390625
+              ]
+            },
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.34719952940940857,
+              "bbox_xyxy": [
+                6.4675140380859375,
+                0.11198043823242188,
+                198.12721252441406,
+                54.41484451293945
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.435038298368454,
+              "bbox_xyxy": [
+                64.12431335449219,
+                84.29813385009766,
+                169.0463409423828,
+                147.2275390625
+              ]
+            },
+            {
+              "class_id": 0,
+              "class_name": "crazing",
+              "confidence": 0.3471986651420593,
+              "bbox_xyxy": [
+                6.467475891113281,
+                0.11198043823242188,
+                198.12721252441406,
+                54.414852142333984
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 9.238719940185547e-07,
+          "max_bbox_absolute_error": 3.814697265625e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 0,
+              "confidence_absolute_error": 9.238719940185547e-07,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            },
+            {
+              "class_id": 0,
+              "confidence_absolute_error": 8.642673492431641e-07,
+              "bbox_max_absolute_error": 3.814697265625e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/inclusion_167.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 79.99788665771484,
+          "max": 642.117431640625
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 79.99788665771484,
+          "max": 642.1174926757812
+        },
+        "mae": 2.7197960387000097e-05,
+        "max_absolute_error": 0.00390625,
+        "element_count": 84000,
+        "absolute_error_sum": 2.284628672508008
+      },
+      "detections": {
+        "pytorch": {
+          "count": 4,
+          "items": [
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7380808591842651,
+              "bbox_xyxy": [
+                17.723363876342773,
+                3.4374046325683594,
+                57.09860610961914,
+                198.7376708984375
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.6405047178268433,
+              "bbox_xyxy": [
+                105.28951263427734,
+                0.0,
+                162.19949340820312,
+                200.0
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.5700556039810181,
+              "bbox_xyxy": [
+                111.27915954589844,
+                0.04498004913330078,
+                152.0721435546875,
+                75.9047622680664
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.3756522536277771,
+              "bbox_xyxy": [
+                92.18734741210938,
+                0.025930404663085938,
+                111.00711822509766,
+                81.29302215576172
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 4,
+          "items": [
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7380803823471069,
+              "bbox_xyxy": [
+                17.723360061645508,
+                3.437366485595703,
+                57.09860610961914,
+                198.7376708984375
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.6405066251754761,
+              "bbox_xyxy": [
+                105.28955078125,
+                0.0,
+                162.19955444335938,
+                200.0
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.5700554251670837,
+              "bbox_xyxy": [
+                111.27915954589844,
+                0.04497528076171875,
+                152.07215881347656,
+                75.90474700927734
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.37565356492996216,
+              "bbox_xyxy": [
+                92.18732452392578,
+                0.025920867919921875,
+                111.00711822509766,
+                81.29300689697266
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 1.9073486328125e-06,
+          "max_bbox_absolute_error": 6.103515625e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 4.76837158203125e-07,
+              "bbox_max_absolute_error": 3.814697265625e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 1.9073486328125e-06,
+              "bbox_max_absolute_error": 6.103515625e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 1.7881393432617188e-07,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 1.3113021850585938e-06,
+              "bbox_max_absolute_error": 2.288818359375e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/inclusion_60.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 78.79590606689453,
+          "max": 635.2222900390625
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 78.79591369628906,
+          "max": 635.2222900390625
+        },
+        "mae": 3.172738005190981e-05,
+        "max_absolute_error": 0.0075836181640625,
+        "element_count": 84000,
+        "absolute_error_sum": 2.665099924360424
+      },
+      "detections": {
+        "pytorch": {
+          "count": 6,
+          "items": [
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.8419365882873535,
+              "bbox_xyxy": [
+                141.08895874023438,
+                80.12561798095703,
+                178.5575714111328,
+                199.6601104736328
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.8063920140266418,
+              "bbox_xyxy": [
+                29.931432723999023,
+                156.600830078125,
+                50.260772705078125,
+                199.95387268066406
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7740474939346313,
+              "bbox_xyxy": [
+                156.80023193359375,
+                0.08368253707885742,
+                173.66058349609375,
+                31.526376724243164
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.773587703704834,
+              "bbox_xyxy": [
+                33.12828063964844,
+                0.0,
+                59.91584777832031,
+                69.78672790527344
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7263047695159912,
+              "bbox_xyxy": [
+                30.41609764099121,
+                67.08296966552734,
+                52.71503448486328,
+                137.66615295410156
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.437147319316864,
+              "bbox_xyxy": [
+                0.0,
+                50.8076286315918,
+                25.72913932800293,
+                199.39010620117188
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 6,
+          "items": [
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.8419362306594849,
+              "bbox_xyxy": [
+                141.08895874023438,
+                80.12561798095703,
+                178.5575714111328,
+                199.6601104736328
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.8063915967941284,
+              "bbox_xyxy": [
+                29.931440353393555,
+                156.600830078125,
+                50.26076126098633,
+                199.95387268066406
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7740485668182373,
+              "bbox_xyxy": [
+                156.8002471923828,
+                0.08368492126464844,
+                173.6605682373047,
+                31.52635955810547
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7735867500305176,
+              "bbox_xyxy": [
+                33.12828063964844,
+                0.0,
+                59.915836334228516,
+                69.78673553466797
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.7263055443763733,
+              "bbox_xyxy": [
+                30.416139602661133,
+                67.08295440673828,
+                52.71503829956055,
+                137.66615295410156
+              ]
+            },
+            {
+              "class_id": 1,
+              "class_name": "inclusion",
+              "confidence": 0.4371498227119446,
+              "bbox_xyxy": [
+                0.0,
+                50.8076057434082,
+                25.729154586791992,
+                199.39013671875
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 2.5033950805664062e-06,
+          "max_bbox_absolute_error": 4.1961669921875e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 3.5762786865234375e-07,
+              "bbox_max_absolute_error": 0.0
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 4.172325134277344e-07,
+              "bbox_max_absolute_error": 1.1444091796875e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 1.0728836059570312e-06,
+              "bbox_max_absolute_error": 1.71661376953125e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 9.5367431640625e-07,
+              "bbox_max_absolute_error": 1.1444091796875e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 7.748603820800781e-07,
+              "bbox_max_absolute_error": 4.1961669921875e-05
+            },
+            {
+              "class_id": 1,
+              "confidence_absolute_error": 2.5033950805664062e-06,
+              "bbox_max_absolute_error": 3.0517578125e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/patches_248.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 82.15222930908203,
+          "max": 634.2921752929688
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 82.15222930908203,
+          "max": 634.2921752929688
+        },
+        "mae": 1.5733189412986187e-05,
+        "max_absolute_error": 0.001190185546875,
+        "element_count": 84000,
+        "absolute_error_sum": 1.3215879106908397
+      },
+      "detections": {
+        "pytorch": {
+          "count": 4,
+          "items": [
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.8812094330787659,
+              "bbox_xyxy": [
+                14.379539489746094,
+                0.0,
+                72.50150299072266,
+                68.94570922851562
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.8764170408248901,
+              "bbox_xyxy": [
+                16.541330337524414,
+                105.56434631347656,
+                75.47341918945312,
+                200.0
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.833919107913971,
+              "bbox_xyxy": [
+                122.0498275756836,
+                29.14803695678711,
+                176.4123077392578,
+                68.7324447631836
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.588603675365448,
+              "bbox_xyxy": [
+                177.52040100097656,
+                0.02433300018310547,
+                199.987060546875,
+                42.90544509887695
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 4,
+          "items": [
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.881209135055542,
+              "bbox_xyxy": [
+                14.379549026489258,
+                0.0,
+                72.50152587890625,
+                68.94572448730469
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.8764166831970215,
+              "bbox_xyxy": [
+                16.54132652282715,
+                105.56434631347656,
+                75.47340393066406,
+                200.0
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.8339192867279053,
+              "bbox_xyxy": [
+                122.0498275756836,
+                29.14804458618164,
+                176.4123077392578,
+                68.73242950439453
+              ]
+            },
+            {
+              "class_id": 2,
+              "class_name": "patches",
+              "confidence": 0.5886037349700928,
+              "bbox_xyxy": [
+                177.5203857421875,
+                0.02434253692626953,
+                199.98704528808594,
+                42.90544128417969
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 3.5762786865234375e-07,
+          "max_bbox_absolute_error": 2.288818359375e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 2,
+              "confidence_absolute_error": 2.980232238769531e-07,
+              "bbox_max_absolute_error": 2.288818359375e-05
+            },
+            {
+              "class_id": 2,
+              "confidence_absolute_error": 3.5762786865234375e-07,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            },
+            {
+              "class_id": 2,
+              "confidence_absolute_error": 1.7881393432617188e-07,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            },
+            {
+              "class_id": 2,
+              "confidence_absolute_error": 5.960464477539063e-08,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/pitted_surface_184.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.08312225341797,
+          "max": 641.8692626953125
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 85.08312225341797,
+          "max": 641.8692016601562
+        },
+        "mae": 2.4337440859404305e-05,
+        "max_absolute_error": 0.00164794921875,
+        "element_count": 84000,
+        "absolute_error_sum": 2.0443450321899617
+      },
+      "detections": {
+        "pytorch": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 3,
+              "class_name": "pitted_surface",
+              "confidence": 0.8371457457542419,
+              "bbox_xyxy": [
+                0.1987457275390625,
+                0.0,
+                197.22915649414062,
+                199.6405029296875
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 3,
+              "class_name": "pitted_surface",
+              "confidence": 0.8371455073356628,
+              "bbox_xyxy": [
+                0.1987457275390625,
+                0.0,
+                197.22911071777344,
+                199.64048767089844
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 2.384185791015625e-07,
+          "max_bbox_absolute_error": 4.57763671875e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 3,
+              "confidence_absolute_error": 2.384185791015625e-07,
+              "bbox_max_absolute_error": 4.57763671875e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/pitted_surface_9.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 83.25856018066406,
+          "max": 641.195556640625
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 83.25856018066406,
+          "max": 641.195556640625
+        },
+        "mae": 4.1350092637521144e-05,
+        "max_absolute_error": 0.0087890625,
+        "element_count": 84000,
+        "absolute_error_sum": 3.473407781551776
+      },
+      "detections": {
+        "pytorch": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 3,
+              "class_name": "pitted_surface",
+              "confidence": 0.8839353322982788,
+              "bbox_xyxy": [
+                0.3905487060546875,
+                20.30548095703125,
+                199.94483947753906,
+                200.0
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 3,
+              "class_name": "pitted_surface",
+              "confidence": 0.883934497833252,
+              "bbox_xyxy": [
+                0.3905487060546875,
+                20.305538177490234,
+                199.94483947753906,
+                200.0
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 8.344650268554688e-07,
+          "max_bbox_absolute_error": 5.7220458984375e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 3,
+              "confidence_absolute_error": 8.344650268554688e-07,
+              "bbox_max_absolute_error": 5.7220458984375e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/rolled-in_scale_267.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 83.0583724975586,
+          "max": 634.3291015625
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 83.05836486816406,
+          "max": 634.3291015625
+        },
+        "mae": 1.8361071583142743e-05,
+        "max_absolute_error": 0.001434326171875,
+        "element_count": 84000,
+        "absolute_error_sum": 1.5423300129839903
+      },
+      "detections": {
+        "pytorch": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 4,
+              "class_name": "rolled-in_scale",
+              "confidence": 0.6961132287979126,
+              "bbox_xyxy": [
+                75.62007904052734,
+                138.34246826171875,
+                199.8350372314453,
+                200.0
+              ]
+            },
+            {
+              "class_id": 4,
+              "class_name": "rolled-in_scale",
+              "confidence": 0.4622671604156494,
+              "bbox_xyxy": [
+                73.87757873535156,
+                0.04382610321044922,
+                194.11944580078125,
+                39.807106018066406
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 2,
+          "items": [
+            {
+              "class_id": 4,
+              "class_name": "rolled-in_scale",
+              "confidence": 0.6961130499839783,
+              "bbox_xyxy": [
+                75.6200942993164,
+                138.34249877929688,
+                199.8350372314453,
+                200.0
+              ]
+            },
+            {
+              "class_id": 4,
+              "class_name": "rolled-in_scale",
+              "confidence": 0.46226751804351807,
+              "bbox_xyxy": [
+                73.87759399414062,
+                0.04381418228149414,
+                194.11949157714844,
+                39.807106018066406
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 3.5762786865234375e-07,
+          "max_bbox_absolute_error": 4.57763671875e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 4,
+              "confidence_absolute_error": 1.7881393432617188e-07,
+              "bbox_max_absolute_error": 3.0517578125e-05
+            },
+            {
+              "class_id": 4,
+              "confidence_absolute_error": 3.5762786865234375e-07,
+              "bbox_max_absolute_error": 4.57763671875e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/scratches_184.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 80.0980453491211,
+          "max": 644.1129760742188
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 80.0980453491211,
+          "max": 644.1129760742188
+        },
+        "mae": 2.923311624894081e-05,
+        "max_absolute_error": 0.0069580078125,
+        "element_count": 84000,
+        "absolute_error_sum": 2.4555817649110283
+      },
+      "detections": {
+        "pytorch": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 5,
+              "class_name": "scratches",
+              "confidence": 0.8644998073577881,
+              "bbox_xyxy": [
+                144.601318359375,
+                0.0,
+                173.0976104736328,
+                200.0
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 5,
+              "class_name": "scratches",
+              "confidence": 0.8644998073577881,
+              "bbox_xyxy": [
+                144.601318359375,
+                0.0,
+                173.0976104736328,
+                200.0
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 0.0,
+          "max_bbox_absolute_error": 0.0,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 5,
+              "confidence_absolute_error": 0.0,
+              "bbox_max_absolute_error": 0.0
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    },
+    {
+      "image_path": "data/yolo/neu_det/images/val/scratches_98.jpg",
+      "original_shape": [
+        200,
+        200,
+        3
+      ],
+      "raw_output": {
+        "pytorch": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 80.3748779296875,
+          "max": 639.0828857421875
+        },
+        "onnx": {
+          "shape": [
+            1,
+            10,
+            8400
+          ],
+          "mean": 80.37487030029297,
+          "max": 639.0830078125
+        },
+        "mae": 2.7451291163355835e-05,
+        "max_absolute_error": 0.003387451171875,
+        "element_count": 84000,
+        "absolute_error_sum": 2.3059084577218902
+      },
+      "detections": {
+        "pytorch": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 5,
+              "class_name": "scratches",
+              "confidence": 0.6951643228530884,
+              "bbox_xyxy": [
+                1.2371635437011719,
+                131.86669921875,
+                200.0,
+                156.21168518066406
+              ]
+            }
+          ]
+        },
+        "onnx": {
+          "count": 1,
+          "items": [
+            {
+              "class_id": 5,
+              "class_name": "scratches",
+              "confidence": 0.695164680480957,
+              "bbox_xyxy": [
+                1.2371635437011719,
+                131.86671447753906,
+                200.0,
+                156.21168518066406
+              ]
+            }
+          ]
+        },
+        "comparison": {
+          "counts_equal": true,
+          "classes_equal": true,
+          "max_confidence_absolute_error": 3.5762786865234375e-07,
+          "max_bbox_absolute_error": 1.52587890625e-05,
+          "comparison_pass": true,
+          "matched_errors": [
+            {
+              "class_id": 5,
+              "confidence_absolute_error": 3.5762786865234375e-07,
+              "bbox_max_absolute_error": 1.52587890625e-05
+            }
+          ]
+        }
+      },
+      "raw_output_pass": true,
+      "image_pass": true
+    }
+  ]
+}
