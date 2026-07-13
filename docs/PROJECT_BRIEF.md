@@ -256,6 +256,27 @@ CUDA version: TBD
 TensorRT version: TBD
 ```
 
+### 7.4 Development and Deployment Environment Separation
+
+The local WSL2 development environment and the final Jetson deployment environment have different responsibilities.
+
+Local development environment:
+
+* Python ONNX export and ONNX Runtime consistency validation
+* C++17 application and module development
+* OpenCV preprocessing and postprocessing development
+* C++ ONNX Runtime baseline integration
+* Serial / Pipeline software architecture validation
+
+Target Jetson environment:
+
+* TensorRT FP16 engine and backend validation
+* ONNX Runtime vs TensorRT FP16 performance comparison
+* Serial vs Pipeline performance comparison
+* final latency, FPS, resource, and stability measurements
+
+This separation does not change the project objective, career positioning, or Jetson + TensorRT main route. It prevents local development constraints from blocking backend-neutral C++ architecture work and keeps final paper performance results on the target edge platform.
+
 ---
 
 ## 8. Main Technical Route

@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-12
+2026-07-13
 ```
 
 当前阶段：
 
 ```text
-YOLOv8n + NEU-DET 训练阶段完成，模型已冻结，进入 ONNX export 阶段
+训练、模型冻结、ONNX export 与 Python ONNX Runtime validation 已完成，进入 C++ ONNX Runtime baseline 阶段
 ```
 
 当前主线：
@@ -175,11 +175,14 @@ NEU-DET
 | TRAIN-005  | P0  | DONE | 建立项目 `.venv` 并固定 Python 训练依赖             |
 | TRAIN-006  | P0  | DONE | 完成本地 YOLOv8n smoke training 链路验证           |
 | TRAIN-007  | P0  | DONE | 冻结 NEU-DET baseline 配置并通过 dry-run          |
-| EXPORT-001 | P0  | TODO | 编写 ONNX export 脚本                        |
+| EXPORT-001 | P0  | DONE | 编写 ONNX export 脚本                        |
 | EXPORT-002 | P0  | TODO | 导出 320 输入尺寸 ONNX                         |
 | EXPORT-003 | P0  | TODO | 导出 416 输入尺寸 ONNX                         |
-| EXPORT-004 | P0  | TODO | 导出 640 输入尺寸 ONNX                         |
-| EXPORT-005 | P0  | TODO | 记录 opset、shape、export command            |
+| EXPORT-004 | P0  | DONE | 导出 640 输入尺寸 ONNX                         |
+| EXPORT-005 | P0  | DONE | 记录 opset、shape、export metadata           |
+| EXPORT-006 | P0  | DONE | 完成 ONNX checker 与 ONNX Runtime smoke test  |
+| EXPORT-007 | P0  | DONE | 完成 PyTorch vs ONNX Runtime 一致性验证          |
+| EXPORT-008 | P1  | DONE | 检查 TensorRT Python validation 环境           |
 
 ---
 
@@ -559,185 +562,124 @@ NEU-DET
 
 ---
 
-### 2026-07-12 - NEU-DET 训练阶段完成与模型冻结
+### 2026-07-12 - 训练阶段完成、模型冻结与证据归档收尾
 
-当前工作：
+当日工作：
 
-* 在 RTX 3090 上完成 V1～V6 及多 seed（seed=7、seed=123、seed=42 deterministic）共 9 组 YOLOv8n baseline 训练实验。
-* 完成三 seed deterministic baseline 稳定性统计（mAP50-95 σ≈0.006）。
-* 完成全部实验逐类别（6 类）validation AP50、AP50-95、Precision、Recall 指标提取。
-* 依据 mAP50-95 和 Recall 优先的工程规则，选定 seed=7 deterministic 为最终冻结模型。
-* 冻结模型路径：`models/pytorch/yolov8n_neudet_frozen.pt`，SHA256 已验证。
-* 完成 frozen model 在 test split 上的最终评价（mAP50-95=0.431）。
-* 生成训练实验汇总表（`results/training/training_experiment_summary.csv` / `.json`）。
-* 生成训练最终报告（`docs/TRAINING_FINAL_REPORT.md`）和模型冻结记录（`docs/MODEL_FREEZE_RECORD.md`）。
-* 创建训练阶段归档目录和压缩包。
+* 在 RTX 3090 上完成 V1～V6、seed=7、seed=123 和 seed=42 deterministic 共 9 组 YOLOv8n 正式训练实验。
+* 完成三 seed deterministic baseline 稳定性统计及全部实验的总体、六类别 validation 指标整理。
+* 依据预先约定的 mAP50-95 和 Recall 工程规则选择 seed=7，并冻结为 `models/pytorch/yolov8n_neudet_frozen.pt`。
+* 完成 frozen model 的 held-out test split 最终评价、训练报告、模型冻结记录和机器可读实验汇总。
+* 修复统一训练入口的参数传递与运行摘要，整理 effective args、validation/test 指标、命令和 provenance。
+* 完成 training stage archive、evidence patch 和 checkpoint patch 三组 Git 外离线归档及最终删除前审计。
 
-修改文件：
+主要产出：
 
-* `configs/train/yolov8n_neudet_baseline_seed42_deterministic.yaml`（新增）
-* `configs/train/yolov8n_neudet_v2.yaml` 等 V2～V6 配置（新增）
-* `configs/train/yolov8n_neudet_baseline_seed7.yaml`、`_seed123.yaml`（新增）
-* `models/pytorch/yolov8n_neudet_frozen.pt`（新增，Git 忽略）
-* `docs/TRAINING_FINAL_REPORT.md`（新增）
-* `docs/MODEL_FREEZE_RECORD.md`（新增）
-* `results/training/training_experiment_summary.csv` / `.json`（新增）
-* `scripts/extract_per_class_metrics.py`（训练时临时使用；最终证据入库后已删除）
-* `scripts/run_seed42_deterministic_training.py`（训练时临时使用；最终收尾已删除，后续统一通过 `train_yolo.py`）
-* `docs/personal/TASKS.md`、`EXPERIMENT_PLAN.md`、`DECISIONS.md`、`ENVIRONMENT.md`（更新）
-* `.gitignore`（更新）
+* 训练配置：V1～V6 及三组 seed baseline 配置。
+* 训练汇总：`results/training/training_experiment_summary.csv` / `.json`。
+* 训练证据：`results/training/evidence/` 下的 9 组 effective args、validation/test JSON/CSV、命令和 provenance。
+* 最终文档：`docs/TRAINING_FINAL_REPORT.md`、`docs/MODEL_FREEZE_RECORD.md`、`docs/TRAINING_ARCHIVE_INDEX.md`。
+* 统一入口：`scripts/train_yolo.py`；训练时临时使用的重复脚本和一次性指标提取脚本已删除。
+* 冻结模型：`models/pytorch/yolov8n_neudet_frozen.pt`（Git 忽略）。
+* 三组离线归档：training stage archive、evidence patch、checkpoint patch（均不进入 Git）。
 
-已完成：
+完成情况：
 
-* NEU-DET 转换和全量 label 校验完成（4186 个有效 bbox）。
-* 本地 GTX 1050 Ti smoke test 完成。
-* RTX 3090 多 seed 和有限训练策略实验全部完成。
-* 所有实验 validation 指标（整体 + 六类别）完整提取，无估算数据。
-* 模型冻结完成，SHA256 已验证。
-* test split 最终评价完成（含 confusion matrix、PR/F1/P/R curves、预测图）。
-* 训练阶段正式结束。
+* 9 组真实 `args.yaml` 均确认 `deterministic=true`。
+* V2 记录为 configured 200 / completed 161；V3 同时改变 `mosaic` 和 `close_mosaic`；V4 同时改变 optimizer 和 `lr0`；V5、V6 为单变量实验。
+* V2～V6 均未证明相对 baseline 有稳定提升，训练阶段不继续扩大超参数搜索。
+* seed=7 与 seed=42 deterministic 属于同一性能水平；seed=7 是工程规则选择，不宣称统计显著优胜。
+* Frozen model SHA256 已验证；test split 最终评价完成，且结果未反向用于训练、调参或模型选择。
+* Test evidence 已记录 `image_count=180`、`instance_count=442`、六类别指标和真实来源。
+* 全部 9 个正式实验的 `best.pt` 已归档并校验，9 个 checkpoint SHA256 均唯一；seed=7 checkpoint 与 frozen model 完全一致。
+* 三组离线归档均通过外部 SHA256 和内部 MANIFEST 校验。
+* 本地 Git、冻结模型和离线归档已覆盖全部必须保留的训练资产，训练服务器不再是任何必要资产的唯一来源。
+* 训练阶段和证据链正式收尾，无需继续训练或 validation。
 
-未完成：
+当日修正说明：
 
-* 尚未执行 ONNX export。
-* 尚未执行 TensorRT 转换。
-* 尚未开始 C++ ONNX Runtime / TensorRT 部署代码。
+* 统一训练入口已正确传递 `False`、`0` 和 `0.0` 等有效配置值，并区分 configured/completed/last/best epoch 与指标。
+* Evidence archive utility 已参数化、fail-fast、默认不覆盖，且不会启动训练、validation 或修改 Git。
+* 删除硬编码服务器路径和重复训练逻辑的 seed42 临时脚本。
+* 文档已修正 deterministic、实验变量、统计解释、test gap 及 checkpoint 归档状态。
+* 轻量测试全部通过；收尾过程未重新运行训练、validation、ONNX export 或 TensorRT。
 
-阻塞问题：
+尚未完成：
 
-* 无阻塞。
-
-下一步计划：
-
-* 进入 ONNX export 与 ONNX Runtime 推理一致性验证阶段。
-* 使用 frozen model 导出 ONNX（opset、动态/静态 shape 待定）。
-* 验证 PyTorch vs ONNX Runtime 输出一致性。
-
-备注：
-
-* V2～V6 均未在 mAP50-95 上超过 baseline，训练阶段不继续扩大超参数搜索。
-* seed=7 和 seed=42 deterministic 属于同一性能水平，选择基于工程规则而非统计显著差异。
-* test split 结果仅用于最终报告，未用于模型选择。
-
----
-
-当前工作：
-
-* 使用真实 `data/raw/NEU-DET` 完成数据转换、重复 bbox 清理和全量 label 校验。
-* 建立项目级 `.venv`，固定 Python、PyTorch、Ultralytics、NumPy、Matplotlib 等依赖版本。
-* 在 GTX 1050 Ti 上完成 `epochs=1`、`imgsz=320`、`batch=2` 的本地 smoke training。
-* 冻结 `configs/train/yolov8n_neudet_baseline.yaml`，并完成正式训练命令 dry-run。
-* 调整训练实验记录与 Git 管理规则，保留轻量复现信息，忽略权重、缓存和大型输出。
-
-修改文件：
-
-* `.gitignore`
-* `scripts/convert_neudet_to_yolo.py`
-* `scripts/train_yolo.py`
-* `configs/train/yolov8n_neudet_smoke.yaml`
-* `configs/train/yolov8n_neudet_640.yaml`
-* `configs/train/yolov8n_neudet_baseline.yaml`
-* `requirements.txt`
-* `requirements-lock.txt`
-* `environment_snapshot.txt`
-* `docs/BASELINE_TRAINING.md`
-* `experiments/training/README.md`
-* `docs/personal/TASKS.md`
-* `docs/personal/EXPERIMENT_PLAN.md`
-* `docs/personal/ENVIRONMENT.md`
-
-已完成：
-
-* 数据集包含 1800 张图片，划分为 train 1260、val 360、test 180。
-* 原始转换统计为 4189 个 bbox；删除 3 个完全重复 bbox 后冻结为 4186 个。
-* 全量 YOLO label 校验结果为 `errors=0`，不存在重复 label 行。
-* `.venv` 中 PyTorch CUDA、cuDNN 和 Ultralytics 导入及依赖检查通过。
-* 最新隔离环境 smoke run 状态为 `completed`、return code 为 0；该结果仅验证训练链路，不作为正式 baseline 结果。
-* baseline 配置固定为 YOLOv8n、640、100 epochs、seed 42、`amp=false`。
-* baseline dry-run 已通过，未启动正式训练。
-
-未完成：
-
-* 尚未在 RTX 3090 上执行正式 baseline training。
-* 尚未产生正式 baseline 的 Precision、Recall、mAP 或 `best.pt`。
-* 尚未执行 ONNX export。
+* ONNX export。
+* PyTorch / ONNX Runtime 输出一致性验证。
+* C++ ONNX Runtime baseline、TensorRT FP16 和 Jetson 部署。
+* Serial / Pipeline 性能实验。
 
 阻塞问题：
 
-* 代码与数据准备无阻塞。
-* 正式训练需要在 RTX 3090 环境中确认依赖和显存后执行。
-
-下一步计划：
-
-* 在 RTX 3090 训练环境中安装 `requirements-lock.txt`。
-* 执行 baseline dry-run，确认 GPU、路径和 `batch=16`。
-* 使用冻结配置运行正式 baseline，并保存真实实验记录和 `best.pt`。
-* 正式训练完成后进入 ONNX export。
-
-备注：
-
-* 一次早期 smoke 尝试因 NumPy / Matplotlib 环境冲突失败，失败记录保留；随后在独立 `.venv` 中验证成功。
-* 本轮没有运行正式 baseline，没有上传数据，没有提交数据集或权重文件。
-
----
-
-### 2026-07-12 18:30 - 训练阶段最终审计收尾
-
-当前工作：
-
-* 修复统一训练入口的配置参数传递和运行摘要。
-* 将轻量 effective args、validation/test 指标、命令和 provenance 纳入 Git。
-* 参数化重构 evidence archive utility，并补充纯单元测试。
-* 修正文档中的 deterministic、统计解释和实验变量描述。
-
-已完成：
-
-* 全部 9 组真实 `args.yaml` 确认为 `deterministic=true`。
-* V2 记录为 configured 200 / completed 161；V3、V4 记录为关联参数组合实验；V5、V6 记录为严格单变量实验。
-* test 摘要补充真实 `image_count=180`、`instance_count=442` 和来源说明。
-* 删除重复且硬编码服务器路径的 seed42 训练脚本，后续统一使用 `scripts/train_yolo.py --config ...`。
-* 冻结模型、原始训练归档和 evidence patch 继续作为 Git 外本地资产保存。
-
-未完成：
-
-* 尚未执行 ONNX export。
-* 历史状态：当时 8 个非冻结 checkpoint 尚未进入离线归档；该状态已由下方 2026-07-12 最终归档记录取代。
-
-阻塞问题：
-
-* 训练阶段无阻塞；完成本轮提交后可合并 `main`。
-
-下一步计划：
-
-* 从更新后的 `main` 创建 `feature/onnx-export`。
-* 使用冻结模型导出 ONNX，并执行 PyTorch / ONNX Runtime 输出一致性验证。
-
-备注：
-
-* 本轮未运行训练、validation、ONNX export 或 TensorRT。
-* test split 未用于模型选择或训练调参。
-
----
-
-### 2026-07-12 - 训练归档与 provenance 最终收尾
-
-已完成：
-
-* 原始 training stage archive、evidence patch 和 checkpoint patch 三组离线归档均已完成并通过外部 SHA256 与内部 MANIFEST 校验。
-* 全部 9 个正式实验的 `best.pt` 已归档并校验，9 个 checkpoint 哈希均唯一；seed=7 checkpoint 与 frozen model 哈希一致。
-* Git 中的轻量 provenance 已更新为 checkpoint archive 名称、成员路径、大小和真实 SHA256，不依赖服务器绝对路径定位。
-* 本地 Git、冻结模型和三组归档已覆盖全部必须保留的训练资产，训练服务器不再保存唯一必要资产。
-* 训练阶段证据链收尾完成，无需继续训练或 validation。
+* 训练阶段无阻塞。
+* 后续部署阶段按更新后的 `main` 继续推进。
 
 下一步计划：
 
 * 合并训练阶段分支后，从更新后的 `main` 创建 `feature/onnx-export`。
-* 使用 frozen model 执行 ONNX export，并验证 PyTorch / ONNX Runtime 输出一致性。
+* 使用唯一标准输入 frozen model 导出 ONNX，并记录 opset、shape 和导出环境。
+* 验证 PyTorch 与 ONNX Runtime 的预处理、输出和后处理一致性。
+* 完成 ONNX Runtime baseline 后再进入 TensorRT FP16 与 Serial / Pipeline 实验。
 
 备注：
 
-* 模型权重和三组归档继续保留在 Git 之外。
-* 后续部署主线只使用 `models/pytorch/yolov8n_neudet_frozen.pt`。
+* Git 只保存轻量代码、配置、指标、文档和 provenance，不保存模型权重、数据集、实验图片或离线归档。
+* 非冻结 checkpoint 仅用于离线审计或必要时重新 validation，不参与后续模型选择和部署。
+* 三组归档应至少保留两份独立本地副本。
+
+---
+
+### 2026-07-13 - ONNX export 与 ONNX Runtime validation 阶段完成
+
+当前工作：
+
+* 使用唯一 frozen model 完成 640 静态输入 ONNX export，并核对源模型 SHA256。
+* 完成 ONNX 文件存在性检查、`onnx.checker`、输入输出节点检查和 export provenance 记录。
+* 使用 CPU `ONNX Runtime` 完成一次 dummy input smoke inference。
+* 在 10 张 validation 图片上使用共享 preprocess / postprocess 完成 PyTorch 与 ONNX Runtime 一致性验证。
+* 检查当前 WSL2 开发环境的 TensorRT Python、CUDA runtime 和 GPU 可用性。
+
+修改文件：
+
+* `scripts/export_onnx.py`、`configs/export/yolov8n_neudet_frozen.yaml`。
+* `tools/validation/onnxruntime_smoke_test.py`、`tools/validation/compare_pt_onnx.py`。
+* `tests/test_export_onnx.py`、`tests/test_onnxruntime_smoke_test.py`、`tests/test_compare_pt_onnx.py`。
+* `results/onnx_export/` 下的 export metadata、environment provenance、smoke test 和 consistency validation JSON。
+* `requirements.txt`、`requirements-lock.txt`。
+
+已完成：
+
+* `models/pytorch/yolov8n_neudet_frozen.pt` 已导出为 `models/onnx/yolov8n_neudet_frozen.onnx`；模型文件继续由 Git 忽略。
+* ONNX checker 通过；模型 input 为 `float32 [1, 3, 640, 640]`，output 为 `float32 [1, 10, 8400]`。
+* ONNX Runtime smoke test 通过，输出非空且不包含 NaN / Inf。
+* PyTorch vs ONNX Runtime 一致性验证通过：10 张图片逐图 detection count 和 class 一致，raw output 与 bbox / confidence 误差均在预先记录的容差内。
+* ONNX export 和 validation 的模型 SHA256、软件版本、时间戳、输入输出信息与数值统计均已写入轻量 JSON evidence。
+* TensorRT Python 环境检查已完成：当前 `.venv` 缺少 `tensorrt` binding，且 WSL2 中 GPU / NVML 不可访问，因此未执行 TensorRT FP16 Python sanity validation，也未修改系统 CUDA、驱动或 TensorRT。
+
+未完成：
+
+* C++ ONNX Runtime baseline。
+* TensorRT backend 与 TensorRT FP16 validation。
+* Jetson 部署。
+* Serial / Pipeline 实现和性能实验。
+
+阻塞问题：
+
+* C++ ONNX Runtime 开发主线无新增阻塞，待确定 C++ 依赖版本并初始化工程骨架。
+* TensorRT validation 需要 Jetson 或具备完整、可访问 CUDA / TensorRT 环境的平台；当前 WSL2 开发机不作为 TensorRT 验证平台。
+
+下一步计划：
+
+* 使用 C++17、OpenCV、yaml-cpp 和 ONNX Runtime C++ API 建立本地 baseline。
+* 保持 `InferenceEngine` backend 解耦，先完成 Serial mode，再完成 Pipeline mode。
+* 在目标平台确定后实现 TensorRT FP16 backend，并在 Jetson 上完成论文性能实验。
+
+备注：
+
+* 本阶段只完成格式导出、可加载性和数值一致性验证，没有执行 FPS、latency、mAP 或稳定性性能实验。
+* 项目总体路线仍为 ONNX Runtime baseline → TensorRT FP16 optimized backend → Jetson deployment。
 
 ---
 
@@ -745,8 +687,8 @@ NEU-DET
 
 每次 agent 更新本文档时，应遵守以下规则：
 
-1. 不删除历史日志。
-2. 每次追加新的时间戳条目。
+1. 不删除跨日期的历史日志；同一天的重复或阶段性记录应在不丢失关键信息的前提下归并。
+2. 同一天优先更新同一条日进展，避免按小时反复追加；跨日期时再新增记录。
 3. 中文描述当前进展。
 4. 专业术语保留英文原文。
 5. 明确写出：
@@ -766,7 +708,7 @@ NEU-DET
 ## 9. 标准迭代记录模板
 
 ```markdown
-### YYYY-MM-DD HH:mm - 本轮迭代标题
+### YYYY-MM-DD - 当日进展标题
 
 当前工作：
 
@@ -803,7 +745,7 @@ NEU-DET
 
 近期优先级：
 
-1. 合并训练阶段最终收尾提交到 `main`。
-2. 从 `main` 创建 `feature/onnx-export`。
-3. 使用冻结模型导出 ONNX，并记录 opset、shape 和导出环境。
-4. 验证 PyTorch 与 ONNX Runtime 的预处理、输出和后处理一致性。
+1. 确定本地 C++ ONNX Runtime、OpenCV 和 CMake 版本。
+2. 初始化 C++17 / CMake 工程与 YAML `ConfigManager`。
+3. 定义 backend 解耦的 `InferenceEngine`，实现 `ONNXRuntimeEngine` baseline。
+4. 完成 Serial mode 后实现 Pipeline mode，并保留 TensorRT backend 扩展点。

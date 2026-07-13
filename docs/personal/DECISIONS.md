@@ -75,6 +75,9 @@
 | D014 | v1 ROS2 | 只预留接口 | ACTIVE |
 | D015 | INT8 | 当前不做，后续可选 | ACTIVE |
 | D016 | 主平台 | NVIDIA Jetson | ACTIVE |
+| D017 | 冻结模型 | seed=7 deterministic baseline | ACTIVE |
+| D018 | 正式训练 checkpoint 保留边界 | Git 外完整归档，部署只使用 frozen model | ACTIVE |
+| D019 | TensorRT 验证平台与部署阶段路线 | 本地 ONNX Runtime 开发，TensorRT 延后到完整 CUDA / Jetson 平台 | ACTIVE |
 
 ---
 
@@ -982,6 +985,65 @@ ACTIVE
 后续调整：
 
 归档至少保留两份独立本地副本。除非新增正式训练决策，否则不再改变 checkpoint 集合或模型选择。
+
+---
+
+### D019 - TensorRT验证平台调整与部署阶段路线收敛
+
+时间：
+
+```text
+2026-07-13
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+背景：
+
+* 当前开发环境为 WSL2 Ubuntu 22.04。
+* 当前开发机记录的 GPU 为 GTX1050Ti，但本次检查中 GPU / NVML 无法在 WSL2 内访问。
+* 项目 `.venv` 缺少 TensorRT Python binding，`torch.cuda.is_available()` 为 `False`。
+* 当前环境已经完成 ONNX export、Python ONNX Runtime smoke test 和 PyTorch / ONNX Runtime 数值一致性验证，但不适合作为 TensorRT FP16 验证平台。
+
+决策：
+
+1. 开发机阶段使用 C++17、ONNX Runtime 和 OpenCV，完成 C++ inference framework、Serial mode、Pipeline mode 与软件架构验证。
+2. TensorRT FP16 backend 的构建和验证推迟到 Jetson，或具备完整且可访问 CUDA / TensorRT 环境的平台。
+3. TensorRT 保持为 optimized backend 和最终部署主线，但不作为当前 WSL2 开发机的验证目标。
+4. 当前环境不强制安装 TensorRT，不修改系统 CUDA、NVIDIA driver 或 WSL GPU 配置来绕过平台限制。
+
+备选方案：
+
+* 在当前 WSL2 环境强行补装 TensorRT Python：binding 与 GPU runtime 均不满足，不能形成有效 FP16 验证证据。
+* 暂停全部部署开发直至 Jetson 到位：会阻塞与硬件无关的 C++ 架构和 ONNX Runtime baseline 工作。
+
+选择理由：
+
+* ONNX Runtime 可在当前开发环境完成跨平台 baseline、接口和 runtime architecture 验证。
+* `InferenceEngine` backend 解耦后，SerialRunner / PipelineRunner 不依赖具体推理库，可先稳定软件结构。
+* TensorRT engine 与目标 GPU、CUDA、driver 和 TensorRT 版本强相关，在目标或兼容平台验证更可复现。
+
+影响范围：
+
+* 本地开发顺序调整为 C++ ONNX Runtime baseline → Serial / Pipeline architecture。
+* TensorRT FP16 engine、backend 和论文性能数据延后到 Jetson 或兼容 GPU 平台。
+* 不改变项目总体路线：
+
+```text
+PyTorch
+→ ONNX
+→ ONNX Runtime baseline
+→ TensorRT FP16
+→ Jetson deployment
+```
+
+后续调整：
+
+Jetson 或兼容 CUDA / TensorRT 平台确定后，记录 GPU、driver、CUDA、TensorRT、engine generation method 和环境 provenance，再启动 TensorRT validation 与性能实验。
 
 ---
 

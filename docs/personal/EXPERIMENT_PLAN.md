@@ -130,6 +130,25 @@ ONNX Runtime C++ version: TBD
 
 ---
 
+### 4.4 开发验证与论文性能实验平台边界
+
+开发验证阶段：
+
+* 使用 Python ONNX Runtime 完成 ONNX 可加载性、单次 inference smoke test 和 PyTorch / ONNX Runtime 数值一致性验证。
+* 使用 C++ ONNX Runtime 完成后续 baseline inference framework、preprocess / postprocess、Serial mode 和 Pipeline mode 的功能验证。
+* 当前 WSL2 开发环境不采集论文级 TensorRT、FPS、latency 或 GPU resource 数据。
+
+最终论文性能实验阶段：
+
+* 平台为 NVIDIA Jetson，具体型号和 JetPack / CUDA / TensorRT 版本确定后记录。
+* 在同一 Jetson、模型、输入、preprocess、postprocess 和实验配置下比较 ONNX Runtime baseline 与 TensorRT FP16 optimized backend。
+* 在同一目标平台上比较 Serial mode 与 Pipeline mode，并分别解释 throughput、single-frame latency 和 end-to-end latency。
+* Backend、runtime mode、input size 和 stability 的最终论文结论只使用 Jetson 上的真实测量日志。
+
+平台分离不改变实验主线：本地开发用于功能与架构验证，Jetson 用于最终 backend / runtime 性能对比。
+
+---
+
 ## 5. 实验数据原则
 
 所有实验数据必须真实采集。
@@ -406,6 +425,8 @@ DONE — 640 训练实验完成，模型冻结，后续实验重点转向：
 ### 11.1 目的
 
 比较 ONNX Runtime baseline 与 TensorRT FP16 optimized backend 在 Jetson 上的性能差异。
+
+Python ONNX Runtime smoke test 和 PyTorch / ONNX Runtime consistency validation 只证明模型可加载、可执行和数值一致，不属于 E2 性能结果。E2 的论文数据必须在同一 Jetson 平台使用 C++ deployment pipeline 采集。
 
 ---
 

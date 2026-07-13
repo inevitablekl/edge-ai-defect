@@ -386,6 +386,34 @@ TensorRT FP16:
 * runs C++ TensorRT inference
 * used for final Jetson deployment experiments
 
+### 12.1 InferenceEngine Backend Decoupling
+
+The deployment pipeline MUST depend on the `InferenceEngine` interface rather than a concrete inference library.
+
+```text
+InferenceEngine interface
+├── ONNXRuntimeEngine
+└── TensorRTEngine
+```
+
+The common interface is responsible for:
+
+* loading or initializing the configured model artifact
+* exposing required input and output tensor metadata
+* accepting the shared preprocessed input representation
+* returning backend-neutral raw output tensors
+* reporting backend initialization or inference errors clearly
+
+The interface MUST NOT own frame input, image preprocessing, YOLO decoding, NMS, result output, or runner scheduling. Those responsibilities remain in their existing modules.
+
+`SerialRunner` and `PipelineRunner` MUST only call `InferenceEngine`. They MUST NOT branch on ONNX Runtime or TensorRT APIs. Backend selection and construction occur at the application composition boundary from YAML configuration.
+
+Development and deployment environments are separated without changing the architecture:
+
+* Local development environment: implement and validate the C++17 framework with OpenCV and `ONNXRuntimeEngine`.
+* Target deployment environment: add `TensorRTEngine` FP16 on Jetson or another compatible CUDA / TensorRT platform.
+* Both backends use the same `Preprocessor`, `PostProcessor`, `DetectionResult`, runner interfaces, and profiler definitions.
+
 Not included in v1:
 
 * PyTorch runtime backend
