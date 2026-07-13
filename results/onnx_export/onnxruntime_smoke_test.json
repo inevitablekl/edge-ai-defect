@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-07-13T22:37:03+08:00",
+  "model_path": "models/onnx/yolov8n_neudet_frozen.onnx",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "onnxruntime_version": "1.23.2",
+  "input_metadata": [
+    {
+      "name": "images",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "output_metadata": [
+    {
+      "name": "output0",
+      "shape": [
+        1,
+        10,
+        8400
+      ],
+      "dtype": "float32",
+      "runtime_shape": [
+        1,
+        10,
+        8400
+      ],
+      "runtime_dtype": "float32"
+    }
+  ],
+  "inference_success": true,
+  "output_statistics": {
+    "all_outputs_non_empty": true,
+    "contains_nan": false,
+    "contains_inf": false,
+    "outputs": [
+      {
+        "name": "output0",
+        "shape": [
+          1,
+          10,
+          8400
+        ],
+        "dtype": "float32",
+        "size": 84000,
+        "min": 0.0,
+        "max": 634.726806640625,
+        "mean": 81.45928192138672,
+        "has_nan": false,
+        "has_inf": false
+      }
+    ]
+  }
+}
