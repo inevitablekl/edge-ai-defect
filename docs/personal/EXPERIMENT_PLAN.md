@@ -911,3 +911,29 @@ TensorRT 在所有设备上都有固定倍数加速。
 * Pipeline mode 可以作为 runtime optimization 进行 throughput 分析。
 * 输入尺寸会影响 accuracy 和 speed trade-off。
 * 系统具备基本工程稳定性。
+
+---
+
+## 23. C++ ONNX Runtime Validation Plan
+
+This plan validates the C++17 ONNX Runtime CPU Serial Baseline against the frozen 640 static model contract. It does not create new model-accuracy or performance claims.
+
+### Level A — Preprocessor-only
+
+Validate C++ preprocessing independently for:
+
+- LetterBox resize and padding;
+- padding placement and padding value;
+- BGR to RGB conversion;
+- HWC to CHW layout conversion;
+- float32 normalization by `255.0`.
+
+### Level B — InferenceEngine-only
+
+Validate C++ ONNX Runtime against Python ONNX Runtime using the same already-preprocessed tensor input. Record output shape and numeric error before introducing postprocessing.
+
+### Level C — End-to-End
+
+Validate the C++ Serial pipeline against the Python reference for detection count, class, bbox, and confidence.
+
+`results/onnx_export/pt_onnx_compare.json` remains historical evidence for PyTorch versus Python ONNX Runtime consistency. It is not the final C++ golden reference; the C++ validation must record its own inputs, tolerances, and comparison evidence.

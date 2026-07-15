@@ -662,3 +662,37 @@ PipelineRunner
 ```
 
 The final system should demonstrate that a trained YOLOv8n industrial defect detection model can be deployed to Jetson through a C++ inference pipeline, and that backend selection, runtime architecture, input size, and stability can be evaluated through reproducible experiments.
+
+---
+
+## 21. Current C++ ONNX Runtime Serial Baseline Contract
+
+The current implementation stage is limited to the C++17 ONNX Runtime CPU Serial Baseline. The effective software flow is:
+
+```text
+Application / CLI
+→ ConfigManager
+→ SerialRunner
+→ FrameSource
+→ Preprocessor
+→ IInferenceEngine
+→ PostProcessor
+→ ResultSink
+→ Profiler
+```
+
+Interface rules for this stage:
+
+- ONNX Runtime API usage exists only inside `OnnxRuntimeEngine`.
+- `SerialRunner` depends only on `IInferenceEngine`; a future `TensorRTEngine` must not require Runner changes.
+- `Preprocessor`, `PostProcessor`, and `ResultSink` do not depend on an inference backend.
+- Only `SerialRunner` is in scope now. Pipeline is a later extension.
+
+The frozen deployment model contract is:
+
+| Tensor | Name | Type | Shape | Shape mode |
+| --- | --- | --- | --- | --- |
+| Input | `images` | `float32` | `[1, 3, 640, 640]` | static |
+| Output | `output0` | `float32` | `[1, 10, 8400]` | static |
+
+The current frozen artifact is `models/onnx/yolov8n_neudet_frozen.onnx`. Historical 320/416/640 experiment planning and historical ONNX path examples are future experiment context, not inputs to the current C++ baseline.

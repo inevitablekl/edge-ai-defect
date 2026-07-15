@@ -1125,3 +1125,36 @@ NEU-DET
 ```
 
 所有后续决策都应服务于这个主线，不应把项目扩展成算法研究、GUI 应用、完整机器人系统或多平台部署项目。
+
+---
+
+### D020 - C++ ONNX Runtime Serial Baseline 阶段范围
+
+时间：
+
+```text
+2026-07-15
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. C++ 部署阶段从 ONNX Runtime CPU Serial Baseline 开始。
+2. TensorRT 延后到 Jetson 阶段；TensorRT 性能数据只在目标设备采集。
+3. 当前阶段不引入 Pipeline、ROS2、Qt、INT8、GPU preprocessing 或 GPU NMS。
+
+选择理由：
+
+- 当前开发环境是 WSL2 x86_64，适合先建立和验证 C++ 软件架构。
+- TensorRT 强依赖 CUDA、driver 和 Jetson 环境；在非目标平台不能形成有效性能结论。
+- 先完成可验证的 Serial Baseline，控制范围并保持后续 backend 替换的接口抽象。
+
+影响范围：
+
+- M0 至 M4 仅覆盖 C++17、OpenCV、yaml-cpp、ONNX Runtime CPU 和 SerialRunner。
+- TensorRT、Jetson、Pipeline 与性能优化保留为后续阶段。

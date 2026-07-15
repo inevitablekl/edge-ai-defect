@@ -102,6 +102,10 @@ v1 MUST NOT include unless explicitly approved:
 - Robotic arm control.
 - Full embodied intelligence system.
 
+### Current C++ baseline phase
+
+The active implementation phase is limited to a C++17 ONNX Runtime CPU Serial Baseline with the frozen static ONNX contract `float32 [1,3,640,640] -> float32 [1,10,8400]`. TensorRT, Pipeline, ROS2, Qt, INT8, and GPU optimizations are not implementation scope for this phase.
+
 ---
 
 ## 5. Dataset Requirements

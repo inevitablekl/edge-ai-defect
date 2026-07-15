@@ -292,3 +292,15 @@ experiments/logs/<run_id>/environment_snapshot.txt
 * ONNX export、ONNX Runtime smoke test 和 PyTorch / ONNX Runtime consistency validation 已在本地 Python 环境通过。
 * 当前 WSL2 进程无法访问 CUDA GPU 且未安装 TensorRT Python binding；TensorRT FP16 validation 延后到 Jetson 或兼容 CUDA / TensorRT 平台。
 * 进入部署实验前，必须补齐 Jetson、JetPack、TensorRT、ONNX Runtime C++ 和资源监控方法等信息。
+
+---
+
+## 12. 环境用途隔离
+
+| 环境 | 用途 | 当前阶段边界 |
+| --- | --- | --- |
+| WSL2 Ubuntu 22.04 | C++ 开发、ONNX Runtime CPU、软件架构验证 | 当前 C++ Serial Baseline 开发环境 |
+| RTX 3090 | 训练、frozen model 生成、模型导出 | 不承担当前 C++ baseline 或 Jetson 性能结论 |
+| Jetson | TensorRT、FP16、目标设备性能测试 | TensorRT 与性能阶段开始后使用 |
+
+不同环境的用途必须隔离记录；不得将 WSL2 CPU 验证表述为 Jetson 或 TensorRT 性能证据。

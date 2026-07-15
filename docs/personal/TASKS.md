@@ -749,3 +749,37 @@ NEU-DET
 2. 初始化 C++17 / CMake 工程与 YAML `ConfigManager`。
 3. 定义 backend 解耦的 `InferenceEngine`，实现 `ONNXRuntimeEngine` baseline。
 4. 完成 Serial mode 后实现 Pipeline mode，并保留 TensorRT backend 扩展点。
+
+---
+
+### 2026-07-15 - C++ ONNX Runtime Serial Baseline 阶段启动准备完成
+
+当前工作：
+
+- 进入 `feature/cpp-onnxruntime` 分支的 M0：工程与依赖初始化阶段。
+
+已完成：
+
+- `feature/cpp-onnxruntime` 分支已创建。
+- frozen ONNX model contract 已冻结。
+- Python reference semantics 已完成源码级核查。
+- C++ 架构方案已完成审查。
+
+当前任务：
+
+- M0：建立 CMake 工程与 CTest 基础。
+- 接入 ONNX Runtime C++ 1.23.2 CPU Linux x64。
+- 建立 `edge_ai_core`、`edge_ai_backend_ort` 和 `edge_ai_infer` targets。
+- 完成 runtime smoke test。
+
+后续阶段：
+
+- M1：Core contract + Preprocessor。
+- M2：ONNX Runtime Engine。
+- M3：PostProcessor。
+- M4：完整 Serial Baseline。
+- M5：独立 benchmark 分支。
+
+当前不开发：
+
+- TensorRT、Jetson、Pipeline、ROS2、Qt、INT8 或 GPU 优化。

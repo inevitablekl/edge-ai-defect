@@ -68,6 +68,10 @@ The project does not focus on:
 | INT8 | Optional future optimization only |
 | Log formats | CSV / JSON |
 
+### Current implementation-phase constraints
+
+The active branch priority is: correctness, verifiability, architectural extensibility, then performance optimization. Before the C++ ONNX Runtime Serial Baseline is complete, agents must not implement TensorRT, Pipeline, ROS2, UI, INT8, GPU preprocessing, GPU NMS, or other GPU optimization. Do not weaken backend-neutral interfaces for premature optimization.
+
 ---
 
 ## 4. Main Technical Route
