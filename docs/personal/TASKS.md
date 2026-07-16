@@ -145,7 +145,7 @@ NEU-DET
 | INIT-007 | P0  | TODO | 创建 `models/README.md`             |
 | INIT-008 | P0  | TODO | 创建 `data/README.md`               |
 | INIT-009 | P0  | DONE | 更新 `.gitignore`                   |
-| INIT-010 | P0  | TODO | 初始化 top-level `CMakeLists.txt`    |
+| INIT-010 | P0  | DONE | 初始化 top-level `CMakeLists.txt`    |
 
 ---
 
@@ -783,3 +783,25 @@ NEU-DET
 当前不开发：
 
 - TensorRT、Jetson、Pipeline、ROS2、Qt、INT8 或 GPU 优化。
+
+---
+
+### 2026-07-16 - M0.2 ONNX Runtime C++ SDK 依赖接入完成
+
+已完成：
+
+- M0.1 已建立 C++17、CMake、CTest 最小工程骨架及 `edge_ai_core`、`edge_ai_backend_ort`、`edge_ai_infer`、`test_core` targets。
+- 下载官方 `onnxruntime-linux-x64-1.23.2.tgz`，记录本地 archive SHA256：`1fa4dcaef22f6f7d5cd81b28c2800414350c10116f5fdd46a2160082551c5f9b`。
+- SDK 已解压到 `third_party/onnxruntime/1.23.2/linux-x64/`，archive 与 payload 均由 Git 忽略。
+- CMake 已通过 `ONNXRUNTIME_ROOT`、`onnxruntime::onnxruntime` imported target 和 target 级 build RPATH 接入 SDK。
+- `edge_ai_backend_ort` 已建立对 imported target 的构建依赖。
+- SDK header、shared library、符号链接和 `ldd` 已验证，动态依赖无 `not found`。
+- 无效 `ONNXRUNTIME_ROOT` 负向配置测试通过；有效 root 下 configure、build、CTest 和最小可执行程序均通过。
+
+待执行：
+
+- M0.3：调用 ONNX Runtime C++ API，验证 runtime version 和 CPU Provider。
+
+边界：
+
+- M0.2 未调用 ORT API，未加载 frozen ONNX，未执行推理，也未创建 ORT smoke test 或正式 `OnnxRuntimeEngine`。
