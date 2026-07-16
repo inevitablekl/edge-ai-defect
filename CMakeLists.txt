@@ -226,10 +226,31 @@ if(BUILD_TESTING)
                 --mode contract-mismatch
                 --model "${EDGE_AI_FROZEN_ONNX_PATH}"
         )
+
+        add_executable(test_ort_inference_smoke
+            tests/smoke/ort_inference_smoke.cpp
+        )
+        target_link_libraries(test_ort_inference_smoke
+            PRIVATE
+                edge_ai_ort_smoke_support
+                onnxruntime::onnxruntime
+        )
+        set_target_properties(test_ort_inference_smoke
+            PROPERTIES
+                BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(
+            NAME ort_inference_smoke
+            COMMAND test_ort_inference_smoke
+                --model "${EDGE_AI_FROZEN_ONNX_PATH}"
+        )
+
         set_tests_properties(
             ort_model_contract_smoke
             ort_model_missing_path
             ort_model_contract_mismatch
+            ort_inference_smoke
             PROPERTIES
                 LABELS "m0;smoke;onnxruntime;model-asset"
         )

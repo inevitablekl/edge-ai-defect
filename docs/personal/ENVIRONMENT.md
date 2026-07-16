@@ -289,6 +289,34 @@ digest 核对，不表述为官方真实性验证。
 本次只创建 Session 并查询模型 metadata；没有创建输入 tensor、调用
 `Session::Run`、读取推理输出或执行性能测试。
 
+### 7.6 Frozen ONNX synthetic inference smoke（M0.5）
+
+| 检查项 | 实际结果 |
+| --- | --- |
+| Runtime | ONNX Runtime C++ 1.23.2 default CPU runtime |
+| Synthetic input dtype | `float32` |
+| Synthetic input shape | `[1,3,640,640]` |
+| Synthetic input elements | `1228800` |
+| Synthetic input value | `0.5F` |
+| Input tensor creation | PASS |
+| `Session::Run` | PASS，单次同步执行 |
+| Output dtype | `float32` |
+| Output shape | `[1,10,8400]` |
+| Output elements | `84000` |
+| Finite count | `84000` |
+| NaN count | `0` |
+| Positive infinity count | `0` |
+| Negative infinity count | `0` |
+| Diagnostic output min / max | `0` / `638.494`，不作为验收阈值 |
+| Performance test | Not performed |
+| Warm-up | Not performed |
+| Formal `OnnxRuntimeEngine` | Not implemented |
+| Next step | M0.6 closeout |
+
+本次只证明当前 C++ ONNX Runtime CPU 能使用真实 frozen model 完成一次
+synthetic inference，并验证输出 shape、element count 与数值有限性；不形成性能、
+模型精度或正式 baseline 结论。
+
 ---
 
 ## 8. 实验环境快照要求
@@ -357,7 +385,9 @@ experiments/logs/<run_id>/environment_snapshot.txt
 * C++ 工程最低 CMake 版本为 3.16；当前实际开发环境使用 CMake 3.22.1、GCC / G++ 11.4.0 和 C++17。
 * ONNX Runtime C++ 1.23.2 runtime API、CPUExecutionProvider、`Ort::Env` 与 `Ort::SessionOptions` 已在 M0.3 验证。
 * Frozen ONNX 的文件哈希、Session 加载和静态输入输出 metadata 合同已在 M0.4 验证。
-* M0.5 synthetic tensor inference 尚未执行。
+* M0.4 missing-model、contract-mismatch 和 non-tensor 检查已在 M0.5A 加固。
+* M0.5 已使用常量 `0.5F` synthetic tensor 完成一次真实 CPU inference，输出 84000 个元素全部 finite。
+* M0.6 收尾尚未执行。
 * 当前 WSL2 进程无法访问 CUDA GPU 且未安装 TensorRT Python binding；TensorRT FP16 validation 延后到 Jetson 或兼容 CUDA / TensorRT 平台。
 * 进入目标设备部署实验前，必须补齐 Jetson、JetPack、TensorRT 和资源监控方法等信息。
 

@@ -849,3 +849,42 @@ NEU-DET
 边界：
 
 - M0.4 只完成模型加载和 metadata 合同验证；未创建输入 tensor，未调用 `Session::Run`，未读取输出，也未执行推理或性能测试。
+
+---
+
+### 2026-07-16 - M0.5A M0.4 负向测试加固完成
+
+已完成：
+
+- missing-model 仅在 `Ort::Exception::GetOrtErrorCode()` 精确为 `ORT_NO_SUCHFILE` 时通过；当前实际错误码为 `3`。
+- contract-mismatch 改为结构化 `field`、`expected`、`actual` 判断，不再使用错误消息子串匹配。
+- metadata 查询在调用 tensor shape API 前显式检查 `ONNX_TYPE_TENSOR`。
+- 抽取 `tests/smoke/` 内部 `edge_ai_ort_smoke_support`，仅复用 metadata 与合同校验代码。
+- 原有五个 CTest 全部通过，未创建 tensor 或执行推理。
+
+边界：
+
+- 测试 helper 未进入 public include 或生产 target，不形成正式 `ModelContract`、`TensorInfo`、`Status` 或 backend API。
+
+---
+
+### 2026-07-16 - M0.5 Frozen ONNX synthetic inference smoke 完成
+
+已完成：
+
+- 新增测试专用 `test_ort_inference_smoke` target 和 `ort_inference_smoke` CTest，仅在模型资产开关开启时建立。
+- 使用 `float32 [1,3,640,640]`、`1228800` 个常量 `0.5F` 创建 CPU input tensor。
+- 默认 ONNX Runtime CPU Session 单次同步 `Session::Run` 成功。
+- 输出为 `float32 [1,10,8400]`、`84000` elements。
+- 输出 finite count 为 `84000`，NaN、正 infinity、负 infinity count 均为 `0`。
+- model smoke OFF 构建继续通过；正式 M0.5 CTest 为 6/6 通过。
+- unset `LD_LIBRARY_PATH` 后独立 inference smoke 通过，动态链接解析到项目 ONNX Runtime SDK。
+
+待执行：
+
+- M0.6：M0 阶段完整收尾、文档复核与 checkpoint。
+
+边界：
+
+- 本阶段只证明 C++ ONNX Runtime CPU 能执行一次真实 frozen model synthetic inference。
+- 未进行计时、warm-up、FPS 或性能实验，未建立正式 `OnnxRuntimeEngine`，不描述为正式 Serial Baseline。
