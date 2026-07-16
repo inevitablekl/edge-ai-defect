@@ -563,6 +563,10 @@ Expected executable:
 build/edge_ai_defect
 ```
 
+The CMake executable target is `edge_ai_infer`. Its `OUTPUT_NAME` is
+`edge_ai_defect`, preserving the expected executable path while keeping the
+frozen target name.
+
 CMake should handle:
 
 * main executable
@@ -573,7 +577,8 @@ CMake should handle:
 * CUDA Runtime if required
 * optional tests
 
-CMake minimum version is TBD.
+CMake minimum version is 3.16. The current local development environment uses
+CMake 3.22.1.
 
 ---
 
@@ -620,7 +625,7 @@ The following items must be decided later and recorded in `docs/personal/DECISIO
 | TensorRT version                  | TBD    |
 | ONNX Runtime C++ version          | TBD    |
 | OpenCV version                    | TBD    |
-| CMake minimum version             | TBD    |
+| CMake minimum version             | 3.16   |
 | TensorRT engine generation method | TBD    |
 | Resource monitoring method        | TBD    |
 
@@ -683,10 +688,15 @@ Application / CLI
 
 Interface rules for this stage:
 
-- ONNX Runtime API usage exists only inside `OnnxRuntimeEngine`.
+- ONNX Runtime API usage in production code exists only inside `OnnxRuntimeEngine`.
 - `SerialRunner` depends only on `IInferenceEngine`; a future `TensorRTEngine` must not require Runner changes.
 - `Preprocessor`, `PostProcessor`, and `ResultSink` do not depend on an inference backend.
 - Only `SerialRunner` is in scope now. Pipeline is a later extension.
+
+For the future M0.3 through M0.5 validation steps, direct ONNX Runtime API use
+is allowed only in smoke-test code under `tests/smoke/`. This test-only
+exception must not enter `src/`, must not be linked into production code, and
+must not create the formal `OnnxRuntimeEngine` implementation before M2.
 
 The frozen deployment model contract is:
 

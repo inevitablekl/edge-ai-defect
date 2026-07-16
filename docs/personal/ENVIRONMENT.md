@@ -82,8 +82,10 @@ Not available
 | PyTorch CUDA runtime | 11.8 |
 | cuDNN version | 8.7.0 / 8700 |
 | NVIDIA driver version | 582.28 |
-| CMake version | TBD |
-| C++ compiler | TBD |
+| CMake version | 3.22.1 |
+| CMake project minimum version | 3.16 |
+| C++ compiler | GCC / G++ 11.4.0 |
+| C++ language standard | C++17 |
 | OpenCV Python version | 4.10.0.84 |
 | yaml-cpp version | TBD |
 | ONNX Runtime C++ version | TBD |
@@ -266,7 +268,7 @@ experiments/logs/<run_id>/environment_snapshot.txt
 | TensorRT version | JetPack version 确定后 |
 | ONNX Runtime C++ version | C++ ONNX Runtime 集成前 |
 | OpenCV version | C++ 项目骨架创建前 |
-| CMake minimum version | C++ 项目骨架创建前 |
+| CMake minimum version | 3.16，已在 M0.1 冻结 |
 | TensorRT engine generation method | Jetson TensorRT 部署前 |
 | Resource monitoring method | 性能实验前 |
 
@@ -290,6 +292,7 @@ experiments/logs/<run_id>/environment_snapshot.txt
 * RTX 3090 训练环境已通过 9 组正式 YOLOv8n baseline 实验验证，环境信息已记录。
 * 训练阶段已完成，模型已冻结为 `models/pytorch/yolov8n_neudet_frozen.pt`。
 * ONNX export、ONNX Runtime smoke test 和 PyTorch / ONNX Runtime consistency validation 已在本地 Python 环境通过。
+* C++ 工程最低 CMake 版本为 3.16；当前实际开发环境使用 CMake 3.22.1、GCC / G++ 11.4.0 和 C++17。
 * 当前 WSL2 进程无法访问 CUDA GPU 且未安装 TensorRT Python binding；TensorRT FP16 validation 延后到 Jetson 或兼容 CUDA / TensorRT 平台。
 * 进入部署实验前，必须补齐 Jetson、JetPack、TensorRT、ONNX Runtime C++ 和资源监控方法等信息。
 
