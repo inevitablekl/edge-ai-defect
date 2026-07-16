@@ -1,54 +1,20 @@
+#include "ort_smoke_test_support.hpp"
+
 #include <onnxruntime_cxx_api.h>
 
-#include <cstddef>
-#include <cstdint>
 #include <exception>
 #include <filesystem>
 #include <iostream>
-#include <sstream>
 #include <string>
-#include <vector>
 
 namespace {
 
-struct ExpectedTensorContract {
-    std::string name;
-    ONNXTensorElementDataType element_type;
-    std::vector<std::int64_t> shape;
-};
-
-struct ActualTensorMetadata {
-    std::string name;
-    ONNXTensorElementDataType element_type;
-    std::vector<std::int64_t> shape;
-};
+namespace smoke_support = edge_ai_defect::test::ort_smoke;
 
 struct Arguments {
     std::string mode;
     std::string model_path;
 };
-
-std::string format_shape(const std::vector<std::int64_t>& shape) {
-    std::ostringstream stream;
-    stream << '[';
-    for (std::size_t index = 0; index < shape.size(); ++index) {
-        if (index != 0) {
-            stream << ',';
-        }
-        stream << shape[index];
-    }
-    stream << ']';
-    return stream.str();
-}
-
-std::string format_element_type(ONNXTensorElementDataType element_type) {
-    if (element_type == ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT) {
-        return "float32";
-    }
-
-    return "ONNX element type " +
-           std::to_string(static_cast<int>(element_type));
-}
 
 bool parse_arguments(int argc, char* argv[], Arguments& arguments) {
     if (argc != 5 || std::string(argv[1]) != "--mode" ||
@@ -73,73 +39,10 @@ bool parse_arguments(int argc, char* argv[], Arguments& arguments) {
     return true;
 }
 
-ActualTensorMetadata read_tensor_metadata(Ort::Session& session,
-                                          Ort::AllocatorWithDefaultOptions& allocator,
-                                          bool is_input,
-                                          std::size_t index) {
-    auto allocated_name =
-        is_input ? session.GetInputNameAllocated(index, allocator)
-                 : session.GetOutputNameAllocated(index, allocator);
-    if (!allocated_name) {
-        throw std::runtime_error("ORT returned a null node name");
-    }
-    const std::string name(allocated_name.get());
-
-    const Ort::TypeInfo type_info =
-        is_input ? session.GetInputTypeInfo(index)
-                 : session.GetOutputTypeInfo(index);
-    const auto tensor_info = type_info.GetTensorTypeAndShapeInfo();
-
-    return ActualTensorMetadata{
-        name,
-        tensor_info.GetElementType(),
-        tensor_info.GetShape(),
-    };
-}
-
-void validate_tensor(const std::string& label,
-                     const ExpectedTensorContract& expected,
-                     const ActualTensorMetadata& actual,
-                     std::vector<std::string>& errors) {
-    if (actual.name != expected.name) {
-        errors.push_back("Expected " + label + " name: " + expected.name +
-                         "\nActual " + label + " name: " + actual.name);
-    }
-
-    if (actual.element_type != expected.element_type) {
-        errors.push_back(
-            "Expected " + label + " dtype: " +
-            format_element_type(expected.element_type) + "\nActual " + label +
-            " dtype: " + format_element_type(actual.element_type));
-    }
-
-    if (actual.shape.size() != expected.shape.size()) {
-        errors.push_back("Expected " + label + " rank: " +
-                         std::to_string(expected.shape.size()) + "\nActual " +
-                         label + " rank: " +
-                         std::to_string(actual.shape.size()));
-    }
-
-    for (std::size_t index = 0; index < actual.shape.size(); ++index) {
-        if (actual.shape[index] <= 0) {
-            errors.push_back("Expected " + label + " dimension " +
-                             std::to_string(index) +
-                             " to be a positive static value\nActual " + label +
-                             " dimension " + std::to_string(index) + ": " +
-                             std::to_string(actual.shape[index]));
-        }
-    }
-
-    if (actual.shape != expected.shape) {
-        errors.push_back("Expected " + label + " shape: " +
-                         format_shape(expected.shape) + "\nActual " + label +
-                         " shape: " + format_shape(actual.shape));
-    }
-}
-
-void print_errors(const std::vector<std::string>& errors) {
-    for (const std::string& error : errors) {
-        std::cerr << error << '\n';
+void print_validation_failure(
+    const smoke_support::ContractValidationResult& result) {
+    if (!result.ok) {
+        std::cerr << result.message << '\n';
     }
 }
 
@@ -156,10 +59,19 @@ int run_missing_model(const Arguments& arguments,
         Ort::Session session(environment, arguments.model_path.c_str(),
                              session_options);
     } catch (const Ort::Exception& exception) {
-        std::cout << "Expected model load failure detected: PASS\n"
-                  << "ORT message: " << exception.what() << '\n'
-                  << "M0.4 missing-model smoke: PASS\n";
-        return 0;
+        const OrtErrorCode error_code = exception.GetOrtErrorCode();
+        std::cout << "ORT error code: " << static_cast<int>(error_code) << '\n'
+                  << "ORT message: " << exception.what() << '\n';
+        if (error_code == ORT_NO_SUCHFILE) {
+            std::cout << "Expected ORT_NO_SUCHFILE detected: PASS\n"
+                      << "M0.4 missing-model smoke: PASS\n";
+            return 0;
+        }
+
+        std::cerr << "Unexpected ORT error for missing model; expected code: "
+                  << static_cast<int>(ORT_NO_SUCHFILE)
+                  << "; actual code: " << static_cast<int>(error_code) << '\n';
+        return 5;
     }
 
     std::cerr << "Model load error: nonexistent model unexpectedly loaded\n";
@@ -193,88 +105,106 @@ int main(int argc, char* argv[]) {
         stage = "model metadata query";
         const std::size_t input_count = session.GetInputCount();
         const std::size_t output_count = session.GetOutputCount();
-        std::vector<std::string> errors;
+        bool counts_match = true;
         if (input_count != 1) {
-            errors.push_back("Expected input count: 1\nActual input count: " +
-                             std::to_string(input_count));
+            std::cerr << "Expected input count: 1\nActual input count: "
+                      << input_count << '\n';
+            counts_match = false;
         }
         if (output_count != 1) {
-            errors.push_back("Expected output count: 1\nActual output count: " +
-                             std::to_string(output_count));
+            std::cerr << "Expected output count: 1\nActual output count: "
+                      << output_count << '\n';
+            counts_match = false;
+        }
+        if (!counts_match) {
+            return 4;
         }
 
         Ort::AllocatorWithDefaultOptions allocator;
-        ActualTensorMetadata input_metadata;
-        ActualTensorMetadata output_metadata;
-        if (input_count > 0) {
-            input_metadata =
-                read_tensor_metadata(session, allocator, true, 0);
-        }
-        if (output_count > 0) {
-            output_metadata =
-                read_tensor_metadata(session, allocator, false, 0);
-        }
+        const smoke_support::ActualTensorMetadata input_metadata =
+            smoke_support::read_tensor_metadata(session, allocator, true, 0);
+        const smoke_support::ActualTensorMetadata output_metadata =
+            smoke_support::read_tensor_metadata(session, allocator, false, 0);
 
-        ExpectedTensorContract expected_input{
-            arguments.mode == "contract-mismatch" ? "wrong_images" : "images",
+        const smoke_support::ExpectedTensorContract expected_input{
+            "images",
             ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT,
             {1, 3, 640, 640},
         };
-        const ExpectedTensorContract expected_output{
+        const smoke_support::ExpectedTensorContract expected_output{
             "output0",
             ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT,
             {1, 10, 8400},
         };
 
-        if (input_count > 0) {
-            validate_tensor("input", expected_input, input_metadata, errors);
-        }
-        if (output_count > 0) {
-            validate_tensor("output", expected_output, output_metadata, errors);
-        }
+        const smoke_support::ContractValidationResult input_result =
+            smoke_support::validate_tensor("input", expected_input,
+                                           input_metadata);
+        const smoke_support::ContractValidationResult output_result =
+            smoke_support::validate_tensor("output", expected_output,
+                                           output_metadata);
 
         if (arguments.mode == "contract-mismatch") {
-            if (errors.size() == 1 &&
-                errors.front().find("Expected input name: wrong_images") !=
-                    std::string::npos &&
-                errors.front().find("Actual input name: images") !=
-                    std::string::npos) {
-                print_errors(errors);
-                std::cout << "Expected contract mismatch detected: PASS\n"
+            if (!input_result.ok || !output_result.ok) {
+                std::cerr << "Actual model contract must be valid before the "
+                             "intentional mismatch check\n";
+                print_validation_failure(input_result);
+                print_validation_failure(output_result);
+                return 4;
+            }
+
+            smoke_support::ExpectedTensorContract wrong_input = expected_input;
+            wrong_input.name = "wrong_images";
+            const smoke_support::ContractValidationResult mismatch_result =
+                smoke_support::validate_tensor("input", wrong_input,
+                                               input_metadata);
+            if (!mismatch_result.ok &&
+                mismatch_result.field == smoke_support::ContractField::kName &&
+                mismatch_result.expected == "wrong_images" &&
+                mismatch_result.actual == "images") {
+                print_validation_failure(mismatch_result);
+                std::cout << "Expected structured name mismatch detected: PASS\n"
                           << "M0.4 contract-mismatch smoke: PASS\n";
                 return 0;
             }
 
             std::cerr << "Contract mismatch mode did not detect exactly the "
-                         "intended input-name difference\n";
-            print_errors(errors);
+                         "intended structured input-name difference\n";
+            print_validation_failure(mismatch_result);
             return 4;
         }
 
-        if (!errors.empty()) {
-            print_errors(errors);
+        if (!input_result.ok || !output_result.ok) {
+            print_validation_failure(input_result);
+            print_validation_failure(output_result);
             return 4;
         }
 
         std::cout << "Input count: " << input_count << '\n'
                   << "Input name: " << input_metadata.name << '\n'
                   << "Input dtype: "
-                  << format_element_type(input_metadata.element_type) << '\n'
-                  << "Input shape: " << format_shape(input_metadata.shape)
+                  << smoke_support::format_element_type(
+                         input_metadata.element_type)
                   << '\n'
+                  << "Input shape: "
+                  << smoke_support::format_shape(input_metadata.shape) << '\n'
                   << "Output count: " << output_count << '\n'
                   << "Output name: " << output_metadata.name << '\n'
                   << "Output dtype: "
-                  << format_element_type(output_metadata.element_type) << '\n'
-                  << "Output shape: " << format_shape(output_metadata.shape)
+                  << smoke_support::format_element_type(
+                         output_metadata.element_type)
                   << '\n'
+                  << "Output shape: "
+                  << smoke_support::format_shape(output_metadata.shape) << '\n'
                   << "Static dimensions: PASS\n"
                   << "Model contract: PASS\n"
                   << "M0.4 model contract smoke: PASS\n";
         return 0;
     } catch (const Ort::Exception& exception) {
         std::cerr << "Smoke stage failed: " << stage
-                  << "; Ort::Exception message: " << exception.what() << '\n';
+                  << "; Ort::Exception code: "
+                  << static_cast<int>(exception.GetOrtErrorCode())
+                  << "; message: " << exception.what() << '\n';
         return stage == "model loading" ? 3 : 5;
     } catch (const std::exception& exception) {
         std::cerr << "Smoke stage failed: " << stage

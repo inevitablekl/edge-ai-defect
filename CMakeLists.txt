@@ -182,11 +182,24 @@ if(BUILD_TESTING)
     )
 
     if(EDGE_AI_ENABLE_MODEL_SMOKE)
+        add_library(edge_ai_ort_smoke_support STATIC
+            tests/smoke/ort_smoke_test_support.cpp
+        )
+        target_include_directories(edge_ai_ort_smoke_support
+            PUBLIC
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/smoke
+        )
+        target_link_libraries(edge_ai_ort_smoke_support
+            PUBLIC
+                onnxruntime::onnxruntime
+        )
+
         add_executable(test_ort_model_contract_smoke
             tests/smoke/ort_model_contract_smoke.cpp
         )
         target_link_libraries(test_ort_model_contract_smoke
             PRIVATE
+                edge_ai_ort_smoke_support
                 onnxruntime::onnxruntime
         )
         set_target_properties(test_ort_model_contract_smoke
