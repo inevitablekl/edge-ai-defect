@@ -746,7 +746,7 @@ NEU-DET
 近期优先级：
 
 1. M0 工程、依赖与真实模型 smoke 验证已经完成并关闭。
-2. 下一阶段为 M1 Core Contract + Preprocessor；M1 尚未开始。
+2. M1.0 仓库预检与阶段计划已冻结；下一步为 M1.1 Core Contracts。
 3. 正式 `OnnxRuntimeEngine`、Serial Baseline 和性能实验继续按后续阶段计划执行。
 4. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
@@ -916,3 +916,24 @@ NEU-DET
 结论：
 
 - M0 工程、依赖与真实模型 smoke 验证完成，可进入 M1。
+
+---
+
+### 2026-07-16 - M1.0 仓库预检与执行计划冻结完成
+
+已完成：
+
+- 完整复核 M0 后的 CMake、生产骨架、测试结构和阶段边界；M0 已关闭，M1 生产模块尚未开始。
+- 当前 OpenCV C++ `4.5.4` 与 yaml-cpp `0.7.0` 均通过 C++17 最小编译、链接和运行验证，未安装或升级系统依赖。
+- 确认当前没有正式可供 C++ 读取的 model contract；M1.2 唯一路径冻结为 `configs/model_contracts/yolov8n_neudet_frozen.yaml`。
+- 核对 Python preprocessing reference、LetterBox 实际参数、round/padding、颜色/layout/normalization 和 EXIF orientation 行为。
+- 确认当前没有独立 Level A generator、manifest、synthetic assets、tensor golden 或 validation report。
+- 创建 `docs/personal/M1_EXECUTION_PLAN.md`，冻结 M1.1～M1.6、Gate、通用规则及 M1.1 精确边界。
+
+下一步：
+
+- M1.1 Core Contracts；本轮未实现任何 C++ 生产模块，未进入 M1.1。
+
+边界：
+
+- 正式 `OnnxRuntimeEngine`、postprocess/NMS、SerialRunner、benchmark、Pipeline、TensorRT、ROS2 和 Qt 均不属于 M1。
