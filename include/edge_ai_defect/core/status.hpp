@@ -12,6 +12,9 @@ enum class ErrorCode {
     kUnsupportedLayout,
     kOverflow,
     kDataSizeMismatch,
+    kIoError,
+    kParseError,
+    kSchemaViolation,
 };
 
 class Status {

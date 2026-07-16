@@ -12,6 +12,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CTest)
 
+find_package(yaml-cpp 0.7 REQUIRED CONFIG)
+
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
     "Enable tests requiring the local frozen ONNX asset"
@@ -113,10 +115,15 @@ set_target_properties(onnxruntime::onnxruntime
 
 add_library(edge_ai_core STATIC
     src/core.cpp
+    src/model_contract.cpp
 )
 target_include_directories(edge_ai_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+target_link_libraries(edge_ai_core
+    PRIVATE
+        yaml-cpp
 )
 
 add_library(edge_ai_backend_ort STATIC
@@ -158,6 +165,30 @@ if(BUILD_TESTING)
             edge_ai_core
     )
     add_test(NAME test_core COMMAND test_core)
+
+    add_executable(test_model_contract
+        tests/test_model_contract.cpp
+    )
+    target_link_libraries(test_model_contract
+        PRIVATE
+            edge_ai_core
+    )
+    set_target_properties(test_model_contract
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME model_contract
+        COMMAND test_model_contract
+            --contract
+            "${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml"
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/model_contract"
+    )
+    set_tests_properties(model_contract
+        PROPERTIES
+            LABELS "m1;model-contract"
+    )
 
     add_executable(test_ort_runtime_smoke
         tests/smoke/ort_runtime_smoke.cpp
