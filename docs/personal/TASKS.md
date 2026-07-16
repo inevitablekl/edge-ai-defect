@@ -805,3 +805,25 @@ NEU-DET
 边界：
 
 - M0.2 未调用 ORT API，未加载 frozen ONNX，未执行推理，也未创建 ORT smoke test 或正式 `OnnxRuntimeEngine`。
+
+---
+
+### 2026-07-16 - M0.3 ONNX Runtime C++ API smoke 完成
+
+已完成：
+
+- 新增测试专用 `test_ort_runtime_smoke` target 和 `ort_runtime_smoke` CTest，仅位于 `tests/smoke/`。
+- 实际 ONNX Runtime C++ runtime version 精确验证为 `1.23.2`。
+- 实际 available Provider 完整列表为 `CPUExecutionProvider`，完全匹配检查通过。
+- `Ort::Env` 和 `Ort::SessionOptions` 创建与销毁通过。
+- smoke executable 通过 build RUNPATH 动态加载项目 SDK 的 `libonnxruntime.so.1.23.2`，unset `LD_LIBRARY_PATH` 后仍可运行。
+- 错误期望版本 `0.0.0` 的负向比较返回非零，版本不一致路径通过。
+- 原有 `test_core`、生产 target 和 `edge_ai_defect` 继续通过。
+
+待执行：
+
+- M0.4：frozen ONNX model loading 与 contract smoke。
+
+边界：
+
+- M0.3 未创建 `Ort::Session`，未加载模型，未创建 tensor，未执行推理，也未创建正式 `OnnxRuntimeEngine`。

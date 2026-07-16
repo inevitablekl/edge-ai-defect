@@ -116,4 +116,26 @@ if(BUILD_TESTING)
             edge_ai_core
     )
     add_test(NAME test_core COMMAND test_core)
+
+    add_executable(test_ort_runtime_smoke
+        tests/smoke/ort_runtime_smoke.cpp
+    )
+    target_compile_definitions(test_ort_runtime_smoke
+        PRIVATE
+            EDGE_AI_EXPECTED_ORT_VERSION="1.23.2"
+    )
+    target_link_libraries(test_ort_runtime_smoke
+        PRIVATE
+            onnxruntime::onnxruntime
+    )
+    set_target_properties(test_ort_runtime_smoke
+        PROPERTIES
+            BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME ort_runtime_smoke COMMAND test_ort_runtime_smoke)
+    set_tests_properties(ort_runtime_smoke
+        PROPERTIES
+            LABELS "m0;smoke;onnxruntime"
+    )
 endif()

@@ -42,6 +42,44 @@ ldd third_party/onnxruntime/1.23.2/linux-x64/lib/libonnxruntime.so
 
 The `ldd` output must not contain `not found`.
 
+## M0.3 runtime API smoke
+
+The C++ runtime API smoke test is built at:
+
+```text
+build/tests/test_ort_runtime_smoke
+```
+
+Run it without relying on `LD_LIBRARY_PATH`:
+
+```bash
+env -u LD_LIBRARY_PATH ./build/tests/test_ort_runtime_smoke
+```
+
+Verified results:
+
+| Check | Result |
+| --- | --- |
+| Runtime API version | `1.23.2` |
+| Available providers | `CPUExecutionProvider` |
+| CPUExecutionProvider | PASS |
+| `Ort::Env` lifecycle | PASS |
+| `Ort::SessionOptions` lifecycle | PASS |
+| Dynamic dependency | `libonnxruntime.so.1` from this project SDK |
+| Build RUNPATH | `third_party/onnxruntime/1.23.2/linux-x64/lib` |
+
+Dynamic linking can be inspected with:
+
+```bash
+readelf -d build/tests/test_ort_runtime_smoke
+ldd build/tests/test_ort_runtime_smoke
+readlink -f third_party/onnxruntime/1.23.2/linux-x64/lib/libonnxruntime.so
+```
+
+This smoke test validates only the runtime API, version, available Provider,
+and basic ORT object lifecycles. It does not create an `Ort::Session`, load a
+model, create tensors, or run inference.
+
 ## Reinstall
 
 Remove the local archive and payload, recreate their directories, download the
