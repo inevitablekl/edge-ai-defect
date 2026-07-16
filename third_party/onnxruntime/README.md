@@ -80,6 +80,46 @@ This smoke test validates only the runtime API, version, available Provider,
 and basic ORT object lifecycles. It does not create an `Ort::Session`, load a
 model, create tensors, or run inference.
 
+## M0 final smoke verification
+
+Configure without the local model asset:
+
+```bash
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DONNXRUNTIME_ROOT="$PWD/third_party/onnxruntime/1.23.2/linux-x64" \
+  -DEDGE_AI_ENABLE_MODEL_SMOKE=OFF
+```
+
+Configure the model-backed smoke tests:
+
+```bash
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DONNXRUNTIME_ROOT="$PWD/third_party/onnxruntime/1.23.2/linux-x64" \
+  -DEDGE_AI_ENABLE_MODEL_SMOKE=ON \
+  -DEDGE_AI_FROZEN_ONNX_PATH="$PWD/models/onnx/yolov8n_neudet_frozen.onnx"
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
+The key smoke executables can also be run independently:
+
+```bash
+env -u LD_LIBRARY_PATH ./build/tests/test_ort_runtime_smoke
+env -u LD_LIBRARY_PATH ./build/tests/test_ort_model_contract_smoke \
+  --mode positive \
+  --model "$PWD/models/onnx/yolov8n_neudet_frozen.onnx"
+env -u LD_LIBRARY_PATH ./build/tests/test_ort_inference_smoke \
+  --model "$PWD/models/onnx/yolov8n_neudet_frozen.onnx"
+```
+
+M0 final verification passes 2/2 tests with model smoke disabled and 6/6 tests
+with it enabled. Runtime version 1.23.2, `CPUExecutionProvider`, the frozen model
+contract, and one synthetic CPU inference are verified. These targets are
+test-side smoke checks only; the production `OnnxRuntimeEngine` and performance
+baseline are not implemented.
+
 ## Reinstall
 
 Remove the local archive and payload, recreate their directories, download the

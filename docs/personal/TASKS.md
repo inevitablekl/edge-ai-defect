@@ -745,10 +745,10 @@ NEU-DET
 
 近期优先级：
 
-1. 确定本地 C++ ONNX Runtime、OpenCV 和 CMake 版本。
-2. 初始化 C++17 / CMake 工程与 YAML `ConfigManager`。
-3. 定义 backend 解耦的 `InferenceEngine`，实现 `ONNXRuntimeEngine` baseline。
-4. 完成 Serial mode 后实现 Pipeline mode，并保留 TensorRT backend 扩展点。
+1. M0 工程、依赖与真实模型 smoke 验证已经完成并关闭。
+2. 下一阶段为 M1 Core Contract + Preprocessor；M1 尚未开始。
+3. 正式 `OnnxRuntimeEngine`、Serial Baseline 和性能实验继续按后续阶段计划执行。
+4. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
 
@@ -888,3 +888,31 @@ NEU-DET
 
 - 本阶段只证明 C++ ONNX Runtime CPU 能执行一次真实 frozen model synthetic inference。
 - 未进行计时、warm-up、FPS 或性能实验，未建立正式 `OnnxRuntimeEngine`，不描述为正式 Serial Baseline。
+
+---
+
+### 2026-07-16 - M0.6 最终回归与阶段收尾完成
+
+已完成：
+
+- M0.0～M0.5 的工程骨架、依赖接入、runtime smoke、模型合同与 synthetic inference smoke 已全部完成。
+- Model Smoke OFF 独立干净构建成功，只注册并通过 `test_core` 和 `ort_runtime_smoke`，结果为 2/2。
+- Model Smoke ON 正式干净构建成功，当前六个 CTest 精确发现并全部通过，结果为 6/6。
+- ONNX Runtime C++ runtime version 为 `1.23.2`，`CPUExecutionProvider` 验证通过。
+- Frozen ONNX input/output 合同、missing-model、结构化 contract-mismatch 和 synthetic inference 均独立验证通过。
+- synthetic inference 输出 `84000` 个元素全部 finite，NaN、正 infinity、负 infinity 均为 `0`。
+- runtime 与 inference smoke 的动态链接均解析到项目内 ONNX Runtime 1.23.2 SDK，无 `not found`。
+- 无效 ORT root、空模型路径和不存在模型路径均以预期的明确配置错误失败。
+- 资产 provenance、代码边界、Git 跟踪与 ignore 状态复核通过。
+- M0 阶段正式关闭。
+
+当前边界：
+
+- 当前生产程序仍为 C++ runtime skeleton，`edge_ai_backend_ort` 仍为占位 target，正式 backend 尚未实现。
+- 下一阶段为 M1 Core Contract + Preprocessor；M1 尚未开始。
+- 当前没有正式 `OnnxRuntimeEngine`、Serial Baseline 或性能数据。
+- 当前不进入 TensorRT、Pipeline、ROS2、Qt 或性能 benchmark。
+
+结论：
+
+- M0 工程、依赖与真实模型 smoke 验证完成，可进入 M1。
