@@ -827,3 +827,25 @@ NEU-DET
 边界：
 
 - M0.3 未创建 `Ort::Session`，未加载模型，未创建 tensor，未执行推理，也未创建正式 `OnnxRuntimeEngine`。
+
+---
+
+### 2026-07-16 - M0.4 Frozen ONNX model contract smoke 完成
+
+已完成：
+
+- frozen ONNX 文件大小 `12242487` bytes 与 SHA256 `c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944` 已核对。
+- 新增默认关闭的 `EDGE_AI_ENABLE_MODEL_SMOKE` 资产测试开关和 `EDGE_AI_FROZEN_ONNX_PATH` cache path；关闭时普通无模型资产构建继续通过。
+- 新增测试专用 `test_ort_model_contract_smoke` target，以及 positive、missing-model、contract-mismatch 三个 CTest。
+- `Ort::Session` 成功加载 frozen ONNX；input 为 `images` / `float32` / `[1,3,640,640]`，output 为 `output0` / `float32` / `[1,10,8400]`。
+- 输入输出数量均为 1，所有维度均为静态正数，完整合同验证通过。
+- 不存在模型路径的预期加载失败被正确捕获；故意设置 `wrong_images` 的 input name mismatch 被正确检测。
+- 原有 `test_core`、`ort_runtime_smoke`、生产 targets 和 `edge_ai_defect` 继续通过。
+
+待执行：
+
+- M0.5：常量 synthetic tensor 的真实 CPU inference smoke。
+
+边界：
+
+- M0.4 只完成模型加载和 metadata 合同验证；未创建输入 tensor，未调用 `Session::Run`，未读取输出，也未执行推理或性能测试。
