@@ -21,14 +21,19 @@ M1 不包含：
 - yaml-cpp：`0.7.0`，C++17 `YAML::Load`、标量和序列 probe PASS。
 - Python reference：`tools/validation/compare_pt_onnx.py::preprocess_image`。
 - Python reference 环境：OpenCV `4.10.0`、Ultralytics `8.4.50`、NumPy `1.26.4`。
-- 当前 `include/` 只有 `.gitkeep`；`src/` 只有 M0 的三个骨架源文件。
-- `edge_ai_core` 只包含 `src/core.cpp`；`edge_ai_backend_ort` 是占位 target；
-  `edge_ai_infer` 只链接前两者并运行骨架 main。
+- 当前 `include/edge_ai_defect/` 已包含 core contracts 与 model contract public
+  headers；`src/` 已包含对应的 `core.cpp` 和 `model_contract.cpp`，以及 M0
+  三个骨架源文件。
+- `edge_ai_core` 已包含 core contracts 和严格 model contract loader，并以
+  PRIVATE target dependency 接入 yaml-cpp；`edge_ai_backend_ort` 仍是占位
+  target；`edge_ai_infer` 仍运行骨架 main。
 - M0 ORT API 和 helper 只位于 `tests/smoke/`；`edge_ai_ort_smoke_support`
   只服务测试。
-- 当前没有正式 C++ `Status`、`TensorInfo`、`HostTensor`、`ModelContract`、
-  `Preprocessor` 或 ORT backend。
-- 当前没有 Git 跟踪、可供 C++ 读取的正式 model contract 文件。
+- M1.1 的正式 C++ `Status`、`TensorInfo` 和 `HostTensor` 已实现；M1.2 的
+  `ModelContract` 和严格 loader 已实现。当前仍没有 `Preprocessor` 或正式 ORT
+  backend。
+- Git-tracked 正式 model contract 已建立在冻结路径
+  `configs/model_contracts/yolov8n_neudet_frozen.yaml`。
 - 当前没有独立 Level A golden generator、manifest、人工 synthetic images、
   tensor/metadata golden 或 Level A report。
 
@@ -50,26 +55,34 @@ configs/model_contracts/yolov8n_neudet_frozen.yaml
 
 ```yaml
 schema_version: 1
+
 model:
+  id: yolov8n_neudet_frozen
+  format: onnx
   sha256: c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944
+  size_bytes: 12242487
+
 input:
   name: images
   dtype: float32
   layout: NCHW
   shape: [1, 3, 640, 640]
+
 output:
   name: output0
   dtype: float32
   layout: BCN
   shape: [1, 10, 8400]
-class_count: 6
+
 classes:
-  - crazing
-  - inclusion
-  - patches
-  - pitted_surface
-  - rolled-in_scale
-  - scratches
+  count: 6
+  names:
+    - crazing
+    - inclusion
+    - patches
+    - pitted_surface
+    - rolled-in_scale
+    - scratches
 ```
 
 权威关系：
@@ -78,6 +91,10 @@ classes:
 - Model Contract 是冻结项目语义、模型 SHA256 和类别顺序的权威；
 - runtime YAML 只提供运行参数，不承担类别名、shape 或模型语义权威；
 - 后续生产 runtime 必须同时读取 ONNX 和 contract，并在一致性验证通过后继续。
+- `ModelContract` 对象不重复保存 `classes.count`，类别数量由有序
+  `class_names.size()` 推导；
+- loader 只实现通用严格 schema、类型和静态 shape 校验，不在 C++ 中硬编码
+  tensor 名称、shape、类别或 frozen SHA256。
 
 ### 3.2 Python preprocessing reference
 
@@ -135,6 +152,10 @@ dtype/layout/shape、非 64 位小写十六进制 SHA、类别数量不一致、
 推荐提交：`feat: add frozen model contract loader`
 
 Gate：深度 Gate 1。
+
+状态：实现完成；2026-07-17 深度 Gate 判定为
+`PASS WITH DOCUMENTATION CHANGES`。正式 contract、严格 loader、yaml-cpp
+target 级接入和 43 个测试用例均已验证；M1.3 尚未开始。
 
 ### M1.3 LetterBox Geometry
 

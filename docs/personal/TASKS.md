@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-13
+2026-07-17
 ```
 
 当前阶段：
 
 ```text
-训练、模型冻结、ONNX export 与 Python ONNX Runtime validation 已完成，进入 C++ ONNX Runtime baseline 阶段
+M1.1 Core Contracts 与 M1.2 Frozen Model Contract 已完成，M1.2 深度 Gate 已通过；今日暂停，M1.3 尚未开始
 ```
 
 当前主线：
@@ -746,9 +746,10 @@ NEU-DET
 近期优先级：
 
 1. M0 工程、依赖与真实模型 smoke 验证已经完成并关闭。
-2. M1.0 仓库预检与阶段计划已冻结；下一步为 M1.1 Core Contracts。
-3. 正式 `OnnxRuntimeEngine`、Serial Baseline 和性能实验继续按后续阶段计划执行。
-4. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
+2. M1.1 Core Contracts 与 M1.2 Frozen Model Contract 已完成，深度 Gate 已通过。
+3. 下一任务为 M1.3 LetterBox Geometry；今日暂停，M1.3 尚未开始。
+4. 正式 `OnnxRuntimeEngine`、Serial Baseline 和性能实验继续按后续阶段计划执行。
+5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
 
@@ -937,3 +938,25 @@ NEU-DET
 边界：
 
 - 正式 `OnnxRuntimeEngine`、postprocess/NMS、SerialRunner、benchmark、Pipeline、TensorRT、ROS2 和 Qt 均不属于 M1。
+
+---
+
+### 2026-07-17 - M1.2 Frozen Model Contract 深度 Gate 通过
+
+已完成：
+
+- M1.1 Core Contracts 已完成，提供 `Status`、`TensorInfo`、`HostTensor` 和安全 element count。
+- M1.2 已创建正式 Git-tracked contract：`configs/model_contracts/yolov8n_neudet_frozen.yaml`。
+- `ModelContract`、严格 `ModelContractLoader` 与 yaml-cpp `0.7.0` target 级接入已完成。
+- `test_model_contract` 共 43 个用例全部通过；Model Smoke OFF 的 CTest 为 3/3 通过。
+- 深度 Gate 完成 public API、所有权、严格 schema、duplicate key、错误传播、权威边界、依赖边界和复杂度审查，判定为 `PASS WITH DOCUMENTATION CHANGES`。
+
+当前边界：
+
+- 当前正式生产能力仅为 core contracts 与 model contract loader。
+- `Preprocessor`、LetterBox、正式 `OnnxRuntimeEngine` 和后续 runtime 模块均未实现。
+- 今日暂停，不进入 M1.3。
+
+下一步：
+
+- 明日按独立任务执行 M1.3 LetterBox Geometry；M1.3 当前尚未开始。
