@@ -231,6 +231,33 @@ if(BUILD_TESTING)
             LABELS "m1;preprocess;cpu"
     )
 
+    add_executable(test_preprocess_level_a
+        tests/test_preprocess_level_a.cpp
+    )
+    target_link_libraries(test_preprocess_level_a
+        PRIVATE
+            edge_ai_core
+            yaml-cpp
+    )
+    set_target_properties(test_preprocess_level_a
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME preprocess_level_a
+        COMMAND test_preprocess_level_a
+            --manifest
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/preprocess_level_a/manifest.yaml"
+            --data-root
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/preprocess_level_a"
+            --report
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/preprocess_level_a/level_a_report.json"
+    )
+    set_tests_properties(preprocess_level_a
+        PROPERTIES
+            LABELS "m1;preprocess;level-a"
+    )
+
     add_executable(test_ort_runtime_smoke
         tests/smoke/ort_runtime_smoke.cpp
     )

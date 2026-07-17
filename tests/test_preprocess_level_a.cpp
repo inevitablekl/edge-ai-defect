@@ -1,0 +1,833 @@
+#include "edge_ai_defect/preprocess/preprocessor.hpp"
+
+#include <opencv2/core.hpp>
+#include <opencv2/core/version.hpp>
+#include <yaml-cpp/yaml.h>
+
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace {
+
+namespace core = edge_ai_defect::core;
+namespace preprocess = edge_ai_defect::preprocess;
+namespace fs = std::filesystem;
+
+constexpr int kComparisonFailure = 1;
+constexpr int kInputFailure = 2;
+constexpr int kPreprocessFailure = 3;
+constexpr int kReportFailure = 4;
+constexpr double kGainTolerance = 1.0e-12;
+
+class InputError final : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class PreprocessError final : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class ReportError final : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
+
+struct Options {
+    fs::path manifest;
+    fs::path data_root;
+    fs::path report;
+};
+
+struct ReferenceInfo {
+    std::string implementation;
+    std::string python_version;
+    std::string numpy_version;
+    std::string opencv_version;
+};
+
+struct ToleranceProfile {
+    double mae_limit = 0.0;
+    double max_abs_limit = 0.0;
+};
+
+struct CaseDefinition {
+    std::string id;
+    fs::path input_path;
+    int width = 0;
+    int height = 0;
+    std::vector<std::int64_t> target_shape;
+    fs::path golden_path;
+    std::size_t golden_element_count = 0;
+    preprocess::ImageTransformMetadata metadata;
+    std::string tolerance_profile;
+};
+
+struct Manifest {
+    ReferenceInfo reference;
+    std::map<std::string, ToleranceProfile> tolerances;
+    std::vector<CaseDefinition> cases;
+};
+
+struct CaseResult {
+    std::string id;
+    std::string tolerance_profile;
+    std::vector<std::int64_t> target_shape;
+    std::size_t element_count = 0;
+    double mae = 0.0;
+    double max_abs = 0.0;
+    double mae_limit = 0.0;
+    double max_abs_limit = 0.0;
+    bool metadata_pass = false;
+    bool tensor_pass = false;
+    bool overall_pass = false;
+    std::size_t max_error_index = 0;
+    int max_error_channel = 0;
+    int max_error_y = 0;
+    int max_error_x = 0;
+    float golden_at_max_error = 0.0F;
+    float actual_at_max_error = 0.0F;
+    std::string max_error_region;
+};
+
+template <typename T>
+T require_scalar(const YAML::Node& parent,
+                 const std::string& key,
+                 const std::string& context) {
+    const YAML::Node node = parent[key];
+    if (!node || !node.IsScalar()) {
+        throw InputError(context + ": missing scalar field '" + key + "'");
+    }
+    try {
+        return node.as<T>();
+    } catch (const YAML::Exception& exception) {
+        throw InputError(context + ": invalid field '" + key + "': " +
+                         exception.what());
+    }
+}
+
+void require_value(const YAML::Node& parent,
+                   const std::string& key,
+                   const std::string& expected,
+                   const std::string& context) {
+    const std::string actual = require_scalar<std::string>(parent, key, context);
+    if (actual != expected) {
+        throw InputError(context + ": field '" + key + "' is '" + actual +
+                         "', expected '" + expected + "'");
+    }
+}
+
+bool host_is_little_endian() noexcept {
+    const std::uint16_t value = 1U;
+    return *reinterpret_cast<const std::uint8_t*>(&value) == 1U;
+}
+
+fs::path require_relative_path(const YAML::Node& parent,
+                               const std::string& key,
+                               const std::string& context) {
+    const fs::path path = require_scalar<std::string>(parent, key, context);
+    if (path.empty() || path.is_absolute()) {
+        throw InputError(context + ": field '" + key +
+                         "' must be a nonempty relative path");
+    }
+    for (const fs::path& component : path) {
+        if (component == "..") {
+            throw InputError(context + ": field '" + key +
+                             "' must not escape the data root");
+        }
+    }
+    return path;
+}
+
+void validate_sha256_field(const YAML::Node& parent,
+                           const std::string& key,
+                           const std::string& context) {
+    const std::string value = require_scalar<std::string>(parent, key, context);
+    const bool is_hex = std::all_of(
+        value.begin(), value.end(), [](char character) {
+            return (character >= '0' && character <= '9') ||
+                   (character >= 'a' && character <= 'f');
+        });
+    if (value.size() != 64U || !is_hex) {
+        throw InputError(context + ": field '" + key +
+                         "' must be a lowercase SHA256 digest");
+    }
+}
+
+preprocess::ImageTransformMetadata parse_metadata(
+    const YAML::Node& node,
+    const std::string& context) {
+    if (!node || !node.IsMap()) {
+        throw InputError(context + ": expected_metadata must be a map");
+    }
+    return {
+        require_scalar<int>(node, "original_width", context),
+        require_scalar<int>(node, "original_height", context),
+        require_scalar<int>(node, "target_width", context),
+        require_scalar<int>(node, "target_height", context),
+        require_scalar<int>(node, "resized_width", context),
+        require_scalar<int>(node, "resized_height", context),
+        require_scalar<double>(node, "gain", context),
+        require_scalar<int>(node, "pad_left", context),
+        require_scalar<int>(node, "pad_right", context),
+        require_scalar<int>(node, "pad_top", context),
+        require_scalar<int>(node, "pad_bottom", context),
+    };
+}
+
+std::vector<std::int64_t> parse_target_shape(const YAML::Node& node,
+                                             const std::string& context) {
+    if (!node || !node.IsSequence() || node.size() != 4U) {
+        throw InputError(context + ": target_shape must contain four dimensions");
+    }
+    std::vector<std::int64_t> shape;
+    shape.reserve(4U);
+    for (std::size_t index = 0; index < node.size(); ++index) {
+        try {
+            shape.push_back(node[index].as<std::int64_t>());
+        } catch (const YAML::Exception& exception) {
+            throw InputError(context + ": invalid target_shape dimension: " +
+                             exception.what());
+        }
+    }
+    if (shape[0] != 1 || shape[1] != 3 || shape[2] <= 0 || shape[3] <= 0) {
+        throw InputError(context + ": target_shape must be positive [1,3,H,W]");
+    }
+    return shape;
+}
+
+Manifest load_manifest(const fs::path& manifest_path) {
+    YAML::Node root;
+    try {
+        root = YAML::LoadFile(manifest_path.string());
+    } catch (const YAML::Exception& exception) {
+        throw InputError("manifest: " + std::string(exception.what()));
+    }
+    if (!root.IsMap() || require_scalar<int>(root, "schema_version", "manifest") != 1) {
+        throw InputError("manifest: schema_version must be 1");
+    }
+
+    const YAML::Node reference = root["reference"];
+    if (!reference || !reference.IsMap()) {
+        throw InputError("manifest: reference must be a map");
+    }
+    require_value(reference, "input_color_order", "BGR", "reference");
+    require_value(reference, "output_color_order", "RGB", "reference");
+    require_value(reference, "interpolation", "INTER_LINEAR", "reference");
+    require_value(reference, "rounding", "python_ties_to_even", "reference");
+    if (require_scalar<int>(reference, "padding_value", "reference") != 114 ||
+        !require_scalar<bool>(reference, "center", "reference") ||
+        require_scalar<bool>(reference, "auto", "reference") ||
+        require_scalar<bool>(reference, "scale_fill", "reference") ||
+        !require_scalar<bool>(reference, "scaleup", "reference") ||
+        require_scalar<int>(reference, "stride", "reference") != 32) {
+        throw InputError("reference: frozen LetterBox semantics do not match Level A");
+    }
+
+    const YAML::Node tensor_format = root["tensor_format"];
+    if (!tensor_format || !tensor_format.IsMap()) {
+        throw InputError("manifest: tensor_format must be a map");
+    }
+    require_value(tensor_format, "dtype", "float32", "tensor_format");
+    require_value(tensor_format, "byte_order", "little_endian", "tensor_format");
+    require_value(tensor_format, "layout", "NCHW", "tensor_format");
+
+    Manifest manifest;
+    manifest.reference = {
+        require_scalar<std::string>(reference, "implementation", "reference"),
+        require_scalar<std::string>(reference, "python_version", "reference"),
+        require_scalar<std::string>(reference, "numpy_version", "reference"),
+        require_scalar<std::string>(reference, "opencv_version", "reference"),
+    };
+    if (manifest.reference.opencv_version != "4.10.0") {
+        throw InputError("reference: opencv_version must be 4.10.0");
+    }
+
+    const YAML::Node profiles = root["tolerance_profiles"];
+    if (!profiles || !profiles.IsMap()) {
+        throw InputError("manifest: tolerance_profiles must be a map");
+    }
+    for (const std::string& name : {std::string("exact"), std::string("resize")}) {
+        const YAML::Node profile = profiles[name];
+        if (!profile || !profile.IsMap()) {
+            throw InputError("tolerance_profiles: missing profile '" + name + "'");
+        }
+        const ToleranceProfile tolerance{
+            require_scalar<double>(profile, "mae_limit", "profile " + name),
+            require_scalar<double>(profile, "max_abs_limit", "profile " + name),
+        };
+        if (!std::isfinite(tolerance.mae_limit) || tolerance.mae_limit < 0.0 ||
+            !std::isfinite(tolerance.max_abs_limit) ||
+            tolerance.max_abs_limit < 0.0) {
+            throw InputError("profile " + name + ": limits must be finite and nonnegative");
+        }
+        manifest.tolerances.emplace(name, tolerance);
+    }
+
+    const YAML::Node cases = root["cases"];
+    if (!cases || !cases.IsSequence() || cases.size() != 8U) {
+        throw InputError("manifest: cases must contain exactly eight entries");
+    }
+    constexpr std::array<const char*, 8> kExpectedCaseIds{
+        "no_transform_gradient",
+        "vertical_padding",
+        "horizontal_padding",
+        "odd_horizontal_padding",
+        "non_integer_resize",
+        "small_upscale",
+        "rgb_color_blocks",
+        "frozen_640_checkerboard",
+    };
+    for (std::size_t index = 0; index < cases.size(); ++index) {
+        const YAML::Node node = cases[index];
+        const std::string context = "case[" + std::to_string(index) + "]";
+        if (!node.IsMap()) {
+            throw InputError(context + ": case must be a map");
+        }
+        CaseDefinition definition;
+        definition.id = require_scalar<std::string>(node, "id", context);
+        if (definition.id != kExpectedCaseIds[index]) {
+            throw InputError(context + ": unexpected case id/order '" + definition.id + "'");
+        }
+        definition.input_path = require_relative_path(node, "input", context);
+        validate_sha256_field(node, "input_sha256", context);
+        definition.width = require_scalar<int>(node, "width", context);
+        definition.height = require_scalar<int>(node, "height", context);
+        if (definition.width <= 0 || definition.height <= 0 ||
+            require_scalar<int>(node, "channels", context) != 3) {
+            throw InputError(context + ": input dimensions/channels are invalid");
+        }
+        definition.target_shape = parse_target_shape(node["target_shape"], context);
+        definition.golden_path = require_relative_path(node, "golden_tensor", context);
+        validate_sha256_field(node, "golden_sha256", context);
+        definition.golden_element_count =
+            require_scalar<std::size_t>(node, "golden_element_count", context);
+        definition.metadata = parse_metadata(node["expected_metadata"], context);
+        definition.tolerance_profile =
+            require_scalar<std::string>(node, "tolerance_profile", context);
+        if (manifest.tolerances.count(definition.tolerance_profile) == 0U) {
+            throw InputError(context + ": unknown tolerance profile '" +
+                             definition.tolerance_profile + "'");
+        }
+        std::size_t shape_count = 0;
+        const core::Status count_status =
+            core::checked_element_count(definition.target_shape, shape_count);
+        if (!count_status.ok() || shape_count != definition.golden_element_count) {
+            throw InputError(context + ": golden element count does not match target_shape");
+        }
+        manifest.cases.push_back(std::move(definition));
+    }
+    return manifest;
+}
+
+Options parse_options(int argc, char** argv) {
+    if (argc != 7) {
+        throw InputError(
+            "CLI: expected --manifest <path> --data-root <path> --report <path>");
+    }
+    Options options;
+    bool have_manifest = false;
+    bool have_data_root = false;
+    bool have_report = false;
+    for (int index = 1; index < argc; index += 2) {
+        const std::string option = argv[index];
+        const fs::path value = argv[index + 1];
+        if (value.empty()) {
+            throw InputError("CLI: option '" + option + "' has an empty value");
+        }
+        if (option == "--manifest" && !have_manifest) {
+            options.manifest = value;
+            have_manifest = true;
+        } else if (option == "--data-root" && !have_data_root) {
+            options.data_root = value;
+            have_data_root = true;
+        } else if (option == "--report" && !have_report) {
+            options.report = value;
+            have_report = true;
+        } else {
+            throw InputError("CLI: unknown or duplicate option '" + option + "'");
+        }
+    }
+    if (!have_manifest || !have_data_root || !have_report) {
+        throw InputError("CLI: all required options must be provided exactly once");
+    }
+    return options;
+}
+
+std::vector<std::uint8_t> read_bytes(const fs::path& path,
+                                     const std::string& case_id,
+                                     const std::string& category) {
+    std::ifstream input(path, std::ios::binary | std::ios::ate);
+    if (!input) {
+        throw InputError(case_id + ": " + category + " file is not readable: " +
+                         path.string());
+    }
+    const std::streampos end = input.tellg();
+    if (end < 0) {
+        throw InputError(case_id + ": cannot determine " + category + " file size: " +
+                         path.string());
+    }
+    const auto unsigned_size = static_cast<std::uintmax_t>(end);
+    if (unsigned_size > std::numeric_limits<std::size_t>::max() ||
+        unsigned_size > static_cast<std::uintmax_t>(
+                            std::numeric_limits<std::streamsize>::max())) {
+        throw InputError(case_id + ": " + category + " file is too large");
+    }
+    std::vector<std::uint8_t> bytes(static_cast<std::size_t>(unsigned_size));
+    input.seekg(0, std::ios::beg);
+    if (!bytes.empty()) {
+        input.read(reinterpret_cast<char*>(bytes.data()),
+                   static_cast<std::streamsize>(bytes.size()));
+        if (!input) {
+            throw InputError(case_id + ": failed to read complete " + category +
+                             " file: " + path.string());
+        }
+    }
+    return bytes;
+}
+
+bool compare_int_field(const std::string& case_id,
+                       const std::string& field,
+                       int actual,
+                       int expected) {
+    if (actual == expected) {
+        return true;
+    }
+    std::cerr << case_id << ": metadata field " << field << " actual=" << actual
+              << " expected=" << expected << '\n';
+    return false;
+}
+
+bool compare_metadata(const std::string& case_id,
+                      const preprocess::ImageTransformMetadata& actual,
+                      const preprocess::ImageTransformMetadata& expected) {
+    bool pass = true;
+    pass = compare_int_field(
+               case_id, "original_width", actual.original_width, expected.original_width) &&
+           pass;
+    pass = compare_int_field(case_id,
+                             "original_height",
+                             actual.original_height,
+                             expected.original_height) &&
+           pass;
+    pass = compare_int_field(
+               case_id, "target_width", actual.target_width, expected.target_width) &&
+           pass;
+    pass = compare_int_field(
+               case_id, "target_height", actual.target_height, expected.target_height) &&
+           pass;
+    pass = compare_int_field(
+               case_id, "resized_width", actual.resized_width, expected.resized_width) &&
+           pass;
+    pass = compare_int_field(case_id,
+                             "resized_height",
+                             actual.resized_height,
+                             expected.resized_height) &&
+           pass;
+    const double gain_error = std::abs(actual.gain - expected.gain);
+    if (!std::isfinite(actual.gain) || gain_error > kGainTolerance) {
+        std::cerr << case_id << ": metadata field gain actual=" << actual.gain
+                  << " expected=" << expected.gain
+                  << " tolerance=" << kGainTolerance << '\n';
+        pass = false;
+    }
+    pass = compare_int_field(
+               case_id, "pad_left", actual.pad_left, expected.pad_left) &&
+           pass;
+    pass = compare_int_field(
+               case_id, "pad_right", actual.pad_right, expected.pad_right) &&
+           pass;
+    pass = compare_int_field(case_id, "pad_top", actual.pad_top, expected.pad_top) &&
+           pass;
+    pass = compare_int_field(
+               case_id, "pad_bottom", actual.pad_bottom, expected.pad_bottom) &&
+           pass;
+    return pass;
+}
+
+std::string classify_region(const CaseDefinition& definition, int y, int x) {
+    const preprocess::ImageTransformMetadata& metadata = definition.metadata;
+    if (x < metadata.pad_left || x >= metadata.target_width - metadata.pad_right ||
+        y < metadata.pad_top || y >= metadata.target_height - metadata.pad_bottom) {
+        return "padding";
+    }
+    return "source_or_resized";
+}
+
+CaseResult validate_case(const CaseDefinition& definition,
+                         const ToleranceProfile& tolerance,
+                         const fs::path& data_root) {
+    const std::size_t input_size =
+        static_cast<std::size_t>(definition.width) *
+        static_cast<std::size_t>(definition.height) * 3U;
+    const std::vector<std::uint8_t> input_bytes =
+        read_bytes(data_root / definition.input_path, definition.id, "raw BGR input");
+    if (input_bytes.size() != input_size) {
+        throw InputError(definition.id + ": raw BGR input size actual=" +
+                         std::to_string(input_bytes.size()) + " expected=" +
+                         std::to_string(input_size));
+    }
+    cv::Mat input_bgr(definition.height, definition.width, CV_8UC3);
+    if (input_bgr.empty() || !input_bgr.isContinuous()) {
+        throw InputError(definition.id + ": failed to allocate contiguous CV_8UC3 input");
+    }
+    std::memcpy(input_bgr.data, input_bytes.data(), input_bytes.size());
+
+    const core::TensorInfo input_info{
+        core::TensorDataType::kFloat32,
+        core::TensorLayout::kNchw,
+        definition.target_shape,
+    };
+    preprocess::PreprocessedFrame actual;
+    const preprocess::Preprocessor preprocessor;
+    const core::Status preprocess_status =
+        preprocessor.preprocess(input_bgr, input_info, &actual);
+    if (!preprocess_status.ok()) {
+        throw PreprocessError(definition.id + ": Preprocessor failed code=" +
+                              std::to_string(static_cast<int>(preprocess_status.code())) +
+                              " message=" + preprocess_status.message());
+    }
+
+    const std::vector<std::uint8_t> golden_bytes =
+        read_bytes(data_root / definition.golden_path, definition.id, "golden tensor");
+    const std::size_t expected_golden_bytes = definition.golden_element_count * 4U;
+    if (golden_bytes.size() != expected_golden_bytes) {
+        throw InputError(definition.id + ": golden tensor byte size actual=" +
+                         std::to_string(golden_bytes.size()) + " expected=" +
+                         std::to_string(expected_golden_bytes));
+    }
+    std::vector<float> golden(definition.golden_element_count);
+    std::memcpy(golden.data(), golden_bytes.data(), golden_bytes.size());
+
+    CaseResult result;
+    result.id = definition.id;
+    result.tolerance_profile = definition.tolerance_profile;
+    result.target_shape = definition.target_shape;
+    result.element_count = definition.golden_element_count;
+    result.mae_limit = tolerance.mae_limit;
+    result.max_abs_limit = tolerance.max_abs_limit;
+    result.metadata_pass =
+        compare_metadata(definition.id, actual.transform, definition.metadata);
+
+    const core::Status tensor_status = core::validate_host_tensor(actual.tensor);
+    const bool tensor_info_pass =
+        actual.tensor.info.dtype == core::TensorDataType::kFloat32 &&
+        actual.tensor.info.layout == core::TensorLayout::kNchw &&
+        actual.tensor.info.shape == definition.target_shape;
+    const bool tensor_size_pass = actual.tensor.data.size() == golden.size();
+    if (!tensor_status.ok()) {
+        std::cerr << definition.id << ": output HostTensor invalid: "
+                  << tensor_status.message() << '\n';
+    }
+    if (!tensor_info_pass) {
+        std::cerr << definition.id << ": output TensorInfo does not match target_shape\n";
+    }
+    if (!tensor_size_pass) {
+        std::cerr << definition.id << ": output element count actual="
+                  << actual.tensor.data.size() << " expected=" << golden.size() << '\n';
+    }
+
+    bool values_finite = true;
+    if (tensor_size_pass) {
+        double absolute_error_sum = 0.0;
+        for (std::size_t index = 0; index < golden.size(); ++index) {
+            const double actual_value = static_cast<double>(actual.tensor.data[index]);
+            const double golden_value = static_cast<double>(golden[index]);
+            const double difference = std::abs(actual_value - golden_value);
+            if (!std::isfinite(actual_value) || !std::isfinite(golden_value) ||
+                !std::isfinite(difference)) {
+                values_finite = false;
+                continue;
+            }
+            absolute_error_sum += difference;
+            if (difference > result.max_abs) {
+                result.max_abs = difference;
+                result.max_error_index = index;
+                result.golden_at_max_error = golden[index];
+                result.actual_at_max_error = actual.tensor.data[index];
+            }
+        }
+        result.mae = absolute_error_sum / static_cast<double>(golden.size());
+        const std::size_t height = static_cast<std::size_t>(definition.target_shape[2]);
+        const std::size_t width = static_cast<std::size_t>(definition.target_shape[3]);
+        const std::size_t plane_size = height * width;
+        result.max_error_channel =
+            static_cast<int>(result.max_error_index / plane_size);
+        const std::size_t spatial_index = result.max_error_index % plane_size;
+        result.max_error_y = static_cast<int>(spatial_index / width);
+        result.max_error_x = static_cast<int>(spatial_index % width);
+        result.max_error_region = classify_region(
+            definition, result.max_error_y, result.max_error_x);
+    } else {
+        result.mae = std::numeric_limits<double>::max();
+        result.max_abs = std::numeric_limits<double>::max();
+        result.max_error_region = "unavailable";
+    }
+    result.tensor_pass = tensor_status.ok() && tensor_info_pass && tensor_size_pass &&
+                         values_finite && result.mae <= result.mae_limit &&
+                         result.max_abs <= result.max_abs_limit;
+    result.overall_pass = result.metadata_pass && result.tensor_pass;
+
+    std::cout << std::setprecision(17) << definition.id
+              << ": elements=" << result.element_count << " mae=" << result.mae
+              << " max_abs=" << result.max_abs
+              << " mae_limit=" << result.mae_limit
+              << " max_abs_limit=" << result.max_abs_limit
+              << " metadata=" << (result.metadata_pass ? "PASS" : "FAIL")
+              << " tensor=" << (result.tensor_pass ? "PASS" : "FAIL")
+              << " overall=" << (result.overall_pass ? "PASS" : "FAIL") << '\n';
+    if (!result.tensor_pass) {
+        std::cerr << std::setprecision(17) << definition.id
+                  << ": comparison failure mae=" << result.mae
+                  << " max_abs=" << result.max_abs
+                  << " max_index=" << result.max_error_index
+                  << " channel=" << result.max_error_channel
+                  << " y=" << result.max_error_y << " x=" << result.max_error_x
+                  << " golden=" << result.golden_at_max_error
+                  << " actual=" << result.actual_at_max_error
+                  << " region=" << result.max_error_region
+                  << " python_opencv=4.10.0 cpp_opencv=" << CV_VERSION << '\n';
+    }
+    return result;
+}
+
+std::string json_escape(const std::string& value) {
+    std::ostringstream escaped;
+    for (const unsigned char character : value) {
+        switch (character) {
+            case '"':
+                escaped << "\\\"";
+                break;
+            case '\\':
+                escaped << "\\\\";
+                break;
+            case '\n':
+                escaped << "\\n";
+                break;
+            case '\r':
+                escaped << "\\r";
+                break;
+            case '\t':
+                escaped << "\\t";
+                break;
+            default:
+                if (character < 0x20U) {
+                    escaped << "\\u" << std::hex << std::setw(4)
+                            << std::setfill('0') << static_cast<unsigned int>(character)
+                            << std::dec << std::setfill(' ');
+                } else {
+                    escaped << static_cast<char>(character);
+                }
+        }
+    }
+    return escaped.str();
+}
+
+void write_shape(std::ostream& output,
+                 const std::vector<std::int64_t>& shape) {
+    output << '[';
+    for (std::size_t index = 0; index < shape.size(); ++index) {
+        if (index != 0U) {
+            output << ", ";
+        }
+        output << shape[index];
+    }
+    output << ']';
+}
+
+void write_report(const fs::path& report_path,
+                  const Manifest& manifest,
+                  const std::vector<CaseResult>& results) {
+    if (results.empty()) {
+        throw ReportError("report: no case results are available");
+    }
+    const fs::path parent = report_path.parent_path();
+    std::error_code directory_error;
+    if (!parent.empty()) {
+        fs::create_directories(parent, directory_error);
+        if (directory_error) {
+            throw ReportError("report: cannot create parent directory: " +
+                              directory_error.message());
+        }
+    }
+    std::ofstream output(report_path);
+    if (!output) {
+        throw ReportError("report: cannot open output file: " + report_path.string());
+    }
+    output << std::setprecision(17);
+    const auto exact = manifest.tolerances.at("exact");
+    const auto resize = manifest.tolerances.at("resize");
+    const std::size_t passed_count = static_cast<std::size_t>(std::count_if(
+        results.begin(), results.end(), [](const CaseResult& result) {
+            return result.overall_pass;
+        }));
+    double aggregate_max_mae = 0.0;
+    double aggregate_max_abs = 0.0;
+    double closest_margin = std::numeric_limits<double>::max();
+    std::string closest_case;
+    std::string closest_metric;
+    for (const CaseResult& result : results) {
+        aggregate_max_mae = std::max(aggregate_max_mae, result.mae);
+        aggregate_max_abs = std::max(aggregate_max_abs, result.max_abs);
+        const double mae_margin = result.mae_limit - result.mae;
+        const double max_abs_margin = result.max_abs_limit - result.max_abs;
+        if (mae_margin < closest_margin) {
+            closest_margin = mae_margin;
+            closest_case = result.id;
+            closest_metric = "mae";
+        }
+        if (max_abs_margin < closest_margin) {
+            closest_margin = max_abs_margin;
+            closest_case = result.id;
+            closest_metric = "max_abs";
+        }
+    }
+
+    output << "{\n"
+           << "  \"schema_version\": 1,\n"
+           << "  \"validation\": \"preprocess_level_a\",\n"
+           << "  \"reference\": {\n"
+           << "    \"implementation\": \"" << json_escape(manifest.reference.implementation)
+           << "\",\n"
+           << "    \"python_version\": \"" << json_escape(manifest.reference.python_version)
+           << "\",\n"
+           << "    \"numpy_version\": \"" << json_escape(manifest.reference.numpy_version)
+           << "\",\n"
+           << "    \"opencv_version\": \"" << json_escape(manifest.reference.opencv_version)
+           << "\",\n"
+           << "    \"input_color_order\": \"BGR\",\n"
+           << "    \"output_color_order\": \"RGB\",\n"
+           << "    \"interpolation\": \"INTER_LINEAR\",\n"
+           << "    \"padding_value\": 114\n"
+           << "  },\n"
+           << "  \"cpp\": {\n"
+           << "    \"opencv_version\": \"" << CV_VERSION << "\"\n"
+           << "  },\n"
+           << "  \"tensor_format\": {\n"
+           << "    \"dtype\": \"float32\",\n"
+           << "    \"byte_order\": \"little_endian\",\n"
+           << "    \"layout\": \"NCHW\"\n"
+           << "  },\n"
+           << "  \"tolerance_profiles\": {\n"
+           << "    \"exact\": {\"mae_limit\": " << exact.mae_limit
+           << ", \"max_abs_limit\": " << exact.max_abs_limit << "},\n"
+           << "    \"resize\": {\"mae_limit\": " << resize.mae_limit
+           << ", \"max_abs_limit\": " << resize.max_abs_limit << "}\n"
+           << "  },\n"
+           << "  \"cases\": [\n";
+    for (std::size_t index = 0; index < results.size(); ++index) {
+        const CaseResult& result = results[index];
+        output << "    {\n"
+               << "      \"id\": \"" << json_escape(result.id) << "\",\n"
+               << "      \"target_shape\": ";
+        write_shape(output, result.target_shape);
+        output << ",\n"
+               << "      \"tolerance_profile\": \""
+               << json_escape(result.tolerance_profile) << "\",\n"
+               << "      \"element_count\": " << result.element_count << ",\n"
+               << "      \"mae\": " << result.mae << ",\n"
+               << "      \"max_abs\": " << result.max_abs << ",\n"
+               << "      \"mae_limit\": " << result.mae_limit << ",\n"
+               << "      \"max_abs_limit\": " << result.max_abs_limit << ",\n"
+               << "      \"metadata_pass\": "
+               << (result.metadata_pass ? "true" : "false") << ",\n"
+               << "      \"tensor_pass\": "
+               << (result.tensor_pass ? "true" : "false") << ",\n"
+               << "      \"overall_pass\": "
+               << (result.overall_pass ? "true" : "false") << ",\n"
+               << "      \"max_error\": {\n"
+               << "        \"index\": " << result.max_error_index << ",\n"
+               << "        \"channel\": " << result.max_error_channel << ",\n"
+               << "        \"y\": " << result.max_error_y << ",\n"
+               << "        \"x\": " << result.max_error_x << ",\n"
+               << "        \"golden\": " << result.golden_at_max_error << ",\n"
+               << "        \"actual\": " << result.actual_at_max_error << ",\n"
+               << "        \"region\": \"" << json_escape(result.max_error_region)
+               << "\"\n"
+               << "      }\n"
+               << "    }" << (index + 1U == results.size() ? "\n" : ",\n");
+    }
+    const bool final_pass = passed_count == results.size();
+    output << "  ],\n"
+           << "  \"aggregate\": {\n"
+           << "    \"case_count\": " << results.size() << ",\n"
+           << "    \"passed_case_count\": " << passed_count << ",\n"
+           << "    \"max_mae\": " << aggregate_max_mae << ",\n"
+           << "    \"max_abs\": " << aggregate_max_abs << ",\n"
+           << "    \"closest_limit_case\": \"" << json_escape(closest_case)
+           << "\",\n"
+           << "    \"closest_limit_metric\": \"" << json_escape(closest_metric)
+           << "\",\n"
+           << "    \"closest_limit_margin\": " << closest_margin << ",\n"
+           << "    \"final_pass\": " << (final_pass ? "true" : "false") << "\n"
+           << "  },\n"
+           << "  \"frozen_case\": {\n"
+           << "    \"id\": \"frozen_640_checkerboard\",\n"
+           << "    \"target_shape\": [1, 3, 640, 640]\n"
+           << "  }\n"
+           << "}\n";
+    if (!output) {
+        throw ReportError("report: failed while writing output file: " +
+                          report_path.string());
+    }
+}
+
+int run(int argc, char** argv) {
+    if (!host_is_little_endian()) {
+        throw InputError(
+            "platform: little-endian host is required for .f32le golden tensors");
+    }
+    const Options options = parse_options(argc, argv);
+    const Manifest manifest = load_manifest(options.manifest);
+    std::vector<CaseResult> results;
+    results.reserve(manifest.cases.size());
+    for (const CaseDefinition& definition : manifest.cases) {
+        results.push_back(validate_case(definition,
+                                        manifest.tolerances.at(
+                                            definition.tolerance_profile),
+                                        options.data_root));
+    }
+    write_report(options.report, manifest, results);
+    const bool all_pass = std::all_of(
+        results.begin(), results.end(), [](const CaseResult& result) {
+            return result.overall_pass;
+        });
+    return all_pass ? 0 : kComparisonFailure;
+}
+
+}  // namespace
+
+int main(int argc, char** argv) {
+    try {
+        return run(argc, argv);
+    } catch (const PreprocessError& exception) {
+        std::cerr << exception.what() << '\n';
+        return kPreprocessFailure;
+    } catch (const ReportError& exception) {
+        std::cerr << exception.what() << '\n';
+        return kReportFailure;
+    } catch (const InputError& exception) {
+        std::cerr << exception.what() << '\n';
+        return kInputFailure;
+    } catch (const std::exception& exception) {
+        std::cerr << "validator: unexpected input/schema error: " << exception.what()
+                  << '\n';
+        return kInputFailure;
+    }
+}
