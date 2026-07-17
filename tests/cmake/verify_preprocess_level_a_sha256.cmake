@@ -1,0 +1,53 @@
+cmake_minimum_required(VERSION 3.16)
+
+if(NOT DEFINED DATA_ROOT OR DATA_ROOT STREQUAL "")
+    message(FATAL_ERROR "DATA_ROOT is required")
+endif()
+
+set(checksum_file "${DATA_ROOT}/SHA256SUMS")
+if(NOT EXISTS "${checksum_file}")
+    message(FATAL_ERROR "SHA256SUMS does not exist: ${checksum_file}")
+endif()
+
+file(STRINGS "${checksum_file}" checksum_lines)
+list(LENGTH checksum_lines entry_count)
+if(NOT entry_count EQUAL 18)
+    message(FATAL_ERROR
+        "SHA256SUMS must contain exactly 18 nonempty entries; actual=${entry_count}")
+endif()
+
+set(seen_paths)
+foreach(line IN LISTS checksum_lines)
+    if(NOT line MATCHES "^([0-9a-f]+)  (.+)$")
+        message(FATAL_ERROR "Invalid SHA256SUMS entry: ${line}")
+    endif()
+    set(expected_sha "${CMAKE_MATCH_1}")
+    set(relative_path "${CMAKE_MATCH_2}")
+    string(LENGTH "${expected_sha}" sha_length)
+    if(NOT sha_length EQUAL 64)
+        message(FATAL_ERROR "SHA256 digest must have 64 lowercase hex characters: ${line}")
+    endif()
+    if(IS_ABSOLUTE "${relative_path}" OR
+       relative_path MATCHES "(^|/)\\.\\.(/|$)")
+        message(FATAL_ERROR "SHA256SUMS path must be safe and relative: ${relative_path}")
+    endif()
+    if(relative_path STREQUAL "SHA256SUMS")
+        message(FATAL_ERROR "SHA256SUMS must not hash itself")
+    endif()
+    if(relative_path IN_LIST seen_paths)
+        message(FATAL_ERROR "Duplicate SHA256SUMS path: ${relative_path}")
+    endif()
+    list(APPEND seen_paths "${relative_path}")
+
+    set(asset_path "${DATA_ROOT}/${relative_path}")
+    if(NOT EXISTS "${asset_path}")
+        message(FATAL_ERROR "SHA256SUMS asset does not exist: ${relative_path}")
+    endif()
+    file(SHA256 "${asset_path}" actual_sha)
+    if(NOT actual_sha STREQUAL expected_sha)
+        message(FATAL_ERROR
+            "SHA256 mismatch for ${relative_path}: expected=${expected_sha} actual=${actual_sha}")
+    endif()
+endforeach()
+
+message(STATUS "Preprocess Level A SHA256 evidence: 18/18 PASS")

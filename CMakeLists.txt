@@ -243,12 +243,21 @@ if(BUILD_TESTING)
             yaml-cpp
     )
 
+    add_library(preprocess_level_a_compare_test_support STATIC
+        tests/preprocess_level_a_compare.cpp
+    )
+    target_include_directories(preprocess_level_a_compare_test_support
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    )
+
     add_executable(test_preprocess_level_a
         tests/test_preprocess_level_a.cpp
     )
     target_link_libraries(test_preprocess_level_a
         PRIVATE
             edge_ai_core
+            preprocess_level_a_compare_test_support
             preprocess_level_a_manifest_test_support
     )
     set_target_properties(test_preprocess_level_a
@@ -292,6 +301,37 @@ if(BUILD_TESTING)
     set_tests_properties(preprocess_level_a_manifest_guard
         PROPERTIES
             LABELS "m1;preprocess;level-a;manifest"
+    )
+
+    add_executable(test_preprocess_level_a_compare
+        tests/test_preprocess_level_a_compare.cpp
+    )
+    target_link_libraries(test_preprocess_level_a_compare
+        PRIVATE
+            preprocess_level_a_compare_test_support
+    )
+    set_target_properties(test_preprocess_level_a_compare
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME preprocess_level_a_numeric_guard
+        COMMAND test_preprocess_level_a_compare
+    )
+    set_tests_properties(preprocess_level_a_numeric_guard
+        PROPERTIES
+            LABELS "m1;preprocess;level-a;numeric"
+    )
+
+    add_test(
+        NAME preprocess_level_a_assets_sha256
+        COMMAND ${CMAKE_COMMAND}
+            -DDATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/tests/data/preprocess_level_a
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/verify_preprocess_level_a_sha256.cmake
+    )
+    set_tests_properties(preprocess_level_a_assets_sha256
+        PROPERTIES
+            LABELS "m1;preprocess;level-a;evidence"
     )
 
     add_executable(test_ort_runtime_smoke

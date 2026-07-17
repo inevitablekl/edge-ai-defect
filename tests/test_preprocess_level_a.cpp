@@ -1,4 +1,5 @@
 #include "edge_ai_defect/preprocess/preprocessor.hpp"
+#include "preprocess_level_a_compare.hpp"
 #include "preprocess_level_a_manifest.hpp"
 
 #include <opencv2/core.hpp>
@@ -72,6 +73,8 @@ struct CaseResult {
     float golden_at_max_error = 0.0F;
     float actual_at_max_error = 0.0F;
     std::string max_error_region;
+    bool nonfinite_detected = false;
+    std::string nonfinite_source;
 };
 
 bool host_is_little_endian() noexcept {
@@ -219,8 +222,11 @@ CaseResult validate_case(const level_a::CaseDefinition& definition,
     const std::size_t input_size =
         static_cast<std::size_t>(definition.width) *
         static_cast<std::size_t>(definition.height) * 3U;
+    fs::path input_path;
+    level_a::resolve_asset_path_under_root(
+        data_root, definition.input_path, &input_path);
     const std::vector<std::uint8_t> input_bytes =
-        read_bytes(data_root / definition.input_path, definition.id, "raw BGR input");
+        read_bytes(input_path, definition.id, "raw BGR input");
     if (input_bytes.size() != input_size) {
         throw InputError(definition.id + ": raw BGR input size actual=" +
                          std::to_string(input_bytes.size()) + " expected=" +
@@ -247,8 +253,11 @@ CaseResult validate_case(const level_a::CaseDefinition& definition,
                               " message=" + preprocess_status.message());
     }
 
+    fs::path golden_path;
+    level_a::resolve_asset_path_under_root(
+        data_root, definition.golden_path, &golden_path);
     const std::vector<std::uint8_t> golden_bytes =
-        read_bytes(data_root / definition.golden_path, definition.id, "golden tensor");
+        read_bytes(golden_path, definition.id, "golden tensor");
     const std::size_t expected_golden_bytes = definition.golden_element_count * 4U;
     if (golden_bytes.size() != expected_golden_bytes) {
         throw InputError(definition.id + ": golden tensor byte size actual=" +
@@ -286,45 +295,37 @@ CaseResult validate_case(const level_a::CaseDefinition& definition,
                   << actual.tensor.data.size() << " expected=" << golden.size() << '\n';
     }
 
-    bool values_finite = true;
-    if (tensor_size_pass) {
-        double absolute_error_sum = 0.0;
-        for (std::size_t index = 0; index < golden.size(); ++index) {
-            const double actual_value = static_cast<double>(actual.tensor.data[index]);
-            const double golden_value = static_cast<double>(golden[index]);
-            const double difference = std::abs(actual_value - golden_value);
-            if (!std::isfinite(actual_value) || !std::isfinite(golden_value) ||
-                !std::isfinite(difference)) {
-                values_finite = false;
-                continue;
-            }
-            absolute_error_sum += difference;
-            if (difference > result.max_abs) {
-                result.max_abs = difference;
-                result.max_error_index = index;
-                result.golden_at_max_error = golden[index];
-                result.actual_at_max_error = actual.tensor.data[index];
-            }
-        }
-        result.mae = absolute_error_sum / static_cast<double>(golden.size());
-        const std::size_t height = static_cast<std::size_t>(definition.target_shape[2]);
-        const std::size_t width = static_cast<std::size_t>(definition.target_shape[3]);
-        const std::size_t plane_size = height * width;
-        result.max_error_channel =
-            static_cast<int>(result.max_error_index / plane_size);
-        const std::size_t spatial_index = result.max_error_index % plane_size;
-        result.max_error_y = static_cast<int>(spatial_index / width);
-        result.max_error_x = static_cast<int>(spatial_index % width);
-        result.max_error_region = classify_region(
-            definition, result.max_error_y, result.max_error_x);
-    } else {
-        result.mae = std::numeric_limits<double>::max();
-        result.max_abs = std::numeric_limits<double>::max();
-        result.max_error_region = "unavailable";
+    const level_a::TensorComparisonResult comparison =
+        level_a::compare_preprocess_tensors(actual.tensor.data,
+                                            golden,
+                                            definition.target_shape,
+                                            tolerance.mae_limit,
+                                            tolerance.max_abs_limit);
+    result.mae = comparison.mae;
+    result.max_abs = comparison.max_abs;
+    result.max_error_index = comparison.max_error_index;
+    result.max_error_channel = comparison.max_error_channel;
+    result.max_error_y = comparison.max_error_y;
+    result.max_error_x = comparison.max_error_x;
+    result.golden_at_max_error = comparison.golden_at_max_error;
+    result.actual_at_max_error = comparison.actual_at_max_error;
+    result.nonfinite_detected = comparison.nonfinite_detected;
+    result.nonfinite_source = comparison.nonfinite_source;
+    if (comparison.nonfinite_detected) {
+        result.max_error_index = comparison.nonfinite_index;
+        result.max_error_channel = comparison.nonfinite_channel;
+        result.max_error_y = comparison.nonfinite_y;
+        result.max_error_x = comparison.nonfinite_x;
+        result.golden_at_max_error = comparison.nonfinite_golden;
+        result.actual_at_max_error = comparison.nonfinite_actual;
     }
+    result.max_error_region = tensor_size_pass
+                                  ? classify_region(definition,
+                                                    result.max_error_y,
+                                                    result.max_error_x)
+                                  : "unavailable";
     result.tensor_pass = tensor_status.ok() && tensor_info_pass && tensor_size_pass &&
-                         values_finite && result.mae <= result.mae_limit &&
-                         result.max_abs <= result.max_abs_limit;
+                         comparison.pass;
     result.overall_pass = result.metadata_pass && result.tensor_pass;
 
     std::cout << std::setprecision(17) << definition.id
@@ -336,6 +337,15 @@ CaseResult validate_case(const level_a::CaseDefinition& definition,
               << " tensor=" << (result.tensor_pass ? "PASS" : "FAIL")
               << " overall=" << (result.overall_pass ? "PASS" : "FAIL") << '\n';
     if (!result.tensor_pass) {
+        if (result.nonfinite_detected) {
+            std::cerr << definition.id << ": non-finite comparison source="
+                      << result.nonfinite_source
+                      << " index=" << result.max_error_index
+                      << " channel=" << result.max_error_channel
+                      << " y=" << result.max_error_y << " x=" << result.max_error_x
+                      << " golden=" << result.golden_at_max_error
+                      << " actual=" << result.actual_at_max_error << '\n';
+        }
         std::cerr << std::setprecision(17) << definition.id
                   << ": comparison failure mae=" << result.mae
                   << " max_abs=" << result.max_abs
@@ -392,6 +402,16 @@ void write_shape(std::ostream& output,
         output << shape[index];
     }
     output << ']';
+}
+
+void write_json_float(std::ostream& output, float value) {
+    if (std::isnan(value)) {
+        output << "\"nan\"";
+    } else if (std::isinf(value)) {
+        output << (value > 0.0F ? "\"+inf\"" : "\"-inf\"");
+    } else {
+        output << value;
+    }
 }
 
 void write_report(const fs::path& report_path,
@@ -499,8 +519,12 @@ void write_report(const fs::path& report_path,
                << "        \"channel\": " << result.max_error_channel << ",\n"
                << "        \"y\": " << result.max_error_y << ",\n"
                << "        \"x\": " << result.max_error_x << ",\n"
-               << "        \"golden\": " << result.golden_at_max_error << ",\n"
-               << "        \"actual\": " << result.actual_at_max_error << ",\n"
+               << "        \"golden\": ";
+        write_json_float(output, result.golden_at_max_error);
+        output << ",\n"
+               << "        \"actual\": ";
+        write_json_float(output, result.actual_at_max_error);
+        output << ",\n"
                << "        \"region\": \"" << json_escape(result.max_error_region)
                << "\"\n"
                << "      }\n"
@@ -537,7 +561,8 @@ int run(int argc, char** argv) {
             "platform: little-endian host is required for .f32le golden tensors");
     }
     const Options options = parse_options(argc, argv);
-    const level_a::Manifest manifest = level_a::load_manifest(options.manifest);
+    const level_a::Manifest manifest = level_a::load_manifest(
+        options.manifest, options.data_root / "SHA256SUMS");
     std::vector<CaseResult> results;
     results.reserve(manifest.cases.size());
     for (const level_a::CaseDefinition& definition : manifest.cases) {

@@ -6,6 +6,7 @@
 #include <array>
 #include <cmath>
 #include <iomanip>
+#include <fstream>
 #include <initializer_list>
 #include <limits>
 #include <set>
@@ -164,9 +165,9 @@ fs::path require_relative_path(const YAML::Node& parent,
     return path;
 }
 
-void validate_sha256_field(const YAML::Node& parent,
-                           const std::string& key,
-                           const std::string& context) {
+std::string require_sha256_field(const YAML::Node& parent,
+                                 const std::string& key,
+                                 const std::string& context) {
     const std::string value = require_scalar<std::string>(parent, key, context);
     const bool is_hex = std::all_of(
         value.begin(), value.end(), [](char character) {
@@ -176,6 +177,100 @@ void validate_sha256_field(const YAML::Node& parent,
     if (value.size() != 64U || !is_hex) {
         throw ManifestError(context + "." + key +
                             ": must be a lowercase SHA256 digest");
+    }
+    return value;
+}
+
+bool path_is_contained(const fs::path& root, const fs::path& candidate) {
+    auto root_component = root.begin();
+    auto candidate_component = candidate.begin();
+    for (; root_component != root.end();
+         ++root_component, ++candidate_component) {
+        if (candidate_component == candidate.end() ||
+            *candidate_component != *root_component) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::map<std::string, std::string> load_sha256sums(
+    const fs::path& sha256sums_path) {
+    std::ifstream input(sha256sums_path);
+    if (!input) {
+        throw ManifestError("SHA256SUMS: cannot read file: " +
+                            sha256sums_path.string());
+    }
+    std::map<std::string, std::string> entries;
+    std::string line;
+    std::size_t line_number = 0U;
+    while (std::getline(input, line)) {
+        ++line_number;
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
+        const std::string context =
+            "SHA256SUMS line " + std::to_string(line_number);
+        if (line.size() <= 66U || line[64] != ' ' || line[65] != ' ') {
+            throw ManifestError(context + ": expected '<sha256>  <path>'");
+        }
+        const std::string digest = line.substr(0U, 64U);
+        const bool is_hex = std::all_of(
+            digest.begin(), digest.end(), [](char character) {
+                return (character >= '0' && character <= '9') ||
+                       (character >= 'a' && character <= 'f');
+            });
+        if (!is_hex) {
+            throw ManifestError(context + ": invalid lowercase SHA256 digest");
+        }
+        const fs::path path = line.substr(66U);
+        if (path.empty() || path.is_absolute()) {
+            throw ManifestError(context + ": path must be nonempty and relative");
+        }
+        for (const fs::path& component : path) {
+            if (component == "..") {
+                throw ManifestError(context + ": path must not contain '..'");
+            }
+        }
+        const std::string normalized = path.generic_string();
+        if (normalized == "SHA256SUMS") {
+            throw ManifestError(context + ": SHA256SUMS must not hash itself");
+        }
+        if (!entries.emplace(normalized, digest).second) {
+            throw ManifestError(context + ": duplicate path='" + normalized + "'");
+        }
+    }
+    if (input.bad()) {
+        throw ManifestError("SHA256SUMS: failed while reading file");
+    }
+    if (entries.size() != 18U) {
+        throw ManifestError("SHA256SUMS: expected exactly 18 entries actual=" +
+                            std::to_string(entries.size()));
+    }
+    return entries;
+}
+
+void validate_manifest_sha_chain(
+    const std::vector<CaseDefinition>& cases,
+    const std::map<std::string, std::string>& entries) {
+    for (const CaseDefinition& definition : cases) {
+        for (const auto& asset : {
+                 std::pair<fs::path, std::string>{definition.input_path,
+                                                  definition.input_sha256},
+                 std::pair<fs::path, std::string>{definition.golden_path,
+                                                  definition.golden_sha256}}) {
+            const std::string path = asset.first.generic_string();
+            const auto entry = entries.find(path);
+            if (entry == entries.end()) {
+                throw ManifestError("SHA256SUMS: missing manifest asset path='" +
+                                    path + "'");
+            }
+            if (entry->second != asset.second) {
+                throw ManifestError("SHA256 mismatch for path='" + path +
+                                    "' manifest='" + asset.second +
+                                    "' SHA256SUMS='" + entry->second + "'");
+            }
+        }
     }
 }
 
@@ -383,7 +478,42 @@ const std::array<FrozenCaseSpec, 8>& frozen_case_specs() noexcept {
     return kFrozenCaseSpecs;
 }
 
-Manifest load_manifest(const fs::path& manifest_path) {
+void resolve_asset_path_under_root(const fs::path& data_root,
+                                   const fs::path& relative_path,
+                                   fs::path* resolved_path) {
+    if (resolved_path == nullptr) {
+        throw ManifestError("asset path: output pointer is null");
+    }
+    if (relative_path.empty() || relative_path.is_absolute()) {
+        throw ManifestError("asset path: must be a nonempty relative path");
+    }
+    for (const fs::path& component : relative_path) {
+        if (component == "..") {
+            throw ManifestError("asset path: '..' is not allowed: " +
+                                relative_path.generic_string());
+        }
+    }
+    std::error_code error;
+    const fs::path canonical_root = fs::canonical(data_root, error);
+    if (error) {
+        throw ManifestError("asset path: cannot resolve data root: " +
+                            error.message());
+    }
+    const fs::path candidate = fs::canonical(canonical_root / relative_path, error);
+    if (error) {
+        throw ManifestError("asset path: cannot resolve existing asset '" +
+                            relative_path.generic_string() + "': " +
+                            error.message());
+    }
+    if (!path_is_contained(canonical_root, candidate) || candidate == canonical_root) {
+        throw ManifestError("asset path: resolved path escapes data root: " +
+                            relative_path.generic_string());
+    }
+    *resolved_path = candidate;
+}
+
+Manifest load_manifest(const fs::path& manifest_path,
+                       const fs::path& sha256sums_path) {
     YAML::Node root;
     try {
         root = YAML::LoadFile(manifest_path.string());
@@ -493,7 +623,8 @@ Manifest load_manifest(const fs::path& manifest_path) {
         definition.id = require_scalar<std::string>(node, "id", context);
         const std::string case_context = "case '" + definition.id + "'";
         definition.input_path = require_relative_path(node, "input", case_context);
-        validate_sha256_field(node, "input_sha256", case_context);
+        definition.input_sha256 =
+            require_sha256_field(node, "input_sha256", case_context);
         definition.width = require_scalar<int>(node, "width", case_context);
         definition.height = require_scalar<int>(node, "height", case_context);
         definition.channels = require_scalar<int>(node, "channels", case_context);
@@ -505,7 +636,8 @@ Manifest load_manifest(const fs::path& manifest_path) {
         definition.target_shape = parse_target_shape(node["target_shape"], case_context);
         definition.golden_path =
             require_relative_path(node, "golden_tensor", case_context);
-        validate_sha256_field(node, "golden_sha256", case_context);
+        definition.golden_sha256 =
+            require_sha256_field(node, "golden_sha256", case_context);
         definition.golden_element_count =
             require_scalar<std::size_t>(node, "golden_element_count", case_context);
         definition.metadata = parse_metadata(
@@ -529,6 +661,7 @@ Manifest load_manifest(const fs::path& manifest_path) {
 
     validate_unique_paths(manifest.cases);
     validate_frozen_cases(manifest.cases);
+    validate_manifest_sha_chain(manifest.cases, load_sha256sums(sha256sums_path));
     return manifest;
 }
 
