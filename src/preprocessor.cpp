@@ -5,10 +5,15 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace edge_ai_defect::preprocess {
 namespace {
+
+static_assert(std::is_nothrow_move_assignable_v<PreprocessedFrame>,
+              "PreprocessedFrame commit must not throw");
 
 core::Status validate_preprocess_input(
     const cv::Mat& input_bgr,
@@ -129,8 +134,31 @@ core::Status Preprocessor::preprocess(
             "Preprocessor tensor element count does not match NCHW dimensions");
     }
 
-    std::vector<float>& tensor_data = output->tensor.data;
-    tensor_data.resize(element_count);
+    PreprocessedFrame staged_output;
+    staged_output.tensor.info = model_input_info;
+    staged_output.transform = transform;
+
+    const bool reuse_output_buffer =
+        output->tensor.data.size() == element_count;
+    if (reuse_output_buffer) {
+        staged_output.tensor.data.swap(output->tensor.data);
+    } else {
+        staged_output.tensor.data.resize(element_count);
+    }
+
+    const core::Status tensor_status =
+        core::validate_host_tensor(staged_output.tensor);
+    if (!tensor_status.ok()) {
+        if (reuse_output_buffer) {
+            staged_output.tensor.data.swap(output->tensor.data);
+        }
+        return tensor_status;
+    }
+
+    // All allocating work and Status failure points precede pixel writes.
+    // The remaining writes preserve the validated contract, and the final
+    // PreprocessedFrame move assignment is statically required to be noexcept.
+    std::vector<float>& tensor_data = staged_output.tensor.data;
     for (int row = 0; row < target_height; ++row) {
         const cv::Vec3b* const pixels = letterboxed_bgr.ptr<cv::Vec3b>(row);
         const std::size_t row_offset =
@@ -148,8 +176,7 @@ core::Status Preprocessor::preprocess(
         }
     }
 
-    output->tensor.info = model_input_info;
-    output->transform = transform;
+    *output = std::move(staged_output);
     return core::Status::success();
 }
 

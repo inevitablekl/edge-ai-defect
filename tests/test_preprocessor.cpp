@@ -490,6 +490,47 @@ void test_buffer_reuse(TestContext& context) {
                  114.0F / 255.0F);
 }
 
+void test_different_size_commit(TestContext& context) {
+    preprocess::PreprocessedFrame output = make_sentinel_frame();
+    const core::Status sentinel_status =
+        core::validate_host_tensor(output.tensor);
+    context.expect(sentinel_status.ok(),
+                   "different-size sentinel",
+                   sentinel_status.message());
+    if (!sentinel_status.ok()) {
+        return;
+    }
+
+    cv::Mat input(2, 2, CV_8UC3);
+    input.at<cv::Vec3b>(0, 0) = cv::Vec3b(0, 0, 255);
+    input.at<cv::Vec3b>(0, 1) = cv::Vec3b(0, 255, 0);
+    input.at<cv::Vec3b>(1, 0) = cv::Vec3b(255, 0, 0);
+    input.at<cv::Vec3b>(1, 1) = cv::Vec3b(1, 254, 255);
+    const core::TensorInfo input_info = make_model_input_info(2, 2);
+
+    const preprocess::Preprocessor preprocessor;
+    const core::Status status =
+        preprocessor.preprocess(input, input_info, &output);
+    context.expect(status.ok(), "different-size commit", status.message());
+    if (!status.ok()) {
+        return;
+    }
+
+    expect_valid_frame(context, "different-size commit", output, input_info);
+    expect_vector(context,
+                  "different-size commit",
+                  output.tensor.data,
+                  {1.0F, 0.0F, 0.0F, 1.0F,
+                   0.0F, 1.0F, 0.0F, 254.0F / 255.0F,
+                   0.0F, 0.0F, 1.0F, 1.0F / 255.0F});
+    const preprocess::ImageTransformMetadata expected_transform{
+        2, 2, 2, 2, 2, 2, 1.0, 0, 0, 0, 0,
+    };
+    context.expect(transform_equal(output.transform, expected_transform),
+                   "different-size commit",
+                   "fresh staging path must replace transform metadata");
+}
+
 void test_failures_and_atomicity(TestContext& context) {
     const preprocess::Preprocessor preprocessor;
     const core::TensorInfo valid_info = make_model_input_info(2, 2);
@@ -648,6 +689,7 @@ int main() {
     test_uniform_resize(context);
     test_non_contiguous_input(context);
     test_buffer_reuse(context);
+    test_different_size_commit(context);
     test_failures_and_atomicity(context);
 
     if (context.failure_count() != 0) {
