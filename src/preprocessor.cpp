@@ -12,8 +12,45 @@
 namespace edge_ai_defect::preprocess {
 namespace {
 
+using FloatBuffer = std::vector<float>;
+
+static_assert(noexcept(std::declval<FloatBuffer&>().swap(
+                  std::declval<FloatBuffer&>())),
+              "Borrowed preprocessor buffer rollback must not throw");
 static_assert(std::is_nothrow_move_assignable_v<PreprocessedFrame>,
               "PreprocessedFrame commit must not throw");
+
+class BorrowedVectorRollback final {
+public:
+    BorrowedVectorRollback() noexcept = default;
+
+    ~BorrowedVectorRollback() noexcept {
+        if (active_) {
+            output_data_->swap(*staged_data_);
+        }
+    }
+
+    BorrowedVectorRollback(const BorrowedVectorRollback&) = delete;
+    BorrowedVectorRollback& operator=(const BorrowedVectorRollback&) = delete;
+    BorrowedVectorRollback(BorrowedVectorRollback&&) = delete;
+    BorrowedVectorRollback& operator=(BorrowedVectorRollback&&) = delete;
+
+    void borrow(FloatBuffer& output_data, FloatBuffer& staged_data) noexcept {
+        output_data_ = &output_data;
+        staged_data_ = &staged_data;
+        active_ = true;
+        staged_data_->swap(*output_data_);
+    }
+
+    void release() noexcept {
+        active_ = false;
+    }
+
+private:
+    FloatBuffer* output_data_ = nullptr;
+    FloatBuffer* staged_data_ = nullptr;
+    bool active_ = false;
+};
 
 core::Status validate_preprocess_input(
     const cv::Mat& input_bgr,
@@ -140,8 +177,9 @@ core::Status Preprocessor::preprocess(
 
     const bool reuse_output_buffer =
         output->tensor.data.size() == element_count;
+    BorrowedVectorRollback rollback_guard;
     if (reuse_output_buffer) {
-        staged_output.tensor.data.swap(output->tensor.data);
+        rollback_guard.borrow(output->tensor.data, staged_output.tensor.data);
     } else {
         staged_output.tensor.data.resize(element_count);
     }
@@ -149,9 +187,6 @@ core::Status Preprocessor::preprocess(
     const core::Status tensor_status =
         core::validate_host_tensor(staged_output.tensor);
     if (!tensor_status.ok()) {
-        if (reuse_output_buffer) {
-            staged_output.tensor.data.swap(output->tensor.data);
-        }
         return tensor_status;
     }
 
@@ -176,6 +211,7 @@ core::Status Preprocessor::preprocess(
         }
     }
 
+    rollback_guard.release();
     *output = std::move(staged_output);
     return core::Status::success();
 }

@@ -490,6 +490,66 @@ void test_buffer_reuse(TestContext& context) {
                  114.0F / 255.0F);
 }
 
+void test_same_size_different_shape(TestContext& context) {
+    const preprocess::Preprocessor preprocessor;
+    const core::TensorInfo first_info = make_model_input_info(1, 4);
+    preprocess::PreprocessedFrame output;
+    const cv::Mat first_input(1, 4, CV_8UC3, cv::Scalar(0, 0, 255));
+    const core::Status first_status =
+        preprocessor.preprocess(first_input, first_info, &output);
+    context.expect(first_status.ok(),
+                   "same-size different-shape first call",
+                   first_status.message());
+    if (!first_status.ok()) {
+        return;
+    }
+    const std::size_t first_size = output.tensor.data.size();
+    const std::size_t first_capacity = output.tensor.data.capacity();
+    const float* const first_pointer = output.tensor.data.data();
+
+    cv::Mat second_input(2, 2, CV_8UC3);
+    second_input.at<cv::Vec3b>(0, 0) = cv::Vec3b(0, 0, 255);
+    second_input.at<cv::Vec3b>(0, 1) = cv::Vec3b(0, 255, 0);
+    second_input.at<cv::Vec3b>(1, 0) = cv::Vec3b(255, 0, 0);
+    second_input.at<cv::Vec3b>(1, 1) = cv::Vec3b(1, 254, 255);
+    const core::TensorInfo second_info = make_model_input_info(2, 2);
+    const core::Status second_status =
+        preprocessor.preprocess(second_input, second_info, &output);
+    context.expect(second_status.ok(),
+                   "same-size different-shape second call",
+                   second_status.message());
+    if (!second_status.ok()) {
+        return;
+    }
+
+    expect_valid_frame(
+        context, "same-size different-shape", output, second_info);
+    context.expect(first_info.shape != second_info.shape && first_size == 12U,
+                   "same-size different-shape",
+                   "test setup must change shape without changing data size");
+    context.expect(output.tensor.data.size() == first_size,
+                   "same-size different-shape",
+                   "shape change must preserve the element count");
+    context.expect(output.tensor.data.capacity() >= first_capacity,
+                   "same-size different-shape",
+                   "reused buffer capacity must not decrease");
+    context.expect(output.tensor.data.data() == first_pointer,
+                   "same-size different-shape",
+                   "same element count must reuse the existing allocation");
+    expect_vector(context,
+                  "same-size different-shape",
+                  output.tensor.data,
+                  {1.0F, 0.0F, 0.0F, 1.0F,
+                   0.0F, 1.0F, 0.0F, 254.0F / 255.0F,
+                   0.0F, 0.0F, 1.0F, 1.0F / 255.0F});
+    const preprocess::ImageTransformMetadata expected_transform{
+        2, 2, 2, 2, 2, 2, 1.0, 0, 0, 0, 0,
+    };
+    context.expect(transform_equal(output.transform, expected_transform),
+                   "same-size different-shape",
+                   "shape change must commit the new transform metadata");
+}
+
 void test_different_size_commit(TestContext& context) {
     preprocess::PreprocessedFrame output = make_sentinel_frame();
     const core::Status sentinel_status =
@@ -689,6 +749,7 @@ int main() {
     test_uniform_resize(context);
     test_non_contiguous_input(context);
     test_buffer_reuse(context);
+    test_same_size_different_shape(context);
     test_different_size_commit(context);
     test_failures_and_atomicity(context);
 
