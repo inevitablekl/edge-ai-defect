@@ -118,6 +118,7 @@ add_library(edge_ai_core STATIC
     src/core.cpp
     src/letterbox.cpp
     src/model_contract.cpp
+    src/preprocessor.cpp
 )
 target_include_directories(edge_ai_core
     PUBLIC
@@ -211,6 +212,23 @@ if(BUILD_TESTING)
     set_tests_properties(letterbox_geometry
         PROPERTIES
             LABELS "m1;preprocess;letterbox"
+    )
+
+    add_executable(test_preprocessor
+        tests/test_preprocessor.cpp
+    )
+    target_link_libraries(test_preprocessor
+        PRIVATE
+            edge_ai_core
+    )
+    set_target_properties(test_preprocessor
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME cpu_preprocessor COMMAND test_preprocessor)
+    set_tests_properties(cpu_preprocessor
+        PROPERTIES
+            LABELS "m1;preprocess;cpu"
     )
 
     add_executable(test_ort_runtime_smoke
