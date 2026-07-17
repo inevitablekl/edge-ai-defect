@@ -15,6 +15,7 @@ enum class ErrorCode {
     kIoError,
     kParseError,
     kSchemaViolation,
+    kImageProcessingError,
 };
 
 class Status {

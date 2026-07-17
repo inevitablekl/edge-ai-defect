@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
+find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc)
 
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
@@ -115,13 +116,18 @@ set_target_properties(onnxruntime::onnxruntime
 
 add_library(edge_ai_core STATIC
     src/core.cpp
+    src/letterbox.cpp
     src/model_contract.cpp
 )
 target_include_directories(edge_ai_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${OpenCV_INCLUDE_DIRS}
 )
 target_link_libraries(edge_ai_core
+    PUBLIC
+        opencv_core
+        opencv_imgproc
     PRIVATE
         yaml-cpp
 )
@@ -188,6 +194,23 @@ if(BUILD_TESTING)
     set_tests_properties(model_contract
         PROPERTIES
             LABELS "m1;model-contract"
+    )
+
+    add_executable(test_letterbox
+        tests/test_letterbox.cpp
+    )
+    target_link_libraries(test_letterbox
+        PRIVATE
+            edge_ai_core
+    )
+    set_target_properties(test_letterbox
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME letterbox_geometry COMMAND test_letterbox)
+    set_tests_properties(letterbox_geometry
+        PROPERTIES
+            LABELS "m1;preprocess;letterbox"
     )
 
     add_executable(test_ort_runtime_smoke
