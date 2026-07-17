@@ -1,11 +1,10 @@
 #include "edge_ai_defect/preprocess/preprocessor.hpp"
+#include "preprocess_level_a_manifest.hpp"
 
 #include <opencv2/core.hpp>
 #include <opencv2/core/version.hpp>
-#include <yaml-cpp/yaml.h>
 
 #include <algorithm>
-#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -15,16 +14,15 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
-#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <utility>
 #include <vector>
 
 namespace {
 
 namespace core = edge_ai_defect::core;
+namespace level_a = edge_ai_defect::test::preprocess_level_a;
 namespace preprocess = edge_ai_defect::preprocess;
 namespace fs = std::filesystem;
 
@@ -55,36 +53,6 @@ struct Options {
     fs::path report;
 };
 
-struct ReferenceInfo {
-    std::string implementation;
-    std::string python_version;
-    std::string numpy_version;
-    std::string opencv_version;
-};
-
-struct ToleranceProfile {
-    double mae_limit = 0.0;
-    double max_abs_limit = 0.0;
-};
-
-struct CaseDefinition {
-    std::string id;
-    fs::path input_path;
-    int width = 0;
-    int height = 0;
-    std::vector<std::int64_t> target_shape;
-    fs::path golden_path;
-    std::size_t golden_element_count = 0;
-    preprocess::ImageTransformMetadata metadata;
-    std::string tolerance_profile;
-};
-
-struct Manifest {
-    ReferenceInfo reference;
-    std::map<std::string, ToleranceProfile> tolerances;
-    std::vector<CaseDefinition> cases;
-};
-
 struct CaseResult {
     std::string id;
     std::string tolerance_profile;
@@ -106,234 +74,9 @@ struct CaseResult {
     std::string max_error_region;
 };
 
-template <typename T>
-T require_scalar(const YAML::Node& parent,
-                 const std::string& key,
-                 const std::string& context) {
-    const YAML::Node node = parent[key];
-    if (!node || !node.IsScalar()) {
-        throw InputError(context + ": missing scalar field '" + key + "'");
-    }
-    try {
-        return node.as<T>();
-    } catch (const YAML::Exception& exception) {
-        throw InputError(context + ": invalid field '" + key + "': " +
-                         exception.what());
-    }
-}
-
-void require_value(const YAML::Node& parent,
-                   const std::string& key,
-                   const std::string& expected,
-                   const std::string& context) {
-    const std::string actual = require_scalar<std::string>(parent, key, context);
-    if (actual != expected) {
-        throw InputError(context + ": field '" + key + "' is '" + actual +
-                         "', expected '" + expected + "'");
-    }
-}
-
 bool host_is_little_endian() noexcept {
     const std::uint16_t value = 1U;
     return *reinterpret_cast<const std::uint8_t*>(&value) == 1U;
-}
-
-fs::path require_relative_path(const YAML::Node& parent,
-                               const std::string& key,
-                               const std::string& context) {
-    const fs::path path = require_scalar<std::string>(parent, key, context);
-    if (path.empty() || path.is_absolute()) {
-        throw InputError(context + ": field '" + key +
-                         "' must be a nonempty relative path");
-    }
-    for (const fs::path& component : path) {
-        if (component == "..") {
-            throw InputError(context + ": field '" + key +
-                             "' must not escape the data root");
-        }
-    }
-    return path;
-}
-
-void validate_sha256_field(const YAML::Node& parent,
-                           const std::string& key,
-                           const std::string& context) {
-    const std::string value = require_scalar<std::string>(parent, key, context);
-    const bool is_hex = std::all_of(
-        value.begin(), value.end(), [](char character) {
-            return (character >= '0' && character <= '9') ||
-                   (character >= 'a' && character <= 'f');
-        });
-    if (value.size() != 64U || !is_hex) {
-        throw InputError(context + ": field '" + key +
-                         "' must be a lowercase SHA256 digest");
-    }
-}
-
-preprocess::ImageTransformMetadata parse_metadata(
-    const YAML::Node& node,
-    const std::string& context) {
-    if (!node || !node.IsMap()) {
-        throw InputError(context + ": expected_metadata must be a map");
-    }
-    return {
-        require_scalar<int>(node, "original_width", context),
-        require_scalar<int>(node, "original_height", context),
-        require_scalar<int>(node, "target_width", context),
-        require_scalar<int>(node, "target_height", context),
-        require_scalar<int>(node, "resized_width", context),
-        require_scalar<int>(node, "resized_height", context),
-        require_scalar<double>(node, "gain", context),
-        require_scalar<int>(node, "pad_left", context),
-        require_scalar<int>(node, "pad_right", context),
-        require_scalar<int>(node, "pad_top", context),
-        require_scalar<int>(node, "pad_bottom", context),
-    };
-}
-
-std::vector<std::int64_t> parse_target_shape(const YAML::Node& node,
-                                             const std::string& context) {
-    if (!node || !node.IsSequence() || node.size() != 4U) {
-        throw InputError(context + ": target_shape must contain four dimensions");
-    }
-    std::vector<std::int64_t> shape;
-    shape.reserve(4U);
-    for (std::size_t index = 0; index < node.size(); ++index) {
-        try {
-            shape.push_back(node[index].as<std::int64_t>());
-        } catch (const YAML::Exception& exception) {
-            throw InputError(context + ": invalid target_shape dimension: " +
-                             exception.what());
-        }
-    }
-    if (shape[0] != 1 || shape[1] != 3 || shape[2] <= 0 || shape[3] <= 0) {
-        throw InputError(context + ": target_shape must be positive [1,3,H,W]");
-    }
-    return shape;
-}
-
-Manifest load_manifest(const fs::path& manifest_path) {
-    YAML::Node root;
-    try {
-        root = YAML::LoadFile(manifest_path.string());
-    } catch (const YAML::Exception& exception) {
-        throw InputError("manifest: " + std::string(exception.what()));
-    }
-    if (!root.IsMap() || require_scalar<int>(root, "schema_version", "manifest") != 1) {
-        throw InputError("manifest: schema_version must be 1");
-    }
-
-    const YAML::Node reference = root["reference"];
-    if (!reference || !reference.IsMap()) {
-        throw InputError("manifest: reference must be a map");
-    }
-    require_value(reference, "input_color_order", "BGR", "reference");
-    require_value(reference, "output_color_order", "RGB", "reference");
-    require_value(reference, "interpolation", "INTER_LINEAR", "reference");
-    require_value(reference, "rounding", "python_ties_to_even", "reference");
-    if (require_scalar<int>(reference, "padding_value", "reference") != 114 ||
-        !require_scalar<bool>(reference, "center", "reference") ||
-        require_scalar<bool>(reference, "auto", "reference") ||
-        require_scalar<bool>(reference, "scale_fill", "reference") ||
-        !require_scalar<bool>(reference, "scaleup", "reference") ||
-        require_scalar<int>(reference, "stride", "reference") != 32) {
-        throw InputError("reference: frozen LetterBox semantics do not match Level A");
-    }
-
-    const YAML::Node tensor_format = root["tensor_format"];
-    if (!tensor_format || !tensor_format.IsMap()) {
-        throw InputError("manifest: tensor_format must be a map");
-    }
-    require_value(tensor_format, "dtype", "float32", "tensor_format");
-    require_value(tensor_format, "byte_order", "little_endian", "tensor_format");
-    require_value(tensor_format, "layout", "NCHW", "tensor_format");
-
-    Manifest manifest;
-    manifest.reference = {
-        require_scalar<std::string>(reference, "implementation", "reference"),
-        require_scalar<std::string>(reference, "python_version", "reference"),
-        require_scalar<std::string>(reference, "numpy_version", "reference"),
-        require_scalar<std::string>(reference, "opencv_version", "reference"),
-    };
-    if (manifest.reference.opencv_version != "4.10.0") {
-        throw InputError("reference: opencv_version must be 4.10.0");
-    }
-
-    const YAML::Node profiles = root["tolerance_profiles"];
-    if (!profiles || !profiles.IsMap()) {
-        throw InputError("manifest: tolerance_profiles must be a map");
-    }
-    for (const std::string& name : {std::string("exact"), std::string("resize")}) {
-        const YAML::Node profile = profiles[name];
-        if (!profile || !profile.IsMap()) {
-            throw InputError("tolerance_profiles: missing profile '" + name + "'");
-        }
-        const ToleranceProfile tolerance{
-            require_scalar<double>(profile, "mae_limit", "profile " + name),
-            require_scalar<double>(profile, "max_abs_limit", "profile " + name),
-        };
-        if (!std::isfinite(tolerance.mae_limit) || tolerance.mae_limit < 0.0 ||
-            !std::isfinite(tolerance.max_abs_limit) ||
-            tolerance.max_abs_limit < 0.0) {
-            throw InputError("profile " + name + ": limits must be finite and nonnegative");
-        }
-        manifest.tolerances.emplace(name, tolerance);
-    }
-
-    const YAML::Node cases = root["cases"];
-    if (!cases || !cases.IsSequence() || cases.size() != 8U) {
-        throw InputError("manifest: cases must contain exactly eight entries");
-    }
-    constexpr std::array<const char*, 8> kExpectedCaseIds{
-        "no_transform_gradient",
-        "vertical_padding",
-        "horizontal_padding",
-        "odd_horizontal_padding",
-        "non_integer_resize",
-        "small_upscale",
-        "rgb_color_blocks",
-        "frozen_640_checkerboard",
-    };
-    for (std::size_t index = 0; index < cases.size(); ++index) {
-        const YAML::Node node = cases[index];
-        const std::string context = "case[" + std::to_string(index) + "]";
-        if (!node.IsMap()) {
-            throw InputError(context + ": case must be a map");
-        }
-        CaseDefinition definition;
-        definition.id = require_scalar<std::string>(node, "id", context);
-        if (definition.id != kExpectedCaseIds[index]) {
-            throw InputError(context + ": unexpected case id/order '" + definition.id + "'");
-        }
-        definition.input_path = require_relative_path(node, "input", context);
-        validate_sha256_field(node, "input_sha256", context);
-        definition.width = require_scalar<int>(node, "width", context);
-        definition.height = require_scalar<int>(node, "height", context);
-        if (definition.width <= 0 || definition.height <= 0 ||
-            require_scalar<int>(node, "channels", context) != 3) {
-            throw InputError(context + ": input dimensions/channels are invalid");
-        }
-        definition.target_shape = parse_target_shape(node["target_shape"], context);
-        definition.golden_path = require_relative_path(node, "golden_tensor", context);
-        validate_sha256_field(node, "golden_sha256", context);
-        definition.golden_element_count =
-            require_scalar<std::size_t>(node, "golden_element_count", context);
-        definition.metadata = parse_metadata(node["expected_metadata"], context);
-        definition.tolerance_profile =
-            require_scalar<std::string>(node, "tolerance_profile", context);
-        if (manifest.tolerances.count(definition.tolerance_profile) == 0U) {
-            throw InputError(context + ": unknown tolerance profile '" +
-                             definition.tolerance_profile + "'");
-        }
-        std::size_t shape_count = 0;
-        const core::Status count_status =
-            core::checked_element_count(definition.target_shape, shape_count);
-        if (!count_status.ok() || shape_count != definition.golden_element_count) {
-            throw InputError(context + ": golden element count does not match target_shape");
-        }
-        manifest.cases.push_back(std::move(definition));
-    }
-    return manifest;
 }
 
 Options parse_options(int argc, char** argv) {
@@ -416,7 +159,7 @@ bool compare_int_field(const std::string& case_id,
 
 bool compare_metadata(const std::string& case_id,
                       const preprocess::ImageTransformMetadata& actual,
-                      const preprocess::ImageTransformMetadata& expected) {
+                      const level_a::TransformMetadata& expected) {
     bool pass = true;
     pass = compare_int_field(
                case_id, "original_width", actual.original_width, expected.original_width) &&
@@ -461,8 +204,8 @@ bool compare_metadata(const std::string& case_id,
     return pass;
 }
 
-std::string classify_region(const CaseDefinition& definition, int y, int x) {
-    const preprocess::ImageTransformMetadata& metadata = definition.metadata;
+std::string classify_region(const level_a::CaseDefinition& definition, int y, int x) {
+    const level_a::TransformMetadata& metadata = definition.metadata;
     if (x < metadata.pad_left || x >= metadata.target_width - metadata.pad_right ||
         y < metadata.pad_top || y >= metadata.target_height - metadata.pad_bottom) {
         return "padding";
@@ -470,8 +213,8 @@ std::string classify_region(const CaseDefinition& definition, int y, int x) {
     return "source_or_resized";
 }
 
-CaseResult validate_case(const CaseDefinition& definition,
-                         const ToleranceProfile& tolerance,
+CaseResult validate_case(const level_a::CaseDefinition& definition,
+                         const level_a::ToleranceProfile& tolerance,
                          const fs::path& data_root) {
     const std::size_t input_size =
         static_cast<std::size_t>(definition.width) *
@@ -652,7 +395,7 @@ void write_shape(std::ostream& output,
 }
 
 void write_report(const fs::path& report_path,
-                  const Manifest& manifest,
+                  const level_a::Manifest& manifest,
                   const std::vector<CaseResult>& results) {
     if (results.empty()) {
         throw ReportError("report: no case results are available");
@@ -794,10 +537,10 @@ int run(int argc, char** argv) {
             "platform: little-endian host is required for .f32le golden tensors");
     }
     const Options options = parse_options(argc, argv);
-    const Manifest manifest = load_manifest(options.manifest);
+    const level_a::Manifest manifest = level_a::load_manifest(options.manifest);
     std::vector<CaseResult> results;
     results.reserve(manifest.cases.size());
-    for (const CaseDefinition& definition : manifest.cases) {
+    for (const level_a::CaseDefinition& definition : manifest.cases) {
         results.push_back(validate_case(definition,
                                         manifest.tolerances.at(
                                             definition.tolerance_profile),
@@ -823,6 +566,9 @@ int main(int argc, char** argv) {
         std::cerr << exception.what() << '\n';
         return kReportFailure;
     } catch (const InputError& exception) {
+        std::cerr << exception.what() << '\n';
+        return kInputFailure;
+    } catch (const level_a::ManifestError& exception) {
         std::cerr << exception.what() << '\n';
         return kInputFailure;
     } catch (const std::exception& exception) {

@@ -231,13 +231,25 @@ if(BUILD_TESTING)
             LABELS "m1;preprocess;cpu"
     )
 
+    add_library(preprocess_level_a_manifest_test_support STATIC
+        tests/preprocess_level_a_manifest.cpp
+    )
+    target_include_directories(preprocess_level_a_manifest_test_support
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    )
+    target_link_libraries(preprocess_level_a_manifest_test_support
+        PUBLIC
+            yaml-cpp
+    )
+
     add_executable(test_preprocess_level_a
         tests/test_preprocess_level_a.cpp
     )
     target_link_libraries(test_preprocess_level_a
         PRIVATE
             edge_ai_core
-            yaml-cpp
+            preprocess_level_a_manifest_test_support
     )
     set_target_properties(test_preprocess_level_a
         PROPERTIES
@@ -256,6 +268,30 @@ if(BUILD_TESTING)
     set_tests_properties(preprocess_level_a
         PROPERTIES
             LABELS "m1;preprocess;level-a"
+    )
+
+    add_executable(test_preprocess_level_a_manifest
+        tests/test_preprocess_level_a_manifest.cpp
+    )
+    target_link_libraries(test_preprocess_level_a_manifest
+        PRIVATE
+            preprocess_level_a_manifest_test_support
+    )
+    set_target_properties(test_preprocess_level_a_manifest
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME preprocess_level_a_manifest_guard
+        COMMAND test_preprocess_level_a_manifest
+            --manifest
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/preprocess_level_a/manifest.yaml"
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/preprocess_level_a_manifest_guard"
+    )
+    set_tests_properties(preprocess_level_a_manifest_guard
+        PROPERTIES
+            LABELS "m1;preprocess;level-a;manifest"
     )
 
     add_executable(test_ort_runtime_smoke
