@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-17
+2026-07-18
 ```
 
 当前阶段：
 
 ```text
-M1.1 Core Contracts 与 M1.2 Frozen Model Contract 已完成，M1.2 深度 Gate 已通过；今日暂停，M1.3 尚未开始
+M1.1～M1.6 已全部完成，M1 Core Contracts + CPU Preprocessor 阶段正式关闭；M2 尚未开始
 ```
 
 当前主线：
@@ -103,9 +103,9 @@ NEU-DET
 | JetPack version            | TODO | Jetson 型号确定后                 |
 | CUDA version               | TODO | JetPack version 确定后          |
 | TensorRT version           | TODO | JetPack version 确定后          |
-| ONNX Runtime C++ version   | TODO | C++ ONNX Runtime 集成前         |
-| OpenCV version             | TODO | C++ 项目骨架创建前                  |
-| CMake minimum version      | TODO | C++ 项目骨架创建前                  |
+| ONNX Runtime C++ version   | DONE | 已冻结并验证为 1.23.2              |
+| OpenCV version             | DONE | C++ 4.5.4；Python 4.10.0       |
+| CMake minimum version      | DONE | 已冻结为 3.16                    |
 | TensorRT engine 生成方式       | TODO | Jetson TensorRT 部署前          |
 | Resource monitoring method | TODO | 性能实验前                        |
 
@@ -139,7 +139,7 @@ NEU-DET
 | INIT-001 | P0  | DONE | 按确定目录结构整理仓库                       |
 | INIT-002 | P0  | DONE | 创建 `configs/` 目录                  |
 | INIT-003 | P0  | DONE | 创建 `scripts/` 子目录                 |
-| INIT-004 | P0  | TODO | 创建 `include/edge_ai_defect/` 模块目录 |
+| INIT-004 | P0  | DONE | 创建 `include/edge_ai_defect/` 模块目录 |
 | INIT-005 | P0  | DONE | 创建 `src/` 模块目录                    |
 | INIT-006 | P0  | DONE | 创建 `experiments/` 子目录             |
 | INIT-007 | P0  | TODO | 创建 `models/README.md`             |
@@ -190,11 +190,11 @@ NEU-DET
 
 | ID      | 优先级 | 状态   | 任务                              |
 | ------- | --- | ---- | ------------------------------- |
-| CPP-001 | P0  | TODO | 初始化 C++ CMake 工程                |
+| CPP-001 | P0  | DONE | 初始化 C++ CMake 工程                |
 | CPP-002 | P0  | TODO | 实现 `ConfigManager`              |
 | CPP-003 | P0  | TODO | 实现 `FrameSource` image sequence |
 | CPP-004 | P0  | TODO | 实现 `FrameSource` video file     |
-| CPP-005 | P0  | TODO | 实现 `Preprocessor`               |
+| CPP-005 | P0  | DONE | 实现 `Preprocessor`               |
 | CPP-006 | P0  | TODO | 定义 `InferenceEngine` 抽象接口       |
 | CPP-007 | P0  | TODO | 实现 `ONNXRuntimeEngine`          |
 | CPP-008 | P0  | TODO | 实现 `PostProcessor`              |
@@ -899,14 +899,63 @@ NEU-DET
 
 ---
 
+### 2026-07-18 - M1 CPU Preprocessing 阶段关闭
+
+当前工作：
+
+- 完成 M1.3～M1.6 的最终验收汇总、证据硬化、完整回归和阶段文档关闭。
+
+修改文件：
+
+- 测试侧 Level A manifest/parser/validator、数值比较 helper、CMake 验证脚本与
+  provenance generator/evidence。
+- `docs/personal/M1_EXECUTION_PLAN.md`、`TASKS.md`、`ENVIRONMENT.md` 和
+  `DECISIONS.md`。
+
+已完成：
+
+- M1.1 Core Contracts、M1.2 Frozen Model Contract、M1.3 LetterBox、M1.4
+  CPU `Preprocessor`、M1.5 Level A Validation 与 M1.6 Closeout 全部完成。
+- 当前 production 能力为 `Status`/tensor contracts、严格 `ModelContract`
+  loader、LetterBox 与连续 `float32 NCHW` CPU `Preprocessor`。
+- Level A A～H 共 8 个 case 全部通过，Python OpenCV `4.10.0` 与 C++ OpenCV
+  `4.5.4` 的 MAE/max_abs 均为 `0`；正式 report 逐字节复核一致。
+- 新增实际资产→`SHA256SUMS`→manifest digest 自动闭环、resolved realpath
+  containment、non-finite numeric guard 和 stable provenance 验证。
+- 最终 Model Smoke OFF 为 10/10，Model Smoke ON 为 14/14，strict 为 10/10，
+  ASan/UBSan 为 10/10；ModelContract 43/43 与 ORT runtime smoke 继续通过。
+- M1 阶段正式关闭，所有提交均为本地提交，未执行 `git push`。
+
+未完成：
+
+- 正式 `OnnxRuntimeEngine`、`SerialRunner`、完整 inference loop 与性能实验尚未实现。
+- M2 尚未开始。
+
+阻塞问题：
+
+- 暂无 M2 前的已知代码阻断项。
+
+下一步计划：
+
+- 以独立任务启动 M2 `ONNX Runtime Engine` 的设计与实现。
+- 继续保持 TensorRT、Pipeline、ROS2、Qt 和 benchmark 在当前范围之外。
+
+备注：
+
+- M1 测试 helper 只链接测试 target，不进入 production target。
+- 当前 `edge_ai_defect` 仍为 runtime skeleton，不宣称 C++ inference baseline 已闭环。
+
+---
+
 ## 8. 当前最近计划
 
 近期优先级：
 
-1. M0 工程、依赖与真实模型 smoke 验证已经完成并关闭。
-2. M1.1 Core Contracts 与 M1.2 Frozen Model Contract 已完成，深度 Gate 已通过。
-3. 下一任务为 M1.3 LetterBox Geometry；今日暂停，M1.3 尚未开始。
-4. 正式 `OnnxRuntimeEngine`、Serial Baseline 和性能实验继续按后续阶段计划执行。
+1. M0 与 M1 已完成并正式关闭。
+2. 当前 production 能力止于 core contracts、model contract loader、LetterBox
+   与 CPU `Preprocessor`。
+3. 下一任务为 M2 `ONNX Runtime Engine`；M2 尚未开始。
+4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---

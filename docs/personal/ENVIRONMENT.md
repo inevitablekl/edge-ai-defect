@@ -55,7 +55,7 @@ Not available
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
-| Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1.2 core/model contract loader 已验证；WSL2 GPU 当前不可访问 |
+| Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
 | Edge Deployment Platform | Jetson TensorRT FP16 部署和论文核心性能实验 | TBD |
 
@@ -377,6 +377,36 @@ Python reference 使用 OpenCV `4.10.0`，与 C++ OpenCV `4.5.4` 不同。当前
 SHA256、不调用 ONNX Runtime。OpenCV C++ `4.5.4` 仅完成 M1.0 capability probe，
 尚未接入生产 CMake target。
 
+### 7.10 M1 最终环境与验证状态
+
+| 检查项 | 最终结果 |
+| --- | --- |
+| CMake minimum / current | `3.16` / `3.22.1` |
+| GCC / G++ | `11.4.0` |
+| C++ standard | C++17 |
+| yaml-cpp | `0.7.0` |
+| ONNX Runtime C++ SDK/runtime | `1.23.2` / `1.23.2` |
+| C++ OpenCV | `4.5.4` |
+| Python / NumPy / Python OpenCV | `3.10.12` / `1.26.4` / `4.10.0` |
+| Formal contract | `configs/model_contracts/yolov8n_neudet_frozen.yaml` |
+| Level A assets | `tests/data/preprocess_level_a/` |
+| Level A report | `results/validation/preprocess_level_a/level_a_report.json` |
+| Level A provenance | `results/validation/preprocess_level_a/provenance.json` |
+| Level A result | 8/8 PASS；MAE/max_abs 均为 `0` |
+| Model Smoke OFF / ON | 10/10 PASS / 14/14 PASS |
+| strict / ASan+UBSan | 10/10 PASS / 10/10 PASS |
+| Current production capability | core contracts + model contract loader + LetterBox + CPU `Preprocessor` |
+
+Level A raw BGR/golden 资产由 18 项 `SHA256SUMS` 和 manifest 中 16 个 asset
+digest 自动交叉验证；validator 在打开资产前执行 resolved realpath containment。
+stable provenance 引用前置 evidence source commit
+`a7d21ce18f988fccf62f467bcf9a4eae367c5b79`，不包含时间、主机、用户、绝对路径
+或 build/temp 路径。
+
+M1 的 test-only manifest、compare helper 和 evidence verifier 不链接 production
+target。正式 `OnnxRuntimeEngine` 尚未实现，当前没有性能数据；WSL2 GPU 仍不可用，
+Jetson/TensorRT 尚未验证。
+
 ---
 
 ## 8. 实验环境快照要求
@@ -448,8 +478,9 @@ experiments/logs/<run_id>/environment_snapshot.txt
 * M0.4 missing-model、contract-mismatch 和 non-tensor 检查已在 M0.5A 加固。
 * M0.5 已使用常量 `0.5F` synthetic tensor 完成一次真实 CPU inference，输出 84000 个元素全部 finite。
 * M0.6 最终回归、边界审计、资产复核和文档收尾已通过，M0 阶段正式关闭。
-* M1.1 Core Contracts 与 M1.2 Frozen Model Contract 已完成；当前正式生产能力仅为 core contracts + model contract loader。
-* OpenCV 尚未接入生产 CMake，`Preprocessor` 与 LetterBox 尚未开始；下一任务为 M1.3 LetterBox Geometry。
+* M1.1～M1.6 已完成并正式关闭；当前正式生产能力为 core contracts、model contract loader、LetterBox 与 CPU `Preprocessor`。
+* Level A 8/8、SHA/provenance 自动验收、Model Smoke OFF/ON、strict 与 ASan/UBSan 最终回归均已通过。
+* 下一阶段为 M2 `ONNX Runtime Engine`，当前尚未开始。
 * 正式 `OnnxRuntimeEngine` 仍未实现，当前生产程序继续保持 runtime skeleton。
 * 当前 WSL2 进程无法访问 CUDA GPU 且未安装 TensorRT Python binding；TensorRT FP16 validation 延后到 Jetson 或兼容 CUDA / TensorRT 平台。
 * 进入目标设备部署实验前，必须补齐 Jetson、JetPack、TensorRT 和资源监控方法等信息。

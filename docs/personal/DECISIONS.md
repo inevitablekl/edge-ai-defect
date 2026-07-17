@@ -78,6 +78,8 @@
 | D017 | 冻结模型 | seed=7 deterministic baseline | ACTIVE |
 | D018 | 正式训练 checkpoint 保留边界 | Git 外完整归档，部署只使用 frozen model | ACTIVE |
 | D019 | TensorRT 验证平台与部署阶段路线 | 本地 ONNX Runtime 开发，TensorRT 延后到完整 CUDA / Jetson 平台 | ACTIVE |
+| D020 | C++ ONNX Runtime Serial Baseline 阶段范围 | M0～M4 先完成 CPU Serial 主线 | ACTIVE |
+| D021 | Preprocess Level A 证据边界 | raw BGR、独立冻结语义、SHA CTest 与前置提交 provenance | ACTIVE |
 
 ---
 
@@ -1158,3 +1160,56 @@ ACTIVE
 
 - M0 至 M4 仅覆盖 C++17、OpenCV、yaml-cpp、ONNX Runtime CPU 和 SerialRunner。
 - TensorRT、Jetson、Pipeline 与性能优化保留为后续阶段。
+
+---
+
+### D021 - Preprocess Level A 证据边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. Level A 输入使用 headerless raw BGR bytes，排除图像解码与 EXIF 行为差异。
+2. Python golden generator 与 C++ validator 独立实现；A～H 的 frozen case 语义由
+   test-only `FrozenCaseSpec` 再独立冻结。
+3. 实际资产通过 CTest 校验 `SHA256SUMS`，manifest 中 16 个 asset digest 与其
+   自动交叉验证。
+4. stable provenance 引用已经存在的前置 evidence source commit，避免最终文档
+   提交或未来提交的自引用。
+5. manifest parser、compare helper 与 evidence verifier 只链接 test target，不进入
+   production target。
+
+备选方案：
+
+- 使用 PNG/JPEG 输入：更接近业务文件，但会混入 decoder 与 orientation 差异。
+- 只依赖 manifest 或人工 `sha256sum`：实现更少，但无法形成持续自动证据闭环。
+- provenance 引用最终关闭提交：会形成不可生成的提交自引用。
+
+选择理由：
+
+- raw BGR 使 Level A 只验证 LetterBox、颜色/layout 转换与 normalization。
+- 双重冻结可防止 generator 与 validator 同步漂移后产生假阳性。
+- CTest SHA、resolved-path containment 和前置提交 provenance 提供确定、可复查且
+  不污染 production dependency 的轻量证据链。
+
+影响范围：
+
+- `tests/data/preprocess_level_a/`
+- `tests/preprocess_level_a_*`
+- `tests/cmake/verify_preprocess_level_a_*.cmake`
+- `results/validation/preprocess_level_a/`
+
+后续调整：
+
+M1 证据语义原则上冻结。如增加图像解码/orientation 验证，应建立独立 validation
+level，不得改写现有 Level A A～H case 或 provenance 语义。
