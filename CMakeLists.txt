@@ -334,6 +334,18 @@ if(BUILD_TESTING)
             LABELS "m1;preprocess;level-a;evidence"
     )
 
+    add_test(
+        NAME preprocess_level_a_provenance
+        COMMAND ${CMAKE_COMMAND}
+            -DREPO_ROOT=${CMAKE_CURRENT_SOURCE_DIR}
+            -DPROVENANCE_FILE=${CMAKE_CURRENT_SOURCE_DIR}/results/validation/preprocess_level_a/provenance.json
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/verify_preprocess_level_a_provenance.cmake
+    )
+    set_tests_properties(preprocess_level_a_provenance
+        PROPERTIES
+            LABELS "m1;preprocess;level-a;evidence;provenance"
+    )
+
     add_executable(test_ort_runtime_smoke
         tests/smoke/ort_runtime_smoke.cpp
     )
