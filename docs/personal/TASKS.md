@@ -59,8 +59,18 @@
 当前阶段：
 
 ```text
-M1.1～M1.6 已全部完成，M1 Core Contracts + CPU Preprocessor 阶段正式关闭；M2 尚未开始
+M1.1～M1.6 已全部完成；M2.0～M2.5 已完成，M2.6 closeout pending
 ```
+
+M2 状态：
+
+- M2.0 Design Freeze：complete。
+- M2.1 Contract：complete。
+- M2.2 Session initialization：complete。
+- M2.3 Run path：complete。
+- M2.4 Boundary hardening：complete。
+- M2.5 Level B validation：complete。
+- M2.6 closeout：pending。
 
 当前主线：
 
@@ -952,9 +962,10 @@ NEU-DET
 近期优先级：
 
 1. M0 与 M1 已完成并正式关闭。
-2. 当前 production 能力止于 core contracts、model contract loader、LetterBox
-   与 CPU `Preprocessor`。
-3. 下一任务为 M2 `ONNX Runtime Engine`；M2 尚未开始。
+2. M2.0～M2.5 已完成：production `OnnxRuntimeEngine` 已具备 contract-validated
+   CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
+   Level B Python/C++ raw-output evidence。
+3. 下一任务为 M2.6 closeout；当前不得进入 M3。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
