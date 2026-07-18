@@ -1,7 +1,7 @@
 # M3 PostProcessor Execution Plan
 
-状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.5 已完成；下一步为 M3 Deep
-Gate。M3.5 PostProcessor-only Validation 已完成，M3 仍未关闭。M3.4 已完成
+状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.5 实现已完成；当前处于 M3 Deep
+Gate remediation。M3 仍未关闭；完成 evidence 修复后必须重新执行只读 Deep Gate。M3.4 已完成
 metadata-driven inverse LetterBox、continuous clipping 与 public `PostProcessor::process()`
 integration。
 
@@ -239,39 +239,29 @@ test-only semantic bypass。
 
 ### 8.2 B：M3 PostProcessor-only Python/C++ validation
 
-验证名冻结为 `postprocessor_level_b`，资产目录冻结为：
+早期计划中的 `postprocessor_level_b` 名称和路径已被取代，不再是有效资产或测试名称。正式
+名称是 **PostProcessor-only Validation**，使用以下实际、Git-tracked 路径：
 
 ```text
-tests/data/postprocessor_level_b/
-results/validation/postprocessor_level_b/
-tools/validation/generate_postprocessor_level_b_reference.py
-tools/validation/generate_postprocessor_level_b_provenance.py
-tests/test_postprocessor_level_b.cpp
+tests/data/postprocessor_reference/
+results/validation/postprocessor_only/
+tools/validation/generate_postprocessor_reference_assets.py
+tools/validation/postprocessor_reference.py
+tools/validation/generate_postprocessor_reference_provenance.py
+tests/test_postprocessor_reference.cpp
 ```
 
-输入是一个 Git-tracked、headerless little-endian `float32 BCN [1,10,8400]` fixed raw
-tensor。优先复制并冻结 M2 已生成的 `python_golden_output.f32le` 为 M3 的独立 input
-asset；M3 manifest 必须记录 source evidence、model SHA256、input SHA256、dtype、layout、
-shape、element count、PostprocessConfig、完整 `ImageTransformMetadata` 和生成 command。
-复制后 M3 asset 的 SHA256、`SHA256SUMS`/CTest verifier 与 manifest 必须独立维护，不能
-在 validation 时读取/调用 C++ ORT Engine 或 C++ Preprocessor。
-
-独立 Python reference 必须直接从该 raw binary 实现本文件的 decode/filter/canonical
-sort/class-offset NMS/inverse LetterBox/clip，不调用 Ultralytics NMS。它输出 JSON
-detections（含 `x1,y1,x2,y2,confidence,class_id,candidate_index`）；C++ test 对同一 raw
-asset 调用 `PostProcessor`，比较 count、顺序、class id、candidate index，及每个 bbox/
-confidence 的冻结容差。manifest、Python reference output、C++ output、comparison report
-和 provenance 都要有 SHA256。阈值和容差必须在 M3.4 前冻结，不得为通过而放宽。
-
-这条验证不经过 C++ preprocessing、不调用 `OnnxRuntimeEngine`、不读取图像、不产生
-benchmark；因此前级错误不能相互抵消。
+输入为 headerless little-endian `float32 BCN [1,10,8400]` synthetic raw tensor。每个 case
+独立记录 raw、metadata、config、Python TSV golden 和 manifest；C++ validator 对同一 raw asset
+仅调用 public `PostProcessor::process()`，比较完整有序 Detection。验证不经过 C++ preprocessing、
+不调用 `OnnxRuntimeEngine`、不读取图像，也不产生 benchmark。
 
 ### 8.3 Gate
 
-M3 gate 要求：clean Git scope audit；Model Smoke OFF/ON 的适用回归；M3 unit/negative
-tests；`postprocessor_level_b` evidence 的 SHA/provenance 和 Python/C++ 全 detection
-comparison 通过。strict、ASan/UBSan 仅在项目已配置的情况下执行；若未配置必须如实记录
-`Not configured`，不得写作通过。Level C complete pipeline / benchmark 继续留给 M5。
+M3 Deep Gate 要求：clean Git scope audit；适用的 Model Smoke OFF/ON 回归；M3 unit/negative
+tests；PostProcessor-only evidence 的 SHA/provenance 和 Python/C++ 全 Detection comparison 通过。
+strict、ASan/UBSan 仅在项目已配置时执行；目前均为 `Not configured`，不得写作通过。Level C
+complete pipeline / benchmark 继续留给后续 Serial Baseline 阶段。
 
 ## 9. 推荐提交拆分
 
@@ -529,13 +519,28 @@ C++ TSV 和 per-case report，并逐项检查 count/order、class id、candidate
 confidence 和 bbox。三个 case 的 exact fields 全部一致；confidence `max_abs=0`、
 `mean_abs=0`，bbox coordinate `max_abs=0`、`mean_abs=0`，均在冻结的 `1e-6` / `1e-4` 限制内。
 
-生成器/reference 在独立临时目录重复运行后，三组 tracked raw 和 golden SHA256 全部一致。
-`generate_postprocessor_reference_provenance.py` 记录 branch/commit/worktree、Python/NumPy、
-CMake/compiler/OS、固定 Ultralytics 8.4.50 仅作为 semantic source、每个 raw/metadata/config/
-golden/C++ TSV/report 的 SHA256，以及验证命令和阈值。Model Smoke OFF configure/build 成功；
-定向 CTest 为 6/6 PASS，完整 CTest 为 16/16 PASS。strict 与 ASan/UBSan 仍为
-`Not configured`，不能写作通过。
+首轮 M3.5 evidence 的详尽 provenance/validator hardening 需要按本计划的 remediation protocol
+刷新；刷新前不得将其当作 Deep Gate closure evidence。M3.5 implementation complete；当前下一步是
+完成 remediation 后重新执行 M3 Deep Gate。仍未实现 Runner、Pipeline、benchmark、TensorRT、CUDA
+或 Level C。
 
-M3.5 complete。下一步为 M3 Deep Gate 的只读 closure review；它必须核对全部 M3 scope、
-evidence/provenance、regression 与未完成能力，之后才决定 M3 closeout。未实现 Runner、
-Pipeline、benchmark、TensorRT、CUDA 或 Level C。
+## 16. M3 Deep Gate remediation protocol（进行中）
+
+TSV validator 必须精确接受一行 header，且每条 Detection record 只能有七个非空字段、六个 TAB、
+无 leading/trailing delimiter，并完整解析 finite float、`class_id` 与 `candidate_index`。CTest
+negative driver 必须在 build 临时目录复制 golden，验证 trailing/extra/missing field、duplicate
+header、corrupt float/integer、NaN、Inf、missing/extra record 和中间 blank line 都被 validator
+拒绝；negative CTest 在拒绝发生时自身 PASS，不能修改 tracked goldens 或结果目录。
+
+provenance 采用 source/evidence 两提交协议：Commit A 固定验证器、CTest 和文档后，必须从 clean
+Commit A 记录完整 `source_commit`、`source_branch` 和 `source_worktree_clean=true`，再重新生成
+evidence。evidence 进入随后的 Commit B；它有意不引用尚未存在的 evidence commit，以避免自引用
+循环。公共 provenance 同时记录 Python/NumPy、validator/CMake/reference/asset-generator/
+provenance-generator SHA256、每个 case 的全部 evidence SHA、detection count、case PASS/FAIL、
+overall PASS 和验证命令；固定 Ultralytics 8.4.50 仅为 semantic reference，不是 runtime dependency。
+
+当前阈值保持不变：Detection count/order/`class_id`/`candidate_index` 必须 exact，confidence
+`abs <= 1e-6`，bbox coordinate `abs <= 1e-4`，全部字段 finite。历史限制必须保留：阈值和首轮
+结果在 `4437d84` 中同时首次进入 Git，历史无法单独证明“阈值先冻结、再执行”；当前误差均为零且
+未发现阈值放宽，但该时间顺序不能由已有 Git 历史倒推。remediation 完成后仍只可重跑 Deep Gate，
+不得标记 M3 CLOSED。

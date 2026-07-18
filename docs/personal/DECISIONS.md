@@ -85,6 +85,7 @@
 | D024 | Inference Level B 一致性方法 | 同一 raw input 下 Python ORT 与 C++ ORT 比较 | ACTIVE |
 | D025 | M2 阶段边界 | 不包含 PostProcessor/NMS/TensorRT/Pipeline | ACTIVE |
 | D026 | M3 frozen YOLOv8 PostProcessor 语义 | original-image Detection、class-aware NMS、独立 Python/C++ validation | ACTIVE |
+| D027 | M3 clipping parity with Ultralytics 8.4.50 | clamp-only clipping，保留 post-clip 零面积 Detection | ACTIVE |
 
 ---
 
@@ -1443,7 +1444,7 @@ ACTIVE
 影响范围：
 
 - M3.1 Detection/PostProcessor contract、M3 decode/NMS implementation 和
-  `postprocessor_level_b` assets/evidence。
+  `tests/data/postprocessor_reference/` / `results/validation/postprocessor_only/` evidence。
 - M4 Runner 将消费 original-image `Detection`，但不拥有 decode/NMS 或坐标恢复逻辑。
 
 后续调整：
@@ -1488,7 +1489,7 @@ degeneracy 或 minimum-size filtering；零宽或零高的最终 `Detection` 必
 影响范围：
 
 - M3.4 transform/clip/process implementation 与其 unit tests。
-- 后续 `postprocessor_level_b` Python/C++ detection evidence。
+- 后续 `tests/data/postprocessor_reference/` 的 Python/C++ PostProcessor-only detection evidence。
 
 后续调整：
 

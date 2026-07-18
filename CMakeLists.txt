@@ -295,6 +295,18 @@ if(BUILD_TESTING)
         PROPERTIES
             LABELS "m3;postprocess;reference;evidence"
     )
+    add_test(
+        NAME postprocessor_reference_malformed
+        COMMAND "${CMAKE_COMMAND}"
+            "-DVALIDATOR=$<TARGET_FILE:test_postprocessor_reference>"
+            "-DDATA_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/tests/data/postprocessor_reference"
+            "-DTEMP_ROOT=${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/postprocessor_reference_malformed"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/tests/cmake/verify_postprocessor_reference_malformed.cmake"
+    )
+    set_tests_properties(postprocessor_reference_malformed
+        PROPERTIES
+            LABELS "m3;postprocess;reference;evidence;negative"
+    )
 
     add_executable(test_inference_engine
         tests/test_inference_engine.cpp

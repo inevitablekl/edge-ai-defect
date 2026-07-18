@@ -2,6 +2,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -118,7 +119,7 @@ float parse_float(const std::string& token) {
     stream.imbue(std::locale::classic());
     float value = 0.0F;
     stream >> value;
-    if (!stream || !stream.eof()) {
+    if (!stream || !stream.eof() || !std::isfinite(value)) {
         throw std::runtime_error("Invalid float TSV field: " + token);
     }
     return value;
@@ -156,6 +157,13 @@ std::vector<std::string> split_tsv(const std::string& line) {
     return fields;
 }
 
+void validate_tsv_record_line(const std::string& line, const fs::path& path) {
+    if (line.empty() || line.front() == '\t' || line.back() == '\t' ||
+        std::count(line.begin(), line.end(), '\t') != 6) {
+        throw std::runtime_error("Invalid TSV record delimiters: " + path.string());
+    }
+}
+
 std::vector<DetectionRecord> read_tsv(const fs::path& path) {
     std::ifstream input(path);
     input.imbue(std::locale::classic());
@@ -169,9 +177,15 @@ std::vector<DetectionRecord> read_tsv(const fs::path& path) {
     }
     std::vector<DetectionRecord> values;
     while (std::getline(input, line)) {
+        validate_tsv_record_line(line, path);
         const std::vector<std::string> fields = split_tsv(line);
         if (fields.size() != 7U) {
             throw std::runtime_error("Invalid TSV record: " + path.string());
+        }
+        for (const std::string& field : fields) {
+            if (field.empty()) {
+                throw std::runtime_error("Empty TSV field: " + path.string());
+            }
         }
         values.push_back({parse_float(fields[0]),
                           parse_float(fields[1]),
