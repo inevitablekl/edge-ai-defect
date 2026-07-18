@@ -167,7 +167,11 @@ target_link_libraries(edge_ai_postprocess
 
 add_library(edge_ai_runtime STATIC
     src/cli.cpp
+    src/composite_sink.cpp
+    src/console_sink.cpp
     src/directory_source.cpp
+    src/json_sink.cpp
+    src/result_sink.cpp
     src/runtime_config.cpp
 )
 target_include_directories(edge_ai_runtime
@@ -414,6 +418,27 @@ if(BUILD_TESTING)
     set_tests_properties(directory_source
         PROPERTIES
             LABELS "m4;runtime;source"
+    )
+
+    add_executable(test_result_sinks
+        tests/test_result_sinks.cpp
+    )
+    target_link_libraries(test_result_sinks
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_result_sinks
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME result_sinks
+        COMMAND test_result_sinks
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/result_sinks"
+    )
+    set_tests_properties(result_sinks
+        PROPERTIES
+            LABELS "m4;runtime;sink"
     )
 
     add_executable(test_model_contract

@@ -1,7 +1,7 @@
 # M4 C++ ONNX Runtime Serial Baseline Execution Plan
 
-状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser 和
-M4.2 ImageSource and DirectorySource 已完成；M4.3 尚未开始。
+状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser、
+M4.2 ImageSource and DirectorySource 和 M4.3 ResultSink System 已完成；M4.4 尚未开始。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -624,6 +624,28 @@ PASS。M4.2 无 Gate；下一步仅为 M4.3 ResultSink System。
 - **expected commit message**：`feat: add serial result sinks`。
 - **next step**：M4.4 SerialRunner and Basic Timing。
 - **Gate**：无独立 Gate；M4.1～M4.3 不做 Gate。
+
+#### M4.3 实际结果（2026-07-18）
+
+M4.3 已完成，且没有进入 M4.4。实际新增：
+
+- `IResultSink`、注入 `std::ostream` 的 `ConsoleSink`、factory 创建的 `JsonSink` 和拥有 child sink 的
+  `CompositeSink`；所有 sink 严格执行 begin → write* → end 生命周期，输入验证失败不推进自身成功状态；
+- 固定 schema 的最小 deterministic UTF-8 JSON writer：classic locale、固定字段顺序、完整 JSON escaping、
+  非 ASCII 原样保留、float32/double round-trip 精度和末尾单个 LF；不引入 JSON DOM dependency；
+- JsonSink 缓存 metadata 和 frames，仅在 `end_run()` 用同目录 `mkstemp` 临时文件完成 write/flush/close 后
+  以 POSIX rename 提交；overwrite=true 的旧目标在提交前保持不变，所有失败及析构路径清理临时文件；
+- CompositeSink 要求非空且无 null child，begin/write 正序、end 逆序；任一 child 失败立即停止，因而
+  Console end 失败时 JsonSink 不会提交最终文件。
+
+`test_result_sinks` 覆盖生命周期非法顺序、Console 固定输出/Detection 顺序/timing 开关/finite validation，
+Json schema/字段顺序/escaping/UTF-8/尾 LF/timing/summary/sequence/path/finite validation、parent/overwrite/
+late target/old-file preservation/temp cleanup/destructor，以及 Composite 正逆序、null/empty child、begin/write/end
+中间失败停止和 Console end 对 JSON commit 的保护。测试使用临时目录和 memory stream，不依赖冻结 ONNX 模型。
+
+真实回归：M4.3 runtime 定向 `5/5 PASS`；Model Smoke OFF 全量 CTest `22/22 PASS`；Model Smoke ON 全量
+CTest `29/29 PASS`。Strict、ASan、UBSan 仍为 `Not configured`，未运行也未表述为 PASS。M4.3 无 Gate；下一步
+仅为 M4.4 SerialRunner and Basic Timing。
 
 ### M4.4 — SerialRunner and Basic Timing
 

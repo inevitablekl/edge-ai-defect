@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.2 complete）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.3 complete）
 ```
 
 M2 状态：
@@ -91,15 +91,17 @@ M4 状态：
 - M4.0 Planning Freeze：complete。
 - M4.1 Runtime Contracts, Config and CLI Parser：complete。
 - M4.2 ImageSource and DirectorySource：complete。
-- M4.3～M4.7：pending。
+- M4.3 ResultSink System：complete。
+- M4.4～M4.7：pending。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
-  deterministic non-recursive DirectorySource。尚未开发 ResultSink、SerialRunner 或完整 application assembly。
+  deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
+  尚未开发 SerialRunner 或完整 application assembly。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
 下一阶段：
 
 ```text
-M4.3 ResultSink System
+M4.4 SerialRunner and Basic Timing
 ```
 
 当前主线：
@@ -1433,6 +1435,54 @@ NEU-DET
 
 - Strict、ASan、UBSan 仍为 `Not configured`；本轮未运行 benchmark，未修改 `DECISIONS.md`，也未进入 M4.3。
 
+#### M4.3 ResultSink System
+
+当前工作：
+
+- 实现 `IResultSink`、ConsoleSink、JsonSink 和 CompositeSink；不实现 SerialRunner、main assembly、ORT 调用或计时采集。
+
+修改文件：
+
+- `include/edge_ai_defect/runtime/result_sink.hpp`
+- `include/edge_ai_defect/runtime/console_sink.hpp`
+- `include/edge_ai_defect/runtime/json_sink.hpp`
+- `include/edge_ai_defect/runtime/composite_sink.hpp`
+- `src/result_sink.cpp`
+- `src/console_sink.cpp`
+- `src/json_sink.cpp`
+- `src/composite_sink.cpp`
+- `src/result_sink_detail.hpp`
+- `tests/test_result_sinks.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 固化单运行级 deterministic JSON schema；JsonSink 只在 successful `end_run()` 以同目录 temp + flush/close +
+  POSIX rename 发布最终文件，且 overwrite=true 的旧文件在提交前不变。
+- ConsoleSink 通过注入 stream 产生稳定 RUN/IMAGE/DETECTION/SUMMARY 输出；CompositeSink 固定 begin/write
+  正序、end 逆序，Console end 失败时 JsonSink 不提交。
+- 测试覆盖 sink lifecycle、JSON schema/escaping/UTF-8/locale/precision/timing、overwrite 与原子失败语义、
+  temp cleanup、输入验证和 Composite 调用顺序/失败停止。
+- M4.3 runtime 定向 5/5 PASS，Model Smoke OFF 全量 CTest 22/22 PASS，Model Smoke ON 全量 CTest 29/29 PASS。
+
+未完成：
+
+- SerialRunner、Frame timing 采集、CLI 接入 main 和完整 application assembly 均未开始。
+
+阻塞问题：
+
+- 无 M4.4 前已知阻塞。
+
+下一步计划：
+
+- 仅执行 M4.4 SerialRunner and Basic Timing；随后必须执行只读 M4.4 Shallow Gate，不能提前进入 M4.5。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark，未修改 `DECISIONS.md`，也未进入 M4.4。
+
 ---
 
 ## 8. 当前最近计划
@@ -1444,9 +1494,9 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.2 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.3 ResultSink System。
-5. M4 当前已开发 ImageSource/DirectorySource；ResultSink、SerialRunner 或完整 application flow 仍未开发，
-   后续仅按 M4.3～M4.5 task cards逐步执行。
+4. M4.0～M4.3 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.4 SerialRunner and Basic Timing。
+5. M4 当前已开发 ImageSource/DirectorySource/ResultSink；SerialRunner 或完整 application flow 仍未开发，
+   后续仅按 M4.4～M4.5 task cards逐步执行。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
