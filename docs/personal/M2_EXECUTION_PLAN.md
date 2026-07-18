@@ -66,6 +66,10 @@ run()
 `HostTensor` input，并通过 output 参数返回已拥有的 `HostTensor`。两者均以
 `core::Status` 表达可恢复失败；不引入 `StatusOr` 或异常穿透 public API。
 
+M2.1 已冻结 interface copy 与 move 均删除。具体 `OnnxRuntimeEngine` 后续由
+`std::unique_ptr` 管理；该选择避免在尚未实现 ORT resource 时暴露或猜测移动后的
+ready/session 语义。
+
 接口禁止出现：async、batch、device tensor、dynamic shape、plugin、ORT types、
 CUDA/TensorRT types 或 postprocess types。
 
@@ -144,10 +148,10 @@ element type、rank、全正静态 dimensions 和完整 shape。模型 metadata 
 - 非 ready 状态的 `run()`、input validation failure、ORT run failure、output
   validation failure。
 
-现有 `ErrorCode` 可覆盖一般 argument、I/O、shape、dtype/layout、data-size 和
-schema 错误。实现前应在 Engine contract 提交中审查并冻结是否新增
-`kIntegrityMismatch`、`kBackendInitializationError`、`kBackendRuntimeError` 和
-`kModelContractMismatch`；本计划不修改 enum。
+M2.1 已冻结并新增 `kModelContractMismatch`、`kBackendInitializationError` 和
+`kBackendRuntimeError`。不新增 `kIntegrityMismatch`：model SHA256/size failure 是
+ModelContract 一致性失败，使用 `kModelContractMismatch`。既有错误码继续覆盖一般
+argument、I/O、shape、dtype/layout、data-size 和 schema 错误。
 
 ## 6. `SessionOptions` 策略
 
@@ -207,8 +211,8 @@ fixed HostTensor input → Python ONNX Runtime golden
 NaN/+Inf/-Inf 均为零。输入资产、Python ORT version、model SHA256、contract 和
 golden digest 必须记录为可复现 evidence。
 
-在首次生成 golden 前，Level B 接受阈值冻结为：`MAE <= 1e-6`、
-`max_abs <= 1e-5`，且 finite count 必须等于完整 element count。任何失败先定位
+Level B 阈值已作为当前环境冻结为：`MAE <= 1e-6`、`max_abs <= 1e-5`，且 finite
+count 必须等于完整 element count。任何失败先定位
 模型、input、contract、provider、ORT version 或 copy/shape 问题；禁止为使结果
 通过而放宽阈值。若需要更改阈值，必须停止 M2、提供差异证据并经人工架构审查后以
 新的决策和计划修订冻结。

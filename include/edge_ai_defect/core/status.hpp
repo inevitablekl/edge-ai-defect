@@ -16,6 +16,9 @@ enum class ErrorCode {
     kParseError,
     kSchemaViolation,
     kImageProcessingError,
+    kModelContractMismatch,
+    kBackendInitializationError,
+    kBackendRuntimeError,
 };
 
 class Status {

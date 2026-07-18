@@ -173,6 +173,19 @@ if(BUILD_TESTING)
     )
     add_test(NAME test_core COMMAND test_core)
 
+    add_executable(test_inference_engine
+        tests/test_inference_engine.cpp
+    )
+    target_link_libraries(test_inference_engine
+        PRIVATE
+            edge_ai_core
+    )
+    add_test(NAME inference_engine_contract COMMAND test_inference_engine)
+    set_tests_properties(inference_engine_contract
+        PROPERTIES
+            LABELS "m2;inference;contract"
+    )
+
     add_executable(test_model_contract
         tests/test_model_contract.cpp
     )
