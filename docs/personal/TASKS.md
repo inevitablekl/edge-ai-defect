@@ -53,13 +53,13 @@
 更新时间：
 
 ```text
-2026-07-18
+2026-07-19
 ```
 
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.5 complete；M4.4 Shallow Gate rerun PASS；M4.6 first Gate FAIL，remediation complete，rerun pending）
+M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。M5 Level C and ORT Baseline Planning：PENDING。
 ```
 
 M2 状态：
@@ -95,8 +95,8 @@ M4 状态：
 - M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：first FAIL，test/documentation remediation complete，rerun PASS；M4.4 COMPLETE。
 - M4.5 Application Assembly and Actual ORT Smoke：complete。
 - M4.6 Standard Final Gate：first FAIL；production architecture PASS，blocker 为 application subprocess 测试证据缺口；
-  test/documentation remediation complete，Gate rerun pending。
-- M4.7 Documentation-only Closeout：pending，尚未开始。
+  test/documentation remediation complete（`1bc0260fd88530e1d44ee8dc8042d7103cb7e571`），Gate rerun PASS。
+- M4.7 Documentation-only Closeout：complete；M4 CLOSED。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
   deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
   已新增 SerialRunner；M4.5 已将 main 替换为 actual application composition 并完成实际 ORT smoke。
@@ -105,7 +105,7 @@ M4 状态：
 下一阶段：
 
 ```text
-M4.6 Standard Final Gate rerun（只读独立任务）
+M5 Level C and ORT Baseline Planning：PENDING（先制定并冻结 M5 执行计划；M5 implementation、Level C 和 benchmark 均未开始）
 ```
 
 当前主线：
@@ -1621,6 +1621,47 @@ NEU-DET
 
 ---
 
+### 2026-07-19 - M4.7 C++ ONNX Runtime Serial Baseline documentation-only closeout
+
+当前工作：
+
+- 在 M4.6 Standard Final Gate rerun PASS 后，仅固化最终 Gate 证据和阶段关闭状态；不修改 production、测试、CMake、配置、模型或 validation evidence。
+
+修改文件：
+
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- M4.6 Gate rerun 已记录为 PASS。Git/提交范围正确，M4.5 后 production 未变化；main 保持薄 composition root，
+  exit `0/1/2/3/4`、单次 ModelContract load、D033 TensorInfo 值注入和既有 runtime contracts 均成立。
+- output preflight 的 OFF/ON executable 与 ResultSink unit-test 分层、exit `2/3/4` subprocess stream evidence、
+  failure JSON/temp atomicity 和 `overwrite=false` 旧文件保持均已确认；无新 blocker。
+- 最终回归为 Model Smoke OFF M4 定向 `7/7 PASS`、OFF 全量 `24/24 PASS`；Model Smoke ON
+  `application_ort_smoke` PASS、ON 全量 `32/32 PASS`。actual ORT 两张 deterministic BMP 串行闭环和 Console smoke 均通过。
+- 两次 timing-disabled JSON byte-identical，SHA256 均为
+  `5fbc1847f54716c3e809ecefa4ee297d368c08d08b2d0964a8a479bf620f7071`；不含 timing、timestamp、FPS 或 percentile。
+- M4.0～M4.7 全部完成，M4 CLOSED。Strict、ASan、UBSan 仍为 `Not configured`；benchmark 和 Level C 均未执行。
+
+未完成：
+
+- M5 implementation、Level C、formal Profiler 和 performance baseline 均未开始。
+
+阻塞问题：
+
+- 无 M4 closeout 阻塞。M5 开始前需要先由独立任务制定并冻结 M5 执行计划。
+
+下一步计划：
+
+- 仅进入 M5 Level C and ORT Baseline Planning：PENDING；不得将其表述为 M5 started 或 benchmark started。
+
+备注：
+
+- `DECISIONS.md` 未修改；D028～D033 与最终实现一致。本轮未重新运行 Gate、CTest 或 benchmark。
+
+---
+
 ## 8. 当前最近计划
 
 近期优先级：
@@ -1630,9 +1671,10 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.5 已完成，M4 为 `IN_PROGRESS`；M4.4 Shallow Gate rerun 已 PASS，M4.5 actual ORT smoke 已通过。
-5. M4.6 第一次 Standard Final Gate 的 production 审查 PASS、测试证据判定 FAIL；remediation 已完成，下一步仅可由
-   独立只读 Gate rerun 开始。M4.7 尚未开始。
+4. M4.0～M4.7 已完成；M4.4 Shallow Gate rerun PASS，M4.6 第一次 Standard Final Gate FAIL 后 remediation complete，
+   M4.6 Gate rerun PASS，M4 已 CLOSED。
+5. 下一阶段仅为 M5 Level C and ORT Baseline Planning：PENDING；必须先制定并冻结执行计划，M5 implementation、
+   Level C 与 benchmark 尚未开始。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---

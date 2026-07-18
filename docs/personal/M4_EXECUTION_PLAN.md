@@ -1,9 +1,10 @@
 # M4 C++ ONNX Runtime Serial Baseline Execution Plan
 
-状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser、
+状态：M4 `CLOSED`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser、
 M4.2 ImageSource and DirectorySource、M4.3 ResultSink System 和 M4.4 SerialRunner and Basic Timing 已完成；
 M4.4 Shallow Gate 首次结果为 FAIL，test/documentation remediation 后的 Gate rerun 为 PASS；M4.4 COMPLETE，
-M4.5 COMPLETE；M4.6 Standard Final Gate 首次结果为 FAIL，test/documentation remediation COMPLETE，Gate rerun PENDING。
+M4.5 COMPLETE；M4.6 Standard Final Gate 首次结果为 FAIL，test/documentation remediation COMPLETE，Gate rerun PASS；
+M4.7 documentation-only closeout COMPLETE。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -817,6 +818,33 @@ stdout、non-empty/stable stderr context；真实 `broken.png` 在 DirectorySour
 `overwrite=false` 断言既有目标内容不变。M4.6 remediation 状态为 **COMPLETE**，但 Gate rerun 仍为
 **PENDING**；M4 保持 `IN_PROGRESS`，M4.7 未开始。
 
+#### M4.6 Standard Final Gate rerun（2026-07-19）
+
+只读 rerun 判定为 **PASS**。remediation commit 为
+`1bc0260fd88530e1d44ee8dc8042d7103cb7e571`（`test: close M4.6 application gate gaps`）。
+
+- Git 起点、提交范围和 `git diff --check` 正确；自 M4.5 application assembly commit
+  `bd5623855d4be5ba8b7145fcd605c52c43491eef` 后 production 未变化。`main.cpp` 仍为薄 composition root，
+  正确映射 success/help=`0`、unexpected exception=`1`、CLI/config=`2`、initialization=`3`、
+  SerialRunner/runtime=`4`；
+- 每次应用运行只加载一次 ModelContract；同一已验证 contract 同时用于 OnnxRuntimeEngine initialize、模型 SHA
+  与 RunMetadata metadata，以及按值注入 SerialRunner 的 TensorInfo，D033 持续成立；
+- DirectorySource、ResultSink、CompositeSink 和 SerialRunner 合同无漂移。人工确认的 output preflight 分层成立：
+  OFF executable 覆盖无需 frozen ONNX 的 CLI/config/init，ON executable 覆盖 output preflight 与实际运行，
+  ResultSink unit test 覆盖组件级原子语义；
+- exit `2`、`3`、`4` subprocess evidence 完整。失败时 stdout 为空、stderr 包含稳定错误上下文、不发布最终 JSON、
+  不残留 JsonSink temporary file；`overwrite=false` 保持旧文件字节不变。真实 `broken.png` 在
+  `DirectorySource::next()` 解码失败并映射 exit `4`；
+- Model Smoke OFF M4 定向 `7/7 PASS`、全量 CTest `24/24 PASS`；Model Smoke ON
+  `application_ort_smoke` PASS、全量 CTest `32/32 PASS`。actual ORT 使用两张 deterministic BMP，完整经过
+  RuntimeConfig → ModelContract → DirectorySource → Preprocessor → OnnxRuntimeEngine → PostProcessor →
+  CompositeSink → SerialRunner，成功提交 JSON；
+- timing-disabled JSON 两次真实运行 byte-identical，SHA256 均为
+  `5fbc1847f54716c3e809ecefa4ee297d368c08d08b2d0964a8a479bf620f7071`；不含 `timing_ms`、timestamp、FPS 或
+  percentile。Console smoke 输出 1 条 RUN、2 条 IMAGE、1 条 SUMMARY，stderr 为空且 JSON 正常提交；
+- 未发现新 blocker，不需要额外 production/test 修改或新的人工架构决策。Strict、ASan、UBSan 仍为
+  `Not configured`；未执行 benchmark、Level C 或任何 M5 工作。
+
 ### M4.7 — Documentation-only Closeout
 
 - **objective**：在 M4 Final Gate PASS 后更新 M4 plan/TASKS，必要时 DECISIONS，记录真实回归并标记 M4 CLOSED。
@@ -830,6 +858,26 @@ stdout、non-empty/stable stderr context；真实 `broken.png` 在 DirectorySour
 - **expected commit message**：`docs: close M4 serial baseline`。
 - **next step**：M5 planning/Level C and ORT Baseline，必须由独立任务启动。
 - **Gate**：Documentation-only Closeout；前置必须是 M4.6 PASS。
+
+#### M4.7 实际关闭结果（2026-07-19）
+
+M4.7 documentation-only closeout 已完成，M4 状态为 **CLOSED**。关闭依据为：
+
+1. M4.1 Runtime Contracts、strict RuntimeConfig 和 minimal CLI 完成；
+2. M4.2 deterministic DirectorySource 完成；
+3. M4.3 Console/JSON/Composite ResultSink System 完成；
+4. M4.4 SerialRunner and Basic Timing 完成，且 Shallow Gate rerun PASS；
+5. M4.5 thin application composition root 与 actual ORT smoke 完成；
+6. M4.6 Standard Final Gate rerun PASS；
+7. 本 M4.7 closeout 已准确固化上述 Gate 事实和最终验证结果。
+
+M4 最终交付为 strict RuntimeConfig、minimal CLI、deterministic DirectorySource、Console/JSON/Composite sinks、
+SerialRunner、basic per-frame timing、thin application composition root、actual ONNX Runtime CPU serial functional
+flow、deterministic JSON，以及 subprocess exit-code 和 failure atomicity evidence。
+
+M4 不包含 Python/C++ Level C parity、formal Profiler、warmup、FPS/P50/P95/P99、benchmark、TensorRT、Jetson、
+Pipeline、CUDA preprocessing 或 GPU NMS。下一阶段仅为 **M5 Level C and ORT Baseline Planning**，必须由独立任务先
+制定并冻结 M5 执行计划；M5 尚未开始。
 
 ## 10. Gate 策略
 
