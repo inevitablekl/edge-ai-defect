@@ -40,6 +40,15 @@ bool expect_code(const core::Status& status,
     return false;
 }
 
+bool expect_initialize_failure(const model::ModelContract& contract,
+                               const std::filesystem::path& model_path,
+                               core::ErrorCode expected_code,
+                               const std::string& case_name) {
+    backend_ort::OnnxRuntimeEngine engine;
+    return expect_code(engine.initialize(contract, model_path), expected_code,
+                       case_name);
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
@@ -56,51 +65,104 @@ int main(int argc, char* argv[]) {
         return 3;
     }
 
-    {
-        backend_ort::OnnxRuntimeEngine engine;
-        const core::Status status = engine.initialize(
-            contract, "missing_model_for_m2_2_initialization_test.onnx");
-        if (!expect_code(status, core::ErrorCode::kIoError, "missing model")) {
-            return 4;
-        }
+    const std::filesystem::path missing_model =
+        arguments.model_path.parent_path() / "m2_4_missing_model.onnx";
+    if (!expect_initialize_failure(contract,
+                                   missing_model,
+                                   core::ErrorCode::kIoError,
+                                   "missing model")) {
+        return 4;
+    }
+    if (!expect_initialize_failure(contract,
+                                   arguments.model_path.parent_path(),
+                                   core::ErrorCode::kIoError,
+                                   "non-regular model path")) {
+        return 5;
     }
 
     {
-        backend_ort::OnnxRuntimeEngine engine;
         model::ModelContract wrong_contract = contract;
-        wrong_contract.format = "not-onnx";
-        const core::Status status =
-            engine.initialize(wrong_contract, arguments.model_path);
-        if (!expect_code(status,
-                         core::ErrorCode::kModelContractMismatch,
-                         "invalid contract")) {
-            return 5;
-        }
-    }
-
-    {
-        backend_ort::OnnxRuntimeEngine engine;
-        model::ModelContract wrong_contract = contract;
-        wrong_contract.input.name = "wrong_input_name";
-        const core::Status status =
-            engine.initialize(wrong_contract, arguments.model_path);
-        if (!expect_code(status,
-                         core::ErrorCode::kModelContractMismatch,
-                         "input metadata mismatch")) {
+        wrong_contract.expected_onnx_sha256[0] =
+            wrong_contract.expected_onnx_sha256[0] == '0' ? '1' : '0';
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "SHA256 mismatch")) {
             return 6;
         }
     }
+    {
+        model::ModelContract wrong_contract = contract;
+        ++wrong_contract.expected_onnx_size_bytes;
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "size mismatch")) {
+            return 7;
+        }
+    }
 
     {
-        backend_ort::OnnxRuntimeEngine engine;
+        model::ModelContract wrong_contract = contract;
+        wrong_contract.input.name = "wrong_input_name";
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "input name mismatch")) {
+            return 8;
+        }
+    }
+    {
+        model::ModelContract wrong_contract = contract;
+        wrong_contract.input.tensor_info.dtype =
+            static_cast<core::TensorDataType>(99);
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "input dtype mismatch")) {
+            return 9;
+        }
+    }
+    {
+        model::ModelContract wrong_contract = contract;
+        wrong_contract.input.tensor_info.shape = {1, 3, 320, 1280};
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "input shape mismatch")) {
+            return 10;
+        }
+    }
+
+    {
         model::ModelContract wrong_contract = contract;
         wrong_contract.output.name = "wrong_output_name";
-        const core::Status status =
-            engine.initialize(wrong_contract, arguments.model_path);
-        if (!expect_code(status,
-                         core::ErrorCode::kModelContractMismatch,
-                         "output metadata mismatch")) {
-            return 7;
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "output name mismatch")) {
+            return 11;
+        }
+    }
+    {
+        model::ModelContract wrong_contract = contract;
+        wrong_contract.output.tensor_info.dtype =
+            static_cast<core::TensorDataType>(99);
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "output dtype mismatch")) {
+            return 12;
+        }
+    }
+    {
+        model::ModelContract wrong_contract = contract;
+        wrong_contract.output.tensor_info.shape = {1, 10, 4200};
+        if (!expect_initialize_failure(wrong_contract,
+                                       arguments.model_path,
+                                       core::ErrorCode::kModelContractMismatch,
+                                       "output shape mismatch")) {
+            return 13;
         }
     }
 
@@ -109,7 +171,7 @@ int main(int argc, char* argv[]) {
     if (!initialize_status.ok()) {
         std::cerr << "positive initialization failed: "
                   << initialize_status.message() << '\n';
-        return 8;
+        return 14;
     }
 
     std::cout << "OnnxRuntimeEngine initialization tests passed\n";

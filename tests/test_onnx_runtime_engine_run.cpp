@@ -102,6 +102,12 @@ int main(int argc, char* argv[]) {
         return 5;
     }
 
+    if (!expect_failure(engine.run(input, nullptr),
+                        core::ErrorCode::kInvalidArgument,
+                        "null output")) {
+        return 6;
+    }
+
     {
         core::HostTensor invalid_shape = input;
         invalid_shape.info.shape = {1, 3, 320, 1280};
@@ -109,7 +115,7 @@ int main(int argc, char* argv[]) {
         const core::Status status = engine.run(invalid_shape, &output);
         if (!expect_failure(status, core::ErrorCode::kInvalidShape, "invalid shape") ||
             !output_is_unchanged(output, sentinel)) {
-            return 6;
+            return 7;
         }
     }
 
@@ -122,7 +128,7 @@ int main(int argc, char* argv[]) {
                             core::ErrorCode::kUnsupportedDataType,
                             "invalid dtype") ||
             !output_is_unchanged(output, sentinel)) {
-            return 7;
+            return 8;
         }
     }
 
@@ -135,7 +141,20 @@ int main(int argc, char* argv[]) {
                             core::ErrorCode::kUnsupportedLayout,
                             "invalid layout") ||
             !output_is_unchanged(output, sentinel)) {
-            return 8;
+            return 9;
+        }
+    }
+
+    {
+        core::HostTensor invalid_data_size = input;
+        invalid_data_size.data.pop_back();
+        core::HostTensor output = sentinel;
+        const core::Status status = engine.run(invalid_data_size, &output);
+        if (!expect_failure(status,
+                            core::ErrorCode::kDataSizeMismatch,
+                            "invalid data size") ||
+            !output_is_unchanged(output, sentinel)) {
+            return 10;
         }
     }
 
@@ -143,19 +162,19 @@ int main(int argc, char* argv[]) {
     const core::Status first_run_status = engine.run(input, &first_output);
     if (!first_run_status.ok()) {
         std::cerr << "First run failed: " << first_run_status.message() << '\n';
-        return 9;
+        return 11;
     }
     if (first_output.info.dtype != core::TensorDataType::kFloat32 ||
         first_output.info.layout != core::TensorLayout::kBcn ||
         first_output.info.shape != contract.output.tensor_info.shape ||
         first_output.data.size() != 84000U) {
         std::cerr << "First run output contract mismatch\n";
-        return 10;
+        return 12;
     }
     for (const float value : first_output.data) {
         if (!std::isfinite(value)) {
             std::cerr << "First run output contains a non-finite value\n";
-            return 11;
+            return 13;
         }
     }
 
@@ -163,12 +182,40 @@ int main(int argc, char* argv[]) {
     const core::Status second_run_status = engine.run(input, &second_output);
     if (!second_run_status.ok()) {
         std::cerr << "Second run failed: " << second_run_status.message() << '\n';
-        return 12;
+        return 14;
     }
     if (second_output.info.shape != first_output.info.shape ||
         second_output.data != first_output.data) {
         std::cerr << "Consecutive run outputs differ\n";
-        return 13;
+        return 15;
+    }
+
+    const core::Status reinitialize_status =
+        engine.initialize(contract, arguments.model_path);
+    if (!reinitialize_status.ok()) {
+        std::cerr << "Repeated initialization failed: "
+                  << reinitialize_status.message() << '\n';
+        return 16;
+    }
+    core::HostTensor reinitialized_output;
+    if (!engine.run(input, &reinitialized_output).ok() ||
+        reinitialized_output.data != first_output.data) {
+        std::cerr << "Run after repeated initialization failed or changed output\n";
+        return 17;
+    }
+
+    const core::Status failed_reinitialize_status = engine.initialize(
+        contract, arguments.model_path.parent_path() / "m2_4_missing_model.onnx");
+    if (!expect_failure(failed_reinitialize_status,
+                        core::ErrorCode::kIoError,
+                        "failed repeated initialization")) {
+        return 18;
+    }
+    core::HostTensor preserved_output;
+    if (!engine.run(input, &preserved_output).ok() ||
+        preserved_output.data != first_output.data) {
+        std::cerr << "Failed repeated initialization did not preserve ready engine\n";
+        return 19;
     }
 
     std::cout << "OnnxRuntimeEngine run tests passed\n";
