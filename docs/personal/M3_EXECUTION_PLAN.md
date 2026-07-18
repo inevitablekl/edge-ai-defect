@@ -1,8 +1,9 @@
 # M3 PostProcessor Execution Plan
 
-状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.2 已完成；M3.3
-IoU/class-aware NMS pending。M3.2 完成内部 raw candidate decode 与 pre-NMS preparation，
-但仍未实现 NMS、inverse LetterBox、clipping 或 public `PostProcessor::process()`。
+状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.3 已完成；M3.4
+inverse LetterBox、clipping 与 public `PostProcessor::process()` integration pending。M3.3
+完成 internal continuous xyxy IoU 与 deterministic class-aware greedy NMS；仍未实现坐标恢复、
+clipping 或 public `PostProcessor::process()`。
 
 ## 1. 目标与边界
 
@@ -352,3 +353,48 @@ required contract failures 和 output atomicity。Model Smoke OFF configure/buil
 `postprocessor_contract` / `postprocessor_decode` / `test_core` 为 3/3 PASS，完整 CTest
 为 13/13 PASS。strict 与 ASan/UBSan 仍为 `Not configured`。下一步为 M3.3 IoU 与
 class-aware NMS。
+
+## 12. M3.3 IoU / Class-aware NMS 实际结果
+
+M3.3 保持 `DecodedCandidate` 为 internal-only model-input continuous xyxy 表示，并在
+`src/postprocessor_nms.cpp` 新增两个 detail helpers：
+
+```cpp
+float continuous_iou(const DecodedCandidate& lhs,
+                     const DecodedCandidate& rhs,
+                     float lhs_offset = 0.0F,
+                     float rhs_offset = 0.0F) noexcept;
+
+core::Status apply_class_aware_nms(
+    const std::vector<DecodedCandidate>& sorted_candidates,
+    const PostprocessConfig& config,
+    std::vector<DecodedCandidate>* output);
+```
+
+`continuous_iou()` 使用 `max(0, min(x2) - max(x1))` 与 `max(0, min(y2) - max(y1))`
+计算交集，面积没有 inclusive-pixel `+1`。零/负 union 或任一中间几何计算为 non-finite 时
+返回 `0.0F`；这不是 public error path。NMS 在调用前验证实际参与的 candidates：class id
+必须在 frozen `[0,6)`，coordinate/confidence 必须 finite，且连续 xyxy 面积为正；不满足时
+返回 `kInvalidArgument`，且 caller output 不变。
+
+NMS 消费 M3.2 已 canonical-sorted 的 candidates，不重新排序。它至多处理前
+`min(size, max_nms)` 项（M3.2 正常路径已经完成同一上限截断），按顺序贪婪保留当前未抑制
+candidate，并将其与后续未抑制 candidates 比较。比较时只临时将四个 xyxy coordinate 加上
+`class_id * max_wh`；因此同类别按原几何竞争，不同类别被 class-offset 分离，返回的
+`DecodedCandidate` 坐标从不含 offset。仅 `IoU > iou_threshold` 抑制；相等不抑制。达到
+`max_det` 个 retained candidates 立即停止，因而 retained order 保持 M3.2 canonical order。
+最坏时间复杂度为 `O(K^2)`，其中 `K = min(sorted_candidates.size(), max_nms)`；本阶段没有
+buffer reuse、parallel NMS 或任何性能声明。
+
+`test_postprocessor_nms` 覆盖 disjoint/identical/partial/touching/zero-area IoU、无 `+1`
+语义、non-finite offset、严格 threshold 边界、same/cross-class behavior、保留顺序、
+`max_nms`/`max_det`、invalid config/candidate、empty success 与 failure atomicity。Model
+Smoke OFF configure/build 成功；`test_core` / `postprocessor_contract` /
+`postprocessor_decode` / `postprocessor_nms` 定向 CTest 为 4/4 PASS，完整 CTest 为
+14/14 PASS。strict 与 ASan/UBSan 仍为 `Not configured`，不能写作通过。
+
+M3.3 未修改 M3.2 decode/排序语义、Preprocessor、Engine 或任何 public header；没有 inverse
+LetterBox、clipping、public `Detection` conversion、`PostProcessor::process()` definition、
+OpenCV DNN NMS、CUDA/TensorRT/ORT/Runner/Pipeline 或 benchmark。下一步仅可进入 M3.4，完成
+metadata-driven inverse LetterBox、clip 与 `process()` integration，再安排独立 M3 Level B
+evidence。

@@ -153,6 +153,7 @@ add_library(edge_ai_postprocess STATIC
     src/postprocess_config.cpp
     src/postprocessor.cpp
     src/postprocessor_decode.cpp
+    src/postprocessor_nms.cpp
 )
 target_include_directories(edge_ai_postprocess
     PUBLIC
@@ -227,6 +228,27 @@ if(BUILD_TESTING)
     set_tests_properties(postprocessor_decode
         PROPERTIES
             LABELS "m3;postprocess;decode"
+    )
+
+    add_executable(test_postprocessor_nms
+        tests/test_postprocessor_nms.cpp
+    )
+    target_include_directories(test_postprocessor_nms
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+    target_link_libraries(test_postprocessor_nms
+        PRIVATE
+            edge_ai_postprocess
+    )
+    set_target_properties(test_postprocessor_nms
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME postprocessor_nms COMMAND test_postprocessor_nms)
+    set_tests_properties(postprocessor_nms
+        PROPERTIES
+            LABELS "m3;postprocess;nms"
     )
 
     add_executable(test_inference_engine

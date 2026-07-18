@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.2 已完成，等待 M3.3 class-aware NMS
+M0、M1、M2 已关闭；M3.0～M3.3 已完成，等待 M3.4 inverse LetterBox、clipping 与 public process integration
 ```
 
 M2 状态：
@@ -77,12 +77,13 @@ M3 状态：
 - M3.0 PostProcessor repository audit and design freeze：complete。
 - M3.1 Detection / PostProcessor contract：complete。
 - M3.2 candidate decode：complete。
-- M3.3 IoU / class-aware NMS：pending。
+- M3.3 IoU / class-aware NMS：complete。
+- M3.4 inverse LetterBox / clipping / public process integration：pending。
 
 下一阶段：
 
 ```text
-M3.3 IoU / class-aware NMS
+M3.4 inverse LetterBox / clipping / public process integration
 ```
 
 当前主线：
@@ -1134,6 +1135,49 @@ NEU-DET
 - 执行 M3.3，只实现 continuous xyxy IoU 和 class-aware NMS，消费 M3.2 已排序的
   internal candidates；仍不实现 inverse LetterBox 或 public `process()`。
 
+#### M3.3 continuous xyxy IoU 与 deterministic class-aware greedy NMS
+
+当前工作：
+
+- 在不改变 M3.2 decode/排序语义的前提下，实现 internal continuous IoU、temporary
+  class offset、greedy NMS 及其边界测试。
+
+修改文件：
+
+- `src/postprocess_detail.hpp`
+- `src/postprocessor_nms.cpp`
+- `tests/test_postprocessor_nms.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 冻结并实现 continuous xyxy IoU：交集/面积无 inclusive-pixel `+1`；zero/invalid union
+  或 non-finite geometry 产生 `0.0F` IoU。
+- NMS 直接消费 canonical-sorted candidates，不重新排序；仅当
+  `IoU > iou_threshold` 时抑制，达到 `max_det` 时停止，输出保持 canonical retain order。
+- 对比较临时使用 `class_id * max_wh` 加到全部 xyxy coordinate；不同类不相互抑制，返回
+  candidate 坐标不包含 offset。
+- 防御性限制处理到 `min(size, max_nms)`；配置或 internal candidate 非法时返回
+  `kInvalidArgument`，不污染 caller output。
+- Model Smoke OFF configure/build 成功；M3/core 定向 CTest 4/4 PASS，完整 CTest
+  14/14 PASS。strict 与 ASan/UBSan 仍为 `Not configured`。
+
+未完成：
+
+- inverse LetterBox、clipping、public `Detection` conversion、
+  `PostProcessor::process()` definition 和 M3 PostProcessor-only Level B evidence 均未实现。
+
+阻塞问题：
+
+- 无 M3.4 前代码阻塞。strict 与 ASan/UBSan 未配置，不能记录为通过。
+
+下一步计划：
+
+- 执行 M3.4，仅完成基于 `ImageTransformMetadata` 的 inverse LetterBox、clip 与 public
+  `PostProcessor::process()` integration；不进入 Runner、Pipeline、benchmark 或 M3 Level B。
+
 ---
 
 ## 8. 当前最近计划
@@ -1144,7 +1188,8 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.2 已完成；下一任务为 M3.3 IoU / class-aware NMS。
+3. M3.0～M3.3 已完成；下一任务为 M3.4 inverse LetterBox / clipping / public process
+   integration。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。

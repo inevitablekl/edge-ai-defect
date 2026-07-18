@@ -27,4 +27,15 @@ struct DecodedCandidate {
     const PostprocessConfig& config,
     std::vector<DecodedCandidate>* output);
 
+[[nodiscard]] float continuous_iou(
+    const DecodedCandidate& lhs,
+    const DecodedCandidate& rhs,
+    float lhs_offset = 0.0F,
+    float rhs_offset = 0.0F) noexcept;
+
+[[nodiscard]] core::Status apply_class_aware_nms(
+    const std::vector<DecodedCandidate>& sorted_candidates,
+    const PostprocessConfig& config,
+    std::vector<DecodedCandidate>* output);
+
 }  // namespace edge_ai_defect::postprocess::detail
