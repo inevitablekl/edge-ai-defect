@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.4 complete；Shallow Gate first FAIL，remediation complete，rerun PASS）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.5 complete；M4.4 Shallow Gate rerun PASS；M4.6 Final Gate pending）
 ```
 
 M2 状态：
@@ -93,16 +93,17 @@ M4 状态：
 - M4.2 ImageSource and DirectorySource：complete。
 - M4.3 ResultSink System：complete。
 - M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：first FAIL，test/documentation remediation complete，rerun PASS；M4.4 COMPLETE。
-- M4.5～M4.7：pending。
+- M4.5 Application Assembly and Actual ORT Smoke：complete。
+- M4.6 Standard Final Gate、M4.7 Documentation-only Closeout：pending。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
   deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
-  已新增 SerialRunner；尚未开发完整 application assembly。
+  已新增 SerialRunner；M4.5 已将 main 替换为 actual application composition 并完成实际 ORT smoke。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
 下一阶段：
 
 ```text
-M4.5 Application Assembly and Actual ORT Smoke（独立任务）
+M4.6 M4 Standard Final Gate（只读独立任务）
 ```
 
 当前主线：
@@ -1540,12 +1541,46 @@ NEU-DET
 - M4.4 Shallow Gate rerun 已 PASS；remediation commit 为
   `0eb4bf3669ce1da1c8d0ce546adffc007c7a2bfe`。此前 blocker（null summary、partial-progress source failure、
   TensorInfo 底层错误保留、zero-Detection frame）均已关闭，production contracts 未修改。
-- M4.4 COMPLETE；M4.5 PENDING 且可以由独立任务开始。main/CLI application assembly 与实际 ORT runtime smoke
-  尚未开始。
+- M4.4 COMPLETE；M4.5 已在后续独立任务中完成 actual application assembly 与 ORT runtime smoke。
 
 备注：
 
-- Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark，未进入 M4.5。
+- Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark。
+
+#### M4.5 Application Assembly and Actual ORT Smoke
+
+当前工作：
+
+- 完成真实 `edge_ai_defect --config <runtime.yaml>` composition；不进入 M4.6、M5、Level C 或 benchmark。
+
+修改文件：
+
+- `src/main.cpp`
+- `CMakeLists.txt`
+- `tests/test_application_smoke.py`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- main 仅负责 CLI/config、组件组装、SerialRunner 调用、stderr 和 exit mapping；Runner 保持逐图处理循环。
+- 同一已验证 ModelContract 用于 ORT initialize、SerialRunner 的 `input.tensor_info` 值注入和 RunMetadata，未改 D033 或
+  M1/M2/M3/Runner/runtime config/CLI 合同。
+- OFF executable smoke 覆盖 help、非法 CLI、config/schema 和 assembly failures；ON smoke 用 build 临时目录的
+  确定性 BMP/YAML 运行实际 ORT 全链路，验证 deterministic JSON 重跑、Console、output preflight/overwrite failure。
+- Model Smoke OFF 全量 CTest `24/24 PASS`；Model Smoke ON 全量 CTest `32/32 PASS`。
+
+未完成：
+
+- M4.6 read-only Standard Final Gate 和 M4.7 documentation-only closeout；M4 仍为 `IN_PROGRESS`。
+
+下一步计划：
+
+- 仅执行 M4.6 Standard Final Gate；不得在 Gate 中修改文件、提交、关闭 M4 或进入 M5。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；未执行 benchmark，未形成 Level C 或性能结论。
 
 ---
 
@@ -1558,9 +1593,9 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.4 已完成，M4 为 `IN_PROGRESS`；M4.4 Shallow Gate rerun 已 PASS，下一任务可由独立 M4.5 开始。
-5. M4 当前已开发 ImageSource/DirectorySource/ResultSink/SerialRunner；完整 application flow 仍未开发，
-   M4.5 必须等待 Shallow Gate PASS 后的独立任务。
+4. M4.0～M4.5 已完成，M4 为 `IN_PROGRESS`；M4.4 Shallow Gate rerun 已 PASS，M4.5 actual ORT smoke 已通过。
+5. M4 当前已开发 ImageSource/DirectorySource/ResultSink/SerialRunner 与 complete application flow；下一步仅可由
+   独立只读 M4.6 Standard Final Gate 开始。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---

@@ -3,7 +3,7 @@
 状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser、
 M4.2 ImageSource and DirectorySource、M4.3 ResultSink System 和 M4.4 SerialRunner and Basic Timing 已完成；
 M4.4 Shallow Gate 首次结果为 FAIL，test/documentation remediation 后的 Gate rerun 为 PASS；M4.4 COMPLETE，
-M4.5 PENDING。
+M4.5 COMPLETE；M4.6 Standard Final Gate PENDING。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -747,6 +747,33 @@ Level C、formal Profiler 或 benchmark 证据。
 - **expected commit message**：`feat: assemble ONNX Runtime serial baseline`。
 - **next step**：M4.6 read-only Standard Final Gate。
 - **Gate**：准备完整 OFF/ON evidence，随后必须执行 M4.6；M4.5 不自行关闭 M4。
+
+#### M4.5 实际结果（2026-07-18）
+
+M4.5 已完成，`edge_ai_defect` 不再是 skeleton，而是保持薄边界的 composition root：CLI parse 和 help、
+RuntimeConfig load、组件组装、`SerialRunner::run()`、stderr 错误输出和五类 process exit code 映射只在
+`src/main.cpp`。逐图循环、preprocess、`engine.run()`、postprocess 和 JSON serialization 仍分别由
+SerialRunner、M1、M2、M3 和 ResultSink 负责。
+
+- `ModelContractLoader` 只执行一次；同一已验证 contract 同时传给 `OnnxRuntimeEngine::initialize()`，并将其
+  `input.tensor_info` 值注入 SerialRunner，且为 RunMetadata 提供 model filename/SHA、contract filename 和
+  class 顺序，保持 D033；
+- 组装顺序为 DirectorySource、Preprocessor、ORT Engine initialize、PostProcessor、JsonSink、optional
+  ConsoleSink、CompositeSink 和 SerialRunner。Composite 子项固定 Json→Console；Json 永远存在；
+- `tests/test_application_smoke.py` 通过真实 `edge_ai_defect` subprocess 覆盖 help、CLI/config errors 和
+  initialization exit `2/3`（OFF）；ON 时在 build 临时目录确定性生成两张最小 24-bit BMP 和 strict runtime YAML，
+  因而不污染 source tree，也不依赖 CWD 或固定 build path；
+- ON smoke 使用 frozen model contract 和 ONNX 模型实际贯穿 RuntimeConfigLoader、ModelContractLoader、
+  DirectorySource、Preprocessor、OnnxRuntimeEngine、PostProcessor、Composite/JsonSink 和 SerialRunner。它验证
+  JSON schema/metadata/相对路径/图像排序/Detection finite and bounds/summary，且 `timing.enabled=false` 连续两次
+  覆盖输出为 byte-identical（SHA256 `5fbc1847f54716c3e809ecefa4ee297d368c08d08b2d0964a8a479bf620f7071`）；
+- Console smoke 验证 RUN、两条 IMAGE 和 SUMMARY 输出，无 timing 字段，且 JSON 仍原子提交；ON 同时覆盖 missing
+  output parent 与 `overwrite=false` 的 initialization exit `3`；
+- 实际回归：Model Smoke OFF `24/24 PASS`；Model Smoke ON `32/32 PASS`。Strict、ASan、UBSan 仍为
+  `Not configured`；未执行 benchmark，未进行 Level C parity 或 M5 work。
+
+M4.5 状态为 **COMPLETE**。M4 仍为 `IN_PROGRESS`，M4.6 read-only Standard Final Gate 为 **PENDING**；本结果不
+关闭 M4，也不构成 Level C 或性能证据。
 
 ### M4.6 — M4 Final Gate
 

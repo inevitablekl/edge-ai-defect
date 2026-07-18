@@ -198,6 +198,7 @@ target_link_libraries(edge_ai_infer
     PRIVATE
         edge_ai_core
         edge_ai_backend_ort
+        edge_ai_runtime
 )
 set_target_properties(edge_ai_infer
     PROPERTIES
@@ -206,6 +207,8 @@ set_target_properties(edge_ai_infer
 )
 
 if(BUILD_TESTING)
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
     add_executable(test_core
         tests/test_core.cpp
     )
@@ -457,6 +460,21 @@ if(BUILD_TESTING)
     set_tests_properties(serial_runner
         PROPERTIES
             LABELS "m4;runtime;runner"
+    )
+
+    add_test(
+        NAME application_cli
+        COMMAND
+            ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_application_smoke.py
+            --mode off
+            --executable $<TARGET_FILE:edge_ai_infer>
+            --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/application_smoke
+            --contract ${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml
+    )
+    set_tests_properties(application_cli
+        PROPERTIES
+            LABELS "m4;runtime;integration;cli"
     )
 
     add_executable(test_model_contract
@@ -809,6 +827,22 @@ if(BUILD_TESTING)
         set_tests_properties(onnx_runtime_engine_level_b
             PROPERTIES
                 LABELS "m2;onnxruntime;level-b;model-asset;evidence"
+        )
+
+        add_test(
+            NAME application_ort_smoke
+            COMMAND
+                ${Python3_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_application_smoke.py
+                --mode on
+                --executable $<TARGET_FILE:edge_ai_infer>
+                --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/application_smoke
+                --contract ${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml
+                --model ${EDGE_AI_FROZEN_ONNX_PATH}
+        )
+        set_tests_properties(application_ort_smoke
+            PROPERTIES
+                LABELS "m4;runtime;integration;smoke;model-asset"
         )
     endif()
 endif()
