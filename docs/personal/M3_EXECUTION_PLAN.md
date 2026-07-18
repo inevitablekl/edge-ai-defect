@@ -1,9 +1,8 @@
 # M3 PostProcessor Execution Plan
 
-状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.5 实现及 Deep Gate remediation
-已完成；M3 仍未关闭，下一步必须重新执行只读 Deep Gate。M3.4 已完成
-metadata-driven inverse LetterBox、continuous clipping 与 public `PostProcessor::process()`
-integration。
+状态：`CLOSED`（2026-07-18）。M3.0～M3.5、Deep Gate remediation 与只读 Deep Gate Rerun
+均已完成并通过。M3 已完成 metadata-driven inverse LetterBox、continuous clipping 与 public
+`PostProcessor::process()` integration；下一阶段仅为 M4 Serial Baseline architecture planning。
 
 ## 1. 目标与边界
 
@@ -519,12 +518,11 @@ C++ TSV 和 per-case report，并逐项检查 count/order、class id、candidate
 confidence 和 bbox。三个 case 的 exact fields 全部一致；confidence `max_abs=0`、
 `mean_abs=0`，bbox coordinate `max_abs=0`、`mean_abs=0`，均在冻结的 `1e-6` / `1e-4` 限制内。
 
-首轮 M3.5 evidence 的详尽 provenance/validator hardening 需要按本计划的 remediation protocol
-刷新；刷新前不得将其当作 Deep Gate closure evidence。M3.5 implementation complete；当前下一步是
-完成 remediation 后重新执行 M3 Deep Gate。仍未实现 Runner、Pipeline、benchmark、TensorRT、CUDA
-或 Level C。
+首轮 M3.5 evidence 在 remediation 前不得当作 Deep Gate closure evidence；其后已按本计划的
+remediation protocol 刷新并通过 Deep Gate Rerun，最终关闭记录见第 17 节。M3.5 implementation
+complete；M3 不包含 Runner、Pipeline、benchmark、TensorRT、CUDA 或 Level C。
 
-## 16. M3 Deep Gate remediation protocol（已完成，待重跑 Gate）
+## 16. M3 Deep Gate remediation protocol（已完成）
 
 TSV validator 必须精确接受一行 header，且每条 Detection record 只能有七个非空字段、六个 TAB、
 无 leading/trailing delimiter，并完整解析 finite float、`class_id` 与 `candidate_index`。CTest
@@ -553,6 +551,35 @@ provenance-generator SHA256 和 `overall_result=PASS`。三个 case 的 count/or
 index 均 exact，confidence/bbox max/mean abs 均为零。
 
 回归结果：Model Smoke OFF 为 17/17 PASS，Model Smoke ON 为 24/24 PASS；正常
-`postprocessor_reference` 与 CTest 的 11 项 malformed TSV rejection 在两种配置均 PASS。strict、
-ASan/UBSan 仍为 `Not configured`，未运行 benchmark。remediation 完成后只可重跑 M3 Deep Gate，
-不得标记 M3 CLOSED。
+`postprocessor_reference` 与 CTest 的 11 项 malformed TSV rejection 在两种配置均 PASS。Strict、
+ASan、UBSan 均为 `Not configured`，未运行 benchmark。随后只读 Deep Gate Rerun 已确认该
+remediation 关闭全部 blocker，最终阶段关闭记录见第 17 节。
+
+## 17. M3.6 Documentation-only Closeout
+
+M3 Deep Gate Rerun 最终结果为 **PASS**。此前 validator/provenance blocker 已由以下提交关闭：
+
+- `c58c4b4` `test: harden postprocessor validation evidence`；
+- `4a095a2` `test: refresh postprocessor validation evidence`。
+
+最终回归为 Model Smoke OFF `17/17 PASS`、Model Smoke ON `24/24 PASS`。Strict、ASan、UBSan
+均为 `Not configured`，不得表述为 PASS。
+
+最终 **PostProcessor-only Validation** 使用 3 个 tracked synthetic cases；Detection count、order、
+`class_id` 与 `candidate_index` 均 exact，confidence `max_abs=0`、bbox `max_abs=0`。仓库外
+deterministic regeneration 通过，provenance 中记录的所有 SHA256 复核通过。第 16 节保留的
+evidence-process limitation 不变：阈值和首轮结果在同一历史提交首次进入 Git，无法由既有历史
+单独证明“阈值先冻结、再执行”。
+
+M3 交付范围已完成：
+
+```text
+raw HostTensor + ImageTransformMetadata + PostprocessConfig
+→ ordered original-image Detection list
+```
+
+M3 不包含 ImageSource、Runner、ResultSink、CLI、Level C 完整 E2E、benchmark、TensorRT、CUDA
+或 Pipeline。
+
+M3 状态：`CLOSED`。下一阶段仅为 **M4 Serial Baseline architecture planning**；本计划不表示
+M4 已开始或完成。

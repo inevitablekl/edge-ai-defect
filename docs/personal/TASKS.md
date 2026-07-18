@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.5 实现与 Deep Gate remediation 已完成，待重跑 M3 Deep Gate；M3 未关闭
+M0、M1、M2、M3 已关闭；M4 尚未开始
 ```
 
 M2 状态：
@@ -81,12 +81,15 @@ M3 状态：
 - M3.4 inverse LetterBox / clipping / public process integration：complete。
 - M3.4 shallow Gate：complete。
 - M3.5 PostProcessor-only Validation：complete。
-- M3 Deep Gate remediation：complete；下一步重新执行 Deep Gate，M3 仍未 CLOSED。
+- M3 Deep Gate remediation：complete。
+- M3 Deep Gate Rerun：PASS；M3 CLOSED。
+- 最终回归：Model Smoke OFF 17/17 PASS；Model Smoke ON 24/24 PASS。
+- Strict、ASan、UBSan：`Not configured`，未记录为 PASS。
 
 下一阶段：
 
 ```text
-重新执行 M3 Deep Gate
+M4 Serial Baseline architecture planning
 ```
 
 当前主线：
