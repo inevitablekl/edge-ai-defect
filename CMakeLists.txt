@@ -173,6 +173,7 @@ add_library(edge_ai_runtime STATIC
     src/json_sink.cpp
     src/result_sink.cpp
     src/runtime_config.cpp
+    src/serial_runner.cpp
 )
 target_include_directories(edge_ai_runtime
     PUBLIC
@@ -439,6 +440,23 @@ if(BUILD_TESTING)
     set_tests_properties(result_sinks
         PROPERTIES
             LABELS "m4;runtime;sink"
+    )
+
+    add_executable(test_serial_runner
+        tests/test_serial_runner.cpp
+    )
+    target_link_libraries(test_serial_runner
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_serial_runner
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME serial_runner COMMAND test_serial_runner)
+    set_tests_properties(serial_runner
+        PROPERTIES
+            LABELS "m4;runtime;runner"
     )
 
     add_executable(test_model_contract

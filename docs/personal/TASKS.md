@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.3 complete）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.4 complete；Shallow Gate pending）
 ```
 
 M2 状态：
@@ -92,16 +92,17 @@ M4 状态：
 - M4.1 Runtime Contracts, Config and CLI Parser：complete。
 - M4.2 ImageSource and DirectorySource：complete。
 - M4.3 ResultSink System：complete。
-- M4.4～M4.7：pending。
+- M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：pending。
+- M4.5～M4.7：pending。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
   deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
-  尚未开发 SerialRunner 或完整 application assembly。
+  已新增 SerialRunner；尚未开发完整 application assembly。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
 下一阶段：
 
 ```text
-M4.4 SerialRunner and Basic Timing
+M4.4 Shallow Gate（只读）
 ```
 
 当前主线：
@@ -1499,6 +1500,44 @@ NEU-DET
 
 - 在该文档修订提交后继续仅执行 M4.4 SerialRunner and Basic Timing；M4.5 仍不得开始。
 
+#### M4.4 SerialRunner and Basic Timing
+
+当前工作：
+
+- 实现严格同步 SerialRunner 与基础 `FrameTimings`；不实现 main assembly、实际 ORT application、benchmark 或 Level C。
+
+修改文件：
+
+- `include/edge_ai_defect/runtime/serial_runner.hpp`
+- `src/serial_runner.cpp`
+- `tests/test_serial_runner.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- Runner 借用 source/preprocessor/engine/postprocessor/sink，保存外部注入的 `ModelContract.input.tensor_info`
+  值副本；不依赖 concrete ORT 或 concrete source/sink，不重新加载 ModelContract。
+- 严格完成 begin/source/preprocess/inference/postprocess/write/end 编排、fail-fast、错误上下文与 RunSummary
+  在 end 成功后的原子提交。
+- timing enabled 在 write 前记录五个 `steady_clock` stage 值；disabled 时完全保持 `timings=nullopt`。
+- `test_serial_runner` 覆盖正常多帧、timing、EOS、全部主要失败阶段、summary 原子性、Status context、
+  detection 顺序和 TensorInfo 注入/值副本；M4.4 runtime 定向 6/6 PASS，Model Smoke OFF 全量 CTest
+  23/23 PASS，Model Smoke ON 全量 CTest 30/30 PASS。
+
+未完成：
+
+- M4.4 Shallow Gate、main/CLI application assembly、实际 ORT runtime smoke 均未开始；M4.5 仍 pending。
+
+阻塞问题：
+
+- 无；下一步必须先执行只读 M4.4 Shallow Gate。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark，未进入 M4.5。
+
 ---
 
 ## 8. 当前最近计划
@@ -1510,9 +1549,9 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.3 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.4 SerialRunner and Basic Timing。
-5. M4 当前已开发 ImageSource/DirectorySource/ResultSink；SerialRunner 或完整 application flow 仍未开发，
-   后续仅按 M4.4～M4.5 task cards逐步执行。
+4. M4.0～M4.4 已完成，M4 为 `IN_PROGRESS`；下一任务必须为只读 M4.4 Shallow Gate。
+5. M4 当前已开发 ImageSource/DirectorySource/ResultSink/SerialRunner；完整 application flow 仍未开发，
+   M4.5 必须等待 Shallow Gate PASS 后的独立任务。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
