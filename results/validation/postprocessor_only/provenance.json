@@ -1,28 +1,61 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "evidence_id": "postprocessor_only",
-  "git": {
-    "branch": "feature/cpp-onnxruntime",
-    "commit": "d20138d9719e8bfc07b1e64ce49b4cc81b1f3179",
-    "status_short": "M CMakeLists.txt\n M docs/personal/M3_EXECUTION_PLAN.md\n M docs/personal/TASKS.md\n?? results/validation/postprocessor_only/\n?? tests/data/postprocessor_reference/\n?? tests/test_postprocessor_reference.cpp\n?? tools/validation/generate_postprocessor_reference_assets.py\n?? tools/validation/generate_postprocessor_reference_provenance.py\n?? tools/validation/postprocessor_reference.py"
-  },
+  "source_commit": "c58c4b4af17567da059a5c0b545f80c7161bacd9",
+  "source_branch": "feature/cpp-onnxruntime",
+  "source_worktree_clean": true,
   "environment": {
     "python_version": "3.10.12",
+    "numpy_version": "1.26.4",
     "cmake_version": "cmake version 3.22.1",
     "cpp_compiler": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
     "os": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
     "architecture": "x86_64"
   },
   "ultralytics_semantic_source_version": "8.4.50 (not a runtime dependency)",
-  "reference_script": {
-    "path": "tools/validation/postprocessor_reference.py",
-    "sha256": "d9e75e446bfc2d9ba60818ce9954b5cbaf112111b7357e0b4c6bfd94134d5e3a"
+  "source_files": {
+    "tools/validation/postprocessor_reference.py": {
+      "path": "tools/validation/postprocessor_reference.py",
+      "sha256": "d9e75e446bfc2d9ba60818ce9954b5cbaf112111b7357e0b4c6bfd94134d5e3a"
+    },
+    "tools/validation/generate_postprocessor_reference_assets.py": {
+      "path": "tools/validation/generate_postprocessor_reference_assets.py",
+      "sha256": "f5863e4fedac7f077e76b8bd9b41a8af07d1ac604a208c4e21877b17f29d82d4"
+    },
+    "tools/validation/generate_postprocessor_reference_provenance.py": {
+      "path": "tools/validation/generate_postprocessor_reference_provenance.py",
+      "sha256": "cb94dbe69e045fcb2ccc02eeb5a45e002e62fd7cc19da0ac734e58a234e2fa60"
+    },
+    "tests/test_postprocessor_reference.cpp": {
+      "path": "tests/test_postprocessor_reference.cpp",
+      "sha256": "e0922814610bad3178cf6ad6b142e1e676c8797e4d533d72631f9fb533a1a93b"
+    },
+    "tests/cmake/verify_postprocessor_reference_malformed.cmake": {
+      "path": "tests/cmake/verify_postprocessor_reference_malformed.cmake",
+      "sha256": "e9fcec63dafd3976904fc3057c9ee946370014d838016829cc8fe441f47f937c"
+    },
+    "CMakeLists.txt": {
+      "path": "CMakeLists.txt",
+      "sha256": "850e6176c8e3678c9114b26307b82433773f0df182e7e6c46dd92dc3b3acc3c5"
+    }
   },
-  "validation_command": "ctest --test-dir build --output-on-failure -R '^postprocessor_reference$'",
+  "validation_commands": [
+    "./.venv/bin/python tools/validation/generate_postprocessor_reference_assets.py --output-root tests/data/postprocessor_reference",
+    "./.venv/bin/python tools/validation/postprocessor_reference.py --data-root tests/data/postprocessor_reference",
+    "build/tests/test_postprocessor_reference --data-root tests/data/postprocessor_reference --cpp-output-root results/validation/postprocessor_only --report-root results/validation/postprocessor_only",
+    "ctest --test-dir build --output-on-failure -R '^postprocessor_reference(_.*)?$'"
+  ],
   "thresholds": {
     "confidence_abs": 1e-06,
-    "bbox_coordinate_abs": 0.0001
+    "bbox_coordinate_abs": 0.0001,
+    "exact_fields": [
+      "detection_count",
+      "order",
+      "class_id",
+      "candidate_index"
+    ]
   },
+  "overall_result": "PASS",
   "cases": {
     "case_no_padding": {
       "manifest": {
@@ -64,6 +97,8 @@
         "path": "results/validation/postprocessor_only/case_no_padding/comparison_report.json",
         "sha256": "d8d74de48e2f4e97be052bbbc3539a3ccb084f6b6a7534ec3c5772eb195369db"
       },
+      "detection_count": 7,
+      "result": "PASS",
       "comparison": {
         "golden_detection_count": 7,
         "cpp_detection_count": 7,
@@ -125,6 +160,8 @@
         "path": "results/validation/postprocessor_only/case_odd_padding/comparison_report.json",
         "sha256": "05226d0380299a652ef4e966f72139bebda44334b54af35f4d0c4f91c5fdeed4"
       },
+      "detection_count": 5,
+      "result": "PASS",
       "comparison": {
         "golden_detection_count": 5,
         "cpp_detection_count": 5,
@@ -186,6 +223,8 @@
         "path": "results/validation/postprocessor_only/case_odd_vertical_padding/comparison_report.json",
         "sha256": "5878955ec0dcfae7e465e71b68bf304084ce58cd3931e3d191b4c5c70e4de7bd"
       },
+      "detection_count": 5,
+      "result": "PASS",
       "comparison": {
         "golden_detection_count": 5,
         "cpp_detection_count": 5,

@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.5 实现已完成，M3 Deep Gate remediation 进行中；M3 未关闭
+M0、M1、M2 已关闭；M3.0～M3.5 实现与 Deep Gate remediation 已完成，待重跑 M3 Deep Gate；M3 未关闭
 ```
 
 M2 状态：
@@ -81,7 +81,7 @@ M3 状态：
 - M3.4 inverse LetterBox / clipping / public process integration：complete。
 - M3.4 shallow Gate：complete。
 - M3.5 PostProcessor-only Validation：complete。
-- M3 Deep Gate remediation：in progress；完成后重新执行 Deep Gate，M3 仍未 CLOSED。
+- M3 Deep Gate remediation：complete；下一步重新执行 Deep Gate，M3 仍未 CLOSED。
 
 下一阶段：
 
@@ -1267,18 +1267,17 @@ NEU-DET
 
 未完成：
 
-- M3 Deep Gate remediation 与其重跑、M3 closeout；未进入 Runner、Pipeline、benchmark、TensorRT、CUDA 或
+- 重新执行 M3 Deep Gate、M3 closeout；未进入 Runner、Pipeline、benchmark、TensorRT、CUDA 或
   Serial Baseline/Level C。
 
 阻塞问题：
 
-- remediation 完成前不重跑 M3 Deep Gate。strict 与 ASan/UBSan 未配置，不能记录为通过。
+- 等待重跑 M3 Deep Gate。strict 与 ASan/UBSan 未配置，不能记录为通过。
 
 下一步计划：
 
-- 完成 validator/provenance/evidence remediation 后，重新执行 M3 Deep Gate，只读审查 M3.0～M3.5
-  scope、production semantics、independent evidence、provenance、regression 和 remaining scope；
-  通过后才考虑 M3 closeout。
+- 重新执行 M3 Deep Gate，只读审查 M3.0～M3.5 scope、production semantics、independent evidence、
+  provenance、regression 和 remaining scope；通过后才考虑 M3 closeout。
 
 ---
 
@@ -1290,8 +1289,8 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.5 实现已完成；当前为 M3 Deep Gate remediation，完成后重新执行 M3 Deep Gate，
-   通过后才考虑 M3 closeout。
+3. M3.0～M3.5 实现与 Deep Gate remediation 已完成；下一任务为重新执行 M3 Deep Gate，通过后才
+   考虑 M3 closeout。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。

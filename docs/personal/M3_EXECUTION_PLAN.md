@@ -1,7 +1,7 @@
 # M3 PostProcessor Execution Plan
 
-状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.5 实现已完成；当前处于 M3 Deep
-Gate remediation。M3 仍未关闭；完成 evidence 修复后必须重新执行只读 Deep Gate。M3.4 已完成
+状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.5 实现及 Deep Gate remediation
+已完成；M3 仍未关闭，下一步必须重新执行只读 Deep Gate。M3.4 已完成
 metadata-driven inverse LetterBox、continuous clipping 与 public `PostProcessor::process()`
 integration。
 
@@ -524,7 +524,7 @@ confidence 和 bbox。三个 case 的 exact fields 全部一致；confidence `ma
 完成 remediation 后重新执行 M3 Deep Gate。仍未实现 Runner、Pipeline、benchmark、TensorRT、CUDA
 或 Level C。
 
-## 16. M3 Deep Gate remediation protocol（进行中）
+## 16. M3 Deep Gate remediation protocol（已完成，待重跑 Gate）
 
 TSV validator 必须精确接受一行 header，且每条 Detection record 只能有七个非空字段、六个 TAB、
 无 leading/trailing delimiter，并完整解析 finite float、`class_id` 与 `candidate_index`。CTest
@@ -542,5 +542,17 @@ overall PASS 和验证命令；固定 Ultralytics 8.4.50 仅为 semantic referen
 当前阈值保持不变：Detection count/order/`class_id`/`candidate_index` 必须 exact，confidence
 `abs <= 1e-6`，bbox coordinate `abs <= 1e-4`，全部字段 finite。历史限制必须保留：阈值和首轮
 结果在 `4437d84` 中同时首次进入 Git，历史无法单独证明“阈值先冻结、再执行”；当前误差均为零且
-未发现阈值放宽，但该时间顺序不能由已有 Git 历史倒推。remediation 完成后仍只可重跑 Deep Gate，
+未发现阈值放宽，但该时间顺序不能由已有 Git 历史倒推。
+
+remediation 的 clean source snapshot 是 Commit A
+`c58c4b4af17567da059a5c0b545f80c7161bacd9`（`feature/cpp-onnxruntime`、worktree clean）。从该
+snapshot 在临时目录重新生成的三组 raw/metadata/config/Python golden 共 12/12 文件与 tracked
+assets byte-identical；随后 public C++ validator 生成三组 C++ TSV/report，provenance 记录该 source
+commit、`source_worktree_clean=true`、NumPy 1.26.4、validator/CMake/reference/asset-generator/
+provenance-generator SHA256 和 `overall_result=PASS`。三个 case 的 count/order/class/candidate
+index 均 exact，confidence/bbox max/mean abs 均为零。
+
+回归结果：Model Smoke OFF 为 17/17 PASS，Model Smoke ON 为 24/24 PASS；正常
+`postprocessor_reference` 与 CTest 的 11 项 malformed TSV rejection 在两种配置均 PASS。strict、
+ASan/UBSan 仍为 `Not configured`，未运行 benchmark。remediation 完成后只可重跑 M3 Deep Gate，
 不得标记 M3 CLOSED。
