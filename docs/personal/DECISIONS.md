@@ -80,6 +80,10 @@
 | D019 | TensorRT 验证平台与部署阶段路线 | 本地 ONNX Runtime 开发，TensorRT 延后到完整 CUDA / Jetson 平台 | ACTIVE |
 | D020 | C++ ONNX Runtime Serial Baseline 阶段范围 | M0～M4 先完成 CPU Serial 主线 | ACTIVE |
 | D021 | Preprocess Level A 证据边界 | raw BGR、独立冻结语义、SHA CTest 与前置提交 provenance | ACTIVE |
+| D022 | C++ ONNX Runtime CPU 部署 baseline | M2 以 CPU synchronous Engine 作为后续 Serial Baseline foundation | ACTIVE |
+| D023 | Engine tensor 所有权合同 | `HostTensor` 作为 Engine 输入和独占输出 | ACTIVE |
+| D024 | Inference Level B 一致性方法 | 同一 raw input 下 Python ORT 与 C++ ORT 比较 | ACTIVE |
+| D025 | M2 阶段边界 | 不包含 PostProcessor/NMS/TensorRT/Pipeline | ACTIVE |
 
 ---
 
@@ -1213,3 +1217,177 @@ ACTIVE
 
 M1 证据语义原则上冻结。如增加图像解码/orientation 验证，应建立独立 validation
 level，不得改写现有 Level A A～H case 或 provenance 语义。
+
+---
+
+### D022 - C++ ONNX Runtime CPU 部署 baseline
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 使用 C++ ONNX Runtime `CPUExecutionProvider` 的 synchronous
+`OnnxRuntimeEngine` 作为后续 C++ Serial Baseline 的 Engine foundation。其固定执行
+语义为 `ORT_SEQUENTIAL`、`ORT_ENABLE_ALL`、intra/inter-op thread 各为 1；该选择
+用于确定性和可验证性，不构成性能优化或 benchmark 结论。
+
+备选方案：
+
+- 在 M2 直接引入 TensorRT、CUDA 或 GPU Execution Provider。
+- 在未完成 Engine contract 验证前实现完整 SerialRunner。
+
+选择理由：
+
+- 当前环境已具备可复现的 ONNX Runtime CPU 1.23.2 验证路径。
+- CPU Engine 先提供稳定、backend-neutral 的推理基础，后续才能独立实现
+  PostProcessor、Runner 和 TensorRT backend。
+
+影响范围：
+
+- `edge_ai_backend_ort` 和 M2 相关 validation。
+- 后续 M3/M4 只能消费该 Engine contract，不得将 backend-specific 逻辑迁入 runner。
+
+后续调整：
+
+TensorRT、CUDA 和 GPU EP 仅在目标环境及独立阶段决定；它们不追溯改变 M2 CPU
+baseline 的验证结论。
+
+---
+
+### D023 - Engine tensor 所有权合同
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+`IInferenceEngine` 和 `OnnxRuntimeEngine` 均使用 `HostTensor` 作为输入与输出
+合同。`run()` 只借用调用方 input buffer 至 `Session::Run` 返回；成功输出必须复制为
+调用方独占的 `HostTensor`，失败时不得修改调用方既有 output。
+
+备选方案：
+
+- 新建 `InferenceOutput` 包装类型。
+- 返回借用的 `Ort::Value` 指针或 device tensor。
+
+选择理由：
+
+- 现有 `HostTensor` 已表达 M2 所需的 `float32`、layout、shape 和连续 CPU owned
+  buffer。
+- 独占输出消除 ORT output 生命周期泄漏，且不为尚未开始的 detection metadata 或
+  device memory 预设抽象。
+
+影响范围：
+
+- M2 Engine public API、run failure 语义和后续 PostProcessor input。
+
+后续调整：
+
+如后续需求确实需要 backend-specific metadata 或 device memory，须新增独立设计与
+兼容性审查；不得静默修改当前 `HostTensor` contract。
+
+---
+
+### D024 - Inference Level B 一致性方法
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 使用同一固定 `float32 NCHW [1,3,640,640]` raw input，以 Python ONNX Runtime
+1.23.2 golden 与 C++ `OnnxRuntimeEngine` raw output 对比，作为 inference
+Level B 一致性验证。验证输出为 `float32 BCN [1,10,8400]`，比较完整 84000 个元素的
+shape、element count、finite、MAE 与 max_abs；冻结阈值为 `MAE <= 1e-6`、
+`max_abs <= 1e-5`。
+
+备选方案：
+
+- 仅验证 C++ `Session::Run` 不抛异常。
+- 使用 PostProcessor/detection 结果进行间接比较。
+
+选择理由：
+
+- raw tensor 对比直接覆盖 Engine I/O、metadata 和 ORT run path，不混入
+  preprocessing 或后处理差异。
+- Python/C++ 使用相同 ORT 1.23.2，且已保存 input、golden、C++ output、comparison
+  report 和 provenance，能够复核实际结果。
+
+影响范围：
+
+- `results/validation/onnx_runtime_engine_level_b/` 和 M2 Gate 结论。
+
+后续调整：
+
+阈值或 reference environment 变更必须提供差异证据并独立评审，不能为了通过而放宽
+当前阈值。
+
+---
+
+### D025 - M2 阶段边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 只关闭 ONNX Runtime Engine foundation；不包含 `PostProcessor`、NMS、
+`Detection`、`SerialRunner`、`Pipeline`、Profiler、benchmark、TensorRT、CUDA 或
+GPU Execution Provider。
+
+备选方案：
+
+- 将 raw output 解码、NMS、runner 或性能测量和 Engine 一并实现。
+- 提前增加 TensorRT/CUDA backend。
+
+选择理由：
+
+- 分离 Engine correctness 与后处理、编排和性能问题，确保 Level B numerical
+  evidence 的边界清晰。
+- 防止当前 CPU 验证环境被误表述为 Jetson/TensorRT 性能或完整应用验证。
+
+影响范围：
+
+- M2 closeout、M3 PostProcessor preparation 和 M4 Serial Baseline 的工作分界。
+
+后续调整：
+
+M3 可在不修改 M2 Engine contract 的前提下开始 PostProcessor design/implementation；
+TensorRT、CUDA、Pipeline 与 benchmark 继续留在各自独立阶段。

@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M1.1～M1.6 已全部完成；M2.0～M2.5 已完成，M2.6 closeout pending
+M0、M1、M2 已关闭；当前进入 M3 PostProcessor preparation
 ```
 
 M2 状态：
@@ -70,7 +70,13 @@ M2 状态：
 - M2.3 Run path：complete。
 - M2.4 Boundary hardening：complete。
 - M2.5 Level B validation：complete。
-- M2.6 closeout：pending。
+- M2.6 closeout：complete；M2 CLOSED。
+
+下一阶段：
+
+```text
+M3 PostProcessor preparation
+```
 
 当前主线：
 
@@ -205,8 +211,8 @@ NEU-DET
 | CPP-003 | P0  | TODO | 实现 `FrameSource` image sequence |
 | CPP-004 | P0  | TODO | 实现 `FrameSource` video file     |
 | CPP-005 | P0  | DONE | 实现 `Preprocessor`               |
-| CPP-006 | P0  | TODO | 定义 `InferenceEngine` 抽象接口       |
-| CPP-007 | P0  | TODO | 实现 `ONNXRuntimeEngine`          |
+| CPP-006 | P0  | DONE | 定义 `InferenceEngine` 抽象接口       |
+| CPP-007 | P0  | DONE | 实现 `ONNXRuntimeEngine`          |
 | CPP-008 | P0  | TODO | 实现 `PostProcessor`              |
 | CPP-009 | P0  | TODO | 实现 `Profiler`                   |
 | CPP-010 | P0  | TODO | 实现 `ResultSink`                 |
@@ -955,6 +961,46 @@ NEU-DET
 - M1 测试 helper 只链接测试 target，不进入 production target。
 - 当前 `edge_ai_defect` 仍为 runtime skeleton，不宣称 C++ inference baseline 已闭环。
 
+#### M2.6 ONNX Runtime Engine 阶段关闭
+
+当前工作：
+
+- 完成 M2 Gate closeout 文档、任务状态与决策记录；未修改 production C++、接口、
+  CMake 或测试逻辑。
+
+修改文件：
+
+- `docs/personal/M2_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+- `docs/personal/DECISIONS.md`
+
+已完成：
+
+- M2.0 Design Freeze、M2.1 Inference contract、M2.2 ORT Session initialization、
+  M2.3 ORT Run path、M2.4 Boundary hardening、M2.5 Level B validation 和 M2.6
+  closeout 均已完成；M2 正式关闭。
+- 最终回归：Model Smoke OFF 为 11/11 CTest PASS；Model Smoke ON 为 18/18 CTest
+  PASS。
+- strict 与 ASan/UBSan 在当前工程中均为 `Not configured`；未执行且未写成通过。
+- M2 已提供 contract-validated CPU synchronous `OnnxRuntimeEngine`、owned
+  `HostTensor` I/O、negative/boundary tests 与 Python/C++ Level B raw-output
+  evidence，不包含 postprocess 或完整 runner。
+
+未完成：
+
+- `PostProcessor`、NMS、`Detection`、`SerialRunner`、`Pipeline`、Profiler、
+  benchmark、TensorRT、CUDA、GPU EP、ROS2 和 Qt 均不属于 M2，尚未实现。
+
+阻塞问题：
+
+- M2 closeout 无阻塞。strict/ASan/UBSan 未配置是当前回归矩阵限制，不构成已通过的
+  sanitizer/strict 证据。
+
+下一步计划：
+
+- 进入 M3 `PostProcessor` preparation，先冻结 raw output 解码、置信度阈值和 NMS
+  的设计/验证边界；不得回改 M2 Engine contract。
+
 ---
 
 ## 8. 当前最近计划
@@ -962,10 +1008,11 @@ NEU-DET
 近期优先级：
 
 1. M0 与 M1 已完成并正式关闭。
-2. M2.0～M2.5 已完成：production `OnnxRuntimeEngine` 已具备 contract-validated
+2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. 下一任务为 M2.6 closeout；当前不得进入 M3。
+3. 下一任务为 M3 `PostProcessor` preparation；M2 closeout 不包含完整 Serial
+   Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
