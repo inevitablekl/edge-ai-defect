@@ -84,6 +84,7 @@
 | D023 | Engine tensor 所有权合同 | `HostTensor` 作为 Engine 输入和独占输出 | ACTIVE |
 | D024 | Inference Level B 一致性方法 | 同一 raw input 下 Python ORT 与 C++ ORT 比较 | ACTIVE |
 | D025 | M2 阶段边界 | 不包含 PostProcessor/NMS/TensorRT/Pipeline | ACTIVE |
+| D026 | M3 frozen YOLOv8 PostProcessor 语义 | original-image Detection、class-aware NMS、独立 Python/C++ validation | ACTIVE |
 
 ---
 
@@ -1391,3 +1392,61 @@ GPU Execution Provider。
 
 M3 可在不修改 M2 Engine contract 的前提下开始 PostProcessor design/implementation；
 TensorRT、CUDA、Pipeline 与 benchmark 继续留在各自独立阶段。
+
+---
+
+### D026 - M3 frozen YOLOv8 PostProcessor 语义
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. M3 只处理 frozen `float32 BCN [1,10,8400]` raw `HostTensor`。channels 0～3 为
+   `cx,cy,w,h`，channels 4～9 为与 frozen `ModelContract` 一致的六类分数；没有
+   objectness 或 embedded NMS。
+2. `PostProcessor` 是 concrete class，不引入 `IPostProcessor`。它输出含 xyxy、
+   confidence、class id 和 candidate index 的最小 `Detection`；坐标在 M3 内通过
+   `ImageTransformMetadata` 恢复为 original-image space 并 clip。
+3. 候选使用最大 class score（score tie 取较小 class id），只保留
+   `confidence > 0.25F`；NMS 为 class-aware、`IoU > 0.45F` 抑制、`max_nms=30000`、
+   `max_det=300`、`max_wh=7680.0F`。pre-NMS 与最终 Detection 均采用
+   confidence desc / class id asc / candidate index asc 的显式 deterministic order。
+4. M3 consistency evidence 必须使用独立 Python reference 与同一 frozen raw tensor
+   比较完整 detection；不得使用现有 PT/ONNX shared-NMS comparison，也不得经过
+   C++ Preprocessor、ORT Engine 或 Runner。完整 E2E Level C 保留给 M5。
+
+备选方案：
+
+- 保留 model-input coordinates，将 inverse LetterBox 延后给 Runner。
+- 使用 OpenCV DNN NMS、class-agnostic NMS 或仅比较最终 detection count。
+- 为潜在多模型实现预先引入 `IPostProcessor`/通用解析框架。
+
+选择理由：
+
+- M1 已生成完整且可验证的 transform metadata，M3 可在不读取图像的情况下履行
+  architecture/requirements 的 original-coordinate restoration 职责。
+- 现有 Python export comparison 未固定 equal-score candidate order、且两侧共用 NMS，
+  不能独立证明 C++ 后处理；明确 canonical order 和独立 reference 使结果可复查。
+- frozen model contract 只有一个静态 YOLOv8 output，最小 concrete contract 能避免
+  对未实现 backend、dynamic shape 或 application metadata 的过早抽象。
+
+影响范围：
+
+- M3.1 Detection/PostProcessor contract、M3 decode/NMS implementation 和
+  `postprocessor_level_b` assets/evidence。
+- M4 Runner 将消费 original-image `Detection`，但不拥有 decode/NMS 或坐标恢复逻辑。
+
+后续调整：
+
+若模型 output、类别语义、NMS 策略或 coordinate contract 改变，必须提供新的 model
+contract/reference evidence 并经架构审查；不得静默改变已冻结的 M3 detection semantics。

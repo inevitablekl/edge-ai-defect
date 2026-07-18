@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；当前进入 M3 PostProcessor preparation
+M0、M1、M2 已关闭；M3.0 PostProcessor design freeze 已完成，等待 M3.1 contract
 ```
 
 M2 状态：
@@ -72,10 +72,15 @@ M2 状态：
 - M2.5 Level B validation：complete。
 - M2.6 closeout：complete；M2 CLOSED。
 
+M3 状态：
+
+- M3.0 PostProcessor repository audit and design freeze：complete。
+- M3.1 Detection / PostProcessor contract：pending。
+
 下一阶段：
 
 ```text
-M3 PostProcessor preparation
+M3.1 Detection / PostProcessor contract
 ```
 
 当前主线：
@@ -1001,6 +1006,44 @@ NEU-DET
 - 进入 M3 `PostProcessor` preparation，先冻结 raw output 解码、置信度阈值和 NMS
   的设计/验证边界；不得回改 M2 Engine contract。
 
+#### M3.0 PostProcessor 仓库事实审计与设计冻结
+
+当前工作：
+
+- 读取 M2 closed 后的 model contract、core tensor/LetterBox、Engine interface、Python
+  PT/ONNX reference、M2 Level B evidence、CMake 和 tests，完成 M3 semantic audit。
+
+修改文件：
+
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+- `docs/personal/DECISIONS.md`
+
+已完成：
+
+- 冻结 output 为 `float32 BCN [1,10,8400]`：0～3 为 `cx,cy,w,h`，4～9 为六类分数；
+  无 objectness、无 embedded NMS，类别顺序与 frozen `ModelContract` 一致。
+- 冻结最小 concrete `PostProcessor`、original-image `Detection` coordinate contract、
+  `ImageTransformMetadata` inverse LetterBox、strict confidence/NMS/排序/原子性语义。
+- 冻结 M3 PostProcessor-only Python/C++ Level B evidence 方案；现有 PT/ONNX shared
+  NMS comparison 不能替代该独立验证。
+
+未完成：
+
+- `Detection`/`PostProcessor` production contract、decode、NMS、tests、M3 evidence 和
+  M3 closeout 尚未实现；未进入 M4 Runner 或 M5 benchmark。
+
+阻塞问题：
+
+- 无 M3.1 前的代码阻塞项。当前 Python reference 未冻结 equal-score candidate tie，
+  已在 M3 plan 中以独立 reference/canonical tie-break 解决，不能复用现有 shared-NMS
+  script 作为 M3 evidence。
+
+下一步计划：
+
+- 执行 M3.1，只定义 `Detection` 和 concrete `PostProcessor` contracts 及必要 target；
+  不实现 decode、NMS 或 M4 模块。
+
 ---
 
 ## 8. 当前最近计划
@@ -1011,8 +1054,8 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. 下一任务为 M3 `PostProcessor` preparation；M2 closeout 不包含完整 Serial
-   Baseline 或性能结论。
+3. M3.0 design freeze 已完成；下一任务为 M3.1 `Detection` / `PostProcessor` contract。
+   M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
