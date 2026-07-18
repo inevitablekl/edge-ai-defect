@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 尚未开始
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（仅 M4.0 planning complete）
 ```
 
 M2 状态：
@@ -86,10 +86,18 @@ M3 状态：
 - 最终回归：Model Smoke OFF 17/17 PASS；Model Smoke ON 24/24 PASS。
 - Strict、ASan、UBSan：`Not configured`，未记录为 PASS。
 
+M4 状态：
+
+- M4.0 Planning Freeze：complete。
+- M4.1 Runtime Contracts, Config and CLI Parser：pending，尚未开始。
+- M4.2～M4.7：pending。
+- M4 尚未开发任何 production code；当前只完成仓库审计、架构/合同、任务卡和 Gate 计划固化。
+- Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
+
 下一阶段：
 
 ```text
-M4 Serial Baseline architecture planning
+M4.1 Runtime Contracts, Config and CLI Parser
 ```
 
 当前主线：
@@ -1282,6 +1290,48 @@ NEU-DET
 - 重新执行 M3 Deep Gate，只读审查 M3.0～M3.5 scope、production semantics、independent evidence、
   provenance、regression 和 remaining scope；通过后才考虑 M3 closeout。
 
+#### M4.0 C++ ONNX Runtime Serial Baseline 计划冻结
+
+当前工作：
+
+- 在 M3 `CLOSED` 起点完成 production modules、public headers、targets、tests、validation tools、
+  configs 和 executable skeleton 的事实审计。
+- 冻结 M4 新增 RuntimeConfig、DirectorySource、ResultSink、SerialRunner、基础计时、CLI、
+  runtime JSON schema、应用组装和 M4/M5 边界。
+
+修改文件：
+
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+- `docs/personal/DECISIONS.md`
+
+已完成：
+
+- 创建可由后续独立 Codex 对话直接执行的 M4.0～M4.7 task cards；每张卡均包含 objective、
+  starting facts、allowed/forbidden scope、planned files、contracts、tests、acceptance、commit、next step 和 Gate。
+- 确认当前可直接复用 M1 `Preprocessor`、M2 `IInferenceEngine`/`OnnxRuntimeEngine` 和 M3
+  `PostProcessor`；当前 `edge_ai_infer` 仍只是 skeleton。
+- 确认 RuntimeConfig/ImageSource/DirectorySource/ResultSink/SerialRunner/Profiler 均尚不存在；
+  production C++ 未使用 JSON library。
+- 冻结 M4.4 后 Shallow Gate、M4.6 Standard Final Gate、M4.7 documentation-only closeout；M4 不做 Deep Gate。
+
+未完成：
+
+- M4.1 及所有 M4 production code、tests、CMake/runtime configs/assets 均未开始。
+
+阻塞问题：
+
+- 无 M4.1 前已知架构冲突。
+
+下一步计划：
+
+- 仅执行 M4.1 Runtime Contracts, Config and CLI Parser；不得自动进入 M4.2。
+
+备注：
+
+- M4 基础 `FrameTimings` 不属于正式 benchmark；完整 Level C、Profiler 和 ORT 性能基线属于 M5。
+- 本轮不运行 CTest，不执行 `git push`。
+
 ---
 
 ## 8. 当前最近计划
@@ -1292,11 +1342,10 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.5 实现与 Deep Gate remediation 已完成；下一任务为重新执行 M3 Deep Gate，通过后才
-   考虑 M3 closeout。
-   M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
-4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
-5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
+3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
+4. M4.0 planning 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.1 Runtime Contracts, Config and CLI Parser。
+5. M4 当前尚未开发 production code；正式 `SerialRunner`、应用闭环按 M4.1～M4.5 task cards 逐步执行。
+6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
 

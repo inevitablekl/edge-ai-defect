@@ -86,6 +86,11 @@
 | D025 | M2 阶段边界 | 不包含 PostProcessor/NMS/TensorRT/Pipeline | ACTIVE |
 | D026 | M3 frozen YOLOv8 PostProcessor 语义 | original-image Detection、class-aware NMS、独立 Python/C++ validation | ACTIVE |
 | D027 | M3 clipping parity with Ultralytics 8.4.50 | clamp-only clipping，保留 post-clip 零面积 Detection | ACTIVE |
+| D028 | M4 与 M5 验证边界 | M4 功能串行闭环和基础 FrameTimings；M5 Level C、正式 Profiler 与性能证据 | ACTIVE |
+| D029 | M4 runtime 配置和 CLI | strict YAML；CLI 仅接受单个 `--config` 或单独 `--help` | ACTIVE |
+| D030 | M4 图片输入抽象 | 最小 ImageSource；非递归、确定性、fail-fast DirectorySource | ACTIVE |
+| D031 | M4 串行编排 | SerialRunner 仅依赖 IInferenceEngine，borrowed dependencies，fail-fast 与 summary 原子提交 | ACTIVE |
+| D032 | M4 结果输出 | 单运行级 deterministic JSON、JsonSink 原子提交、CompositeSink 固定顺序 | ACTIVE |
 
 ---
 
@@ -1495,3 +1500,207 @@ degeneracy 或 minimum-size filtering；零宽或零高的最终 `Detection` 必
 
 任何业务层零面积过滤必须有单独的配置/contract、测试和架构决策；不得倒灌修改 M3 baseline
 PostProcessor。
+
+---
+
+### D028 - M4 与 M5 验证边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 只建立 deterministic single-thread C++ ONNX Runtime functional baseline，包括 strict runtime
+configuration、DirectorySource、M1/M2/M3 composition、ResultSink、SerialRunner、actual ORT smoke 和
+per-frame 基础 `FrameTimings`。M4 不建立 public Profiler，不做 warmup、statistics、FPS 或 benchmark。
+
+完整 Level C image-to-detection parity、正式 Profiler、warmup/minimum sample rules、mean/percentiles/FPS、
+ORT CPU performance baseline、stability 和 paper performance evidence 全部属于 M5。
+
+备选方案：
+
+- 在 M4 同时实现完整 Level C 和正式 performance baseline。
+- M4 完全不记录 stage timing。
+
+选择理由：
+
+- 功能正确性、application orchestration 与性能证据的验证风险不同，应分阶段关闭。
+- 最小 per-frame timing 能验证 stage boundary wiring，但不足以支撑正式性能结论。
+
+影响范围：
+
+- M4/M5 task boundary、`FrameTimings`、SerialRunner、runtime JSON/Console 输出和 Gate 口径。
+
+后续调整：
+
+M5 可在不追溯改变 M4 functional output 的前提下引入正式 Profiler；不得把 M4 timing 重新解释为论文性能证据。
+
+---
+
+### D029 - M4 runtime 配置和 CLI
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 runtime 使用 schema version 1 的 strict YAML：全部 section/field 必填，无 implicit defaults，拒绝 unknown
+field、duplicate key 和错误类型。CLI 唯一正常运行形式为 `edge_ai_infer --config <runtime.yaml>`；只允许
+单独 `--help` 作为帮助形式，不提供 `-h`、positional arguments 或 YAML overrides。
+
+备选方案：
+
+- 为缺失字段提供默认值并允许 unknown fields。
+- 同时提供大量 model/input/postprocess CLI overrides。
+
+选择理由：
+
+- 单一完整配置可使 smoke runs 可复查，避免 CLI/YAML precedence 和 silent typo。
+- 当前只有一个 backend/input mode，无需提前建立通用配置或 override framework。
+
+影响范围：
+
+- RuntimeConfig/Loader、CLI parser、application exit mapping 和 runtime config tests。
+
+后续调整：
+
+新增 backend/runtime mode 时必须通过新 schema version 或显式兼容设计扩展，不得静默放宽 M4 strictness。
+
+---
+
+### D030 - M4 图片输入抽象
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 采用只有 `next(optional<ImageItem>*)` 的最小 `ImageSource`。`DirectorySource` 只枚举第一层真实 regular
+image files，跳过 symlink，以 relative generic path byte order 确定性排序，按次解码，遇到坏图 fail-fast；不提供
+reset/size，也不为 Video/Camera/RTSP/ROS2 设计提前抽象。
+
+备选方案：
+
+- 递归目录并跳过坏图继续运行。
+- 立即设计统一 image/video/camera/stream interface 与 random access。
+
+选择理由：
+
+- M4 需要可复查的 deterministic finite input sequence 和明确 failure semantics。
+- 最小接口足以支持 SerialRunner dependency injection，避免未实现 source types 驱动过度设计。
+
+影响范围：
+
+- ImageItem、ImageSource、DirectorySource、source tests 和 SerialRunner EOS/failure behavior。
+
+后续调整：
+
+Video/Camera/RTSP 必须在独立阶段基于真实需求新增 source implementation；不得改变 M4 DirectorySource 顺序和 fail-fast 证据。
+
+---
+
+### D031 - M4 串行编排
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+`SerialRunner` 严格同步单线程，只借用 ImageSource、Preprocessor、`IInferenceEngine`、PostProcessor 和
+IResultSink；不拥有或构造依赖，不加载 YAML，不解析 CLI，不接触 concrete ORT type。任一 stage 首次失败立即停止，
+不处理下一帧、不调用成功 `end_run()`；caller `RunSummary` 只在 sink end 成功后一次提交。
+
+备选方案：
+
+- Runner 直接构造/分支 `OnnxRuntimeEngine` 并管理 application configuration。
+- 失败时跳过 frame 继续并返回 partial summary。
+
+选择理由：
+
+- interface-only dependency 保持 M2 backend boundary，并使 fake-based orchestration tests 可覆盖全部 failure paths。
+- fail-fast 和 summary atomicity 避免把 partial run 表述为完整成功。
+
+影响范围：
+
+- SerialRunner public contract、lifetime、Status context、sink lifecycle、tests 和未来 backend composition。
+
+后续调整：
+
+Pipeline 或 tolerant processing policy 必须作为独立 runtime mode 设计，不得修改 M4 SerialRunner baseline 语义。
+
+---
+
+### D032 - M4 结果输出
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 JSON 是单个运行级、固定字段顺序的 deterministic UTF-8 functional output。JsonSink 在内存缓存完整 run，
+仅在 `end_run()` 通过同目录 temporary file + flush/close + POSIX atomic rename 提交；运行失败时目标文件保持不变。
+CompositeSink 固定拥有 JsonSink 后 optional ConsoleSink，begin/write 正序、end 逆序，使 Console end 成功后才提交 JSON。
+当前仓库无 production JSON library，因此使用固定 schema 的最小 writer，不新增大型 DOM dependency。
+
+备选方案：
+
+- 每图 JSON/JSON Lines 或运行中持续覆盖 final file。
+- 引入 dynamic sink registry 和大型 general-purpose JSON framework。
+
+选择理由：
+
+- 单运行级文件能表达 metadata、ordered images 和 committed summary；atomic replacement 避免失败后留下假完整结果。
+- 固定 composition order 保留 JSON final commit 作为最后成功点，同时维持实现范围最小。
+
+影响范围：
+
+- IResultSink lifecycle、ConsoleSink/JsonSink/CompositeSink、JSON schema、overwrite/failure tests 和 application assembly。
+
+后续调整：
+
+M5 可新增正式 experiment logs，但不得静默改变 M4 schema version 1 或其 atomic commit semantics。
