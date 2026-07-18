@@ -8,8 +8,10 @@
 
 #include <array>
 #include <cctype>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <exception>
 #include <fstream>
 #include <iomanip>
 #include <limits>
@@ -207,6 +209,37 @@ Status validate_ort_tensor(const char* label,
     return Status::success();
 }
 
+bool tensor_info_matches(const core::TensorInfo& actual,
+                         const core::TensorInfo& expected) {
+    return actual.dtype == expected.dtype && actual.layout == expected.layout &&
+           actual.shape == expected.shape;
+}
+
+Status validate_run_input(const core::HostTensor& input,
+                          const core::TensorInfo& expected_info) {
+    const Status tensor_status = core::validate_host_tensor(input);
+    if (!tensor_status.ok()) {
+        return tensor_status;
+    }
+    if (input.data.empty()) {
+        return Status::failure(ErrorCode::kInvalidArgument,
+                               "Inference input data must not be empty");
+    }
+    if (input.info.dtype != expected_info.dtype) {
+        return Status::failure(ErrorCode::kUnsupportedDataType,
+                               "Inference input dtype does not match ModelContract");
+    }
+    if (input.info.layout != expected_info.layout) {
+        return Status::failure(ErrorCode::kUnsupportedLayout,
+                               "Inference input layout does not match ModelContract");
+    }
+    if (input.info.shape != expected_info.shape) {
+        return Status::failure(ErrorCode::kInvalidShape,
+                               "Inference input shape does not match ModelContract");
+    }
+    return Status::success();
+}
+
 }  // namespace
 
 class OnnxRuntimeEngine::Impl {
@@ -319,10 +352,109 @@ core::Status OnnxRuntimeEngine::initialize(
     }
 }
 
-core::Status OnnxRuntimeEngine::run(const core::HostTensor&,
-                                    core::HostTensor*) {
-    return Status::failure(ErrorCode::kBackendRuntimeError,
-                           "OnnxRuntimeEngine run is not implemented in M2.2");
+core::Status OnnxRuntimeEngine::run(const core::HostTensor& input,
+                                    core::HostTensor* output) {
+    if (!impl_ || !impl_->session) {
+        return Status::failure(ErrorCode::kBackendRuntimeError,
+                               "OnnxRuntimeEngine is not initialized");
+    }
+    if (output == nullptr) {
+        return Status::failure(ErrorCode::kInvalidArgument,
+                               "Inference output must not be null");
+    }
+
+    const Status input_status = validate_run_input(input, impl_->input_info);
+    if (!input_status.ok()) {
+        return input_status;
+    }
+
+    try {
+        Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(
+            OrtArenaAllocator, OrtMemTypeDefault);
+        // ORT consumes this caller-owned input buffer synchronously without copying it.
+        Ort::Value input_value = Ort::Value::CreateTensor<float>(
+            memory_info,
+            const_cast<float*>(input.data.data()),
+            input.data.size(),
+            input.info.shape.data(),
+            input.info.shape.size());
+        if (!input_value.IsTensor()) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime did not create a tensor input value");
+        }
+
+        const char* input_names[] = {impl_->input_name.c_str()};
+        const char* output_names[] = {impl_->output_name.c_str()};
+        Ort::RunOptions run_options;
+        std::vector<Ort::Value> output_values = impl_->session->Run(
+            run_options,
+            input_names,
+            &input_value,
+            1,
+            output_names,
+            1);
+
+        if (output_values.size() != 1U || !output_values.front().IsTensor()) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output must contain exactly one tensor");
+        }
+
+        const Ort::Value& output_value = output_values.front();
+        const auto output_tensor_info = output_value.GetTensorTypeAndShapeInfo();
+        if (output_tensor_info.GetElementType() !=
+            ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output dtype must be float32");
+        }
+        const std::vector<std::int64_t> output_shape =
+            output_tensor_info.GetShape();
+        if (output_shape != impl_->output_info.shape) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output shape does not match ModelContract");
+        }
+
+        std::size_t expected_element_count = 0;
+        const Status count_status = core::checked_element_count(
+            impl_->output_info.shape, expected_element_count);
+        if (!count_status.ok() ||
+            output_tensor_info.GetElementCount() != expected_element_count) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output element count does not match ModelContract");
+        }
+
+        const float* output_data = output_value.GetTensorData<float>();
+        if (output_data == nullptr) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output tensor data is null");
+        }
+        for (std::size_t index = 0; index < expected_element_count; ++index) {
+            if (!std::isfinite(output_data[index])) {
+                return Status::failure(ErrorCode::kBackendRuntimeError,
+                                       "ONNX Runtime output contains a non-finite value");
+            }
+        }
+
+        core::HostTensor candidate{
+            impl_->output_info,
+            std::vector<float>(output_data, output_data + expected_element_count),
+        };
+        const Status output_status = core::validate_host_tensor(candidate);
+        if (!output_status.ok() ||
+            !tensor_info_matches(candidate.info, impl_->output_info)) {
+            return Status::failure(ErrorCode::kBackendRuntimeError,
+                                   "ONNX Runtime output HostTensor validation failed");
+        }
+        *output = std::move(candidate);
+        return Status::success();
+    } catch (const Ort::Exception& exception) {
+        return Status::failure(
+            ErrorCode::kBackendRuntimeError,
+            "ONNX Runtime run failed: " + std::string(exception.what()));
+    } catch (const std::exception& exception) {
+        return Status::failure(
+            ErrorCode::kBackendRuntimeError,
+            "ONNX Runtime run failed: " + std::string(exception.what()));
+    }
 }
 
 }  // namespace edge_ai_defect::backend_ort

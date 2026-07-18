@@ -112,13 +112,6 @@ int main(int argc, char* argv[]) {
         return 8;
     }
 
-    const core::Status run_status = engine.run(core::HostTensor{}, nullptr);
-    if (!expect_code(run_status,
-                     core::ErrorCode::kBackendRuntimeError,
-                     "M2.2 run placeholder")) {
-        return 9;
-    }
-
     std::cout << "OnnxRuntimeEngine initialization tests passed\n";
     return 0;
 }

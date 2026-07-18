@@ -483,5 +483,30 @@ if(BUILD_TESTING)
             PROPERTIES
                 LABELS "m2;onnxruntime;initialization;model-asset"
         )
+
+        add_executable(test_onnx_runtime_engine_run
+            tests/test_onnx_runtime_engine_run.cpp
+        )
+        target_link_libraries(test_onnx_runtime_engine_run
+            PRIVATE
+                edge_ai_backend_ort
+                edge_ai_core
+        )
+        set_target_properties(test_onnx_runtime_engine_run
+            PROPERTIES
+                BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(
+            NAME onnx_runtime_engine_run
+            COMMAND test_onnx_runtime_engine_run
+                --contract
+                "${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml"
+                --model "${EDGE_AI_FROZEN_ONNX_PATH}"
+        )
+        set_tests_properties(onnx_runtime_engine_run
+            PROPERTIES
+                LABELS "m2;onnxruntime;run;model-asset"
+        )
     endif()
 endif()
