@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0 PostProcessor design freeze 已完成，等待 M3.1 contract
+M0、M1、M2 已关闭；M3.0～M3.1 已完成，等待 M3.2 candidate decode
 ```
 
 M2 状态：
@@ -75,12 +75,13 @@ M2 状态：
 M3 状态：
 
 - M3.0 PostProcessor repository audit and design freeze：complete。
-- M3.1 Detection / PostProcessor contract：pending。
+- M3.1 Detection / PostProcessor contract：complete。
+- M3.2 candidate decode：pending。
 
 下一阶段：
 
 ```text
-M3.1 Detection / PostProcessor contract
+M3.2 candidate decode
 ```
 
 当前主线：
@@ -1044,6 +1045,51 @@ NEU-DET
 - 执行 M3.1，只定义 `Detection` 和 concrete `PostProcessor` contracts 及必要 target；
   不实现 decode、NMS 或 M4 模块。
 
+#### M3.1 Detection / PostProcessor contract
+
+当前工作：
+
+- 建立 M3 public types、配置验证、`edge_ai_postprocess` target 和 contract-level test。
+
+修改文件：
+
+- `include/edge_ai_defect/postprocess/detection.hpp`
+- `include/edge_ai_defect/postprocess/postprocess_config.hpp`
+- `include/edge_ai_defect/postprocess/postprocessor.hpp`
+- `src/postprocess_config.cpp`
+- `src/postprocessor.cpp`
+- `tests/test_postprocessor_contract.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 定义 original-image continuous xyxy `Detection`、冻结 defaults 的
+  `PostprocessConfig` 和最小配置合法性验证。
+- 定义 concrete `PostProcessor::process()` signature；保持普通 value copy/move，未
+  创建 `IPostProcessor`、pImpl 或 backend abstraction。
+- 补充连续 bbox 面积无 `+1`、clip 闭区间、使用 metadata 已保存 gain/left/top 和
+  class-offset NMS 的精确定义。
+- 新 target 只显式依赖 `edge_ai_core`；未链接 ORT/TensorRT/CUDA/OpenCV DNN。
+- Model Smoke OFF configure/build 完成；contract/core 定向 CTest 2/2 PASS，完整 CTest
+  12/12 PASS。
+
+未完成：
+
+- `process()` 尚无 definition；candidate decode、confidence filter、IoU、NMS、inverse
+  LetterBox、clipping 和 8400-candidate tests 均未实现。
+
+阻塞问题：
+
+- 无 M3.2 前代码阻塞。strict 与 ASan/UBSan 仍未配置，是后续工程债务，不能记录为已
+  通过。
+
+下一步计划：
+
+- 执行 M3.2 candidate decode，只实现 raw tensor validation、candidate parsing、
+  confidence filter 和 deterministic pre-NMS ordering；NMS 留给 M3.3。
+
 ---
 
 ## 8. 当前最近计划
@@ -1054,7 +1100,7 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0 design freeze 已完成；下一任务为 M3.1 `Detection` / `PostProcessor` contract。
+3. M3.0～M3.1 已完成；下一任务为 M3.2 candidate decode。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。

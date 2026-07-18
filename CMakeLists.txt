@@ -149,6 +149,19 @@ target_link_libraries(edge_ai_backend_ort
         OpenSSL::Crypto
 )
 
+add_library(edge_ai_postprocess STATIC
+    src/postprocess_config.cpp
+    src/postprocessor.cpp
+)
+target_include_directories(edge_ai_postprocess
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+target_link_libraries(edge_ai_postprocess
+    PUBLIC
+        edge_ai_core
+)
+
 add_executable(edge_ai_infer
     src/main.cpp
 )
@@ -176,6 +189,23 @@ if(BUILD_TESTING)
             edge_ai_core
     )
     add_test(NAME test_core COMMAND test_core)
+
+    add_executable(test_postprocessor_contract
+        tests/test_postprocessor_contract.cpp
+    )
+    target_link_libraries(test_postprocessor_contract
+        PRIVATE
+            edge_ai_postprocess
+    )
+    set_target_properties(test_postprocessor_contract
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME postprocessor_contract COMMAND test_postprocessor_contract)
+    set_tests_properties(postprocessor_contract
+        PROPERTIES
+            LABELS "m3;postprocess;contract"
+    )
 
     add_executable(test_inference_engine
         tests/test_inference_engine.cpp
