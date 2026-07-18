@@ -508,5 +508,38 @@ if(BUILD_TESTING)
             PROPERTIES
                 LABELS "m2;onnxruntime;run;model-asset"
         )
+
+        add_executable(test_onnx_runtime_engine_level_b
+            tests/test_onnx_runtime_engine_level_b.cpp
+        )
+        target_link_libraries(test_onnx_runtime_engine_level_b
+            PRIVATE
+                edge_ai_backend_ort
+                edge_ai_core
+        )
+        set_target_properties(test_onnx_runtime_engine_level_b
+            PROPERTIES
+                BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(
+            NAME onnx_runtime_engine_level_b
+            COMMAND test_onnx_runtime_engine_level_b
+                --contract
+                "${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml"
+                --model "${EDGE_AI_FROZEN_ONNX_PATH}"
+                --input
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/preprocess_level_a/golden/frozen_640_checkerboard.f32le"
+                --golden
+                "${CMAKE_CURRENT_SOURCE_DIR}/results/validation/onnx_runtime_engine_level_b/python_golden_output.f32le"
+                --cpp-output
+                "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/onnx_runtime_engine_level_b/cpp_output.f32le"
+                --report
+                "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/onnx_runtime_engine_level_b/comparison_report.json"
+        )
+        set_tests_properties(onnx_runtime_engine_level_b
+            PROPERTIES
+                LABELS "m2;onnxruntime;level-b;model-asset;evidence"
+        )
     endif()
 endif()

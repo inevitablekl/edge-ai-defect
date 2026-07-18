@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "evidence_id": "onnx_runtime_engine_level_b",
+  "python_environment": {
+    "python_version": "3.10.12",
+    "numpy_version": "1.26.4",
+    "onnxruntime_version": "1.23.2",
+    "providers": [
+      "CPUExecutionProvider"
+    ]
+  },
+  "cpp_environment": {
+    "compiler": "GCC 11.4.0",
+    "cplusplus": 201703
+  },
+  "model": {
+    "path": "models/onnx/yolov8n_neudet_frozen.onnx",
+    "size_bytes": 12242487,
+    "sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944"
+  },
+  "input": {
+    "path": "tests/data/preprocess_level_a/golden/frozen_640_checkerboard.f32le",
+    "sha256": "f8c5d7d0ba99ecf33a4a8539f9461780483c7509c1de100938ee896ba7834cd3",
+    "dtype": "float32",
+    "byte_order": "little_endian",
+    "layout": "NCHW",
+    "shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "element_count": 1228800
+  },
+  "files": {
+    "input_manifest": {
+      "path": "results/validation/onnx_runtime_engine_level_b/input_manifest.json",
+      "sha256": "da25d91d9b17432cfafce1bf00d8a6cf68129639a3790353097b16897eb605e2"
+    },
+    "python_golden_output": {
+      "path": "results/validation/onnx_runtime_engine_level_b/python_golden_output.f32le",
+      "sha256": "c3b17b6072147afb126c9ce812184703e4f75966db07a9433f50f829d892f254",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "BCN",
+      "shape": [
+        1,
+        10,
+        8400
+      ],
+      "element_count": 84000,
+      "finite_count": 84000
+    },
+    "cpp_output": {
+      "path": "results/validation/onnx_runtime_engine_level_b/cpp_output.f32le",
+      "sha256": "c3b17b6072147afb126c9ce812184703e4f75966db07a9433f50f829d892f254"
+    },
+    "comparison_report": {
+      "path": "results/validation/onnx_runtime_engine_level_b/comparison_report.json",
+      "sha256": "740aaae8813ee837d353eec0c504a428267a2e57a63b2366223c2ea6873cd83c"
+    }
+  },
+  "comparison": {
+    "shape": [
+      1,
+      10,
+      8400
+    ],
+    "element_count": 84000,
+    "golden_finite_count": 84000,
+    "cpp_finite_count": 84000,
+    "mae": 0,
+    "max_abs": 0,
+    "max_abs_index": 0,
+    "max_abs_channel": 0,
+    "max_abs_candidate": 0,
+    "mae_limit": 1e-06,
+    "max_abs_limit": 1e-05,
+    "pass": true
+  }
+}
