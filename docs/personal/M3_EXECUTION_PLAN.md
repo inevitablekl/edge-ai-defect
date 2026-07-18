@@ -1,8 +1,8 @@
 # M3 PostProcessor Execution Plan
 
-状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0 与 M3.1 已完成；M3.2
-candidate decode pending。M3.1 只建立 public contract、配置验证、模块 target 和
-contract-level test，尚未实现 decode、NMS、inverse LetterBox 或 clipping。
+状态：`IN_PROGRESS`（design frozen，2026-07-18）。M3.0～M3.2 已完成；M3.3
+IoU/class-aware NMS pending。M3.2 完成内部 raw candidate decode 与 pre-NMS preparation，
+但仍未实现 NMS、inverse LetterBox、clipping 或 public `PostProcessor::process()`。
 
 ## 1. 目标与边界
 
@@ -303,3 +303,52 @@ IoU、NMS、inverse LetterBox 或 clipping。Model Smoke OFF configure/build 成
 `postprocessor_contract` 与 `test_core` 定向 CTest 为 2/2 PASS，当前完整 CTest 为
 12/12 PASS。strict 与 ASan/UBSan 仍为 `Not configured`，未写成通过。下一步为 M3.2
 candidate decode。
+
+## 11. M3.2 Candidate Decode 实际结果
+
+M3.2 新增 internal-only `src/postprocess_detail.hpp`：
+
+```cpp
+namespace edge_ai_defect::postprocess::detail {
+
+struct DecodedCandidate {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float confidence;
+    int class_id;
+    std::size_t candidate_index;
+};
+
+core::Status decode_candidates(
+    const core::HostTensor& raw_output,
+    const PostprocessConfig& config,
+    std::vector<DecodedCandidate>* output);
+
+}  // namespace edge_ai_defect::postprocess::detail
+```
+
+该 header 仅供 `src/postprocessor_decode.cpp` 和 M3.2 test 使用，不属于 public include
+API。helper 在写入 output 前完成 `validate_postprocess_config()`、
+`validate_host_tensor()`、固定 `float32 BCN [1,10,8400]` / 84000-element contract 与全量
+finite scan；任何 NaN、`+Inf` 或 `-Inf` 返回 `kInvalidArgument`，不产生部分候选且保持
+caller output 不变。
+
+BCN 读取固定为 `data[channel * 8400 + candidate_index]`。每个 valid candidate 保留
+model-input continuous xyxy：先跳过 `w <= 0` 或 `h <= 0`，然后按 class id 0～5 递增扫描，
+仅当 `score > current_best` 才更新，因此 score tie 选择最小 class id；仅当
+`confidence > config.confidence_threshold` 才保留。decode 不 round、clip、inverse
+LetterBox、添加 class offset 或产生 public `Detection`。若 raw fields 虽 finite 但 float
+xyxy 运算溢出为 non-finite，则该 candidate 作为非法 geometry 跳过，不影响其他候选。
+
+pre-NMS candidates 以完整 comparator 排序：confidence 降序、class id 升序、candidate
+index 升序，随后保留前 `min(size, config.max_nms)` 项；`max_det`、`max_wh`、agnostic 与
+multi_label 在本阶段不参与 NMS。`PostProcessor::process()` 继续没有 definition。
+
+`test_postprocessor_decode` 覆盖 BCN/BNC distinguishability、阈值严格边界、argmax ties、
+continuous xyxy、deterministic ordering、max_nms、invalid geometry、empty success、all
+required contract failures 和 output atomicity。Model Smoke OFF configure/build 成功；
+`postprocessor_contract` / `postprocessor_decode` / `test_core` 为 3/3 PASS，完整 CTest
+为 13/13 PASS。strict 与 ASan/UBSan 仍为 `Not configured`。下一步为 M3.3 IoU 与
+class-aware NMS。

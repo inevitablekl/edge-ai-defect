@@ -152,6 +152,7 @@ target_link_libraries(edge_ai_backend_ort
 add_library(edge_ai_postprocess STATIC
     src/postprocess_config.cpp
     src/postprocessor.cpp
+    src/postprocessor_decode.cpp
 )
 target_include_directories(edge_ai_postprocess
     PUBLIC
@@ -205,6 +206,27 @@ if(BUILD_TESTING)
     set_tests_properties(postprocessor_contract
         PROPERTIES
             LABELS "m3;postprocess;contract"
+    )
+
+    add_executable(test_postprocessor_decode
+        tests/test_postprocessor_decode.cpp
+    )
+    target_include_directories(test_postprocessor_decode
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+    target_link_libraries(test_postprocessor_decode
+        PRIVATE
+            edge_ai_postprocess
+    )
+    set_target_properties(test_postprocessor_decode
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME postprocessor_decode COMMAND test_postprocessor_decode)
+    set_tests_properties(postprocessor_decode
+        PROPERTIES
+            LABELS "m3;postprocess;decode"
     )
 
     add_executable(test_inference_engine

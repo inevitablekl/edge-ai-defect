@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.1 已完成，等待 M3.2 candidate decode
+M0、M1、M2 已关闭；M3.0～M3.2 已完成，等待 M3.3 class-aware NMS
 ```
 
 M2 状态：
@@ -76,12 +76,13 @@ M3 状态：
 
 - M3.0 PostProcessor repository audit and design freeze：complete。
 - M3.1 Detection / PostProcessor contract：complete。
-- M3.2 candidate decode：pending。
+- M3.2 candidate decode：complete。
+- M3.3 IoU / class-aware NMS：pending。
 
 下一阶段：
 
 ```text
-M3.2 candidate decode
+M3.3 IoU / class-aware NMS
 ```
 
 当前主线：
@@ -1090,6 +1091,49 @@ NEU-DET
 - 执行 M3.2 candidate decode，只实现 raw tensor validation、candidate parsing、
   confidence filter 和 deterministic pre-NMS ordering；NMS 留给 M3.3。
 
+#### M3.2 YOLO raw candidate decode 与 deterministic pre-NMS preparation
+
+当前工作：
+
+- 实现 internal `DecodedCandidate`、固定 raw BCN decode、class argmax、confidence
+  filter、model-space xyxy、deterministic sort 与 `max_nms` truncation。
+
+修改文件：
+
+- `src/postprocess_detail.hpp`
+- `src/postprocessor_decode.cpp`
+- `tests/test_postprocessor_decode.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 严格接受 `float32 BCN [1,10,8400]` / 84000 elements；任一 raw NaN、`+Inf`、`-Inf`
+  返回 `kInvalidArgument` 且不污染 caller output。
+- `w/h <= 0` 仅跳过 candidate；class score 用严格 `>` argmax，tie 选择最小 class id；
+  confidence 必须严格大于 threshold。
+- 固定 `data[channel * 8400 + candidate_index]` BCN 索引、continuous model-space xyxy、
+  confidence/class/candidate 的完整 deterministic order 和 sorted `max_nms` 截断。
+- 新 decode test 覆盖 raw contract、BCN/BNC 区分、边界、ties、排序、geometry、empty
+  success 和 output atomicity；未实现 IoU、NMS、class offset、inverse LetterBox、clip 或
+  public `PostProcessor::process()`。
+- Model Smoke OFF configure/build 成功；定向 CTest 3/3 PASS，完整 CTest 13/13 PASS。
+
+未完成：
+
+- IoU、class-aware NMS、`max_det` 应用、inverse LetterBox、clipping、public Detection
+  输出和 M3 Level B evidence 尚未实现。
+
+阻塞问题：
+
+- 无 M3.3 前代码阻塞。strict 与 ASan/UBSan 仍为 `Not configured`，不能记录为通过。
+
+下一步计划：
+
+- 执行 M3.3，只实现 continuous xyxy IoU 和 class-aware NMS，消费 M3.2 已排序的
+  internal candidates；仍不实现 inverse LetterBox 或 public `process()`。
+
 ---
 
 ## 8. 当前最近计划
@@ -1100,7 +1144,7 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.1 已完成；下一任务为 M3.2 candidate decode。
+3. M3.0～M3.2 已完成；下一任务为 M3.3 IoU / class-aware NMS。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
