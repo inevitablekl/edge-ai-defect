@@ -40,6 +40,37 @@ def run(executable, arguments, expected_code):
     return result
 
 
+def assert_failure(result, expected_code, required_stderr_substrings):
+    require(result.returncode == expected_code,
+            f"expected exit {expected_code}, got {result.returncode}")
+    require(result.stdout == "", f"failure unexpectedly wrote stdout: {result.stdout!r}")
+    require(result.stderr, "failure did not write stderr")
+    require(result.stderr.startswith("error: "),
+            f"failure stderr lacks application error prefix: {result.stderr!r}")
+    require("Traceback" not in result.stderr, "failure stderr exposed a traceback")
+    for substring in required_stderr_substrings:
+        require(substring in result.stderr,
+                f"failure stderr lacks {substring!r}: {result.stderr!r}")
+
+
+def run_failure(executable, arguments, expected_code, required_stderr_substrings):
+    result = run(executable, arguments, expected_code)
+    assert_failure(result, expected_code, required_stderr_substrings)
+
+
+def temporary_paths(target_path):
+    if not target_path.parent.exists():
+        return []
+    return list(target_path.parent.glob(target_path.name + ".tmp.*"))
+
+
+def assert_no_final_output(target_path):
+    require(not target_path.exists(),
+            f"failed run left a final JSON target: {target_path}")
+    require(not temporary_paths(target_path),
+            f"failed run left JsonSink temporary files for: {target_path}")
+
+
 def yaml_quote(path):
     return '"' + str(path).replace('\\', '/').replace('"', '\\"') + '"'
 
@@ -142,27 +173,45 @@ def run_off(arguments):
     help_result = run(executable, ["--help"], 0)
     require(help_result.stdout == "Usage: edge_ai_defect --config <runtime.yaml>\n" and not help_result.stderr,
             "help stdout/stderr contract violated")
-    for argv in (
-            [], ["-h"], ["--unknown"], ["input.yaml"], ["--config"],
-            ["--config", "one.yaml", "--config", "two.yaml"],
-            ["--config", "one.yaml", "extra"], ["--help", "--config", "x.yaml"]):
-        result = run(executable, argv, 2)
-        require(result.stderr.startswith("error: "), "CLI error must use stderr")
-    run(executable, ["--config", str(root / "missing.yaml")], 2)
+    for argv, stderr_context in (
+            ([], "Usage requires"), (['-h'], "Usage requires"),
+            (["--unknown"], "Usage requires"), (["input.yaml"], "Usage requires"),
+            (["--config"], "Usage requires"),
+            (["--config", "one.yaml", "--config", "two.yaml"], "Usage requires"),
+            (["--config", "one.yaml", "extra"], "Usage requires"),
+            (["--help", "--config", "x.yaml"], "Usage requires")):
+        run_failure(executable, argv, 2, (stderr_context,))
+
+    missing_config = root / "missing.yaml"
+    run_failure(executable, ["--config", str(missing_config)], 2,
+                ("Runtime config file is not readable",))
 
     schema_error = root / "schema_error.yaml"
-    schema_error.write_text("schema_version: 1\nunknown: true\n", encoding="utf-8")
-    run(executable, ["--config", str(schema_error)], 2)
+    schema_result = root / "schema_error.json"
+    write_config(schema_error, root / "missing_contract.yaml", root / "missing.onnx",
+                 root / "missing_input", schema_result)
+    schema_error.write_text(schema_error.read_text(encoding="utf-8") + "unknown: true\n",
+                            encoding="utf-8")
+    run_failure(executable, ["--config", str(schema_error)], 2, ("unknown field",))
+    assert_no_final_output(schema_result)
 
     missing_contract = root / "missing_contract.yaml"
-    write_config(missing_contract, root / "missing_contract.yaml", root / "missing.onnx",
-                 root / "missing_input", root / "result.json")
-    run(executable, ["--config", str(missing_contract)], 3)
+    missing_contract_result = root / "missing_contract.json"
+    write_config(missing_contract, root / "does_not_exist.contract.yaml", root / "missing.onnx",
+                 root / "missing_input", missing_contract_result)
+    run_failure(executable, ["--config", str(missing_contract)], 3,
+                ("contract file is not readable",))
+    assert_no_final_output(missing_contract_result)
 
     missing_input = root / "missing_input.yaml"
+    missing_input_result = root / "missing_input.json"
     write_config(missing_input, Path(arguments.contract), root / "missing.onnx",
-                 root / "missing_input", root / "result.json")
-    run(executable, ["--config", str(missing_input)], 3)
+                 root / "missing_input", missing_input_result)
+    run_failure(executable, ["--config", str(missing_input)], 3,
+                ("inspect input directory",))
+    assert_no_final_output(missing_input_result)
+    require(not list(root.glob("*.json")),
+            "OFF application failures left a final JSON target")
 
 
 def run_on(arguments):
@@ -202,13 +251,34 @@ def run_on(arguments):
     bad_output_config = root / "bad_output.yaml"
     write_config(bad_output_config, Path(arguments.contract), Path(arguments.model), images,
                  missing_parent)
-    run(executable, ["--config", str(bad_output_config)], 3)
-    require(not missing_parent.exists(), "failed run left a final JSON target")
+    run_failure(executable, ["--config", str(bad_output_config)], 3,
+                ("JsonSink output parent",))
+    assert_no_final_output(missing_parent)
 
     overwrite_false = root / "overwrite_false.yaml"
+    overwrite_target = root / "existing.json"
+    original_output = b"existing output must remain unchanged\n"
+    overwrite_target.write_bytes(original_output)
     write_config(overwrite_false, Path(arguments.contract), Path(arguments.model), images,
-                 result_path, overwrite=False)
-    run(executable, ["--config", str(overwrite_false)], 3)
+                 overwrite_target, overwrite=False)
+    run_failure(executable, ["--config", str(overwrite_false)], 3,
+                ("JsonSink target exists while overwrite is false",))
+    require(overwrite_target.read_bytes() == original_output,
+            "overwrite=false changed an existing target")
+    require(not temporary_paths(overwrite_target),
+            "overwrite=false failure left JsonSink temporary files")
+
+    broken_images = root / "broken_images"
+    broken_images.mkdir(parents=True, exist_ok=True)
+    broken_path = broken_images / "broken.png"
+    broken_path.write_bytes(b"M4.6 deterministic invalid image bytes\n")
+    runner_failure_target = root / "runner_failure.json"
+    runner_failure_config = root / "runner_failure.yaml"
+    write_config(runner_failure_config, Path(arguments.contract), Path(arguments.model),
+                 broken_images, runner_failure_target)
+    run_failure(executable, ["--config", str(runner_failure_config)], 4,
+                ("source", "broken.png", "decode image"))
+    assert_no_final_output(runner_failure_target)
 
 
 def main():

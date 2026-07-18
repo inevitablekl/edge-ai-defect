@@ -3,7 +3,7 @@
 状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser、
 M4.2 ImageSource and DirectorySource、M4.3 ResultSink System 和 M4.4 SerialRunner and Basic Timing 已完成；
 M4.4 Shallow Gate 首次结果为 FAIL，test/documentation remediation 后的 Gate rerun 为 PASS；M4.4 COMPLETE，
-M4.5 COMPLETE；M4.6 Standard Final Gate PENDING。
+M4.5 COMPLETE；M4.6 Standard Final Gate 首次结果为 FAIL，test/documentation remediation COMPLETE，Gate rerun PENDING。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -790,6 +790,32 @@ M4.5 状态为 **COMPLETE**。M4 仍为 `IN_PROGRESS`，M4.6 read-only Standard 
 - **expected commit message**：无。
 - **next step**：PASS 后仅 M4.7；FAIL 时另行批准 remediation，不在 Gate 静默修改。
 - **Gate**：Standard Final Gate；M4 不做 Deep Gate。
+
+#### M4.6 第一次 Standard Final Gate 与 remediation（2026-07-18）
+
+第一次只读 Standard Final Gate 判定为 **FAIL**。production architecture 审查为 PASS，Model Smoke OFF 全量
+CTest `24/24 PASS`、Model Smoke ON 全量 CTest `32/32 PASS`；未发现 M1/M2/M3/M4.4 contract 漂移、ownership
+问题、dependency leakage 或 M5 scope violation。FAIL 原因仅为 `tests/test_application_smoke.py` 的 subprocess
+证据不完整：多数 exit `2/3` case 未统一断言 stdout/stderr，且缺少真实 executable 的 Runner exit `4` failure。
+
+本轮已确认并冻结测试验收分层，不改变 D028～D033 或 production composition order：
+
+- Model Smoke OFF executable 覆盖 help、CLI/RuntimeConfig/YAML errors，以及不依赖 frozen ONNX 可到达的
+  component initialization failures；
+- Model Smoke ON executable 覆盖 actual ORT serial flow、missing output parent、`overwrite=false`、Runner
+  source decode failure exit `4`、deterministic JSON 和 Console；
+- Model Smoke OFF `result_sinks` unit test 覆盖 output parent、overwrite、atomic rename、旧文件保留、temporary
+  file cleanup 和 sink lifecycle。
+
+因此 output preflight 固定为 **ON-only executable coverage**：不要求 OFF application subprocess 到达该阶段，
+不将 JsonSink 移到 Engine initialize 前，不增加 fake backend、production test seam、Service Locator 或 DI container，
+也不让 OFF 依赖 frozen ONNX。
+
+remediation 已补强 application subprocess evidence：所有 exit `2/3/4` failure 统一断言 expected code、empty
+stdout、non-empty/stable stderr context；真实 `broken.png` 在 DirectorySource create 成功后于
+`SerialRunner → source.next()` decode fail-fast，断言 exit `4`、无 final JSON 与无 JsonSink temporary file；
+`overwrite=false` 断言既有目标内容不变。M4.6 remediation 状态为 **COMPLETE**，但 Gate rerun 仍为
+**PENDING**；M4 保持 `IN_PROGRESS`，M4.7 未开始。
 
 ### M4.7 — Documentation-only Closeout
 

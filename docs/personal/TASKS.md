@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.5 complete；M4.4 Shallow Gate rerun PASS；M4.6 Final Gate pending）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.5 complete；M4.4 Shallow Gate rerun PASS；M4.6 first Gate FAIL，remediation complete，rerun pending）
 ```
 
 M2 状态：
@@ -94,7 +94,9 @@ M4 状态：
 - M4.3 ResultSink System：complete。
 - M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：first FAIL，test/documentation remediation complete，rerun PASS；M4.4 COMPLETE。
 - M4.5 Application Assembly and Actual ORT Smoke：complete。
-- M4.6 Standard Final Gate、M4.7 Documentation-only Closeout：pending。
+- M4.6 Standard Final Gate：first FAIL；production architecture PASS，blocker 为 application subprocess 测试证据缺口；
+  test/documentation remediation complete，Gate rerun pending。
+- M4.7 Documentation-only Closeout：pending，尚未开始。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
   deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
   已新增 SerialRunner；M4.5 已将 main 替换为 actual application composition 并完成实际 ORT smoke。
@@ -103,7 +105,7 @@ M4 状态：
 下一阶段：
 
 ```text
-M4.6 M4 Standard Final Gate（只读独立任务）
+M4.6 Standard Final Gate rerun（只读独立任务）
 ```
 
 当前主线：
@@ -1582,6 +1584,41 @@ NEU-DET
 
 - Strict、ASan、UBSan 仍为 `Not configured`；未执行 benchmark，未形成 Level C 或性能结论。
 
+#### M4.6 Standard Final Gate remediation
+
+当前工作：
+
+- 关闭第一次 Standard Final Gate 发现的 application subprocess 测试证据缺口；不修改 production code，不执行 Gate rerun、
+  M4.7、M5 或 benchmark。
+
+修改文件：
+
+- `tests/test_application_smoke.py`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 第一次 M4.6 Gate 为 FAIL，但 production architecture 审查 PASS；当时 OFF `24/24`、ON `32/32` 回归通过，未发现
+  production defect。
+- 人工确认 output preflight 的 executable 证据属于 Model Smoke ON；Model Smoke OFF 保持不依赖 frozen ONNX，并由
+  `result_sinks` unit tests 覆盖 output parent、overwrite、atomicity 和 temporary cleanup。未改变 D028～D033、组装顺序，
+  未增加 fake backend 或 production seam。
+- application smoke 现统一断言 exit `2/3/4` 的 empty stdout、non-empty/stable stderr、final JSON 与 temporary-file
+  failure state；新增真实 `broken.png` source decode 的 Runner exit `4`，并验证 `overwrite=false` 旧文件不变。
+
+未完成：
+
+- M4.6 Standard Final Gate rerun；M4.7 未开始，M4 仍为 `IN_PROGRESS`。
+
+下一步计划：
+
+- 仅执行只读 M4.6 Standard Final Gate rerun；不得修改文件、创建 remediation commit、关闭 M4 或进入 M5。
+
+备注：
+
+- Strict、ASan、UBSan 均为 `Not configured`；未运行 benchmark。
+
 ---
 
 ## 8. 当前最近计划
@@ -1594,8 +1631,8 @@ NEU-DET
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
 4. M4.0～M4.5 已完成，M4 为 `IN_PROGRESS`；M4.4 Shallow Gate rerun 已 PASS，M4.5 actual ORT smoke 已通过。
-5. M4 当前已开发 ImageSource/DirectorySource/ResultSink/SerialRunner 与 complete application flow；下一步仅可由
-   独立只读 M4.6 Standard Final Gate 开始。
+5. M4.6 第一次 Standard Final Gate 的 production 审查 PASS、测试证据判定 FAIL；remediation 已完成，下一步仅可由
+   独立只读 Gate rerun 开始。M4.7 尚未开始。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
