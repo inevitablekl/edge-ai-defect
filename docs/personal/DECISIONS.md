@@ -1450,3 +1450,47 @@ ACTIVE
 
 若模型 output、类别语义、NMS 策略或 coordinate contract 改变，必须提供新的 model
 contract/reference evidence 并经架构审查；不得静默改变已冻结的 M3 detection semantics。
+
+---
+
+### D027 - M3 clipping parity with Ultralytics 8.4.50
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M3 baseline `PostProcessor` 的 inverse LetterBox 后使用 continuous xyxy clipping：x clamp
+到 `[0, original_width]`，y clamp 到 `[0, original_height]`。为与本地固定
+Ultralytics 8.4.50 的 `scale_boxes() -> clip_boxes()` 行为保持 parity，M3 不做 post-clip
+degeneracy 或 minimum-size filtering；零宽或零高的最终 `Detection` 必须保留。所有输出坐标
+仍必须 finite，且满足非降序边界。零面积过滤若为业务所需，必须作为后续显式业务层策略，
+不属于 M3 baseline。
+
+选择理由：
+
+- 固定 Ultralytics 8.4.50 `scale_boxes()` 在 inverse transform 后只调用 `clip_boxes()`；
+  后者 clamp 四个坐标后直接返回，未过滤 `x1 == x2` 或 `y1 == y2` 的框。
+- decode 阶段 `w <= 0` / `h <= 0` skip 和 xyxy overflow skip 是 raw prediction 的非法
+  geometry policy，不等同于有效 NMS candidate 被恢复并 clip 后退化。
+- 保持该边界行为使后续 M3 Python/C++ PostProcessor-only validation 能比较完整 detection
+  而无隐式过滤差异。
+
+影响范围：
+
+- M3.4 transform/clip/process implementation 与其 unit tests。
+- 后续 `postprocessor_level_b` Python/C++ detection evidence。
+
+后续调整：
+
+任何业务层零面积过滤必须有单独的配置/contract、测试和架构决策；不得倒灌修改 M3 baseline
+PostProcessor。

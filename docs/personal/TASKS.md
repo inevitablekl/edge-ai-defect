@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.3 已完成，等待 M3.4 inverse LetterBox、clipping 与 public process integration
+M0、M1、M2 已关闭；M3.0～M3.4 已完成，等待 M3.4 shallow Gate
 ```
 
 M2 状态：
@@ -78,12 +78,13 @@ M3 状态：
 - M3.1 Detection / PostProcessor contract：complete。
 - M3.2 candidate decode：complete。
 - M3.3 IoU / class-aware NMS：complete。
-- M3.4 inverse LetterBox / clipping / public process integration：pending。
+- M3.4 inverse LetterBox / clipping / public process integration：complete。
+- M3.4 shallow Gate：pending。
 
 下一阶段：
 
 ```text
-M3.4 inverse LetterBox / clipping / public process integration
+M3.4 shallow Gate
 ```
 
 当前主线：
@@ -1178,6 +1179,55 @@ NEU-DET
 - 执行 M3.4，仅完成基于 `ImageTransformMetadata` 的 inverse LetterBox、clip 与 public
   `PostProcessor::process()` integration；不进入 Runner、Pipeline、benchmark 或 M3 Level B。
 
+#### M3.4 inverse LetterBox、continuous clipping 与 public process integration
+
+当前工作：
+
+- 先解决 M3 plan 与固定 Ultralytics 8.4.50 `scale_boxes()/clip_boxes()` 的 post-clip
+  degeneracy conflict，再完成 metadata-driven public PostProcessor pipeline。
+
+修改文件：
+
+- `src/postprocess_detail.hpp`
+- `src/postprocessor.cpp`
+- `src/postprocessor_transform.cpp`
+- `tests/test_postprocessor_process.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/DECISIONS.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 追加 D027：M3 baseline 按固定 Ultralytics 8.4.50 parity 只做 continuous coordinate clamp；
+  post-clip 零宽/零高 `Detection` 保留，不做 minimum-size filter。decode 阶段负/零 `w/h`
+  skip 与 xyxy overflow skip 维持不变。
+- 使用 M1 实际 `ImageTransformMetadata` 的 original/target/resized dimensions、`double gain`
+  与四侧 padding 验证 transform，并直接按保存的 `gain`、`pad_left`、`pad_top` 执行 inverse
+  LetterBox；不依据 image dimensions 重新推导参数。
+- 实现完整 public `PostProcessor::process()`：config/metadata validation → decode → NMS →
+  transform/clip → original-image `Detection`。每个 failure path 保持 caller output，empty
+  valid result 成功返回 empty vector。
+- 新 process test 覆盖 asymmetric odd padding、clipping 后的四侧退化框保留、NMS-before-
+  transform、class-aware integration、strict confidence、limits、invalid raw/metadata/config、
+  null output 和 atomicity。
+- Model Smoke OFF configure/build 成功；M3/core 定向 CTest 5/5 PASS，完整 CTest 15/15 PASS。
+  strict、ASan、UBSan 仍为 `Not configured`。
+
+未完成：
+
+- M3.4 shallow Gate 与 M3.5 独立 Python/C++ PostProcessor-only Level B validation；未实现
+  Runner、Pipeline、benchmark、TensorRT 或 CUDA。
+
+阻塞问题：
+
+- 无 shallow Gate 前代码阻塞。strict 与 ASan/UBSan 未配置，不能记录为通过。
+
+下一步计划：
+
+- 执行 M3.4 shallow Gate，只读审查范围、public process 行为、reference parity 语义、测试
+  证据和 Git cleanliness；通过后才启动 M3.5。
+
 ---
 
 ## 8. 当前最近计划
@@ -1188,8 +1238,8 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.3 已完成；下一任务为 M3.4 inverse LetterBox / clipping / public process
-   integration。
+3. M3.0～M3.4 已完成；下一任务为 M3.4 shallow Gate，通过后才进入 M3.5
+   PostProcessor-only Python/C++ validation。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。

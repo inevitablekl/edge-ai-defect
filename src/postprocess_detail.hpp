@@ -2,7 +2,9 @@
 
 #include "edge_ai_defect/core/status.hpp"
 #include "edge_ai_defect/core/tensor.hpp"
+#include "edge_ai_defect/postprocess/detection.hpp"
 #include "edge_ai_defect/postprocess/postprocess_config.hpp"
+#include "edge_ai_defect/preprocess/letterbox.hpp"
 
 #include <cstddef>
 #include <vector>
@@ -37,5 +39,13 @@ struct DecodedCandidate {
     const std::vector<DecodedCandidate>& sorted_candidates,
     const PostprocessConfig& config,
     std::vector<DecodedCandidate>* output);
+
+[[nodiscard]] core::Status validate_transform_metadata(
+    const preprocess::ImageTransformMetadata& transform);
+
+[[nodiscard]] core::Status transform_and_clip_detections(
+    const std::vector<DecodedCandidate>& candidates,
+    const preprocess::ImageTransformMetadata& transform,
+    std::vector<Detection>* output);
 
 }  // namespace edge_ai_defect::postprocess::detail
