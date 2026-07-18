@@ -14,6 +14,7 @@ include(CTest)
 
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
 find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc)
+find_package(OpenSSL REQUIRED)
 
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
@@ -135,6 +136,7 @@ target_link_libraries(edge_ai_core
 
 add_library(edge_ai_backend_ort STATIC
     src/backend_ort.cpp
+    src/onnx_runtime_engine.cpp
 )
 target_include_directories(edge_ai_backend_ort
     PUBLIC
@@ -142,7 +144,9 @@ target_include_directories(edge_ai_backend_ort
 )
 target_link_libraries(edge_ai_backend_ort
     PRIVATE
+        edge_ai_core
         onnxruntime::onnxruntime
+        OpenSSL::Crypto
 )
 
 add_executable(edge_ai_infer
@@ -452,7 +456,32 @@ if(BUILD_TESTING)
             ort_model_contract_mismatch
             ort_inference_smoke
             PROPERTIES
-                LABELS "m0;smoke;onnxruntime;model-asset"
+            LABELS "m0;smoke;onnxruntime;model-asset"
+        )
+
+        add_executable(test_onnx_runtime_engine_initialization
+            tests/test_onnx_runtime_engine_initialization.cpp
+        )
+        target_link_libraries(test_onnx_runtime_engine_initialization
+            PRIVATE
+                edge_ai_backend_ort
+                edge_ai_core
+        )
+        set_target_properties(test_onnx_runtime_engine_initialization
+            PROPERTIES
+                BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(
+            NAME onnx_runtime_engine_initialization
+            COMMAND test_onnx_runtime_engine_initialization
+                --contract
+                "${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml"
+                --model "${EDGE_AI_FROZEN_ONNX_PATH}"
+        )
+        set_tests_properties(onnx_runtime_engine_initialization
+            PROPERTIES
+                LABELS "m2;onnxruntime;initialization;model-asset"
         )
     endif()
 endif()
