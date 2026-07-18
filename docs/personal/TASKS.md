@@ -1483,6 +1483,22 @@ NEU-DET
 
 - Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark，未修改 `DECISIONS.md`，也未进入 M4.4。
 
+#### M4.4 SerialRunner 输入合同修正
+
+当前工作：
+
+- 审计发现原冻结 Runner 构造函数缺少真实 M1 `Preprocessor::preprocess()` 所需的 `TensorInfo` 执行依赖；
+  已由人工决策关闭该 planning blocker，M4.4 恢复为 pending，尚未开始 production 实现。
+
+已完成：
+
+- 冻结 `SerialRunner` 构造时显式接收已验证 `ModelContract.input.tensor_info`；Runner 保存值副本，
+  不修改 M1 Preprocessor 或 M2 `IInferenceEngine`，也不让 Runner 重载 ModelContract。
+
+下一步计划：
+
+- 在该文档修订提交后继续仅执行 M4.4 SerialRunner and Basic Timing；M4.5 仍不得开始。
+
 ---
 
 ## 8. 当前最近计划
