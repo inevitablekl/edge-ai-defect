@@ -1,7 +1,7 @@
 # M4 C++ ONNX Runtime Serial Baseline Execution Plan
 
-状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze 和 M4.1 Runtime Contracts, Config and CLI Parser
-已完成；M4.2 尚未开始。
+状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze、M4.1 Runtime Contracts, Config and CLI Parser 和
+M4.2 ImageSource and DirectorySource 已完成；M4.3 尚未开始。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -580,6 +580,32 @@ M4.2 ImageSource and DirectorySource。
 - **expected commit message**：`feat: add deterministic directory image source`。
 - **next step**：M4.3 ResultSink System。
 - **Gate**：无独立 Gate；完成定向/完整适用 CTest 和 scope audit 后停止。
+
+#### M4.2 实际结果（2026-07-18）
+
+M4.2 已完成，且没有进入 M4.3。实际新增：
+
+- `runtime::ImageItem`、最小 `runtime::ImageSource` 和 `runtime::DirectorySource`；factory 在成功时
+  完整持有输入根及路径列表，失败时保持 caller `unique_ptr` 原值；
+- `DirectorySource` 只枚举输入目录第一层的真实 regular file，跳过 symlink、目录和其他非 regular
+  entry；仅接受 `.jpg`、`.jpeg`、`.png`、`.bmp`（ASCII 大小写不敏感），以
+  `relative_path.generic_string()` 字节序排序；
+- `next()` 每次仅以 `cv::imread(path, cv::IMREAD_COLOR)` 解码当前图片，不 resize、normalize、
+  颜色转换或调用 Preprocessor；成功的 `ImageItem` 使用从 0 连续递增的序号、相对路径和有效
+  `CV_8UC3` BGR 图像；
+- EOS 返回 success + `nullopt`，重复调用仍相同；解码失败为 fail-fast，cursor 不推进、caller output
+  保持原值，因此重试会读取同一项；
+- `edge_ai_runtime` 私有接入 OpenCV `imgcodecs`，未改变 M1、M2、M3 合同，也未触及 main、sink、
+  Runner、ORT 或 benchmark。
+
+`test_directory_source` 在运行时生成并清理临时图片，覆盖空/null/non-directory/no-valid factory
+failure 及其 output atomicity，四种扩展名与大小写、隐藏文件、过滤、非递归、file/directory symlink、
+Linux FIFO、字节序排序、index/relative path、按需单图解码、EOS/repeated EOS、损坏/删除后图片的
+fail-fast 和 `next()` output atomicity；测试不依赖冻结 ONNX 模型。
+
+真实回归：M4.2 定向及必要 runtime/core 回归 `8/8 PASS`；Model Smoke OFF 全量 CTest `21/21 PASS`；
+Model Smoke ON 全量 CTest `28/28 PASS`。Strict、ASan、UBSan 仍为 `Not configured`，未运行也未表述为
+PASS。M4.2 无 Gate；下一步仅为 M4.3 ResultSink System。
 
 ### M4.3 — ResultSink System
 

@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(CTest)
 
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
-find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc)
+find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs)
 find_package(OpenSSL REQUIRED)
 
 option(
@@ -167,6 +167,7 @@ target_link_libraries(edge_ai_postprocess
 
 add_library(edge_ai_runtime STATIC
     src/cli.cpp
+    src/directory_source.cpp
     src/runtime_config.cpp
 )
 target_include_directories(edge_ai_runtime
@@ -177,6 +178,7 @@ target_link_libraries(edge_ai_runtime
     PUBLIC
         edge_ai_postprocess
     PRIVATE
+        opencv_imgcodecs
         yaml-cpp
 )
 
@@ -390,6 +392,28 @@ if(BUILD_TESTING)
     set_tests_properties(runtime_types
         PROPERTIES
             LABELS "m4;runtime;contract"
+    )
+
+    add_executable(test_directory_source
+        tests/test_directory_source.cpp
+    )
+    target_link_libraries(test_directory_source
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_directory_source
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME directory_source
+        COMMAND test_directory_source
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/directory_source"
+    )
+    set_tests_properties(directory_source
+        PROPERTIES
+            LABELS "m4;runtime;source"
     )
 
     add_executable(test_model_contract

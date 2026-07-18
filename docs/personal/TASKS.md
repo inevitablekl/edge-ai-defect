@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.1 complete）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.2 complete）
 ```
 
 M2 状态：
@@ -90,16 +90,16 @@ M4 状态：
 
 - M4.0 Planning Freeze：complete。
 - M4.1 Runtime Contracts, Config and CLI Parser：complete。
-- M4.2 ImageSource and DirectorySource：pending，尚未开始。
+- M4.2 ImageSource and DirectorySource：complete。
 - M4.3～M4.7：pending。
-- M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；尚未开发
-  ImageSource、ResultSink、SerialRunner 或完整 application assembly。
+- M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
+  deterministic non-recursive DirectorySource。尚未开发 ResultSink、SerialRunner 或完整 application assembly。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
 下一阶段：
 
 ```text
-M4.2 ImageSource and DirectorySource
+M4.3 ResultSink System
 ```
 
 当前主线：
@@ -1385,6 +1385,54 @@ NEU-DET
 
 - Strict、ASan、UBSan 仍为 `Not configured`；没有 benchmark、TensorRT、CUDA、Pipeline、ROS2 或图片读取实现。
 
+#### M4.2 ImageSource and DirectorySource
+
+当前工作：
+
+- 实现最小 `ImageSource`、`ImageItem` 和 deterministic `DirectorySource`；不实现 ResultSink、
+  SerialRunner、main application assembly 或 ORT 调用。
+
+修改文件：
+
+- `include/edge_ai_defect/runtime/image_source.hpp`
+- `include/edge_ai_defect/runtime/directory_source.hpp`
+- `src/directory_source.cpp`
+- `tests/test_directory_source.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- DirectorySource factory 只枚举第一层真实 regular image file，不递归并跳过所有 symlink；支持
+  `.jpg`、`.jpeg`、`.png`、`.bmp` 的 ASCII 大小写不敏感扩展名，按相对路径
+  `generic_string()` 字节序确定性排序。
+- 每次 `next()` 仅解码一张 `CV_8UC3` BGR 图片，成功序号从 0 连续递增；正常 EOS 以 success +
+  `nullopt` 表达，重复 EOS 保持相同行为。
+- 读取损坏、删除或不可访问图片时 fail-fast；output 保持原值且 cursor 不推进。创建失败也保持 factory
+  output 原值。
+- OpenCV `imgcodecs` 仅私有接入 runtime target；没有修改 M1/M2/M3、`main.cpp` 或引入 sink/Runner/
+  ORT/benchmark。
+- `test_directory_source` 覆盖目录筛选、symlink、FIFO、hidden file、排序、索引、解码、EOS 与失败原子性；
+  M4.2 定向/必要回归 8/8 PASS，Model Smoke OFF 全量 CTest 21/21 PASS，Model Smoke ON 全量 CTest
+  28/28 PASS。
+
+未完成：
+
+- ResultSink、SerialRunner、CLI 接入 main 和完整 application assembly 均未开始。
+
+阻塞问题：
+
+- 无 M4.3 前已知阻塞。
+
+下一步计划：
+
+- 仅执行 M4.3 ResultSink System；不得提前实现 SerialRunner、main assembly、实际 ORT 流程或 benchmark。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；本轮未运行 benchmark，未修改 `DECISIONS.md`，也未进入 M4.3。
+
 ---
 
 ## 8. 当前最近计划
@@ -1396,9 +1444,9 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.1 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.2 ImageSource and DirectorySource。
-5. M4 当前尚未开发 ImageSource、ResultSink、SerialRunner 或完整 application flow；按 M4.2～M4.5
-   task cards逐步执行。
+4. M4.0～M4.2 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.3 ResultSink System。
+5. M4 当前已开发 ImageSource/DirectorySource；ResultSink、SerialRunner 或完整 application flow 仍未开发，
+   后续仅按 M4.3～M4.5 task cards逐步执行。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
