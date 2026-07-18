@@ -165,6 +165,21 @@ target_link_libraries(edge_ai_postprocess
         edge_ai_core
 )
 
+add_library(edge_ai_runtime STATIC
+    src/cli.cpp
+    src/runtime_config.cpp
+)
+target_include_directories(edge_ai_runtime
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+target_link_libraries(edge_ai_runtime
+    PUBLIC
+        edge_ai_postprocess
+    PRIVATE
+        yaml-cpp
+)
+
 add_executable(edge_ai_infer
     src/main.cpp
 )
@@ -319,6 +334,62 @@ if(BUILD_TESTING)
     set_tests_properties(inference_engine_contract
         PROPERTIES
             LABELS "m2;inference;contract"
+    )
+
+    add_executable(test_runtime_config
+        tests/test_runtime_config.cpp
+    )
+    target_link_libraries(test_runtime_config
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_runtime_config
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME runtime_config
+        COMMAND test_runtime_config
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/runtime_config"
+    )
+    set_tests_properties(runtime_config
+        PROPERTIES
+            LABELS "m4;runtime;config"
+    )
+
+    add_executable(test_cli
+        tests/test_cli.cpp
+    )
+    target_link_libraries(test_cli
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_cli
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME cli_parser COMMAND test_cli)
+    set_tests_properties(cli_parser
+        PROPERTIES
+            LABELS "m4;runtime;cli"
+    )
+
+    add_executable(test_runtime_types
+        tests/test_runtime_types.cpp
+    )
+    target_link_libraries(test_runtime_types
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_runtime_types
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(NAME runtime_types COMMAND test_runtime_types)
+    set_tests_properties(runtime_types
+        PROPERTIES
+            LABELS "m4;runtime;contract"
     )
 
     add_executable(test_model_contract

@@ -1,6 +1,7 @@
 # M4 C++ ONNX Runtime Serial Baseline Execution Plan
 
-状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze 完成；M4.1 尚未开始。
+状态：M4 `IN_PROGRESS`；M4.0 Planning Freeze 和 M4.1 Runtime Contracts, Config and CLI Parser
+已完成；M4.2 尚未开始。
 
 M4 正式名称：**C++ ONNX Runtime Serial Baseline**。
 
@@ -539,6 +540,28 @@ SerialRunner public contract：`OnnxRuntimeEngine`、ORT Session、TensorRT 或 
 - **expected commit message**：`feat: define serial runtime contracts`。
 - **next step**：M4.2 ImageSource and DirectorySource。
 - **Gate**：无独立 Gate；完成定向/完整适用 CTest 和 scope audit 后停止。
+
+#### M4.1 实际结果（2026-07-18）
+
+M4.1 已完成，且没有进入 M4.2。实际新增：
+
+- `edge_ai_defect::runtime::RuntimeConfig` 与严格 `RuntimeConfigLoader`；Loader 只读 YAML、验证
+  schema/字段并解析路径，不加载 model、不初始化 Engine、不打开目录或 sink；
+- `FrameTimings`、`RunMetadata`、`FrameResult`、`RunSummary` runtime value contracts；
+- `CliAction`、`CliOptions` 与 `parse_cli()`；parser 只接受 `--config <runtime.yaml>` 或单独
+  `--help`，不返回 process exit code；
+- 独立 `edge_ai_runtime` static target。它 public 依赖既有 postprocess value contracts，并 private
+  使用既有 yaml-cpp；没有改变 `edge_ai_core`、M2 Engine 或 M3 PostProcessor 的 public contract。
+
+`test_runtime_config` 覆盖 valid config、missing section/key、unknown/duplicate key、wrong type、
+schema/backend/input、empty path、postprocess validation、timing type、config-CWD 与内部相对路径解析，
+以及 loader output atomicity。`test_cli` 覆盖 valid `--config`、missing/duplicate value、extra/positional/
+unsupported flag、standalone help、help-with-other 和 parser output atomicity；`test_runtime_types` 编译和
+验证四个运行数据合同。
+
+真实回归：Model Smoke ON 全量 CTest `27/27 PASS`；独立 Model Smoke OFF 全量 CTest `20/20 PASS`。
+Strict、ASan、UBSan 仍为 `Not configured`，未运行也未表述为 PASS。M4.1 无 Gate；下一步仅为
+M4.2 ImageSource and DirectorySource。
 
 ### M4.2 — ImageSource and DirectorySource
 

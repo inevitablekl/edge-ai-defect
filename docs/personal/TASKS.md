@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（仅 M4.0 planning complete）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.1 complete）
 ```
 
 M2 状态：
@@ -89,15 +89,17 @@ M3 状态：
 M4 状态：
 
 - M4.0 Planning Freeze：complete。
-- M4.1 Runtime Contracts, Config and CLI Parser：pending，尚未开始。
-- M4.2～M4.7：pending。
-- M4 尚未开发任何 production code；当前只完成仓库审计、架构/合同、任务卡和 Gate 计划固化。
+- M4.1 Runtime Contracts, Config and CLI Parser：complete。
+- M4.2 ImageSource and DirectorySource：pending，尚未开始。
+- M4.3～M4.7：pending。
+- M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；尚未开发
+  ImageSource、ResultSink、SerialRunner 或完整 application assembly。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
 下一阶段：
 
 ```text
-M4.1 Runtime Contracts, Config and CLI Parser
+M4.2 ImageSource and DirectorySource
 ```
 
 当前主线：
@@ -1332,6 +1334,57 @@ NEU-DET
 - M4 基础 `FrameTimings` 不属于正式 benchmark；完整 Level C、Profiler 和 ORT 性能基线属于 M5。
 - 本轮不运行 CTest，不执行 `git push`。
 
+#### M4.1 Runtime Contracts, Config and CLI Parser
+
+当前工作：
+
+- 实现 runtime value contracts、strict YAML `RuntimeConfigLoader` 和最小 CLI parser；不实现
+  ImageSource、ResultSink、SerialRunner 或真实 application flow。
+
+修改文件：
+
+- `include/edge_ai_defect/runtime/runtime_types.hpp`
+- `include/edge_ai_defect/runtime/runtime_config.hpp`
+- `include/edge_ai_defect/runtime/cli.hpp`
+- `src/runtime_config.cpp`
+- `src/cli.cpp`
+- `tests/test_runtime_config.cpp`
+- `tests/test_cli.cpp`
+- `tests/test_runtime_types.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M4_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- RuntimeConfig schema version 1 严格要求全部 section/field，拒绝 unknown/duplicate key、缺失字段、
+  错误 mapping/scalar type、非法 backend/input type 与空 path；内部相对路径相对配置文件目录解析并
+  `lexically_normal()`。
+- Loader 只解析、验证和解析路径；不会加载 model、初始化 Engine、打开目录或创建 sink；全部 failure
+  保持 caller RuntimeConfig 原值。
+- CLI 只接受 `edge_ai_defect --config <runtime.yaml>` 或单独 `edge_ai_defect --help` 的参数语义；
+  library parser 返回 `Status` 和 action，不处理 process exit code。
+- 新增 `FrameTimings`、`RunMetadata`、`FrameResult`、`RunSummary`，并保持 M3 Detection/
+  PostprocessConfig value contracts 的既有定义。
+- Model Smoke ON 全量 CTest：27/27 PASS；独立 Model Smoke OFF 全量 CTest：20/20 PASS。
+
+未完成：
+
+- ImageSource、DirectorySource、ResultSink、SerialRunner、main application assembly 和 actual M4
+  serial runtime smoke 均未开始。
+
+阻塞问题：
+
+- 无 M4.2 前已知阻塞。
+
+下一步计划：
+
+- 仅执行 M4.2 ImageSource and DirectorySource；不得提前创建 ResultSink、SerialRunner 或完整 main。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；没有 benchmark、TensorRT、CUDA、Pipeline、ROS2 或图片读取实现。
+
 ---
 
 ## 8. 当前最近计划
@@ -1343,8 +1396,9 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0 planning 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.1 Runtime Contracts, Config and CLI Parser。
-5. M4 当前尚未开发 production code；正式 `SerialRunner`、应用闭环按 M4.1～M4.5 task cards 逐步执行。
+4. M4.0～M4.1 已完成，M4 为 `IN_PROGRESS`；下一任务仅为 M4.2 ImageSource and DirectorySource。
+5. M4 当前尚未开发 ImageSource、ResultSink、SerialRunner 或完整 application flow；按 M4.2～M4.5
+   task cards逐步执行。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
 
 ---
