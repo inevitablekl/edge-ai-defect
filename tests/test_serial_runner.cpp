@@ -75,14 +75,22 @@ core::HostTensor raw_output(bool valid = true) {
     return output;
 }
 
+core::HostTensor raw_output_without_detections() {
+    return {{core::TensorDataType::kFloat32, core::TensorLayout::kBcn, {1, 10, 8400}},
+            std::vector<float>(10U * 8400U, 0.0F)};
+}
+
 class FakeSource final : public runtime::ImageSource {
 public:
     struct Step {
         core::Status status = core::Status::success();
         std::optional<runtime::ImageItem> item;
     };
-    explicit FakeSource(std::vector<Step> steps) : steps_(std::move(steps)) {}
+    explicit FakeSource(std::vector<Step> steps,
+                        std::vector<std::string>* event_log = nullptr)
+        : steps_(std::move(steps)), event_log_(event_log) {}
     core::Status next(std::optional<runtime::ImageItem>* output) override {
+        if (event_log_ != nullptr) event_log_->push_back("source.next");
         ++calls;
         if (output == nullptr) return core::Status::failure(core::ErrorCode::kInvalidArgument, "null output");
         if (cursor_ == steps_.size()) { *output = std::nullopt; return core::Status::success(); }
@@ -95,6 +103,7 @@ public:
 private:
     std::vector<Step> steps_;
     std::size_t cursor_ = 0;
+    std::vector<std::string>* event_log_ = nullptr;
 };
 
 FakeSource::Step success_step(runtime::ImageItem item) {
@@ -103,10 +112,13 @@ FakeSource::Step success_step(runtime::ImageItem item) {
 
 class FakeEngine final : public inference::IInferenceEngine {
 public:
+    explicit FakeEngine(std::vector<std::string>* event_log = nullptr)
+        : event_log_(event_log) {}
     core::Status initialize(const model::ModelContract&, const std::filesystem::path&) override {
         return core::Status::success();
     }
     core::Status run(const core::HostTensor& input, core::HostTensor* output) override {
+        if (event_log_ != nullptr) event_log_->push_back("engine.run");
         ++calls;
         received_inputs.push_back(input.info);
         if (!status.ok()) return status;
@@ -117,19 +129,25 @@ public:
     core::HostTensor output_tensor = raw_output();
     int calls = 0;
     std::vector<core::TensorInfo> received_inputs;
+    std::vector<std::string>* event_log_ = nullptr;
 };
 
 class RecordingSink final : public runtime::IResultSink {
 public:
+    explicit RecordingSink(std::vector<std::string>* event_log = nullptr)
+        : event_log_(event_log) {}
     core::Status begin_run(const runtime::RunMetadata&) override {
+        if (event_log_ != nullptr) event_log_->push_back("sink.begin_run");
         calls.push_back("begin"); ++begin_calls; return begin_status;
     }
     core::Status write_frame(const runtime::FrameResult& frame) override {
+        if (event_log_ != nullptr) event_log_->push_back("sink.write_frame");
         calls.push_back("write"); ++write_calls;
         if (!write_status.ok()) return write_status;
         frames.push_back(frame); return core::Status::success();
     }
     core::Status end_run(const runtime::RunSummary& value) override {
+        if (event_log_ != nullptr) event_log_->push_back("sink.end_run");
         calls.push_back("end"); ++end_calls; received_summary = value; return end_status;
     }
     core::Status begin_status = core::Status::success();
@@ -141,6 +159,7 @@ public:
     std::vector<std::string> calls;
     std::vector<runtime::FrameResult> frames;
     runtime::RunSummary received_summary;
+    std::vector<std::string>* event_log_ = nullptr;
 };
 
 bool tensor_info_equal(const core::TensorInfo& left, const core::TensorInfo& right) {
@@ -170,12 +189,15 @@ void expect_failure_context(TestContext& context, const std::string& name,
 }
 
 void test_success_and_timing(TestContext& context) {
-    FakeSource source({success_step(image(0, "frame.jpg", 8, 6)), success_step(image(1, "next.png", 5, 4))});
+    std::vector<std::string> event_log;
+    FakeSource source({success_step(image(0, "frame.jpg", 8, 6)),
+                       success_step(image(1, "next.png", 5, 4))},
+                      &event_log);
     preprocess::Preprocessor preprocessor;
     core::TensorInfo input_info = valid_input_info();
-    FakeEngine engine;
+    FakeEngine engine(&event_log);
     postprocess::PostProcessor postprocessor;
-    RecordingSink sink;
+    RecordingSink sink(&event_log);
     runtime::SerialRunner runner(source, preprocessor, input_info, engine, postprocessor, sink);
     input_info.layout = core::TensorLayout::kBcn;
     runtime::RunSummary summary = sentinel_summary();
@@ -186,6 +208,11 @@ void test_success_and_timing(TestContext& context) {
                    "staged summary", "sink received wrong counts");
     context.expect(sink.calls == std::vector<std::string>{"begin", "write", "write", "end"},
                    "stage order", "sink ordering wrong");
+    context.expect(event_log == std::vector<std::string>{
+                       "sink.begin_run", "source.next", "engine.run", "sink.write_frame",
+                       "source.next", "engine.run", "sink.write_frame", "source.next",
+                       "sink.end_run"},
+                   "cross-component order", "source/engine/sink ordering wrong");
     context.expect(source.calls == 3 && engine.calls == 2 && sink.frames.size() == 2,
                    "multi-frame calls", "unexpected call count");
     context.expect(engine.received_inputs.size() == 2 &&
@@ -222,6 +249,81 @@ void test_success_and_timing(TestContext& context) {
     context.expect(disabled_runner.run(metadata(false), &disabled_summary).ok(), "timing disabled run", "must succeed");
     context.expect(disabled_sink.frames.size() == 1 && !disabled_sink.frames[0].timings.has_value(),
                    "timing disabled", "must not create zero timing placeholder");
+}
+
+void test_null_summary(TestContext& context) {
+    std::vector<std::string> event_log;
+    FakeSource source({success_step(image(0, "frame.jpg"))}, &event_log);
+    preprocess::Preprocessor preprocessor;
+    const core::TensorInfo input_info = valid_input_info();
+    FakeEngine engine(&event_log);
+    postprocess::PostProcessor postprocessor;
+    RecordingSink sink(&event_log);
+    runtime::SerialRunner runner(source, preprocessor, input_info, engine, postprocessor, sink);
+
+    const core::Status status = runner.run(metadata(), nullptr);
+    context.expect(!status.ok() && status.code() == core::ErrorCode::kInvalidArgument,
+                   "null summary", "must return InvalidArgument");
+    context.expect(status.message().find("summary") != std::string::npos &&
+                       status.message().find("null") != std::string::npos,
+                   "null summary", "message must identify null summary");
+    context.expect(event_log.empty() && source.calls == 0 && engine.calls == 0 &&
+                       sink.begin_calls == 0 && sink.write_calls == 0 && sink.end_calls == 0,
+                   "null summary", "must fail before every observable side effect");
+}
+
+void test_source_failure_after_success(TestContext& context) {
+    std::vector<std::string> event_log;
+    FakeSource source({
+                          success_step(image(0, "frame.jpg")),
+                          {core::Status::failure(core::ErrorCode::kIoError,
+                                                 "injected source after first frame"),
+                           std::nullopt},
+                          success_step(image(2, "must_not_be_read.jpg")),
+                      },
+                      &event_log);
+    preprocess::Preprocessor preprocessor;
+    const core::TensorInfo input_info = valid_input_info();
+    FakeEngine engine(&event_log);
+    postprocess::PostProcessor postprocessor;
+    RecordingSink sink(&event_log);
+    runtime::SerialRunner runner(source, preprocessor, input_info, engine, postprocessor, sink);
+    runtime::RunSummary summary = sentinel_summary();
+
+    const core::Status status = runner.run(metadata(), &summary);
+    context.expect(!status.ok() && status.message().find("source") != std::string::npos &&
+                       status.message().find("injected source after first frame") != std::string::npos,
+                   "source failure after success", "source context or bottom-level message missing");
+    context.expect(source.calls == 2 && engine.calls == 1 && sink.write_calls == 1 &&
+                       sink.end_calls == 0 && sink.frames.size() == 1,
+                   "source failure after success", "must stop after the failed second source read");
+    context.expect(summary_equal(summary, sentinel_summary()), "source failure after success",
+                   "caller summary must not commit partial progress");
+    context.expect(event_log == std::vector<std::string>{
+                       "sink.begin_run", "source.next", "engine.run", "sink.write_frame",
+                       "source.next"},
+                   "source failure after success", "unexpected later-stage side effect");
+}
+
+void test_zero_detection_frame(TestContext& context) {
+    FakeSource source({success_step(image(0, "frame.jpg"))});
+    preprocess::Preprocessor preprocessor;
+    const core::TensorInfo input_info = valid_input_info();
+    FakeEngine engine;
+    engine.output_tensor = raw_output_without_detections();
+    postprocess::PostProcessor postprocessor;
+    RecordingSink sink;
+    runtime::SerialRunner runner(source, preprocessor, input_info, engine, postprocessor, sink);
+    runtime::RunSummary summary = sentinel_summary();
+
+    const core::Status status = runner.run(metadata(), &summary);
+    context.expect(status.ok(), "zero Detection frame", status.message());
+    context.expect(sink.frames.size() == 1 && sink.frames[0].detections.empty(),
+                   "zero Detection frame", "frame must be written with no Detections");
+    context.expect(summary_equal(summary, {1, 0}) &&
+                       summary_equal(sink.received_summary, {1, 0}) &&
+                       sink.write_calls == 1 && sink.end_calls == 1,
+                   "zero Detection summary", "zero detections must still count as one image");
 }
 
 void test_fail_fast(TestContext& context) {
@@ -289,7 +391,9 @@ void test_injected_tensor_failure(TestContext& context) {
     const core::Status status = runner.run(metadata(), &summary);
     context.expect(!status.ok() && status.message().find("preprocess") != std::string::npos &&
                        status.message().find("sequence_index=0") != std::string::npos &&
-                       status.message().find("frame.jpg") != std::string::npos,
+                       status.message().find("frame.jpg") != std::string::npos &&
+                       status.message().find("model_input_info.layout") != std::string::npos &&
+                       status.message().find("NCHW") != std::string::npos,
                    "injected invalid TensorInfo", "preprocess context missing");
     context.expect(engine.calls == 0 && sink.write_calls == 0 && sink.end_calls == 0 &&
                        summary_equal(summary, sentinel_summary()),
@@ -301,6 +405,9 @@ void test_injected_tensor_failure(TestContext& context) {
 int main() {
     TestContext context;
     test_success_and_timing(context);
+    test_null_summary(context);
+    test_source_failure_after_success(context);
+    test_zero_detection_frame(context);
     test_fail_fast(context);
     test_injected_tensor_failure(context);
     if (context.failures() != 0) {

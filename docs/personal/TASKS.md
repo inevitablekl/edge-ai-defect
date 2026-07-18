@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.4 complete；Shallow Gate pending）
+M0、M1、M2、M3 已关闭；M4 IN_PROGRESS（M4.0～M4.4 complete；Shallow Gate first FAIL，remediation complete，rerun pending）
 ```
 
 M2 状态：
@@ -92,7 +92,7 @@ M4 状态：
 - M4.1 Runtime Contracts, Config and CLI Parser：complete。
 - M4.2 ImageSource and DirectorySource：complete。
 - M4.3 ResultSink System：complete。
-- M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：pending。
+- M4.4 SerialRunner and Basic Timing：complete；M4.4 Shallow Gate：first FAIL，test/documentation remediation complete，rerun pending。
 - M4.5～M4.7：pending。
 - M4.1 已新增 runtime contracts、strict YAML RuntimeConfigLoader、CLI parser 和对应测试；M4.2 已新增
   deterministic non-recursive DirectorySource；M4.3 已新增 deterministic Console/JSON/Composite ResultSink。
@@ -102,7 +102,7 @@ M4 状态：
 下一阶段：
 
 ```text
-M4.4 Shallow Gate（只读）
+M4.4 Shallow Gate rerun（只读）
 ```
 
 当前主线：
@@ -1526,13 +1526,19 @@ NEU-DET
   detection 顺序和 TensorInfo 注入/值副本；M4.4 runtime 定向 6/6 PASS，Model Smoke OFF 全量 CTest
   23/23 PASS，Model Smoke ON 全量 CTest 30/30 PASS。
 
-未完成：
+#### M4.4 Shallow Gate remediation
 
-- M4.4 Shallow Gate、main/CLI application assembly、实际 ORT runtime smoke 均未开始；M4.5 仍 pending。
+当前工作：
 
-阻塞问题：
+- 首次只读 Shallow Gate 的 production 审查 PASS、总体 Gate FAIL；阻断原因为 SerialRunner 测试证据缺少
+  null summary、一帧成功后的 source failure 和 injected TensorInfo 底层错误保留断言，另有 null summary 覆盖的文档漂移。
 
-- 无；下一步必须先执行只读 M4.4 Shallow Gate。
+已完成：
+
+- 在既有 `test_serial_runner` 中补齐 null summary、partial-progress source failure、M1 底层 TensorInfo 错误保留、
+  zero-Detection summary，以及 source/engine/sink 共享 test-only event log；未修改任何 production contract。
+- M4.4 test/documentation remediation complete；Shallow Gate rerun pending；main/CLI application assembly 与实际 ORT
+  runtime smoke 仍未开始，M4.5 仍 pending。
 
 备注：
 
@@ -1549,7 +1555,7 @@ NEU-DET
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
-4. M4.0～M4.4 已完成，M4 为 `IN_PROGRESS`；下一任务必须为只读 M4.4 Shallow Gate。
+4. M4.0～M4.4 已完成，M4 为 `IN_PROGRESS`；M4.4 Shallow Gate 首次 FAIL 的 remediation 已完成，下一任务必须为只读 rerun。
 5. M4 当前已开发 ImageSource/DirectorySource/ResultSink/SerialRunner；完整 application flow 仍未开发，
    M4.5 必须等待 Shallow Gate PASS 后的独立任务。
 6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
