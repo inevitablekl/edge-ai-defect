@@ -269,6 +269,33 @@ if(BUILD_TESTING)
             LABELS "m3;postprocess;process"
     )
 
+    add_executable(test_postprocessor_reference
+        tests/test_postprocessor_reference.cpp
+    )
+    target_link_libraries(test_postprocessor_reference
+        PRIVATE
+            edge_ai_postprocess
+            yaml-cpp
+    )
+    set_target_properties(test_postprocessor_reference
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME postprocessor_reference
+        COMMAND test_postprocessor_reference
+            --data-root
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/postprocessor_reference"
+            --cpp-output-root
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/postprocessor_only"
+            --report-root
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/postprocessor_only"
+    )
+    set_tests_properties(postprocessor_reference
+        PROPERTIES
+            LABELS "m3;postprocess;reference;evidence"
+    )
+
     add_executable(test_inference_engine
         tests/test_inference_engine.cpp
     )

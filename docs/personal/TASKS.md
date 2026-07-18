@@ -59,7 +59,7 @@
 当前阶段：
 
 ```text
-M0、M1、M2 已关闭；M3.0～M3.4 已完成，等待 M3.4 shallow Gate
+M0、M1、M2 已关闭；M3.0～M3.5 已完成，等待 M3 Deep Gate
 ```
 
 M2 状态：
@@ -79,12 +79,14 @@ M3 状态：
 - M3.2 candidate decode：complete。
 - M3.3 IoU / class-aware NMS：complete。
 - M3.4 inverse LetterBox / clipping / public process integration：complete。
-- M3.4 shallow Gate：pending。
+- M3.4 shallow Gate：complete。
+- M3.5 PostProcessor-only Validation：complete。
+- M3 Deep Gate：pending。
 
 下一阶段：
 
 ```text
-M3.4 shallow Gate
+M3 Deep Gate
 ```
 
 当前主线：
@@ -1228,6 +1230,55 @@ NEU-DET
 - 执行 M3.4 shallow Gate，只读审查范围、public process 行为、reference parity 语义、测试
   证据和 Git cleanliness；通过后才启动 M3.5。
 
+#### M3.5 PostProcessor-only Validation
+
+当前工作：
+
+- 建立独立 NumPy Python reference、deterministic synthetic BCN assets、public C++
+  `PostProcessor::process()` TSV comparison 和 tracked provenance；不调用 ORT/Preprocessor/
+  Engine，也不将其称为 Level C。
+
+修改文件：
+
+- `tests/data/postprocessor_reference/`
+- `results/validation/postprocessor_only/`
+- `tools/validation/generate_postprocessor_reference_assets.py`
+- `tools/validation/postprocessor_reference.py`
+- `tools/validation/generate_postprocessor_reference_provenance.py`
+- `tests/test_postprocessor_reference.cpp`
+- `CMakeLists.txt`
+- `docs/personal/M3_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 固定 no-padding、M1 horizontal odd-padding 和 M1 vertical odd-padding 三个 case；覆盖
+  decode/argmax/threshold/order、class-aware NMS、candidate provenance、metadata actual padding、
+  continuous clipping 与 post-clip zero-width/zero-height retain。
+- Python reference 仅使用 standard library/NumPy，显式复现 C++ float32 decode/NMS arithmetic、
+  double transform promotion 与最终 float32 cast；不调用 Ultralytics 后处理或 C++ detail API。
+- C++ validator 只调用 public `PostProcessor::process()`，逐项比较完整 ordered Detection；三个
+  case 的 count/class/order/candidate index/finite 均一致，confidence 和 bbox max/mean abs
+  均为 0，满足 `1e-6` / `1e-4` 冻结阈值。
+- 生成器/reference 在独立临时目录重复运行，raw 与 golden SHA256 全部与 tracked assets
+  一致；provenance 记录环境、Git、命令、阈值和所有 evidence 文件 SHA256。
+- Model Smoke OFF configure/build 成功；M3/core/reference 定向 CTest 6/6 PASS，完整 CTest
+  16/16 PASS。strict、ASan、UBSan 仍为 `Not configured`。
+
+未完成：
+
+- M3 Deep Gate 与 M3 closeout；未进入 Runner、Pipeline、benchmark、TensorRT、CUDA 或
+  Serial Baseline/Level C。
+
+阻塞问题：
+
+- 无 M3 Deep Gate 前代码阻塞。strict 与 ASan/UBSan 未配置，不能记录为通过。
+
+下一步计划：
+
+- 执行 M3 Deep Gate，只读审查 M3.0～M3.5 scope、production semantics、independent evidence、
+  provenance、regression 和 remaining scope；通过后才考虑 M3 closeout。
+
 ---
 
 ## 8. 当前最近计划
@@ -1238,8 +1289,7 @@ NEU-DET
 2. M2 已正式关闭：production `OnnxRuntimeEngine` 已具备 contract-validated
    CPU Session initialization、synchronous `HostTensor` inference、boundary tests 和
    Level B Python/C++ raw-output evidence。
-3. M3.0～M3.4 已完成；下一任务为 M3.4 shallow Gate，通过后才进入 M3.5
-   PostProcessor-only Python/C++ validation。
+3. M3.0～M3.5 已完成；下一任务为 M3 Deep Gate，通过后才考虑 M3 closeout。
    M2/M3 当前均不包含完整 Serial Baseline 或性能结论。
 4. 正式 `SerialRunner`、完整 Serial Baseline 和性能实验继续按后续阶段执行。
 5. TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
