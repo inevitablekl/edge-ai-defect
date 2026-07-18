@@ -879,6 +879,26 @@ M4 不包含 Python/C++ Level C parity、formal Profiler、warmup、FPS/P50/P95/
 Pipeline、CUDA preprocessing 或 GPU NMS。下一阶段仅为 **M5 Level C and ORT Baseline Planning**，必须由独立任务先
 制定并冻结 M5 执行计划；M5 尚未开始。
 
+#### M5 Pre-Planning Discovery Audit（2026-07-19）
+
+M4 closeout 后完成了一次只读 M5 pre-planning discovery audit。该审计未创建 M5 执行计划，未修改 production、tests、
+CMake、配置 schema、模型或正式 validation/benchmark evidence，也未开始 M5 implementation。
+
+审计确认：冻结 ONNX、ModelContract、M4 application JSON schema、`candidate_index` 语义和 M2 ORT SessionOptions
+可直接作为 M5 输入事实；现有 Python preprocess、ORT raw-output 和 postprocess helper 可按
+`Reusable with M5 harness changes` 复用，但仓库尚无完整的图片到 Detection 的 Level C wrapper。C++ application
+接口不需要为 M5 增加修改。
+
+本地 validation split discovery 扫描覆盖六类、多 Detection 和近阈值样本，但在 confidence 0.25 下仅发现一张零
+Detection 图片；Git 中没有 tracked 原始图片，也没有找到可直接复现 NEU-DET 图片的 dataset archive。因此正式 M5
+仍需冻结 portable corpus、资产导入/许可、第二张零 Detection 的选择规则、非方形派生图策略和 evidence 保留策略。
+
+1000 帧 size probe 仅用于规划：raw JSON 约 1.21 MB，`gzip -n` 约 51.9 KB，峰值 RSS 164,824 KiB；未形成任何
+latency/FPS/benchmark 结论，JsonSink 缓存暂不构成 M5 blocker。
+
+本审计不新增 DECISIONS.md 决策，D028～D033 保持不变。M5.0 documentation-only planning 可以开始，但 M5 仍为
+PENDING，不能表述为 M5 started 或 benchmark started。
+
 ## 10. Gate 策略
 
 ```text

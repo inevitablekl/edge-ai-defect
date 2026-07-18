@@ -59,7 +59,8 @@
 当前阶段：
 
 ```text
-M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。M5 Level C and ORT Baseline Planning：PENDING。
+M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
+M5 Pre-Planning Discovery Audit 已完成，但 M5 Level C and ORT Baseline Planning 仍为 PENDING。
 ```
 
 M2 状态：
@@ -105,7 +106,7 @@ M4 状态：
 下一阶段：
 
 ```text
-M5 Level C and ORT Baseline Planning：PENDING（先制定并冻结 M5 执行计划；M5 implementation、Level C 和 benchmark 均未开始）
+M5 Level C and ORT Baseline Planning：PENDING（Pre-Planning Discovery Audit 已完成；仍需先制定并冻结 M5 执行计划；M5 implementation、Level C 和 benchmark 均未开始）
 ```
 
 当前主线：
@@ -1659,6 +1660,34 @@ NEU-DET
 备注：
 
 - `DECISIONS.md` 未修改；D028～D033 与最终实现一致。本轮未重新运行 Gate、CTest 或 benchmark。
+
+### 2026-07-19 - M5 Pre-Planning Discovery Audit
+
+当前工作：
+
+- 完成只读 M5 pre-planning discovery；未创建 `M5_EXECUTION_PLAN.md`，未修改 production、tests、CMake、配置 schema、模型或正式 validation/benchmark evidence。
+- Discovery 临时输出和独立 `build-m5-discovery` 已在任务结束时清理；source worktree 保持 clean。
+
+已确认：
+
+- 冻结 ONNX、ModelContract、C++ application JSON schema、`candidate_index` 语义和 M2 ORT SessionOptions 均可作为 M5 输入事实；不需要修改 M4 production 接口。
+- 现有 Python 能力可按“`Reusable with M5 harness changes`”复用：preprocess、ORT raw output 和 postprocess helper 分层存在，但尚无完整的图片到 Detection 的 Level C wrapper。
+- 本地 validation split 的 360 张图片可覆盖六类、多 Detection 和近阈值样本；当前 confidence 0.25 扫描仅发现 1 张零 Detection，尚不能满足发现任务期望的至少 2 张零 Detection。
+- Git 中没有 tracked 原始图片，也没有找到可直接复现 NEU-DET 图片的 dataset archive；资产许可、portable corpus 和确定性导入仍需在 M5.0 明确。
+- 1000 帧非正式 JSON size probe 成功：约 1.21 MB raw、约 51.9 KB `gzip -n`、峰值 RSS 164,824 KiB；该结果不是 benchmark，不形成 latency/FPS 结论，JsonSink 缓存暂不构成 blocker。
+
+未决规划输入：
+
+- Level C 第二张零 Detection 的选择规则；
+- 12 张原图、20 张 benchmark 原图及四张派生图的 portable/tracked 策略；
+- 派生图格式和确定性生成规则；
+- 完整 application JSON、timings 和压缩 evidence 的保留策略。
+
+状态结论：
+
+- M5.0 documentation-only planning 具备开始条件；M5 implementation、Level C、formal Profiler 和 benchmark 仍未开始。
+- 本审计不新增 DECISIONS.md 决策；D028～D033 保持不变。
+- 下一步仅为独立 M5.0 计划制定与人工未决项冻结，不得将本审计表述为 M5 started 或 benchmark started。
 
 ---
 
