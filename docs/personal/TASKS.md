@@ -1926,6 +1926,29 @@ NEU-DET
 - M5.3：`COMPLETE`；M5.4：`PENDING`；M5 overall：`IN_PROGRESS`。
 - 下一步为 M5.4 Formal WSL2 ORT CPU Baseline Execution；本轮未运行 benchmark、未进入 M5.4。
 
+#### M5.3 formal-execution remediation
+
+当前工作：
+
+- M5.4 能力预审发现初始 M5.3 CLI 仍为 `formal execution is reserved for M5.4`；本轮未运行 Pilot、未生成部分
+  benchmark Evidence，M5.4 保持 `PENDING`。
+- 已补齐显式互斥的 `--check-only`、`--development-smoke`、`--formal` 模式和可注入正式 orchestrator：preflight、
+  Pilot、正式 N、五个独立 application run、四次 30 秒等待、CPU affinity、run 分析、aggregate、environment、
+  provenance、commands、gzip、SHA、25 MiB 检查和原子 Evidence staging。
+
+验证结果：
+
+- fake application 端到端 formal 测试通过：六次独立 invocation、五个 formal run、Pilot 不进入 aggregate、四次等待、
+  五份 summary、aggregate、environment/provenance、gzip、SHA 和原子发布均验证；测试未真实等待 30 秒。
+- Model Smoke OFF Release：定向 `7/7 PASS`、全量 `31/31 PASS`；ON Release：定向 `7/7 PASS`、全量 `39/39 PASS`。
+- `NON-FORMAL DEVELOPMENT SMOKE` 通过 application/analyzer/summary/gzip 功能验证；未记录性能数字。
+
+状态结论：
+
+- M5.3 formal-execution remediation：`COMPLETE`；M5.3：`COMPLETE`；M5.4：`PENDING`。
+- 正式 benchmark 和正式 Evidence 仍未执行/生成；Strict、ASan、UBSan 为 `Not configured`。
+- 下一步可基于本轮新 source commit 重新执行 M5.4；原候选 Evidence ID `20260719_fed96c1` 不具备正式效力。
+
 ---
 
 ## 8. 当前最近计划

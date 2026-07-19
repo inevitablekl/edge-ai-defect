@@ -377,7 +377,8 @@ def set_cpu_affinity(cpu: int, allowed: Iterable[int] | None = None) -> set[int]
 
 def collect_environment(*, selected_cpu: int | None = None, binary_sha256: str | None = None,
                         model_sha256: str | None = None, model_contract_sha256: str | None = None,
-                        runtime_config_sha256: str | None = None) -> dict[str, Any]:
+                        runtime_config_sha256: str | None = None,
+                        effective_affinity: Iterable[int] | None = None) -> dict[str, Any]:
     try:
         allowed = sorted(os.sched_getaffinity(0))
     except (AttributeError, OSError):
@@ -392,7 +393,8 @@ def collect_environment(*, selected_cpu: int | None = None, binary_sha256: str |
             "OS": platform.platform(), "WSL_kernel": platform.release(), "architecture": platform.machine(),
             "CPU_model": platform.processor() or "unknown", "visible_logical_cpu_count": os.cpu_count(),
             "allowed_affinity_before": allowed, "selected_cpu": selected_cpu,
-            "effective_affinity": sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else [],
+            "effective_affinity": sorted(set(effective_affinity)) if effective_affinity is not None
+            else sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else [],
             "memory_total_bytes": memory, "python_version": platform.python_version(),
             "python_executable_semantics": ".venv/bin/python", "binary_sha256": binary_sha256,
             "model_sha256": model_sha256, "model_contract_sha256": model_contract_sha256,

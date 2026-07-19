@@ -804,3 +804,31 @@ M5.4 baseline，也未在 `results/benchmark/ort_cpu/` 发布 evidence。
 
 - M5.2 保持 `COMPLETE`，M5.3 `COMPLETE`，M5.4 Formal WSL2 ORT CPU Baseline Execution `PENDING`。
 - M5 overall 仍为 `IN_PROGRESS`，下一步仅为 M5.4；不得把 development smoke 写作正式性能结论。
+
+## 22. M5.3 formal-execution remediation 实际结果（2026-07-19）
+
+M5.3 初始实现提交 `fed96c177739453aafab16edbae0de525b60ba9a` 曾将正式 CLI 保留为
+`formal execution is reserved for M5.4`。M5.4 能力预审因此停止；当时未执行 Pilot、未创建部分正式
+benchmark Evidence，候选 Evidence ID `20260719_fed96c1` 不具备正式效力。
+
+本轮仅完成 M5.3 formal-execution capability remediation：
+
+- `run_m5_ort_cpu_baseline.py` 新增显式互斥的 `--check-only`、`--development-smoke`、`--formal` 模式；不提供模式或
+  同时提供多个模式均为 CLI 错误，正式协议常量仍不可由 CLI 覆盖。
+- `--formal` 已串联 preflight、单周期及 Pilot workload、独立 Pilot、Pilot 解析和正式 N 计算、固定 formal workload、
+  五次独立 application invocation、四次 30 秒等待、CPU affinity、每 run 分析、aggregate、environment/provenance、
+  commands、deterministic gzip、SHA 校验、25 MiB 检查和 evidence 原子发布。
+- 正式路径支持 subprocess、sleep、clock、preflight、corpus preparation、workload、environment、日期等依赖注入；
+  新增 fake application 端到端测试覆盖六次独立调用、五个 run、Pilot 排除、四次等待、五份 summary、aggregate、
+  environment/provenance、gzip、SHA 和原子 staging。测试不真实等待、不运行正式 500+ 帧。
+- Model Smoke OFF Release：定向 `7/7 PASS`，全量 `31/31 PASS`；Model Smoke ON Release：定向 `7/7 PASS`，全量
+  `39/39 PASS`。另完成一次 `NON-FORMAL DEVELOPMENT SMOKE`，仅验证 application exit、timing/analyzer、summary 和
+  gzip 功能，不记录任何性能数值。
+
+本轮没有执行正式 benchmark、没有生成 `results/benchmark/ort_cpu/` Evidence，没有修改 production、M5 corpus、Level C
+Evidence 或正式协议。Strict、ASan、UBSan 仍为 `Not configured`。
+
+状态结论：
+
+- M5.3 formal-execution remediation：`COMPLETE`；M5.3：`COMPLETE`；M5.4：`PENDING`。
+- M5 overall：`IN_PROGRESS`；下一步可在本轮新提交的 source commit 上重新执行 M5.4，重新计算 Evidence ID。
