@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成，但 M5 Level C and ORT Baseline Planning 仍为 PENDING。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS；M5.1 PENDING。
 ```
 
 M2 状态：
@@ -103,10 +103,25 @@ M4 状态：
   已新增 SerialRunner；M4.5 已将 main 替换为 actual application composition 并完成实际 ORT smoke。
 - Strict、ASan、UBSan：保持当前真实状态 `Not configured`。
 
+M5 状态：
+
+- M5.0 Planning Freeze：complete。
+- M5.1 Corpus Assets and Validation Contract：pending。
+- M5.2 Level C Reference, Comparator and Formal Validation：pending。
+- M5.2 Level C Gate：pending。
+- M5.3 Benchmark Harness and Offline Analyzer：pending。
+- M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
+- M5.5 Evidence Consolidation：pending。
+- M5.6 Deep Evidence Gate：pending。
+- M5.7 Documentation-Only Closeout：pending。
+- M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
+- Level C、正式 benchmark 和正式 M5 evidence：均未执行/未生成。
+- Strict、ASan、UBSan：保持 `Not configured`，不因 M5.0 改变。
+
 下一阶段：
 
 ```text
-M5 Level C and ORT Baseline Planning：PENDING（Pre-Planning Discovery Audit 已完成；仍需先制定并冻结 M5 执行计划；M5 implementation、Level C 和 benchmark 均未开始）
+M5.1 Corpus Assets and Validation Contract：PENDING（下一步唯一允许任务；不得进入 M5.2、正式 Level C 或 benchmark）
 ```
 
 当前主线：
@@ -1689,6 +1704,46 @@ NEU-DET
 - 本审计不新增 DECISIONS.md 决策；D028～D033 保持不变。
 - 下一步仅为独立 M5.0 计划制定与人工未决项冻结，不得将本审计表述为 M5 started 或 benchmark started。
 
+#### M5.0 Level C Validation and WSL2 ORT CPU Engineering Baseline Planning Freeze
+
+当前工作：
+
+- 以 `86fd46d16e8d579613001e7c99df19b9e59a2249` clean HEAD 为经人工确认的新起点，完成 M5.0 documentation-only planning freeze。
+- 不修改 production、tests、tools、CMake、RuntimeConfig schema、模型、配置、data 或 results，不进入 M5.1。
+
+修改文件：
+
+- `docs/personal/M5_EXECUTION_PLAN.md`
+- `docs/personal/EXPERIMENT_PLAN.md`
+- `docs/personal/DECISIONS.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 建立 M5 直接事实权威，冻结 M5.0～M5.7、M5.2 Level C Gate 和 M5.6 Deep Evidence Gate；M5 overall 转为 `IN_PROGRESS`，M5.0 COMPLETE。
+- 冻结 Python explicit ORT Reference、12 原图 + 4 runtime-derived BMP、20 原图 benchmark corpus、不提交 NEU-DET 图片的 portable asset 策略。
+- 冻结按 class 的确定性最大二分匹配，confidence tolerance `1e-4`、bbox tolerance `0.01 pixel`，以及 Python/C++ 各两次 byte-identical 和 16/16 PASS。
+- 冻结复用 M4 FrameTimings 的离线 benchmark：pilot 100/drop 20、formal warmup 50、measured >=500 且 >=30 秒、五个独立进程、30 秒间隔、最低允许 CPU affinity、Type 7、sample stddev 和 no outlier removal。
+- 冻结 Level C/benchmark evidence、完整 provenance、25 MiB retention 上限和失效规则；新增长期决策 D034～D039。
+- 修订 EXPERIMENT_PLAN，明确 M5 是 WSL2 x86_64 ONNX Runtime CPU Engineering Baseline；TensorRT、Pipeline、input-size 和 stability 延期到后续 Jetson 阶段。
+
+未完成：
+
+- M5.1 corpus manifests、导入/SHA 校验工具和 derived generator 尚未实现。
+- Level C Reference/Comparator、正式 Level C evidence、benchmark harness、正式 baseline 和 Deep Gate 均未开始。
+
+阻塞问题：
+
+- 无 M5.1 planning blocker；本地合法 `--dataset-root` 是 M5.1 执行输入，不是 Git 资产。
+
+下一步计划：
+
+- 仅执行 M5.1 Corpus Assets and Validation Contract；不得自动进入 M5.2，不得导入图片到 Git 或运行正式 Level C/benchmark。
+
+备注：
+
+- Strict、ASan、UBSan 仍为 `Not configured`；M5.0 未运行 build、CTest、Level C 或 benchmark，未生成正式 evidence。
+
 ---
 
 ## 8. 当前最近计划
@@ -1702,9 +1757,10 @@ NEU-DET
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
 4. M4.0～M4.7 已完成；M4.4 Shallow Gate rerun PASS，M4.6 第一次 Standard Final Gate FAIL 后 remediation complete，
    M4.6 Gate rerun PASS，M4 已 CLOSED。
-5. 下一阶段仅为 M5 Level C and ORT Baseline Planning：PENDING；必须先制定并冻结执行计划，M5 implementation、
-   Level C 与 benchmark 尚未开始。
-6. 完整 Level C、正式 Profiler 和 ORT 性能实验属于 M5；TensorRT、Pipeline、ROS2 和 Qt 当前不进入开发范围。
+5. M5.0 Planning Freeze 已完成，M5 overall 为 `IN_PROGRESS`；下一步且唯一允许任务为 M5.1 Corpus Assets and
+   Validation Contract。Level C、benchmark 和正式 evidence 尚未执行。
+6. M5 复用 M4 FrameTimings 并由离线 Python 工具统计，不新增 production Profiler；TensorRT、Pipeline、input-size、
+   stability、ROS2 和 Qt 不进入 M5，保留给后续 Jetson/TensorRT 阶段。
 
 ---
 

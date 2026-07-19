@@ -93,16 +93,18 @@ RTX 3090
 
 * 代码开发。
 * C++ 编译。
-* ONNX Runtime baseline 初步验证。
+* ONNX Runtime baseline 功能验证。
+* M5 WSL2 x86_64 ONNX Runtime CPU Engineering Baseline 采集。
 * 小规模功能测试。
 
-当前平台：
+当前记录环境：
 
 ```text
-GTX1050Ti
+WSL2 x86_64 / CPUExecutionProvider
 ```
 
-该平台不作为论文核心性能实验平台。
+M5 在该环境采集工程 baseline，用于复现当前 C++ Serial pipeline 的 CPU timing，不作为 Jetson/TensorRT
+论文核心性能或同硬件 speedup 依据。历史 GTX1050Ti 是开发机硬件背景，不是本 M5 CPU baseline backend。
 
 ---
 
@@ -136,7 +138,8 @@ ONNX Runtime C++ version: TBD
 
 * 使用 Python ONNX Runtime 完成 ONNX 可加载性、单次 inference smoke test 和 PyTorch / ONNX Runtime 数值一致性验证。
 * 使用 C++ ONNX Runtime 完成后续 baseline inference framework、preprocess / postprocess、Serial mode 和 Pipeline mode 的功能验证。
-* 当前 WSL2 开发环境不采集论文级 TensorRT、FPS、latency 或 GPU resource 数据。
+* M5 在当前 WSL2 x86_64 环境采集 ONNX Runtime CPU Engineering Baseline；该数据不是论文级 Jetson/TensorRT、GPU resource
+  或最终部署硬件性能数据。
 
 最终论文性能实验阶段：
 
@@ -205,7 +208,7 @@ Not measured yet
 
 ## 7. 通用实验配置项
 
-实验应由 YAML 配置驱动。
+部署行为应由 YAML 配置驱动；实验重复、warmup、measured frame 选择和统计由阶段专属 orchestrator 管理。
 
 配置项至少包括：
 
@@ -220,12 +223,13 @@ Not measured yet
 * NMS threshold
 * output directory
 * log directory
-* warmup frames
-* measured frames
 * pipeline queue size
 * pipeline drop policy
 * device name
 * precision mode
+
+M5 不修改 strict RuntimeConfig schema。M5 的 pilot、warmup、measured frames、run count、affinity 和 inter-run wait
+只属于离线 Python orchestrator；不得加入 runtime YAML、CLI override 或 production C++。
 
 ---
 
@@ -261,9 +265,15 @@ ms
 统计项：
 
 * average latency
+* minimum latency
+* maximum latency
 * p50 latency
 * p95 latency
-* max latency if needed
+* p99 latency
+* sample standard deviation
+
+M5 percentile 固定使用 Hyndman–Fan Type 7，sample standard deviation 使用 `n-1`。后续 Jetson/TensorRT
+实验采用何种统计协议须在对应阶段再次冻结，不得把未声明的库默认值混入 M5。
 
 ---
 
@@ -314,16 +324,23 @@ Not available
 
 warmup frames 不进入最终统计。
 
-建议初始值：
+M5 WSL2 ORT CPU Engineering Baseline 当前冻结值：
 
 ```text
-warmup_frames: 20
-measured_frames: 500
+pilot_frames: 100
+pilot_discard_frames: 20
+formal_warmup_frames: 50
+formal_measured_frames: at least 500
+formal_measured_pre_sink_duration: at least 30000 ms
+formal_process_count: 5
+inter_run_wait: 30 seconds
 ```
 
-最终数值可根据 Jetson 实际性能和测试输入长度调整。
+正式总帧数由 pilot measured `pre_sink_total_ms` mean 计算，并向上取整到 20 张 corpus 的整数周期；完整规则见
+`docs/personal/M5_EXECUTION_PLAN.md`。除前 50 帧 warmup 外不删除、不裁剪、不 Winsorize measured outlier。
 
-调整后需记录在实验日志中。
+这些值不进入 RuntimeConfig。未来 Jetson/TensorRT 实验的 warmup 和 measured 协议属于后续阶段，不由 M5 数字
+自动决定；任何 M5 协议调整必须先更新决策和失效旧 evidence。
 
 ---
 
@@ -683,7 +700,9 @@ Pipeline mode reduced latency.
 
 ## 15. 实验日志格式
 
-### 15.1 Per-frame CSV
+### 15.1 后续 Jetson/TensorRT 通用 Per-frame CSV
+
+本小节保留后续 Jetson/TensorRT 实验的历史通用建议，不适用于 M5 evidence 文件名。
 
 建议文件名：
 
@@ -712,7 +731,7 @@ note
 
 ---
 
-### 15.2 Summary JSON
+### 15.2 后续 Jetson/TensorRT 通用 Summary JSON
 
 建议文件名：
 
@@ -737,7 +756,7 @@ summary.json
   "backend": "tensorrt",
   "runtime_mode": "serial",
   "precision_mode": "fp16",
-  "warmup_frames": 20,
+  "warmup_frames": 50,
   "measured_frames": 500,
   "avg_latency_ms": "TBD",
   "p50_latency_ms": "TBD",
@@ -749,6 +768,25 @@ summary.json
   "note": "TBD"
 }
 ```
+
+以上 JSON 是通用摘要模板，不表示 Jetson/TensorRT 已执行。M5 还必须记录 P99、sample standard deviation、
+minimum/maximum、Type 7、measured duration、五次独立进程、affinity 和完整 provenance。
+
+### 15.3 M5 WSL2 ORT CPU evidence 格式
+
+M5 每 run 使用：
+
+```text
+raw_application.json.gz
+timings.tsv
+summary.json
+command.txt
+exit_code.txt
+```
+
+`timings.tsv` 来自 M4 JSON 的 `source/preprocess/inference/postprocess/pre_sink_total`，使用 TSV 避免仓库全局
+`*.csv` ignore。raw JSON 先记录未压缩 SHA，再用固定压缩级别和 mtime=0 的 deterministic gzip 压缩；summary
+必须可由 TSV 重建。五次 run 的 aggregate 另写 `aggregate_summary.json`。
 
 ---
 
@@ -867,11 +905,12 @@ TensorRT 在所有设备上都有固定倍数加速。
 | JetPack version                   | TBD | Jetson 环境配置后     |
 | CUDA version                      | TBD | Jetson 环境配置后     |
 | TensorRT version                  | TBD | Jetson 环境配置后     |
-| ONNX Runtime C++ version          | TBD | ONNX Runtime 集成前 |
+| ONNX Runtime C++ version          | 1.23.2 | M2 已冻结并验证 |
 | TensorRT engine generation method | TBD | TensorRT 部署前     |
 | Resource monitoring method        | TBD | 性能实验前            |
-| Warmup frames final value         | TBD | 初步性能测试后          |
-| Measured frames final value       | TBD | 初步性能测试后          |
+| M5 WSL2 warmup                    | 50 | M5.0 已冻结            |
+| M5 WSL2 measured requirement      | >=500 且 >=30s | M5.0 已冻结 |
+| 后续 Jetson warmup/measured        | TBD | Jetson 实验阶段重新冻结   |
 | Stability test input source       | TBD | 稳定性测试前           |
 | Paper table final format          | TBD | 实验结果产生后          |
 
@@ -937,3 +976,55 @@ Validate C++ ONNX Runtime against Python ONNX Runtime using the same already-pre
 Validate the C++ Serial pipeline against the Python reference for detection count, class, bbox, and confidence.
 
 `results/onnx_export/pt_onnx_compare.json` remains historical evidence for PyTorch versus Python ONNX Runtime consistency. It is not the final C++ golden reference; the C++ validation must record its own inputs, tolerances, and comparison evidence.
+
+### Level C 当前冻结协议（M5）
+
+- Reference：同一冻结 ONNX 上的 Python ONNX Runtime 显式 pipeline；不使用 PyTorch 或 Ultralytics hidden pipeline。
+- Corpus：12 张 frozen validation 原图 + 4 张运行时确定性生成的非方形 24-bit BMP，共 16 张；不提交图片。
+- Determinism：Python 两次 byte-identical，C++ application 两次 byte-identical，然后跨语言语义比较。
+- Matching：按 class 建兼容边并使用确定性最大二分匹配；禁止 greedy 和输出顺序逐项比较。
+- Tolerance：confidence `<=1e-4`；任一 bbox 坐标 `<=0.01 pixel`；16/16 全部 PASS。
+- `candidate_index`：进入报告用于诊断，不作为跨语言 PASS 必要条件。
+- Level C read-only Gate PASS 并固化前，禁止正式 benchmark。
+
+## 24. M5 WSL2 x86_64 ONNX Runtime CPU Engineering Baseline
+
+本节是当前 M5 冻结协议；第 10～14 节的 TensorRT、Pipeline、input size 和 stability 仍是后续 Jetson 阶段，
+不在 M5 执行。
+
+### 24.1 定位和 instrumentation
+
+- 名称固定为 `WSL2 x86_64 ONNX Runtime CPU Engineering Baseline`；
+- 使用真实 Release `edge_ai_defect`、CPUExecutionProvider 和 frozen single-thread SessionOptions；
+- 复用 M4 `FrameTimings` 和 JsonSink，不新增 C++ Profiler、`--benchmark` 或 RuntimeConfig mode；
+- 离线 Python orchestrator 负责重复 regular files、pilot、进程、affinity、统计、gzip 和 provenance；
+- 结果不能与未来 Jetson TensorRT 直接计算 speedup。
+
+### 24.2 Corpus 和运行协议
+
+- 20 张 frozen validation 原图，六类每类至少三张，不使用派生图或 symlink；
+- pilot 100 帧，丢弃前 20 帧；
+- 正式每 run 丢弃前 50 帧，measured 至少 500 帧且 `pre_sink_total_ms` sum 至少 30,000 ms；
+- target N 使用 pilot mean 和 33,000 ms 余量计算，总帧数向上取整到 20 的整数倍；
+- 五个独立进程，每次重新初始化 ORT；run 间等待 30 秒；
+- 绑定当前允许 CPU 集合的最低编号逻辑 CPU，记录 affinity；不 drop caches，标记 warm-cache。
+
+### 24.3 Timing、统计和 outlier
+
+正式字段为 `source_ms`、`preprocess_ms`、`inference_ms`、`postprocess_ms`、`pre_sink_total_ms`。每字段报告
+sample_count、mean、minimum、maximum、P50、P95、P99 和 sample standard deviation；percentile 使用 Type 7，
+sample standard deviation 使用 `n-1`。
+
+`pre_sink_fps` 使用 measured `pre_sink_total_ms` sum；`backend_fps_equivalent` 使用 measured `inference_ms` sum。
+除 warmup 外不删除、不裁剪、不 Winsorize 或基于 IQR/标准差剔除 outlier。
+
+跨 run 主要汇总五个 run mean、P95、`pre_sink_fps`、`backend_fps_equivalent` 各自的 median/minimum/maximum；
+pooled percentile 只能作为辅助数据。
+
+### 24.4 Evidence 前提
+
+正式 evidence 只能在 clean committed HEAD 生成。Level C 位于 `results/validation/level_c/<evidence_id>/`；
+benchmark 位于 `results/benchmark/ort_cpu/<evidence_id>/`。Level C 保留原始 JSON；benchmark 保留 deterministic
+gzip raw JSON、`timings.tsv`、per-run summary 和 aggregate。单 evidence set 上限 25 MiB，超过时停止并人工决定。
+
+当前状态：M5.0 planning freeze complete；Level C、正式 benchmark 和性能数字均 `Not measured yet`。

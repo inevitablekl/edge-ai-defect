@@ -92,6 +92,12 @@
 | D031 | M4 串行编排 | SerialRunner 仅依赖 IInferenceEngine，borrowed dependencies，fail-fast 与 summary 原子提交 | ACTIVE |
 | D032 | M4 结果输出 | 单运行级 deterministic JSON、JsonSink 原子提交、CompositeSink 固定顺序 | ACTIVE |
 | D033 | M4 Runner 模型输入合同 | 应用组装层注入 `ModelContract.input.tensor_info`，Runner 保存值副本 | ACTIVE |
+| D034 | M5 Level C Reference | 同一冻结 ONNX 上的 Python ONNX Runtime 显式 pipeline | ACTIVE |
+| D035 | M5 Level C Detection Matching | 按类别的确定性最大二分匹配；confidence 1e-4、bbox 0.01 pixel | ACTIVE |
+| D036 | M5 Benchmark Instrumentation | 复用 M4 FrameTimings 和真实 application；离线 Python 统计 | ACTIVE |
+| D037 | M5 ORT CPU Baseline 定位 | WSL2 x86_64 ONNX Runtime CPU Engineering Baseline | ACTIVE |
+| D038 | M5 Evidence、Retention 和失效 | clean committed HEAD、raw samples/summary/provenance、明确失效边界 | ACTIVE |
+| D039 | M5 NEU-DET 资产策略 | 不提交图片；跟踪 manifest/SHA/工具；本地合法 dataset root | ACTIVE |
 
 ---
 
@@ -1746,3 +1752,263 @@ ModelContract 同时用于 Engine initialize 与 Runner 注入。
 
 不得把 TensorInfo 加入 RunMetadata 或以 shared_ptr/裸引用替代 Runner 的值副本；如需扩展模型能力，应通过
 新的明确 ModelContract 与应用组装设计处理。
+
+---
+
+### D034 - M5 Level C Reference
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 Level C 使用同一冻结 ONNX 上的 Python ONNX Runtime 显式 pipeline 作为 Reference。Reference 读取同一
+ModelContract 和 RuntimeConfig，显式执行图片排序/读取、LetterBox、BGR→RGB、HWC→CHW、float32/255、ORT、
+BCN decode、strict confidence threshold、class-aware NMS、坐标恢复和 `candidate_index` 保留。
+
+PyTorch、Ultralytics `model.predict()`、Ultralytics hidden LetterBox/NMS/scale_boxes 和历史
+`compare_pt_onnx.py` 的 shared/greedy pipeline 均不是 Level C oracle。
+
+备选方案：
+
+- 使用 PyTorch 或 Ultralytics 高层结果作为 C++ golden；
+- 继续使用历史 PT/ORT consistency report；
+- 对 M1/M2/M3 分层结果做人工拼接而不建立 E2E Reference。
+
+选择理由：
+
+- 同一 ONNX/ORT 隔离模型导出差异，只验证完整 image-to-detection deployment pipeline；
+- 显式实现可审计每个语义边界，并复用已验证的 M1/M2/M3 参考逻辑；
+- 独立稳定 JSON 支持 self-determinism 和跨语言语义比较。
+
+影响范围：
+
+- M5 Level C Reference、Comparator、corpus、evidence、provenance 和 Level C Gate。
+
+后续调整：
+
+Reference、依赖版本或任一语义变化使既有 Level C evidence 失效，必须重新评审和执行 Gate。
+
+---
+
+### D035 - M5 Level C Detection Matching
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+Python/C++ Detection 按 `class_id` 分组，以 confidence absolute error `<=1e-4` 且 bbox 任一坐标 absolute error
+`<=0.01 pixel` 建立兼容边，每类使用确定性的最大二分匹配并要求完整一对一 matching。输出顺序和
+`candidate_index` 不作为跨语言 PASS 条件；`candidate_index` 保留用于诊断。16 张图片必须全部 PASS。
+
+备选方案：
+
+- 按输出下标或 confidence 排序后逐项比较；
+- IoU 最近或兼容边 greedy matching；
+- 只比较 count、平均误差或通过率。
+
+选择理由：
+
+- 多个相近 Detection 可能存在多条兼容边，greedy 会产生假失败；
+- 最大匹配验证是否存在完整容差内一对一对应，不依赖实现输出顺序；
+- 冻结逐项容差和全量 PASS 防止平均值掩盖个别错误。
+
+影响范围：
+
+- M5 Comparator、反例测试、comparison report、tolerance 和 Level C Gate。
+
+后续调整：
+
+matching 或 tolerance 变化必须人工决定并使旧 Level C/benchmark evidence 失效，不得为通过而自动放宽。
+
+---
+
+### D036 - M5 Benchmark Instrumentation
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 使用真实 Release `edge_ai_defect`，复用 M4 `FrameTimings` 和 JsonSink；pilot、warmup、重复 regular-file
+workload、进程编排、CPU affinity、统计、压缩和 provenance 由离线 Python 工具完成。不新增 C++ Profiler、
+`--benchmark`、RuntimeConfig benchmark mode，也不修改 SerialRunner、FrameTimings 或 production JSON schema。
+
+备选方案：
+
+- 在 C++ 引入正式 Profiler/benchmark mode；
+- 通过 RuntimeConfig 或 CLI 增加 warmup/measured/run 参数；
+- 使用外部 wall clock 代替已有阶段 timing。
+
+选择理由：
+
+- M4 已提供完整且可序列化的 stage boundary；离线工具足以执行严格统计并保持 production 合同冻结；
+- 真实 executable 覆盖实际 source/preprocess/ORT/postprocess 路径，避免建立第二条 benchmark-only runtime。
+
+影响范围：
+
+- M5 benchmark harness、RuntimeConfig 使用方式、evidence schema 和 performance Gate。
+
+后续调整：
+
+未来 Jetson/Pipeline 若确需新 instrumentation，必须在独立阶段设计，不追溯改变 M5 WSL baseline。
+
+---
+
+### D037 - M5 ORT CPU Baseline 定位
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 正式性能结果名称为 **WSL2 x86_64 ONNX Runtime CPU Engineering Baseline**。它用于记录当前环境、冻结
+single-thread ORT 配置和 C++ Serial pipeline 的工程测量，不是 Jetson baseline、TensorRT baseline、最终部署硬件
+性能或论文同硬件 backend speedup。
+
+备选方案：
+
+- 不采集本地 baseline；
+- 将 WSL CPU 数字与未来 Jetson TensorRT 数字直接比较；
+- 把 M5 表述为最终论文性能实验。
+
+选择理由：
+
+- 当前 WSL2 环境可稳定验证工具、measurement protocol 和 C++ CPU baseline；
+- 跨设备、CPU/GPU、系统和电源策略的数字不能形成有效加速比；
+- 未来论文 backend comparison 仍需在同一 Jetson 平台采集。
+
+影响范围：
+
+- M5 evidence 命名、报告措辞、EXPERIMENT_PLAN、论文引用边界和后续 Jetson/TensorRT 计划。
+
+后续调整：
+
+定位不可由结果好坏改变。Jetson 数据必须作为独立 evidence 和阶段产生。
+
+---
+
+### D038 - M5 Evidence、Retention 和失效
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+正式 M5 evidence 仅在 clean committed source HEAD 生成，使用 `YYYYMMDD_<short_source_git_commit>` 标识，保存
+原始样本、统计、commands、exit codes 和完整 provenance。Level C 保留未压缩原始 JSON；benchmark 保留固定压缩级别、
+mtime=0 的 deterministic gzip raw application JSON，以及可追溯的 `timings.tsv`、per-run/aggregate summary。
+单个 evidence set tracked 上限为 25 MiB，超过时停止并人工决定，不自行删减。
+
+关键模型/合同/config/corpus/图片、Reference/Comparator/production、ORT/OpenCV、tolerance/matching 变化使 Level C
+evidence 失效；Release flags、FrameTimings、benchmark corpus、pilot/warmup/measured/run/wait/affinity、percentile、
+outlier 或 retention 变化还使 benchmark evidence 失效。无关 documentation-only 修改不强制重跑。
+
+备选方案：
+
+- 只保留 summary 或手工表格；
+- 保留全部未压缩 benchmark JSON；
+- 不记录失效条件，持续覆盖同一路径。
+
+选择理由：
+
+- 原始样本允许独立重建统计并审查 warmup/outlier；
+- deterministic compression 控制体积且保留完整数据；
+- 明确 source commit 和失效边界防止旧 evidence 被误用于变化后的实现或协议。
+
+影响范围：
+
+- `results/validation/level_c/`、`results/benchmark/ort_cpu/`、所有 M5 tools、Gate 和 closeout。
+
+后续调整：
+
+Retention 或失效规则变化属于新决策，并使受影响的正式 baseline evidence 失效。
+
+---
+
+### D039 - M5 NEU-DET 资产策略
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+在未确认明确再分发许可的情况下，不将 NEU-DET 原图或基于其生成的派生图提交 Git。仓库只跟踪 corpus manifest、
+文件名、split、expected SHA256、GT 类别、选择理由、导入/SHA 工具和派生规则。正式运行由用户通过
+`--dataset-root <path>` 提供本地合法数据，工具 fail-fast 验证 regular file、split 和 SHA；不联网下载或使用硬编码
+个人绝对路径。
+
+备选方案：
+
+- 将 12/20 张 JPG 和 derived BMP 直接提交 Git；
+- 自动从网络或第三方镜像下载；
+- 只记录文件名，不记录 SHA 或来源。
+
+选择理由：
+
+- 当前仓库没有 tracked NEU-DET 图片、dataset archive 或明确再分发许可；
+- manifest+SHA 可验证 corpus 身份和顺序，同时避免未经确认的再分发；
+- 显式本地 root 使工具可移植且不会依赖某台机器目录。
+
+影响范围：
+
+- M5 corpus manifests、preparation tool、derived images、provenance、Level C/benchmark evidence 和复现说明。
+
+后续调整：
+
+若取得明确许可或官方可归档来源，可新增决策调整分发策略；不得静默提交图片或虚构许可状态。
