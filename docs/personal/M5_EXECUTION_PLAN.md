@@ -7,14 +7,17 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.2 Level C Gate remediation (rerun pending) |
+| Current task | M5.3 Benchmark Harness and Offline Analyzer (`PENDING`, not started) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
-| M5.2 Level C Reference, Comparator and Formal Validation | `COMPLETE` (formal comparison PASS; Gate pending) |
+| M5.2 Level C Reference, Comparator and Formal Validation | `COMPLETE` (formal comparison and Gate rerun PASS) |
 | M5.2A Harness Implementation | `COMPLETE` |
 | M5.2B Formal Evidence Generation | `COMPLETE` |
-| M5.2 Level C Gate | `PENDING` (first Gate FAIL; remediation COMPLETE; rerun pending) |
+| M5.2 First Standard Validation Gate | `FAIL` (historical) |
+| M5.2 Gate Remediation | `COMPLETE` |
+| M5.2 Standard Validation Gate Rerun | `PASS` |
+| M5.2 Level C Validation | `COMPLETE` |
 | M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
 | M5.5 Evidence Consolidation | `PENDING` |
@@ -720,3 +723,48 @@ M5.3 保持 `PENDING`，M5 overall 保持 `IN_PROGRESS`。
 - M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；第一次 Level C Gate：`FAIL`；M5.2 Gate remediation：`COMPLETE`。
 - M5.2 Gate rerun：`PENDING`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
 - 下一步唯一允许任务为只读 M5.2 Level C Gate rerun；不得把 remediation 或 formal comparison 写为 Gate PASS。
+
+## 20. M5.2 Level C Standard Validation Gate Rerun 固化结果（2026-07-19）
+
+M5.2 Level C Standard Validation Gate Rerun：`PASS`。
+
+本节固化刚刚完成的只读 Gate 结果；不重新生成或修改正式 evidence，不启动 M5.3，不运行 benchmark。
+
+### 20.1 Gate 结论与证据身份
+
+- Git 和 remediation 提交范围正确；当前 remediation commit：`26bfca7b291145b7889ea976e4221dd15d1751d2`。
+- 第一次 Gate 的历史结论保持为 `FAIL`；remediation 已完成，本次 rerun 判定为 `PASS`。
+- Evidence ID：`20260719_1073fa8`；Evidence source commit：`1073fa8be1644dd8562f5704ae31996121883dbb`。
+- Evidence commit：`011ac3ca046a40f8da4bd5b0be7e7fa3e55b27c6`；Evidence 路径：
+  `results/validation/level_c/20260719_1073fa8/`。
+- ModelContract SHA 为正确的 64 位值
+  `9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`；旧错误 SHA 无残留。
+
+### 20.2 Gate 检查结果
+
+- Greedy 反例真实有效：adjacency `[[0, 1], [0]]`；first-compatible greedy 只能匹配 1 项；maximum matching 完整匹配 2 项；Comparator 最终 `PASS`。
+- Confidence 正负方向边界及略超容差测试通过；bbox 正负方向边界及略超 `0.01` 容差测试通过。
+- Detection 顺序交换仍 `PASS`；NaN、Infinity、-Infinity 输入稳定拒绝。
+- Comparator production 实现未修改；Reference、orchestrator、corpus 工具、CMake 和 production 未修改。
+- provenance 的 15 条 machine-readable command records 完整；Evidence SHA 检查 `PASS`。
+- Python Run 1/2 SHA：`bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486`；C++ Run 1/2 SHA：
+  `f3341b09075e89cb4d688d9a76c7893792b11a0c77d05cd36c8ce7c04a8fbc48`。
+- 两份 comparison 均 `16/16 PASS`；Detection 总数 `54`；per-class `[4, 28, 7, 4, 5, 6]`；最大 confidence
+  error `4.980773571361397e-10`；最大 bbox coordinate error `1.2131195092024427e-05`。
+- Python 和 C++ 各自两次输出 byte-identical；临时完整复现与正式 Evidence 一致。
+- Evidence 大小 `174145` bytes；不包含图片、隐私路径、timing 或 benchmark 数据；未发现新 blocker。
+
+### 20.3 最终回归与阶段边界
+
+- Model Smoke OFF：targeted `4/4 PASS`，full `28/28 PASS`。
+- Model Smoke ON：targeted `4/4 PASS`，full `36/36 PASS`。
+- Release binary SHA：`0f38995c4d179a724c275c025fd51e22eb18c282b89ff34c73d786c0f02ef315`；binary reproducibility：`PASS`。
+- Strict、ASan、UBSan：`Not configured`；benchmark：未执行。
+- 不需要额外 production、Reference、Comparator 或测试修改；不需要新的人工架构决策。
+- M5.2 Level C Validation：`COMPLETE`；现在允许进入 M5.3，但本提交不启动 M5.3。
+
+状态结论：
+
+- M5.0：`COMPLETE`；M5.1：`COMPLETE`；M5.2A：`COMPLETE`；M5.2B：`COMPLETE`。
+- M5.2 First Standard Validation Gate：`FAIL`（历史）；M5.2 Gate Remediation：`COMPLETE`；M5.2 Standard Validation Gate Rerun：`PASS`。
+- M5.3：`PENDING`；M5.4～M5.7：`PENDING`；M5 overall：`IN_PROGRESS`，不得标记为 `CLOSED`。
