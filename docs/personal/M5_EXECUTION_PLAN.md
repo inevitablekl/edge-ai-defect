@@ -7,7 +7,7 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.3 Benchmark Harness and Offline Analyzer (`PENDING`, not started) |
+| Current task | M5.4 Formal WSL2 ORT CPU Baseline Execution (`PENDING`, M5.3 complete) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
@@ -18,7 +18,7 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | M5.2 Gate Remediation | `COMPLETE` |
 | M5.2 Standard Validation Gate Rerun | `PASS` |
 | M5.2 Level C Validation | `COMPLETE` |
-| M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
+| M5.3 Benchmark Harness and Offline Analyzer | `COMPLETE` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
 | M5.5 Evidence Consolidation | `PENDING` |
 | M5.6 Deep Evidence Gate | `PENDING` |
@@ -768,3 +768,39 @@ M5.2 Level C Standard Validation Gate Rerun：`PASS`。
 - M5.0：`COMPLETE`；M5.1：`COMPLETE`；M5.2A：`COMPLETE`；M5.2B：`COMPLETE`。
 - M5.2 First Standard Validation Gate：`FAIL`（历史）；M5.2 Gate Remediation：`COMPLETE`；M5.2 Standard Validation Gate Rerun：`PASS`。
 - M5.3：`PENDING`；M5.4～M5.7：`PENDING`；M5 overall：`IN_PROGRESS`，不得标记为 `CLOSED`。
+
+## 21. M5.3 Benchmark Harness and Offline Analyzer 实际结果（2026-07-19）
+
+M5.3 已完成工具实现与验证；本阶段只建立正式 benchmark 的可执行 harness 和离线 analyzer，未执行正式
+M5.4 baseline，也未在 `results/benchmark/ort_cpu/` 发布 evidence。
+
+### 21.1 实现范围
+
+- 新增 `tools/benchmark/m5_ort_cpu_common.py`、`m5_ort_cpu_analyze.py` 和
+  `run_m5_ort_cpu_baseline.py`，分别负责冻结协议/稳定序列化、M4 `FrameTimings` 严格解析与统计、以及
+  workload/subprocess/preflight/evidence staging 编排。
+- 复用 M5.1 benchmark corpus preparation；验证 20 张单周期、regular-file copy、固定顺序和可追溯 workload
+  manifest，并支持 100 帧 pilot、discard 20、formal warmup 50、正式总帧数计算和五次独立进程编排。
+- 固化最低允许 CPU affinity、Type 7 percentile、n-1 sample standard deviation、keep-all measured samples、
+  `pre_sink_fps`/`backend_fps_equivalent` 公式、deterministic gzip（level 9、mtime 0）以及 25 MiB 原子 evidence
+  staging/隐私检查能力；benchmark 参数未进入 RuntimeConfig schema。
+- 新增 `tests/test_m5_ort_cpu_common.py`、`tests/test_m5_ort_cpu_analyze.py`、
+  `tests/test_m5_ort_cpu_runner.py`，并以 `m5_ort_cpu_common_unit`、`m5_ort_cpu_analyzer_unit`、
+  `m5_ort_cpu_runner_unit` 接入 CTest；未修改 `src/`、`include/`、M5.1 manifests、Level C evidence 或
+  M1～M4 contracts。
+
+### 21.2 验证与阶段边界
+
+- Python `py_compile` 和 M5.3 Python unit tests：通过。
+- Model Smoke OFF Release：M5/Level C 定向 `7/7 PASS`，全量 `31/31 PASS`。
+- Model Smoke ON Release：M5/Level C 定向 `7/7 PASS`，全量 `39/39 PASS`，包含实际 application smoke。
+- 已完成一次 `build-m5-3-development-smoke/` 下的非正式真实 application smoke：application exit 0、JSON
+  schema/timing 解析、measured TSV、summary 和 gzip round-trip 均 PASS。该 smoke 不是正式 benchmark；本计划
+  不记录其 latency、FPS、P50、P95 或 P99 数值。
+- Strict、ASan、UBSan：`Not configured`；未执行五次正式 run、30 秒间隔或 >=30 秒 measured baseline，未生成
+  正式 benchmark evidence。
+
+状态结论：
+
+- M5.2 保持 `COMPLETE`，M5.3 `COMPLETE`，M5.4 Formal WSL2 ORT CPU Baseline Execution `PENDING`。
+- M5 overall 仍为 `IN_PROGRESS`，下一步仅为 M5.4；不得把 development smoke 写作正式性能结论。

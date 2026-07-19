@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 COMPLETE；M5.4 PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -111,7 +111,7 @@ M5 状态：
 - M5.2B Formal Evidence Generation：complete；Formal Level C evidence 已生成，comparison PASS。
 - M5.2 Level C Reference, Comparator and Formal Validation：complete。
 - M5.2 Level C Gate：第一次 `FAIL`；remediation `COMPLETE`；Gate rerun `PASS`；M5.2 overall `COMPLETE`。
-- M5.3 Benchmark Harness and Offline Analyzer：pending。
+- M5.3 Benchmark Harness and Offline Analyzer：complete。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
 - M5.5 Evidence Consolidation：pending。
 - M5.6 Deep Evidence Gate：pending。
@@ -123,7 +123,7 @@ M5 状态：
 下一阶段：
 
 ```text
-M5.3 Benchmark Harness and Offline Analyzer（下一步；尚未开始）
+M5.4 Formal WSL2 ORT CPU Baseline Execution（下一步；M5.3 已完成）
 ```
 
 当前主线：
@@ -1896,7 +1896,35 @@ NEU-DET
 - M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；M5.2 overall：`COMPLETE`。
 - M5.2 Gate rerun：`PASS`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
 - Strict/ASan/UBSan：`Not configured`；benchmark 未执行；本次提交不启动 M5.3。
-- 下一步：`M5.3 Benchmark Harness and Offline Analyzer`，但尚未 `STARTED`、`IN_PROGRESS` 或 `COMPLETE`。
+- 当时下一步为 `M5.3 Benchmark Harness and Offline Analyzer`；该阶段已在本日后续记录中完成。
+
+#### M5.3 Benchmark Harness and Offline Analyzer
+
+当前工作：
+
+- M5.3 已完成；新增 `tools/benchmark/m5_ort_cpu_common.py`、`m5_ort_cpu_analyze.py`、
+  `run_m5_ort_cpu_baseline.py`，实现 benchmark workload、pilot/正式帧数计算、五进程编排、CPU affinity、
+  M4 `FrameTimings` 严格解析、warmup、Type 7 与 n-1 统计、per-run/aggregate summary、deterministic gzip 和
+  evidence staging/原子发布。
+- 复用 M5.1 20 张 benchmark corpus preparation；未修改 M1～M4 production、RuntimeConfig/JsonSink schema、
+  M5.1 manifests 或 Level C evidence。
+
+验证结果：
+
+- Python unit tests、CTest M5.3 tests 和 OFF/ON Release 全量回归通过：OFF `31/31 PASS`，ON `39/39 PASS`；
+  Strict、ASan、UBSan 保持 `Not configured`。
+- `build-m5-3-development-smoke/` 下真实 application smoke 通过：exit 0、JSON/timing 解析、TSV、summary 和
+  deterministic gzip round-trip 均 PASS。该 smoke 明确为 `NON-FORMAL DEVELOPMENT SMOKE`，未形成任何正式
+  latency/FPS/P50/P95/P99 结论。
+
+未完成：
+
+- M5.4 正式 WSL2 ORT CPU baseline 尚未执行；正式 benchmark evidence 尚未生成。
+
+状态结论：
+
+- M5.3：`COMPLETE`；M5.4：`PENDING`；M5 overall：`IN_PROGRESS`。
+- 下一步为 M5.4 Formal WSL2 ORT CPU Baseline Execution；本轮未运行 benchmark、未进入 M5.4。
 
 ---
 

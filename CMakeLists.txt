@@ -226,6 +226,29 @@ if(BUILD_TESTING)
     )
 
     add_test(
+        NAME m5_ort_cpu_common_unit
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_ort_cpu_common.py
+    )
+    add_test(
+        NAME m5_ort_cpu_analyzer_unit
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_ort_cpu_analyze.py
+    )
+    add_test(
+        NAME m5_ort_cpu_runner_unit
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_ort_cpu_runner.py
+    )
+    set_tests_properties(
+        m5_ort_cpu_common_unit
+        m5_ort_cpu_analyzer_unit
+        m5_ort_cpu_runner_unit
+        PROPERTIES
+            LABELS "m5;benchmark;validation"
+    )
+
+    add_test(
         NAME m5_level_c_reference_unit
         COMMAND
             ${EDGE_AI_M5_PYTHON_EXECUTABLE}
