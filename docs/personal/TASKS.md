@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 COMPLETE；M5.4 COMPLETE；M5.5 PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 COMPLETE；M5.4 COMPLETE；M5.5 COMPLETE；M5.6 Gate Rerun PASS；M5.7 COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 已 CLOSED。
 ```
 
 M2 状态：
@@ -120,16 +120,16 @@ M5 状态：
 - M5.5 Consolidation Remediation Generation：`COMPLETE`；active consolidation 为
   `results/consolidation/m5/20260719_da86e53/`，包含 15/15 provenance records 和 stable regeneration PASS；未重跑正式
   benchmark。
-- M5.6 Deep Evidence Gate：pending。
-- M5.7 Documentation-Only Closeout：pending。
-- M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
+- M5.6 Deep Evidence Gate Rerun：`PASS`；active consolidation 已通过只读 Gate。
+- M5.7 Documentation-Only Closeout：`COMPLETE`。
+- M5：`CLOSED`。
 - Level C Gate rerun 已 `PASS`，documentation-only 状态已固化；正式 Level C 与 benchmark Evidence 均已生成并完成 consolidation。
 - Strict、ASan、UBSan：保持 `Not configured`，不因 M5.1 改变。
 
 下一阶段：
 
 ```text
-M5.6 Deep Evidence Gate Rerun（下一步；active consolidation 已生成）
+Jetson/TensorRT planning（下一阶段入口；`PENDING`，尚未开始）
 ```
 
 M5.5 首次预审曾在修改文件前 `STOPPED`：原计划未冻结 consolidation 目录、文件集合、schema、summary 和
@@ -141,7 +141,20 @@ remediation planning freeze 进一步冻结 generation-time Git snapshot、旧 c
 为 `20260719_c24eefa` provenance command_records `6/15`，其余底层 Evidence、重建、合同、corpus、privacy、asset、
 retention 和 CTest 均 PASS。旧目录保留但不可作为 Gate PASS 依据；本轮 planning freeze 后已基于新 clean committed HEAD
 `da86e53` 生成 active consolidation `results/consolidation/m5/20260719_da86e53/`，15/15 records、commands 一对一、
-stable regeneration 和发布后 SHA 均 PASS。本轮未运行 application、benchmark 或 Evidence 重建，下一步为只读 M5.6 Gate Rerun。
+stable regeneration 和发布后 SHA 均 PASS。随后 M5.6 Deep Evidence Gate Rerun 判定 `PASS`；本轮 closeout 不重新运行
+application、benchmark、build、CTest 或 Evidence 重建。M5.7 已完成，M5 正式关闭；下一阶段仅按冻结计划保持 `PENDING`。
+
+M5.7 Documentation-Only Closeout（2026-07-19）：
+
+- M5.6 Gate Rerun：`PASS`；旧 `20260719_c24eefa` 保持 `historical_invalidated_consolidation`；active consolidation 为
+  `results/consolidation/m5/20260719_da86e53/`；
+- Level C Evidence：`results/validation/level_c/20260719_1073fa8/`；Benchmark Evidence：
+  `results/benchmark/ort_cpu/20260719_850252b/`；
+- M5.0～M5.5：`COMPLETE`；M5.7：`COMPLETE`；M5：`CLOSED`；
+- Strict/ASan/UBSan：`Not configured`；本轮未重新运行 build、CTest、Comparator、application、Pilot 或 benchmark；
+- M5 仅证明冻结 corpus 上的 Level C 正确性和 WSL2 x86_64 ORT CPU 工程基线，不代表 Jetson、TensorRT、生产实时或最终
+  部署性能；
+- 下一阶段入口为冻结的 Jetson/TensorRT planning，保持 `PENDING`，尚未开始。
 
 当前主线：
 

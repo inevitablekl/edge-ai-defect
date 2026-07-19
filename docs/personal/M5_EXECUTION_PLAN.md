@@ -6,8 +6,8 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 
 | 状态项 | 当前状态 |
 | --- | --- |
-| M5 overall | `IN_PROGRESS` |
-| Current task | M5.6 Deep Evidence Gate Rerun (`PENDING`, active consolidation ready) |
+| M5 overall | `CLOSED` |
+| Current task | M5.7 Documentation-Only Closeout (`COMPLETE`) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
@@ -23,9 +23,9 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | M5.5 Evidence Consolidation | `COMPLETE` (historical artifact invalidated; active remediation complete) |
 | M5.5 Remediation Planning Freeze | `COMPLETE` |
 | M5.5 Remediation Generation | `COMPLETE` |
-| M5.6 Deep Evidence Gate | `PENDING` |
-| M5.7 Documentation-Only Closeout | `PENDING` |
-| M5 final | 尚未 `CLOSED` |
+| M5.6 Deep Evidence Gate | `PASS` (rerun) |
+| M5.7 Documentation-Only Closeout | `COMPLETE` |
+| M5 final | `CLOSED` |
 
 M5.0 只冻结计划，不实现 M5.1，不导入图片，不生成正式 Level C/benchmark evidence，也不运行 benchmark。
 
@@ -1142,9 +1142,87 @@ result 一对一一致。Staging A/B 六文件逐字节一致，双方 `sha256su
 - 新 consolidation tracked file bytes：`674639`，低于 `26214400` retention 上限；
 - README 明确旧 consolidation 失效、新 consolidation active、未重跑 benchmark，且 M5.6 仍为 PENDING；
 - M5.5 Remediation Generation：`COMPLETE`；
-- M5.6 Deep Evidence Gate Rerun：`PENDING`；
-- M5.7：`PENDING`；
-- M5 overall：`IN_PROGRESS`，尚未 `CLOSED`；
+- M5.6 Deep Evidence Gate Rerun：`PASS`（随后完成只读 Gate rerun）；
+- M5.7：`COMPLETE`（本节 closeout 后）；
+- M5 overall：`CLOSED`（本节 closeout 后）；
 - Strict、ASan、UBSan：`Not configured`。
 
 本轮未运行 application、Pilot、formal benchmark、build、CTest 或 M5.6 Gate。下一步仅为只读 M5.6 Deep Evidence Gate Rerun。
+
+## 28. M5.7 Documentation-Only Closeout（2026-07-19）
+
+M5.6 Deep Evidence Gate Rerun 已在此前只读执行中判定 `PASS`，本节仅固化该事实，不重新运行验证、不修改任何 Evidence。
+M5 ONNX Runtime baseline stage 现正式关闭。
+
+### 28.1 M5 目标与完成范围
+
+M5 的目标是建立可复核的 Level C 跨语言正确性证据、WSL2 x86_64 ONNX Runtime CPU 工程基线、跨 Evidence consolidation
+合同及独立 Gate。以下范围已完成：
+
+- M5.0～M5.1 计划、corpus manifest、validation contract 和资产策略；
+- M5.2 explicit Python ORT Reference、Comparator、maximum matching 和正式 Level C Evidence；
+- M5.2 Gate remediation 与 rerun PASS；
+- M5.3 Benchmark Harness、offline analyzer 和 formal-execution remediation；
+- M5.4 正式 WSL2 x86_64 ORT CPU baseline；
+- M5.5 consolidation contract、首次失效历史、remediation planning freeze 和 active consolidation regeneration；
+- M5.6 Deep Evidence Gate 首次 FAIL 历史及 rerun PASS；
+- M5.7 documentation-only closeout。
+
+本阶段明确未完成、也未纳入 M5 的范围：Jetson 实机验证、TensorRT、CUDA/GPU 优化、Pipeline/ROS2、完整 camera pipeline、
+跨硬件 speedup、最终部署性能结论以及正式 benchmark 之外的新性能样本。
+
+### 28.2 正式 Evidence 索引与 Gate 结果
+
+Level C Evidence：
+
+- ID：`20260719_1073fa8`；source `1073fa8be1644dd8562f5704ae31996121883dbb`；evidence `011ac3ca046a40f8da4bd5b0be7e7fa3e55b27c6`；
+- remediation：`26bfca7b291145b7889ea976e4221dd15d1751d2`；Gate 固化：`ea7e0db673ad1680999479a3189287df1e344dc3`；
+- 结果：16/16 PASS，54 detections，per-class `[4,28,7,4,5,6]`；
+- 最大 confidence error：`4.980773571361397e-10`；最大 bbox error：`1.2131195092024427e-05`。
+
+Benchmark Evidence：
+
+- ID：`20260719_850252b`；source `850252b3c176622e3f4461e78f1b7e517e8b06b6`；evidence `703c0184ddc7621ed91c0cb265f1fcc58b16b15d`；
+- baseline：`WSL2 x86_64 ONNX Runtime CPU Engineering Baseline`；
+- Pilot：100 raw / discard 20 / analyzed 80，mean pre-sink `108.5349276625 ms`；
+- Formal：560 total / 50 warmup / 510 measured，五次独立运行全部 PASS。
+
+Active Consolidation：
+
+- `results/consolidation/m5/20260719_da86e53/`；source `da86e53d92c62ff03f4fe2aaf6328fb5f051519c`；evidence commit
+  `44d6c97cd2449ae21f3ce3d32389e69a7fccb390`；
+- 六文件 SHA 5/5 PASS；provenance command records 15/15；commands 一对一；stable regeneration PASS；
+- 已被 M5.6 Deep Evidence Gate Rerun 接受为 active consolidation。
+
+历史失效 Consolidation：
+
+- `results/consolidation/m5/20260719_c24eefa/` 保留为 `historical_invalidated_consolidation`；失效原因是旧 provenance
+  仅有 6/15 聚合 command records；目录和 SHA 未修改，不作为 active Gate 输入。
+
+M5.6 Deep Evidence Gate Rerun：`PASS`。Git/提交范围、7/7 ancestry、严格 schema、15/15 provenance、commands 一对一、
+底层 SHA、Comparator、重建、合同、corpus、privacy、asset、retention、独立 consolidation regeneration 及 OFF/ON 回归
+全部通过，未发现新 blocker。
+
+### 28.3 Benchmark 结果与解释边界
+
+正式 aggregate 的 median / minimum / maximum 为：
+
+- inference mean：`106.57698616274516 / 106.39670165686272 / 107.41927339215691` ms；
+- inference P95：`110.33601374999999 / 109.2568074 / 115.34218419999999` ms；
+- pre-sink mean：`108.6549774215686 / 108.47198617450971 / 109.55094533333337` ms；
+- pre-sink P95：`112.43494974999999 / 111.3694557 / 117.96132499999997` ms；
+- pre_sink_fps：`9.203443999809755 / 9.128173170548873 / 9.21897012553269`；
+- backend_fps_equivalent：`9.382888708008503 / 9.309316367736795 / 9.398787597994104`。
+
+这些数值仅表示当前 WSL2 x86_64、CPU-only、warm-cache、单逻辑 CPU affinity、20 图循环 workload、ORT sequential、
+intra/inter threads=1 的工程基线。未冻结 Windows host 负载、CPU 频率或 cache drop；`backend_fps_equivalent` 不是完整
+application FPS，也不能用于跨硬件 speedup 计算。结果不代表 Jetson、TensorRT、裸机 Linux、生产实时性能或最终部署性能。
+
+### 28.4 最终状态与后续入口
+
+- M5.0：`COMPLETE`；M5.1：`COMPLETE`；M5.2：`COMPLETE`；M5.2 Gate：`PASS`；
+- M5.3：`COMPLETE`；M5.4：`COMPLETE`；M5.5：`COMPLETE`；M5.6 Gate Rerun：`PASS`；
+- M5.7：`COMPLETE`；M5 overall：`CLOSED`；
+- Strict、ASan、UBSan：`Not configured`；本次 closeout 未重新运行 build、CTest、Comparator、application 或 benchmark。
+
+后续入口为冻结任务卡定义的 **Jetson/TensorRT planning**，当前保持 `PENDING`，尚未开始；不得将其解释为已启动的技术阶段。
