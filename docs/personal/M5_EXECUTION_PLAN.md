@@ -7,7 +7,7 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.6 Deep Evidence Gate (`PENDING`, M5.5 complete) |
+| Current task | M5.5 Consolidation Remediation Generation (`PENDING`, planning freeze complete) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
@@ -20,7 +20,9 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | M5.2 Level C Validation | `COMPLETE` |
 | M5.3 Benchmark Harness and Offline Analyzer | `COMPLETE` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `COMPLETE` |
-| M5.5 Evidence Consolidation | `COMPLETE` |
+| M5.5 Evidence Consolidation | `COMPLETE` (historical artifact invalidated; remediation pending) |
+| M5.5 Remediation Planning Freeze | `COMPLETE` |
+| M5.5 Remediation Generation | `PENDING` |
 | M5.6 Deep Evidence Gate | `PENDING` |
 | M5.7 Documentation-Only Closeout | `PENDING` |
 | M5 final | 尚未 `CLOSED` |
@@ -1025,7 +1027,71 @@ speedup。Consolidation PASS 不等于 M5.6 Deep Evidence Gate PASS。
 
 ### 25.3 阶段状态
 
-- M5.4：`COMPLETE`；M5.5 Evidence Consolidation：`COMPLETE`；
+- M5.4：`COMPLETE`；M5.5 首次 Evidence Consolidation 已生成，但因 provenance completeness 失败而标记为
+  `historical_invalidated_consolidation`；
+- M5.5 Remediation Planning Freeze：`COMPLETE`；M5.5 Remediation Generation：`PENDING`；
 - M5.6 Deep Evidence Gate：`PENDING`；M5.7：`PENDING`；
-- M5 overall：`IN_PROGRESS`，尚未 `CLOSED`；下一步仅为只读 M5.6 Deep Evidence Gate。
+- M5 overall：`IN_PROGRESS`，尚未 `CLOSED`；下一步先基于新的 clean committed HEAD 生成新的 Consolidation，之后才能
+  rerun M5.6 Deep Evidence Gate。
 - Strict、ASan、UBSan：`Not configured`；本轮未运行 application、benchmark 或 M5.6。
+
+## 26. M5.5 Consolidation Evidence Remediation Planning Freeze（2026-07-19）
+
+第一次 M5.6 Deep Evidence Gate 已完成只读审计并判定 `FAIL`。唯一 blocker 为 consolidation provenance completeness：
+`results/consolidation/m5/20260719_c24eefa/provenance.json` 的 `command_records` 只有 6 条聚合记录，而 D040/M5.6 要求
+15 个独立阶段。Level C、Benchmark、gzip/TSV/per-run summary/aggregate 重建、model/contract、corpus、privacy、asset、
+retention、跨 Evidence 合同和 OFF/ON CTest 均 PASS。该问题不是 production、Reference、Comparator、Benchmark 结果、统计或
+底层 Evidence 损坏，不需要重跑正式 benchmark。
+
+本轮只完成 remediation contract clarification，不创建或修改 Evidence。Consolidation provenance 的
+`branch`、`upstream`、`behind`、`ahead` 和 `worktree_clean_before_generation` 固定表示正式生成开始前采集的
+generation-time Git snapshot；提交后不因后续 push、upstream 变化或新 commit 回填。M5.6 审计单独记录 current Git facts，
+Gate 不要求历史 `ahead` 等于审计时 `ahead`。因此 `20260719_c24eefa` 中的 `ahead=9` 保持生成时事实，第一次 M5.6 审计的
+当前 `ahead=1` 不回填旧 provenance。Stable regeneration 必须使用 source commit 和冻结的 generation snapshot，不重新查询
+current HEAD/upstream、时间、hostname 或临时目录。
+
+旧 `results/consolidation/m5/20260719_c24eefa/` 现在标识为
+`historical_invalidated_consolidation`：保留原始六文件，不修改、不删除、不重算 SHA，不作为下一次 M5.6 的 active
+Consolidation。失效状态只由本阶段文档记录；旧 Evidence 内不增加 INVALID 文件、remediation 内容、superseded 字段或新
+README。
+
+本 planning freeze 提交后先形成新的 clean committed HEAD；下一次 M5.5 remediation 必须使用该新 source commit，重新计算
+`YYYYMMDD_<new_short_source_commit>` Evidence ID，创建新的完整六文件 consolidation，继续引用既有 Level C/Benchmark
+Evidence，不生成新的检测或性能样本，不复用或覆盖旧目录。
+
+新 provenance 必须按以下顺序恰好包含 15 条唯一 `command_records`：
+
+1. `git_preflight`
+2. `git_ancestry`
+3. `level_c_sha`
+4. `benchmark_sha`
+5. `gzip_validation`
+6. `timings_tsv_rebuild`
+7. `per_run_summary_rebuild`
+8. `aggregate_summary_rebuild`
+9. `model_contract_consistency`
+10. `corpus_consistency`
+11. `privacy_scan`
+12. `asset_scan`
+13. `retention_check`
+14. `stable_regeneration`
+15. `consolidation_sha`
+
+每条记录必须包含实际执行的 `id`、`phase`、`command`、`working_directory`、`exit_code` 和 `result`；不得合并阶段、记录
+未执行命令或包含 application/Pilot/formal run/benchmark 命令。新 `commands.txt` 必须与 15 条记录一对一，恰好 15 个编号
+段，顺序及上述字段完全一致，仅使用 repo-relative 检查命令。
+
+Stable regeneration 必须在 staging A 生成六文件，再使用完全相同的冻结输入在独立 staging B 重新生成；五个内容文件和
+`sha256sums.txt` 必须 byte-identical，之后才可单次原子发布，发布后再次执行 SHA 检查。
+
+本轮提交后阶段状态保持：
+
+- M5.5 Consolidation Remediation Planning Freeze：`COMPLETE`；
+- M5.5 Consolidation Remediation Generation：`PENDING`；
+- M5.6 Deep Evidence Gate rerun：`PENDING`；
+- M5.7 Documentation-Only Closeout：`PENDING`；
+- M5 overall：`IN_PROGRESS`，尚未 `CLOSED`；
+- Strict、ASan、UBSan：`Not configured`。
+
+本轮不运行 application、Pilot、benchmark、build、CTest、Evidence 重建或 M5.6 Gate rerun。下一步仅可基于本轮提交后的
+新 clean committed HEAD 生成新的 Consolidation。

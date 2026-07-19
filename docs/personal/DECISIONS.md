@@ -2062,3 +2062,31 @@ Consequences：
 增加一个小型、稳定、可审计的跨 Evidence 索引，避免大体积重复数据，并为 M5.6 提供明确入口；任何底层 Evidence
 变化都会使该 consolidation 失效。M5.5 Planning Freeze Remediation 完成后，必须从新的 clean committed HEAD
 重新计算未来 consolidation 的 Evidence ID。
+
+Clarification（M5.5 Consolidation Evidence Remediation Planning Freeze，2026-07-19）：
+
+- `provenance.json` 中的 `branch`、`upstream`、`behind`、`ahead` 和
+  `worktree_clean_before_generation` 固定表示 consolidation 生成开始前采集的 generation-time Git snapshot；提交后
+  不因后续 push、upstream 变化或新 commit 回填。M5.6 审计单独记录 current Git facts，Gate 不要求历史 `ahead` 与审计时
+  `ahead` 相等。Stable regeneration 使用 source commit 和冻结的 generation snapshot，不重新查询动态 Git 状态、时间、
+  hostname、临时目录或当前 HEAD/upstream。
+- 第一次 M5.6 Deep Evidence Gate 的唯一 blocker 是 consolidation provenance completeness：旧
+  `20260719_c24eefa` 的 `command_records` 只有 6 条聚合记录，而合同要求 15 个独立阶段；Level C、Benchmark、重建、
+  model/contract、corpus、privacy、retention 和 CTest 均保持 PASS。该问题不是 production、Reference、Comparator、
+  Benchmark 结果、统计或底层 Evidence 损坏，不需要重跑正式 benchmark。
+- 旧 `results/consolidation/m5/20260719_c24eefa/` 保留为 `historical_invalidated_consolidation`，不修改、不删除、不
+  重算其 SHA，不作为下一次 M5.6 的 active Consolidation；失效状态只由阶段文档记录，旧 Evidence 内不增加标记文件或
+  字段。
+- 本次提交只冻结 remediation contract。提交后先形成新的 clean committed HEAD，再以该新 source commit 重新计算
+  Evidence ID 并生成新的完整六文件 consolidation；不复用或覆盖旧目录，不产生新的检测或性能样本。
+- 新 provenance 必须按固定顺序恰好包含 15 条唯一 `command_records`：
+  `git_preflight`、`git_ancestry`、`level_c_sha`、`benchmark_sha`、`gzip_validation`、
+  `timings_tsv_rebuild`、`per_run_summary_rebuild`、`aggregate_summary_rebuild`、
+  `model_contract_consistency`、`corpus_consistency`、`privacy_scan`、`asset_scan`、
+  `retention_check`、`stable_regeneration`、`consolidation_sha`。每条记录必须包含实际执行的 command、phase、
+  working directory、exit code 和 result，不得合并阶段或记录 application/Pilot/formal run/benchmark 命令。
+- 新 `commands.txt` 与 15 条 `command_records` 一对一：恰好 15 个编号段，顺序、ID、phase、command、working directory、
+  exit code 和 result 完全一致，且只使用 repo-relative 检查命令。
+- Stable regeneration 必须在 staging A/B 使用完全相同的冻结输入生成并比较六文件；五个内容文件和
+  `sha256sums.txt` 必须 byte-identical，随后才可原子发布。新 consolidation 完成前，M5.5 remediation generation、M5.6
+  Gate rerun 和 M5.7 均保持 PENDING；不得 patch 历史 consolidation。

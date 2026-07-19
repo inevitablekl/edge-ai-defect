@@ -113,8 +113,12 @@ M5 状态：
 - M5.2 Level C Gate：第一次 `FAIL`；remediation `COMPLETE`；Gate rerun `PASS`；M5.2 overall `COMPLETE`。
 - M5.3 Benchmark Harness and Offline Analyzer：complete。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：complete；正式 Evidence 已生成。
-- M5.5 Evidence Consolidation：complete；正式 consolidation Evidence 已生成并通过全部冻结检查。
-- M5.5 Planning Freeze Remediation：complete；consolidation contract 已冻结，随后已完成 M5.5 consolidation。
+- M5.5 Evidence Consolidation：首次生成已完成，但 `20260719_c24eefa` 因 provenance command_records 不完整而标记为
+  `historical_invalidated_consolidation`，保留且不修改。
+- M5.5 Planning Freeze Remediation：`COMPLETE`；已冻结 generation-time Git snapshot、旧 Evidence 失效/保留规则、新
+  source commit/新 Evidence ID、15 条 command_records 和 commands 一对一、stable regeneration 合同。
+- M5.5 Consolidation Remediation Generation：`PENDING`；必须基于本轮提交后的新 clean committed HEAD 生成新的完整
+  consolidation，不重跑正式 benchmark。
 - M5.6 Deep Evidence Gate：pending。
 - M5.7 Documentation-Only Closeout：pending。
 - M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
@@ -124,17 +128,18 @@ M5 状态：
 下一阶段：
 
 ```text
-M5.6 Deep Evidence Gate（下一步；M5.5 已完成）
+M5.5 Consolidation Remediation Generation（下一步；Planning Freeze 已完成）
 ```
 
 M5.5 首次预审曾在修改文件前 `STOPPED`：原计划未冻结 consolidation 目录、文件集合、schema、summary 和
 `sha256sums` 规则，分类为 `M5.5 evidence consolidation planning gap`，不是执行失败。本次 Planning Freeze
 Remediation 已完成并新增 D040，冻结路径 `results/consolidation/m5/<evidence_id>/`、固定六文件、三个 JSON
-schema version 1、README/commands/SHA 规则、staging 后单次 rename、失效边界和 `26214400` bytes retention。
-本轮 remediation 为 documentation-only，未运行 application、benchmark 或 Evidence 重建；随后已在新的 clean
-committed HEAD 上完成 M5.5 consolidation，正式路径为 `results/consolidation/m5/20260719_c24eefa/`，目录固定六文件，
-全部 SHA、gzip/TSV/summary/aggregate、合同、corpus、privacy、asset 和 retention 检查 PASS。M5.6 Deep Evidence Gate
-仍为 pending，下一步为只读 M5.6。
+schema version 1、README/commands/SHA 规则、staging 后单次 rename、失效边界和 `26214400` bytes retention；本次
+remediation planning freeze 进一步冻结 generation-time Git snapshot、旧 consolidation historical invalidated 规则、
+15 条独立 command_records、commands 一对一和 stable regeneration 输入。第一次 M5.6 Deep Evidence Gate 的唯一 blocker
+为 `20260719_c24eefa` provenance command_records `6/15`，其余底层 Evidence、重建、合同、corpus、privacy、asset、
+retention 和 CTest 均 PASS。旧目录保留但不可作为 Gate PASS 依据；本轮未运行 application、benchmark 或 Evidence 重建，
+未创建新 consolidation。提交后下一步为基于新的 clean committed HEAD 生成新的完整 consolidation，随后才能 rerun M5.6。
 
 当前主线：
 

@@ -1102,3 +1102,51 @@ benchmark 只证明当前 WSL2 x86_64 ORT CPU 工程基线，结果不代表 Jet
 或 retention 变化都会使 consolidation 失效，必须完整重新生成，不得手工 patch。
 
 M5.6 将直接读取并独立验证 consolidation 及底层 Evidence；M5.5 不能替代 M5.6，也不能将 M5 标记 CLOSED。
+
+### 25.4 M5.5 remediation planning freeze：snapshot、失效与重生成
+
+第一次 M5.6 Deep Evidence Gate 已执行并判定 `FAIL`，唯一 blocker 是旧 consolidation 的 provenance completeness：
+`20260719_c24eefa/provenance.json` 只有 6 条聚合 `command_records`，而本合同要求 15 个独立阶段。Level C、Benchmark、
+重建、跨 Evidence 合同、corpus、privacy、asset、retention 和 CTest 检查均 PASS；该失败不属于 production、Reference、
+Comparator、Benchmark 结果、统计或底层 Evidence 缺陷，不需要重跑正式 benchmark。
+
+Consolidation provenance 的 Git 字段（`branch`、`upstream`、`behind`、`ahead`、
+`worktree_clean_before_generation`）是 generation-time snapshot：在正式生成开始前采集，提交后不因后续 upstream、push
+或新 commit 回填。M5.6 报告单独记录审计时 current Git facts；Gate 不要求历史 `ahead` 等于审计时 `ahead`。因此旧记录的
+`ahead=9` 保持生成时事实，当前审计的 `ahead=1` 不回填旧 Evidence。Stable regeneration 固定复用 source commit、该
+generation snapshot、两套底层 Evidence、D040 schema、15 阶段结果和稳定序列化规则，不重新查询 current HEAD/upstream、
+时间、hostname 或临时目录。
+
+旧目录 `results/consolidation/m5/20260719_c24eefa/` 标记为
+`historical_invalidated_consolidation`：保留六个原始文件，不修改、不删除、不重算 SHA，不作为下一次 M5.6 的 active
+Consolidation。失效状态只记录在阶段文档；旧 Evidence 内不增加 INVALID 文件、remediation 内容或 superseded 字段。
+
+本 planning freeze 提交后形成新的 clean committed HEAD；下一次 remediation 必须以该新 HEAD 为 source commit，重新计算
+`YYYYMMDD_<new_short_source_commit>` Evidence ID，创建新的完整六文件目录并继续引用现有 Level C/Benchmark Evidence，不
+生成新的检测或性能样本，不复用或覆盖旧目录。
+
+新 provenance 必须按固定顺序恰好包含以下 15 条唯一记录：
+
+1. `git_preflight`
+2. `git_ancestry`
+3. `level_c_sha`
+4. `benchmark_sha`
+5. `gzip_validation`
+6. `timings_tsv_rebuild`
+7. `per_run_summary_rebuild`
+8. `aggregate_summary_rebuild`
+9. `model_contract_consistency`
+10. `corpus_consistency`
+11. `privacy_scan`
+12. `asset_scan`
+13. `retention_check`
+14. `stable_regeneration`
+15. `consolidation_sha`
+
+每条记录必须包含实际执行的 `id`、`phase`、`command`、`working_directory`、`exit_code` 和 `result`；不得合并阶段、
+记录未执行命令或包含 application/Pilot/formal run/benchmark 命令。`commands.txt` 必须与这 15 条记录一对一，恰好 15
+个编号段，顺序和全部字段完全一致，仅使用 repo-relative 检查命令。
+
+Stable regeneration 必须先在 staging A 生成六文件，再使用相同冻结输入在独立 staging B 生成；五个内容文件及
+`sha256sums.txt` 均须 byte-identical，验证通过后才可单次原子发布。当前状态保持：M5.5 Consolidation Remediation
+Generation `PENDING`、M5.6 Gate rerun `PENDING`、M5.7 `PENDING`、M5 overall `IN_PROGRESS`。
