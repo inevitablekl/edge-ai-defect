@@ -1,0 +1,19 @@
+# M5.5 consolidation commands (repository-relative paths)
+git branch --show-current
+git rev-parse HEAD
+git status --short
+git rev-parse --abbrev-ref --symbolic-full-name @{upstream}
+git rev-list --left-right --count @{upstream}...HEAD
+git diff --name-status 850252b..703c018
+git diff --check 850252b..703c018
+git merge-base --is-ancestor 1073fa8be1644dd8562f5704ae31996121883dbb 850252b3c176622e3f4461e78f1b7e517e8b06b6
+git merge-base --is-ancestor ea7e0db673ad1680999479a3189287df1e344dc3 850252b3c176622e3f4461e78f1b7e517e8b06b6
+git merge-base --is-ancestor 850252b3c176622e3f4461e78f1b7e517e8b06b6 703c0184ddc7621ed91c0cb265f1fcc58b16b15d
+(cd results/validation/level_c/20260719_1073fa8 && sha256sum -c sha256sums.txt)
+(cd results/benchmark/ort_cpu/20260719_850252b && sha256sum -c sha256sums.txt)
+python3 - <<'PY'  # executed standard-library verifier and committed analyzer rebuild
+PY
+python3 - <<'PY'  # executed privacy and asset scan over formal Evidence
+find results/validation/level_c/20260719_1073fa8 results/benchmark/ort_cpu/20260719_850252b -type f | grep -Ei '\.(jpg|jpeg|png|bmp|tif|tiff)$'
+find results/benchmark/ort_cpu/20260719_850252b -type f -name raw_application.json
+sha256sum -c results/consolidation/m5/20260719_c24eefa/sha256sums.txt

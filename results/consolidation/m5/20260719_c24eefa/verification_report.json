@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "check_groups": {
+    "git_ancestry": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "git_ancestry",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "level_c_integrity": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "level_c_integrity",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "benchmark_integrity": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "benchmark_integrity",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "benchmark_reconstruction": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "benchmark_reconstruction",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "model_contract_consistency": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "model_contract_consistency",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "corpus_consistency": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "corpus_consistency",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "asset_policy": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "asset_policy",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "privacy": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "privacy",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "retention": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "retention",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    },
+    "interpretation_boundary": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "interpretation_boundary",
+          "status": "PASS",
+          "evidence": "verified during M5.5 execution"
+        }
+      ]
+    }
+  },
+  "failures": [],
+  "summary": {
+    "total_check_count": 10,
+    "passed_check_count": 10,
+    "failed_check_count": 0,
+    "level_c_sha_check": "PASS",
+    "benchmark_sha_check": "PASS",
+    "gzip_round_trip": "PASS",
+    "timings_tsv_rebuild": "PASS",
+    "per_run_summary_rebuild": "PASS",
+    "aggregate_summary_rebuild": "PASS",
+    "cross_evidence_contract_check": "PASS",
+    "tracked_evidence_total_size_bytes": 652682,
+    "retention_limit_bytes": 26214400
+  }
+}
