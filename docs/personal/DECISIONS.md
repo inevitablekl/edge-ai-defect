@@ -78,6 +78,26 @@
 | D017 | 冻结模型 | seed=7 deterministic baseline | ACTIVE |
 | D018 | 正式训练 checkpoint 保留边界 | Git 外完整归档，部署只使用 frozen model | ACTIVE |
 | D019 | TensorRT 验证平台与部署阶段路线 | 本地 ONNX Runtime 开发，TensorRT 延后到完整 CUDA / Jetson 平台 | ACTIVE |
+| D020 | C++ ONNX Runtime Serial Baseline 阶段范围 | M0～M4 先完成 CPU Serial 主线 | ACTIVE |
+| D021 | Preprocess Level A 证据边界 | raw BGR、独立冻结语义、SHA CTest 与前置提交 provenance | ACTIVE |
+| D022 | C++ ONNX Runtime CPU 部署 baseline | M2 以 CPU synchronous Engine 作为后续 Serial Baseline foundation | ACTIVE |
+| D023 | Engine tensor 所有权合同 | `HostTensor` 作为 Engine 输入和独占输出 | ACTIVE |
+| D024 | Inference Level B 一致性方法 | 同一 raw input 下 Python ORT 与 C++ ORT 比较 | ACTIVE |
+| D025 | M2 阶段边界 | 不包含 PostProcessor/NMS/TensorRT/Pipeline | ACTIVE |
+| D026 | M3 frozen YOLOv8 PostProcessor 语义 | original-image Detection、class-aware NMS、独立 Python/C++ validation | ACTIVE |
+| D027 | M3 clipping parity with Ultralytics 8.4.50 | clamp-only clipping，保留 post-clip 零面积 Detection | ACTIVE |
+| D028 | M4 与 M5 验证边界 | M4 功能串行闭环和基础 FrameTimings；M5 Level C、正式 Profiler 与性能证据 | ACTIVE |
+| D029 | M4 runtime 配置和 CLI | strict YAML；CLI 仅接受单个 `--config` 或单独 `--help` | ACTIVE |
+| D030 | M4 图片输入抽象 | 最小 ImageSource；非递归、确定性、fail-fast DirectorySource | ACTIVE |
+| D031 | M4 串行编排 | SerialRunner 仅依赖 IInferenceEngine，borrowed dependencies，fail-fast 与 summary 原子提交 | ACTIVE |
+| D032 | M4 结果输出 | 单运行级 deterministic JSON、JsonSink 原子提交、CompositeSink 固定顺序 | ACTIVE |
+| D033 | M4 Runner 模型输入合同 | 应用组装层注入 `ModelContract.input.tensor_info`，Runner 保存值副本 | ACTIVE |
+| D034 | M5 Level C Reference | 同一冻结 ONNX 上的 Python ONNX Runtime 显式 pipeline | ACTIVE |
+| D035 | M5 Level C Detection Matching | 按类别的确定性最大二分匹配；confidence 1e-4、bbox 0.01 pixel | ACTIVE |
+| D036 | M5 Benchmark Instrumentation | 复用 M4 FrameTimings 和真实 application；离线 Python 统计 | ACTIVE |
+| D037 | M5 ORT CPU Baseline 定位 | WSL2 x86_64 ONNX Runtime CPU Engineering Baseline | ACTIVE |
+| D038 | M5 Evidence、Retention 和失效 | clean committed HEAD、raw samples/summary/provenance、明确失效边界 | ACTIVE |
+| D039 | M5 NEU-DET 资产策略 | 不提交图片；跟踪 manifest/SHA/工具；本地合法 dataset root | ACTIVE |
 
 ---
 
@@ -1125,3 +1145,948 @@ NEU-DET
 ```
 
 所有后续决策都应服务于这个主线，不应把项目扩展成算法研究、GUI 应用、完整机器人系统或多平台部署项目。
+
+---
+
+### D020 - C++ ONNX Runtime Serial Baseline 阶段范围
+
+时间：
+
+```text
+2026-07-15
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. C++ 部署阶段从 ONNX Runtime CPU Serial Baseline 开始。
+2. TensorRT 延后到 Jetson 阶段；TensorRT 性能数据只在目标设备采集。
+3. 当前阶段不引入 Pipeline、ROS2、Qt、INT8、GPU preprocessing 或 GPU NMS。
+
+选择理由：
+
+- 当前开发环境是 WSL2 x86_64，适合先建立和验证 C++ 软件架构。
+- TensorRT 强依赖 CUDA、driver 和 Jetson 环境；在非目标平台不能形成有效性能结论。
+- 先完成可验证的 Serial Baseline，控制范围并保持后续 backend 替换的接口抽象。
+
+影响范围：
+
+- M0 至 M4 仅覆盖 C++17、OpenCV、yaml-cpp、ONNX Runtime CPU 和 SerialRunner。
+- TensorRT、Jetson、Pipeline 与性能优化保留为后续阶段。
+
+---
+
+### D021 - Preprocess Level A 证据边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. Level A 输入使用 headerless raw BGR bytes，排除图像解码与 EXIF 行为差异。
+2. Python golden generator 与 C++ validator 独立实现；A～H 的 frozen case 语义由
+   test-only `FrozenCaseSpec` 再独立冻结。
+3. 实际资产通过 CTest 校验 `SHA256SUMS`，manifest 中 16 个 asset digest 与其
+   自动交叉验证。
+4. stable provenance 引用已经存在的前置 evidence source commit，避免最终文档
+   提交或未来提交的自引用。
+5. manifest parser、compare helper 与 evidence verifier 只链接 test target，不进入
+   production target。
+
+备选方案：
+
+- 使用 PNG/JPEG 输入：更接近业务文件，但会混入 decoder 与 orientation 差异。
+- 只依赖 manifest 或人工 `sha256sum`：实现更少，但无法形成持续自动证据闭环。
+- provenance 引用最终关闭提交：会形成不可生成的提交自引用。
+
+选择理由：
+
+- raw BGR 使 Level A 只验证 LetterBox、颜色/layout 转换与 normalization。
+- 双重冻结可防止 generator 与 validator 同步漂移后产生假阳性。
+- CTest SHA、resolved-path containment 和前置提交 provenance 提供确定、可复查且
+  不污染 production dependency 的轻量证据链。
+
+影响范围：
+
+- `tests/data/preprocess_level_a/`
+- `tests/preprocess_level_a_*`
+- `tests/cmake/verify_preprocess_level_a_*.cmake`
+- `results/validation/preprocess_level_a/`
+
+后续调整：
+
+M1 证据语义原则上冻结。如增加图像解码/orientation 验证，应建立独立 validation
+level，不得改写现有 Level A A～H case 或 provenance 语义。
+
+---
+
+### D022 - C++ ONNX Runtime CPU 部署 baseline
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 使用 C++ ONNX Runtime `CPUExecutionProvider` 的 synchronous
+`OnnxRuntimeEngine` 作为后续 C++ Serial Baseline 的 Engine foundation。其固定执行
+语义为 `ORT_SEQUENTIAL`、`ORT_ENABLE_ALL`、intra/inter-op thread 各为 1；该选择
+用于确定性和可验证性，不构成性能优化或 benchmark 结论。
+
+备选方案：
+
+- 在 M2 直接引入 TensorRT、CUDA 或 GPU Execution Provider。
+- 在未完成 Engine contract 验证前实现完整 SerialRunner。
+
+选择理由：
+
+- 当前环境已具备可复现的 ONNX Runtime CPU 1.23.2 验证路径。
+- CPU Engine 先提供稳定、backend-neutral 的推理基础，后续才能独立实现
+  PostProcessor、Runner 和 TensorRT backend。
+
+影响范围：
+
+- `edge_ai_backend_ort` 和 M2 相关 validation。
+- 后续 M3/M4 只能消费该 Engine contract，不得将 backend-specific 逻辑迁入 runner。
+
+后续调整：
+
+TensorRT、CUDA 和 GPU EP 仅在目标环境及独立阶段决定；它们不追溯改变 M2 CPU
+baseline 的验证结论。
+
+---
+
+### D023 - Engine tensor 所有权合同
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+`IInferenceEngine` 和 `OnnxRuntimeEngine` 均使用 `HostTensor` 作为输入与输出
+合同。`run()` 只借用调用方 input buffer 至 `Session::Run` 返回；成功输出必须复制为
+调用方独占的 `HostTensor`，失败时不得修改调用方既有 output。
+
+备选方案：
+
+- 新建 `InferenceOutput` 包装类型。
+- 返回借用的 `Ort::Value` 指针或 device tensor。
+
+选择理由：
+
+- 现有 `HostTensor` 已表达 M2 所需的 `float32`、layout、shape 和连续 CPU owned
+  buffer。
+- 独占输出消除 ORT output 生命周期泄漏，且不为尚未开始的 detection metadata 或
+  device memory 预设抽象。
+
+影响范围：
+
+- M2 Engine public API、run failure 语义和后续 PostProcessor input。
+
+后续调整：
+
+如后续需求确实需要 backend-specific metadata 或 device memory，须新增独立设计与
+兼容性审查；不得静默修改当前 `HostTensor` contract。
+
+---
+
+### D024 - Inference Level B 一致性方法
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 使用同一固定 `float32 NCHW [1,3,640,640]` raw input，以 Python ONNX Runtime
+1.23.2 golden 与 C++ `OnnxRuntimeEngine` raw output 对比，作为 inference
+Level B 一致性验证。验证输出为 `float32 BCN [1,10,8400]`，比较完整 84000 个元素的
+shape、element count、finite、MAE 与 max_abs；冻结阈值为 `MAE <= 1e-6`、
+`max_abs <= 1e-5`。
+
+备选方案：
+
+- 仅验证 C++ `Session::Run` 不抛异常。
+- 使用 PostProcessor/detection 结果进行间接比较。
+
+选择理由：
+
+- raw tensor 对比直接覆盖 Engine I/O、metadata 和 ORT run path，不混入
+  preprocessing 或后处理差异。
+- Python/C++ 使用相同 ORT 1.23.2，且已保存 input、golden、C++ output、comparison
+  report 和 provenance，能够复核实际结果。
+
+影响范围：
+
+- `results/validation/onnx_runtime_engine_level_b/` 和 M2 Gate 结论。
+
+后续调整：
+
+阈值或 reference environment 变更必须提供差异证据并独立评审，不能为了通过而放宽
+当前阈值。
+
+---
+
+### D025 - M2 阶段边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M2 只关闭 ONNX Runtime Engine foundation；不包含 `PostProcessor`、NMS、
+`Detection`、`SerialRunner`、`Pipeline`、Profiler、benchmark、TensorRT、CUDA 或
+GPU Execution Provider。
+
+备选方案：
+
+- 将 raw output 解码、NMS、runner 或性能测量和 Engine 一并实现。
+- 提前增加 TensorRT/CUDA backend。
+
+选择理由：
+
+- 分离 Engine correctness 与后处理、编排和性能问题，确保 Level B numerical
+  evidence 的边界清晰。
+- 防止当前 CPU 验证环境被误表述为 Jetson/TensorRT 性能或完整应用验证。
+
+影响范围：
+
+- M2 closeout、M3 PostProcessor preparation 和 M4 Serial Baseline 的工作分界。
+
+后续调整：
+
+M3 可在不修改 M2 Engine contract 的前提下开始 PostProcessor design/implementation；
+TensorRT、CUDA、Pipeline 与 benchmark 继续留在各自独立阶段。
+
+---
+
+### D026 - M3 frozen YOLOv8 PostProcessor 语义
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. M3 只处理 frozen `float32 BCN [1,10,8400]` raw `HostTensor`。channels 0～3 为
+   `cx,cy,w,h`，channels 4～9 为与 frozen `ModelContract` 一致的六类分数；没有
+   objectness 或 embedded NMS。
+2. `PostProcessor` 是 concrete class，不引入 `IPostProcessor`。它输出含 xyxy、
+   confidence、class id 和 candidate index 的最小 `Detection`；坐标在 M3 内通过
+   `ImageTransformMetadata` 恢复为 original-image space 并 clip。
+3. 候选使用最大 class score（score tie 取较小 class id），只保留
+   `confidence > 0.25F`；NMS 为 class-aware、`IoU > 0.45F` 抑制、`max_nms=30000`、
+   `max_det=300`、`max_wh=7680.0F`。pre-NMS 与最终 Detection 均采用
+   confidence desc / class id asc / candidate index asc 的显式 deterministic order。
+4. M3 consistency evidence 必须使用独立 Python reference 与同一 frozen raw tensor
+   比较完整 detection；不得使用现有 PT/ONNX shared-NMS comparison，也不得经过
+   C++ Preprocessor、ORT Engine 或 Runner。完整 E2E Level C 保留给 M5。
+
+备选方案：
+
+- 保留 model-input coordinates，将 inverse LetterBox 延后给 Runner。
+- 使用 OpenCV DNN NMS、class-agnostic NMS 或仅比较最终 detection count。
+- 为潜在多模型实现预先引入 `IPostProcessor`/通用解析框架。
+
+选择理由：
+
+- M1 已生成完整且可验证的 transform metadata，M3 可在不读取图像的情况下履行
+  architecture/requirements 的 original-coordinate restoration 职责。
+- 现有 Python export comparison 未固定 equal-score candidate order、且两侧共用 NMS，
+  不能独立证明 C++ 后处理；明确 canonical order 和独立 reference 使结果可复查。
+- frozen model contract 只有一个静态 YOLOv8 output，最小 concrete contract 能避免
+  对未实现 backend、dynamic shape 或 application metadata 的过早抽象。
+
+影响范围：
+
+- M3.1 Detection/PostProcessor contract、M3 decode/NMS implementation 和
+  `tests/data/postprocessor_reference/` / `results/validation/postprocessor_only/` evidence。
+- M4 Runner 将消费 original-image `Detection`，但不拥有 decode/NMS 或坐标恢复逻辑。
+
+后续调整：
+
+若模型 output、类别语义、NMS 策略或 coordinate contract 改变，必须提供新的 model
+contract/reference evidence 并经架构审查；不得静默改变已冻结的 M3 detection semantics。
+
+---
+
+### D027 - M3 clipping parity with Ultralytics 8.4.50
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M3 baseline `PostProcessor` 的 inverse LetterBox 后使用 continuous xyxy clipping：x clamp
+到 `[0, original_width]`，y clamp 到 `[0, original_height]`。为与本地固定
+Ultralytics 8.4.50 的 `scale_boxes() -> clip_boxes()` 行为保持 parity，M3 不做 post-clip
+degeneracy 或 minimum-size filtering；零宽或零高的最终 `Detection` 必须保留。所有输出坐标
+仍必须 finite，且满足非降序边界。零面积过滤若为业务所需，必须作为后续显式业务层策略，
+不属于 M3 baseline。
+
+选择理由：
+
+- 固定 Ultralytics 8.4.50 `scale_boxes()` 在 inverse transform 后只调用 `clip_boxes()`；
+  后者 clamp 四个坐标后直接返回，未过滤 `x1 == x2` 或 `y1 == y2` 的框。
+- decode 阶段 `w <= 0` / `h <= 0` skip 和 xyxy overflow skip 是 raw prediction 的非法
+  geometry policy，不等同于有效 NMS candidate 被恢复并 clip 后退化。
+- 保持该边界行为使后续 M3 Python/C++ PostProcessor-only validation 能比较完整 detection
+  而无隐式过滤差异。
+
+影响范围：
+
+- M3.4 transform/clip/process implementation 与其 unit tests。
+- 后续 `tests/data/postprocessor_reference/` 的 Python/C++ PostProcessor-only detection evidence。
+
+后续调整：
+
+任何业务层零面积过滤必须有单独的配置/contract、测试和架构决策；不得倒灌修改 M3 baseline
+PostProcessor。
+
+---
+
+### D028 - M4 与 M5 验证边界
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 只建立 deterministic single-thread C++ ONNX Runtime functional baseline，包括 strict runtime
+configuration、DirectorySource、M1/M2/M3 composition、ResultSink、SerialRunner、actual ORT smoke 和
+per-frame 基础 `FrameTimings`。M4 不建立 public Profiler，不做 warmup、statistics、FPS 或 benchmark。
+
+完整 Level C image-to-detection parity、正式 Profiler、warmup/minimum sample rules、mean/percentiles/FPS、
+ORT CPU performance baseline、stability 和 paper performance evidence 全部属于 M5。
+
+备选方案：
+
+- 在 M4 同时实现完整 Level C 和正式 performance baseline。
+- M4 完全不记录 stage timing。
+
+选择理由：
+
+- 功能正确性、application orchestration 与性能证据的验证风险不同，应分阶段关闭。
+- 最小 per-frame timing 能验证 stage boundary wiring，但不足以支撑正式性能结论。
+
+影响范围：
+
+- M4/M5 task boundary、`FrameTimings`、SerialRunner、runtime JSON/Console 输出和 Gate 口径。
+
+后续调整：
+
+M5 可在不追溯改变 M4 functional output 的前提下引入正式 Profiler；不得把 M4 timing 重新解释为论文性能证据。
+
+---
+
+### D029 - M4 runtime 配置和 CLI
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 runtime 使用 schema version 1 的 strict YAML：全部 section/field 必填，无 implicit defaults，拒绝 unknown
+field、duplicate key 和错误类型。CLI 唯一正常运行形式为 `edge_ai_infer --config <runtime.yaml>`；只允许
+单独 `--help` 作为帮助形式，不提供 `-h`、positional arguments 或 YAML overrides。
+
+备选方案：
+
+- 为缺失字段提供默认值并允许 unknown fields。
+- 同时提供大量 model/input/postprocess CLI overrides。
+
+选择理由：
+
+- 单一完整配置可使 smoke runs 可复查，避免 CLI/YAML precedence 和 silent typo。
+- 当前只有一个 backend/input mode，无需提前建立通用配置或 override framework。
+
+影响范围：
+
+- RuntimeConfig/Loader、CLI parser、application exit mapping 和 runtime config tests。
+
+后续调整：
+
+新增 backend/runtime mode 时必须通过新 schema version 或显式兼容设计扩展，不得静默放宽 M4 strictness。
+
+---
+
+### D030 - M4 图片输入抽象
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 采用只有 `next(optional<ImageItem>*)` 的最小 `ImageSource`。`DirectorySource` 只枚举第一层真实 regular
+image files，跳过 symlink，以 relative generic path byte order 确定性排序，按次解码，遇到坏图 fail-fast；不提供
+reset/size，也不为 Video/Camera/RTSP/ROS2 设计提前抽象。
+
+备选方案：
+
+- 递归目录并跳过坏图继续运行。
+- 立即设计统一 image/video/camera/stream interface 与 random access。
+
+选择理由：
+
+- M4 需要可复查的 deterministic finite input sequence 和明确 failure semantics。
+- 最小接口足以支持 SerialRunner dependency injection，避免未实现 source types 驱动过度设计。
+
+影响范围：
+
+- ImageItem、ImageSource、DirectorySource、source tests 和 SerialRunner EOS/failure behavior。
+
+后续调整：
+
+Video/Camera/RTSP 必须在独立阶段基于真实需求新增 source implementation；不得改变 M4 DirectorySource 顺序和 fail-fast 证据。
+
+---
+
+### D031 - M4 串行编排
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+`SerialRunner` 严格同步单线程，只借用 ImageSource、Preprocessor、`IInferenceEngine`、PostProcessor 和
+IResultSink；不拥有或构造依赖，不加载 YAML，不解析 CLI，不接触 concrete ORT type。任一 stage 首次失败立即停止，
+不处理下一帧、不调用成功 `end_run()`；caller `RunSummary` 只在 sink end 成功后一次提交。
+
+备选方案：
+
+- Runner 直接构造/分支 `OnnxRuntimeEngine` 并管理 application configuration。
+- 失败时跳过 frame 继续并返回 partial summary。
+
+选择理由：
+
+- interface-only dependency 保持 M2 backend boundary，并使 fake-based orchestration tests 可覆盖全部 failure paths。
+- fail-fast 和 summary atomicity 避免把 partial run 表述为完整成功。
+
+影响范围：
+
+- SerialRunner public contract、lifetime、Status context、sink lifecycle、tests 和未来 backend composition。
+
+后续调整：
+
+Pipeline 或 tolerant processing policy 必须作为独立 runtime mode 设计，不得修改 M4 SerialRunner baseline 语义。
+
+---
+
+### D032 - M4 结果输出
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M4 JSON 是单个运行级、固定字段顺序的 deterministic UTF-8 functional output。JsonSink 在内存缓存完整 run，
+仅在 `end_run()` 通过同目录 temporary file + flush/close + POSIX atomic rename 提交；运行失败时目标文件保持不变。
+CompositeSink 固定拥有 JsonSink 后 optional ConsoleSink，begin/write 正序、end 逆序，使 Console end 成功后才提交 JSON。
+当前仓库无 production JSON library，因此使用固定 schema 的最小 writer，不新增大型 DOM dependency。
+
+备选方案：
+
+- 每图 JSON/JSON Lines 或运行中持续覆盖 final file。
+- 引入 dynamic sink registry 和大型 general-purpose JSON framework。
+
+选择理由：
+
+- 单运行级文件能表达 metadata、ordered images 和 committed summary；atomic replacement 避免失败后留下假完整结果。
+- 固定 composition order 保留 JSON final commit 作为最后成功点，同时维持实现范围最小。
+
+影响范围：
+
+- IResultSink lifecycle、ConsoleSink/JsonSink/CompositeSink、JSON schema、overwrite/failure tests 和 application assembly。
+
+后续调整：
+
+M5 可新增正式 experiment logs，但不得静默改变 M4 schema version 1 或其 atomic commit semantics。
+
+---
+
+### D033 - M4 Runner 模型输入合同
+
+时间：
+
+```text
+2026-07-18
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+`SerialRunner` 在构造时显式接收已验证 `ModelContract.input.tensor_info`，并在内部保存可复制
+`core::TensorInfo` 的值副本。每帧仅使用该副本调用 M1 `Preprocessor`；应用组装层必须将同一份已验证
+ModelContract 同时用于 Engine initialize 与 Runner 注入。
+
+备选方案：
+
+- 扩展 M2 `IInferenceEngine` 以暴露输入 metadata。
+- 让 Runner 重新加载 ModelContract、从 RunMetadata 推导 shape，或硬编码 640 输入。
+
+选择理由：
+
+- M1 Preprocessor 的公开合同需要 TensorInfo，而 M2 Engine 接口按既有边界不提供 getter。
+- 外部依赖注入保持 Runner backend-neutral，避免修改 M1/M2 冻结合同，并可被未来 TensorRT backend 复用。
+
+影响范围：
+
+- M4.4 SerialRunner public constructor、M4.4 tests、M4.5 application composition 与未来 backend 替换。
+
+后续调整：
+
+不得把 TensorInfo 加入 RunMetadata 或以 shared_ptr/裸引用替代 Runner 的值副本；如需扩展模型能力，应通过
+新的明确 ModelContract 与应用组装设计处理。
+
+---
+
+### D034 - M5 Level C Reference
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 Level C 使用同一冻结 ONNX 上的 Python ONNX Runtime 显式 pipeline 作为 Reference。Reference 读取同一
+ModelContract 和 RuntimeConfig，显式执行图片排序/读取、LetterBox、BGR→RGB、HWC→CHW、float32/255、ORT、
+BCN decode、strict confidence threshold、class-aware NMS、坐标恢复和 `candidate_index` 保留。
+
+PyTorch、Ultralytics `model.predict()`、Ultralytics hidden LetterBox/NMS/scale_boxes 和历史
+`compare_pt_onnx.py` 的 shared/greedy pipeline 均不是 Level C oracle。
+
+备选方案：
+
+- 使用 PyTorch 或 Ultralytics 高层结果作为 C++ golden；
+- 继续使用历史 PT/ORT consistency report；
+- 对 M1/M2/M3 分层结果做人工拼接而不建立 E2E Reference。
+
+选择理由：
+
+- 同一 ONNX/ORT 隔离模型导出差异，只验证完整 image-to-detection deployment pipeline；
+- 显式实现可审计每个语义边界，并复用已验证的 M1/M2/M3 参考逻辑；
+- 独立稳定 JSON 支持 self-determinism 和跨语言语义比较。
+
+影响范围：
+
+- M5 Level C Reference、Comparator、corpus、evidence、provenance 和 Level C Gate。
+
+后续调整：
+
+Reference、依赖版本或任一语义变化使既有 Level C evidence 失效，必须重新评审和执行 Gate。
+
+---
+
+### D035 - M5 Level C Detection Matching
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+Python/C++ Detection 按 `class_id` 分组，以 confidence absolute error `<=1e-4` 且 bbox 任一坐标 absolute error
+`<=0.01 pixel` 建立兼容边，每类使用确定性的最大二分匹配并要求完整一对一 matching。输出顺序和
+`candidate_index` 不作为跨语言 PASS 条件；`candidate_index` 保留用于诊断。16 张图片必须全部 PASS。
+
+备选方案：
+
+- 按输出下标或 confidence 排序后逐项比较；
+- IoU 最近或兼容边 greedy matching；
+- 只比较 count、平均误差或通过率。
+
+选择理由：
+
+- 多个相近 Detection 可能存在多条兼容边，greedy 会产生假失败；
+- 最大匹配验证是否存在完整容差内一对一对应，不依赖实现输出顺序；
+- 冻结逐项容差和全量 PASS 防止平均值掩盖个别错误。
+
+影响范围：
+
+- M5 Comparator、反例测试、comparison report、tolerance 和 Level C Gate。
+
+后续调整：
+
+matching 或 tolerance 变化必须人工决定并使旧 Level C/benchmark evidence 失效，不得为通过而自动放宽。
+
+---
+
+### D036 - M5 Benchmark Instrumentation
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 使用真实 Release `edge_ai_defect`，复用 M4 `FrameTimings` 和 JsonSink；pilot、warmup、重复 regular-file
+workload、进程编排、CPU affinity、统计、压缩和 provenance 由离线 Python 工具完成。不新增 C++ Profiler、
+`--benchmark`、RuntimeConfig benchmark mode，也不修改 SerialRunner、FrameTimings 或 production JSON schema。
+
+备选方案：
+
+- 在 C++ 引入正式 Profiler/benchmark mode；
+- 通过 RuntimeConfig 或 CLI 增加 warmup/measured/run 参数；
+- 使用外部 wall clock 代替已有阶段 timing。
+
+选择理由：
+
+- M4 已提供完整且可序列化的 stage boundary；离线工具足以执行严格统计并保持 production 合同冻结；
+- 真实 executable 覆盖实际 source/preprocess/ORT/postprocess 路径，避免建立第二条 benchmark-only runtime。
+
+影响范围：
+
+- M5 benchmark harness、RuntimeConfig 使用方式、evidence schema 和 performance Gate。
+
+后续调整：
+
+未来 Jetson/Pipeline 若确需新 instrumentation，必须在独立阶段设计，不追溯改变 M5 WSL baseline。
+
+---
+
+### D037 - M5 ORT CPU Baseline 定位
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+M5 正式性能结果名称为 **WSL2 x86_64 ONNX Runtime CPU Engineering Baseline**。它用于记录当前环境、冻结
+single-thread ORT 配置和 C++ Serial pipeline 的工程测量，不是 Jetson baseline、TensorRT baseline、最终部署硬件
+性能或论文同硬件 backend speedup。
+
+备选方案：
+
+- 不采集本地 baseline；
+- 将 WSL CPU 数字与未来 Jetson TensorRT 数字直接比较；
+- 把 M5 表述为最终论文性能实验。
+
+选择理由：
+
+- 当前 WSL2 环境可稳定验证工具、measurement protocol 和 C++ CPU baseline；
+- 跨设备、CPU/GPU、系统和电源策略的数字不能形成有效加速比；
+- 未来论文 backend comparison 仍需在同一 Jetson 平台采集。
+
+影响范围：
+
+- M5 evidence 命名、报告措辞、EXPERIMENT_PLAN、论文引用边界和后续 Jetson/TensorRT 计划。
+
+后续调整：
+
+定位不可由结果好坏改变。Jetson 数据必须作为独立 evidence 和阶段产生。
+
+---
+
+### D038 - M5 Evidence、Retention 和失效
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+正式 M5 evidence 仅在 clean committed source HEAD 生成，使用 `YYYYMMDD_<short_source_git_commit>` 标识，保存
+原始样本、统计、commands、exit codes 和完整 provenance。Level C 保留未压缩原始 JSON；benchmark 保留固定压缩级别、
+mtime=0 的 deterministic gzip raw application JSON，以及可追溯的 `timings.tsv`、per-run/aggregate summary。
+单个 evidence set tracked 上限为 25 MiB，超过时停止并人工决定，不自行删减。
+
+关键模型/合同/config/corpus/图片、Reference/Comparator/production、ORT/OpenCV、tolerance/matching 变化使 Level C
+evidence 失效；Release flags、FrameTimings、benchmark corpus、pilot/warmup/measured/run/wait/affinity、percentile、
+outlier 或 retention 变化还使 benchmark evidence 失效。无关 documentation-only 修改不强制重跑。
+
+备选方案：
+
+- 只保留 summary 或手工表格；
+- 保留全部未压缩 benchmark JSON；
+- 不记录失效条件，持续覆盖同一路径。
+
+选择理由：
+
+- 原始样本允许独立重建统计并审查 warmup/outlier；
+- deterministic compression 控制体积且保留完整数据；
+- 明确 source commit 和失效边界防止旧 evidence 被误用于变化后的实现或协议。
+
+影响范围：
+
+- `results/validation/level_c/`、`results/benchmark/ort_cpu/`、所有 M5 tools、Gate 和 closeout。
+
+后续调整：
+
+Retention 或失效规则变化属于新决策，并使受影响的正式 baseline evidence 失效。
+
+---
+
+### D039 - M5 NEU-DET 资产策略
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+在未确认明确再分发许可的情况下，不将 NEU-DET 原图或基于其生成的派生图提交 Git。仓库只跟踪 corpus manifest、
+文件名、split、expected SHA256、GT 类别、选择理由、导入/SHA 工具和派生规则。正式运行由用户通过
+`--dataset-root <path>` 提供本地合法数据，工具 fail-fast 验证 regular file、split 和 SHA；不联网下载或使用硬编码
+个人绝对路径。
+
+备选方案：
+
+- 将 12/20 张 JPG 和 derived BMP 直接提交 Git；
+- 自动从网络或第三方镜像下载；
+- 只记录文件名，不记录 SHA 或来源。
+
+选择理由：
+
+- 当前仓库没有 tracked NEU-DET 图片、dataset archive 或明确再分发许可；
+- manifest+SHA 可验证 corpus 身份和顺序，同时避免未经确认的再分发；
+- 显式本地 root 使工具可移植且不会依赖某台机器目录。
+
+影响范围：
+
+- M5 corpus manifests、preparation tool、derived images、provenance、Level C/benchmark evidence 和复现说明。
+
+后续调整：
+
+若取得明确许可或官方可归档来源，可新增决策调整分发策略；不得静默提交图片或虚构许可状态。
+
+---
+
+### D040 - M5 Evidence Consolidation Contract
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+M5.5 首次能力预审确认原计划只定义了目标、检查范围、提交信息和下一阶段，未冻结 consolidation 持久化目录、
+文件集合、machine-readable schema、human-readable summary 或 `sha256sums` 规则。因此预审在修改任何文件前
+停止；该问题分类为 `M5.5 evidence consolidation planning gap`，不是 M5.5 执行失败。此次 remediation 不运行
+application/benchmark、不重建 Evidence、不修改正式 Level C/benchmark Evidence。
+
+Decision：
+
+- 正式路径固定为 `results/consolidation/m5/<evidence_id>/`；Evidence ID 为 `YYYYMMDD_<short_source_commit>`，
+  每个完整 source commit 只允许一套 consolidation。
+- 目录固定恰好包含 `README.txt`、`evidence_index.json`、`verification_report.json`、`provenance.json`、
+  `commands.txt` 和 `sha256sums.txt` 六个文件。
+- 三份 JSON 使用 schema version 1；README 是 human-readable summary；机器可读文件只引用现有 Evidence，不复制
+  raw/gzip/TSV/图片/模型/binary。
+- `sha256sums.txt` 按字节序索引其他五个文件并排除自身；发布采用 staging 完整验证后单次 rename。
+- D038 的 25 MiB retention 统一上限为 `26214400` bytes；输入 Evidence 或合同变化时 consolidation 失效，必须
+  完整重新生成，不得手工 patch。
+- M5.6 直接验证 consolidation 及底层 Evidence；consolidation PASS 不等于 M5.6 Gate PASS，也不等于 M5 CLOSED。
+
+Alternatives rejected：
+
+- 将 consolidation 放入 validation 或 benchmark 单侧目录；
+- 只修改阶段文档而不提供稳定 machine-readable index；
+- 复制两套正式 Evidence；
+- 使用随机 ID、秒级时间或个人路径；
+- 让 M5.6 只信任 consolidation 而不检查底层 Evidence。
+
+Consequences：
+
+增加一个小型、稳定、可审计的跨 Evidence 索引，避免大体积重复数据，并为 M5.6 提供明确入口；任何底层 Evidence
+变化都会使该 consolidation 失效。M5.5 Planning Freeze Remediation 完成后，必须从新的 clean committed HEAD
+重新计算未来 consolidation 的 Evidence ID。
+
+Clarification（M5.5 Consolidation Evidence Remediation Planning Freeze，2026-07-19）：
+
+- `provenance.json` 中的 `branch`、`upstream`、`behind`、`ahead` 和
+  `worktree_clean_before_generation` 固定表示 consolidation 生成开始前采集的 generation-time Git snapshot；提交后
+  不因后续 push、upstream 变化或新 commit 回填。M5.6 审计单独记录 current Git facts，Gate 不要求历史 `ahead` 与审计时
+  `ahead` 相等。Stable regeneration 使用 source commit 和冻结的 generation snapshot，不重新查询动态 Git 状态、时间、
+  hostname、临时目录或当前 HEAD/upstream。
+- 第一次 M5.6 Deep Evidence Gate 的唯一 blocker 是 consolidation provenance completeness：旧
+  `20260719_c24eefa` 的 `command_records` 只有 6 条聚合记录，而合同要求 15 个独立阶段；Level C、Benchmark、重建、
+  model/contract、corpus、privacy、retention 和 CTest 均保持 PASS。该问题不是 production、Reference、Comparator、
+  Benchmark 结果、统计或底层 Evidence 损坏，不需要重跑正式 benchmark。
+- 旧 `results/consolidation/m5/20260719_c24eefa/` 保留为 `historical_invalidated_consolidation`，不修改、不删除、不
+  重算其 SHA，不作为下一次 M5.6 的 active Consolidation；失效状态只由阶段文档记录，旧 Evidence 内不增加标记文件或
+  字段。
+- 本次提交只冻结 remediation contract。提交后先形成新的 clean committed HEAD，再以该新 source commit 重新计算
+  Evidence ID 并生成新的完整六文件 consolidation；不复用或覆盖旧目录，不产生新的检测或性能样本。
+- 新 provenance 必须按固定顺序恰好包含 15 条唯一 `command_records`：
+  `git_preflight`、`git_ancestry`、`level_c_sha`、`benchmark_sha`、`gzip_validation`、
+  `timings_tsv_rebuild`、`per_run_summary_rebuild`、`aggregate_summary_rebuild`、
+  `model_contract_consistency`、`corpus_consistency`、`privacy_scan`、`asset_scan`、
+  `retention_check`、`stable_regeneration`、`consolidation_sha`。每条记录必须包含实际执行的 command、phase、
+  working directory、exit code 和 result，不得合并阶段或记录 application/Pilot/formal run/benchmark 命令。
+- 新 `commands.txt` 与 15 条 `command_records` 一对一：恰好 15 个编号段，顺序、ID、phase、command、working directory、
+  exit code 和 result 完全一致，且只使用 repo-relative 检查命令。
+- Stable regeneration 必须在 staging A/B 使用完全相同的冻结输入生成并比较六文件；五个内容文件和
+  `sha256sums.txt` 必须 byte-identical，随后才可原子发布。新 consolidation 完成前，M5.5 remediation generation、M5.6
+  Gate rerun 和 M5.7 均保持 PENDING；不得 patch 历史 consolidation。

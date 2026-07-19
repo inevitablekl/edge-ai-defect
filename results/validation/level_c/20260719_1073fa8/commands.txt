@@ -1,0 +1,42 @@
+M5.2B formal Level C evidence commands (run from repository root)
+
+All paths below are repository-relative. `$REPO_ROOT` is a documentation placeholder.
+
+1. Git preflight (exit 0; source worktree clean; upstream behind 0, ahead 2)
+   git branch --show-current
+   git rev-parse HEAD
+   git status --short
+   git rev-parse --abbrev-ref --symbolic-full-name @{upstream}
+   git rev-parse @{upstream}
+   git rev-list --left-right --count @{upstream}...HEAD
+
+2. Release builds and regression (all commands exit 0)
+   cmake -S . -B build-m5-2b-formal-off -DCMAKE_BUILD_TYPE=Release -DEDGE_AI_ENABLE_MODEL_SMOKE=OFF -DONNXRUNTIME_ROOT="$REPO_ROOT/third_party/onnxruntime/1.23.2/linux-x64"
+   cmake --build build-m5-2b-formal-off -j2
+   ctest --test-dir build-m5-2b-formal-off --output-on-failure -R 'm5_level_c|m5_corpus'  # 4/4 PASS
+   ctest --test-dir build-m5-2b-formal-off --output-on-failure                    # 28/28 PASS
+   cmake -S . -B build-m5-2b-formal-on -DCMAKE_BUILD_TYPE=Release -DEDGE_AI_ENABLE_MODEL_SMOKE=ON -DEDGE_AI_FROZEN_ONNX_PATH="$REPO_ROOT/models/onnx/yolov8n_neudet_frozen.onnx" -DONNXRUNTIME_ROOT="$REPO_ROOT/third_party/onnxruntime/1.23.2/linux-x64"
+   cmake --build build-m5-2b-formal-on -j2
+   ctest --test-dir build-m5-2b-formal-on --output-on-failure -R 'm5_level_c|m5_corpus'  # 4/4 PASS
+   ctest --test-dir build-m5-2b-formal-on --output-on-failure                     # 36/36 PASS
+
+3. Prepare the formal corpus (exit 0; 12 originals + 4 derived, no images are retained in evidence)
+   .venv/bin/python tools/validation/prepare_m5_corpus.py --mode level-c --dataset-root data/yolo/neu_det/images/val --output-dir build-m5-2b-formal-work/20260719_1073fa8/prepared
+
+4. Python explicit ONNX Runtime reference (each exit 0; stderr empty)
+   .venv/bin/python tools/validation/m5_level_c_reference.py --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml --input-dir build-m5-2b-formal-work/20260719_1073fa8/prepared --output build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_1.json
+   .venv/bin/python tools/validation/m5_level_c_reference.py --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml --input-dir build-m5-2b-formal-work/20260719_1073fa8/prepared --output build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_2.json
+
+5. C++ application (each exit 0; stdout and stderr empty)
+   build-m5-2b-formal-on/edge_ai_defect --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml
+   build-m5-2b-formal-on/edge_ai_defect --config build-m5-2b-formal-work/20260719_1073fa8/cpp_runtime_run_2.yaml
+
+6. Deterministic comparisons (each exit 0; 16/16 PASS)
+   .venv/bin/python tools/validation/m5_level_c_compare.py --python-reference build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_1.json --cpp-result build-m5-2b-formal-work/20260719_1073fa8/cpp_run_1.json --output build-m5-2b-formal-work/20260719_1073fa8/comparison_report.json
+   .venv/bin/python tools/validation/m5_level_c_compare.py --python-reference build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_2.json --cpp-result build-m5-2b-formal-work/20260719_1073fa8/cpp_run_2.json --output build-m5-2b-formal-work/20260719_1073fa8/comparison_report_run_2.json
+
+7. Evidence checks (exit 0)
+   cmp --silent python_reference_run_1.json python_reference_run_2.json
+   cmp --silent cpp_run_1.json cpp_run_2.json
+   sha256sum --check sha256sums.txt
+   python JSON/schema/privacy/size checks recorded in provenance.json

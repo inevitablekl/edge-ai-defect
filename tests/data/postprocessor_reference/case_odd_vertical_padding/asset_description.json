@@ -1,0 +1,60 @@
+{
+  "case": "case_odd_vertical_padding",
+  "shape": [
+    1,
+    10,
+    8400
+  ],
+  "candidates": [
+    {
+      "candidate_index": 300,
+      "cx": 150.0,
+      "cy": 150.0,
+      "width": 100.0,
+      "height": 100.0,
+      "class_scores": {
+        "0": 0.95
+      }
+    },
+    {
+      "candidate_index": 301,
+      "cx": 10.0,
+      "cy": 90.0,
+      "width": 60.0,
+      "height": 60.0,
+      "class_scores": {
+        "1": 0.9
+      }
+    },
+    {
+      "candidate_index": 302,
+      "cx": 650.0,
+      "cy": 600.0,
+      "width": 200.0,
+      "height": 200.0,
+      "class_scores": {
+        "2": 0.85
+      }
+    },
+    {
+      "candidate_index": 303,
+      "cx": 125.0,
+      "cy": -75.0,
+      "width": 50.0,
+      "height": 50.0,
+      "class_scores": {
+        "3": 0.8
+      }
+    },
+    {
+      "candidate_index": 304,
+      "cx": 725.0,
+      "cy": 125.0,
+      "width": 50.0,
+      "height": 50.0,
+      "class_scores": {
+        "4": 0.75
+      }
+    }
+  ]
+}

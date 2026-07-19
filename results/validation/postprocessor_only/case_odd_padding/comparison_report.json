@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "evidence_id": "postprocessor_only",
+  "case": "case_odd_padding",
+  "cpp_environment": {"compiler": "GCC 11.4.0", "cplusplus": 201703},
+  "comparison": {
+    "golden_detection_count": 5,
+    "cpp_detection_count": 5,
+    "count_match": true,
+    "order_match": true,
+    "class_id_match": true,
+    "candidate_index_match": true,
+    "finite": true,
+    "confidence_max_abs": 0,
+    "confidence_mean_abs": 0,
+    "confidence_max_abs_detection_index": 0,
+    "bbox_max_abs": 0,
+    "bbox_mean_abs": 0,
+    "bbox_max_abs_detection_index": 0,
+    "bbox_max_abs_coordinate": "x1",
+    "confidence_abs_limit": 9.9999999999999995e-07,
+    "bbox_coordinate_abs_limit": 0.0001,
+    "first_exact_mismatch": "",
+    "pass": true
+  }
+}

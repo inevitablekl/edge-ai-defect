@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "evidence_id": "preprocess_level_a",
+  "source_commit": "a7d21ce18f988fccf62f467bcf9a4eae367c5b79",
+  "generator": {
+    "path": "tools/validation/generate_preprocess_level_a.py",
+    "sha256": "2cae95a4de9d254e0ae4fe98eab2ee62fe763266deaf70ac7b2fd0a7b4fa685b"
+  },
+  "validator": {
+    "path": "tests/test_preprocess_level_a.cpp",
+    "sha256": "cbf11b9af1437eac1d1fb6a8c6df1d7e77d84cbb3ae3f4256375d9cb8b0f7d20"
+  },
+  "manifest_parser": {
+    "path": "tests/preprocess_level_a_manifest.cpp",
+    "sha256": "16db05879398afc54c494a54195ce9a47b3061a493b447684eb56b2af81b6002"
+  },
+  "compare_helper": {
+    "path": "tests/preprocess_level_a_compare.cpp",
+    "sha256": "167585b461fc4cc5febffbe49e276bdb833a4592ed513a32e5e4fa16cb2188c1"
+  },
+  "manifest": {
+    "path": "tests/data/preprocess_level_a/manifest.yaml",
+    "sha256": "14cb8749f2b7d550707ad77e75a775d02f77c841bfe822f7ddb2f30742ab1b12"
+  },
+  "sha256sums": {
+    "path": "tests/data/preprocess_level_a/SHA256SUMS",
+    "sha256": "0a35ab6ca0c512d5a82656cf8a6e5a39d92206eddc5fd77e16c2da0d6d984b9b"
+  },
+  "formal_report": {
+    "path": "results/validation/preprocess_level_a/level_a_report.json",
+    "sha256": "08b1112b066a881eeddf47e2183bd96c43de3c976b3c8e53e62fafb13ff9c0fc"
+  },
+  "environment": {
+    "python_version": "3.10.12",
+    "numpy_version": "1.26.4",
+    "python_opencv_version": "4.10.0",
+    "cpp_opencv_version": "4.5.4"
+  },
+  "case_count": 8,
+  "frozen_input_shape": [
+    1,
+    3,
+    640,
+    640
+  ],
+  "final_result": "PASS",
+  "mae_aggregate": 0,
+  "max_abs_aggregate": 0
+}

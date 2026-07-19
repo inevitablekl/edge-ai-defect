@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "corpus_mode": "level-c",
+  "manifest_path": "tests/data/m5/manifests/level_c_original_corpus.json",
+  "manifest_sha256": "08fb6ab80f83b878d60fee725c7b142dfbdb131b95d1d168cd905da1d25fa88a",
+  "entries": [
+    {
+      "source_filename": "crazing_51.jpg",
+      "prepared_filename": "0000_crazing_51.jpg",
+      "source_sha256": "185daa31428cf2467d48f9f57ff582575d07a796cd26d77f3e05537bae681503",
+      "prepared_sha256": "185daa31428cf2467d48f9f57ff582575d07a796cd26d77f3e05537bae681503",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "crazing_10.jpg",
+      "prepared_filename": "0001_crazing_10.jpg",
+      "source_sha256": "522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c",
+      "prepared_sha256": "522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "inclusion_18.jpg",
+      "prepared_filename": "0002_inclusion_18.jpg",
+      "source_sha256": "c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b",
+      "prepared_sha256": "c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "inclusion_217.jpg",
+      "prepared_filename": "0003_inclusion_217.jpg",
+      "source_sha256": "e40821c51a341286572663cbba1159e7efe8a7cd729c763a5c439d851e6a9c77",
+      "prepared_sha256": "e40821c51a341286572663cbba1159e7efe8a7cd729c763a5c439d851e6a9c77",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "patches_156.jpg",
+      "prepared_filename": "0004_patches_156.jpg",
+      "source_sha256": "9961f0ffde85a40516f54262b3fa74eb35cee24fc87a54d4fe8f07b7e7fb2ec2",
+      "prepared_sha256": "9961f0ffde85a40516f54262b3fa74eb35cee24fc87a54d4fe8f07b7e7fb2ec2",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "patches_211.jpg",
+      "prepared_filename": "0005_patches_211.jpg",
+      "source_sha256": "f988631bac3b31eac7be7a1f56e118d14d3327989ce4b454370761c5c8700305",
+      "prepared_sha256": "f988631bac3b31eac7be7a1f56e118d14d3327989ce4b454370761c5c8700305",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "pitted_surface_224.jpg",
+      "prepared_filename": "0006_pitted_surface_224.jpg",
+      "source_sha256": "419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80",
+      "prepared_sha256": "419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "pitted_surface_231.jpg",
+      "prepared_filename": "0007_pitted_surface_231.jpg",
+      "source_sha256": "0bfa310238545597ac7a48495a85ae1a945d2f6f8e4fa470d1bce5f4648c931c",
+      "prepared_sha256": "0bfa310238545597ac7a48495a85ae1a945d2f6f8e4fa470d1bce5f4648c931c",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "rolled-in_scale_146.jpg",
+      "prepared_filename": "0008_rolled-in_scale_146.jpg",
+      "source_sha256": "4b76ee7c33602b95115a2acec07b4cd74cab87eeb2cdc2a602534646cbed047b",
+      "prepared_sha256": "4b76ee7c33602b95115a2acec07b4cd74cab87eeb2cdc2a602534646cbed047b",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "rolled-in_scale_262.jpg",
+      "prepared_filename": "0009_rolled-in_scale_262.jpg",
+      "source_sha256": "67cab4d93752e5def8a7d34b72504c1ecacadc673f252d4d719b716aeda0c083",
+      "prepared_sha256": "67cab4d93752e5def8a7d34b72504c1ecacadc673f252d4d719b716aeda0c083",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "scratches_126.jpg",
+      "prepared_filename": "0010_scratches_126.jpg",
+      "source_sha256": "fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3",
+      "prepared_sha256": "fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "scratches_246.jpg",
+      "prepared_filename": "0011_scratches_246.jpg",
+      "source_sha256": "06811a835826c47ad78e91e90cb758f6334f348d21765375b2ce9146be1309b4",
+      "prepared_sha256": "06811a835826c47ad78e91e90cb758f6334f348d21765375b2ce9146be1309b4",
+      "width": 200,
+      "height": 200,
+      "derived": false
+    },
+    {
+      "source_filename": "crazing_10.jpg",
+      "prepared_filename": "0012_derived_319x201_crazing_10.bmp",
+      "source_sha256": "522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c",
+      "prepared_sha256": "8b7457f25d17344440dbd26ada74a6373bf0a177a0e4b89ce754ff12893f9b29",
+      "width": 319,
+      "height": 201,
+      "derived": true
+    },
+    {
+      "source_filename": "inclusion_18.jpg",
+      "prepared_filename": "0013_derived_201x319_inclusion_18.bmp",
+      "source_sha256": "c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b",
+      "prepared_sha256": "1b2c956884c7b7e573cfa634e3a93e5a510ca41d6d6b54cd44aa6148e3538ccb",
+      "width": 201,
+      "height": 319,
+      "derived": true
+    },
+    {
+      "source_filename": "pitted_surface_224.jpg",
+      "prepared_filename": "0014_derived_321x199_pitted_surface_224.bmp",
+      "source_sha256": "419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80",
+      "prepared_sha256": "01e52085c57fe641d20ce3212f88dd40ac80f0604676b7bc9d5c7fa080214bbb",
+      "width": 321,
+      "height": 199,
+      "derived": true
+    },
+    {
+      "source_filename": "scratches_126.jpg",
+      "prepared_filename": "0015_derived_199x321_scratches_126.bmp",
+      "source_sha256": "fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3",
+      "prepared_sha256": "fbe8c46a58125d8cd58c623efc4da5fed8cc162f3ff2f53aad86363273336dd4",
+      "width": 199,
+      "height": 321,
+      "derived": true
+    }
+  ]
+}

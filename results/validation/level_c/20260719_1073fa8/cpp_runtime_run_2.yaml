@@ -1,0 +1,23 @@
+schema_version: 1
+backend:
+  type: onnxruntime_cpu
+model:
+  contract_path: ../../configs/model_contracts/yolov8n_neudet_frozen.yaml
+  model_path: ../../models/onnx/yolov8n_neudet_frozen.onnx
+input:
+  type: directory
+  directory: prepared
+output:
+  json_path: cpp_run_2.json
+  console: false
+  overwrite: true
+postprocess:
+  confidence_threshold: 0.25
+  iou_threshold: 0.45
+  max_nms: 30000
+  max_det: 300
+  max_wh: 7680.0
+  agnostic: false
+  multi_label: false
+timing:
+  enabled: false

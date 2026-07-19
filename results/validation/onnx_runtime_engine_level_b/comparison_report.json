@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "command": "build/tests/test_onnx_runtime_engine_level_b --contract configs/model_contracts/yolov8n_neudet_frozen.yaml --model models/onnx/yolov8n_neudet_frozen.onnx --input tests/data/preprocess_level_a/golden/frozen_640_checkerboard.f32le --golden results/validation/onnx_runtime_engine_level_b/python_golden_output.f32le --cpp-output results/validation/onnx_runtime_engine_level_b/cpp_output.f32le --report results/validation/onnx_runtime_engine_level_b/comparison_report.json",
+  "cpp_environment": {
+    "compiler": "GCC 11.4.0",
+    "cplusplus": 201703
+  },
+  "comparison": {
+    "shape": [1, 10, 8400],
+    "element_count": 84000,
+    "golden_finite_count": 84000,
+    "cpp_finite_count": 84000,
+    "mae": 0,
+    "max_abs": 0,
+    "max_abs_index": 0,
+    "max_abs_channel": 0,
+    "max_abs_candidate": 0,
+    "mae_limit": 9.9999999999999995e-07,
+    "max_abs_limit": 1.0000000000000001e-05,
+    "pass": true
+  }
+}

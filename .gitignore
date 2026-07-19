@@ -123,3 +123,8 @@ predictions.json
 
 # Archive artifacts (local only, not committed).
 artifacts/transfer/
+
+# Local third-party dependency payloads
+/third_party/downloads/*
+!/third_party/downloads/.gitkeep
+/third_party/onnxruntime/1.23.2/linux-x64/

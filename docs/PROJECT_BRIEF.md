@@ -118,6 +118,10 @@ The system should support:
 * performance profiling
 * CSV / JSON logs
 * image / video result output
+
+### Current development-stage boundary
+
+The current branch implements the C++17 ONNX Runtime CPU Serial Baseline first. WSL2 is the development and software-architecture validation environment; Jetson remains the target environment for TensorRT FP16 and performance experiments. This separation does not change the Jetson + TensorRT project direction.
 * command-line execution
 
 ---

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "evidence_id": "onnx_runtime_engine_level_b",
+  "command": "./.venv/bin/python tools/validation/generate_onnx_runtime_engine_level_b_golden.py --model models/onnx/yolov8n_neudet_frozen.onnx --input tests/data/preprocess_level_a/golden/frozen_640_checkerboard.f32le --output-dir results/validation/onnx_runtime_engine_level_b",
+  "environment": {
+    "python_version": "3.10.12",
+    "numpy_version": "1.26.4",
+    "onnxruntime_version": "1.23.2",
+    "providers": [
+      "CPUExecutionProvider"
+    ]
+  },
+  "model": {
+    "path": "models/onnx/yolov8n_neudet_frozen.onnx",
+    "size_bytes": 12242487,
+    "sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944"
+  },
+  "input": {
+    "path": "tests/data/preprocess_level_a/golden/frozen_640_checkerboard.f32le",
+    "sha256": "f8c5d7d0ba99ecf33a4a8539f9461780483c7509c1de100938ee896ba7834cd3",
+    "dtype": "float32",
+    "byte_order": "little_endian",
+    "layout": "NCHW",
+    "shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "element_count": 1228800
+  },
+  "python_golden_output": {
+    "path": "results/validation/onnx_runtime_engine_level_b/python_golden_output.f32le",
+    "sha256": "c3b17b6072147afb126c9ce812184703e4f75966db07a9433f50f829d892f254",
+    "dtype": "float32",
+    "byte_order": "little_endian",
+    "layout": "BCN",
+    "shape": [
+      1,
+      10,
+      8400
+    ],
+    "element_count": 84000,
+    "finite_count": 84000
+  },
+  "invocation": {
+    "python_executable": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/.venv/bin/python"
+  }
+}

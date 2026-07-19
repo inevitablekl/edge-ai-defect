@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "baseline_name": "WSL2 x86_64 ONNX Runtime CPU Engineering Baseline",
+  "OS": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "WSL_kernel": "6.18.33.2-microsoft-standard-WSL2",
+  "architecture": "x86_64",
+  "CPU_model": "Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz",
+  "visible_logical_cpu_count": 6,
+  "allowed_affinity_before": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "selected_cpu": 0,
+  "effective_affinity": [
+    0
+  ],
+  "memory_total_bytes": 8246124544,
+  "python_version": "3.10.12",
+  "python_executable_semantics": ".venv/bin/python",
+  "binary_sha256": "0f38995c4d179a724c275c025fd51e22eb18c282b89ff34c73d786c0f02ef315",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "runtime_config_sha256": "5e53f99c7acc9cd6d98a17d78b576966a769f77d4d3fb74f0f7546c16c37a230",
+  "python_package_versions": {
+    "opencv-python": "4.13.0",
+    "numpy": "2.2.6",
+    "PyYAML": "5.4.1",
+    "onnxruntime": "not installed"
+  },
+  "GCC_version": "11.4.0",
+  "CMake_version": "3.22.1",
+  "glibc": "glibc 2.35",
+  "C++_OpenCV_version": "4.5.4",
+  "Python_OpenCV_version": "4.13.0",
+  "ONNX_Runtime_C++_version": "1.23.2",
+  "ONNX_Runtime_Python_version": "not installed",
+  "CMAKE_BUILD_TYPE": "Release",
+  "compile_flags": "Release; CXX flags from CMake target",
+  "SessionOptions": {
+    "execution_provider": "CPUExecutionProvider",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "intra_op_num_threads": 1,
+    "inter_op_num_threads": 1,
+    "cpu_arena": true
+  },
+  "cache_policy": "warm-cache; caches not dropped",
+  "limitations": [
+    "WSL2",
+    "warm-cache",
+    "caches not dropped",
+    "Windows host load uncontrolled",
+    "CPU frequency/governor not fixed",
+    "not a Jetson result",
+    "not used for TensorRT speedup"
+  ]
+}

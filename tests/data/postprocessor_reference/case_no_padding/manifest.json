@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "evidence_id": "postprocessor_only",
+  "case": "case_no_padding",
+  "command": "./.venv/bin/python tools/validation/postprocessor_reference.py --data-root tests/data/postprocessor_reference",
+  "environment": {
+    "python_version": "3.10.12",
+    "numpy_version": "1.26.4"
+  },
+  "raw_output": {
+    "path": "tests/data/postprocessor_reference/case_no_padding/raw_output.f32le",
+    "sha256": "73d02ee3a4f76e2d26a0228324fd8841fd1945378d9003e647b6276c4af38cf0",
+    "dtype": "float32",
+    "byte_order": "little_endian",
+    "layout": "BCN",
+    "shape": [
+      1,
+      10,
+      8400
+    ],
+    "element_count": 84000
+  },
+  "metadata": {
+    "path": "tests/data/postprocessor_reference/case_no_padding/metadata.json",
+    "sha256": "6d04eabf29797950075c6b57fa2d00cb563dc5fd00f6679f64024971ef6d9262"
+  },
+  "config": {
+    "path": "tests/data/postprocessor_reference/case_no_padding/config.json",
+    "sha256": "a834624b780cbf23f6d3ec380e77d3610a78109f5d5c0bcabc2288ee95491861"
+  },
+  "python_golden_detections": {
+    "path": "tests/data/postprocessor_reference/case_no_padding/python_golden_detections.tsv",
+    "sha256": "f8b18794e18c6c3bb38064db9914e9c1046cec05334bb601ade26991bef484c3",
+    "format": "tsv_utf8_lf",
+    "detection_count": 7
+  },
+  "scripts": {
+    "python_reference": {
+      "path": "tools/validation/postprocessor_reference.py",
+      "sha256": "d9e75e446bfc2d9ba60818ce9954b5cbaf112111b7357e0b4c6bfd94134d5e3a"
+    },
+    "asset_generator": {
+      "path": "tools/validation/generate_postprocessor_reference_assets.py",
+      "sha256": "f5863e4fedac7f077e76b8bd9b41a8af07d1ac604a208c4e21877b17f29d82d4"
+    }
+  }
+}

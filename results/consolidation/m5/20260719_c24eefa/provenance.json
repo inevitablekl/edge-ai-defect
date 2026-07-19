@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "evidence_identity": {
+    "evidence_id": "20260719_c24eefa",
+    "source_git_commit": "c24eefa85bb77543e3267b7aaf797a0d1f02b846",
+    "source_git_short": "c24eefa",
+    "relative_path": "results/consolidation/m5/20260719_c24eefa",
+    "kind": "m5_evidence_consolidation"
+  },
+  "git": {
+    "branch": "feature/cpp-onnxruntime",
+    "upstream": "origin/feature/cpp-onnxruntime",
+    "behind": 0,
+    "ahead": 9,
+    "worktree_clean_before_generation": true
+  },
+  "input_evidence": {
+    "level_c": {
+      "evidence_id": "20260719_1073fa8",
+      "relative_path": "results/validation/level_c/20260719_1073fa8",
+      "source_commit": "1073fa8be1644dd8562f5704ae31996121883dbb",
+      "evidence_commit": "011ac3ca046a40f8da4bd5b0be7e7fa3e55b27c6",
+      "sha256sums_sha256": "14685b7253a4923239f6796fb173177126fa23f241861e6f696712a83e0379f3"
+    },
+    "benchmark": {
+      "evidence_id": "20260719_850252b",
+      "relative_path": "results/benchmark/ort_cpu/20260719_850252b",
+      "source_commit": "850252b3c176622e3f4461e78f1b7e517e8b06b6",
+      "evidence_commit": "703c0184ddc7621ed91c0cb265f1fcc58b16b15d",
+      "sha256sums_sha256": "43eea81f79d2e0ee5310872cbb939ff783ff3dcb4a661c0ac2ff073cbd4b7e87"
+    }
+  },
+  "artifact_sha256": {
+    "README.txt": "f403508e4f48db0367d25a506271e29d228d5a8e13f4a450b2beae41d8782503",
+    "evidence_index.json": "f453bfd27d5e5e40c271d521b4099030a0cafa3802ceef7252dc2c3d90312fe9",
+    "verification_report.json": "b738635153a35f0e949dec39eff3e97e1be7b543116fb97e42555ce2cc2af59f",
+    "commands.txt": "7f65848155df15aad0991ed2b0c9aad4132377b5588aac3cb51a0a752af37056"
+  },
+  "verification_environment": {
+    "python_executable": ".venv/bin/python",
+    "python_version": "3.10.12",
+    "platform": "Linux WSL2",
+    "architecture": "x86_64"
+  },
+  "command_records": [
+    {
+      "id": "git_ancestry",
+      "phase": "preflight",
+      "command": "git preflight and merge-base checks",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "evidence_sha",
+      "phase": "integrity",
+      "command": "sha256sum -c for both formal Evidence",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "reconstruction",
+      "phase": "reconstruction",
+      "command": "inline Python gzip, TSV, per-run summary and aggregate rebuild",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS byte-identical"
+    },
+    {
+      "id": "contract_corpus",
+      "phase": "consistency",
+      "command": "inline Python model/contract/corpus checks",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "privacy_retention",
+      "phase": "scan",
+      "command": "privacy, asset and retention scans",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "consolidation_sha",
+      "phase": "publish",
+      "command": "sha256sum -c results/consolidation/m5/20260719_c24eefa/sha256sums.txt",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "generation_rules": {
+    "stable_json": true,
+    "utf8": true,
+    "line_ending": "LF",
+    "timestamps_forbidden": true,
+    "absolute_paths_forbidden": true,
+    "duplicate_json_keys_forbidden": true,
+    "copied_raw_evidence": false,
+    "sha256sums_excludes_itself": true,
+    "one_consolidation_per_source_commit": true
+  }
+}

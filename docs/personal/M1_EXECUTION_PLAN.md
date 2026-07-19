@@ -1,0 +1,354 @@
+# M1 Execution Plan
+
+最终状态：`CLOSED`（2026-07-18）。M2 尚未开始。
+
+## 1. M1 目标
+
+M1 建立正式核心数据合同、冻结模型合同读取能力、CPU `Preprocessor`，并完成
+Python/C++ Level A 预处理一致性验证。
+
+M1 不包含：
+
+- 正式 `OnnxRuntimeEngine` 或生产 `Session::Run`；
+- postprocess/NMS、`SerialRunner`、`ResultSink`、`Profiler`；
+- benchmark、Pipeline、TensorRT、ROS2、Qt；
+- GPU preprocessing、dynamic shape、batch inference。
+
+## 2. 已确认环境与仓库事实
+
+- M0 closed at commit `52e7165`。
+- CMake minimum/current：`3.16` / `3.22.1`。
+- GCC/G++：`11.4.0`；语言标准：C++17。
+- OpenCV C++：`4.5.4`，C++17 include/compile/link/run probe PASS。
+- yaml-cpp：`0.7.0`，C++17 `YAML::Load`、标量和序列 probe PASS。
+- Python reference：`tools/validation/compare_pt_onnx.py::preprocess_image`。
+- Python reference 环境：OpenCV `4.10.0`、Ultralytics `8.4.50`、NumPy `1.26.4`。
+- 当前 `include/edge_ai_defect/` 和 `src/` 已包含 core contracts、严格 model
+  contract loader、LetterBox 与 CPU `Preprocessor`。
+- `edge_ai_core` 已包含上述 M1 production modules，并以 PRIVATE target
+  dependency 接入 yaml-cpp；`edge_ai_backend_ort` 仍是占位 target；
+  `edge_ai_infer` 仍运行骨架 main。
+- M0 ORT API 和 helper 只位于 `tests/smoke/`；`edge_ai_ort_smoke_support`
+  只服务测试。
+- M1.1～M1.5 的正式 core contracts、`ModelContract` loader、LetterBox、CPU
+  `Preprocessor` 与 Level A validation 均已完成；当前仍没有正式 ORT backend。
+- Git-tracked 正式 model contract 已建立在冻结路径
+  `configs/model_contracts/yolov8n_neudet_frozen.yaml`。
+- Level A generator、manifest、8 组 raw BGR/golden tensor、正式 report、SHA
+  自动验收与 stable provenance 均已建立并由 Git 跟踪。
+
+M1 保持最小 target 结构：核心合同、model contract loader 和 CPU preprocessor
+均归属 `edge_ai_core`；没有证据表明需要单独 preprocessing library。
+
+## 3. 权威模型合同与 Python 参考语义
+
+### 3.1 Model Contract
+
+正式 contract 的唯一冻结路径：
+
+```text
+configs/model_contracts/yolov8n_neudet_frozen.yaml
+```
+
+该文件在 M1.2 创建并由 Git 跟踪，不依赖被 `.gitignore` 排除的
+`data/yolo/neu_det/dataset.yaml`。严格 schema 冻结为：
+
+```yaml
+schema_version: 1
+
+model:
+  id: yolov8n_neudet_frozen
+  format: onnx
+  sha256: c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944
+  size_bytes: 12242487
+
+input:
+  name: images
+  dtype: float32
+  layout: NCHW
+  shape: [1, 3, 640, 640]
+
+output:
+  name: output0
+  dtype: float32
+  layout: BCN
+  shape: [1, 10, 8400]
+
+classes:
+  count: 6
+  names:
+    - crazing
+    - inclusion
+    - patches
+    - pitted_surface
+    - rolled-in_scale
+    - scratches
+```
+
+权威关系：
+
+- ONNX 是运行时 tensor 结构事实；
+- Model Contract 是冻结项目语义、模型 SHA256 和类别顺序的权威；
+- runtime YAML 只提供运行参数，不承担类别名、shape 或模型语义权威；
+- 后续生产 runtime 必须同时读取 ONNX 和 contract，并在一致性验证通过后继续。
+- `ModelContract` 对象不重复保存 `classes.count`，类别数量由有序
+  `class_names.size()` 推导；
+- loader 只实现通用严格 schema、类型和静态 shape 校验，不在 C++ 中硬编码
+  tensor 名称、shape、类别或 frozen SHA256。
+
+### 3.2 Python preprocessing reference
+
+当前实际语义冻结为：
+
+- `cv2.imread(path)` 默认读取，输出 BGR；未传
+  `IMREAD_IGNORE_ORIENTATION`，因此存在 EXIF 时会应用 orientation；
+- target shape 当前为 `(640, 640)`；C++ 生产代码必须改由已验证 model
+  contract 提供，禁止硬编码 640；
+- `LetterBox(new_shape=(640,640), auto=False, stride=32)`；当前依赖默认值为
+  `scale_fill=false`、`scaleup=true`、`center=true`、padding `114`、
+  `INTER_LINEAR`；
+- resize size 使用 Python `round`（ties-to-even），两侧 padding 使用
+  `round(value - 0.1)` / `round(value + 0.1)`；
+- BGR→RGB、HWC→CHW、增加 batch dimension；
+- `np.ascontiguousarray(..., dtype=np.float32)` 后除以 `255.0`；
+- 输出为连续 `float32 [1,3,640,640]`。
+
+Level A generator 必须显式传入所有 LetterBox 参数并记录 Python/OpenCV/
+Ultralytics 版本，不能依赖未来版本的默认参数。人工 synthetic assets 不携带
+EXIF；若后续增加 orientation case，Python 与 C++ loader 必须显式使用相同策略。
+
+## 4. M1 阶段
+
+### M1.1 Core Contracts
+
+目标：实现 `ErrorCode`、`Status`、`TensorDataType`、`TensorLayout`、
+`TensorInfo`、拥有连续 CPU `float32` buffer 的 `HostTensor`，以及防
+`size_t` 溢出的 checked element count。
+
+边界：仅标准库；不接 OpenCV、yaml-cpp 或生产 ORT API；不实现
+`ModelContract`、`Preprocessor` 或未来模块。
+
+测试：成功/失败 `Status`；空 shape；零维；`-1` dynamic dimension；小于
+`-1` 的非法负维；element count 溢出；data size/shape mismatch；dtype/layout
+基础语义。空 shape 在本项目中不是 scalar，必须拒绝。
+
+推荐提交：`feat: add core tensor and status contracts`
+
+Gate：快速 Gate。
+
+状态：完成；core contract tests 通过。
+
+### M1.2 Frozen Model Contract
+
+目标：创建上述 Git-tracked contract，实现 `ModelContract` 和严格的
+`ModelContractLoader`，接入 yaml-cpp，验证 SHA256、输入输出合同和类别顺序。
+
+严格规则：所有 mapping 的未知字段均拒绝；缺字段、错误 YAML 类型、非法
+dtype/layout/shape、非 64 位小写十六进制 SHA、类别数量不一致、空类别或重复
+类别均失败。输出 `BCN` 只表达 frozen output metadata，不扩大 M1 preprocessing
+对 NCHW input 的支持。
+
+边界：不实现完整 `ConfigManager`；不解析 runtime 路径；不读取或运行 ONNX；
+不引入生产 ORT API。
+
+推荐提交：`feat: add frozen model contract loader`
+
+Gate：深度 Gate 1。
+
+状态：完成；2026-07-17 深度 Gate 通过。正式 contract、严格 loader、yaml-cpp
+target 级接入和 43 个测试用例均已验证。
+
+### M1.3 LetterBox Geometry
+
+目标：验证输入图像，依据已验证的 input `TensorInfo`/`ModelContract` 计算并执行
+Python-compatible resize/padding，输出 BGR letterboxed image 和
+`ImageTransformMetadata`。
+
+规则：只接受非空 `CV_8UC3`；target shape 不硬编码；padding value `114`；
+resize 为 `INTER_LINEAR`；实现确定性的 ties-to-even helper，不以
+`std::round` 代替 Python `round`。
+
+测试至少覆盖：`200×200`、`640×360`、`360×640`、`641×480`、
+`480×641`、`37×53`、ties-to-even 边界、gain/resize size/四边 padding。
+
+边界：暂不做 RGB/CHW/float normalization、GPU 或 inference。
+
+推荐提交：`feat: implement letterbox geometry`
+
+Gate：快速 Gate。
+
+状态：完成；快速 Gate 与 ties-to-even 边界测试通过。
+
+### M1.4 Full CPU Preprocessor
+
+目标：实现 `Preprocessor`、`ImageTransformMetadata`、`PreprocessedFrame`：
+
+```text
+BGR → LetterBox → RGB → HWC to CHW → float32 → /255
+    → HostTensor [1,3,H,W]
+```
+
+要求：输入 `cv::Mat` 只读；输出 vector capacity 可跨调用复用；严格验证
+shape/dtype/layout；空图、错误 channel/type 和无效 contract 明确失败。
+
+边界：不做 batch、dynamic shape、GPU、pinned memory、buffer pool 或 inference。
+
+推荐提交：`feat: implement CPU image preprocessing`
+
+Gate：深度 Gate 2。
+
+状态：完成；输出事务语义、same-size buffer 暂借回滚与异常安全 Gate 通过。
+
+### M1.5 Level A Validation
+
+目标：建立 synthetic image generator、manifest、image SHA256、Python golden
+generator、C++ validation executable、metadata/tensor comparison 和 validation
+report，并依据实测冻结容差。
+
+资产路径冻结为：
+
+- 生成器：`tools/validation/generate_preprocess_level_a.py`；
+- raw BGR、golden tensor、manifest 与 SHA：`tests/data/preprocess_level_a/`；
+- 正式报告：`results/validation/preprocess_level_a/level_a_report.json`；
+- stable provenance：`results/validation/preprocess_level_a/provenance.json`。
+
+覆盖：正方形、横图、竖图、奇数 padding、小图、RGB 色块、棋盘/锐利边缘。
+现有 `pt_onnx_compare.json` 只是历史 PyTorch/ONNX evidence，不是 Level A golden。
+
+候选门槛：无 resize 或人工精确用例 `max abs <= 1e-7`；发生 resize 时
+`MAE <= 5e-4` 且 `max abs <= 2/255 + 1e-6`。这些只是假设；失败时先分析
+像素、round、padding、interpolation 和 OpenCV 版本，禁止直接放宽阈值。
+
+推荐提交：`test: validate C++ preprocessing against Python reference`
+
+Gate：深度 Gate 3。
+
+状态：完成；A～H 共 8 个 frozen case 全部通过，Python OpenCV `4.10.0` 与
+C++ OpenCV `4.5.4` 的实际 MAE/max_abs 均为 `0`。A～H 语义另由 test-only
+`FrozenCaseSpec` 冻结。
+
+### M1.6 Closeout
+
+目标：clean build、CTest、Level A/model contract/M0 smoke 全量回归，执行边界和
+Git 审计，更新必要文档并创建本地 checkpoint。
+
+边界：不增加功能、不重构、不进入 M2。
+
+推荐提交：`docs: close M1 preprocessing baseline`
+
+Gate：最终回归。
+
+状态：完成；M1 正式关闭。Model Smoke OFF 10/10、ON 14/14、strict 10/10、
+ASan/UBSan 10/10 均通过。资产 SHA CTest、resolved-path containment、
+non-finite numeric guard 和引用前置 evidence source commit 的 stable provenance
+均已验收。
+
+## 5. Gate 规则
+
+- M1.1、M1.3：快速 Gate；
+- M1.2、M1.4、M1.5：分别为深度 Gate 1、2、3；
+- M1.6：最终回归。
+
+快速 Gate 只检查范围、构建、测试、负向测试、Git 状态和阻断项。深度 Gate
+额外检查 public API、所有权和生命周期、错误传播、数值语义、测试误报风险及
+过度设计风险。
+
+## 6. 通用执行规则与结果模板
+
+- 每次只执行一个子阶段，完成后停止，不自动进入下一阶段；
+- 全部提交只保存在本地；Codex 禁止执行 `git push`，由用户手动 push；
+- archive/model SHA 仅在依赖、模型或环境变化时重验；
+- 每阶段只更新必要文档；`ENVIRONMENT.md` 和 `TASKS.md` 主要在重要 Gate 或
+  阶段关闭时更新；
+- build、SDK、模型和大型 golden 不得进入 Git；
+- 不为未来模块创建空壳接口，不用放宽阈值掩盖差异。
+
+每个子阶段报告固定为：起点、修改文件、核心设计、执行命令、测试与负向测试、
+范围检查、Git 结果、未解决问题。
+
+## 7. M1.1 精确边界
+
+允许创建：
+
+- `include/edge_ai_defect/core/status.hpp`
+- `include/edge_ai_defect/core/tensor.hpp`
+
+允许修改：
+
+- `src/core.cpp`
+- `tests/test_core.cpp`
+- `CMakeLists.txt`
+- 必要时 `docs/personal/TASKS.md`
+
+target 归属：生产代码只进入现有 `edge_ai_core`；测试只使用现有 `test_core`；
+不新增 production library 或 test framework。
+
+最小 public API/行为：
+
+- `ErrorCode` 至少区分 OK、invalid argument、unsupported、overflow、shape/data
+  mismatch；
+- `Status` 提供 OK/error 构造、`ok()`、`code()` 和只读 message；
+- `TensorDataType` 当前只有 `float32`；
+- `TensorLayout` 表达 NCHW；可表达 frozen output 的 BCN metadata，但
+  `HostTensor`/`Preprocessor` 在 M1 只接受 NCHW batch=1；
+- `TensorInfo` 使用 `std::vector<int64_t>` shape，不硬编码通用 tensor shape；
+- checked element count 使用 `size_t`，乘法前检查溢出；
+- `HostTensor` 只拥有连续 `std::vector<float>` CPU buffer，不设计 device tensor、
+  CUDA、zero-copy、pinned memory、multi-dtype variant 或任意 rank 运算框架；
+- shape 必须非空、静态且全为正数；当前 NCHW input 必须 rank=4、batch=1；
+  HostTensor data size 必须精确等于 checked element count。
+
+明确禁止：OpenCV、yaml-cpp、ORT production API、`ModelContract`、
+`ConfigManager`、`Preprocessor`、inference interface/backend 及其他未来模块。
+
+验收命令：
+
+```bash
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DONNXRUNTIME_ROOT="$PWD/third_party/onnxruntime/1.23.2/linux-x64" \
+  -DEDGE_AI_ENABLE_MODEL_SMOKE=OFF
+cmake --build build --target edge_ai_core test_core --parallel
+ctest --test-dir build --output-on-failure -R '^test_core$'
+./build/test_core
+```
+
+推荐本地提交：`feat: add core tensor and status contracts`
+
+## 8. 问题分级
+
+### BLOCKER
+
+- 无。
+
+### PREREQUISITE
+
+- M1 已关闭，无未完成 prerequisite。
+
+### MINOR
+
+- C++ OpenCV `4.5.4` 与 Python OpenCV `4.10.0` 不同；未升级，Level A 实测
+  MAE/max_abs 均为 `0`。
+- dataset YAML 被忽略且不是正式 contract；M1.2 已通过冻结 contract 路径解决。
+- `ARCHITECTURE.md` 的 `PreprocessOutput` 是可调整示例；M1 正式名称冻结为
+  `PreprocessedFrame` 和 `ImageTransformMetadata`。
+- 文档中存在 `InferenceEngine`/`IInferenceEngine`、`ONNXRuntimeEngine`/
+  `OnnxRuntimeEngine` 历史命名差异；M1 不实现这些类型，最终生产命名留待 M2
+  冻结。
+
+## 9. M1 最终结论
+
+- M1.1～M1.6 全部完成，M1 状态为 `CLOSED`。
+- 正式 contract 路径为
+  `configs/model_contracts/yolov8n_neudet_frozen.yaml`。
+- LetterBox 固定 Python ties-to-even resize rounding、`±0.1` padding rounding、
+  `INTER_LINEAR` 与 padding `114`；CPU `Preprocessor` 输出连续
+  `float32 NCHW [1,3,H,W]` `HostTensor`。
+- Level A 使用 8 个 raw BGR case，A～H 同时由 manifest 与 test-only
+  `FrozenCaseSpec` 冻结；Python OpenCV `4.10.0` 对 C++ OpenCV `4.5.4` 的
+  MAE/max_abs 均为 `0`。
+- CTest 自动验证 18 项资产 SHA、manifest 的 16 个 asset digest、resolved
+  realpath containment、non-finite 数值失败与 stable provenance。
+- Model Smoke OFF/ON、strict 与 ASan/UBSan 最终回归全部通过。
+- 下一阶段仅为 M2 `ONNX Runtime Engine`，当前尚未开始；正式
+  `OnnxRuntimeEngine`、`SerialRunner`、推理闭环与 TensorRT 均未实现。

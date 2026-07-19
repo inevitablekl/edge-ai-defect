@@ -49,6 +49,17 @@ Code must avoid:
 - ROS2 runtime dependency in v1.
 - INT8 logic unless explicitly approved.
 
+### Current phase priority
+
+For the C++ ONNX Runtime Serial Baseline, priorities are:
+
+1. Correctness.
+2. Verifiability.
+3. Architectural extensibility.
+4. Performance optimization.
+
+Do not introduce TensorRT, Pipeline, ROS2, UI, INT8, or GPU-specific optimization before their approved stages. Do not weaken backend-neutral interfaces for premature performance work.
+
 ---
 
 ## 3. Language Responsibility
