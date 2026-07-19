@@ -7,11 +7,13 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.1 Corpus Assets and Validation Contract |
+| Current task | M5.2A Level C Harness Implementation |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
-| M5.2 Level C Reference, Comparator and Formal Validation | `PENDING` |
+| M5.2 Level C Reference, Comparator and Formal Validation | `IN_PROGRESS` |
+| M5.2A Harness Implementation | `COMPLETE` |
+| M5.2B Formal Evidence Generation | `PENDING` |
 | M5.2 Level C Gate | `PENDING` |
 | M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
@@ -632,3 +634,43 @@ Prepared 输出仅写入 `build-m5-1-validation/` 临时目录，未进入 `data
 - 未运行正式 Level C、benchmark，未生成正式 evidence。
 
 下一步仅为 M5.2 Harness 实现；不得在本提交中提前实现或运行 M5.2 内容。
+
+## 17. M5.2A 实际结果（2026-07-19）
+
+M5.2A Harness Implementation 已完成；M5.2B Formal Evidence Generation、M5.2 Level C Gate 和 M5.3 均保持 `PENDING`。
+M5 overall 仍为 `IN_PROGRESS`。本轮只实现临时 dry-run harness，没有生成正式 Level C evidence，也没有运行 benchmark。
+
+### 17.1 新增工具与边界
+
+- `tools/validation/m5_level_c_common.py`：严格 RuntimeConfig/ModelContract YAML loader、duplicate key 检查、DirectorySource 等价枚举、显式 LetterBox/预处理、BCN 后处理、稳定 JSON 和 atomic publish。
+- `tools/validation/m5_level_c_reference.py`：显式 Python ONNX Runtime CPU Reference，固定 `ORT_SEQUENTIAL`、`ORT_ENABLE_ALL`、intra/inter-op threads=1，保留 `candidate_index`。
+- `tools/validation/m5_level_c_compare.py`：严格 Reference/C++ JSON schema、按 class_id 的确定性 augmenting-path maximum matching、confidence `1e-4` 和 bbox `0.01` 容差。
+- `tools/validation/run_m5_level_c.py`：仅生成 build/临时目录 dry-run；执行 Python 两次、C++ 两次、byte comparison、Comparator 和稳定 summary；禁止正式 results 路径。
+- `tests/test_m5_level_c_reference.py`、`tests/test_m5_level_c_compare.py`、`tests/test_m5_level_c_runner.py`：Reference、Comparator、greedy 反例、tolerance、失败清理和 orchestrator 单元测试。
+- `CMakeLists.txt`：新增 `m5_level_c_reference_unit`、`m5_level_c_compare_unit`、`m5_level_c_runner_unit`；优先使用 `.venv/bin/python`。
+
+Reference schema 顶层固定为 `schema_version`、`reference`、`model`、`postprocess`、`images`、`summary`；不包含 timestamp、hostname、username、绝对路径或 timing。
+
+### 17.2 非正式 16 张 corpus dry-run
+
+使用本地 ignored `data/yolo/neu_det/images/val` 经 M5.1 工具生成的临时 16 张 corpus，并使用 Model Smoke ON Release `edge_ai_defect`：
+
+- Python Run 1 SHA256：`bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486`
+- Python Run 2 SHA256：`bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486`
+- C++ Run 1 SHA256：`f3341b09075e89cb4d688d9a76c7893792b11a0c77d05cd36c8ce7c04a8fbc48`
+- C++ Run 2 SHA256：`f3341b09075e89cb4d688d9a76c7893792b11a0c77d05cd36c8ce7c04a8fbc48`
+- Python/C++ 两侧自身均 byte-identical；Comparator：`16/16 PASS`。
+- 最大 confidence 绝对误差：`4.980773571361397e-10`。
+- 最大 bbox 坐标绝对误差：`1.2131195092024427e-05`。
+
+所有 dry-run 输出仅位于临时 build/`/tmp`，不是正式 Level C evidence；`results/validation/level_c` 未写入。
+
+### 17.3 验证与阶段边界
+
+- Python `py_compile`：通过。
+- Model Smoke OFF M5.2A 定向：`3/3 PASS`；OFF 全量：`28/28 PASS`。
+- Model Smoke ON M5.2A 定向：`3/3 PASS`；ON 全量：`36/36 PASS`。
+- Strict、ASan、UBSan：仍为 `Not configured`。
+- 未执行 Level C Gate、未生成正式 evidence、未开始 benchmark/M5.3。
+
+下一步仅为在 clean committed HEAD 上执行 M5.2B Formal Evidence Generation；本轮不提前进入该阶段。

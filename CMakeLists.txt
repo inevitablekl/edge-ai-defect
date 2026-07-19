@@ -208,16 +208,47 @@ set_target_properties(edge_ai_infer
 
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
+        set(EDGE_AI_M5_PYTHON_EXECUTABLE "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
+    else()
+        set(EDGE_AI_M5_PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+    endif()
 
     add_test(
         NAME m5_corpus_preparation
         COMMAND
-            ${Python3_EXECUTABLE}
+            ${EDGE_AI_M5_PYTHON_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_prepare_m5_corpus.py
     )
     set_tests_properties(m5_corpus_preparation
         PROPERTIES
             LABELS "m5;corpus;validation"
+    )
+
+    add_test(
+        NAME m5_level_c_reference_unit
+        COMMAND
+            ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_level_c_reference.py
+    )
+    add_test(
+        NAME m5_level_c_compare_unit
+        COMMAND
+            ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_level_c_compare.py
+    )
+    add_test(
+        NAME m5_level_c_runner_unit
+        COMMAND
+            ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_level_c_runner.py
+    )
+    set_tests_properties(
+        m5_level_c_reference_unit
+        m5_level_c_compare_unit
+        m5_level_c_runner_unit
+        PROPERTIES
+            LABELS "m5;level-c;validation"
     )
 
     add_executable(test_core

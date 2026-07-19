@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -107,7 +107,9 @@ M5 状态：
 
 - M5.0 Planning Freeze：complete。
 - M5.1 Corpus Assets and Validation Contract：complete。
-- M5.2 Level C Reference, Comparator and Formal Validation：pending。
+- M5.2A Harness Implementation：complete。
+- M5.2B Formal Evidence Generation：pending。
+- M5.2 Level C Reference, Comparator and Formal Validation：in progress；尚未完成正式 evidence。
 - M5.2 Level C Gate：pending。
 - M5.3 Benchmark Harness and Offline Analyzer：pending。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
@@ -121,7 +123,7 @@ M5 状态：
 下一阶段：
 
 ```text
-M5.2 Level C Reference, Comparator and Formal Validation：PENDING（下一步唯一允许任务；不得在 M5.2 完成前执行正式 benchmark）
+M5.2B Formal Evidence Generation：PENDING（下一步唯一允许任务；不得执行 Level C Gate 或 benchmark）
 ```
 
 当前主线：
@@ -1781,6 +1783,46 @@ NEU-DET
 下一步计划：
 
 - 仅可进入 M5.2 Harness 实现；不得在本任务中运行正式 Level C、benchmark 或生成正式 evidence。
+
+#### M5.2A Level C Reference、Comparator 和 Validation Harness 实现
+
+当前工作：
+
+- 完成 explicit Python ONNX Runtime Reference、稳定 Reference JSON schema、DirectorySource 等价枚举、显式 LetterBox/预处理、BCN 后处理、candidate_index 保留、最大二分匹配 Comparator 和临时 dry-run orchestrator。
+- 起点为 `2739ceb94b618113cab4a126cb6e9cd5f48e6042` clean HEAD；upstream behind `0` / ahead `1`，ahead 只记录实际值。
+
+修改文件：
+
+- `tools/validation/m5_level_c_common.py`
+- `tools/validation/m5_level_c_reference.py`
+- `tools/validation/m5_level_c_compare.py`
+- `tools/validation/run_m5_level_c.py`
+- `tests/test_m5_level_c_reference.py`
+- `tests/test_m5_level_c_compare.py`
+- `tests/test_m5_level_c_runner.py`
+- `CMakeLists.txt`
+- `docs/personal/M5_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- Reference 严格读取 RuntimeConfig/ModelContract/frozen ONNX；使用 CPU EP、ORT_SEQUENTIAL、ORT_ENABLE_ALL、intra/inter-op=1；不使用 PyTorch、Ultralytics 或 C++ executable 作为 oracle。
+- Comparator 使用真实确定性 augmenting-path maximum matching；测试包含 greedy 反例、confidence/bbox tolerance 边界、candidate_index 不同仍可 PASS、顺序差异和 no-compatible-edge。
+- 本地 16 张 dry-run：Python/C++ 两侧各自两次 byte-identical，Comparator `16/16 PASS`；最大 confidence 误差 `4.980773571361397e-10`，最大 bbox 误差 `1.2131195092024427e-05`。
+- Model Smoke OFF M5.2A 定向 `3/3`、全量 `28/28`；ON 定向 `3/3`、全量 `36/36`。
+
+未完成：
+
+- 正式 Level C evidence、正式 provenance、Level C Gate、benchmark harness 和 M5.3 均未开始。
+
+状态结论：
+
+- M5.2A：`COMPLETE`；M5.2B：`PENDING`；M5 overall：`IN_PROGRESS`。
+- 本轮没有新增长期决策，`DECISIONS.md` 不变；M5.1 manifests 未漂移。
+
+下一步计划：
+
+- 仅可在 clean committed HEAD 上进入 M5.2B Formal Evidence Generation；不得把本轮 dry-run 写为正式 Level C PASS，也不得执行 Level C Gate 或 benchmark。
 
 ---
 
