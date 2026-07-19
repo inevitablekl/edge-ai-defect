@@ -1,0 +1,106 @@
+# M5.5 remediation consolidation commands (repository-relative)
+
+[01] id=git_preflight
+phase=git_preflight
+command=git branch --show-current && git rev-parse HEAD && git status --short && git rev-parse --abbrev-ref --symbolic-full-name @{upstream} && git rev-parse @{upstream} && git rev-list --left-right --count @{upstream}...HEAD
+working_directory=.
+exit_code=0
+result=PASS
+
+[02] id=git_ancestry
+phase=git_ancestry
+command=python3 build-m5-5-remediation-generation/run_stage.py git_ancestry
+working_directory=.
+exit_code=0
+result=PASS
+
+[03] id=level_c_sha
+phase=level_c_sha
+command=python3 build-m5-5-remediation-generation/run_stage.py level_c_sha
+working_directory=.
+exit_code=0
+result=PASS
+
+[04] id=benchmark_sha
+phase=benchmark_sha
+command=python3 build-m5-5-remediation-generation/run_stage.py benchmark_sha
+working_directory=.
+exit_code=0
+result=PASS
+
+[05] id=gzip_validation
+phase=gzip_validation
+command=python3 build-m5-5-remediation-generation/run_stage.py gzip_validation
+working_directory=.
+exit_code=0
+result=PASS
+
+[06] id=timings_tsv_rebuild
+phase=timings_tsv_rebuild
+command=python3 build-m5-5-remediation-generation/run_stage.py timings_tsv_rebuild
+working_directory=.
+exit_code=0
+result=PASS
+
+[07] id=per_run_summary_rebuild
+phase=per_run_summary_rebuild
+command=python3 build-m5-5-remediation-generation/run_stage.py per_run_summary_rebuild
+working_directory=.
+exit_code=0
+result=PASS
+
+[08] id=aggregate_summary_rebuild
+phase=aggregate_summary_rebuild
+command=python3 build-m5-5-remediation-generation/run_stage.py aggregate_summary_rebuild
+working_directory=.
+exit_code=0
+result=PASS
+
+[09] id=model_contract_consistency
+phase=model_contract_consistency
+command=python3 build-m5-5-remediation-generation/run_stage.py model_contract_consistency
+working_directory=.
+exit_code=0
+result=PASS
+
+[10] id=corpus_consistency
+phase=corpus_consistency
+command=python3 build-m5-5-remediation-generation/run_stage.py corpus_consistency
+working_directory=.
+exit_code=0
+result=PASS
+
+[11] id=privacy_scan
+phase=privacy_scan
+command=python3 build-m5-5-remediation-generation/run_stage.py privacy_scan
+working_directory=.
+exit_code=0
+result=PASS
+
+[12] id=asset_scan
+phase=asset_scan
+command=python3 build-m5-5-remediation-generation/run_stage.py asset_scan
+working_directory=.
+exit_code=0
+result=PASS
+
+[13] id=retention_check
+phase=retention_check
+command=python3 build-m5-5-remediation-generation/run_stage.py retention_check
+working_directory=.
+exit_code=0
+result=PASS
+
+[14] id=stable_regeneration
+phase=stable_regeneration
+command=python3 build-m5-5-remediation-generation/run_stage.py stable_regeneration
+working_directory=.
+exit_code=0
+result=PASS
+
+[15] id=consolidation_sha
+phase=consolidation_sha
+command=python3 build-m5-5-remediation-generation/run_stage.py consolidation_sha
+working_directory=.
+exit_code=0
+result=PASS

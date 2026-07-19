@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "check_groups": {
+    "git_ancestry": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "git_ancestry",
+          "status": "PASS",
+          "evidence": "git_ancestry exit_code=0"
+        }
+      ]
+    },
+    "level_c_integrity": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "level_c_integrity",
+          "status": "PASS",
+          "evidence": "level_c_sha exit_code=0"
+        }
+      ]
+    },
+    "benchmark_integrity": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "benchmark_integrity",
+          "status": "PASS",
+          "evidence": "benchmark_sha exit_code=0"
+        }
+      ]
+    },
+    "benchmark_reconstruction": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "benchmark_reconstruction",
+          "status": "PASS",
+          "evidence": "gzip_validation, timings_tsv_rebuild, per_run_summary_rebuild and aggregate_summary_rebuild exit_code=0"
+        }
+      ]
+    },
+    "model_contract_consistency": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "model_contract_consistency",
+          "status": "PASS",
+          "evidence": "model_contract_consistency exit_code=0"
+        }
+      ]
+    },
+    "corpus_consistency": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "corpus_consistency",
+          "status": "PASS",
+          "evidence": "corpus_consistency exit_code=0"
+        }
+      ]
+    },
+    "asset_policy": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "asset_policy",
+          "status": "PASS",
+          "evidence": "asset_scan exit_code=0"
+        }
+      ]
+    },
+    "privacy": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "privacy",
+          "status": "PASS",
+          "evidence": "privacy_scan exit_code=0"
+        }
+      ]
+    },
+    "retention": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "retention",
+          "status": "PASS",
+          "evidence": "retention_check exit_code=0"
+        }
+      ]
+    },
+    "interpretation_boundary": {
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "interpretation_boundary",
+          "status": "PASS",
+          "evidence": "stable_regeneration and consolidation_sha exit_code=0"
+        }
+      ]
+    }
+  },
+  "failures": [],
+  "summary": {
+    "total_check_count": 10,
+    "passed_check_count": 10,
+    "failed_check_count": 0,
+    "level_c_sha_check": "PASS",
+    "benchmark_sha_check": "PASS",
+    "gzip_round_trip": "PASS",
+    "timings_tsv_rebuild": "PASS",
+    "per_run_summary_rebuild": "PASS",
+    "aggregate_rebuild": "PASS",
+    "cross_evidence_contract_check": "PASS",
+    "stable_regeneration": "PASS",
+    "consolidation_sha": "PASS",
+    "tracked_evidence_total_size_bytes": 674639,
+    "retention_limit_bytes": 26214400
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "kind": "m5_evidence_consolidation",
+  "status": "PASS",
+  "identity": {
+    "evidence_id": "20260719_da86e53",
+    "source_git_commit": "da86e53d92c62ff03f4fe2aaf6328fb5f051519c",
+    "source_git_short": "da86e53",
+    "branch": "feature/cpp-onnxruntime",
+    "relative_path": "results/consolidation/m5/20260719_da86e53"
+  },
+  "level_c": {
+    "evidence_id": "20260719_1073fa8",
+    "relative_path": "results/validation/level_c/20260719_1073fa8",
+    "source_commit": "1073fa8be1644dd8562f5704ae31996121883dbb",
+    "evidence_commit": "011ac3ca046a40f8da4bd5b0be7e7fa3e55b27c6",
+    "remediation_commit": "26bfca7b291145b7889ea976e4221dd15d1751d2",
+    "gate_commit": "ea7e0db673ad1680999479a3189287df1e344dc3",
+    "sha256sums_sha256": "14685b7253a4923239f6796fb173177126fa23f241861e6f696712a83e0379f3",
+    "provenance_sha256": "be1bca4915517f63e7d75f9bbf00ee7b5bfecc8c0ec6983d348e197df92f614f",
+    "comparison_report_sha256": "e9fa013aad47f59ae6b3639ec434bbfb7f00657cd52adb9942cc1ef67efdf2cc",
+    "comparison_report_run_2_sha256": "6dd02f644adbc233cd6f130c7db0e2972777df7f9ee40e86e6025a6a09c4e533",
+    "status": "PASS",
+    "image_count": 16,
+    "pass_count": 16,
+    "fail_count": 0,
+    "detection_count": 54,
+    "per_class_counts": [
+      4,
+      28,
+      7,
+      4,
+      5,
+      6
+    ],
+    "confidence_tolerance": 0.0001,
+    "bbox_coordinate_tolerance": 0.01,
+    "max_confidence_abs_error": 4.980773571361397e-10,
+    "max_bbox_coordinate_abs_error": 1.2131195092024427e-05,
+    "python_deterministic": true,
+    "cpp_deterministic": true,
+    "matching_algorithm": "deterministic_maximum_bipartite_matching",
+    "candidate_index_role": "diagnostic_only"
+  },
+  "benchmark": {
+    "evidence_id": "20260719_850252b",
+    "relative_path": "results/benchmark/ort_cpu/20260719_850252b",
+    "source_commit": "850252b3c176622e3f4461e78f1b7e517e8b06b6",
+    "evidence_commit": "703c0184ddc7621ed91c0cb265f1fcc58b16b15d",
+    "sha256sums_sha256": "43eea81f79d2e0ee5310872cbb939ff783ff3dcb4a661c0ac2ff073cbd4b7e87",
+    "provenance_sha256": "096fd1282dda097bd906332910e2adc5a2168d10a503ea7696a3847ba4ad258e",
+    "aggregate_summary_sha256": "f782643e8a42aa549f3e82e5ed88ceb6e5f750cf280602086553670b590b0b35",
+    "environment_sha256": "8b92bc165b95a77fb58a4e13f613a370c612470707d4caf00b20d336f9b8b6c6",
+    "protocol_sha256": "c996b7197715ca812b33b0a6451abee22cc608b15c3700a8548e98733168d40e",
+    "status": "PASS",
+    "baseline_name": "WSL2 x86_64 ONNX Runtime CPU Engineering Baseline",
+    "pilot": {
+      "raw_frame_count": 100,
+      "discarded_frame_count": 20,
+      "analyzed_frame_count": 80,
+      "mean_pre_sink_total_ms": 108.5349276625,
+      "target_measured_frames": 500,
+      "formal_total_frames": 560,
+      "formal_measured_frames": 510
+    },
+    "formal_protocol": {
+      "pilot_frames": 100,
+      "pilot_discard": 20,
+      "formal_warmup": 50,
+      "minimum_measured_frames": 500,
+      "target_measured_duration_ms": 33000,
+      "minimum_valid_duration_ms": 30000,
+      "formal_run_count": 5,
+      "inter_run_wait_seconds": 30,
+      "corpus_size": 20,
+      "gzip_level": 9,
+      "gzip_mtime": 0,
+      "percentile_method": "hyndman_fan_type_7",
+      "sample_stddev": "n_minus_1",
+      "outlier_policy": "keep_all_measured_samples"
+    },
+    "run_count": 5,
+    "valid_run_count": 5,
+    "run_summaries": [
+      {
+        "run_index": 1,
+        "status": "PASS",
+        "measured_frame_count": 510,
+        "measured_pre_sink_duration_ms": 55320.71294899995,
+        "inference_mean_ms": 106.39670165686272,
+        "inference_p95_ms": 110.33601374999999,
+        "pre_sink_mean_ms": 108.47198617450971,
+        "pre_sink_p95_ms": 112.43494974999999,
+        "pre_sink_fps": 9.21897012553269,
+        "backend_fps_equivalent": 9.398787597994104
+      },
+      {
+        "run_index": 2,
+        "status": "PASS",
+        "measured_frame_count": 510,
+        "measured_pre_sink_duration_ms": 55662.11942299999,
+        "inference_mean_ms": 107.05746759411774,
+        "inference_p95_ms": 113.72057544999997,
+        "pre_sink_mean_ms": 109.14141063333331,
+        "pre_sink_p95_ms": 115.93601199999998,
+        "pre_sink_fps": 9.162425097835285,
+        "backend_fps_equivalent": 9.340777644687579
+      },
+      {
+        "run_index": 3,
+        "status": "PASS",
+        "measured_frame_count": 510,
+        "measured_pre_sink_duration_ms": 55870.98212000002,
+        "inference_mean_ms": 107.41927339215691,
+        "inference_p95_ms": 115.34218419999999,
+        "pre_sink_mean_ms": 109.55094533333337,
+        "pre_sink_p95_ms": 117.96132499999997,
+        "pre_sink_fps": 9.128173170548873,
+        "backend_fps_equivalent": 9.309316367736795
+      },
+      {
+        "run_index": 4,
+        "status": "PASS",
+        "measured_frame_count": 510,
+        "measured_pre_sink_duration_ms": 55414.03848499999,
+        "inference_mean_ms": 106.57698616274516,
+        "inference_p95_ms": 110.2351401,
+        "pre_sink_mean_ms": 108.6549774215686,
+        "pre_sink_p95_ms": 112.26165565,
+        "pre_sink_fps": 9.203443999809755,
+        "backend_fps_equivalent": 9.382888708008503
+      },
+      {
+        "run_index": 5,
+        "status": "PASS",
+        "measured_frame_count": 510,
+        "measured_pre_sink_duration_ms": 55357.02441300001,
+        "inference_mean_ms": 106.45120505882355,
+        "inference_p95_ms": 109.2568074,
+        "pre_sink_mean_ms": 108.54318512352943,
+        "pre_sink_p95_ms": 111.3694557,
+        "pre_sink_fps": 9.212922938109223,
+        "backend_fps_equivalent": 9.393975384754105
+      }
+    ],
+    "across_run_summary": {
+      "inference_mean": {
+        "median": 106.57698616274516,
+        "minimum": 106.39670165686272,
+        "maximum": 107.41927339215691
+      },
+      "inference_p95": {
+        "median": 110.33601374999999,
+        "minimum": 109.2568074,
+        "maximum": 115.34218419999999
+      },
+      "pre_sink_mean": {
+        "median": 108.6549774215686,
+        "minimum": 108.47198617450971,
+        "maximum": 109.55094533333337
+      },
+      "pre_sink_p95": {
+        "median": 112.43494974999999,
+        "minimum": 111.3694557,
+        "maximum": 117.96132499999997
+      },
+      "pre_sink_fps": {
+        "median": 9.203443999809755,
+        "minimum": 9.128173170548873,
+        "maximum": 9.21897012553269
+      },
+      "backend_fps_equivalent": {
+        "median": 9.382888708008503,
+        "minimum": 9.309316367736795,
+        "maximum": 9.398787597994104
+      }
+    },
+    "evidence_size_bytes": 463762
+  },
+  "cross_evidence": {
+    "benchmark_source_contains_level_c_source": true,
+    "benchmark_source_contains_level_c_gate_commit": true,
+    "same_onnx_sha256": true,
+    "same_model_contract_sha256": true,
+    "same_input_contract": true,
+    "same_output_contract": true,
+    "same_class_contract": true,
+    "same_postprocess_contract": true,
+    "same_ort_cpu_session_options": true,
+    "first_12_original_corpus_entries_identical": true,
+    "asset_policy_compliant": true,
+    "evidence_sha_checks_pass": true,
+    "benchmark_reconstruction_pass": true
+  },
+  "limitations": [
+    "WSL2 ORT CPU Engineering Baseline",
+    "x86_64 CPU only",
+    "single logical CPU affinity",
+    "warm-cache",
+    "host load not frozen",
+    "CPU frequency not controlled",
+    "cache drop not performed",
+    "repeated 20-image workload",
+    "not Jetson",
+    "not TensorRT",
+    "not final deployment performance",
+    "no cross-hardware speedup claim"
+  ],
+  "gate_readiness": {
+    "required_evidence_sets_present": true,
+    "known_blocker_count": 0,
+    "known_blockers": [],
+    "m5_6_deep_evidence_gate_status": "PENDING",
+    "ready_for_m5_6": true
+  }
+}

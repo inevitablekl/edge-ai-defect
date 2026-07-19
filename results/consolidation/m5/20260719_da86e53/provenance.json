@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "evidence_identity": {
+    "evidence_id": "20260719_da86e53",
+    "source_git_commit": "da86e53d92c62ff03f4fe2aaf6328fb5f051519c",
+    "source_git_short": "da86e53",
+    "relative_path": "results/consolidation/m5/20260719_da86e53",
+    "kind": "m5_evidence_consolidation"
+  },
+  "git": {
+    "branch": "feature/cpp-onnxruntime",
+    "upstream": "origin/feature/cpp-onnxruntime",
+    "behind": 0,
+    "ahead": 2,
+    "worktree_clean_before_generation": true
+  },
+  "input_evidence": {
+    "level_c": {
+      "evidence_id": "20260719_1073fa8",
+      "relative_path": "results/validation/level_c/20260719_1073fa8",
+      "source_commit": "1073fa8be1644dd8562f5704ae31996121883dbb",
+      "evidence_commit": "011ac3ca046a40f8da4bd5b0be7e7fa3e55b27c6",
+      "sha256sums_sha256": "14685b7253a4923239f6796fb173177126fa23f241861e6f696712a83e0379f3"
+    },
+    "benchmark": {
+      "evidence_id": "20260719_850252b",
+      "relative_path": "results/benchmark/ort_cpu/20260719_850252b",
+      "source_commit": "850252b3c176622e3f4461e78f1b7e517e8b06b6",
+      "evidence_commit": "703c0184ddc7621ed91c0cb265f1fcc58b16b15d",
+      "sha256sums_sha256": "43eea81f79d2e0ee5310872cbb939ff783ff3dcb4a661c0ac2ff073cbd4b7e87"
+    }
+  },
+  "artifact_sha256": {
+    "README.txt": "0692fbd1cf933cd1d821a9ed14ab80b34cbc1eee133cb028959745281067a60f",
+    "evidence_index.json": "8aef07e29dc19aa01293c34712f093277197daf02608d6ebc8d190b524b9cbba",
+    "verification_report.json": "4b974a0f1d0d6c1462398ee24acf4922c46082098044198603d290b6f4ca9064",
+    "commands.txt": "cb0c8afc2e1ea8ed24aa6912392b29fdbf0e43c9e66449cabbcef2337cea6713"
+  },
+  "verification_environment": {
+    "python_executable": ".venv/bin/python",
+    "python_version": "3.10.12",
+    "platform": "Linux WSL2",
+    "architecture": "x86_64"
+  },
+  "command_records": [
+    {
+      "id": "git_preflight",
+      "phase": "git_preflight",
+      "command": "git branch --show-current && git rev-parse HEAD && git status --short && git rev-parse --abbrev-ref --symbolic-full-name @{upstream} && git rev-parse @{upstream} && git rev-list --left-right --count @{upstream}...HEAD",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "git_ancestry",
+      "phase": "git_ancestry",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py git_ancestry",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "level_c_sha",
+      "phase": "level_c_sha",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py level_c_sha",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "benchmark_sha",
+      "phase": "benchmark_sha",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py benchmark_sha",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "gzip_validation",
+      "phase": "gzip_validation",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py gzip_validation",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "timings_tsv_rebuild",
+      "phase": "timings_tsv_rebuild",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py timings_tsv_rebuild",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "per_run_summary_rebuild",
+      "phase": "per_run_summary_rebuild",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py per_run_summary_rebuild",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "aggregate_summary_rebuild",
+      "phase": "aggregate_summary_rebuild",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py aggregate_summary_rebuild",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "model_contract_consistency",
+      "phase": "model_contract_consistency",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py model_contract_consistency",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "corpus_consistency",
+      "phase": "corpus_consistency",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py corpus_consistency",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "privacy_scan",
+      "phase": "privacy_scan",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py privacy_scan",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "asset_scan",
+      "phase": "asset_scan",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py asset_scan",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "retention_check",
+      "phase": "retention_check",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py retention_check",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "stable_regeneration",
+      "phase": "stable_regeneration",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py stable_regeneration",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "consolidation_sha",
+      "phase": "consolidation_sha",
+      "command": "python3 build-m5-5-remediation-generation/run_stage.py consolidation_sha",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "generation_rules": {
+    "stable_json": true,
+    "utf8": true,
+    "line_ending": "LF",
+    "timestamps_forbidden": true,
+    "absolute_paths_forbidden": true,
+    "duplicate_json_keys_forbidden": true,
+    "copied_raw_evidence": false,
+    "sha256sums_excludes_itself": true,
+    "one_consolidation_per_source_commit": true,
+    "generation_time_git_snapshot": true,
+    "stable_regeneration_reuses_frozen_snapshot": true
+  }
+}
