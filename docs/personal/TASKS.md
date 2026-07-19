@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -110,7 +110,7 @@ M5 状态：
 - M5.2A Harness Implementation：complete。
 - M5.2B Formal Evidence Generation：complete；Formal Level C evidence 已生成，comparison PASS。
 - M5.2 Level C Reference, Comparator and Formal Validation：complete；Level C Gate 尚未执行。
-- M5.2 Level C Gate：pending。
+- M5.2 Level C Gate：第一次 `FAIL`；remediation `COMPLETE`；Gate rerun `PENDING`。
 - M5.3 Benchmark Harness and Offline Analyzer：pending。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
 - M5.5 Evidence Consolidation：pending。
@@ -1846,6 +1846,31 @@ NEU-DET
 - M5 overall：`IN_PROGRESS`；Level C Gate：`PENDING`；M5.3：`PENDING`。
 - 下一步仅为只读 M5.2 Level C Gate；不得将 Formal comparison PASS 写为 Gate PASS。
 
+#### M5.2 Level C Gate remediation
+
+当前工作：
+
+- 第一次 Level C Standard Validation Gate 已记录为 `FAIL`；本轮仅修复既有测试证明和 evidence metadata blocker，
+  不修改 production、Reference、Comparator、orchestrator、M5.1 manifests、ONNX 或 ModelContract 本体。
+- 修正 ModelContract 64 位 SHA：`9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`，同步到 M5 计划和
+  `results/validation/level_c/20260719_1073fa8/provenance.json`。
+- `tests/test_m5_level_c_compare.py` 已补齐真实 `[[0, 1], [0]]` greedy 反例、confidence/bbox 双方向边界和略超容差、
+  Detection 重排、non-finite JSON rejection。
+- provenance 增加 15 条 machine-readable command records；正式 Detection/comparison/manifests/RuntimeConfig 和
+  `commands.txt` 未重新生成。
+
+验证结果：
+
+- Python Comparator 定向测试通过；Model Smoke OFF targeted/full `4/4`、`28/28 PASS`；ON targeted/full `4/4`、`36/36 PASS`。
+- Formal comparison 仍 `16/16 PASS`，Detection `54`，per-class `[4, 28, 7, 4, 5, 6]`；正式结果文件 byte-identical。
+- `sha256sum -c` 全部通过；Strict/ASan/UBSan 为 `Not configured`；benchmark 未开始。
+
+状态结论：
+
+- M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；第一次 Level C Gate：`FAIL`；remediation：`COMPLETE`。
+- Gate rerun：`PENDING`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
+- 下一步唯一允许任务为只读 M5.2 Level C Gate rerun，不得进入 M5.3 或运行 benchmark。
+
 ---
 
 ## 8. 当前最近计划
@@ -1859,8 +1884,8 @@ NEU-DET
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
 4. M4.0～M4.7 已完成；M4.4 Shallow Gate rerun PASS，M4.6 第一次 Standard Final Gate FAIL 后 remediation complete，
    M4.6 Gate rerun PASS，M4 已 CLOSED。
-5. M5.0 Planning Freeze、M5.1、M5.2A 和 M5.2B 已完成，M5 overall 仍为 `IN_PROGRESS`；Formal Level C comparison 已
-   `PASS`，下一步且唯一允许任务为只读 M5.2 Level C Gate。benchmark 尚未开始。
+5. M5.0 Planning Freeze、M5.1、M5.2A 和 M5.2B 已完成；第一次 Level C Gate `FAIL`，remediation 已完成，Gate rerun
+   仍 `PENDING`；M5 overall 仍为 `IN_PROGRESS`。benchmark 尚未开始。
 6. M5 复用 M4 FrameTimings 并由离线 Python 工具统计，不新增 production Profiler；TensorRT、Pipeline、input-size、
    stability、ROS2 和 Qt 不进入 M5，保留给后续 Jetson/TensorRT 阶段。
 

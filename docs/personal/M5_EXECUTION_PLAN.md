@@ -7,14 +7,14 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | Read-only M5.2 Level C Gate |
+| Current task | M5.2 Level C Gate remediation (rerun pending) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
 | M5.2 Level C Reference, Comparator and Formal Validation | `COMPLETE` (formal comparison PASS; Gate pending) |
 | M5.2A Harness Implementation | `COMPLETE` |
 | M5.2B Formal Evidence Generation | `COMPLETE` |
-| M5.2 Level C Gate | `PENDING` |
+| M5.2 Level C Gate | `PENDING` (first Gate FAIL; remediation COMPLETE; rerun pending) |
 | M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
 | M5.5 Evidence Consolidation | `PENDING` |
@@ -98,7 +98,7 @@ Jetson TensorRT 数字不得直接计算 speedup。
 | ONNX | `models/onnx/yolov8n_neudet_frozen.onnx` |
 | ONNX SHA256 | `c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944` |
 | ModelContract | `configs/model_contracts/yolov8n_neudet_frozen.yaml` |
-| Contract SHA256 | `9dd74f8420d8326fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190` |
+| Contract SHA256 | `9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190` |
 | Input | `images`, float32 NCHW `[1,3,640,640]` |
 | Output | `output0`, float32 BCN `[1,10,8400]` |
 
@@ -694,3 +694,29 @@ M5.2B 已完成正式 evidence 生成；M5 overall 仍为 `IN_PROGRESS`。正式
 - M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；Formal Level C comparison：`PASS`。
 - M5.2 Level C Gate：`PENDING`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
 - Formal comparison PASS 不等于 Level C Gate PASS；下一步仅允许只读 M5.2 Level C Gate。
+
+## 19. M5.2 Level C Gate remediation 实际结果（2026-07-19）
+
+M5.2 第一次 Standard Validation Gate 结论为 `FAIL`，但失败集中在测试证明和 evidence metadata，未发现
+production、Reference、Comparator 或正式结果算法失败。remediation 已完成，Gate rerun 仍保持 `PENDING`，
+M5.3 保持 `PENDING`，M5 overall 保持 `IN_PROGRESS`。
+
+- 事实修正：`configs/model_contracts/yolov8n_neudet_frozen.yaml` 的实际 SHA256 为正确的 64 位值
+  `9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`；已同步修正本计划和 formal
+  evidence `provenance.json`，未修改 ModelContract 本体。
+- 第一次 Gate 的三类测试/元数据 blocker 已补齐：greedy 反例现在严格构造邻接图 `[[0, 1], [0]]` 并证明
+  first-compatible greedy 只能匹配一项而 maximum matching 匹配两项；confidence/bbox 正负方向边界、略超
+  容差、Detection 重排和 non-finite JSON rejection 均有 committed tests。
+- provenance 已增加 15 条机器可读 command records，覆盖 7 条 generation 命令和 OFF/ON configure、build、
+  targeted/full CTest；每条均保留实际参数、工作目录、exit code 和结果。
+- 正式 Python/C++ Detection 输出、两份 comparison report、corpus/manifests、RuntimeConfig 和 `commands.txt`
+  均未重新生成，保持 byte-identical；formal comparison 仍为 `16/16 PASS`、Detection `54`、per-class
+  `[4, 28, 7, 4, 5, 6]`，最大 confidence/bbox 误差未变化。
+- 新建 Release 回归：Model Smoke OFF targeted/full `4/4`、`28/28 PASS`；ON targeted/full `4/4`、`36/36 PASS`。
+  Strict、ASan、UBSan 仍为 `Not configured`；未运行 benchmark，未执行 Gate rerun，未进入 M5.3。
+
+状态结论：
+
+- M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；第一次 Level C Gate：`FAIL`；M5.2 Gate remediation：`COMPLETE`。
+- M5.2 Gate rerun：`PENDING`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
+- 下一步唯一允许任务为只读 M5.2 Level C Gate rerun；不得把 remediation 或 formal comparison 写为 Gate PASS。

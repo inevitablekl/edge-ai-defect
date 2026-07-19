@@ -22,7 +22,7 @@
     "runtime_config": {"path": "runtime_config.yaml", "sha256": "de66843d45d16842e1072ec94cd828bcf8623c0da13c7c1bce36aaed8fd4c3da"},
     "cpp_runtime_run_1_config": {"path": "cpp_runtime_run_1.yaml", "sha256": "de66843d45d16842e1072ec94cd828bcf8623c0da13c7c1bce36aaed8fd4c3da"},
     "cpp_runtime_run_2_config": {"path": "cpp_runtime_run_2.yaml", "sha256": "139a7bbb5ef6cc0ab138824ab9cf0d598a3c041042fb80606b9be34e22db4f76"},
-    "model_contract": {"path": "configs/model_contracts/yolov8n_neudet_frozen.yaml", "sha256": "9dd74f8420d8326fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190"},
+    "model_contract": {"path": "configs/model_contracts/yolov8n_neudet_frozen.yaml", "sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190"},
     "onnx": {"path": "models/onnx/yolov8n_neudet_frozen.onnx", "sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944"},
     "python_run_1_sha256": "bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486",
     "python_run_2_sha256": "bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486",
@@ -118,6 +118,128 @@
     "comparison_run_1": 0,
     "comparison_run_2": 0
   },
+  "command_records": [
+    {
+      "id": "prepare_corpus",
+      "phase": "generation",
+      "command": ".venv/bin/python tools/validation/prepare_m5_corpus.py --mode level-c --dataset-root data/yolo/neu_det/images/val --output-dir build-m5-2b-formal-work/20260719_1073fa8/prepared",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "12 originals + 4 derived prepared"
+    },
+    {
+      "id": "python_reference_run_1",
+      "phase": "generation",
+      "command": ".venv/bin/python tools/validation/m5_level_c_reference.py --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml --input-dir build-m5-2b-formal-work/20260719_1073fa8/prepared --output build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_1.json",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "python_reference_run_2",
+      "phase": "generation",
+      "command": ".venv/bin/python tools/validation/m5_level_c_reference.py --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml --input-dir build-m5-2b-formal-work/20260719_1073fa8/prepared --output build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_2.json",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "cpp_run_1",
+      "phase": "generation",
+      "command": "build-m5-2b-formal-on/edge_ai_defect --config build-m5-2b-formal-work/20260719_1073fa8/runtime_config.yaml",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "cpp_run_2",
+      "phase": "generation",
+      "command": "build-m5-2b-formal-on/edge_ai_defect --config build-m5-2b-formal-work/20260719_1073fa8/cpp_runtime_run_2.yaml",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "comparison_run_1",
+      "phase": "generation",
+      "command": ".venv/bin/python tools/validation/m5_level_c_compare.py --python-reference build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_1.json --cpp-result build-m5-2b-formal-work/20260719_1073fa8/cpp_run_1.json --output build-m5-2b-formal-work/20260719_1073fa8/comparison_report.json",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "16/16 PASS"
+    },
+    {
+      "id": "comparison_run_2",
+      "phase": "generation",
+      "command": ".venv/bin/python tools/validation/m5_level_c_compare.py --python-reference build-m5-2b-formal-work/20260719_1073fa8/python_reference_run_2.json --cpp-result build-m5-2b-formal-work/20260719_1073fa8/cpp_run_2.json --output build-m5-2b-formal-work/20260719_1073fa8/comparison_report_run_2.json",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "16/16 PASS"
+    },
+    {
+      "id": "off_configure",
+      "phase": "regression_build",
+      "command": "cmake -S . -B build-m5-2-remediation-off -DCMAKE_BUILD_TYPE=Release -DEDGE_AI_ENABLE_MODEL_SMOKE=OFF -DONNXRUNTIME_ROOT=\"$REPO_ROOT/third_party/onnxruntime/1.23.2/linux-x64\"",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "configured"
+    },
+    {
+      "id": "off_build",
+      "phase": "regression_build",
+      "command": "cmake --build build-m5-2-remediation-off -j2",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "built"
+    },
+    {
+      "id": "off_targeted_ctest",
+      "phase": "regression_build",
+      "command": "ctest --test-dir build-m5-2-remediation-off --output-on-failure -R 'm5_level_c|m5_corpus'",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "4/4 PASS"
+    },
+    {
+      "id": "off_full_ctest",
+      "phase": "regression_build",
+      "command": "ctest --test-dir build-m5-2-remediation-off --output-on-failure",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "28/28 PASS"
+    },
+    {
+      "id": "on_configure",
+      "phase": "regression_build",
+      "command": "cmake -S . -B build-m5-2-remediation-on -DCMAKE_BUILD_TYPE=Release -DEDGE_AI_ENABLE_MODEL_SMOKE=ON -DEDGE_AI_FROZEN_ONNX_PATH=\"$REPO_ROOT/models/onnx/yolov8n_neudet_frozen.onnx\" -DONNXRUNTIME_ROOT=\"$REPO_ROOT/third_party/onnxruntime/1.23.2/linux-x64\"",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "configured"
+    },
+    {
+      "id": "on_build",
+      "phase": "regression_build",
+      "command": "cmake --build build-m5-2-remediation-on -j2",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "built"
+    },
+    {
+      "id": "on_targeted_ctest",
+      "phase": "regression_build",
+      "command": "ctest --test-dir build-m5-2-remediation-on --output-on-failure -R 'm5_level_c|m5_corpus'",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "4/4 PASS"
+    },
+    {
+      "id": "on_full_ctest",
+      "phase": "regression_build",
+      "command": "ctest --test-dir build-m5-2-remediation-on --output-on-failure",
+      "working_directory": ".",
+      "exit_code": 0,
+      "result": "36/36 PASS"
+    }
+  ],
   "privacy": {
     "images_in_evidence": false,
     "absolute_personal_paths": false,
