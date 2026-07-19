@@ -1,0 +1,16 @@
+{
+  "pilot_frames": 100,
+  "pilot_discard": 20,
+  "formal_warmup": 50,
+  "minimum_measured_frames": 500,
+  "target_measured_duration_ms": 33000,
+  "minimum_valid_duration_ms": 30000,
+  "formal_run_count": 5,
+  "inter_run_wait_seconds": 30,
+  "corpus_size": 20,
+  "gzip_level": 9,
+  "gzip_mtime": 0,
+  "percentile_method": "hyndman_fan_type_7",
+  "sample_stddev": "n_minus_1",
+  "outlier_policy": "keep_all_measured_samples"
+}

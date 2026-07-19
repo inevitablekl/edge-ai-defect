@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "evidence_id": "20260719_850252b",
+  "source_commit": "850252b3c176622e3f4461e78f1b7e517e8b06b6",
+  "branch": "feature/cpp-onnxruntime",
+  "upstream": "origin/feature/cpp-onnxruntime",
+  "upstream_behind": 0,
+  "upstream_ahead": 7,
+  "worktree_clean": true,
+  "binary_sha256": "0f38995c4d179a724c275c025fd51e22eb18c282b89ff34c73d786c0f02ef315",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "benchmark_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+  "protocol_sha256": "c996b7197715ca812b33b0a6451abee22cc608b15c3700a8548e98733168d40e",
+  "environment_sha256": "8b92bc165b95a77fb58a4e13f613a370c612470707d4caf00b20d336f9b8b6c6",
+  "protocol": {
+    "pilot_frames": 100,
+    "pilot_discard": 20,
+    "formal_warmup": 50,
+    "minimum_measured_frames": 500,
+    "target_measured_duration_ms": 33000,
+    "minimum_valid_duration_ms": 30000,
+    "formal_run_count": 5,
+    "inter_run_wait_seconds": 30,
+    "corpus_size": 20,
+    "gzip_level": 9,
+    "gzip_mtime": 0,
+    "percentile_method": "hyndman_fan_type_7",
+    "sample_stddev": "n_minus_1",
+    "outlier_policy": "keep_all_measured_samples"
+  },
+  "pilot": {
+    "record": {
+      "phase": "pilot",
+      "command": [
+        "<temporary>/edge_ai_defect",
+        "--config",
+        "build-m5-4-formal-work/20260719_850252b/pilot_runtime.yaml"
+      ],
+      "exit_code": 0,
+      "pid": 97410,
+      "wall_clock_seconds": 11.167757961000461,
+      "stdout": "",
+      "stderr": ""
+    },
+    "raw_sha256": "01d56cde6ee4e6a5f9191680c69535ec831df8a24378c6ea8d915e49bae2306e",
+    "mean_pre_sink_total_ms": 108.5349276625,
+    "frame_counts": {
+      "pilot_sample_count": 100,
+      "pilot_discard_count": 20,
+      "pilot_analyzed_count": 80,
+      "pilot_mean_pre_sink_total_ms": 108.5349276625,
+      "target_measured_frames": 500,
+      "raw_total_frames": 550,
+      "formal_total_frames": 560,
+      "formal_measured_frames": 510
+    }
+  },
+  "formal_runs": [
+    {
+      "record": {
+        "phase": "formal_run_1",
+        "command": [
+          "<temporary>/edge_ai_defect",
+          "--config",
+          "build-m5-4-formal-work/20260719_850252b/run_01_runtime.yaml"
+        ],
+        "exit_code": 0,
+        "pid": 97460,
+        "wall_clock_seconds": 61.00010751000082,
+        "stdout": "",
+        "stderr": ""
+      },
+      "raw_sha256": "a5f4af586e83991b9356c1ebaa8cd3a2719d2e092774fe44ea693e1bf0e77b1b",
+      "compressed_sha256": "3be0b4b964195a1ab18b5f20634a8ab0629cd0611d2b2edd949d8e5fe2ed7ec7",
+      "timings_sha256": "7e4ca0a38de9308ffcc8c3c4d9ea3addefdc1ca7de05bf5d2a0bb01becf56676",
+      "summary_sha256": "7e225467b5c0e35364e28013dca6896043c11eab1340f6b14e19f1ed950e09a3",
+      "measured_count": 510,
+      "measured_duration_ms": 55320.71294899995,
+      "status": "PASS"
+    },
+    {
+      "record": {
+        "phase": "formal_run_2",
+        "command": [
+          "<temporary>/edge_ai_defect",
+          "--config",
+          "build-m5-4-formal-work/20260719_850252b/run_02_runtime.yaml"
+        ],
+        "exit_code": 0,
+        "pid": 97778,
+        "wall_clock_seconds": 61.3351852550004,
+        "stdout": "",
+        "stderr": ""
+      },
+      "raw_sha256": "f8b0369584610dba1cecef82de252620b2a9d79833fef8db45ff765aaba68414",
+      "compressed_sha256": "d724d6a8b67681eae3795c512b5cf33de66701b72092a592b9bd5d4b73c953f9",
+      "timings_sha256": "0af7f2748c939223844a72c25c956ea35fe20b06487bcb35c60ffe626e0e71dd",
+      "summary_sha256": "a5b5b1b3063a9207e81c850ec96c59ae85221fc47b136a9dd23677302b54a515",
+      "measured_count": 510,
+      "measured_duration_ms": 55662.11942299999,
+      "status": "PASS"
+    },
+    {
+      "record": {
+        "phase": "formal_run_3",
+        "command": [
+          "<temporary>/edge_ai_defect",
+          "--config",
+          "build-m5-4-formal-work/20260719_850252b/run_03_runtime.yaml"
+        ],
+        "exit_code": 0,
+        "pid": 98133,
+        "wall_clock_seconds": 61.62029257500035,
+        "stdout": "",
+        "stderr": ""
+      },
+      "raw_sha256": "72662ba9537b24fe92c258d11c4fc86aca3dc8ab5d2431d7eb738f52a7eb23b4",
+      "compressed_sha256": "42c5401e996e05b453e9f446d2e8366286140195c7ba63e2a5ca60242c9793c6",
+      "timings_sha256": "ef2e733e190ca6057e5505be93a626092721cf28f1e412a2c518a8edd889819f",
+      "summary_sha256": "5d370e111f162e84e0ba85b41676440e45a2e6459598fdb67cce61289b9fd186",
+      "measured_count": 510,
+      "measured_duration_ms": 55870.98212000002,
+      "status": "PASS"
+    },
+    {
+      "record": {
+        "phase": "formal_run_4",
+        "command": [
+          "<temporary>/edge_ai_defect",
+          "--config",
+          "build-m5-4-formal-work/20260719_850252b/run_04_runtime.yaml"
+        ],
+        "exit_code": 0,
+        "pid": 98487,
+        "wall_clock_seconds": 61.133658053000545,
+        "stdout": "",
+        "stderr": ""
+      },
+      "raw_sha256": "1c36a451fa36c160c85a3c021f152841aa89bae31e0d290a0675a74fdbb65e25",
+      "compressed_sha256": "9d455e1a24b8d6a0c7fd91bfd8c61163700a99c55d345d56433f80abefdfe7f1",
+      "timings_sha256": "541a31f4cc79b0cc1de6a617b8dd04d0ae64a970890496409e4191eef50f4319",
+      "summary_sha256": "7b60c445940d110d53a21c30b00c6bf8125a145134348532f05359eea53d5dcd",
+      "measured_count": 510,
+      "measured_duration_ms": 55414.03848499999,
+      "status": "PASS"
+    },
+    {
+      "record": {
+        "phase": "formal_run_5",
+        "command": [
+          "<temporary>/edge_ai_defect",
+          "--config",
+          "build-m5-4-formal-work/20260719_850252b/run_05_runtime.yaml"
+        ],
+        "exit_code": 0,
+        "pid": 98786,
+        "wall_clock_seconds": 61.0598033990027,
+        "stdout": "",
+        "stderr": ""
+      },
+      "raw_sha256": "bf71016846277744a54c60859f1967b5a6f8f2f6e62a9af1660fb0e56172e828",
+      "compressed_sha256": "2ede569448a51e0af291528dd3326940c55fca3081cf4567304924a96b240d1f",
+      "timings_sha256": "59953968900f7f8c902b06ee8dd8e4436deb70456d054254fb8c1715a6bdd96f",
+      "summary_sha256": "499967d3f3c39ec2183971c83d4a1610a894e5f2c4fd9dfe9231d8c3607ab9b4",
+      "measured_count": 510,
+      "measured_duration_ms": 55357.02441300001,
+      "status": "PASS"
+    }
+  ],
+  "waits_seconds": [
+    30,
+    30,
+    30,
+    30
+  ],
+  "aggregate_sha256": "f782643e8a42aa549f3e82e5ed88ceb6e5f750cf280602086553670b590b0b35",
+  "outlier_policy": "keep_all_measured_samples",
+  "benchmark_tools_sha256": {
+    "run_m5_ort_cpu_baseline.py": "5876352cc98b6669d06fadcfc9cda151ae7632e57b81c3ed2286ffaa784e47ec",
+    "m5_ort_cpu_analyze.py": "5f1a7766838408ecd800b8d832ab18561bef31a65a18452b32c3754aa9717321",
+    "m5_ort_cpu_common.py": "190e0b33e7800593e84c88fcf3c4f39f3a215e8acf832067ba095f4df48e8fa5",
+    "prepare_m5_corpus.py": "3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f"
+  },
+  "runtime_config_sha256": "5e53f99c7acc9cd6d98a17d78b576966a769f77d4d3fb74f0f7546c16c37a230"
+}

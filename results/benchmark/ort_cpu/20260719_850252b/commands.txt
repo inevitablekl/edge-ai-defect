@@ -1,0 +1,6 @@
+pilot: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/pilot_runtime.yaml exit=0 pid=97410
+formal_run_1: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/run_01_runtime.yaml exit=0 pid=97460
+formal_run_2: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/run_02_runtime.yaml exit=0 pid=97778
+formal_run_3: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/run_03_runtime.yaml exit=0 pid=98133
+formal_run_4: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/run_04_runtime.yaml exit=0 pid=98487
+formal_run_5: <temporary>/edge_ai_defect --config build-m5-4-formal-work/20260719_850252b/run_05_runtime.yaml exit=0 pid=98786

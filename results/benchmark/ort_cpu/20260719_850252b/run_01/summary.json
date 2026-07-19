@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "run_index": 1,
+  "status": "PASS",
+  "raw_frame_count": 560,
+  "warmup_frame_count": 50,
+  "measured_frame_count": 510,
+  "measured_pre_sink_duration_ms": 55320.71294899995,
+  "protocol": {
+    "pilot_frames": 100,
+    "pilot_discard": 20,
+    "formal_warmup": 50,
+    "minimum_measured_frames": 500,
+    "target_measured_duration_ms": 33000,
+    "minimum_valid_duration_ms": 30000,
+    "formal_run_count": 5,
+    "inter_run_wait_seconds": 30,
+    "corpus_size": 20,
+    "gzip_level": 9,
+    "gzip_mtime": 0,
+    "percentile_method": "hyndman_fan_type_7",
+    "sample_stddev": "n_minus_1",
+    "outlier_policy": "keep_all_measured_samples"
+  },
+  "timing_statistics": {
+    "source_ms": {
+      "sample_count": 510,
+      "mean": 0.3575782882352943,
+      "minimum": 0.2659,
+      "maximum": 0.6379,
+      "P50": 0.35724999999999996,
+      "P95": 0.4466899999999999,
+      "P99": 0.5015079999999997,
+      "sample_standard_deviation": 0.0544034629952858
+    },
+    "preprocess_ms": {
+      "sample_count": 510,
+      "mean": 1.622600137254902,
+      "minimum": 1.5035,
+      "maximum": 3.3211,
+      "P50": 1.5739999999999998,
+      "P95": 1.9119054499999995,
+      "P99": 2.146723999999999,
+      "sample_standard_deviation": 0.14258164072636004
+    },
+    "inference_ms": {
+      "sample_count": 510,
+      "mean": 106.39670165686272,
+      "minimum": 103.247521,
+      "maximum": 130.782025,
+      "P50": 105.7112255,
+      "P95": 110.33601374999999,
+      "P99": 120.79102191999993,
+      "sample_standard_deviation": 2.745680373143474
+    },
+    "postprocess_ms": {
+      "sample_count": 510,
+      "mean": 0.09499883725490187,
+      "minimum": 0.0803,
+      "maximum": 0.2514,
+      "P50": 0.0909,
+      "P95": 0.11506499999999999,
+      "P99": 0.16189099999999967,
+      "sample_standard_deviation": 0.014867398975399087
+    },
+    "pre_sink_total_ms": {
+      "sample_count": 510,
+      "mean": 108.47198617450971,
+      "minimum": 105.266722,
+      "maximum": 132.951525,
+      "P50": 107.766471,
+      "P95": 112.43494974999999,
+      "P99": 122.89259345999993,
+      "sample_standard_deviation": 2.7637074421497947
+    }
+  },
+  "pre_sink_fps": 9.21897012553269,
+  "backend_fps_equivalent": 9.398787597994104,
+  "process_wall_clock_seconds": 61.00010751000082,
+  "process_exit_code": 0,
+  "raw_application_uncompressed_sha256": "a5f4af586e83991b9356c1ebaa8cd3a2719d2e092774fe44ea693e1bf0e77b1b",
+  "raw_application_compressed_sha256": "3be0b4b964195a1ab18b5f20634a8ab0629cd0611d2b2edd949d8e5fe2ed7ec7",
+  "timings_tsv_sha256": "7e4ca0a38de9308ffcc8c3c4d9ea3addefdc1ca7de05bf5d2a0bb01becf56676",
+  "command": null,
+  "validity_checks": {
+    "timing_schema": true,
+    "all_timing_finite_nonnegative": true,
+    "measured_count_minimum": true,
+    "duration_minimum": true
+  },
+  "warnings": [],
+  "outlier_policy": "keep_all_measured_samples"
+}

@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 COMPLETE；M5.4 PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；第一次 M5.2 Level C Gate FAIL；Gate remediation COMPLETE；Gate rerun PASS；M5.2 overall COMPLETE；M5.3 COMPLETE；M5.4 COMPLETE；M5.5 PENDING；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -112,7 +112,7 @@ M5 状态：
 - M5.2 Level C Reference, Comparator and Formal Validation：complete。
 - M5.2 Level C Gate：第一次 `FAIL`；remediation `COMPLETE`；Gate rerun `PASS`；M5.2 overall `COMPLETE`。
 - M5.3 Benchmark Harness and Offline Analyzer：complete。
-- M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
+- M5.4 Formal WSL2 ORT CPU Baseline Execution：complete；正式 Evidence 已生成。
 - M5.5 Evidence Consolidation：pending。
 - M5.6 Deep Evidence Gate：pending。
 - M5.7 Documentation-Only Closeout：pending。
@@ -123,7 +123,7 @@ M5 状态：
 下一阶段：
 
 ```text
-M5.4 Formal WSL2 ORT CPU Baseline Execution（下一步；M5.3 已完成）
+M5.5 Evidence Consolidation（下一步；M5.4 已完成）
 ```
 
 当前主线：
@@ -1948,6 +1948,28 @@ NEU-DET
 - M5.3 formal-execution remediation：`COMPLETE`；M5.3：`COMPLETE`；M5.4：`PENDING`。
 - 正式 benchmark 和正式 Evidence 仍未执行/生成；Strict、ASan、UBSan 为 `Not configured`。
 - 下一步可基于本轮新 source commit 重新执行 M5.4；原候选 Evidence ID `20260719_fed96c1` 不具备正式效力。
+
+#### M5.4 Formal WSL2 x86_64 ONNX Runtime CPU Engineering Baseline Execution
+
+正式执行结果：
+
+- source commit：`850252b3c176622e3f4461e78f1b7e517e8b06b6`；Evidence ID：`20260719_850252b`；路径：
+  `results/benchmark/ort_cpu/20260719_850252b/`。
+- 全新 Release OFF/ON 回归通过：OFF targeted/full `7/7`、`31/31 PASS`；ON targeted/full `7/7`、`39/39 PASS`。
+- binary SHA：`0f38995c4d179a724c275c025fd51e22eb18c282b89ff34c73d786c0f02ef315`；check-only PASS；20 张 benchmark
+  corpus SHA/尺寸校验通过，source 未被修改。
+- Pilot 100/discard20/analyzed80；Pilot mean `108.5349276625 ms`；正式 workload `560` 帧，measured `510` 帧。
+- 五个独立 formal run 全部 exit 0，PID `97460`、`97778`、`98133`、`98487`、`98786`；四次 30 秒等待已执行；
+  每个 run measured duration 均超过 30 秒，summary status 均为 `PASS`。
+- Type 7、n-1 sample stddev、keep-all measured samples、deterministic gzip、TSV/summary/aggregate 重建和
+  `sha256sum -c` 全部通过；Evidence 大小 `492434` bytes，无图片、未压缩 raw JSON 或个人绝对路径。
+- CPU affinity：allowed `[0,1,2,3,4,5]`，selected/effective CPU `0`；环境限制按 WSL2 warm-cache、未 drop caches、
+  host load/governor 未控制记录。
+
+状态结论：
+
+- M5.4：`COMPLETE`；正式 benchmark Evidence 已生成；M5.5：`PENDING`；M5 overall：`IN_PROGRESS`。
+- Strict、ASan、UBSan：`Not configured`；M5.6 Deep Evidence Gate 尚未执行；下一步为 M5.5 Evidence Consolidation。
 
 ---
 

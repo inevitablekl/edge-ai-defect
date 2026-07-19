@@ -7,7 +7,7 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.4 Formal WSL2 ORT CPU Baseline Execution (`PENDING`, M5.3 complete) |
+| Current task | M5.5 Evidence Consolidation (`PENDING`, M5.4 complete) |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
@@ -19,7 +19,7 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | M5.2 Standard Validation Gate Rerun | `PASS` |
 | M5.2 Level C Validation | `COMPLETE` |
 | M5.3 Benchmark Harness and Offline Analyzer | `COMPLETE` |
-| M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
+| M5.4 Formal WSL2 ORT CPU Baseline Execution | `COMPLETE` |
 | M5.5 Evidence Consolidation | `PENDING` |
 | M5.6 Deep Evidence Gate | `PENDING` |
 | M5.7 Documentation-Only Closeout | `PENDING` |
@@ -832,3 +832,64 @@ Evidence 或正式协议。Strict、ASan、UBSan 仍为 `Not configured`。
 
 - M5.3 formal-execution remediation：`COMPLETE`；M5.3：`COMPLETE`；M5.4：`PENDING`。
 - M5 overall：`IN_PROGRESS`；下一步可在本轮新提交的 source commit 上重新执行 M5.4，重新计算 Evidence ID。
+
+## 23. M5.4 Formal WSL2 x86_64 ONNX Runtime CPU Engineering Baseline 实际结果（2026-07-19）
+
+M5.4 正式 baseline 已完成，Evidence 已生成并通过完整性验证。结果名称固定为
+**WSL2 x86_64 ONNX Runtime CPU Engineering Baseline**；不代表 Jetson、TensorRT 或最终部署性能。
+
+### 23.1 Evidence 身份与运行前提
+
+- source commit：`850252b3c176622e3f4461e78f1b7e517e8b06b6`；branch：`feature/cpp-onnxruntime`；运行前
+  worktree clean；upstream behind `0` / ahead `7`。
+- Evidence ID：`20260719_850252b`；路径：`results/benchmark/ort_cpu/20260719_850252b/`。
+- Release、Model Smoke ON 全新构建 binary SHA：
+  `0f38995c4d179a724c275c025fd51e22eb18c282b89ff34c73d786c0f02ef315`，与既有可复现 SHA 一致。
+- 正式 CLI 使用 `--formal`；check-only 已通过，正式协议未由 CLI 覆盖。
+- benchmark corpus 20 张 SHA 和 200×200 尺寸校验通过；运行前后 source SHA/mtime 未变化。
+
+### 23.2 Formal protocol 与执行结果
+
+- Pilot：100 帧，discard 前 20 帧，analyzed 80 帧；`pre_sink_total_ms` mean 为 `108.5349276625` ms。
+- `target_measured_frames=500`；`raw_total_frames=550`；向上取整后的 `formal_total_frames=560`；
+  `formal_measured_frames=510`。
+- 五个 formal run 使用独立 application invocation，PID 为 `97460`、`97778`、`98133`、`98487`、`98786`；
+  五次 exit code 均为 `0`，stdout 为空，stderr 为空；四次等待均为 30 秒，Run 5 后无等待。
+- 每个 run：raw `560`、warmup `50`、measured `510`，measured pre-sink duration 分别为
+  `55320.712949`、`55662.119423`、`55870.982120`、`55414.038485`、`55357.024413` ms，均满足正式有效性。
+
+### 23.3 Per-run 与 across-run 统计
+
+统计使用 Hyndman–Fan Type 7、sample standard deviation `n-1`，所有 measured samples 保留。
+
+| Run | inference mean / P50 / P95 / P99 / stddev (ms) | pre-sink mean / P50 / P95 / P99 / stddev (ms) | pre_sink_fps | backend_fps_equivalent |
+| --- | --- | --- | ---: | ---: |
+| 1 | 106.396702 / 105.711226 / 110.336014 / 120.791022 / 2.745680 | 108.471986 / 107.766471 / 112.434950 / 122.892593 / 2.763707 | 9.218970 | 9.398788 |
+| 2 | 107.057468 / 105.997172 / 113.720575 / 127.290453 / 4.192724 | 109.141411 / 108.041588 / 115.936012 / 129.440387 / 4.223130 | 9.162425 | 9.340778 |
+| 3 | 107.419273 / 105.886084 / 115.342184 / 126.989770 / 4.566095 | 109.550945 / 108.025735 / 117.961325 / 129.710440 / 4.725734 | 9.128173 | 9.309316 |
+| 4 | 106.576986 / 105.911661 / 110.235140 / 122.507634 / 2.996833 | 108.654977 / 108.020152 / 112.261656 / 125.809767 / 3.038978 | 9.203444 | 9.382889 |
+| 5 | 106.451205 / 105.805520 / 109.256807 / 122.869547 / 3.090779 | 108.543185 / 107.944389 / 111.369456 / 124.999492 / 3.151252 | 9.212923 | 9.393975 |
+
+Across-run median/min/max：
+
+- inference mean：`106.576986 / 106.396702 / 107.419273` ms；pre-sink mean：
+  `108.654977 / 108.471986 / 109.550945` ms。
+- inference P95：`110.336014 / 109.256807 / 115.342184` ms；pre-sink P95：
+  `112.434950 / 111.369456 / 117.961325` ms。
+- pre_sink_fps：`9.203444 / 9.128173 / 9.218970`；backend_fps_equivalent：
+  `9.382889 / 9.309316 / 9.398788`。
+
+### 23.4 Evidence 与环境验证
+
+- `sha256sum -c sha256sums.txt`：全部 PASS；五份 TSV、summary、gzip 和 aggregate 可从 raw gzip 重建，
+  结果结构一致；Pilot 未进入 aggregate。
+- Evidence 大小：`492434` bytes；无图片、未压缩 raw JSON、binary、ONNX、ModelContract、临时 YAML、Python cache
+  或个人绝对路径。定位限制明确记录为 WSL2、warm-cache、未 drop caches、Windows host load 未冻结、CPU
+  governor/frequency 未控制、非 Jetson、不得用于 TensorRT speedup。
+- CPU affinity：allowed `[0,1,2,3,4,5]`，selected `0`，effective `[0]`。
+- Strict、ASan、UBSan：`Not configured`；M5.5 Evidence Consolidation 尚未开始。
+
+状态结论：
+
+- M5.3 与 M5.3 formal-execution remediation：`COMPLETE`；M5.4：`COMPLETE`；M5.5：`PENDING`。
+- M5 overall 仍为 `IN_PROGRESS`；下一步仅为 M5.5 Evidence Consolidation，不进入 M5.6 Deep Evidence Gate。
