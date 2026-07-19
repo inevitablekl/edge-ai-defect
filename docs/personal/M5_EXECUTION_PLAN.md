@@ -893,3 +893,91 @@ Across-run median/min/max：
 
 - M5.3 与 M5.3 formal-execution remediation：`COMPLETE`；M5.4：`COMPLETE`；M5.5：`PENDING`。
 - M5 overall 仍为 `IN_PROGRESS`；下一步仅为 M5.5 Evidence Consolidation，不进入 M5.6 Deep Evidence Gate。
+
+## 24. M5.5 Evidence Consolidation Planning Freeze Remediation（2026-07-19）
+
+M5.5 首次能力预审在修改文件前停止：原计划只冻结了目标、检查范围、提交信息和下一阶段，未冻结
+consolidation 持久化目录、文件集合、machine-readable schema、human-readable summary 或 SHA 规则。
+该事实分类为 `M5.5 evidence consolidation planning gap`，不是 M5.5 执行失败。本次 remediation 仅冻结合同，
+不执行 consolidation、不运行 application/benchmark、不重建 Evidence、不进入 M5.6；正式 Level C 和 benchmark
+Evidence 均未修改。
+
+### 24.1 根路径和 Evidence ID
+
+正式 consolidation 根路径冻结为：
+
+```text
+results/consolidation/m5/<evidence_id>/
+```
+
+不得使用 `results/validation/consolidated`、`results/benchmark/consolidated`、`results/m5`、
+`docs/evidence` 或 `results/consolidated`。`<evidence_id>` 使用 `YYYYMMDD_<short_source_commit>`：日期为实际
+M5.5 执行日期，short commit 为 7 位，source commit 为 M5.5 执行前的 clean committed HEAD；provenance 必须
+记录完整 40 位 commit。不得使用秒级时间、UUID、hostname 或用户名；每个 source commit 只允许一套正式
+consolidation。当前 `703c018...` 仅为 planning freeze 的起点，不是未来 consolidation source commit。
+
+### 24.2 固定文件集合和发布边界
+
+正式目录必须恰好包含以下六个文件：
+
+```text
+README.txt
+evidence_index.json
+verification_report.json
+provenance.json
+commands.txt
+sha256sums.txt
+```
+
+Consolidation 只引用现有 Level C/benchmark Evidence 的相对路径、SHA 和关键指标，不复制 raw JSON、gzip、
+TSV、图片、模型、binary 或独立 summary。先在同一文件系统 staging 目录完成全部验证，生成前五个文件，再生成
+`sha256sums.txt`，执行 SHA/privacy/retention 检查后以单次 rename 发布；失败时不发布 partial 目录。
+
+### 24.3 `evidence_index.json` schema version 1
+
+顶层键顺序固定为 `schema_version`、`kind`、`status`、`identity`、`level_c`、`benchmark`、
+`cross_evidence`、`limitations`、`gate_readiness`；`schema_version=1`、`kind=m5_evidence_consolidation`，
+`status` 只能为 `PASS` 或 `FAIL`。Identity 必须含 `evidence_id`、完整/短 source commit、branch、relative path，
+不得含 timestamp、hostname、username、CWD 或绝对路径。
+
+`level_c` 固定记录 Evidence identity/path/commits、三个报告 SHA、PASS 计数、detection/per-class、tolerance、
+最大误差、Python/C++ determinism、maximum matching 和 `candidate_index` diagnostic-only。`benchmark` 固定记录
+Evidence identity/path/commits、SHA、baseline name、pilot、formal protocol、五个 run summary、across-run
+median/min/max 和 evidence size。`cross_evidence` 必须记录 model/contract/class/postprocess/ORT/corpus/asset
+及 SHA/reconstruction 布尔检查；`limitations` 使用冻结的 WSL2/x86_64/CPU-only、warm-cache、affinity、非
+Jetson/TensorRT 等边界；`gate_readiness` 必须保持 `m5_6_deep_evidence_gate_status=PENDING`，并记录
+required evidence、known blockers 和 `ready_for_m5_6`。
+
+### 24.4 `verification_report.json` schema version 1
+
+顶层键顺序固定为 `schema_version`、`status`、`check_groups`、`failures`、`summary`；每个 check group
+（git ancestry、Level C/benchmark integrity、reconstruction、model/contract、corpus、asset、privacy、
+retention、interpretation boundary）必须含 `status` 和 `checks`，每个 check 含 `id`、`status`、`evidence`，
+状态只允许 `PASS`/`FAIL`，不得使用 `SKIP`、`UNKNOWN` 或 `NOT_RUN`。全部检查完成且 PASS 时 `failures=[]`；
+summary 必须含总/通过/失败数量、两套 SHA、gzip、TSV、per-run summary、aggregate、合同检查、tracked size 和
+`retention_limit_bytes=26214400`。任何必需检查不能执行即 FAIL，不得发布或标记 M5.5 COMPLETE。
+
+### 24.5 `provenance.json`、README、commands 和 SHA 合同
+
+`provenance.json` 顶层键顺序固定为 `schema_version`、`evidence_identity`、`git`、`input_evidence`、
+`artifact_sha256`、`verification_environment`、`command_records`、`generation_rules`。记录 source commit、
+branch/upstream/divergence/worktree、输入 Evidence identity/SHA、artifact SHA（不含自身 sha256sums）、语义 Python
+路径 `.venv/bin/python`、实际命令和 exit code；command record 必须覆盖 Git、ancestry、两套 SHA、gzip/TSV/summary/
+aggregate 重建、合同/corpus/privacy/asset/retention/stability/SHA 检查。JSON 必须 stable key order、UTF-8、LF、
+无 timestamp/绝对路径/duplicate key；generation rules 固定声明不复制 raw evidence、排除自身 SHA 和 one-per-source。
+
+`README.txt` 固定包含 Identity、Purpose、Referenced Evidence、Correctness Result、Performance Baseline Result、
+Cross-Evidence Consistency、Interpretation Boundaries、Gate Readiness 八节，明确 M5.5 不产生新结果/样本，
+Level C 与 benchmark 的证明边界，M5.6 仍 PENDING，consolidation PASS 不等于 Gate PASS，且不代表 Jetson、
+TensorRT 或最终部署性能。`commands.txt` 只记录实际执行的 repo-relative 检查命令，禁止 application、Pilot、
+formal run、`sleep 30` 或新 benchmark。`sha256sums.txt` 按字节序索引本目录另外五个文件、排除自身，并发布前后
+执行 `sha256sum -c`。
+
+### 24.6 失效、retention 和阶段状态
+
+Level C/benchmark 任一文件或 sha256sums、source commit、模型/合同、corpus 前 12 项、重建结果或 benchmark source
+Gate ancestry 变化，或出现重复 source commit、retention 超过 25 MiB（`26214400` bytes）时，consolidation 失效；
+不得手工 patch，必须完整 remediation 重建。D040 记录本合同及其失效边界。
+
+本次 Planning Freeze Remediation：`COMPLETE`；M5.5 Evidence Consolidation：`PENDING`；M5.6/M5.7：`PENDING`；
+M5 overall：`IN_PROGRESS`。下一步是在新的 clean committed HEAD 上重新执行 M5.5。

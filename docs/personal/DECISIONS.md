@@ -2012,3 +2012,53 @@ ACTIVE
 后续调整：
 
 若取得明确许可或官方可归档来源，可新增决策调整分发策略；不得静默提交图片或虚构许可状态。
+
+---
+
+### D040 - M5 Evidence Consolidation Contract
+
+时间：
+
+```text
+2026-07-19
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+M5.5 首次能力预审确认原计划只定义了目标、检查范围、提交信息和下一阶段，未冻结 consolidation 持久化目录、
+文件集合、machine-readable schema、human-readable summary 或 `sha256sums` 规则。因此预审在修改任何文件前
+停止；该问题分类为 `M5.5 evidence consolidation planning gap`，不是 M5.5 执行失败。此次 remediation 不运行
+application/benchmark、不重建 Evidence、不修改正式 Level C/benchmark Evidence。
+
+Decision：
+
+- 正式路径固定为 `results/consolidation/m5/<evidence_id>/`；Evidence ID 为 `YYYYMMDD_<short_source_commit>`，
+  每个完整 source commit 只允许一套 consolidation。
+- 目录固定恰好包含 `README.txt`、`evidence_index.json`、`verification_report.json`、`provenance.json`、
+  `commands.txt` 和 `sha256sums.txt` 六个文件。
+- 三份 JSON 使用 schema version 1；README 是 human-readable summary；机器可读文件只引用现有 Evidence，不复制
+  raw/gzip/TSV/图片/模型/binary。
+- `sha256sums.txt` 按字节序索引其他五个文件并排除自身；发布采用 staging 完整验证后单次 rename。
+- D038 的 25 MiB retention 统一上限为 `26214400` bytes；输入 Evidence 或合同变化时 consolidation 失效，必须
+  完整重新生成，不得手工 patch。
+- M5.6 直接验证 consolidation 及底层 Evidence；consolidation PASS 不等于 M5.6 Gate PASS，也不等于 M5 CLOSED。
+
+Alternatives rejected：
+
+- 将 consolidation 放入 validation 或 benchmark 单侧目录；
+- 只修改阶段文档而不提供稳定 machine-readable index；
+- 复制两套正式 Evidence；
+- 使用随机 ID、秒级时间或个人路径；
+- 让 M5.6 只信任 consolidation 而不检查底层 Evidence。
+
+Consequences：
+
+增加一个小型、稳定、可审计的跨 Evidence 索引，避免大体积重复数据，并为 M5.6 提供明确入口；任何底层 Evidence
+变化都会使该 consolidation 失效。M5.5 Planning Freeze Remediation 完成后，必须从新的 clean committed HEAD
+重新计算未来 consolidation 的 Evidence ID。

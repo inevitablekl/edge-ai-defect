@@ -114,6 +114,7 @@ M5 状态：
 - M5.3 Benchmark Harness and Offline Analyzer：complete。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：complete；正式 Evidence 已生成。
 - M5.5 Evidence Consolidation：pending。
+- M5.5 Planning Freeze Remediation：complete；consolidation contract 已冻结，尚未执行 M5.5 consolidation。
 - M5.6 Deep Evidence Gate：pending。
 - M5.7 Documentation-Only Closeout：pending。
 - M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
@@ -125,6 +126,14 @@ M5 状态：
 ```text
 M5.5 Evidence Consolidation（下一步；M5.4 已完成）
 ```
+
+M5.5 首次预审曾在修改文件前 `STOPPED`：原计划未冻结 consolidation 目录、文件集合、schema、summary 和
+`sha256sums` 规则，分类为 `M5.5 evidence consolidation planning gap`，不是执行失败。本次 Planning Freeze
+Remediation 已完成并新增 D040，冻结路径 `results/consolidation/m5/<evidence_id>/`、固定六文件、三个 JSON
+schema version 1、README/commands/SHA 规则、staging 后单次 rename、失效边界和 `26214400` bytes retention。
+本轮为 documentation-only，未创建 consolidation 目录，未运行 application、benchmark 或 Evidence 重建；
+M5.5 Evidence Consolidation、M5.6 Deep Evidence Gate、M5.7 仍为 pending，下一步是在新的 clean committed HEAD
+上重新执行 M5.5。
 
 当前主线：
 
