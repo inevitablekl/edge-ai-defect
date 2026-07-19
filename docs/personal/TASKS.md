@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS；M5.1 PENDING。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -106,7 +106,7 @@ M4 状态：
 M5 状态：
 
 - M5.0 Planning Freeze：complete。
-- M5.1 Corpus Assets and Validation Contract：pending。
+- M5.1 Corpus Assets and Validation Contract：complete。
 - M5.2 Level C Reference, Comparator and Formal Validation：pending。
 - M5.2 Level C Gate：pending。
 - M5.3 Benchmark Harness and Offline Analyzer：pending。
@@ -116,12 +116,12 @@ M5 状态：
 - M5.7 Documentation-Only Closeout：pending。
 - M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
 - Level C、正式 benchmark 和正式 M5 evidence：均未执行/未生成。
-- Strict、ASan、UBSan：保持 `Not configured`，不因 M5.0 改变。
+- Strict、ASan、UBSan：保持 `Not configured`，不因 M5.1 改变。
 
 下一阶段：
 
 ```text
-M5.1 Corpus Assets and Validation Contract：PENDING（下一步唯一允许任务；不得进入 M5.2、正式 Level C 或 benchmark）
+M5.2 Level C Reference, Comparator and Formal Validation：PENDING（下一步唯一允许任务；不得在 M5.2 完成前执行正式 benchmark）
 ```
 
 当前主线：
@@ -1743,6 +1743,44 @@ NEU-DET
 备注：
 
 - Strict、ASan、UBSan 仍为 `Not configured`；M5.0 未运行 build、CTest、Level C 或 benchmark，未生成正式 evidence。
+
+#### M5.1 Corpus Assets and Validation Contract
+
+当前工作：
+
+- 完成 M5.1 corpus contract、三份文字/哈希 manifest、严格 parser/validator、regular-file preparation 工具和独立 Python/CTest 测试。
+- 起点 Git upstream 为 behind `0` / ahead `0`；ahead 0 已确认不是阶段启动阻断条件，未人为恢复历史 ahead 14。
+
+修改文件：
+
+- `tools/validation/prepare_m5_corpus.py`
+- `tests/data/m5/manifests/level_c_original_corpus.json`
+- `tests/data/m5/manifests/level_c_derived_corpus.json`
+- `tests/data/m5/manifests/benchmark_corpus.json`
+- `tests/test_prepare_m5_corpus.py`
+- `CMakeLists.txt`
+- `docs/personal/M5_EXECUTION_PLAN.md`
+- `docs/personal/TASKS.md`
+
+已完成：
+
+- 12 张 Level C original、4 张确定性 derived BMP 和 20 张 benchmark original 均按冻结顺序、SHA、尺寸和 coverage 验证。
+- 工具只接受显式 `--dataset-root`，执行 source regular-file 检查、SHA fail-fast、regular copy、OpenCV 4.10 `INTER_LINEAR`/BGR 114 derived 生成、临时目录原子发布和稳定 prepared manifest。
+- 本地 ignored `data/yolo/neu_det/images/val` 验证通过；图片未复制到 tracked 目录，源文件未修改，Git 未跟踪图片或 prepared 输出。
+- Model Smoke OFF 定向 `1/1`、OFF 全量 `25/25`、ON 全量 `33/33` CTest 通过；Strict/ASan/UBSan 保持 `Not configured`。
+
+未完成：
+
+- Python ORT Reference、Level C Comparator、正式 Level C、benchmark harness、benchmark execution、formal evidence 均未开始。
+
+状态结论：
+
+- M5.1：`COMPLETE`；M5.2：`PENDING`；M5 overall：`IN_PROGRESS`。
+- 本轮没有新增长期决策，`DECISIONS.md` 不变。
+
+下一步计划：
+
+- 仅可进入 M5.2 Harness 实现；不得在本任务中运行正式 Level C、benchmark 或生成正式 evidence。
 
 ---
 

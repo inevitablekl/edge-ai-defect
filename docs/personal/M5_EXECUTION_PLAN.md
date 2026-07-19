@@ -7,10 +7,10 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.0 Planning Freeze |
+| Current task | M5.1 Corpus Assets and Validation Contract |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
-| M5.1 Corpus Assets and Validation Contract | `PENDING` |
+| M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
 | M5.2 Level C Reference, Comparator and Formal Validation | `PENDING` |
 | M5.2 Level C Gate | `PENDING` |
 | M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
@@ -586,7 +586,49 @@ PASS 后只进入 M5.7；FAIL 后另行批准 targeted remediation。
 
 - M5 完整阶段、两个 Gate、12+4 Level C corpus、20 图 benchmark corpus、数据合规、Reference、matching、统计、
   evidence/provenance/retention/失效规则已冻结；
-- M5 状态由 planning PENDING 转为 `IN_PROGRESS`，M5.0 `COMPLETE`；
+- M5 状态为 `IN_PROGRESS`，M5.0 `COMPLETE`，M5.1 已完成；
 - Level C、benchmark 和正式 evidence 尚未执行；M5 未 CLOSED；
 - Strict、ASan、UBSan 仍为 `Not configured`，M5.0 未改变其状态；
-- 下一步且唯一允许任务为 **M5.1 Corpus Assets and Validation Contract**。
+- 下一步且唯一允许任务为 **M5.2 Level C Reference, Comparator and Formal Validation**。
+
+## 16. M5.1 实际结果（2026-07-19）
+
+M5.1 已完成，M5.2 保持 `PENDING`，M5 overall 仍为 `IN_PROGRESS`。本轮仅建立 corpus contract 和准备工具，未进入
+Python ORT Reference、Comparator、正式 Level C、benchmark 或 evidence。
+
+### 16.1 文件与 schema
+
+- `tests/data/m5/manifests/level_c_original_corpus.json`：schema version 1，固定 12 项、validation split、六类覆盖、角色覆盖和原图 SHA256。
+- `tests/data/m5/manifests/level_c_derived_corpus.json`：schema version 1，固定 4 项、24-bit BMP、OpenCV `INTER_LINEAR`、BGR border `[114,114,114]`、尺寸/padding 和输出 SHA256。
+- `tests/data/m5/manifests/benchmark_corpus.json`：schema version 1，固定 20 项 validation 原图，前 12 项与 Level C original 一致。
+- `tools/validation/prepare_m5_corpus.py`：严格 JSON parser/validator、重复键/未知键/缺失键/类型/路径/SHA/schema 校验、regular-file copy、确定性 derived BMP、原子 prepared 目录和临时 prepared manifest。
+- `tests/test_prepare_m5_corpus.py`：manifest contract、失败路径、派生规则、regular copy、非 symlink 和重复准备测试。
+- `CMakeLists.txt`：新增独立 `m5_corpus_preparation` CTest，使用项目 Python，不依赖数据集或模型。
+
+三个 manifest 均不包含绝对路径、时间戳、主机名、运行结果或图片内容；没有提交 NEU-DET JPG/BMP，也没有修改 `.gitignore`。
+
+### 16.2 本地 ignored 数据验证
+
+本轮只读使用仓库已有 ignored validation root `data/yolo/neu_det/images/val`：
+
+- 12 张 Level C original：SHA、200×200 尺寸和六类 coverage 全部通过；prepared 顺序为 `0000`～`0011`。
+- 4 张 derived：目标尺寸分别为 319×201、201×319、321×199、199×321；连续两次生成 byte-identical；最终 SHA256 为：
+  - `0012_derived_319x201_crazing_10.bmp`: `8b7457f25d17344440dbd26ada74a6373bf0a177a0e4b89ce754ff12893f9b29`
+  - `0013_derived_201x319_inclusion_18.bmp`: `1b2c956884c7b7e573cfa634e3a93e5a510ca41d6d6b54cd44aa6148e3538ccb`
+  - `0014_derived_321x199_pitted_surface_224.bmp`: `01e52085c57fe641d20ce3212f88dd40ac80f0604676b7bc9d5c7fa080214bbb`
+  - `0015_derived_199x321_scratches_126.bmp`: `fbe8c46a58125d8cd58c623efc4da5fed8cc162f3ff2f53aad86363273336dd4`
+- 20 张 benchmark original：SHA、200×200 尺寸、validation split 和六类 coverage 全部通过；prepared 顺序为 `0000`～`0019`。
+- 所有 prepared 图片均为 regular file，不使用 symlink/hard link，OpenCV `IMREAD_COLOR` 可解码；源文件未修改。
+
+Prepared 输出仅写入 `build-m5-1-validation/` 临时目录，未进入 `data/`、`results/` 或 Git。
+
+### 16.3 验证与边界
+
+- Python `py_compile`：通过。
+- M5.1 定向 CTest：Model Smoke OFF `1/1 PASS`。
+- Model Smoke OFF 全量 CTest：`25/25 PASS`。
+- Model Smoke ON 全量 CTest：`33/33 PASS`。
+- Strict、ASan、UBSan：仍为 `Not configured`。
+- 未运行正式 Level C、benchmark，未生成正式 evidence。
+
+下一步仅为 M5.2 Harness 实现；不得在本提交中提前实现或运行 M5.2 内容。

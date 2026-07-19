@@ -209,6 +209,17 @@ set_target_properties(edge_ai_infer
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
+    add_test(
+        NAME m5_corpus_preparation
+        COMMAND
+            ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_prepare_m5_corpus.py
+    )
+    set_tests_properties(m5_corpus_preparation
+        PROPERTIES
+            LABELS "m5;corpus;validation"
+    )
+
     add_executable(test_core
         tests/test_core.cpp
     )
