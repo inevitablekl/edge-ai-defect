@@ -7,13 +7,13 @@ Stage：**M5 Level C Validation and WSL2 ORT CPU Engineering Baseline**
 | 状态项 | 当前状态 |
 | --- | --- |
 | M5 overall | `IN_PROGRESS` |
-| Current task | M5.2A Level C Harness Implementation |
+| Current task | Read-only M5.2 Level C Gate |
 | M4 prerequisite | `CLOSED` |
 | M5.0 Planning Freeze | `COMPLETE` |
 | M5.1 Corpus Assets and Validation Contract | `COMPLETE` |
-| M5.2 Level C Reference, Comparator and Formal Validation | `IN_PROGRESS` |
+| M5.2 Level C Reference, Comparator and Formal Validation | `COMPLETE` (formal comparison PASS; Gate pending) |
 | M5.2A Harness Implementation | `COMPLETE` |
-| M5.2B Formal Evidence Generation | `PENDING` |
+| M5.2B Formal Evidence Generation | `COMPLETE` |
 | M5.2 Level C Gate | `PENDING` |
 | M5.3 Benchmark Harness and Offline Analyzer | `PENDING` |
 | M5.4 Formal WSL2 ORT CPU Baseline Execution | `PENDING` |
@@ -674,3 +674,23 @@ Reference schema 顶层固定为 `schema_version`、`reference`、`model`、`pos
 - 未执行 Level C Gate、未生成正式 evidence、未开始 benchmark/M5.3。
 
 下一步仅为在 clean committed HEAD 上执行 M5.2B Formal Evidence Generation；本轮不提前进入该阶段。
+
+## 18. M5.2B Formal Evidence Generation 实际结果（2026-07-19）
+
+M5.2B 已完成正式 evidence 生成；M5 overall 仍为 `IN_PROGRESS`。正式运行冻结在 source commit
+`1073fa8be1644dd8562f5704ae31996121883dbb`，起点 upstream behind `0` / ahead `2`，ahead 仅记录实际值。
+
+- Evidence ID：`20260719_1073fa8`。
+- Evidence 目录：`results/validation/level_c/20260719_1073fa8/`。
+- 12 张 validation original + 4 张 runtime-derived BMP 均通过 SHA、尺寸、顺序和 regular-file 验证；图片本体未进入 Git 或 evidence。
+- Python Reference 两次 byte-identical；真实 C++ `edge_ai_defect` 两次 byte-identical；Run 1 与 Run 2 comparison 均 `16/16 PASS`。
+- 最大 confidence 绝对误差 `4.980773571361397e-10`；最大 bbox 单坐标绝对误差 `1.2131195092024427e-05`。
+- Detection 总数 `54`；per-class counts `[4, 28, 7, 4, 5, 6]`。
+- Model Smoke OFF 定向 `4/4 PASS`、全量 `28/28 PASS`；ON 定向 `4/4 PASS`、全量 `36/36 PASS`。
+- Strict、ASan、UBSan 仍为 `Not configured`；未执行 benchmark；未执行 Level C Gate。
+
+状态结论：
+
+- M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；Formal Level C comparison：`PASS`。
+- M5.2 Level C Gate：`PENDING`；M5.3：`PENDING`；M5 overall：`IN_PROGRESS`。
+- Formal comparison PASS 不等于 Level C Gate PASS；下一步仅允许只读 M5.2 Level C Gate。

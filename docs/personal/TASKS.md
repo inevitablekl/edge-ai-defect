@@ -60,7 +60,7 @@
 
 ```text
 M0、M1、M2、M3、M4 已关闭；M4.6 first Gate FAIL、remediation complete、Gate rerun PASS；M4.7 documentation-only closeout complete。
-M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
+M5 Pre-Planning Discovery Audit 已完成；M5.0 Planning Freeze COMPLETE；M5.1 COMPLETE；M5.2A COMPLETE；M5.2B COMPLETE；Formal Level C comparison PASS；M5 Level C Validation and WSL2 ORT CPU Engineering Baseline 为 IN_PROGRESS。
 ```
 
 M2 状态：
@@ -108,8 +108,8 @@ M5 状态：
 - M5.0 Planning Freeze：complete。
 - M5.1 Corpus Assets and Validation Contract：complete。
 - M5.2A Harness Implementation：complete。
-- M5.2B Formal Evidence Generation：pending。
-- M5.2 Level C Reference, Comparator and Formal Validation：in progress；尚未完成正式 evidence。
+- M5.2B Formal Evidence Generation：complete；Formal Level C evidence 已生成，comparison PASS。
+- M5.2 Level C Reference, Comparator and Formal Validation：complete；Level C Gate 尚未执行。
 - M5.2 Level C Gate：pending。
 - M5.3 Benchmark Harness and Offline Analyzer：pending。
 - M5.4 Formal WSL2 ORT CPU Baseline Execution：pending。
@@ -117,13 +117,13 @@ M5 状态：
 - M5.6 Deep Evidence Gate：pending。
 - M5.7 Documentation-Only Closeout：pending。
 - M5 overall：`IN_PROGRESS`；尚未 `CLOSED`。
-- Level C、正式 benchmark 和正式 M5 evidence：均未执行/未生成。
+- Level C Gate、正式 benchmark 尚未执行；正式 M5.2B evidence 已生成。
 - Strict、ASan、UBSan：保持 `Not configured`，不因 M5.1 改变。
 
 下一阶段：
 
 ```text
-M5.2B Formal Evidence Generation：PENDING（下一步唯一允许任务；不得执行 Level C Gate 或 benchmark）
+只读 M5.2 Level C Gate（下一步唯一允许任务；不得执行 benchmark）
 ```
 
 当前主线：
@@ -1822,7 +1822,29 @@ NEU-DET
 
 下一步计划：
 
-- 仅可在 clean committed HEAD 上进入 M5.2B Formal Evidence Generation；不得把本轮 dry-run 写为正式 Level C PASS，也不得执行 Level C Gate 或 benchmark。
+- 仅可进入只读 M5.2 Level C Gate；不得把 Formal comparison PASS 写为 Gate PASS，也不得执行 benchmark。
+
+#### M5.2B Formal Evidence Generation
+
+当前工作：
+
+- 在 source commit `1073fa8be1644dd8562f5704ae31996121883dbb` 上完成正式 Level C evidence；起点 upstream behind `0` / ahead `2`，
+  worktree clean，ahead 仅记录实际值。
+- Evidence ID：`20260719_1073fa8`；目录：`results/validation/level_c/20260719_1073fa8/`。
+
+验证结果：
+
+- 12 张 validation original + 4 张 runtime-derived BMP 准备和 SHA 校验通过，图片本体未进入 Git/evidence。
+- Python Reference 两次 byte-identical；真实 C++ `edge_ai_defect` 两次 byte-identical；Run 1/Run 2 comparison 均 `16/16 PASS`。
+- 最大 confidence 误差 `4.980773571361397e-10`；最大 bbox 误差 `1.2131195092024427e-05`；Detection 总数 `54`，per-class `[4, 28, 7, 4, 5, 6]`。
+- Model Smoke OFF 定向/全量 `4/4`、`28/28 PASS`；ON 定向/全量 `4/4`、`36/36 PASS`。
+- Strict/ASan/UBSan 保持 `Not configured`；benchmark 未开始；Level C Gate 未执行。
+
+状态结论：
+
+- M5.1：`COMPLETE`；M5.2A：`COMPLETE`；M5.2B：`COMPLETE`；Formal Level C comparison：`PASS`。
+- M5 overall：`IN_PROGRESS`；Level C Gate：`PENDING`；M5.3：`PENDING`。
+- 下一步仅为只读 M5.2 Level C Gate；不得将 Formal comparison PASS 写为 Gate PASS。
 
 ---
 
@@ -1837,8 +1859,8 @@ NEU-DET
 3. M3 Deep Gate Rerun 已 PASS，M3 已正式关闭；M2/M3 均不包含完整 Serial Baseline 或性能结论。
 4. M4.0～M4.7 已完成；M4.4 Shallow Gate rerun PASS，M4.6 第一次 Standard Final Gate FAIL 后 remediation complete，
    M4.6 Gate rerun PASS，M4 已 CLOSED。
-5. M5.0 Planning Freeze 已完成，M5 overall 为 `IN_PROGRESS`；下一步且唯一允许任务为 M5.1 Corpus Assets and
-   Validation Contract。Level C、benchmark 和正式 evidence 尚未执行。
+5. M5.0 Planning Freeze、M5.1、M5.2A 和 M5.2B 已完成，M5 overall 仍为 `IN_PROGRESS`；Formal Level C comparison 已
+   `PASS`，下一步且唯一允许任务为只读 M5.2 Level C Gate。benchmark 尚未开始。
 6. M5 复用 M4 FrameTimings 并由离线 Python 工具统计，不新增 production Profiler；TensorRT、Pipeline、input-size、
    stability、ROS2 和 Qt 不进入 M5，保留给后续 Jetson/TensorRT 阶段。
 
