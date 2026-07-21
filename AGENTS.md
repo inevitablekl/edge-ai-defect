@@ -395,17 +395,37 @@ The following items must not be invented by AI agents:
 
 | Item                              | Status |
 | --------------------------------- | ------ |
-| Specific Jetson model             | TBD    |
-| JetPack version                   | TBD    |
+| Specific Jetson model             | planned target; pending J1 |
+| JetPack version                   | planned target 6.2.2; pending J1 |
 | CUDA version                      | TBD    |
 | TensorRT version                  | TBD    |
-| ONNX Runtime C++ version          | TBD    |
-| OpenCV version                    | TBD    |
-| CMake minimum version             | TBD    |
+| ONNX Runtime C++ version          | 1.23.2 (verified WSL/M5 fact) |
+| OpenCV version                    | 4.5.4 C++ (verified WSL/M5 fact) |
+| CMake minimum version             | 3.16 (verified project fact) |
 | TensorRT engine generation method | TBD    |
 | Resource monitoring method        | TBD    |
 
 When finalized, these items should be recorded in `docs/personal/DECISIONS.md` and `docs/personal/ENVIRONMENT.md` when they describe the runtime environment.
+
+### 13.1 Stage J Planning Status
+
+Current status contract: `M0–M5 CLOSED`; `Stage J Plan v0.3 FROZEN`; `J0 IN PROGRESS`; `Stage J PENDING`; `Device-observed facts: pending J1`; Stage T and Stage P have not started.
+
+M0–M5 are completed and closed. The project is currently at Stage J `J0 Planning Freeze`:
+
+- Stage J Plan v0.3 is frozen and committed at `docs/personal/STAGE_J_EXECUTION_PLAN.md`;
+- Decision D041 is `Accepted`;
+- J0 is not yet fully complete;
+- the Stage J implementation branch has not been created;
+- Stage J production code has not been modified.
+
+The verified WSL/M5 environment facts are GCC/G++ `11.4.0`, C++17, CMake `3.22.1` with minimum `3.16`, OpenCV C++ `4.5.4`, and ONNX Runtime C++ `1.23.2`. These are current verified WSL/M5 environment facts, not Jetson observed facts.
+
+The Stage J planned target is Jetson Orin Nano Super Developer Kit 8GB, 256GB NVMe root filesystem, JetPack 6.2.2, Jetson Linux / L4T 36.5, Ubuntu 22.04-based, aarch64, ONNX Runtime 1.23.2 native source build, CPUExecutionProvider only, FP32, Serial, MAXN_SUPER and active fan. This is a planned target pending J1 verification.
+
+For Stage J execution, the authority order within the existing global rules is: current production source and tests; `docs/personal/STAGE_J_EXECUTION_PLAN.md`; D041 and subsequent Stage J Decisions; `docs/personal/EXPERIMENT_PLAN.md`; `docs/personal/ENVIRONMENT.md`; `docs/personal/TASKS.md`; `README.md`; historical conversations and external summaries. AGENTS.md remains the highest-priority global Agent rule; the frozen Stage J execution protocol is authoritative for Stage J scope, while current source and tests remain higher than descriptive historical documents.
+
+Until Stage J is closed, Agents must not implement TensorRT, CUDA EP, TensorRT EP, FP16, INT8, PipelineRunner, BoundedQueue, ROS2, Qt, Camera / RTSP / PLC, generic BackendFactory, generic SinkFactory, plugin systems, or a cross-compilation chain. TensorRT FP16 and Pipeline remain in the long-term route as later Stage T and Stage P work. Allowed implementation is limited to the frozen Stage J Plan and the J0/J1–J9 task cards.
 
 ---
 

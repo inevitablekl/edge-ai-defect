@@ -2078,3 +2078,50 @@ NEU-DET
 
 -
 ```
+
+### 2026-07-21 - Stage J J0 Planning Freeze
+
+当前工作：
+
+- 同步 Stage J Plan v0.3、Decision D041 以及项目全局规划文档的当前状态。
+
+修改文件：
+
+- `AGENTS.md`
+- `README.md`
+- `docs/personal/TASKS.md`
+- `docs/personal/ENVIRONMENT.md`
+- `docs/personal/EXPERIMENT_PLAN.md`
+
+已完成：
+
+- J0.1：`COMPLETE`；新增 `docs/personal/STAGE_J_EXECUTION_PLAN.md`；Plan v0.3 `FROZEN`；commit `87d4459f4d25e630f38ae279b0423e39036e64af`。
+- J0.2：`COMPLETE`；新增 Decision D041；commit `38e8e068a6d38e69b8845098197d6632cef4f5b0`。
+- J0.3：`COMPLETE`；同步 AGENTS、README、TASKS、ENVIRONMENT、EXPERIMENT_PLAN；commit to be recorded by Git history。
+
+当前状态：
+
+- `M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；J0：`IN PROGRESS`；Stage J：`PENDING`；Stage T/Stage P：未开始。
+- J0：`IN PROGRESS`；Stage J：`PENDING`。
+- Stage J implementation branch：`not created`。
+- Stage J production code：`not modified`。
+- Stage J formal Evidence：`not generated`。
+- Device-observed facts：`pending J1`；planned target 与 observed fact 保持分离。
+
+未完成：
+
+- J0.4 测试名称与分类清单；
+- J0.5 里程碑任务卡；
+- J0.6 Git 起点核验和分支创建。
+
+阻塞问题：
+
+- 无；Jetson 实机验收仍等待 J1，尚未开始 Stage J 实现。
+
+下一步计划：
+
+- 完成 J0.4、J0.5 和 J0.6；不得将上述任务提前标记为完成。
+
+备注：
+
+- 本记录时间：`2026-07-21 22:52:39 CST`。

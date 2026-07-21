@@ -53,11 +53,13 @@ Not available
 
 ## 3. 当前环境总览
 
+当前规划状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；J0：`IN PROGRESS`；Stage J：`PENDING`；Device-observed facts：`pending J1`。Stage T 和 Stage P 尚未开始。
+
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Jetson TensorRT FP16 部署和论文核心性能实验 | TBD |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | planned target; pending J1 |
 
 ---
 
@@ -161,22 +163,68 @@ Not available
 
 | 项目 | 当前值 |
 |---|---|
-| Jetson model | TBD |
-| JetPack version | TBD |
-| Ubuntu / L4T version | TBD |
-| CUDA version | TBD |
-| TensorRT version | TBD |
-| cuDNN version | TBD |
-| ONNX Runtime C++ version | TBD |
-| OpenCV version | TBD |
-| CMake version | TBD |
-| C++ compiler | TBD |
-| Power mode | TBD |
-| Resource monitoring method | TBD |
+| Jetson model | planned target; pending J1 |
+| JetPack version | planned target 6.2.2; pending J1 |
+| Ubuntu / L4T version | planned target Ubuntu 22.04-based / L4T 36.5; pending J1 |
+| CUDA version | pending J1 |
+| TensorRT version | pending J1 / Stage T |
+| cuDNN version | pending J1 |
+| ONNX Runtime C++ version | planned 1.23.2 native source build; pending J1/J2 |
+| OpenCV version | pending J1 |
+| CMake version | pending J1 |
+| C++ compiler | pending J1 |
+| Power mode | planned MAXN_SUPER; pending J1 |
+| Resource monitoring method | pending J1 |
 
 说明：
 
-Jetson 平台是最终 TensorRT FP16 部署和论文核心性能数据采集平台。
+Jetson 平台是 Stage J CPU baseline、后续 Stage T TensorRT FP16 部署和论文核心性能数据采集平台；本表为 planned target，不是 hardware observed fact。
+
+### 6.1 Stage J Planned Jetson Target
+
+> **Status: planned target; not yet observed on hardware. All device-specific values require J1 verification.**
+
+```text
+device: Jetson Orin Nano Super Developer Kit
+memory: 8GB
+storage: 256GB NVMe
+root filesystem: NVMe
+JetPack: 6.2.2
+L4T: 36.5
+architecture: aarch64
+OS: Ubuntu 22.04-based
+ONNX Runtime: 1.23.2 native source build
+EP: CPUExecutionProvider
+mode: MAXN_SUPER planned
+cooling: active fan planned
+build: native Jetson build
+cross-compilation: excluded from Stage J
+```
+
+这些是冻结的 planned target 合同，不是 J0 或当前 WSL 环境的 Jetson observed facts。
+
+### 6.2 J1 Observed Facts Placeholder
+
+以下字段在 J1 前保持 `pending J1`，不得填入推测值：
+
+| Field | Status |
+|---|---|
+| actual SKU | pending J1 |
+| serial / board identifiers | pending J1 |
+| actual JetPack | pending J1 |
+| actual L4T | pending J1 |
+| actual GCC | pending J1 |
+| actual CMake | pending J1 |
+| actual OpenCV | pending J1 |
+| actual Python | pending J1 |
+| actual online CPUs | pending J1 |
+| actual allowed CPUs | pending J1 |
+| actual MAXN_SUPER mode ID | pending J1 |
+| actual thermal zones | pending J1 |
+| actual frequency paths | pending J1 |
+| actual tegrastats rails | pending J1 |
+| actual OC/UV paths | pending J1 |
+| actual power supply status | pending J1 |
 
 ---
 
