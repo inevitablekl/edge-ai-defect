@@ -2173,3 +2173,14 @@ NEU-DET
 
 - 本记录时间：`2026-07-21T23:47:11+08:00`。
 - J0.4 commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J0.5 Milestone Task Cards
+
+- J0.5：`COMPLETE`；新增并冻结 [`docs/personal/STAGE_J_TASK_CARDS.md`](STAGE_J_TASK_CARDS.md)，版本 `v0.1`，文档状态 `FROZEN`。
+- 父协议：Stage J Plan v0.3（`FROZEN`）；Decision D041：`Accepted`。
+- 任务卡覆盖 J1–J9，共 45 张：J1（5）、J2（6）、J3（10）、J4（4）、J5（10，含 J5.1a/J5.1b/J5.1c）、J6（4）、J7（2）、J8（2）、J9（2）。
+- J1 设备依赖卡保持 `BLOCKED`；J2–J9 均未执行且未标记 `COMPLETE`。J0.6 分支创建仍为 `PENDING`，J0 仍为 `IN PROGRESS`。
+- 卡片冻结了依赖图、硬 Gate、PASS/FAIL/BLOCKED、失效与重跑范围、source/Evidence 分离提交策略及用户 merge/tag/backup/push 交接责任。
+- 起始 source commit：`6e1c46ac4f9d09ef2e620f316723957144a66cf0`；Stage J production 未修改；J1–J9 formal Evidence 未生成。
+- 本记录时间：`2026-07-22T00:01:04+08:00`。
+- J0.5 commit：commit to be recorded by Git history。
