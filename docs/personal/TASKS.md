@@ -2125,3 +2125,51 @@ NEU-DET
 备注：
 
 - 本记录时间：`2026-07-21 22:52:39 CST`。
+
+### 2026-07-21 - Stage J J0.4 Baseline Test Inventory
+
+当前工作：
+
+- 冻结当前 HEAD 的 CMake/CTest baseline test inventory 和 Stage J 测试分类。
+
+已完成：
+
+- J0.4：`COMPLETE`；新增 `configs/stage_j/test_inventory.yaml`。
+- source commit：`2da4d2cae6c5075e516c7edcfbd28e52f5301299`。
+- Model Smoke OFF：31；Model Smoke ON：39；ON-only：8；unique baseline：39。
+- 分类数量：`portable_required=39`、`model_asset_required=19`、`x86_only=0`、`jetson_only=0`、`sanitizer_required=15`。
+- 未来 Stage J requirements：JTEST-001～JTEST-011，共 11 项，均为 `not_implemented` 且无 CTest 名称。
+
+第一次 J0.4 attempt：
+
+- 因旧任务预期 28/39 与当前 HEAD 旧 build metadata 的 24/32 不一致，按 Gate 停止；未修改文件、未创建提交。
+- 该次停止不是代码失败或测试失败。
+
+第二次 J0.4 attempt：
+
+- 发现仓库内旧 `build/off` 和 `build` metadata 与当前 CMake 静态注册不一致；旧 metadata 缺少 7 个 M5 tests。
+- 未修改文件、未创建提交；该次停止不是代码失败或测试失败。
+
+最终处理：
+
+- 保留旧 build directories 不变，并将其标记为 stale、排除出 inventory 权威来源。
+- 使用仓库外临时 OFF/ON configure 生成 fresh CTest metadata；当前 CMake 静态注册与 fresh metadata exact match。
+- 未新增真实测试、未运行 CTest 实际测试、未编译、未修改 CMake。
+
+当前状态：
+
+- J0：`IN PROGRESS`；Stage J：`PENDING`。
+- Stage J implementation branch：`not created`。
+- Stage J production code：`not modified`。
+- Stage J formal Evidence：`not generated`。
+- J0.5、J0.6：`PENDING`。
+
+下一步计划：
+
+- J0.5 里程碑任务卡；
+- J0.6 Git 起点核验和 Stage J 分支创建。
+
+备注：
+
+- 本记录时间：`2026-07-21T23:47:11+08:00`。
+- J0.4 commit：commit to be recorded by Git history。
