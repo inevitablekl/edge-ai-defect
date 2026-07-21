@@ -138,7 +138,7 @@ Status: planned target; pending J1 verification
 
 ### 4.4 Stage J 研究定位与边界
 
-当前状态合同：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；J0：`IN PROGRESS`；Stage J：`PENDING`；Device-observed facts：`pending J1`。Stage T 和 Stage P 尚未开始。
+当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041：`Accepted`；J0：`COMPLETE`；Stage J execution：`PENDING J1`；J1：`BLOCKED pending device`；implementation branch：`feature/jetson-onnxruntime`；no Jetson experiment has run；Stage J formal Evidence：`not generated`。Stage T 和 Stage P 尚未开始。
 
 Stage J 的正式定位是 **Jetson Orin Nano Super ONNX Runtime CPU Baselines**，目标包括：
 

@@ -2184,3 +2184,15 @@ NEU-DET
 - 起始 source commit：`6e1c46ac4f9d09ef2e620f316723957144a66cf0`；Stage J production 未修改；J1–J9 formal Evidence 未生成。
 - 本记录时间：`2026-07-22T00:01:04+08:00`。
 - J0.5 commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J0.6 Planning Freeze Closeout
+
+- J0.6：`COMPLETE`；J0：`COMPLETE`；J0.1–J0.5 均已完成。
+- Stage J Plan v0.3：`FROZEN`；D041：`Accepted`；test inventory Model Smoke OFF=`31` / ON=`39`；Task Cards v0.1：`FROZEN`，共 45 张。
+- 最终 J0 base commit：commit to be recorded by Git history。
+- 目标分支：`feature/jetson-onnxruntime`；该分支将在本 closeout commit 后立即从最终 main HEAD 创建。
+- Stage J production code 未修改；未执行 build/test/benchmark；Stage J formal Evidence 未生成。
+- Stage J execution：`PENDING J1`；J1：`BLOCKED pending device arrival`；下一张任务卡：J1.1 — Device Identity, Storage and Flash Acceptance。
+- implementation branch：`feature/jetson-onnxruntime`；device-observed facts：`pending J1`；Stage T/P 尚未开始。
+- 本记录时间：`2026-07-22T00:07:37+08:00`。
+- J0.6 closeout commit：commit to be recorded by Git history。

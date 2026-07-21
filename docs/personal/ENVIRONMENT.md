@@ -53,7 +53,7 @@ Not available
 
 ## 3. 当前环境总览
 
-当前规划状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；J0：`IN PROGRESS`；Stage J：`PENDING`；Device-observed facts：`pending J1`。Stage T 和 Stage P 尚未开始。
+当前规划状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041：`Accepted`；J0 Planning Freeze：`COMPLETE`；Stage J execution：`PENDING J1`；J1：`BLOCKED pending device`；Device-observed facts：`pending J1`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
