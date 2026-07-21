@@ -2090,3 +2090,137 @@ Clarification（M5.5 Consolidation Evidence Remediation Planning Freeze，2026-0
 - Stable regeneration 必须在 staging A/B 使用完全相同的冻结输入生成并比较六文件；五个内容文件和
   `sha256sums.txt` 必须 byte-identical，随后才可原子发布。新 consolidation 完成前，M5.5 remediation generation、M5.6
   Gate rerun 和 M5.7 均保持 PENDING；不得 patch 历史 consolidation。
+
+### D041 - Freeze Stage J Jetson ONNX Runtime CPU Baseline Route
+
+时间：
+
+```text
+2026-07-21
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+M0～M5 C++ ONNX Runtime CPU Serial Baseline 已完成并关闭，当前已有 WSL2 x86_64 正确性验证和工程基线。下一步需要在同一目标 Jetson 上建立可信的 ONNX Runtime CPU baseline，作为后续 Stage T TensorRT FP16 同设备比较的参考。WSL 与 Jetson 只做环境差异描述，不计算正式 speedup。
+
+本决策依据冻结计划 [`docs/personal/STAGE_J_EXECUTION_PLAN.md`](STAGE_J_EXECUTION_PLAN.md)：
+
+- Plan version：`Stage J Plan v0.3`
+- Document status：`FROZEN`
+- Plan SHA256：`a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd`
+
+Decision：
+
+#### A. 阶段分离
+
+冻结阶段关系：
+
+- Stage J：Jetson ONNX Runtime CPU Baselines；
+- Stage T：TensorRT FP16；
+- Stage P：Pipeline / System Optimization；
+- Stage R：Research Extension。
+
+Stage J 不实现 TensorRT、CUDA EP、TensorRT EP、FP16、INT8、PipelineRunner、ROS2、Qt、摄像头、RTSP、PLC，也不引入通用插件或通用 Factory 系统。
+
+#### B. 目标平台合同
+
+Stage J 的 planned target 为 Jetson Orin Nano Super Developer Kit、8GB、256GB NVMe、JetPack 6.2.2、Jetson Linux / L4T 36.5、Ubuntu 22.04-based root filesystem、aarch64、MAXN_SUPER、主动风扇和 Jetson 原生构建。
+
+以上是 planned target，不是 J0 已验证的 observed facts。所有设备事实必须在 J1 采集并冻结，包括实际 thermal zone、CPU frequency sysfs、MAXN_SUPER mode ID、OC/UV counter、sustained throttling 目标频率、tegrastats rail、allowed/online CPU set 以及 Jetson 工具链版本。
+
+#### C. ONNX Runtime 合同
+
+冻结使用官方 ONNX Runtime 1.23.2 source，在 Jetson 上进行原生 aarch64 Release shared-library 构建，仅使用 CPUExecutionProvider、FP32，且不做交叉编译。禁止 CUDA EP、TensorRT EP、XNNPACK、ACL/ArmNN、OpenMP、minimal build、reduced operator config、training、custom ops、LTO 和人为 `-march=native`。
+
+#### D. 继承的推理语义
+
+Stage J 不重新定义 Frozen ONNX 和 SHA、ModelContract、HostTensor、Preprocessor / LetterBox、PostProcessor / NMS、Detection、IInferenceEngine、SerialRunner 的处理顺序、Level A/B/C Reference 和容差、以及 class-aware maximum bipartite matching。原则上不修改这些公共合同。
+
+#### E. RuntimeConfig v2 与 Protocol 分离
+
+RuntimeConfig v2 只管理进程内部软件配置；StageJRunProtocol 管理实验执行条件、CPU set、thermal、telemetry、campaign 和 Evidence。schema v1 保留历史兼容路径；v1 与 v2 字段禁止混用；launcher 不得绕过 RuntimeConfig 修改 Engine 私有状态；正式协议开始后 Resolved Protocol SHA 不得变化。
+
+#### F. ORT 配置证据模型
+
+冻结 `requested options`、`applied options`、`queried options` 三层证据。`applied` 只能由 Engine 实际成功调用 ORT API 后记录，不得由调用方复制 requested 值；`queried` 仅用于 ORT 1.23.2 真正支持独立查询的字段；不可查询字段以成功的配置 API 调用作为应用证据。不得宣称所有 SessionOptions 均已完成独立运行时回读。
+
+#### G. CPU Profile
+
+冻结两套正式 CPU baseline 角色：Controlled 1-Core Application Profile 和 Tuned k-Core Application Profile。
+
+Controlled 固定为 ORT sequential、`intra=1`、`inter=1`、OpenCV threads=1、spinning enabled 和固定单核 affinity。
+
+Tuned 候选为 `unique({1, 2, 4, non_cpu0_count, all_allowed_cpu_count})`，并固定 `intra_op_threads = k`、`inter_op_threads = 1`、ORT sequential、OpenCV threads=1 和 spinning enabled。不得将 `inter_op_threads` 设为 `k`，不得切换 ORT parallel mode。
+
+Tuned 结论只能限定为当前模型、20 图 workload、当前 JetPack、ORT build、MAXN_SUPER 和预注册候选集合中的最优 Profile，不得声称普遍最优线程数。
+
+#### H. 正确性 Gate
+
+冻结 J4 Level A/B/C、J5 20 图 Python Reference，以及每个 Candidate Profile 的两次 separate-process semantic precheck。每个 precheck 进程重新创建 ORT Session 且只执行一个完整 20 图 cycle；不同 Profile 不要求 byte-identical，但每个 Profile 必须分别与 Python Reference 在冻结容差内语义一致；性能 run 的每个完整 cycle SHA 必须匹配该 Profile 的 expected SHA。
+
+#### I. Benchmark 和稳定性
+
+Selection Campaign 使用完整平衡 rotation；正式 Controlled/Tuned baseline 各执行五次 separate-process repetitions；每次正式 measured window 至少 30 秒；任一正式 run 无效则整套五次重跑；不删除 outlier。J6 只验证 Tuned Profile，持续运行至少 30 分钟。Controlled 1-Core 不做独立 30 分钟稳定性测试，除非新增 Decision。
+
+#### J. 实验控制
+
+冻结 MAXN_SUPER、`jetson_clocks --fan`、Thermal Gate、application affinity、telemetry affinity、TID 生命周期采样、tegrastats、rail telemetry、OC/UV counter Gate、monotonic Frame Trace 和 telemetry coverage Gate。实际设备路径、rail 名称、mode ID 和目标频率在 J1 冻结，不得在 J0 猜测。
+
+#### K. Evidence
+
+冻结 local attempt 与 published Evidence 分离；published Evidence 只能来自一个完整 PASS attempt 或 campaign，禁止拼接、patch 或覆盖历史 Evidence。J7 负责 Consolidation，J8 负责只读独立重建审计，J9 仅进行文档收尾。Stage J tracked Evidence 总预算不超过 25 MiB。`sha256sums.txt` 不包含自身，输入按 repo-relative UTF-8 path byte order 排序，输出使用固定 `<sha256><two spaces><relative_path>` 格式和 LF 行尾，不允许绝对路径或动态元数据影响 byte-identical 重建。
+
+选择理由：
+
+1. ORT CPU baseline 与 TensorRT FP16 必须在同一 Jetson、相同模型、corpus、功耗和 Trace 定义下比较；
+2. WSL x86 与 Jetson aarch64 不适合计算正式 speedup；
+3. 先完成 CPU baseline 可以隔离平台迁移、跨架构正确性和 TensorRT 优化变量；
+4. Controlled 与 Tuned 两套 Profile 分别提供受控参考和当前 workload 下的实用 CPU 性能；
+5. RuntimeConfig 与 Run Protocol 分离可以避免实验编排层绕过应用合同；
+6. 严格 Evidence 和 Deep Gate 用于防止部分重跑、证据拼接和结论污染；
+7. Stage J 不提前引入 TensorRT/Pipeline，可避免同时改变多个关键变量。
+
+影响范围：
+
+- Stage J 开始前必须先完成 J0；
+- Stage J implementation branch 尚未创建；
+- production 代码修改尚未开始；
+- J1 前不得将 planned target 写成 observed fact；
+- RuntimeConfig v2 必须保持 v1 兼容；
+- 当前 `IInferenceEngine` 不因 Stage J 扩展；
+- 后续 Stage T 必须继承 Stage J 的 trace 和统计语义；
+- Stage J 不产生 TensorRT、Pipeline 或最终 Jetson 性能结论；
+- WSL M5 Evidence 不回写、不改名、不重算。
+
+风险与限制：
+
+- Jetson 尚未到货；
+- JetPack/L4T/MAXN_SUPER 实际状态未验证；
+- ORT 1.23.2 aarch64 build command 尚需在 J2 基于真实 `build.sh --help` 冻结；
+- 多线程 Profile 可能产生可容忍的浮点差异；
+- telemetry 与 all-core candidate 可能在 CPU0 上重叠；
+- thermal zone、frequency、OC/UV 和 rail 路径依赖设备事实；
+- 严格 campaign invalidation 可能增加实机重复运行成本；
+- Stage J 只能证明 30 分钟受控持续运行，不能证明生产长期稳定性。
+
+替代方案及拒绝理由：
+
+- 在 WSL 上直接交叉编译 Jetson binary：拒绝，因为 Stage J 要求目标设备原生构建；
+- 使用非目标设备上的 TensorRT 代替 Jetson TensorRT：拒绝，因为这不构成同设备参考；
+- Stage J 同时实现 TensorRT 和 Pipeline：拒绝，因为会同时改变多个关键变量；
+- 只测试单一 ORT 线程数：拒绝，因为无法形成 Controlled 与 Tuned 两种角色；
+- 将 all-core 或某个 k 直接预设为最优：拒绝，因为 Profile 必须经过预注册候选和选择协议；
+- 使用 WSL 与 Jetson 计算正式 speedup：拒绝，因为跨设备结果不可作正式加速比；
+- 使用一个进程内两个 cycle 替代 separate-process semantic precheck：拒绝，因为无法覆盖进程级 Session 重建边界；
+- 允许局部补跑后拼接正式 campaign：拒绝，因为会破坏 campaign 完整性；
+- 将不可查询的 SessionOptions 伪装成 queried actual values：拒绝，因为会污染配置证据语义。
+
+后续调整：
+
+Stage J 范围、RuntimeConfig 与 Protocol 权威关系、J4/J5 语义 Gate、Profile 选择规则、Thermal/Telemetry 合同、Evidence 和 Deep Gate 边界的变化，必须通过新的 Decision 记录，并重新评估受影响 Gate。当前设备事实、ORT 实际 build command 和目标频率不在本 Decision 中预先编造。
