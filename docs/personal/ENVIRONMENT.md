@@ -702,3 +702,60 @@ J1.3 状态：`COMPLETE`。
 The first Phase B attempt stopped before system changes because Codex could not read the root-owned sudoers SHA. The second stopped before system changes because the two user-provided SHA labels conflicted. The user then supplied explicitly labelled wrapper/sudoers SHA values and `visudo` validation evidence; wrapper SHA was independently rechecked by Codex.
 
 J1.3 did not install packages, modify wrappers/sudoers, run build/test/benchmark, or perform reboot. This acceptance does not complete J1.4 thermal, rail, OC/UV or long-duration stability work.
+
+## 16. Stage J J1.4 Telemetry and Throttling Contract
+
+J1.4 状态：`COMPLETE`。Decision D042：`Accepted`。
+
+J1.4 使用 composite immutable discovery evidence v1：
+
+- Phase A raw SHA256：`91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`；覆盖 thermal、frequency、EMC、tegrastats、rail-name、environment-drift 和 sustained-throttling discovery。
+- Supplemental raw SHA256：`75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`；覆盖 OC/UV counters、throttle-enable fields、hwmon identity/realpath、INA3221 labels 和 alarm values。
+- 两个 raw attempt 均 repository-external、untracked、immutable、not Published Evidence；不修改旧 raw、不伪装为单一 raw。
+
+### Thermal
+
+Raw unit 为 milli-degree Celsius；正式 Gate 使用 raw integer，展示时除以 `1000.0`。Readable relevant set：
+
+- `cpu-thermal`：`/sys/class/thermal/thermal_zone0/temp`
+- `gpu-thermal`：`/sys/class/thermal/thermal_zone1/temp`
+- `soc0-thermal`：`/sys/class/thermal/thermal_zone5/temp`
+- `soc1-thermal`：`/sys/class/thermal/thermal_zone6/temp`
+- `soc2-thermal`：`/sys/class/thermal/thermal_zone7/temp`
+- `tj-thermal`：`/sys/class/thermal/thermal_zone8/temp`
+
+`cv0-thermal`、`cv1-thermal`、`cv2-thermal` 位于 `thermal_zone2-4`，稳定返回 `EAGAIN`，仅纳入 inventory，不纳入 numeric hard maximum，不转换为零。正式样本要求所有 required readable zones 成功读取；不 forward-fill、不插值。Passive/critical trip 和 formal `T_idle_ref` 规则由 D042 冻结；本任务未建立正式 `T_idle_ref`。
+
+### Frequency and EMC
+
+- CPU sources：policy0/policy4 `scaling_cur_freq`；affected CPUs 分别为 `0-3`、`4-5`；target/min/max `1728000 kHz`；governor `schedutil`。
+- GPU source：`/sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/cur_freq`；target/min/max `1020000000 Hz`；governor `nvhost_podgov`。
+- EMC cap source：`/sys/kernel/nvpmodel_clk_cap/emc`，`3199000000 Hz`；`jetson_clocks --show` current/max 为 `3199000000`，`FreqOverride=1`。未发现可靠普通用户可读的独立 1 Hz EMC runtime source；EMC 只做 preflight/postflight Gate。
+
+### tegrastats and rails
+
+`/usr/bin/tegrastats` 来自 `nvidia-l4t-tools 36.5.0-20260115194252`，正式 interval 为 `1000 ms`，每行记录 UTC 和 `CLOCK_MONOTONIC ns`。Gap `>2500 ms`、coverage `<0.90` 或 sample count 不足会使 run invalid。
+
+冻结 rail-name set：`VDD_IN`、`VDD_CPU_GPU_CV`、`VDD_SOC`。格式为 `current_power / average_power`，单位 mW；first value 用于正式统计，second value 仅保留为 device-emitted diagnostic。该数据只称为 onboard rail telemetry，不称为 wall power 或精密能量测量。
+
+### OC/UV and INA3221
+
+`soctherm_oc` realpath：`/sys/devices/platform/soctherm-oc-event/hwmon/hwmon3`。
+
+| Event | Counter | Enable | Observed |
+|---|---|---|---|
+| OC1 Under Voltage | `/sys/class/hwmon/hwmon3/oc1_event_cnt` | `oc1_throt_en` | `0 / 1` |
+| OC2 Average Overcurrent | `/sys/class/hwmon/hwmon3/oc2_event_cnt` | `oc2_throt_en` | `0 / 1` |
+| OC3 Instantaneous Overcurrent | `/sys/class/hwmon/hwmon3/oc3_event_cnt` | `oc3_throt_en` | `0 / 1` |
+
+Counters 为 cumulative；每个 attempt/campaign 记录 start/end delta，不清零 counter；正 delta 为 hard failure，reboot 后必须重新建立 baseline。
+
+INA3221 realpath：`/sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon1`。Labels：`in1_label=VDD_IN`、`in2_label=VDD_CPU_GPU_CV`、`in3_label=VDD_SOC`、`in7_label=sum of shunt voltages`。Observed alarm paths：`curr1/2/3_crit_alarm`、`curr1/2/3_max_alarm`、`curr4_crit_alarm`，全部 observed value 为 `0`；formal telemetry 每秒采样，任一非零 alarm 为 hard failure。
+
+### Sustained throttling and environment drift
+
+D042 冻结 `Stage J Sustained Throttling Algorithm v1`：每秒使用 monotonic timestamp 采集 CPU policy0/policy4 和 GPU runtime frequency；同一 source 连续 3 个有效样本低于 target 即 hard fail。上升值、配置不一致、CPU set/mode/EMC/fan 状态变化为 environment-drift hard failure；gap、coverage、required-source read failure 按 run invalid 处理。EMC 不进入 1 Hz sequence；all-core profile 下 telemetry 固定 CPU0，记录 CPU0 overlap limitation。
+
+Environment-drift hard-match fields 包括 kernel/L4T/package/config SHA、mode/CPU sets、frequency paths/targets、EMC、fan、thermal path/type sets、tegrastats/package、rail set、OC/UV paths/enables 和 wrapper SHA。Boot ID 变化使 resolved reference 失效，reboot 后必须重新 preflight、thermal reference 和 protocol。
+
+J1.4 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；MAXN_SUPER、locked clocks 和 fan state 保持不变。

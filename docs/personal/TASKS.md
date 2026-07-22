@@ -2213,6 +2213,19 @@ NEU-DET
 - Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
 - Commit：`commit to be recorded by Git history`。
 
+### 2026-07-22T22:55:09+08:00 - Stage J J1.4 Telemetry and Throttling Freeze
+
+- J1.4 Phase A：`DISCOVERY_PASS`；用户授权 J1 discovery 使用 composite immutable discovery evidence。
+- J1.4：`COMPLETE`；新增 D042 `Freeze Stage J Jetson Telemetry and Throttling Contract`，状态 `Accepted`。
+- Composite raw SHA：Phase A `91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`；supplemental `75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`；均 repository-external、untracked、not Published Evidence。
+- Frozen thermal relevant set：cpu/gpu/soc0/soc1/soc2/tj；CV0/CV1/CV2 因稳定 `EAGAIN` 排除 numeric hard maximum。
+- CPU/GPU/EMC authority、tegrastats `1000 ms`、rail current/average semantics、OC1 Under Voltage / OC2 Average Overcurrent / OC3 Instantaneous Overcurrent 已冻结。
+- OC/UV counter delta、throttle-enable、INA3221 alarm Gate 已冻结；当前 counter 为 `0`、enable 为 `1`、alarm 为 `0`。
+- `Stage J Sustained Throttling Algorithm v1` 与 environment-drift/boot invalidation 规则已冻结；all-core telemetry CPU0 overlap limitation 已记录。
+- 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；未发生系统、production 或 wrapper/sudoers 变更。
+- J1 overall：`IN PROGRESS`；J1.5：`READY`。不得将 J1 标记为 COMPLETE。
+- Commit：`commit to be recorded by Git history`。
+
 ### 2026-07-22 - Stage J J1.3 MAXN_SUPER and Clock-Control Acceptance
 
 - J1.3：`COMPLETE`；Phase A：`DISCOVERY_PASS`。

@@ -2224,3 +2224,174 @@ Selection Campaign 使用完整平衡 rotation；正式 Controlled/Tuned baselin
 后续调整：
 
 Stage J 范围、RuntimeConfig 与 Protocol 权威关系、J4/J5 语义 Gate、Profile 选择规则、Thermal/Telemetry 合同、Evidence 和 Deep Gate 边界的变化，必须通过新的 Decision 记录，并重新评估受影响 Gate。当前设备事实、ORT 实际 build command 和目标频率不在本 Decision 中预先编造。
+
+### D042 - Freeze Stage J Jetson Telemetry and Throttling Contract
+
+时间：
+
+```text
+2026-07-22
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+J1.4 Phase A 已完成 thermal、frequency、EMC、tegrastats、rail、OC/UV
+和 environment-drift discovery。原始 Phase A attempt 未包含全部 OC/UV 与
+INA3221 字段；根据用户明确的 J1 discovery 工程协议裁决，J1 discovery
+允许使用多个独立、不可变、repository-external raw attempt 组成 composite
+evidence。本裁决不改变 J5/J6 formal benchmark/stability campaign 的连续性、
+不可拼接和不可删除要求。
+
+Evidence provenance：
+
+1. Phase A discovery raw SHA256：
+   `91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`
+   覆盖 thermal zones、30 秒 thermal/frequency sampling、CPU/GPU/EMC
+   sources、tegrastats、rail-name set、environment-drift candidates 和
+   sustained-throttling candidate。
+2. Supplemental OC/UV/INA3221 raw SHA256：
+   `75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`
+   覆盖 hwmon identity/realpath、OC1/2/3 counters、throttle-enable fields、
+   INA3221 labels 和实际 alarm paths/values。
+
+两个 raw attempt 均 repository-external、untracked、immutable 且未作为
+Published Evidence。旧 Phase A raw 未被修改或覆盖；J1.4 composite discovery
+evidence v1 不伪装为单一 raw attempt。中间未通过 provenance/字段完整性 Gate
+的 supplemental attempts 不属于 composite evidence。
+
+Observed platform facts：
+
+- Device：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，Tegra234。
+- Power mode：`MAXN_SUPER` / ID `2`；CPU online `0-5`。
+- CPU policies：policy0 CPUs `0-3`，policy4 CPUs `4-5`；driver `tegra194`，
+  governor `schedutil`；target/min/max `1728000 kHz`。
+- GPU devfreq：
+  `/sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu`；
+  target/min/max `1020000000 Hz`，governor `nvhost_podgov`。
+- EMC configuration/cap source：`/sys/kernel/nvpmodel_clk_cap/emc`，
+  target `3199000000 Hz`；`jetson_clocks --show` reports current/max
+  `3199000000` and `FreqOverride=1`。
+- Fan：PWM `255`，dynamic speed control disabled；nvfancontrol inactive
+  after `jetson_clocks --fan`。
+
+Thermal contract：
+
+- Raw unit is milli-degree Celsius; gates use raw integer values and display
+  conversion is `raw / 1000.0`.
+- Required readable relevant set is exactly:
+  `cpu-thermal` (`thermal_zone0`), `gpu-thermal` (`thermal_zone1`),
+  `soc0-thermal` (`thermal_zone5`), `soc1-thermal` (`thermal_zone6`),
+  `soc2-thermal` (`thermal_zone7`) and `tj-thermal` (`thermal_zone8`).
+- `cv0-thermal`, `cv1-thermal` and `cv2-thermal` at `thermal_zone2-4` are
+  inventory members but stably return `EAGAIN`; they are excluded from the
+  numeric hard maximum, never converted to zero, and any future stable value
+  requires relevant-set review.
+- Each formal sample takes the maximum of the readable relevant set. A read
+  failure in any required zone invalidates that sample; no forward fill or
+  interpolation is allowed.
+- Any required zone at or above its lowest passive trip is a hard
+  thermal-throttling failure; critical trip is an immediate hard failure.
+  Active trips alone do not define throttling; frequency Gate is independent.
+- Formal `T_idle_ref` remains a later protocol operation: 5-minute idle,
+  60 one-second maxima, median reference, 30-second pre-run wait,
+  `T_idle_ref + 2°C` and 10-second range `<= 1°C`, timeout 600 seconds.
+  J1.4 did not establish a formal reference.
+
+Frequency and EMC authority：
+
+- CPU runtime sources are policy0/policy4 `scaling_cur_freq`; downward
+  deviation means observed value below `1728000 kHz`.
+- GPU runtime source is the discovered devfreq `cur_freq`; downward
+  deviation means observed value below `1020000000 Hz`.
+- EMC cap and `jetson_clocks --show` current/max/`FreqOverride` are
+  preflight/postflight authority only. No independent reliable ordinary-user
+  1 Hz EMC runtime source was found, and tegrastats does not report EMC
+  frequency. EMC therefore does not enter the 1 Hz sustained sequence.
+- Formal start/end EMC Gate requires cap/current/max `3199000000` and
+  `FreqOverride=1`; mismatch is environment-drift hard failure.
+
+tegrastats and rail contract：
+
+- Executable: `/usr/bin/tegrastats`; package `nvidia-l4t-tools`
+  `36.5.0-20260115194252`; interval `1000 ms`.
+- Formal lines carry UTC and `CLOCK_MONOTONIC ns`; gap `>2500 ms` invalidates
+  the run; telemetry coverage must be at least `0.90` and sample count must
+  satisfy the formal protocol.
+- Rail-name set is exactly `VDD_IN`, `VDD_CPU_GPU_CV`, `VDD_SOC`.
+- Rail telemetry is onboard rail telemetry, not wall power, PSU input power,
+  precision energy measurement or calibrated external power-meter data.
+- For `current_power / average_power`, both values are retained. The first
+  value in mW is used for arithmetic mean, time-weighted linear mean, min,
+  max, Type-7 P50/P95 and count. The second device-emitted value is diagnostic
+  only and is not averaged or used for precise energy integration.
+
+OC/UV and INA3221 hard Gate：
+
+- `soctherm_oc` realpath is
+  `/sys/devices/platform/soctherm-oc-event/hwmon/hwmon3`.
+- OC1 Under Voltage:
+  `/sys/class/hwmon/hwmon3/oc1_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc1_throt_en`, current `1`.
+- OC2 Average Overcurrent:
+  `/sys/class/hwmon/hwmon3/oc2_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc2_throt_en`, current `1`.
+- OC3 Instantaneous Overcurrent:
+  `/sys/class/hwmon/hwmon3/oc3_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc3_throt_en`, current `1`.
+- Counters are cumulative; they are not cleared before a run. Each attempt
+  records start/end and compares deltas. Any positive delta is a hard failure;
+  reboot requires a new baseline. dmesg is diagnostic only.
+- INA3221 realpath is
+  `/sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon1`.
+  Labels are `in1_label=VDD_IN`, `in2_label=VDD_CPU_GPU_CV`,
+  `in3_label=VDD_SOC`, plus `in7_label=sum of shunt voltages`.
+  Observed current-alarm paths are `curr1/2/3_crit_alarm`,
+  `curr1/2/3_max_alarm` and `curr4_crit_alarm`; all observed values are `0`.
+  Formal telemetry samples every alarm field at 1 second; any non-zero value
+  is a hard failure.
+
+Stage J Sustained Throttling Algorithm v1：
+
+- Sample every 1 second with `CLOCK_MONOTONIC ns`.
+- Monitor CPU policy0/policy4 `scaling_cur_freq` and GPU `cur_freq`.
+- A downward-deviation sample is `observed < target`.
+- Three consecutive valid one-second downward samples for the same source are
+  a sustained-throttling event and hard-fail the current run/campaign.
+- One or two consecutive samples are warnings unless an OC/UV counter delta or
+  alarm occurs, which is a hard failure.
+- Upward values, configuration mismatch, CPU-set changes, mode changes,
+  EMC Gate mismatch or fan-state mismatch are environment-drift hard failures.
+- Gap `>2500 ms`, coverage `<0.90`, insufficient samples or required-source
+  read failure invalidates the run; no fill or interpolation.
+- Thermal and frequency Gates are independent and both are recorded when
+  simultaneous. EMC is excluded from the 1 Hz sequence.
+- With all allowed CPUs, telemetry is pinned to CPU0; CPU0 overlap with the
+  application is recorded as an interference limitation.
+
+Environment-drift contract：
+
+Hard-match fields are kernel release, `/etc/nv_tegra_release` SHA256,
+`nvidia-l4t-core` version, active nvpmodel config path/SHA256, mode name/ID,
+CPU present/possible/online/allowed sets, policy paths/mappings and targets,
+GPU path and targets, EMC cap/show/FreqOverride, fan PWM/control state,
+thermal type/path sets, tegrastats path/package version, rail-name set,
+OC/UV paths and enable values, and wrapper SHA256 values. Attempt preflight
+mismatch prevents startup; in-run mismatch invalidates the run and is never
+silently repaired. Boot ID is recorded per resolved attempt; reboot invalidates
+the reference and requires new preflight, thermal reference and protocol.
+
+Rationale and consequences：
+
+This Decision converts J1 observed telemetry facts into explicit formal Gates,
+separates EMC cap from runtime measurement, preserves INA3221/onboard rail
+limitations, and makes OC/UV counter deltas auditable. It does not validate
+workload throttling, establish `T_idle_ref`, change system state, or authorize
+J1.5 by itself. J5/J6 formal runs remain single continuous attempts with no
+post-hoc telemetry patching, deletion or evidence splicing.
