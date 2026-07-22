@@ -840,3 +840,27 @@ J2.1 状态：`COMPLETE`；J2.2：`READY_WITH_WARNINGS`；未开始 J2.2。
 - Protobuf candidate/runtime compatibility and flatbuffers tooling remain unvalidated until dependencies are made available through an authorized installation step。
 - GCC `11.4.0` and native aarch64 are plausible for this Ubuntu/L4T environment, but compiler compatibility is not proven until the later authorized build。
 - No configure, build, test, benchmark, inference, TensorRT, CUDA EP or GPU build was executed。
+
+## 20. Stage J J2.2 ONNX Runtime CPU-only Build
+
+J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
+
+### Build and dependency record
+
+- Starting gate：branch `feature/jetson-onnxruntime`；HEAD `7a41a91c5d45150f55aa866b5c0fd35a24018536`；worktree clean。
+- User-installed package versions：CMake `3.22.1-1ubuntu1.22.04.2`、Ninja `1.10.1-1`、protobuf compiler/development `3.12.4-1ubuntu7.22.04.6`、flatbuffers compiler/development/Python module `1.12.1~git20200711.33e2d80+dfsg1-0.6`。
+- ORT source：tag `v1.23.2`；source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- System CMake 3.22.1 was insufficient for ORT v1.23.2. Official CMake `3.28.6` aarch64 binary was placed only in external staging and used through `--cmake_path`; system CMake and `/usr/local` were not changed. Archive SHA256：`7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7`。
+- Build command：`build.sh --build_dir <external>/ort-build --cmake_path <external>/cmake-3.28/bin/cmake --config Release --build_shared_lib --skip_tests --parallel 4 --update --build`。
+- Build interval：`2026-07-22T23:49:15+08:00` to `2026-07-23T00:47:22+08:00`；elapsed `3487 s`；exit code `0`。
+- Resource snapshot：CPU online `0-5`；memory `1.5Gi/7.4Gi` used before and `1.3Gi/7.4Gi` after；disk approximately `196G` available before and `195G` after。
+
+### CPU-only artifact and SDK record
+
+- External SDK staging：`/home/orin/edge-ai-local-build/ort-sdk/`；owner/group `orin/orin`；mode `775`；size approximately `51M`。
+- SDK contains `include/`、`lib/` and `lib/cmake/onnxruntime/`；headers include `onnxruntime_c_api.h` and `onnxruntime_cxx_api.h`。
+- `lib/libonnxruntime.so.1.23.2`：ARM aarch64 ELF shared object；SHA256 `bd6193ae6028a9e1a16e2cc567e14bd9ea61760686c2d9d3c07df5524a7e362a`。
+- `lib/libonnxruntime_providers_shared.so`：ARM aarch64 ELF shared object；SHA256 `2558ceb1670e58d0e6103c2b528af7b7802f850b2145b9f10d71d8283f525a21`。
+- SDK manifest `sha256sums.txt` SHA256：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
+- CMake cache verification：`CMAKE_BUILD_TYPE=Release`、shared library `ON`；CUDA/CUDA interface/TensorRT/TensorRT interface `OFF`；no CUDA or TensorRT runtime dependency in `libonnxruntime.so.1.23.2`。
+- System tests, benchmark, inference and J3 were not executed. The first CMake 3.22 attempt stopped at the minimum-version check before compilation; it was retained as external failure evidence only。

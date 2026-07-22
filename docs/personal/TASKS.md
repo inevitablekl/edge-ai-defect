@@ -2306,3 +2306,15 @@ NEU-DET
 - Feasibility：`PASS_WITH_WARNINGS`；CMake、protobuf/flatbuffers tooling 和 Python flatbuffers 必须在授权安装/准备后解决；当前 NVMe 约 `197G` 可用，建议至少保留 `20 GiB`。
 - 未执行完整 ORT 编译、CMake configure、CTest、benchmark、inference、TensorRT、CUDA EP 或 GPU build；未创建仓库 build 目录。
 - Next authorized task：`J2.2 — ONNX Runtime CPU-only Build`，仍须遵守安装授权与 CPU-only 约束。
+
+### 2026-07-23 - Stage J J2.2 ONNX Runtime CPU-only Build
+
+- J2.2：`COMPLETE`；J3：`READY`；未开始 J3。
+- Resume preflight PASS：branch `feature/jetson-onnxruntime`、HEAD `7a41a91c5d45150f55aa866b5c0fd35a24018536`、worktree clean；用户已安装七个授权依赖包。
+- ORT v1.23.2 source tag/HEAD：`v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- System CMake 3.22.1 不满足 ORT v1.23.2 的 CMake >=3.28 要求；使用外部 staging 的 official CMake 3.28.6 aarch64 binary，通过 `--cmake_path` 构建，未修改系统 CMake 或 `/usr/local`。
+- Build PASS：Release、shared library、CPU-only、`--skip_tests`、parallel 4；开始 `23:49:15`，结束 `00:47:22`，elapsed `3487s`，exit code `0`。
+- Artifact PASS：`libonnxruntime.so.1.23.2`、headers、CMake package config 均生成；主要 ELF 为 ARM aarch64；CMake cache 确认 CUDA/TensorRT 及其 interfaces 为 `OFF`。
+- External SDK：`/home/orin/edge-ai-local-build/ort-sdk/`，包含 `include/`、`lib/`、`lib/cmake/onnxruntime/`，约 `51M`；SDK SHA256 manifest：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
+- 未执行测试、benchmark、inference、CUDA EP、TensorRT EP 或 GPU build；未修改源码、configs、tests 或 results。
+- Next authorized task：`J3.0 — C++ Project Dependency and Configure Discovery`；不得跳过 J3.0。
