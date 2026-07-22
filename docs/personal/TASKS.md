@@ -2295,3 +2295,14 @@ NEU-DET
 - ORT 1.23.2 native aarch64 Release shared-library CPU-only strategy 已记录；真实 build.sh 参数仍需 J2.1 验证。
 - 未安装软件；未执行 configure/build/CTest、benchmark、inference；J2.1 尚未开始。
 - Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22 - Stage J J2.1 Development Feasibility Probe
+
+- J2.1：`COMPLETE`；J2.2：`READY_WITH_WARNINGS`；未开始 J2.2。
+- Starting gate PASS：branch `feature/jetson-onnxruntime`、HEAD `56d0c9ba7dfc50ff02fa9e481ae3a1026357df0c`、worktree clean；Plan、Inventory、Task Cards frozen SHA 全部匹配。
+- Read-only dependency probe：GCC/G++ 11.4、Make 4.3、Git 2.34.1、Python 3.10.12、NumPy 1.21.5、PyYAML 5.4.1、google.protobuf import available；CMake/CTest、Ninja、protoc、flatc 和 Python flatbuffers unavailable。APT candidate versions已记录，未安装任何包。
+- ORT source probe PASS：repository-external shallow clone，tag `v1.23.2`，source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278`，`VERSION_NUMBER=1.23.2`；仅阅读 `build.sh`、`build.py` 和 `build_args.py`，未调用脚本。
+- J2.2 strategy：native aarch64、Release、shared library、CPU-only/CPUExecutionProvider；不传 `--use_cuda`、`--use_tensorrt` 或其他 GPU EP 参数；计划使用 `--skip_tests`、保守 `--parallel 4` 和外部 staging prefix。
+- Feasibility：`PASS_WITH_WARNINGS`；CMake、protobuf/flatbuffers tooling 和 Python flatbuffers 必须在授权安装/准备后解决；当前 NVMe 约 `197G` 可用，建议至少保留 `20 GiB`。
+- 未执行完整 ORT 编译、CMake configure、CTest、benchmark、inference、TensorRT、CUDA EP 或 GPU build；未创建仓库 build 目录。
+- Next authorized task：`J2.2 — ONNX Runtime CPU-only Build`，仍须遵守安装授权与 CPU-only 约束。

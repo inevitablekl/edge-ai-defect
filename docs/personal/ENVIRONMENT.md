@@ -810,3 +810,33 @@ J2.0 状态：`COMPLETE`；J2.1：`READY_WITH_WARNINGS`。
 - Time estimate：native Release build 预计几十分钟；未实测，不是 benchmark 或 performance result。
 
 J2.0 未安装软件、未运行 configure/build/CTest、未下载 ONNX Runtime、未执行 benchmark/inference。J2.1 前必须解决或明确处理 CMake、protobuf/flatbuffers tooling 和构建依赖。
+
+## 19. Stage J J2.1 Development Feasibility Probe
+
+J2.1 状态：`COMPLETE`；J2.2：`READY_WITH_WARNINGS`；未开始 J2.2。
+
+### Probe result
+
+- Starting gate：branch `feature/jetson-onnxruntime`；HEAD `56d0c9ba7dfc50ff02fa9e481ae3a1026357df0c`；worktree clean；三个 frozen asset SHA 全部匹配。
+- Platform：Ubuntu `22.04.5 LTS`、kernel `5.15.185-tegra`、native `aarch64`、glibc `2.35`。
+- Toolchain：GCC/G++ `11.4.0`、Make `4.3`、Git `2.34.1`、Python `3.10.12`；`build-essential` installed；CMake/CTest、Ninja、`protoc` 和 `flatc` missing。
+- Package candidates were inspected read-only; no package or Python package was installed. Candidates: CMake `3.22.1-1ubuntu1.22.04.2`、Ninja `1.10.1-1`、protobuf `3.12.4-1ubuntu7.22.04.6`、flatbuffers compiler `1.12.1~git20200711.33e2d80+dfsg1-0.6`、pip `22.0.2+dfsg-1ubuntu0.7`、venv `3.10.6-1~22.04.1`。
+- Python：NumPy `1.21.5`、PyYAML `5.4.1`、`google.protobuf` import available；Python `flatbuffers` import unavailable。
+- ORT source was cloned only into a repository-external temporary directory using tag `v1.23.2`; observed source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278` and `VERSION_NUMBER=1.23.2`。`build.sh` only delegates to `tools/ci_build/build.py`；the parser source confirms the required interface flags. Neither script was invoked。
+
+### Frozen J2.2 build strategy
+
+- Source：official ONNX Runtime repository, tag `v1.23.2`。
+- Target：native Jetson `aarch64`，Release shared library，CPUExecutionProvider；CPU-only is represented by omitting `--use_cuda`、`--use_tensorrt` and all other non-CPU EP flags。
+- Candidate command：`build.sh --config Release --build_shared_lib --skip_tests --parallel 4 --cmake_extra_defines CMAKE_INSTALL_PREFIX=<external-staging-prefix>`。This is a plan only and was not executed。
+- Parallelism：start conservatively at 4 jobs on the 6-CPU online set；adjust only under J2.2 observation if memory pressure requires it。
+- Install prefix：repository-external staging prefix；none was created during this probe。
+- Dependencies：CMake/CTest、GCC/G++/Make、Git、Python, NumPy/PyYAML, protobuf compiler/development files and flatbuffers compiler/Python module; exact dependency resolution remains a J2.2 pre-build check。
+- Capacity estimate：retain at least `20 GiB` free; current NVMe filesystem has approximately `197G` available. Expected native Release build time is tens of minutes; not measured。
+
+### Risks and limitations
+
+- Existing JetPack CUDA/TensorRT libraries were not selected; CPU-only strategy must continue to omit their EP flags and CUDA definitions。
+- Protobuf candidate/runtime compatibility and flatbuffers tooling remain unvalidated until dependencies are made available through an authorized installation step。
+- GCC `11.4.0` and native aarch64 are plausible for this Ubuntu/L4T environment, but compiler compatibility is not proven until the later authorized build。
+- No configure, build, test, benchmark, inference, TensorRT, CUDA EP or GPU build was executed。
