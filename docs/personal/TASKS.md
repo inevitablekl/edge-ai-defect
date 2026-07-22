@@ -2213,6 +2213,21 @@ NEU-DET
 - Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
 - Commit：`commit to be recorded by Git history`。
 
+### 2026-07-22 - Stage J J1.3 MAXN_SUPER and Clock-Control Acceptance
+
+- J1.3：`COMPLETE`；Phase A：`DISCOVERY_PASS`。
+- Pre-change 15W/ID=`0` successfully changed to MAXN_SUPER/ID=`2` using the fixed command-scoped power-control wrapper；未使用 `--force`，无需 reboot。
+- CPU online set remained `0-5`。
+- `jetson_clocks` applied successfully；observed locked state: CPU `1728000`，GPU `1020000000`，EMC `3199000000`。
+- `jetson_clocks --fan` applied successfully；PWM=`255`，fan dynamic speed control disabled，nvfancontrol enabled but inactive after the apply。
+- Post-change query remained MAXN_SUPER/ID=`2`，无 silent fallback；NVMe `unsafe_shutdowns=11` 未增加。
+- First Phase B attempt stopped before changes because Codex could not read root-owned sudoers SHA；second stopped before changes because user SHA labels conflicted。用户随后通过明确标签提供 wrapper/sudoers SHA 和 `visudo parsed OK` 证据；wrapper SHA 由 Codex 独立复核。
+- Wrapper self-test PASS；unrestricted sudo negative check PASS；未读取 sudoers 正文。
+- 未安装 package、未修改 wrapper/sudoers、未执行 reboot、未运行 configure/build/test/benchmark。
+- raw attempt repository-external、untracked、not Published Evidence；未加入 Git。
+- J1 overall：`IN PROGRESS`；J1.4：`READY`；J1.5：`PENDING`。
+- Commit：`commit to be recorded by Git history`。
+
 ### 2026-07-22 - Stage J J1.2 Platform and Toolchain Inventory
 
 - J1.2：`COMPLETE`；L4T observed `R36.5.0`，JetPack meta-package 未安装，APT candidate 为 `6.2.2+b24`，exact installed JetPack 未独立验证。

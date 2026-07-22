@@ -682,3 +682,23 @@ These are recorded only and were not used by Stage J:
 | CUDA/cuDNN/TensorRT | recorded only | CUDA 12.6, cuDNN libs, TensorRT 10.3 observed | NOT_APPLICABLE_IN_J1.2 |
 
 J1.2 did not install packages, modify APT sources, alter system settings, run configure/build/test/benchmark, or begin J1.3。
+
+## 15. Stage J J1.3 MAXN_SUPER and Clock-Control Acceptance
+
+J1.3 状态：`COMPLETE`。
+
+- Phase A discovery：`DISCOVERY_PASS`；active nvpmodel configuration SHA256 remained `5b3c6779df10506928fb9f6a9213d7a9ad0c4ef0a3fe542a95031103079a2dcf`。
+- Pre-change mode：15W / ID `0`；post-change mode：`MAXN_SUPER` / ID `2`。
+- MAXN_SUPER apply：observed successful；未使用 `--force`；无需 reboot，boot ID unchanged。
+- CPU online set：`0-5` before and after。
+- `jetson_clocks` apply：observed successful；CPU locked at `1728000`，GPU locked at `1020000000`，EMC observed at `3199000000`。
+- `jetson_clocks --fan` apply：observed successful；PWM observed `255`，`FAN Dynamic Speed Control=disabled`。
+- Post-state `nvfancontrol.service`：enabled but inactive after fan-control apply；该状态与 `jetson_clocks --fan` 的 observed state 一致。
+- Post-state `nvpmodel.service`：enabled but inactive after boot-time completion。
+- No silent fallback：post-change query remained `MAXN_SUPER` / ID `2`。
+- NVMe `unsafe_shutdowns` remained `11`；SMART critical warning/media errors remained clear。
+- Phase B used only the command-scoped power-control wrapper and the existing read-only wrapper；unrestricted sudo remained unavailable。
+
+The first Phase B attempt stopped before system changes because Codex could not read the root-owned sudoers SHA. The second stopped before system changes because the two user-provided SHA labels conflicted. The user then supplied explicitly labelled wrapper/sudoers SHA values and `visudo` validation evidence; wrapper SHA was independently rechecked by Codex.
+
+J1.3 did not install packages, modify wrappers/sudoers, run build/test/benchmark, or perform reboot. This acceptance does not complete J1.4 thermal, rail, OC/UV or long-duration stability work.
