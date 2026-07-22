@@ -2196,3 +2196,19 @@ NEU-DET
 - implementation branch：`feature/jetson-onnxruntime`；device-observed facts：`pending J1`；Stage T/P 尚未开始。
 - 本记录时间：`2026-07-22T00:07:37+08:00`。
 - J0.6 closeout commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J1.1 Device Acceptance
+
+- J1.1：`COMPLETE`；设备身份为 Jetson Orin Nano Super / `aarch64` / Tegra234。
+- MemTotal：`7,976,910,848` bytes，符合 nominal 8GB SKU。
+- NVMe：PUSKILL 256GB，`256,060,514,304` bytes；rootfs 位于 NVMe，ext4 read-write。
+- Boot slot A/B：正常；SMART critical warning=`0`，media errors=`0`。
+- `unsafe_shutdowns=11` 为历史累计值；当前无明确 NVMe 故障，后续继续观察是否增长。
+- Fan、heatsink、稳定原装电源、设备独占和无已知随机重启/掉盘问题：`USER_CONFIRMED`。
+- Network/SSH/sudo：available；sudo 仅通过 command-scoped read-only wrapper 提供给 Codex，unrestricted NOPASSWD 为 false。
+- 用户在正式采集前安装了临时受限只读 wrapper：`/usr/local/sbin/edge-ai-j1-readonly`；sudo authorization 为 command-scoped NOPASSWD。该变更不安装软件、不改变功耗模式、时钟、风扇或推理环境；J1.4 完成或不再需要特权采集后由用户手工移除。
+- 未安装软件；未改变 nvpmodel、时钟、风扇或系统配置；未运行 build/test/benchmark。
+- 原始采集保存在 repository-external temporary location，未加入 Git，未作为 Published Evidence。
+- J1 overall：`IN PROGRESS`；J1.2：`READY_WITH_WARNINGS`；J1.3～J1.5：`PENDING`。
+- Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
+- Commit：`commit to be recorded by Git history`。

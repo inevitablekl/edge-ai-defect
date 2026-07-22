@@ -544,3 +544,30 @@ experiments/logs/<run_id>/environment_snapshot.txt
 | Jetson | TensorRT、FP16、目标设备性能测试 | TensorRT 与性能阶段开始后使用 |
 
 不同环境的用途必须隔离记录；不得将 WSL2 CPU 验证表述为 Jetson 或 TensorRT 性能证据。
+
+## 13. Stage J J1.1 Device Acceptance
+
+J1.1 状态：`COMPLETE`。
+
+本节只记录 J1.1 已观察并验收的 Jetson 设备事实；J1.2～J1.4 的平台、工具链、功耗、时钟、温度和 rail/OC/UV 验收仍未完成。
+
+- 设备型号：NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super。
+- Architecture：`aarch64`；device-tree compatible 包含 `nvidia,tegra234`。
+- L4T observed：`R36.5.0`。
+- MemTotal：`7,976,910,848` bytes；与 nominal 8GB SKU 合理一致。
+- NVMe：PUSKILL 256GB，`256,060,514,304` bytes；未记录设备序列号。
+- Rootfs：位于 NVMe，ext4，read-write；J1.1 采集时约 11% 使用率。
+- Boot：bootloader slot A/B 均报告 `normal`；NVIDIA L4T bootloader/core/initrd/kernel 包存在。
+- NVMe SMART：critical warning `0`，media errors `0`，error log 无明确当前故障。
+- `unsafe_shutdowns=11`：历史累计计数；当前无 media error、critical warning 或 SMART error log，后续需观察是否增长。
+- Network/SSH：available。
+- sudo：通过 command-scoped read-only wrapper 进行特权采集；unrestricted NOPASSWD 为 false。
+- Active fan：`USER_CONFIRMED`。
+- Heatsink secure：`USER_CONFIRMED`。
+- Stable original power adapter：`USER_CONFIRMED`。
+- Device exclusivity：`USER_CONFIRMED`。
+- Known random reboot, power loss or NVMe drop：用户未报告。
+
+Carry-forward warnings：CMake 缺失；OpenCV pkg-config/CMake metadata 缺失；Python `cv2` 不可用；当前 nvpmodel mode 为 15W；MAXN_SUPER 尚未验证；jetson_clocks 查询要求 root；unsafe shutdown counter 需后续观察。
+
+J1.1 期间未安装软件，未改变 nvpmodel、时钟、风扇或系统配置，未运行 build/test/benchmark。原始采集保存在仓库外临时目录，未作为 Published Evidence 或 Git 文件。
