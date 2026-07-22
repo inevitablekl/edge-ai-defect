@@ -767,3 +767,18 @@ J1.4 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；MAX
 - Superseded supplemental attempts 保留、未修改、未删除，且不作为最终合同 authority。
 - J1.4 closeout verification confirmed `J1.4 COMPLETE`、`J1 IN PROGRESS`、`J1.5 READY`。
 - Closeout 未执行 workload/build/test/benchmark/J1.5，未改变 device state、system settings、wrapper 或 sudoers。
+
+## 17. Stage J J1.5 Platform Evidence Gate
+
+J1.5 状态：`COMPLETE`；J1 状态：`COMPLETE`；Stage J 状态：`IN PROGRESS`。
+
+- Published Evidence logical root：`results/platform/jetson/environment/j1_baseline_v1/`。
+- Published Evidence exact file set：README、platform acceptance、toolchain inventory、power/clock acceptance、telemetry contract、evidence provenance、`environment_snapshot.yaml` 和 `sha256sums.txt`。
+- Published manifest SHA256：`6fb506bd47ce52bcc80c7f8067e4c9bf3547040af937aa273b413154c7d10d46`。
+- Local preservation manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- Published Evidence：tracked、sanitized、derived；local raw evidence：external、untracked、immutable、not Published Evidence。
+- Evidence total size：`14309` bytes；tracked limit `<=25 MiB`。
+- YAML schema parse、manifest checksum、UTF-8/LF、deterministic ordering、privacy/redaction 和 cross-document consistency：`PASS`。
+- Carried gaps：CMake missing；OpenCV metadata missing；yaml-cpp missing；ORT 1.23.2 pending J2；JetPack exact installed version not independently verified；Python `cv2` non-blocking。
+- Device controlled state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive；无 reboot/system/package change。
+- J1.5 未执行 build/test/benchmark；J2 尚未开始。

@@ -2275,3 +2275,13 @@ NEU-DET
 - 当前 controlled device state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive。
 - 未执行 J1.5；未发生 workload/build/test/benchmark、reboot、system、wrapper 或 sudoers 变更。
 - Closeout commit：`0fbbbbcb6acdfbb0b5ca2e0e9cc16b37aaed2222`；后续仅为本末尾状态记录修正。
+
+### 2026-07-22T23:29:14+08:00 - Stage J J1.5 Platform Evidence Gate
+
+- J1.5：`COMPLETE`；Published Evidence validation、privacy/redaction 和 consistency Gate：`PASS`。
+- Published Evidence logical root：`results/platform/jetson/environment/j1_baseline_v1/`；exact required file set 和 schema 按 D043 冻结。
+- Published manifest SHA256：`6fb506bd47ce52bcc80c7f8067e4c9bf3547040af937aa273b413154c7d10d46`；local manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- J1.1～J1.5：`COMPLETE`；J1：`COMPLETE`；Stage J remains `IN PROGRESS`。
+- Next authorized task：`J2.0 — Build Interface Discovery`；status `READY_WITH_WARNINGS`，carrying CMake/OpenCV metadata/yaml-cpp gaps and ORT 1.23.2 pending J2。
+- 未安装软件；未执行 build/test/benchmark；未发生 system、power、clock、fan、wrapper 或 sudoers 变更；J2 未开始。
+- Commit：`commit to be recorded by Git history`。

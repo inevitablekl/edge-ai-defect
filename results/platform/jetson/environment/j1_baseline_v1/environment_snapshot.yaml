@@ -1,0 +1,53 @@
+schema_version: 1
+device:
+  model: Jetson Orin Nano Engineering Reference Developer Kit Super
+  architecture: aarch64
+  soc_family: Tegra234
+  nominal_memory: 8GB
+  observed_memtotal_bytes: 7976910848
+software:
+  ubuntu: 22.04.5 LTS
+  kernel: 5.15.185-tegra
+  l4t: R36.5.0
+  nvidia_l4t_core: 36.5.0-20260115194252
+  jetpack_exact_installed: null
+  jetpack_exact_installed_status: not_independently_verified
+toolchain:
+  gcc: 11.4.0
+  gxx: 11.4.0
+  make: 4.3
+  pkg_config: 0.29.2
+  cmake: missing
+  opencv_cpp: runtime_and_headers_present_metadata_missing
+  yaml_cpp: missing
+  onnxruntime: pending_j2_official_1.23.2_build
+power:
+  nvpmodel: MAXN_SUPER
+  mode_id: 2
+  pre_state: 15W_ID_0
+  reboot_required: false
+clock:
+  cpu_target_khz: 1728000
+  gpu_target_hz: 1020000000
+  emc_target_hz: 3199000000
+  emc_runtime_1hz_source: unavailable
+fan:
+  pwm: 255
+  dynamic_speed_control: disabled
+  nvfancontrol: inactive
+thermal:
+  relevant: [cpu-thermal, gpu-thermal, soc0-thermal, soc1-thermal, soc2-thermal, tj-thermal]
+  excluded_cv: [cv0-thermal, cv1-thermal, cv2-thermal]
+  excluded_cv_read_behavior: EAGAIN
+telemetry:
+  tegrastats_interval_ms: 1000
+  rails: [VDD_IN, VDD_CPU_GPU_CV, VDD_SOC]
+  oc1: Under_Voltage
+  oc2: Average_Overcurrent
+  oc3: Instantaneous_Overcurrent
+  sustained_throttling_contract: D042_v1
+evidence_provenance:
+  evidence_id: j1_baseline_v1
+  local_manifest_sha256: ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb
+  published_evidence: tracked_sanitized_derived
+  local_raw_evidence: external_untracked_immutable_not_published
