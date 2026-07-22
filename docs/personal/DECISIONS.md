@@ -2395,3 +2395,123 @@ limitations, and makes OC/UV counter deltas auditable. It does not validate
 workload throttling, establish `T_idle_ref`, change system state, or authorize
 J1.5 by itself. J5/J6 formal runs remain single continuous attempts with no
 post-hoc telemetry patching, deletion or evidence splicing.
+
+### D043 - Freeze Stage J1.5 Published Evidence Contract
+
+时间：
+
+```text
+2026-07-22
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Purpose：
+
+本 Decision 定义 J1.5 Platform Evidence Gate 的 Published Evidence artifact
+contract，补全 evidence root、required files、machine-readable schema、manifest
+和 privacy/redaction 规则。D043 不执行 J1.5，不授权 J2，也不改变 D041 或 D042。
+
+Evidence root：
+
+```text
+results/platform/jetson/environment/j1_baseline_v1/
+```
+
+Required files：
+
+```text
+README.md
+PLATFORM_ACCEPTANCE.md
+TOOLCHAIN_INVENTORY.md
+POWER_CLOCK_ACCEPTANCE.md
+TELEMETRY_CONTRACT.md
+EVIDENCE_PROVENANCE.md
+environment_snapshot.yaml
+sha256sums.txt
+```
+
+Published Evidence must contain exactly the required artifact set above. It is
+tracked, sanitized and derived from reviewed local evidence; local raw evidence
+remains external, untracked and immutable preservation, and is not Published
+Evidence.
+
+Manifest contract：
+
+`sha256sums.txt` excludes itself, contains only Published Evidence-root-relative
+paths, sorts paths by UTF-8 byte order, uses deterministic formatting and LF
+line endings, and contains no absolute path, directory entry or duplicate path.
+Each line uses:
+
+```text
+<sha256><two spaces><relative-path>
+```
+
+The manifest must be validated with `sha256sum -c sha256sums.txt` from the
+Published Evidence root. The local evidence manifest must not be copied as the
+Published Evidence manifest.
+
+`environment_snapshot.yaml` contract：
+
+```yaml
+schema_version: 1
+```
+
+The top-level schema must contain these required sections:
+
+```text
+device
+software
+toolchain
+power
+clock
+fan
+thermal
+telemetry
+evidence_provenance
+```
+
+Observed, planned, missing and null meanings must remain distinct. Formatting
+is UTF-8, LF and deterministic; no YAML anchors, aliases or environment
+variable expansion are allowed.
+
+Privacy and redaction：
+
+Published Evidence must not contain serial numbers, MAC addresses, IP
+addresses, UUID/PARTUUID values, passwords, tokens, credentials, sudoers
+content or private-key paths. It must not contain `/home/orin`,
+`/tmp/edge-ai-j1*` or `raw_output.txt`. Logical evidence labels, basenames,
+booleans, package versions and SHA256 values are allowed where they do not
+reveal a prohibited identifier.
+
+Evidence source rules：
+
+- Local raw evidence: repository-external, untracked and immutable preservation;
+  it is not Published Evidence.
+- Published Evidence: tracked, sanitized and derived; it must never directly
+  copy unreviewed raw output.
+- Raw evidence absolute local paths are not portable Published Evidence
+  locators; provenance uses logical evidence IDs and relative preservation
+  labels.
+
+Size and validation：
+
+- Total tracked Evidence under this contract is `<=25 MiB`.
+- All files are UTF-8 with LF line endings.
+- File ordering and manifest generation are deterministic.
+- Validation must check the exact file set, parser validity, line endings,
+  privacy scan, no absolute local paths, no raw files, no duplicate evidence,
+  total size and manifest checksums before J1.5 can pass.
+
+Consequences：
+
+D043 supplies the missing J1.5 contract but does not create the evidence
+directory or any results files. J1.5 must use only this exact root and file set,
+must preserve the distinction between local raw evidence and derived tracked
+evidence, and must remain blocked if any required artifact or schema validation
+is unavailable. J1.5 remains a separate gate; J1 and Stage J are not completed
+by this Decision alone.
