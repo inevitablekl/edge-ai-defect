@@ -2285,3 +2285,13 @@ NEU-DET
 - Next authorized task：`J2.0 — Build Interface Discovery`；status `READY_WITH_WARNINGS`，carrying CMake/OpenCV metadata/yaml-cpp gaps and ORT 1.23.2 pending J2。
 - 未安装软件；未执行 build/test/benchmark；未发生 system、power、clock、fan、wrapper 或 sudoers 变更；J2 未开始。
 - Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T23:33:18+08:00 - Stage J J2.0 Build Interface Discovery
+
+- J2.0：`COMPLETE`；J2.1：`READY_WITH_WARNINGS`。
+- Read-only facts：aarch64、Ubuntu 22.04.5、GCC/G++ 11.4、Make 4.3、Git 2.34.1、Python 3.10.12。
+- CMake/CTest、Ninja、protoc、flatc 缺失；NumPy/PyYAML/google.protobuf 可用；Python flatbuffers 不可用。
+- OpenCV runtime/header 存在但 metadata 缺失；yaml-cpp 缺失；build-essential 已安装；NVMe 约 197G 可用。
+- ORT 1.23.2 native aarch64 Release shared-library CPU-only strategy 已记录；真实 build.sh 参数仍需 J2.1 验证。
+- 未安装软件；未执行 configure/build/CTest、benchmark、inference；J2.1 尚未开始。
+- Commit：`commit to be recorded by Git history`。

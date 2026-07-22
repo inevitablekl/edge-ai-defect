@@ -782,3 +782,31 @@ J1.5 状态：`COMPLETE`；J1 状态：`COMPLETE`；Stage J 状态：`IN PROGRES
 - Carried gaps：CMake missing；OpenCV metadata missing；yaml-cpp missing；ORT 1.23.2 pending J2；JetPack exact installed version not independently verified；Python `cv2` non-blocking。
 - Device controlled state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive；无 reboot/system/package change。
 - J1.5 未执行 build/test/benchmark；J2 尚未开始。
+
+## 18. Stage J J2.0 Build Interface Discovery
+
+J2.0 状态：`COMPLETE`；J2.1：`READY_WITH_WARNINGS`。
+
+### Read-only platform/toolchain facts
+
+- OS：Ubuntu `22.04.5 LTS`；kernel `5.15.185-tegra`；architecture `aarch64`。
+- GCC/G++：`11.4.0`；Make：`4.3`；Git：`2.34.1`；Python：`3.10.12`。
+- CMake/CTest：missing；Ninja：missing；未安装或修复。
+- `build-essential`：installed `12.9ubuntu3`；CMake APT candidate：`3.22.1-1ubuntu1.22.04.2`。
+- NumPy `1.21.5`、PyYAML `5.4.1` 和 Python `google.protobuf` import 可用；Python `flatbuffers` import 不可用。
+- `protoc`、`flatc`：not found；protobuf/flatbuffers development packages 未安装。
+- OpenCV runtime/header 存在，pkg-config/CMake metadata 缺失；yaml-cpp header/runtime 缺失。
+- Root NVMe filesystem：约 `197G` available、约 `11%` used；未创建 build directory。
+
+### ORT 1.23.2 CPU-only build interface strategy
+
+- Source acquisition：后续从官方 ONNX Runtime source repository 获取并固定 tag `v1.23.2`；J2.0 未下载 source。
+- Target：native Jetson `aarch64`，Release shared library，CPUExecutionProvider/CPU-only。
+- Candidate build interface：`build.sh --config Release --build_shared_lib --use_cpu --skip_tests --parallel <n>`；必要时通过 `--cmake_extra_defines CMAKE_INSTALL_PREFIX=<prefix>` 指定 install prefix。
+- 禁止项：CUDA EP、TensorRT EP、GPU build、configure、build、CTest、benchmark、inference。
+- Dependencies：CMake/CTest、GCC/G++/Make、Git、Python、NumPy/PyYAML，以及 build script 实际需要的 protobuf/flatbuffers tooling；J2.1 必须先依据真实 `build.sh --help` 验证参数和 dependency resolution。
+- Suggested install prefix：仓库外的固定 staging prefix；J2.0 未创建或写入 prefix。
+- Disk estimate：建议正式 build 前保留至少 `20 GiB` free；当前约 `197G` available。
+- Time estimate：native Release build 预计几十分钟；未实测，不是 benchmark 或 performance result。
+
+J2.0 未安装软件、未运行 configure/build/CTest、未下载 ONNX Runtime、未执行 benchmark/inference。J2.1 前必须解决或明确处理 CMake、protobuf/flatbuffers tooling 和构建依赖。
