@@ -571,3 +571,114 @@ J1.1 状态：`COMPLETE`。
 Carry-forward warnings：CMake 缺失；OpenCV pkg-config/CMake metadata 缺失；Python `cv2` 不可用；当前 nvpmodel mode 为 15W；MAXN_SUPER 尚未验证；jetson_clocks 查询要求 root；unsafe shutdown counter 需后续观察。
 
 J1.1 期间未安装软件，未改变 nvpmodel、时钟、风扇或系统配置，未运行 build/test/benchmark。原始采集保存在仓库外临时目录，未作为 Published Evidence 或 Git 文件。
+
+## 14. Stage J J1.2 Platform and Toolchain Inventory
+
+J1.2 状态：`COMPLETE`。
+
+### Observed platform
+
+- OS：Ubuntu 22.04.5 LTS。
+- Kernel：`5.15.185-tegra`。
+- Architecture：`aarch64`。
+- L4T：`R36.5.0`；NVIDIA L4T package family observed at `36.5.0-20260115194252`。
+- glibc：`2.35`。
+- Online/allowed CPUs：`0-5` / `0-5`。
+
+### JetPack and NVIDIA provenance
+
+- Installed `nvidia-jetpack` meta-package：not installed。
+- APT metadata candidate：`nvidia-jetpack 6.2.2+b24`；`nvidia-jetpack-runtime` and `nvidia-jetpack-dev` have the same candidate.
+- NVIDIA APT sources：configured for Jetson `common`, `t234` and `ffmpeg`, repository series `r36`。
+- Exact installed JetPack version：not independently verified；the APT candidate is not evidence that the meta-package is installed.
+- L4T/core/kernel/bootloader/initrd/tools packages：installed and consistent with observed L4T `R36.5.0`。
+
+### Native toolchain
+
+- GCC/G++：`11.4.0`。
+- CMake/CTest：missing。
+- Make：`4.3`。
+- Ninja：missing。
+- pkg-config：`0.29.2`。
+- Git：`2.34.1`。
+- binutils：installed；`readelf` and `objdump` available。
+- `patchelf`：missing。
+
+Capability/remediation matrix：
+
+| Capability | Observed | Required milestone | Deadline/action |
+|---|---|---|---|
+| GCC/G++/Make | present | J2/J3 | none currently |
+| CMake/CTest | missing | J2.1/J2.2/J3 | user-approved minimal installation before first CMake task |
+| Ninja | missing | optional | no action unless selected by later build protocol |
+| pkg-config/binutils | present | J2/J3 | none currently |
+| patchelf | missing | J2.3 if required by packaging | assess before J2.3 |
+
+### Python
+
+- Python：`/usr/bin/python3.10`, version `3.10.12`。
+- python3-dev：installed。
+- pip/ensurepip：unavailable。
+- venv：package not installed。
+- NumPy：`1.21.5`；PyYAML：`5.4.1`。
+- ONNX, ONNX Runtime Python and Python `cv2`：unavailable。
+- Python TensorRT binding：unavailable (ImportError)。
+
+### OpenCV C++
+
+Classification: `RUNTIME_AND_HEADERS_PRESENT_METADATA_MISSING`。
+
+- Runtime libraries：present。
+- Headers/component headers：present。
+- Version: `4.5.4`。
+- Debian component packages: `4.5.4+dfsg-9ubuntu4` installed for core/imgproc/imgcodecs development and runtime components。
+- pkg-config metadata: missing。
+- CMake package metadata: missing。
+- Python `cv2`: unavailable。
+- CUDA support: not required by Stage J1.2。
+- J3 impact: native configure/build remains blocked until metadata and build dependency remediation is defined and completed。
+
+### yaml-cpp and ONNX Runtime
+
+- yaml-cpp: `NOT_FOUND`; header, runtime, pkg-config metadata and CMake metadata not found. This blocks J3 configure/build until remediation。
+- System ONNX Runtime: not found; Python ONNX Runtime unavailable. This is expected to be resolved by the official ONNX Runtime 1.23.2 build in J2 and is not a J1.2 failure。
+
+### CUDA/cuDNN/TensorRT pre-existing facts
+
+These are recorded only and were not used by Stage J:
+
+- CUDA toolkit/runtime: `/usr/local/cuda-12.6`, toolkit `12.6.11`, cudart `12.6.68`。
+- cuDNN runtime libraries: present; `libcudnn9`/`libcudnn9-dev` package status was not installed in dpkg query。
+- TensorRT packages: `10.3.0.30-1+cuda12.5` runtime/dev/parser packages installed。
+- `trtexec`: unavailable。
+- TensorRT Python binding: unavailable。
+- No TensorRT smoke, CUDA inference or Stage T work was executed。
+
+### Package and storage health
+
+- `dpkg --audit`: no output; no incomplete package state observed。
+- Held packages: none observed。
+- Root, `/var` and `/tmp`: NVMe ext4, approximately 11% used, approximately 211 GB available。
+
+### Planned versus observed summary
+
+| Field | Planned target | Observed fact | Status |
+|---|---|---|---|
+| Device | Jetson Orin Nano Super | Jetson Orin Nano Engineering Reference Developer Kit Super | MATCH |
+| Memory | nominal 8GB | MemTotal 7,976,910,848 bytes | MATCH |
+| NVMe | 256GB class | 256,060,514,304 bytes | MATCH |
+| Architecture | aarch64 | aarch64 | MATCH |
+| Ubuntu | 22.04 | 22.04.5 LTS | MATCH |
+| L4T | 36.5 planned | R36.5.0 | MATCH |
+| JetPack | 6.2.2 planned | APT candidate 6.2.2+b24; meta-package not installed | NOT_INDEPENDENTLY_VERIFIED |
+| GCC/G++ | 11.x | 11.4.0 | MATCH |
+| glibc | 2.35 | 2.35 | MATCH |
+| CMake | required | not installed | NOT_INSTALLED |
+| OpenCV C++ | 4.x | 4.5.4 runtime/headers, metadata missing | OBSERVED_DIFFERENCE |
+| yaml-cpp | 0.7.x | not found | NOT_INSTALLED |
+| Python | 3.10 | 3.10.12 | MATCH |
+| Online/allowed CPUs | 0-5 / 0-5 | 0-5 / 0-5 | MATCH |
+| ORT | official 1.23.2 in J2 | not found | NOT_INSTALLED |
+| CUDA/cuDNN/TensorRT | recorded only | CUDA 12.6, cuDNN libs, TensorRT 10.3 observed | NOT_APPLICABLE_IN_J1.2 |
+
+J1.2 did not install packages, modify APT sources, alter system settings, run configure/build/test/benchmark, or begin J1.3。

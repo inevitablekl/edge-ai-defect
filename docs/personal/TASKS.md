@@ -2212,3 +2212,20 @@ NEU-DET
 - J1 overall：`IN PROGRESS`；J1.2：`READY_WITH_WARNINGS`；J1.3～J1.5：`PENDING`。
 - Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
 - Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22 - Stage J J1.2 Platform and Toolchain Inventory
+
+- J1.2：`COMPLETE`；L4T observed `R36.5.0`，JetPack meta-package 未安装，APT candidate 为 `6.2.2+b24`，exact installed JetPack 未独立验证。
+- Ubuntu `22.04.5`，kernel `5.15.185-tegra`，architecture `aarch64`，glibc `2.35`；online/allowed CPU 均为 `0-5`。
+- GCC/G++ `11.4.0`，Make `4.3`，pkg-config `0.29.2`；CMake/CTest、Ninja、patchelf 缺失。
+- Python `3.10.12`，python3-dev、NumPy `1.21.5`、PyYAML `5.4.1` 可用；pip/venv、ONNX、Python ORT、Python cv2 不可用。
+- OpenCV C++ classification：`RUNTIME_AND_HEADERS_PRESENT_METADATA_MISSING`；runtime/headers 4.5.4 和 Debian component packages 存在，但 pkg-config/CMake metadata 缺失。
+- yaml-cpp：未发现 header、runtime 或 metadata，阻塞 J3 configure/build。
+- 系统 ONNX Runtime：未发现；J2 构建官方 1.23.2 SDK，不以系统缺失判定 J1.2 失败。
+- CUDA 12.6、cuDNN runtime libraries、TensorRT 10.3 为 recorded-only pre-existing facts；未使用这些后端，未开始 Stage T。
+- dpkg audit 无异常，未发现 held packages；root/var/tmp 均约 11% 使用率。
+- Remediation：CMake/CTest 在 J2.1/J2.2 前处理；OpenCV metadata 和 yaml-cpp 在 J3.1 前处理；ORT 在 J2 构建；Python cv2 当前不阻塞 C++ Stage J。
+- 未安装或修复软件；未修改 APT、系统配置、功耗、时钟或风扇；未运行 configure/build/test/benchmark；未开始 J1.3。
+- raw attempt 为 repository-external、untracked、not Published Evidence；未记录随机临时路径。
+- J1 overall：`IN PROGRESS`；J1.3：`READY_WITH_WARNINGS`。
+- Commit：`commit to be recorded by Git history`。
