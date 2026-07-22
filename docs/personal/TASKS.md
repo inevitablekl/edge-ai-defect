@@ -2267,3 +2267,11 @@ NEU-DET
 - raw attempt 为 repository-external、untracked、not Published Evidence；未记录随机临时路径。
 - J1 overall：`IN PROGRESS`；J1.3：`READY_WITH_WARNINGS`。
 - Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T23:15:49+08:00 - Stage J J1.4 Final Closeout Status
+
+- Post-D042 closeout verification：`PASS`；stable evidence manifest 全部 `OK`，权威 Phase A/final supplemental SHA 与 D042 一致。
+- J1.4：`COMPLETE`；J1 remains `IN PROGRESS`；J1.5：`READY`。
+- 当前 controlled device state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive。
+- 未执行 J1.5；未发生 workload/build/test/benchmark、reboot、system、wrapper 或 sudoers 变更。
+- Closeout commit：`0fbbbbcb6acdfbb0b5ca2e0e9cc16b37aaed2222`；后续仅为本末尾状态记录修正。
