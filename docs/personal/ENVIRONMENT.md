@@ -759,3 +759,11 @@ D042 冻结 `Stage J Sustained Throttling Algorithm v1`：每秒使用 monotonic
 Environment-drift hard-match fields 包括 kernel/L4T/package/config SHA、mode/CPU sets、frequency paths/targets、EMC、fan、thermal path/type sets、tegrastats/package、rail set、OC/UV paths/enables 和 wrapper SHA。Boot ID 变化使 resolved reference 失效，reboot 后必须重新 preflight、thermal reference 和 protocol。
 
 J1.4 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；MAXN_SUPER、locked clocks 和 fan state 保持不变。
+
+### J1.4 Post-D042 closeout verification
+
+- Stable local evidence manifest validation：全部记录 `OK`；manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- Component A 和 final supplemental stable copies 的 SHA256 与 D042 一致；证据目录无可写路径。
+- Superseded supplemental attempts 保留、未修改、未删除，且不作为最终合同 authority。
+- J1.4 closeout verification confirmed `J1.4 COMPLETE`、`J1 IN PROGRESS`、`J1.5 READY`。
+- Closeout 未执行 workload/build/test/benchmark/J1.5，未改变 device state、system settings、wrapper 或 sudoers。

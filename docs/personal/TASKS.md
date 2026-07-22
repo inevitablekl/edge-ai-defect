@@ -2213,6 +2213,16 @@ NEU-DET
 - Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
 - Commit：`commit to be recorded by Git history`。
 
+### 2026-07-22T23:14:52+08:00 - Stage J J1.4 Post-D042 Closeout Verification
+
+- 当前 HEAD `697a58ee3f4f4a93fe507e7b48a27e5906f08d09` 保持不变；worktree clean。
+- D042：`Accepted`；未修改 D042，不新增 D043。
+- Stable evidence manifest validation：全部 `OK`；authoritative Phase A/final supplemental SHA 与 D042 一致；superseded attempts retained。
+- J1.4：`COMPLETE`；J1 remains `IN PROGRESS`；J1.5：`READY`。
+- MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked state、fan PWM 255 和 nvfancontrol inactive 均 retained。
+- 未执行 workload、build、test、benchmark 或 J1.5；未发生 system、wrapper 或 sudoers 变更。
+- Commit：`commit to be recorded by Git history`。
+
 ### 2026-07-22T22:55:09+08:00 - Stage J J1.4 Telemetry and Throttling Freeze
 
 - J1.4 Phase A：`DISCOVERY_PASS`；用户授权 J1 discovery 使用 composite immutable discovery evidence。
