@@ -65,7 +65,11 @@ ApplicationResult run_application(const runtime::RuntimeConfig& config) {
 
     preprocess::Preprocessor preprocessor;
     backend_ort::OnnxRuntimeEngine engine;
-    status = engine.initialize(contract, config.model_path);
+    if (config.schema_version == 2U) {
+        status = engine.initialize(config, contract, config.model_path);
+    } else {
+        status = engine.initialize(contract, config.model_path);
+    }
     if (!status.ok()) {
         return {status, false};
     }

@@ -1,4 +1,7 @@
+#include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
+
+#include <onnxruntime_cxx_api.h>
 
 #include <filesystem>
 #include <fstream>
@@ -9,6 +12,7 @@
 namespace {
 
 namespace core = edge_ai_defect::core;
+namespace backend_ort = edge_ai_defect::backend_ort;
 namespace runtime = edge_ai_defect::runtime;
 
 class TestContext {
@@ -361,6 +365,74 @@ void test_v2_config_and_isolation(TestContext& context, const Options& options) 
                    "onnxruntime.memory_pattern_enabled");
 }
 
+void test_ort_options_record(TestContext& context) {
+    runtime::RuntimeConfig config;
+    config.schema_version = 2;
+    config.backend_type = "onnxruntime_cpu";
+
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> record;
+    const core::Status record_status =
+        backend_ort::OrtOptionsRecord::create(config, &record);
+    context.expect(record_status.ok(),
+                   "ORT options default record",
+                   record_status.message());
+    if (!record_status.ok()) {
+        return;
+    }
+
+    context.expect(record->schema_version() == 2U &&
+                       record->backend_type() == "onnxruntime_cpu" &&
+                       record->execution_mode() == "sequential" &&
+                       record->graph_optimization_level() == "all" &&
+                       record->intra_op_threads() == 1U &&
+                       record->inter_op_threads() == 1U &&
+                       record->intra_op_allow_spinning() &&
+                       record->inter_op_allow_spinning() &&
+                       record->cpu_arena_enabled() &&
+                       record->memory_pattern_enabled(),
+                   "ORT options default values",
+                   "default option values mismatch");
+
+    const std::string expected_record =
+        "{\"schema_version\":2,\"backend_type\":\"onnxruntime_cpu\","
+        "\"execution_mode\":\"sequential\",\"graph_optimization_level\":\"all\","
+        "\"intra_op_threads\":1,\"inter_op_threads\":1,"
+        "\"intra_op_allow_spinning\":true,\"inter_op_allow_spinning\":true,"
+        "\"cpu_arena_enabled\":true,\"memory_pattern_enabled\":true}";
+    context.expect(record->canonical_json() == expected_record,
+                   "ORT options stable record",
+                   "canonical record output changed");
+
+    Ort::SessionOptions session_options;
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> applied_record;
+    const core::Status apply_status = backend_ort::apply_ort_options(
+        config, &session_options, &applied_record);
+    context.expect(apply_status.ok(),
+                   "ORT options application",
+                   apply_status.message());
+    context.expect(applied_record != nullptr &&
+                       applied_record->canonical_json() == expected_record,
+                   "ORT options applied record",
+                   "applied record mismatch");
+
+    runtime::RuntimeConfig invalid = config;
+    invalid.schema_version = 1;
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> rejected;
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid schema",
+                   "schema v1 must be rejected");
+    invalid = config;
+    invalid.onnxruntime.execution_mode = "parallel";
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid execution mode",
+                   "unsupported execution mode must be rejected");
+    invalid = config;
+    invalid.onnxruntime.intra_op_threads = 0;
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid thread count",
+                   "zero thread count must be rejected");
+}
+
 void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
@@ -490,6 +562,7 @@ int main(int argc, char* argv[]) {
     TestContext context;
     test_valid_config_and_paths(context, options);
     test_v2_config_and_isolation(context, options);
+    test_ort_options_record(context);
     test_schema_failures(context, options);
     test_loader_argument_failures(context, options);
 

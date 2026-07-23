@@ -159,6 +159,7 @@ target_link_libraries(edge_ai_core
 
 add_library(edge_ai_backend_ort STATIC
     src/backend_ort.cpp
+    src/onnx_runtime_options.cpp
     src/onnx_runtime_engine.cpp
 )
 target_include_directories(edge_ai_backend_ort
@@ -440,6 +441,8 @@ if(BUILD_TESTING)
     target_link_libraries(test_runtime_config
         PRIVATE
             edge_ai_runtime
+            edge_ai_backend_ort
+            onnxruntime::onnxruntime
     )
     set_target_properties(test_runtime_config
         PROPERTIES

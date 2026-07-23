@@ -1,4 +1,5 @@
 #include "edge_ai_defect/backend_ort/onnx_runtime_engine.hpp"
+#include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
 
 #include "edge_ai_defect/core/tensor.hpp"
 
@@ -247,6 +248,7 @@ public:
     std::unique_ptr<Ort::Env> environment;
     std::unique_ptr<Ort::SessionOptions> session_options;
     std::unique_ptr<Ort::Session> session;
+    std::unique_ptr<const OrtOptionsRecord> options_record;
     model::ModelContract contract;
     core::TensorInfo input_info;
     core::TensorInfo output_info;
@@ -259,6 +261,16 @@ OnnxRuntimeEngine::OnnxRuntimeEngine() = default;
 OnnxRuntimeEngine::~OnnxRuntimeEngine() = default;
 
 core::Status OnnxRuntimeEngine::initialize(
+    const model::ModelContract& contract,
+    const std::filesystem::path& model_path) {
+    runtime::RuntimeConfig default_config;
+    default_config.schema_version = 2;
+    default_config.backend_type = "onnxruntime_cpu";
+    return initialize(default_config, contract, model_path);
+}
+
+core::Status OnnxRuntimeEngine::initialize(
+    const runtime::RuntimeConfig& config,
     const model::ModelContract& contract,
     const std::filesystem::path& model_path) {
     if (model_path.empty()) {
@@ -298,11 +310,11 @@ core::Status OnnxRuntimeEngine::initialize(
         candidate->environment = std::make_unique<Ort::Env>(
             ORT_LOGGING_LEVEL_WARNING, "edge_ai_defect_onnx_runtime_engine");
         candidate->session_options = std::make_unique<Ort::SessionOptions>();
-        candidate->session_options->SetExecutionMode(ORT_SEQUENTIAL);
-        candidate->session_options->SetGraphOptimizationLevel(ORT_ENABLE_ALL);
-        candidate->session_options->SetIntraOpNumThreads(1);
-        candidate->session_options->SetInterOpNumThreads(1);
-        candidate->session_options->AppendExecutionProvider_CPU(1);
+        const Status options_status = apply_ort_options(
+            config, candidate->session_options.get(), &candidate->options_record);
+        if (!options_status.ok()) {
+            return options_status;
+        }
         candidate->session = std::make_unique<Ort::Session>(
             *candidate->environment, model_path.c_str(), *candidate->session_options);
 

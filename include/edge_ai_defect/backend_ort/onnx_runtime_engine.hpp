@@ -1,6 +1,7 @@
 #pragma once
 
 #include "edge_ai_defect/inference/inference_engine.hpp"
+#include "edge_ai_defect/runtime/runtime_config.hpp"
 
 #include <memory>
 
@@ -19,6 +20,11 @@ public:
     [[nodiscard]] core::Status initialize(
         const model::ModelContract& contract,
         const std::filesystem::path& model_path) override;
+
+    [[nodiscard]] core::Status initialize(
+        const runtime::RuntimeConfig& config,
+        const model::ModelContract& contract,
+        const std::filesystem::path& model_path);
 
     [[nodiscard]] core::Status run(
         const core::HostTensor& input,
