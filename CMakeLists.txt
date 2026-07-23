@@ -195,6 +195,7 @@ add_library(edge_ai_runtime STATIC
     src/console_sink.cpp
     src/directory_source.cpp
     src/json_sink.cpp
+    src/opencv_thread_policy.cpp
     src/result_sink.cpp
     src/runtime_config.cpp
     src/serial_runner.cpp

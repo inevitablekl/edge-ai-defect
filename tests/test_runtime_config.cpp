@@ -1,6 +1,8 @@
 #include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
+#include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 
+#include <opencv2/core.hpp>
 #include <onnxruntime_cxx_api.h>
 
 #include <filesystem>
@@ -433,6 +435,49 @@ void test_ort_options_record(TestContext& context) {
                    "zero thread count must be rejected");
 }
 
+void test_opencv_thread_policy(TestContext& context) {
+    const int previous_threads = cv::getNumThreads();
+    runtime::RuntimeConfig config;
+    config.schema_version = 2;
+    config.opencv_num_threads = 1;
+
+    std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> record;
+    const core::Status status =
+        runtime::OpenCvThreadPolicyRecord::apply(config, &record);
+    context.expect(status.ok(), "OpenCV policy mapping", status.message());
+    if (status.ok()) {
+        context.expect(record->requested_threads() == 1U &&
+                           record->applied_threads() == 1U &&
+                           record->opencv_version() == CV_VERSION &&
+                           record->policy_active(),
+                       "OpenCV policy record",
+                       "requested/applied/version/active mismatch");
+        const std::string expected =
+            "{\"requested_threads\":1,\"applied_threads\":1,\"opencv_version\":\"" +
+            std::string(CV_VERSION) + "\",\"policy_active\":true}";
+        context.expect(record->canonical_json() == expected,
+                       "OpenCV policy stable output",
+                       "canonical policy record changed");
+        context.expect(cv::getNumThreads() == 1,
+                       "OpenCV policy application",
+                       "cv::getNumThreads did not report requested value");
+    }
+
+    runtime::RuntimeConfig invalid = config;
+    invalid.schema_version = 1;
+    std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> rejected;
+    context.expect(!runtime::OpenCvThreadPolicyRecord::apply(invalid, &rejected).ok(),
+                   "OpenCV policy invalid schema",
+                   "schema v1 must be rejected");
+    invalid = config;
+    invalid.opencv_num_threads = 0;
+    context.expect(!runtime::OpenCvThreadPolicyRecord::apply(invalid, &rejected).ok(),
+                   "OpenCV policy invalid thread count",
+                   "zero thread count must be rejected");
+
+    cv::setNumThreads(previous_threads);
+}
+
 void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
@@ -563,6 +608,7 @@ int main(int argc, char* argv[]) {
     test_valid_config_and_paths(context, options);
     test_v2_config_and_isolation(context, options);
     test_ort_options_record(context);
+    test_opencv_thread_policy(context);
     test_schema_failures(context, options);
     test_loader_argument_failures(context, options);
 

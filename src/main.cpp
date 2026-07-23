@@ -8,6 +8,7 @@
 #include "edge_ai_defect/runtime/directory_source.hpp"
 #include "edge_ai_defect/runtime/json_sink.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
+#include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
 #include "edge_ai_defect/runtime/serial_runner.hpp"
 
 #include <exception>
@@ -50,6 +51,15 @@ struct ApplicationResult {
 };
 
 ApplicationResult run_application(const runtime::RuntimeConfig& config) {
+    std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> opencv_policy_record;
+    if (config.schema_version == 2U) {
+        const core::Status policy_status =
+            runtime::OpenCvThreadPolicyRecord::apply(config, &opencv_policy_record);
+        if (!policy_status.ok()) {
+            return {policy_status, false};
+        }
+    }
+
     model::ModelContract contract;
     core::Status status = model::ModelContractLoader::load(
         config.model_contract_path, &contract);
