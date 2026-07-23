@@ -1,0 +1,18 @@
+Scenario A complete sanitizer finding:
+
+=================================================================
+ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 792 byte(s) in 3 object(s) allocated from:
+operator new[](unsigned long)
+libtbb.so.2
+tbb::interface7::internal::task_arena_base::internal_initialize()
+cv::setNumThreads(int) in libopencv_core.so.4.5d
+edge_ai_defect::runtime::PortableControlSession::start
+test_portable_control in test_runtime_config
+main in test_runtime_config
+
+SUMMARY: AddressSanitizer: 792 bytes leaked in 3 allocations.
+
+Scenario B corrected run emitted no leak stack. Scenario C emitted no
+non-leak ASan/UBSan diagnostic.

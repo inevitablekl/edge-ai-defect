@@ -1,0 +1,27 @@
+{
+  "scenario_a": {
+    "description": "current code with leak detection enabled",
+    "result": "FAIL",
+    "exit_code": 8,
+    "runtime_config": "LeakSanitizer reported 792 bytes in 3 allocations",
+    "stderr": "CTest failure summary only; full stdout retained in local attempt"
+  },
+  "scenario_b": {
+    "description": "diagnostic shim bypasses OpenCV thread activation; leak detection enabled",
+    "initial_run": "FAIL due ASan runtime preload-order guard; retained as diagnostic setup output",
+    "corrected_run": "PASS",
+    "corrected_exit_code": 0,
+    "runtime_config": "1/1 passed; no leak report; stderr empty"
+  },
+  "scenario_c": {
+    "description": "current code with detect_leaks=0",
+    "result": "PASS",
+    "exit_code": 0,
+    "runtime_config": "1/1 passed; no non-leak ASan/UBSan diagnostic; stderr empty"
+  },
+  "ownership_classification": "B — third-party OpenCV/TBB initialization leak",
+  "project_code_role": "PortableControlSession triggers cv::setNumThreads(1); leaked allocations originate below that boundary in libtbb/OpenCV",
+  "code_change_required": false,
+  "strict_j3_9_rerun_allowed": false,
+  "rerun_condition": "requires owner-approved third-party/runtime resolution or protocol decision; no suppression authorized"
+}
