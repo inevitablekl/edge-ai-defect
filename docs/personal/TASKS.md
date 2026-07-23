@@ -2397,3 +2397,8 @@ NEU-DET
 - 未执行模型加载、inference、CTest、benchmark、TensorRT、CUDA EP 或 J3.2；系统包安装已由用户在本次重试前完成，本次验证未修改系统。
 - J3.2：`READY`；J3：`IN PROGRESS`；J3.0：`NOT_DEFINED`。
 - Next authorized task：`J3.2 — RuntimeConfig v2`；J3.2 未执行。
+- J3.3：`COMPLETE`；source commit：`de022b19e0dd54c156cd7463c64d97eeb112180f`；Published Evidence：`j3_3_ort_options_v1`。
+- RuntimeConfig v2 到 ORT SessionOptions 映射、不可变 options record、默认值、非法配置、稳定输出和 model-free application 测试：`PASS`。
+- 未执行模型加载、inference、benchmark、TensorRT、CUDA EP、ROS2、camera 或 pipeline。
+- J3.4：`READY`；J3：`IN PROGRESS`；J3.3 未扩大到 OpenCV thread policy。
+- Next authorized task：`J3.4 — OpenCV thread policy`；J3.4 未执行。

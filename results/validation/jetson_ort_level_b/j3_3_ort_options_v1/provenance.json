@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_3_ort_options_v1",
+  "task_id": "J3.3",
+  "repository_source_commit": "de022b19e0dd54c156cd7463c64d97eeb112180f",
+  "j3_2_commit": "42fccfac4f27f7c1249c33a5df7994997f7038ea",
+  "ort_version": "1.23.2",
+  "sdk_platform": "linux-aarch64",
+  "sdk_build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+  "sdk_main_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "local_attempt_id": "j3.3_ort_options_v1",
+  "local_attempt_manifest_sha256": "728b01f66534278098026966ef54f13f7eb6042a31ddeac2e94687d44047d408",
+  "compiler": "GCC/G++ 11.4.0",
+  "system_cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "yaml_cpp": "0.7.0",
+  "openssl": "3.0.2",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}

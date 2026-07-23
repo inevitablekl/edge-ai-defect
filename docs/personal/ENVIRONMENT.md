@@ -916,3 +916,5 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - Selected ONNX Runtime header layout：nested；include directory：SDK `include/onnxruntime`；flat layout compatibility retained。
 - Published Evidence：`j3_1_aarch64_build_v1`；published manifest SHA256：`ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5`；local attempt manifest SHA256：`368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871`。
 - Full Release build、dynamic dependency resolution and non-model `--help` smoke：`PASS`；未执行模型加载、inference、benchmark、CTest、TensorRT、CUDA EP 或 J3.2。
+- J3.3：`COMPLETE`；source commit：`de022b19e0dd54c156cd7463c64d97eeb112180f`；Published Evidence：`j3_3_ort_options_v1`；native aarch64 Release build and model-free ORT options test：`PASS`。
+- `OrtOptionsRecord` records RuntimeConfig v2 schema/backend, execution mode, graph optimization, thread, spinning, CPU arena and memory-pattern values with stable canonical output；未执行模型加载或 inference。
