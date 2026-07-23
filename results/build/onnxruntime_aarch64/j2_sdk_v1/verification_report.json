@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_sdk_v1",
+  "task_id": "J2.3",
+  "result": "PASS",
+  "checks": [
+    {
+      "id": "formal_v2_only",
+      "result": "PASS",
+      "detail": "include and lib copied from one formal j2.2_formal_clean_v2 SDK"
+    },
+    {
+      "id": "formal_attempt_manifest",
+      "result": "PASS",
+      "detail": "immutable attempt manifest verified 10 of 10 files"
+    },
+    {
+      "id": "canonical_source_aggregate",
+      "result": "PASS",
+      "detail": "stage_j_ort_source_aggregate_v1; 9431 entries, 4 recursive submodules, SHA256 c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c"
+    },
+    {
+      "id": "no_ort_rebuild",
+      "result": "PASS",
+      "detail": "J2.3 performed packaging and verification only"
+    },
+    {
+      "id": "header_manifest",
+      "result": "PASS",
+      "detail": "13 of 13 regular include files verified"
+    },
+    {
+      "id": "file_manifest",
+      "result": "PASS",
+      "detail": "24 of 24 regular SDK and metadata files verified"
+    },
+    {
+      "id": "symlink_chain",
+      "result": "PASS",
+      "detail": "libonnxruntime.so -> libonnxruntime.so.1 -> libonnxruntime.so.1.23.2"
+    },
+    {
+      "id": "main_library_sha256",
+      "result": "PASS",
+      "detail": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740"
+    },
+    {
+      "id": "elf_main_library",
+      "result": "PASS",
+      "detail": "ELF64 AArch64"
+    },
+    {
+      "id": "soname_and_needed",
+      "result": "PASS",
+      "detail": "SONAME and system dependencies verified; no CUDA, TensorRT or cuDNN dependency"
+    },
+    {
+      "id": "ldd",
+      "result": "PASS",
+      "detail": "no not-found dependency; provider shared library is statically linked"
+    },
+    {
+      "id": "cmake_package",
+      "result": "PASS",
+      "detail": "four onnxruntime CMake package files present and no private staging path"
+    },
+    {
+      "id": "license",
+      "result": "PASS",
+      "detail": "LICENSE copied unchanged from formal source"
+    },
+    {
+      "id": "third_party_notice",
+      "result": "PASS",
+      "detail": "ThirdPartyNotices.txt copied unchanged as THIRD_PARTY_NOTICES"
+    },
+    {
+      "id": "metadata_privacy",
+      "result": "PASS",
+      "detail": "no absolute private paths, host identity, IP, MAC, UUID, credentials or dynamic timestamp"
+    },
+    {
+      "id": "payload_git_tracking",
+      "result": "PASS",
+      "detail": "include and lib are ignored and no payload file is tracked"
+    },
+    {
+      "id": "binary_runtime_scope",
+      "result": "NOT_EXECUTED_BY_CONTRACT",
+      "detail": "binary execution, inference, CTest, benchmark and RPATH smoke were not run"
+    }
+  ],
+  "status_after_j2_3": {
+    "J2.3": "COMPLETE",
+    "J2.4": "READY",
+    "J2.5": "PENDING",
+    "J2": "IN PROGRESS",
+    "J3": "BLOCKED_BY_J2.5"
+  }
+}

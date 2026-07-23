@@ -874,3 +874,15 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - 未执行 SDK binary、CTest、inference、benchmark 或 RPATH smoke；未启用 CUDA/TensorRT/cuDNN；未修改系统 CMake、`/usr/local` 或生产源码。
 - J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
 - Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 尚未执行。
+
+### Stage J J2.3 SDK packaging and manifest
+
+- J2.3：`COMPLETE`；只使用 formal v2 SDK，未使用 historical development SDK、v1 SDK 或新的 ORT 构建产物。
+- Local SDK logical path：`third_party/onnxruntime/1.23.2/linux-aarch64/`；`include/` 和 `lib/` 为 local-only payload，保留真实 symlink，不进入 Git。
+- ORT：`1.23.2` / `v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`；formal attempt：`j2.2_formal_clean_v2`；attempt manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- Canonical source aggregate SHA256：`c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`；main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- Metadata SHA256：`BUILD_MANIFEST.json` `94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406`；`HEADER_SHA256SUMS.txt` `3aace362a8a6d65f9852e501df69d4b33720e51f5017c4e7d25d21d33ffe9029`；`FILE_SHA256SUMS.txt` `8fb13ae5f579a4c148725ed5e1ce96ba1fe25c6d0024ec377517fdf8c5d99f02`。
+- Official source license SHA256：`2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c`；third-party notice SHA256：`e9e90971a8e75a9a8ac0c6412e29c1202d079998389915aa485f46c816c3b4cc`。
+- Published Evidence：`j2_sdk_v1`；Evidence manifest 4/4 PASS；无 payload、`.so`、完整 headers 或绝对私有路径。
+- J2.4 runtime/RPATH smoke：`PENDING`；J2.5 Evidence gate：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- 未执行 binary/runtime smoke、inference、benchmark、CTest、J2.4、J2.5 或 J3。Next authorized task：`J2.4 — RPATH smoke`。

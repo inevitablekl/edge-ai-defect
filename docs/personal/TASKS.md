@@ -2359,3 +2359,12 @@ NEU-DET
 - J2.2：`COMPLETE`；J2.3：`READY`；J2.4：`PENDING`；J2.5：`PENDING`；J2
   overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
 - Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。
+
+### Stage J J2.3 SDK packaging and manifest
+
+- J2.3：`COMPLETE`；formal v2 SDK used exclusively；no ORT rebuild。
+- Local SDK metadata、headers manifest、file manifest、license 和 third-party notice：`PASS`；payload 保持 local-only 且未被 Git 跟踪。
+- Published Evidence `results/build/onnxruntime_aarch64/j2_sdk_v1/`：`PASS`；exact file set 为 README、provenance、verification report、commands 和 sha256sums；无 payload、`.so`、完整 headers 或绝对私有路径。
+- J2.4：`READY`；J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- 本次未执行 J2.4 RPATH smoke；未执行 J2.5、binary/runtime smoke、inference、benchmark、CTest 或 J3。
+- Next authorized task：`J2.4 — RPATH smoke`。
