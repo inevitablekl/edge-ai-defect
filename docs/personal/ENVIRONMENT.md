@@ -918,3 +918,5 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - Full Release build、dynamic dependency resolution and non-model `--help` smoke：`PASS`；未执行模型加载、inference、benchmark、CTest、TensorRT、CUDA EP 或 J3.2。
 - J3.3：`COMPLETE`；source commit：`de022b19e0dd54c156cd7463c64d97eeb112180f`；Published Evidence：`j3_3_ort_options_v1`；native aarch64 Release build and model-free ORT options test：`PASS`。
 - `OrtOptionsRecord` records RuntimeConfig v2 schema/backend, execution mode, graph optimization, thread, spinning, CPU arena and memory-pattern values with stable canonical output；未执行模型加载或 inference。
+- J3.4：`COMPLETE`；source commit：`05e2d4c47e7a95bf3f8796ef501d12e27b618082`；Published Evidence：`j3_4_opencv_thread_policy_v1`。
+- OpenCV `4.5.4` policy：RuntimeConfig v2 `opencv_num_threads=1` 显式映射到 `cv::setNumThreads(1)`，readback applied=`1`，policy active：`true`；未使用环境变量覆盖。

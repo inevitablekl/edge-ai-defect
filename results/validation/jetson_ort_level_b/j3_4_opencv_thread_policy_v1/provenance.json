@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_4_opencv_thread_policy_v1",
+  "task_id": "J3.4",
+  "repository_source_commit": "05e2d4c47e7a95bf3f8796ef501d12e27b618082",
+  "j3_3_commit": "de022b19e0dd54c156cd7463c64d97eeb112180f",
+  "opencv_version": "4.5.4",
+  "ort_version": "1.23.2",
+  "sdk_platform": "linux-aarch64",
+  "sdk_build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+  "local_attempt_id": "j3.4_opencv_thread_policy_v1",
+  "local_attempt_manifest_sha256": "9d43e08843627017743723ade6f551dce90b2b5b6e53abfcda0dc252be7a0c64",
+  "compiler": "GCC/G++ 11.4.0",
+  "system_cmake": "3.22.1",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}

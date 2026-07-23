@@ -1,0 +1,26 @@
+{
+  "task": "J3.4",
+  "result": "PASS",
+  "configure_exit": 0,
+  "build_exit": 0,
+  "runtime_config_ctest_exit": 0,
+  "architecture": "aarch64",
+  "cxx_standard": "C++17",
+  "policy_activation_point": "after RuntimeConfig v2 load and before model/source initialization",
+  "mapping": "runtime.opencv_num_threads -> cv::setNumThreads(N)",
+  "record": "requested threads, applied threads, OpenCV version and policy_active",
+  "requested_threads": 1,
+  "applied_threads": 1,
+  "opencv_version": "4.5.4",
+  "policy_active": true,
+  "environment_override": "none",
+  "test_coverage": [
+    "config to OpenCV mapping",
+    "default thread value",
+    "invalid schema and thread value rejection",
+    "stable policy record output",
+    "cv::getNumThreads readback"
+  ],
+  "excluded_operations": ["inference", "benchmark", "camera", "TensorRT", "CUDA", "ROS2"],
+  "result_scope": "J3.4 only"
+}

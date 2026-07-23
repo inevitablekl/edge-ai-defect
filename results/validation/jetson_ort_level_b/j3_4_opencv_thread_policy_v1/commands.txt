@@ -1,0 +1,6 @@
+gate=branch,worktree,frozen Plan SHA, frozen Task Cards SHA, J3.3 runtime_config CTest
+configure=cmake -S . -B <FORMAL_BUILD> -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DOpenCV_DIR=<SYSTEM_OPENCV4_CMAKE_DIR> -DONNXRUNTIME_ROOT=<STAGE_J_LINUX_AARCH64_SDK>
+build=cmake --build <FORMAL_BUILD> --target edge_ai_infer test_runtime_config --parallel 4
+test=ctest --test-dir <FORMAL_BUILD> -R '^runtime_config$' --output-on-failure
+policy=cv::setNumThreads(N) followed by cv::getNumThreads readback
+scope=no inference, benchmark, camera, TensorRT, CUDA or ROS2

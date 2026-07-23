@@ -2402,3 +2402,8 @@ NEU-DET
 - 未执行模型加载、inference、benchmark、TensorRT、CUDA EP、ROS2、camera 或 pipeline。
 - J3.4：`READY`；J3：`IN PROGRESS`；J3.3 未扩大到 OpenCV thread policy。
 - Next authorized task：`J3.4 — OpenCV thread policy`；J3.4 未执行。
+- J3.4：`COMPLETE`；source commit：`05e2d4c47e7a95bf3f8796ef501d12e27b618082`；Published Evidence：`j3_4_opencv_thread_policy_v1`。
+- OpenCV thread policy 的初始化时机、requested/applied/version/active record、默认值、非法值、稳定输出和 `cv::getNumThreads` readback 测试：`PASS`。
+- 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+- J3.5：`READY`；J3：`IN PROGRESS`；J3.4 未扩大到 trace observer。
+- Next authorized task：`J3.5 — Trace observer and recorder`；J3.5 未执行。
