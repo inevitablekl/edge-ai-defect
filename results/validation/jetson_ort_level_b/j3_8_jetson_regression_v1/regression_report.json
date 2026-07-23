@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "build": {
+    "configuration": "native aarch64 Release",
+    "exit_code": 0,
+    "targets": ["edge_ai_infer", "test_runtime_config", "test_serial_runner"]
+  },
+  "tests": {
+    "ctest_filter": "^(runtime_config|serial_runner)$",
+    "passed": 2,
+    "failed": 0,
+    "runtime_config": {
+      "v2_config_load": "PASS",
+      "schema_version_2": "PASS",
+      "ort_options_record": "PASS",
+      "opencv_thread_policy_activation": "PASS",
+      "portable_control_session_start": "PASS",
+      "environment_record_generation": "PASS",
+      "evidence_record_generation": "PASS"
+    },
+    "serial_runner": {
+      "trace_recorder_initialization": "PASS",
+      "callback_order": "PASS",
+      "deterministic_output": "PASS",
+      "monotonic_timestamps": "PASS",
+      "empty_trace_and_flush": "PASS"
+    }
+  },
+  "scope": {
+    "model_loading": false,
+    "inference": false,
+    "benchmark": false,
+    "tensorrt": false,
+    "cuda_ep": false,
+    "ros2": false,
+    "camera": false,
+    "system_modification": false,
+    "production_source_modification": false
+  }
+}

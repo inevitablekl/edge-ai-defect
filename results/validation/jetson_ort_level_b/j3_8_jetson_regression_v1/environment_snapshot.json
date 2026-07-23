@@ -1,0 +1,26 @@
+{
+  "platform": {
+    "jetson": true,
+    "kernel": "5.15.185 Jetson Linux",
+    "l4t_release": "R36.5",
+    "architecture": "aarch64",
+    "cpu_model": "Cortex-A78AE"
+  },
+  "toolchain": {
+    "compiler": "GCC/G++ 11.4.0",
+    "language_standard": "C++17",
+    "cmake": "3.22.1"
+  },
+  "dependencies": {
+    "onnxruntime_sdk": "1.23.2 linux-aarch64",
+    "onnxruntime_provider": "CPU only",
+    "opencv": "4.5.4",
+    "yaml_cpp": "0.7.0",
+    "openssl": "3.0.2"
+  },
+  "binaries": {
+    "edge_ai_defect": "ELF64 LSB PIE, ARM aarch64",
+    "test_runtime_config": "ELF64 LSB PIE, ARM aarch64",
+    "test_serial_runner": "ELF64 LSB PIE, ARM aarch64"
+  }
+}
