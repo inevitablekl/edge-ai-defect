@@ -1,4 +1,5 @@
 #include "edge_ai_defect/runtime/serial_runner.hpp"
+#include "edge_ai_defect/runtime/frame_trace.hpp"
 
 #include <opencv2/core.hpp>
 
@@ -7,6 +8,7 @@
 #include <iostream>
 #include <limits>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -160,6 +162,30 @@ public:
     std::vector<runtime::FrameResult> frames;
     runtime::RunSummary received_summary;
     std::vector<std::string>* event_log_ = nullptr;
+};
+
+class TraceOrderObserver final : public runtime::IFrameTraceObserver {
+public:
+    core::Status on_stage_begin(std::size_t cycle_id,
+                                runtime::FrameTraceStage stage,
+                                std::uint64_t timestamp_ns) override {
+        events.push_back(std::to_string(cycle_id) + ":" +
+                         runtime::frame_trace_stage_name(stage) + ":begin");
+        timestamps.push_back(timestamp_ns);
+        return core::Status::success();
+    }
+
+    core::Status on_stage_end(std::size_t cycle_id,
+                              runtime::FrameTraceStage stage,
+                              std::uint64_t timestamp_ns) override {
+        events.push_back(std::to_string(cycle_id) + ":" +
+                         runtime::frame_trace_stage_name(stage) + ":end");
+        timestamps.push_back(timestamp_ns);
+        return core::Status::success();
+    }
+
+    std::vector<std::string> events;
+    std::vector<std::uint64_t> timestamps;
 };
 
 bool tensor_info_equal(const core::TensorInfo& left, const core::TensorInfo& right) {
@@ -400,6 +426,62 @@ void test_injected_tensor_failure(TestContext& context) {
                    "injected invalid TensorInfo", "failure must stop before engine and preserve summary");
 }
 
+void test_trace_observer_and_recorder(TestContext& context) {
+    FakeSource source({success_step(image(0, "frame.jpg"))});
+    preprocess::Preprocessor preprocessor;
+    const core::TensorInfo input_info = valid_input_info();
+    FakeEngine engine;
+    postprocess::PostProcessor postprocessor;
+    RecordingSink sink;
+    TraceOrderObserver observer;
+    runtime::SerialRunner runner(source,
+                                 preprocessor,
+                                 input_info,
+                                 engine,
+                                 postprocessor,
+                                 sink,
+                                 &observer);
+    runtime::RunSummary summary;
+    const core::Status run_status = runner.run(metadata(), &summary);
+    context.expect(run_status.ok(), "trace observer runner", run_status.message());
+    context.expect(observer.events == std::vector<std::string>{
+                       "0:source:begin", "0:source:end",
+                       "0:preprocess:begin", "0:preprocess:end",
+                       "0:inference:begin", "0:inference:end",
+                       "0:postprocess:begin", "0:postprocess:end",
+                       "0:sink:begin", "0:sink:end",
+                       "1:source:begin", "1:source:end"},
+                   "trace callback order",
+                   "stage callback order changed");
+    for (std::size_t index = 1; index < observer.timestamps.size(); ++index) {
+        context.expect(observer.timestamps[index] >= observer.timestamps[index - 1],
+                       "trace timestamp monotonicity",
+                       "callback timestamps must be non-decreasing");
+    }
+
+    std::ostringstream output;
+    runtime::TraceRecorder recorder(output);
+    context.expect(recorder.on_stage_begin(4, runtime::FrameTraceStage::kSource, 100).ok(),
+                   "trace recorder begin", "begin must succeed");
+    context.expect(recorder.on_stage_end(4, runtime::FrameTraceStage::kSource, 175).ok(),
+                   "trace recorder end", "end must succeed");
+    context.expect(recorder.on_stage_begin(4, runtime::FrameTraceStage::kPreprocess, 175).ok(),
+                   "trace recorder second begin", "second begin must succeed");
+    context.expect(recorder.on_stage_end(4, runtime::FrameTraceStage::kPreprocess, 225).ok(),
+                   "trace recorder second end", "second end must succeed");
+    context.expect(output.str() ==
+                       "{\"cycle_id\":4,\"stage\":\"source\",\"start_ns\":100,\"end_ns\":175,\"duration_ns\":75}\n"
+                       "{\"cycle_id\":4,\"stage\":\"preprocess\",\"start_ns\":175,\"end_ns\":225,\"duration_ns\":50}\n",
+                   "trace recorder stable output",
+                   "JSON Lines output changed");
+
+    std::ostringstream empty_output;
+    runtime::TraceRecorder empty_recorder(empty_output);
+    context.expect(empty_recorder.flush().ok() && empty_output.str().empty(),
+                   "empty trace",
+                   "empty trace must flush without output");
+}
+
 }  // namespace
 
 int main() {
@@ -410,6 +492,7 @@ int main() {
     test_zero_detection_frame(context);
     test_fail_fast(context);
     test_injected_tensor_failure(context);
+    test_trace_observer_and_recorder(context);
     if (context.failures() != 0) {
         std::cerr << context.failures() << " SerialRunner test(s) failed\n";
         return 1;
