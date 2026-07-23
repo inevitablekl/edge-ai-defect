@@ -896,3 +896,13 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - Local attempt：`j2.4_rpath_smoke_v1`；manifest SHA256：`3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03`。Published Evidence：`j2_rpath_smoke_v1`。
 - J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
 - Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。
+
+### Stage J J2.5 J2 Evidence gate
+
+- J2.5：`COMPLETE`；J2 Evidence chain J2.2 formal v2、D045、J2.3 和 J2.4：`PASS`。
+- ORT：`1.23.2` / `v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`；canonical source aggregate：`c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`。
+- Formal attempt manifest：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`；SDK main library：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- J2.3 Evidence：`j2_sdk_v1`；J2.4 Evidence：`j2_rpath_smoke_v1`；J2.5 Evidence：`j2_evidence_gate_v1`。
+- J2.4 GPU discovery warning 分类：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；runtime exit 0、CPU provider PASS、无缺失动态库或 GPU EP 初始化。
+- J2 最终范围：formal aarch64 CPU SDK build、package、manifest 和无 `LD_LIBRARY_PATH` runtime/RPATH smoke；不包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 benchmark。
+- J2：`COMPLETE`；J3.1：`READY`；J3：尚未开始；J3.0：`NOT_DEFINED`。Next authorized task：`J3.1 — aarch64 build and CMake portability`。

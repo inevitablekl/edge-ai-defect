@@ -1,0 +1,15 @@
+J2.5 J2 Evidence gate Published Evidence command record
+
+001 repository gate: verify expected branch, HEAD, subject, clean worktree and frozen asset hashes
+002 lineage gate: verify D044, formal v2, D045, J2.3 and J2.4 commits are ancestors
+003 J2.2 gate: verify immutable formal attempt file set, manifest, source/build/install facts and D045 reconciliation
+004 J2.3 gate: verify SDK manifests, symlinks, library SHA, payload tracking and j2_sdk_v1 manifest
+005 J2.4 gate: verify local attempt, runtime/provider facts, warning classification and j2_rpath_smoke_v1 manifest
+006 history gate: index J2.0/J2.1 historical records without creating pseudo-attempts
+007 privacy gate: parse JSON, scan prohibited values/paths, inspect tracked payload and calculate Evidence size
+008 J2.5 attempt close: verify exact local file set and sha256sum manifest
+009 Published Evidence: write sanitized README, provenance, index, verification report, limitations and command record
+010 Published Evidence manifest: generate root-relative UTF-8 ordered sha256sums excluding itself and verify 6 of 6
+
+Commands are for this J2.5 audit only. No J2.2, J2.3, J2.4, build, runtime,
+CTest, inference, benchmark or J3 command is represented as a J2.5 command.

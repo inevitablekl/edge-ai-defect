@@ -2377,3 +2377,12 @@ NEU-DET
 - Local attempt `j2.4_rpath_smoke_v1`：9/9 manifest PASS；Published Evidence：6/6 manifest PASS；binary 未进入 Git，SDK payload 未被跟踪。
 - J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
 - Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。
+
+### Stage J J2.5 J2 Evidence gate
+
+- J2.5：`COMPLETE`；Evidence ID：`j2_evidence_gate_v1`。
+- J2.2 formal v2、D045 reconciliation、J2.3 SDK Evidence 和 J2.4 RPATH/runtime Evidence chain：`PASS`。
+- GPU discovery warning：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；未改变 runtime exit、ORT version、CPU provider 或动态库解析结果。
+- J2：`COMPLETE`；J3.1：`READY`；J3 尚未执行；J3.0：`NOT_DEFINED`。
+- J2 未包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 performance benchmark。
+- Next authorized task：`J3.1 — aarch64 build and CMake portability`；J3.1 未执行。

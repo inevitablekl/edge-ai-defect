@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_evidence_gate_v1",
+  "items": [
+    {
+      "task": "J2.0",
+      "status": "HISTORICAL_PLANNING_RECORD",
+      "commit": "56d0c9ba7dfc50ff02fa9e481ae3a1026357df0c",
+      "evidence_or_attempt_id": "not_applicable",
+      "manifest_sha256": "not_applicable",
+      "role": "historical build-interface discovery",
+      "superseded_or_replaced_by": "J2.2 formal build facts"
+    },
+    {
+      "task": "J2.1",
+      "status": "HISTORICAL_FEASIBILITY_RECORD",
+      "commit": "7a41a91c5d45150f55aa866b5c0fd35a24018536",
+      "evidence_or_attempt_id": "not_applicable",
+      "manifest_sha256": "not_applicable",
+      "role": "historical development feasibility probe",
+      "superseded_or_replaced_by": "J2.2 formal build facts"
+    },
+    {
+      "task": "J2.2",
+      "status": "BLOCKED",
+      "commit": "26c72c63d9466899c53bd5edaeb232d0f002fcf0",
+      "evidence_or_attempt_id": "j2.2_formal_clean_v1",
+      "manifest_sha256": "53ae2faa506f4a71547702454bb928518e91a0bfb74f9b2b92e38223ae88712f",
+      "role": "retained failed formal remediation attempt",
+      "superseded_or_replaced_by": "j2.2_formal_clean_v2"
+    },
+    {
+      "task": "J2.2",
+      "status": "PASS",
+      "commit": "5713615ec2ae9ccddabe9d732996e9a2116edd8a",
+      "evidence_or_attempt_id": "j2.2_formal_clean_v2",
+      "manifest_sha256": "a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32",
+      "role": "formal Release shared CPU-only build and install",
+      "superseded_or_replaces": "j2.2_formal_clean_v1 formal authority"
+    },
+    {
+      "task": "D045",
+      "status": "PASS",
+      "commit": "0218d9ddf20abc61442b7e2783d7a9c52993ba82",
+      "evidence_or_attempt_id": "J2_2_V2_EVIDENCE_RECONCILIATION",
+      "manifest_sha256": "7111a390edf768f8a34da640ae3660db7f31c6da39b2d23ef98a437ee12fb530",
+      "role": "accepted non-build evidence reconciliation",
+      "superseded_or_replaces": "historical aggregate as future authority only"
+    },
+    {
+      "task": "J2.3",
+      "status": "PASS",
+      "commit": "5079484d729ad6bf8229835d7d702460dcfa49ad",
+      "evidence_or_attempt_id": "j2_sdk_v1",
+      "manifest_sha256": "3f00308ebe9feca86781b2e3e0dec04390c592b3b3c6a7ae3d1004d66c278532",
+      "role": "formal SDK packaging and manifest",
+      "superseded_or_replaces": "none"
+    },
+    {
+      "task": "J2.4",
+      "status": "PASS",
+      "commit": "aa1e44e1d3566c66820d5d4380646c9c5c92aa8a",
+      "evidence_or_attempt_id": "j2.4_rpath_smoke_v1",
+      "manifest_sha256": "3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03",
+      "role": "local RPATH/runtime smoke attempt",
+      "superseded_or_replaces": "none"
+    },
+    {
+      "task": "J2.4",
+      "status": "PASS",
+      "commit": "aa1e44e1d3566c66820d5d4380646c9c5c92aa8a",
+      "evidence_or_attempt_id": "j2_rpath_smoke_v1",
+      "manifest_sha256": "c7aca30577ccf01308bb869742d81cb3e4d924a6ac07293e471651bbec556cfa",
+      "role": "sanitized Published Evidence",
+      "superseded_or_replaces": "none"
+    }
+  ]
+}

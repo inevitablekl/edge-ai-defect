@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_evidence_gate_v1",
+  "task_id": "J2.5",
+  "repository_source_commit": "aa1e44e1d3566c66820d5d4380646c9c5c92aa8a",
+  "contract_decisions": {
+    "D044": "Accepted",
+    "D045": "Accepted"
+  },
+  "ort": {
+    "version": "1.23.2",
+    "tag": "v1.23.2",
+    "commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278"
+  },
+  "canonical_source_aggregate_sha256": "c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c",
+  "formal_j2_2": {
+    "attempt_id": "j2.2_formal_clean_v2",
+    "manifest_sha256": "a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32"
+  },
+  "j2_3": {
+    "commit": "5079484d729ad6bf8229835d7d702460dcfa49ad",
+    "evidence_id": "j2_sdk_v1",
+    "manifest_sha256": "3f00308ebe9feca86781b2e3e0dec04390c592b3b3c6a7ae3d1004d66c278532",
+    "build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+    "main_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740"
+  },
+  "j2_4": {
+    "commit": "aa1e44e1d3566c66820d5d4380646c9c5c92aa8a",
+    "evidence_id": "j2_rpath_smoke_v1",
+    "manifest_sha256": "c7aca30577ccf01308bb869742d81cb3e4d924a6ac07293e471651bbec556cfa",
+    "local_attempt_id": "j2.4_rpath_smoke_v1",
+    "local_attempt_manifest_sha256": "3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03"
+  },
+  "j2_5": {
+    "local_attempt_id": "j2.5_evidence_gate_v1",
+    "local_attempt_manifest_sha256": "925d7f6618ee6a3e0d93fe0d20d822dc51e9bd71e8bbbfe6a0e18bf4dfd3a24e"
+  },
+  "privacy_status": "PASS"
+}
