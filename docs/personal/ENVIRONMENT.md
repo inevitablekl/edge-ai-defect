@@ -922,3 +922,6 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - OpenCV `4.5.4` policy：RuntimeConfig v2 `opencv_num_threads=1` 显式映射到 `cv::setNumThreads(1)`，readback applied=`1`，policy active：`true`；未使用环境变量覆盖。
 - J3.5：`COMPLETE`；source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`；Published Evidence：`j3_5_trace_observer_v1`。
 - Trace format：deterministic JSON Lines；stages：source/preprocess/inference/postprocess/sink；clock：`steady_clock` ns；recorder only retains one active stage and flushes per completed record by default。
+- J3.6：`COMPLETE`；source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；Published Evidence：`j3_6_portable_control_v1`。
+- Portable control：`PortableControlSession::start` 完成 RuntimeConfig v2 加载/验证、ORT/OpenCV record 固定记录、executable/config/model/evidence/trace 路径记录；无环境变量覆盖。
+- J3.6 formal native aarch64 Release build、`runtime_config` 和 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。

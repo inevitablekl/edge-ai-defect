@@ -1,0 +1,3 @@
+configure: cmake -S . -B <new-formal-build> -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DOpenCV_DIR=<system-opencv4-cmake-dir> -DONNXRUNTIME_ROOT=<onnxruntime-1.23.2-linux-aarch64>
+build: cmake --build <new-formal-build> --target edge_ai_infer test_runtime_config test_serial_runner -j2
+test: ctest --test-dir <new-formal-build> -R '^(runtime_config|serial_runner)$' --output-on-failure

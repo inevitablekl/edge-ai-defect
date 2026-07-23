@@ -2412,3 +2412,8 @@ NEU-DET
 - 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2；未修改 inference algorithm。
 - J3.6：`READY`；J3：`IN PROGRESS`；J3.5 未扩大到 portable control utilities。
 - Next authorized task：`J3.6 — Portable control utilities`；J3.6 未执行。
+- J3.6：`COMPLETE`；source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；Published Evidence：`j3_6_portable_control_v1`。
+- `PortableControlSession`、参数/路径校验、evidence/trace 输出目录策略、固定 control record、环境信息入口和 no-overwrite 行为：`PASS`。
+- formal native aarch64 Release build、`runtime_config` 与 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+- J3.7：`READY`；J3：`IN PROGRESS`；J3.6 未扩大到 historical v1 regression。
+- Next authorized task：`J3.7 — Historical v1 regression`；J3.7 未执行。

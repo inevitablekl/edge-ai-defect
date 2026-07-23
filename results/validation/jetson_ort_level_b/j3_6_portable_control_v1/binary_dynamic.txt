@@ -1,0 +1,5 @@
+Formal binaries were built natively for aarch64 with the system OpenCV 4.5.4,
+yaml-cpp 0.7.0, OpenSSL 3.0.2 and ONNX Runtime 1.23.2 linux-aarch64 SDK.
+
+The evidence verifies compilation and focused tests only. The application was
+not launched, so no model load or inference result is claimed.
