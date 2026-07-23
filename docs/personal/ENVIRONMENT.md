@@ -864,3 +864,13 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - SDK manifest `sha256sums.txt` SHA256：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
 - CMake cache verification：`CMAKE_BUILD_TYPE=Release`、shared library `ON`；CUDA/CUDA interface/TensorRT/TensorRT interface `OFF`；no CUDA or TensorRT runtime dependency in `libonnxruntime.so.1.23.2`。
 - System tests, benchmark, inference and J3 were not executed. The first CMake 3.22 attempt stopped at the minimum-version check before compilation; it was retained as external failure evidence only。
+
+## 21. Stage J J2.2 Formal Clean Build Remediation v2
+
+- D044：`Accepted`；historical development build：`SUPERSEDED` as formal Evidence authority；`j2.2_formal_clean_v1`：`BLOCKED` and retained immutable。
+- Formal attempt `j2.2_formal_clean_v2`：`PASS`；ORT source tag/commit：`v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- Build：native AArch64、Release、shared library、CPU-only，external CMake `3.28.6`，parallel `4`，elapsed `3883 s`，formal build exit `0`；independent install exit `0`。
+- SDK validation：public headers、`libonnxruntime.so` symlink chain、AArch64 ELF64、SONAME、NEEDED、ldd、CMake package relocatability 均 `PASS`；主库 SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- 未执行 SDK binary、CTest、inference、benchmark 或 RPATH smoke；未启用 CUDA/TensorRT/cuDNN；未修改系统 CMake、`/usr/local` 或生产源码。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 尚未执行。

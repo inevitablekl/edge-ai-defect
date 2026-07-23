@@ -2333,3 +2333,13 @@ NEU-DET
 - J3.0：`NOT_DEFINED`；历史记录保留，不作为当前 live status。
 - Next authorized operation：`J2.2 Formal clean build remediation attempt v1`。
 - 本次仅冻结 planning contract；未执行 ORT clone、build、SDK packaging、J2.3、J2.4、J2.5、J3、test 或 inference。
+
+### 2026-07-23 - Stage J D044 J2.2 Formal Clean Build Remediation v2
+
+- D044：`Accepted`；v1 attempt `j2.2_formal_clean_v1` 的 `BLOCKED` 状态保留且 evidence 未修改；historical development build 标记为 `SUPERSEDED`，不作为 formal Evidence authority。
+- v2 formal attempt：`j2.2_formal_clean_v2`，结果 `PASS`；ORT `v1.23.2` source commit：`a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- Formal build：native AArch64、Release、shared library、CPU-only、external CMake `3.28.6`、parallel `4`，exit code `0`；independent install exit code `0`。
+- SDK/artifact Gate：headers、library、symlink/targets、AArch64/ELF64、SONAME、NEEDED、ldd、CMake package relocatability 和 local manifest 全部 `PASS`；attempt final manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- 本次未执行 CTest、SDK binary、inference、benchmark、RPATH smoke、J2.3、J2.4、J2.5 或 J3；未修改生产源码、系统 CMake 或 `/usr/local`。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。
