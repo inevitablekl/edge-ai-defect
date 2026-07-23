@@ -1,5 +1,6 @@
 #include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
 #include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
+#include "edge_ai_defect/runtime/portable_control.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 
 #include <opencv2/core.hpp>
@@ -478,6 +479,137 @@ void test_opencv_thread_policy(TestContext& context) {
     cv::setNumThreads(previous_threads);
 }
 
+void test_portable_control(TestContext& context, const Options& options) {
+    const std::filesystem::path config_path =
+        options.temp_dir / "portable_control" / "runtime_v2.yaml";
+    const std::filesystem::path evidence_directory =
+        options.temp_dir / "portable_control" / "evidence";
+    std::error_code error;
+    std::filesystem::create_directories(config_path.parent_path(), error);
+    context.expect(!error,
+                   "portable control setup",
+                   "could not create config directory");
+    context.expect(write_text_file(config_path, valid_yaml_v2()),
+                   "portable control setup",
+                   "could not write YAML");
+
+    runtime::PortableControlOptions control_options;
+    control_options.executable_path = "/bin/true";
+    control_options.config_path = config_path;
+    control_options.evidence_directory = evidence_directory;
+
+    std::unique_ptr<const runtime::PortableControlSession> session;
+    const core::Status start_status =
+        runtime::PortableControlSession::start(control_options, &session);
+    context.expect(start_status.ok(),
+                   "portable control startup",
+                   start_status.message());
+    if (!start_status.ok()) {
+        return;
+    }
+
+    const std::filesystem::path expected_config_path =
+        std::filesystem::absolute(config_path).lexically_normal();
+    const std::filesystem::path expected_evidence_directory =
+        std::filesystem::absolute(evidence_directory).lexically_normal();
+    context.expect(session->config_path() == expected_config_path,
+                   "portable control config path",
+                   "config path normalization mismatch");
+    context.expect(session->evidence_directory() == expected_evidence_directory,
+                   "portable control evidence path",
+                   "evidence directory normalization mismatch");
+    context.expect(session->trace_output_path() ==
+                       expected_evidence_directory / "trace.jsonl",
+                   "portable control trace path",
+                   "default trace path mismatch");
+    context.expect(session->config().schema_version == 2U &&
+                       session->config().model_path == options.temp_dir / "models/frozen.onnx",
+                   "portable control config record",
+                   "loaded model/config values mismatch");
+    context.expect(session->ort_options().canonical_json().find(
+                       "\"backend_type\":\"onnxruntime_cpu\"") !=
+                       std::string::npos,
+                   "portable control ORT record",
+                   "ORT record is not included");
+    context.expect(session->opencv_thread_policy().policy_active(),
+                   "portable control OpenCV record",
+                   "OpenCV policy is not active");
+
+    const std::string first_record = session->canonical_json();
+    context.expect(first_record == session->canonical_json(),
+                   "portable control deterministic record",
+                   "canonical record is not stable");
+    context.expect(first_record.find("\"executable_path\":\"") != std::string::npos &&
+                       first_record.find("\"config_path\":\"") != std::string::npos &&
+                       first_record.find("\"model_path\":\"") != std::string::npos &&
+                       first_record.find("\"ort_options\":") != std::string::npos &&
+                       first_record.find("\"opencv_thread_policy\":") != std::string::npos &&
+                       first_record.find("\"trace_output_path\":\"") != std::string::npos,
+                   "portable control fixed record",
+                   "required control fields are missing");
+
+    const core::Status write_status = session->write_evidence_record();
+    context.expect(write_status.ok(),
+                   "portable control evidence write",
+                   write_status.message());
+    if (write_status.ok()) {
+        std::ifstream input(session->evidence_record_path());
+        std::string written_record;
+        std::getline(input, written_record);
+        context.expect(written_record == first_record,
+                       "portable control evidence content",
+                       "written evidence differs from canonical record");
+    context.expect(!session->write_evidence_record().ok(),
+                       "portable control no overwrite",
+                       "existing evidence must not be overwritten by default");
+    }
+
+    runtime::PortableControlOptions explicit_trace = control_options;
+    explicit_trace.evidence_directory =
+        options.temp_dir / "portable_control" / "explicit_evidence";
+    explicit_trace.trace_output_path = "nested/trace.jsonl";
+    std::unique_ptr<const runtime::PortableControlSession> explicit_session;
+    const core::Status explicit_status =
+        runtime::PortableControlSession::start(explicit_trace, &explicit_session);
+    context.expect(explicit_status.ok(),
+                   "portable control explicit trace path",
+                   explicit_status.message());
+    if (explicit_status.ok()) {
+        const std::filesystem::path expected_explicit_trace =
+            std::filesystem::absolute(explicit_trace.evidence_directory)
+                .lexically_normal() /
+            "nested/trace.jsonl";
+        context.expect(explicit_session->trace_output_path() ==
+                           expected_explicit_trace,
+                       "portable control explicit trace path",
+                       "relative trace path normalization mismatch");
+        context.expect(std::filesystem::is_directory(
+                           explicit_session->trace_output_path().parent_path()),
+                       "portable control explicit trace path",
+                       "trace parent directory was not prepared");
+    }
+
+    runtime::PortableControlOptions invalid = control_options;
+    invalid.config_path = options.temp_dir / "missing-runtime.yaml";
+    std::unique_ptr<const runtime::PortableControlSession> rejected;
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control missing config",
+                   "missing config must fail");
+    invalid = control_options;
+    invalid.executable_path = options.temp_dir / "not-an-executable";
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control invalid executable",
+                   "invalid executable path must fail");
+    invalid = control_options;
+    invalid.evidence_directory = options.temp_dir / "evidence-file";
+    context.expect(write_text_file(invalid.evidence_directory, "not-a-directory"),
+                   "portable control invalid output setup",
+                   "could not create invalid output sentinel");
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control invalid evidence path",
+                   "file path must not be accepted as evidence directory");
+}
+
 void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
@@ -609,6 +741,7 @@ int main(int argc, char* argv[]) {
     test_v2_config_and_isolation(context, options);
     test_ort_options_record(context);
     test_opencv_thread_policy(context);
+    test_portable_control(context, options);
     test_schema_failures(context, options);
     test_loader_argument_failures(context, options);
 
