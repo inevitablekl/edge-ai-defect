@@ -2407,3 +2407,8 @@ NEU-DET
 - 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
 - J3.5：`READY`；J3：`IN PROGRESS`；J3.4 未扩大到 trace observer。
 - Next authorized task：`J3.5 — Trace observer and recorder`；J3.5 未执行。
+- J3.5：`COMPLETE`；source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`；Published Evidence：`j3_5_trace_observer_v1`。
+- `IFrameTraceObserver`、`TraceRecorder`、SerialRunner stage callbacks、JSONL stable ordering、monotonic timestamp、empty trace and flush policy tests：`PASS`。
+- 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2；未修改 inference algorithm。
+- J3.6：`READY`；J3：`IN PROGRESS`；J3.5 未扩大到 portable control utilities。
+- Next authorized task：`J3.6 — Portable control utilities`；J3.6 未执行。

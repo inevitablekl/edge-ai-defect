@@ -920,3 +920,5 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - `OrtOptionsRecord` records RuntimeConfig v2 schema/backend, execution mode, graph optimization, thread, spinning, CPU arena and memory-pattern values with stable canonical output；未执行模型加载或 inference。
 - J3.4：`COMPLETE`；source commit：`05e2d4c47e7a95bf3f8796ef501d12e27b618082`；Published Evidence：`j3_4_opencv_thread_policy_v1`。
 - OpenCV `4.5.4` policy：RuntimeConfig v2 `opencv_num_threads=1` 显式映射到 `cv::setNumThreads(1)`，readback applied=`1`，policy active：`true`；未使用环境变量覆盖。
+- J3.5：`COMPLETE`；source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`；Published Evidence：`j3_5_trace_observer_v1`。
+- Trace format：deterministic JSON Lines；stages：source/preprocess/inference/postprocess/sink；clock：`steady_clock` ns；recorder only retains one active stage and flushes per completed record by default。

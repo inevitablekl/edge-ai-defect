@@ -1,0 +1,22 @@
+{
+  "task": "J3.5",
+  "result": "PASS",
+  "configure_exit": 0,
+  "build_exit": 0,
+  "runtime_config_ctest_exit": 0,
+  "serial_runner_ctest_exit": 0,
+  "architecture": "aarch64",
+  "cxx_standard": "C++17",
+  "observer": "optional IFrameTraceObserver at SerialRunner stage boundaries",
+  "recorder": "bounded one-active-stage JSON Lines writer",
+  "test_coverage": [
+    "observer callback order",
+    "non-decreasing monotonic timestamps",
+    "stable JSON Lines output",
+    "empty trace flush"
+  ],
+  "stage_order": ["source", "preprocess", "inference", "postprocess", "sink"],
+  "algorithm_semantics": "unchanged",
+  "excluded_operations": ["inference", "benchmark", "camera", "TensorRT", "CUDA", "ROS2"],
+  "result_scope": "J3.5 only"
+}

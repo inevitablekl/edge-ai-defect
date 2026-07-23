@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_5_trace_observer_v1",
+  "task_id": "J3.5",
+  "repository_source_commit": "9b14631a773518b9eea73d875af1e46b4e3a0b9e",
+  "j3_4_commit": "05e2d4c47e7a95bf3f8796ef501d12e27b618082",
+  "trace_format": "JSON Lines",
+  "trace_stages": ["source", "preprocess", "inference", "postprocess", "sink"],
+  "timestamp_clock": "std::chrono::steady_clock nanoseconds",
+  "flush_policy": "flush each completed record by default; explicit flush available",
+  "unbounded_cache": false,
+  "local_attempt_id": "j3.5_trace_observer_v1",
+  "local_attempt_manifest_sha256": "fcd0c8a1c9a24fcfc2b4e119484b4553359ddbe37b32d694e7489c5908d4c72d",
+  "compiler": "GCC/G++ 11.4.0",
+  "system_cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "ort_version": "1.23.2",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}
