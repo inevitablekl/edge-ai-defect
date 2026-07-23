@@ -2515,3 +2515,241 @@ must preserve the distinction between local raw evidence and derived tracked
 evidence, and must remain blocked if any required artifact or schema validation
 is unavailable. J1.5 remains a separate gate; J1 and Stage J are not completed
 by this Decision alone.
+
+### D044 - Freeze J2 Formal Build Remediation and SDK Packaging Contract
+
+时间：2026-07-23T19:30:42+08:00
+
+状态：`Accepted`
+
+D044 only completes the execution, artifact, provenance and evidence contract
+for the existing J2.2 formal build remediation and J2.3 SDK packaging work. It
+does not change the Stage J scope, ORT version, CPU-only contract, J2 task
+numbering, J2.4 RPATH Gate, J2.5 Evidence Gate or J3 task boundary. J3.0 is not
+a task in the frozen sequence.
+
+#### Historical J2.2 attempt disposition
+
+The existing external SDK is technically valid for the facts already audited:
+the main and providers-shared library hashes match the recorded values, the
+payload is AArch64 ELF64, the SONAME and symlink chain are valid, CUDA/TensorRT
+dependencies are absent, and the CMake package uses `_IMPORT_PREFIX`.
+
+The existing external build and SDK artifacts, failed-build directory and raw
+logs must not be deleted, modified or overwritten. The historical successful
+build is classified as:
+
+`development_build_valid_artifact_not_formal_published_evidence`
+
+The historical attempt cannot independently satisfy the complete frozen J2.2
+provenance Gate because the source tree is no longer available for independent
+verification, the successful build has no independent exit-code record and the
+local attempt/staging manifest is incomplete. This disposition does not mean
+that the SDK is corrupt or that the historical technical build failed.
+
+The historical J2.2 attempt disposition is `SUPERSEDED`. `SUPERSEDED` means it
+is not the sole authoritative source for future formal J2.2 Published Evidence;
+it does not invalidate its already observed technical artifact facts.
+
+#### Frozen J2 status correction
+
+- J2.2: `IN_PROGRESS` pending formal remediation PASS.
+- J2.3: `BLOCKED` pending formal J2.2 remediation PASS.
+- J2.4: `PENDING`.
+- J2.5: `PENDING`.
+- J2 overall: `IN PROGRESS`.
+- J3: `BLOCKED_BY_J2.5`.
+- J3.0: `NOT_DEFINED`.
+
+Historical status entries are retained for audit history and are not silently
+rewritten. The live status is corrected by the current task record.
+
+#### J2 local attempt contract
+
+The repository-external local attempt root is:
+
+`/home/orin/edge-ai-local-evidence/stage_j/j2_attempts/`
+
+Each attempt uses an immutable, non-overwriting directory named
+`<task_id>_<semantic_name>_v<integer>`. The first formal remediation attempt is
+`j2.2_formal_clean_v1`. A failed attempt is retained intact and the next attempt
+increments the version; no attempt directory may be reused or overwritten.
+
+Each formal attempt must contain exactly these required files:
+
+```text
+README.txt
+commands.txt
+stdout.log
+stderr.log
+exit_codes.tsv
+timestamps.tsv
+environment.txt
+source_provenance.txt
+build_configuration.txt
+artifact_inventory.txt
+sha256sums.txt
+```
+
+`tegrastats.log` is optional and may exist only when telemetry is actually
+collected. Command logs must record executed commands in order and must never
+present planned commands as executed commands. stdout/stderr must preserve raw
+command boundaries without post-hoc deletion or concatenation across attempts.
+
+`exit_codes.tsv` uses the fixed columns `sequence`, `command_id` and
+`exit_code`, and records source acquisition, source verification, submodule
+preparation, configure/build, install/staging, artifact verification and local
+manifest verification. `timestamps.tsv` uses `event`, `iso8601_local` and
+`monotonic_ns`, and records attempt start, source ready, build start/end,
+install start/end, verification end and attempt end.
+
+The remaining attempt files record, respectively, the attempt identity and
+disposition; execution environment; official source URL, exact tag/commit,
+VERSION_NUMBER, clean status, submodules and source inventory; the exact
+build.sh command and CPU-only cache/flag facts; and the complete artifact,
+ELF, dependency, header, package, license and notice inventory.
+
+The attempt-local `sha256sums.txt` excludes itself, uses attempt-root-relative
+paths, UTF-8 byte-order sorting, two spaces between hash and path, LF line
+endings, and covers every regular file. Symlinks are recorded separately in
+`artifact_inventory.txt`. `sha256sum -c` must pass for every entry.
+
+#### J2.2 formal remediation paths
+
+The first formal remediation uses new, previously nonexistent roots and does
+not reuse or remove historical artifacts:
+
+```text
+Source: /home/orin/edge-ai-local-build/j2.2-formal-v1/source/
+Build: /home/orin/edge-ai-local-build/j2.2-formal-v1/build/
+Installed SDK: /home/orin/edge-ai-local-build/j2.2-formal-v1/sdk/
+Local attempt: /home/orin/edge-ai-local-evidence/stage_j/j2_attempts/j2.2_formal_clean_v1/
+```
+
+The source must come from the official ONNX Runtime repository, tag `v1.23.2`,
+commit `a83fc4d58cb48eb68890dd689f94f28288cf2278`, with a clean tree, complete
+recursive submodules and `VERSION_NUMBER=1.23.2`.
+
+#### J2.2 formal build contract
+
+The formal build is native AArch64, Release, shared-library, CPU
+ExecutionProvider, upstream tests skipped and parallelism four. It uses the
+external CMake 3.28.6 binary at
+`/home/orin/edge-ai-local-build/cmake-3.28/bin/cmake`; the archive SHA256 must
+be `7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7`.
+
+Before execution, the actual v1.23.2 `build.sh --help` output must be checked.
+The planned command semantics are exactly:
+
+```text
+./build.sh --build_dir <fixed-new-build-root> \
+  --cmake_path <external-cmake> --config Release --build_shared_lib \
+  --skip_tests --parallel 4 --update --build
+```
+
+If staging requires a separate install command, it must be recorded with its
+own exit code and must use the successful build/install output rather than
+manually selecting headers. Any actual parameter change stops the formal
+attempt and requires a new decision.
+
+The formal build must not enable CUDA EP, TensorRT EP, XNNPACK, ACL, ArmNN,
+OpenMP, minimal build, reduced operator configuration, training, custom ops,
+LTO or manual `-march=native`.
+
+#### J2.3 local SDK contract
+
+The final Stage J local SDK logical root is:
+
+```text
+third_party/onnxruntime/1.23.2/linux-aarch64/
+```
+
+The complete payload remains local-only and must not enter Git. The required
+logical structure is:
+
+```text
+include/
+lib/
+BUILD_MANIFEST.json
+HEADER_SHA256SUMS.txt
+FILE_SHA256SUMS.txt
+LICENSE
+THIRD_PARTY_NOTICES
+README.md
+```
+
+The include/lib payload, including real symlinks, must come entirely from one
+formal J2.2 PASS SDK. Failed-build artifacts and mixed SDK attempts are
+prohibited. J2.3 may track only the metadata, license/notice and README files;
+its controlled `.gitignore` update must prevent `.so` files and complete SDK
+headers from entering Git.
+
+`BUILD_MANIFEST.json` uses schema version 1 and records the artifact kind
+`onnxruntime_aarch64_cpu_sdk`, status `complete`, ORT 1.23.2, AArch64,
+FP32, CPUExecutionProvider, source/build/toolchain/SDK facts, libraries,
+headers, CMake package, features, license, provenance and limitations. It
+uses logical or repository-relative paths only, distinguishes observed from
+unverified facts, contains no NaN/Infinity or absolute local paths, and never
+uses the historical superseded build as the active artifact source.
+
+`HEADER_SHA256SUMS.txt` covers only regular files under `include/` using SDK
+root-relative paths. `FILE_SHA256SUMS.txt` covers regular include/lib/CMake
+package files plus BUILD_MANIFEST.json, LICENSE, THIRD_PARTY_NOTICES and
+README.md. Each excludes itself, the other manifest and symlinks; both use
+UTF-8 byte-order sorting, LF endings and two spaces between hash and path.
+Symlink path, target and resolved target are recorded in BUILD_MANIFEST.json.
+
+LICENSE and THIRD_PARTY_NOTICES must be obtained from a newly retrieved and
+verified official ORT v1.23.2 source. They must not be reconstructed from
+memory, copied from an unknown web page or substituted with an individual
+dependency license. Source-relative path, source commit, source SHA, copy
+command and destination SHA are recorded.
+
+#### J2.3 Published Evidence contract
+
+The frozen Published Evidence logical root is:
+
+```text
+results/build/onnxruntime_aarch64/j2_sdk_v1/
+```
+
+It contains exactly:
+
+```text
+README.md
+provenance.json
+verification_report.json
+commands.txt
+sha256sums.txt
+```
+
+`provenance.json` and `verification_report.json` use schema version 1. They
+record the evidence/task/contract identity, source and formal attempt
+provenance, all manifest and artifact hashes, historical superseded attempt,
+privacy status, exact file-set and manifest validation, clean source/build
+exit codes, ELF/SONAME/symlink/ldd facts, CPU-only absence of CUDA/TensorRT,
+CMake package relocatability, license/notice validation, tracked size and
+limitations. Absolute local paths are prohibited.
+
+`commands.txt` records only commands actually used for J2.3 packaging,
+copying, manifest generation, validation, privacy scan and Git checks.
+`sha256sums.txt` excludes itself, is root-relative, deterministic, LF-only,
+and must pass `sha256sum -c` for the exact five-file set.
+
+#### Privacy and invalidation
+
+Tracked Published Evidence must not contain home/tmp paths, IP or MAC
+addresses, serials, UUID/PARTUUID values, passwords, tokens, credentials,
+sudoers content, private-key paths or raw output files. Logical labels,
+basenames, versions, booleans, commits and SHA256 values are allowed.
+
+Any change to ORT source/tag/commit, build flags, compiler, external CMake,
+CPU-only configuration, source/build/SDK attempt, public headers, libraries,
+symlinks/SONAME, license/notice source, manifest schema or generation rules
+invalidates formal J2.2/J2.3. Documentation-only changes do not invalidate
+the SDK.
+
+After formal J2.2 remediation PASS: J2.2 becomes COMPLETE and J2.3 becomes
+READY. After J2.3 PASS: J2.3 becomes COMPLETE and J2.4 becomes READY. After
+J2.4 PASS: J2.4 becomes COMPLETE and J2.5 becomes READY. After J2.5 PASS:
+J2 becomes COMPLETE and J3.1 becomes READY.

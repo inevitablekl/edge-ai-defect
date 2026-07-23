@@ -2318,3 +2318,18 @@ NEU-DET
 - External SDK：`/home/orin/edge-ai-local-build/ort-sdk/`，包含 `include/`、`lib/`、`lib/cmake/onnxruntime/`，约 `51M`；SDK SHA256 manifest：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
 - 未执行测试、benchmark、inference、CUDA EP、TensorRT EP 或 GPU build；未修改源码、configs、tests 或 results。
 - Next authorized task：`J3.0 — C++ Project Dependency and Configure Discovery`；不得跳过 J3.0。
+
+### Stage J D044 J2 Formal Build Remediation Contract
+
+- D044 `Freeze J2 Formal Build Remediation and SDK Packaging Contract`：`Accepted`。
+- Existing external SDK is technically valid for the audited ELF, SONAME, symlink, dependency and CMake-package facts, but is not formal Published Evidence.
+- Historical J2.2 attempt disposition：`SUPERSEDED` as formal Evidence authority；this does not classify the SDK as damaged or the technical build as failed。
+- J2.2：`IN_PROGRESS` pending formal clean-build remediation PASS。
+- J2.3：`BLOCKED` pending formal J2.2 remediation PASS。
+- J2.4：`PENDING`。
+- J2.5：`PENDING`。
+- J2 overall：`IN PROGRESS`。
+- J3：`BLOCKED_BY_J2.5`。
+- J3.0：`NOT_DEFINED`；历史记录保留，不作为当前 live status。
+- Next authorized operation：`J2.2 Formal clean build remediation attempt v1`。
+- 本次仅冻结 planning contract；未执行 ORT clone、build、SDK packaging、J2.3、J2.4、J2.5、J3、test 或 inference。
