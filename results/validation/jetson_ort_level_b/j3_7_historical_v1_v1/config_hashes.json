@@ -1,0 +1,21 @@
+{
+  "hash_algorithm": "SHA-256",
+  "fixtures": [
+    {
+      "name": "historical_v1",
+      "sha256": "1108bad00ca2f473dba2d8da237d2309e9a6b88925ba069820e06b9d8a4ea3c9",
+      "parser_result": "PASS"
+    },
+    {
+      "name": "current_v2",
+      "sha256": "a7c4c37d605acaecb966cf9345ac7a14bc8c96184598819fd87c2ac0cdfa2497",
+      "parser_result": "PASS"
+    },
+    {
+      "name": "historical_v1_with_v2_onnxruntime_field",
+      "sha256": "9b73bd280fc9e2c00a71297c74b035ec82021b44aefbbef16f7d02ad921a6781",
+      "parser_result": "FAIL as required: unknown v2 field"
+    }
+  ],
+  "fixture_source": "existing tests/test_runtime_config.cpp valid_yaml and valid_yaml_v2 fixtures"
+}

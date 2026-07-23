@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "dependency_gate": {
+    "runtime_config": "PASS",
+    "serial_runner": "PASS"
+  },
+  "regression": {
+    "test_name": "runtime_config",
+    "passed": 1,
+    "failed": 0,
+    "v1_valid_config": "PASS",
+    "v1_unknown_v2_field": "FAIL as required",
+    "v2_valid_config": "PASS",
+    "effective_options_difference": "PASS; v1 legacy implicit options versus v2 explicit ORT/OpenCV records",
+    "portable_control_v1_startup_compatibility": "PASS; v1 main.cpp path remains separate and unchanged"
+  },
+  "scope_assertions": {
+    "repository_source_changes": false,
+    "test_name_or_inventory_changes": false,
+    "model_contract_changes": false,
+    "preprocess_changes": false,
+    "postprocess_changes": false,
+    "inference_engine_changes": false,
+    "model_loading": false,
+    "inference": false,
+    "benchmark": false,
+    "tensorrt": false,
+    "cuda": false,
+    "ros2": false,
+    "camera": false
+  }
+}

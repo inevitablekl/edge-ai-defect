@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_7_historical_v1_v1",
+  "task_id": "J3.7",
+  "repository_observation_commit": "934972fdb7778aaa9a72cdda875bff12ae75c1ab",
+  "source_commit": null,
+  "j3_6_commit": "934972fdb7778aaa9a72cdda875bff12ae75c1ab",
+  "local_attempt_id": "j3.7_historical_v1_v1",
+  "local_attempt_manifest_sha256": "d24f6fd7a3b41d7ad85a41bdb375e2147d00975849d491247b363d5385c792f4",
+  "architecture": "aarch64",
+  "language_standard": "C++17",
+  "compiler": "GCC/G++ 11.4.0",
+  "cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "yaml_cpp": "0.7.0",
+  "onnxruntime_sdk": "1.23.2 linux-aarch64",
+  "test_registration": "existing runtime_config only; no new test name or inventory change",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}
