@@ -1,0 +1,30 @@
+{
+  "architecture": "aarch64",
+  "language_standard": "C++17",
+  "build_type": "Release with sanitizer instrumentation in independent build",
+  "compile_flags": [
+    "-fsanitize=address",
+    "-fsanitize=undefined",
+    "-fno-omit-frame-pointer"
+  ],
+  "linker_flags": [
+    "-fsanitize=address",
+    "-fsanitize=undefined"
+  ],
+  "asan_options": "detect_leaks=1:halt_on_error=1:print_summary=1",
+  "ubsan_options": "halt_on_error=1:print_stacktrace=1",
+  "compiler": "GCC/G++ 11.4.0",
+  "cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "yaml_cpp": "0.7.0",
+  "onnxruntime_sdk": "1.23.2 linux-aarch64 CPU only",
+  "linked_sanitizers": ["libasan.so.6", "libubsan.so.1"],
+  "linked_runtime_libraries": [
+    "libonnxruntime.so.1",
+    "libopencv_core.so.4.5d",
+    "libopencv_imgproc.so.4.5d",
+    "libopencv_imgcodecs.so.4.5d",
+    "libyaml-cpp.so.0.7",
+    "libtbb.so.2"
+  ]
+}

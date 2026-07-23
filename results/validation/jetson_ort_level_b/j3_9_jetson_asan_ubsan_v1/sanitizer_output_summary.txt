@@ -1,0 +1,9 @@
+stdout summary: configure exit 0; build exit 0; runtime_config failed with
+LeakSanitizer; serial_runner passed; CTest result 1/2.
+
+sanitizer diagnostic: AddressSanitizer: detected memory leaks; direct leak of
+792 byte(s) in 3 object(s); allocation path includes libtbb.so.2 and OpenCV
+cv::setNumThreads(int), entered from PortableControlSession::start.
+
+stderr summary: CTest reported the failed runtime_config test. No UBSan
+diagnostic, segmentation fault or runtime crash was emitted.

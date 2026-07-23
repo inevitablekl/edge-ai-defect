@@ -1,0 +1,39 @@
+{
+  "verdict": "FAIL_STOP",
+  "configure": {"exit_code": 0},
+  "build": {
+    "exit_code": 0,
+    "targets": ["edge_ai_infer", "test_runtime_config", "test_serial_runner"]
+  },
+  "tests": {
+    "filter": "^(runtime_config|serial_runner)$",
+    "passed": 1,
+    "failed": 1,
+    "runtime_config": "FAIL: LeakSanitizer detected 792 bytes leaked in 3 allocations",
+    "serial_runner": "PASS",
+    "ubsan_diagnostic": false,
+    "segmentation_fault": false,
+    "runtime_crash": false
+  },
+  "detected_issue": {
+    "sanitizer": "ASan/LeakSanitizer",
+    "allocation_count": 3,
+    "bytes": 792,
+    "library_chain": "libtbb.so.2 -> OpenCV cv::setNumThreads(int)",
+    "project_entry": "PortableControlSession::start",
+    "interpretation": "system OpenCV/TBB allocation remains live at process exit under leak detection; requires authorized investigation"
+  },
+  "scope": {
+    "model_loading": false,
+    "inference": false,
+    "benchmark": false,
+    "tensorrt": false,
+    "cuda_ep": false,
+    "ros2": false,
+    "camera": false,
+    "source_modification": false,
+    "release_build_modification": false,
+    "ort_sdk_modification": false,
+    "model_asset_modification": false
+  }
+}
