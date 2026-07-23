@@ -1,0 +1,14 @@
+binary_sha256: d08391424b42d0720293cc9b5a07431d33f8b2763296e25912d03e1951a20d40
+elf_type: ELF64 AArch64 PIE executable
+needed:
+  libonnxruntime.so.1
+  libstdc++.so.6
+  libgcc_s.so.1
+  libc.so.6
+  ld-linux-aarch64.so.1
+runpath: third_party/onnxruntime/1.23.2/linux-aarch64/lib
+resolved_ort_logical_path: third_party/onnxruntime/1.23.2/linux-aarch64/lib/libonnxruntime.so.1
+resolved_regular_logical_path: third_party/onnxruntime/1.23.2/linux-aarch64/lib/libonnxruntime.so.1.23.2
+resolved_library_sha256: 6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740
+ld_library_path: absent in child process
+dependency_scan: PASS; no not-found, CUDA, TensorRT or cuDNN

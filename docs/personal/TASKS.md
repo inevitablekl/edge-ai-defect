@@ -2368,3 +2368,12 @@ NEU-DET
 - J2.4：`READY`；J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
 - 本次未执行 J2.4 RPATH smoke；未执行 J2.5、binary/runtime smoke、inference、benchmark、CTest 或 J3。
 - Next authorized task：`J2.4 — RPATH smoke`。
+
+### Stage J J2.4 RPATH smoke
+
+- J2.4：`COMPLETE`；Evidence ID：`j2_rpath_smoke_v1`。
+- `env -u LD_LIBRARY_PATH`：`PASS`；RPATH/RUNPATH 精确解析到 Stage J SDK；runtime version `1.23.2`：`PASS`；`CPUExecutionProvider`：`PASS`。
+- `Ort::Env`、`Ort::SessionOptions` lifecycle：`PASS`；无模型加载、inference、CTest 或 benchmark。
+- Local attempt `j2.4_rpath_smoke_v1`：9/9 manifest PASS；Published Evidence：6/6 manifest PASS；binary 未进入 Git，SDK payload 未被跟踪。
+- J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。

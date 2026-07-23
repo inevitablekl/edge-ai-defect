@@ -886,3 +886,13 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - Published Evidence：`j2_sdk_v1`；Evidence manifest 4/4 PASS；无 payload、`.so`、完整 headers 或绝对私有路径。
 - J2.4 runtime/RPATH smoke：`PENDING`；J2.5 Evidence gate：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
 - 未执行 binary/runtime smoke、inference、benchmark、CTest、J2.4、J2.5 或 J3。Next authorized task：`J2.4 — RPATH smoke`。
+
+### Stage J J2.4 RPATH smoke
+
+- J2.4：`COMPLETE`；使用 formal Stage J aarch64 SDK 完成仓库外最小 consumer configure/build 和基本 ORT runtime smoke。
+- Smoke binary SHA256：`d08391424b42d0720293cc9b5a07431d33f8b2763296e25912d03e1951a20d40`；SDK main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- `RUNPATH` 解析到 logical path：`third_party/onnxruntime/1.23.2/linux-aarch64/lib`；清除 `LD_LIBRARY_PATH` 后精确解析到 Stage J SDK，resolved library SHA PASS。
+- Runtime：ORT `1.23.2`、`CPUExecutionProvider`、`Ort::Env` 和 `Ort::SessionOptions` 均 PASS；未加载模型，未执行 inference、CTest 或 benchmark。
+- Local attempt：`j2.4_rpath_smoke_v1`；manifest SHA256：`3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03`。Published Evidence：`j2_rpath_smoke_v1`。
+- J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。

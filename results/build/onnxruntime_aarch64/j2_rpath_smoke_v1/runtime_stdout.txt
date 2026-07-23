@@ -1,0 +1,7 @@
+ONNX Runtime version: 1.23.2
+Available providers:
+- CPUExecutionProvider
+CPUExecutionProvider: PASS
+Ort::Env creation: PASS
+Ort::SessionOptions creation: PASS
+M0.3 runtime smoke: PASS
