@@ -2829,3 +2829,59 @@ fails validation.
 The D045 contract commit is intentionally a placeholder until the owner
 reviews and records the repository commit. No push, merge, rebase or tag is
 authorized by this decision.
+
+### D046 - Accept third-party OpenCV/TBB Leak Limitation in J3.9 Sanitizer Validation
+
+时间：2026-07-24T01:27:43+08:00
+
+状态：`Accepted`
+
+#### Decision scope
+
+D046 is limited to the J3.9 Jetson ASan/UBSan validation gate. It records the
+formal disposition of the existing sanitizer failure after the independent
+J3.9 remediation investigation. It does not change production source, test
+logic, CMake sanitizer flags, Release build behavior, ORT SDK contents or
+frozen assets.
+
+#### Recorded strict sanitizer result
+
+- ASan: no heap corruption, use-after-free or invalid memory access was
+  observed.
+- UBSan: PASS; no undefined-behavior diagnostic was emitted.
+- LeakSanitizer: detected 792 bytes in 3 allocations during the
+  `runtime_config` test.
+- The original J3.9 configure and build completed successfully; `serial_runner`
+  passed and `runtime_config` failed only on the LeakSanitizer report.
+
+#### Ownership conclusion
+
+The remediation Evidence `j3_9_remediation_investigation_v1` records:
+
+- Scenario A reproduced the leak with the current code and leak detection
+  enabled.
+- Scenario B bypassed only OpenCV thread-policy activation in a diagnostic
+  shim, and the leak disappeared.
+- The allocation stack is below the project boundary in OpenCV/TBB
+  initialization (`cv::setNumThreads(int)` and `libtbb.so.2`).
+- Scenario C disabled leak detection and produced no non-leak ASan/UBSan
+  diagnostic.
+- No project-owned allocation was identified.
+
+The accepted ownership classification is:
+
+`B — third-party OpenCV/TBB initialization leak`
+
+#### Acceptance and limitations
+
+For J3.9 only, the project accepts this third-party initialization leak as a
+documented limitation and does not require strict LeakSanitizer PASS for the
+J3.9 final disposition. ASan and UBSan checks remain required and are not
+weakened. No leak suppression is added, and no production source change is
+authorized or required by this Decision. The existing Release runtime
+validation remains valid.
+
+This acceptance must not affect J4 inference pipeline work, benchmark work,
+TensorRT, CUDA EP, ROS2, camera operation or any later runtime gate. Any
+future change to the OpenCV/TBB runtime, sanitizer policy or J3.9 acceptance
+requires a new Decision.

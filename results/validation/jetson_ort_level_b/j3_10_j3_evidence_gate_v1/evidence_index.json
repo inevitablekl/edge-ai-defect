@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_10_j3_evidence_gate_v1",
+  "task_id": "J3.10",
+  "milestone": "J3",
+  "status": "PASS_WITH_ACCEPTED_THIRD_PARTY_LIMITATION",
+  "j3_status": "COMPLETE",
+  "j4_status": "READY_FOR_SEPARATE_AUTHORIZATION",
+  "j4_started": false,
+  "decision_id": "D046",
+  "decision_status": "Accepted",
+  "evidence_chain": [
+    {
+      "task_id": "J3.1",
+      "evidence_id": "j3_1_aarch64_build_v1",
+      "result": "PASS",
+      "manifest_sha256": "ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5",
+      "local_attempt_manifest_sha256": "368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871"
+    },
+    {
+      "task_id": "J3.2",
+      "evidence_id": "j3_3_ort_options_v1",
+      "result": "PASS; RuntimeConfig v2 evidence carried by J3.3",
+      "manifest_sha256": "ba47352b877011ceda850a82926b1ee0700a59d4fb2135d3ab8127feb65d9d3e",
+      "local_attempt_manifest_sha256": "728b01f66534278098026966ef54f13f7eb6042a31ddeac2e94687d44047d408"
+    },
+    {
+      "task_id": "J3.3",
+      "evidence_id": "j3_3_ort_options_v1",
+      "result": "PASS",
+      "manifest_sha256": "ba47352b877011ceda850a82926b1ee0700a59d4fb2135d3ab8127feb65d9d3e",
+      "local_attempt_manifest_sha256": "728b01f66534278098026966ef54f13f7eb6042a31ddeac2e94687d44047d408"
+    },
+    {
+      "task_id": "J3.4",
+      "evidence_id": "j3_4_opencv_thread_policy_v1",
+      "result": "PASS",
+      "manifest_sha256": "9b320e4c2c1197583b0e8bbeec3a1eafd372c9c35e50bd0cf8f68ecb13295ef8",
+      "local_attempt_manifest_sha256": "9d43e08843627017743723ade6f551dce90b2b5b6e53abfcda0dc252be7a0c64"
+    },
+    {
+      "task_id": "J3.5",
+      "evidence_id": "j3_5_trace_observer_v1",
+      "result": "PASS",
+      "manifest_sha256": "e64a7f2e51806cf7b9ca4cb13df01f40416e11dcbfcfca22675f7aebae9252b7",
+      "local_attempt_manifest_sha256": "fcd0c8a1c9a24fcfc2b4e119484b4553359ddbe37b32d694e7489c5908d4c72d"
+    },
+    {
+      "task_id": "J3.6",
+      "evidence_id": "j3_6_portable_control_v1",
+      "result": "PASS",
+      "manifest_sha256": "38206701f398e5192f1e3586b38c24a888d3701ef25b51b7a6faff86893a4d02",
+      "local_attempt_manifest_sha256": "561390cf6dc245f62358e9d922017b3ff7eccbae354336429e88f220f0e3e508"
+    },
+    {
+      "task_id": "J3.7",
+      "evidence_id": "j3_7_historical_v1_v1",
+      "result": "PASS",
+      "manifest_sha256": "2561302d5bcb47414c561f7c4e87791d3803930e6eb6846892080b8f964c6461",
+      "local_attempt_manifest_sha256": "d24f6fd7a3b41d7ad85a41bdb375e2147d00975849d491247b363d5385c792f4"
+    },
+    {
+      "task_id": "J3.8",
+      "evidence_id": "j3_8_jetson_regression_v1",
+      "result": "PASS",
+      "manifest_sha256": "87f8e1e99068b552b440195f6c4bd21f242767ee2c9a8fd9c80b881f87ed0453",
+      "local_attempt_manifest_sha256": "3d0cf93d264bbc81b6a501cf9f89d16a0aeddf040247a4f741c2e36f4fae38d3"
+    },
+    {
+      "task_id": "J3.9",
+      "evidence_id": "j3_9_jetson_asan_ubsan_v1",
+      "result": "STRICT_FAIL_PRESERVED",
+      "manifest_sha256": "59da77141c5a6d4aad932e5c600c31459e2ae4f81abda16a710c24625241e69e",
+      "local_attempt_manifest_sha256": "69e80b2d92e9b34bfc8c8359358951578eb7ccdf9ebee951f68808b90833ab22"
+    },
+    {
+      "task_id": "J3.9-remediation",
+      "evidence_id": "j3_9_remediation_investigation_v1",
+      "result": "CLASSIFICATION_B_THIRD_PARTY_OPENCV_TBB",
+      "manifest_sha256": "7a57103fcc004048e351652901d2a609072445e1cfd25728eded1df012cc72c2",
+      "local_attempt_manifest_sha256": "0cf508f99d40fdf8589ebe3b5e55acab4ab6eeb26d512281ba96c06b00143396"
+    }
+  ],
+  "preservation": {
+    "original_j3_9_failure_retained": true,
+    "remediation_evidence_retained": true,
+    "failure_evidence_patched": false,
+    "production_source_modified": false,
+    "ort_sdk_modified": false,
+    "cmake_modified": false,
+    "frozen_assets_modified": false
+  }
+}

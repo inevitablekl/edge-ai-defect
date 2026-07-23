@@ -2417,3 +2417,10 @@ NEU-DET
 - formal native aarch64 Release build、`runtime_config` 与 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
 - J3.7：`READY`；J3：`IN PROGRESS`；J3.6 未扩大到 historical v1 regression。
 - Next authorized task：`J3.7 — Historical v1 regression`；J3.7 未执行。
+
+### 2026-07-24T01:27:43+08:00 - Stage J J3.10 Evidence Gate disposition
+
+- D046 `Accept third-party OpenCV/TBB Leak Limitation in J3.9 Sanitizer Validation`：`Accepted`。
+- J3.9：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；strict LeakSanitizer 结果为 792 bytes / 3 allocations，ASan 无 heap corruption/use-after-free/invalid memory access，UBSan PASS；remediation ownership classification 为第三方 OpenCV/TBB 初始化泄漏。
+- J3：`IN PROGRESS`，等待 J3.10 Evidence Gate 完成；J4 未启动。
+- 本记录不修改 production source、test logic、CMake sanitizer flags、Release build、ORT SDK 或 frozen assets。

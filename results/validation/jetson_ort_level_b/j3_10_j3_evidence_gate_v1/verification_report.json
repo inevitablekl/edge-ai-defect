@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "task_id": "J3.10",
+  "evidence_id": "j3_10_j3_evidence_gate_v1",
+  "verdict": "PASS_WITH_ACCEPTED_THIRD_PARTY_LIMITATION",
+  "j3_overall_status": "COMPLETE",
+  "j4_readiness": "READY_FOR_SEPARATE_AUTHORIZATION",
+  "j4_started": false,
+  "frozen_consistency": {
+    "branch": "feature/jetson-onnxruntime",
+    "worktree_clean_before_gate": true,
+    "worktree_clean_after_gate": true,
+    "frozen_plan_sha256": "a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+    "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+    "plan_status": "FROZEN",
+    "task_cards_status": "FROZEN"
+  },
+  "decision_chain": {
+    "d041": "Accepted",
+    "d046": "Accepted",
+    "d046_scope": "J3.9 sanitizer validation only"
+  },
+  "commit_relation": {
+    "audit_parent_commit": "36c58eb7d6d29192ead786bcef2ef398899eafed",
+    "production_source_commit": "94576b6fe81e2f853c30c41826d039d016e093b0",
+    "j3_1_source_commit": "7935c708465e14ea8786a64ecd1bf5f14096c333",
+    "j3_2_runtime_config_commit": "42fccfac4f27f7c1249c33a5df7994997f7038ea",
+    "j3_3_source_commit": "de022b19e0dd54c156cd7463c64d97eeb112180f",
+    "j3_4_source_commit": "05e2d4c47e7a95bf3f8796ef501d12e27b618082",
+    "j3_5_source_commit": "9b14631a773518b9eea73d875af1e46b4e3a0b9e",
+    "j3_6_source_commit": "94576b6fe81e2f853c30c41826d039d016e093b0",
+    "j3_7_evidence_commit": "fcdda4c2bb69600e9802a7771b294f3c2383b1a8",
+    "j3_8_evidence_commit": "54100d12212147ccaf0dc98ccc355d15362f20da",
+    "j3_9_failure_evidence_commit": "fcc1203f46874d13c7fdf1d74848741e119d304b",
+    "j3_9_remediation_evidence_commit": "36c58eb7d6d29192ead786bcef2ef398899eafed",
+    "j3_10_evidence_commit": null
+  },
+  "evidence_chain": {
+    "j3_1": "PASS",
+    "j3_2": "PASS; represented by RuntimeConfig v2 evidence carried in J3.3",
+    "j3_3": "PASS",
+    "j3_4": "PASS",
+    "j3_5": "PASS",
+    "j3_6": "PASS",
+    "j3_7": "PASS",
+    "j3_8": "PASS",
+    "j3_9_strict": "FAIL; original Evidence retained",
+    "j3_9_remediation": "PASS classification B",
+    "d046_disposition": "Accepted",
+    "j3_9_final": "COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION"
+  },
+  "j3_9_final_classification": {
+    "asan": "PASS; no heap corruption, use-after-free or invalid memory access",
+    "ubsan": "PASS; no undefined-behavior diagnostic",
+    "leaksan": "792 bytes in 3 allocations detected",
+    "ownership": "B — third-party OpenCV/TBB initialization leak",
+    "diagnostic_basis": [
+      "Scenario B bypassed OpenCV thread activation and the leak disappeared",
+      "allocation path entered OpenCV/TBB below the project boundary",
+      "Scenario C found no non-leak ASan/UBSan diagnostic"
+    ],
+    "production_source_change": false,
+    "suppression_added": false,
+    "strict_leaksan_pass_required": false,
+    "acceptance_decision": "D046"
+  },
+  "repository_integrity": {
+    "unexpected_files": false,
+    "failure_evidence_deleted": false,
+    "frozen_assets_changed": false,
+    "release_build_changed": false,
+    "system_modified": false
+  },
+  "scope_validation": {
+    "model_loading": false,
+    "inference": false,
+    "benchmark": false,
+    "tensorrt": false,
+    "cuda_ep": false,
+    "ros2": false,
+    "camera": false,
+    "ort_rebuild": false,
+    "production_source_change": false,
+    "cmake_change": false
+  },
+  "gate_result": "PASS_WITH_ACCEPTED_THIRD_PARTY_LIMITATION"
+}
