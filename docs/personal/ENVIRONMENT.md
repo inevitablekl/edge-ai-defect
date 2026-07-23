@@ -906,3 +906,13 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - J2.4 GPU discovery warning 分类：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；runtime exit 0、CPU provider PASS、无缺失动态库或 GPU EP 初始化。
 - J2 最终范围：formal aarch64 CPU SDK build、package、manifest 和无 `LD_LIBRARY_PATH` runtime/RPATH smoke；不包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 benchmark。
 - J2：`COMPLETE`；J3.1：`READY`；J3：尚未开始；J3.0：`NOT_DEFINED`。Next authorized task：`J3.1 — aarch64 build and CMake portability`。
+### Stage J J3.1 aarch64 build and CMake portability
+
+- Native Jetson architecture：`aarch64`；GCC/G++：`11.4.0`；system CMake：`3.22.1`；C++ standard：`C++17`。
+- Development dependencies used：OpenCV `4.5.4`、yaml-cpp `0.7.0`、OpenSSL `3.0.2`、pkg-config `0.29.2`。
+- Source commit：`7935c708465e14ea8786a64ecd1bf5f14096c333`。
+- Formal `edge_ai_defect` binary SHA256：`30ed762cdb82c3c25dcce320f9e53480fe6bd305323601a554aa21a72bd0c383`。
+- ORT SDK：`1.23.2`，platform `linux-aarch64`；BUILD_MANIFEST SHA256：`94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406`；main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- Selected ONNX Runtime header layout：nested；include directory：SDK `include/onnxruntime`；flat layout compatibility retained。
+- Published Evidence：`j3_1_aarch64_build_v1`；published manifest SHA256：`ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5`；local attempt manifest SHA256：`368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871`。
+- Full Release build、dynamic dependency resolution and non-model `--help` smoke：`PASS`；未执行模型加载、inference、benchmark、CTest、TensorRT、CUDA EP 或 J3.2。

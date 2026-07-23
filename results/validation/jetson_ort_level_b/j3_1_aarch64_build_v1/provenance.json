@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_1_aarch64_build_v1",
+  "task_id": "J3.1",
+  "repository_source_commit": "7935c708465e14ea8786a64ecd1bf5f14096c333",
+  "j2_5_commit": "3bc529ac3a619ac5d01ad22418784b24c2203cd3",
+  "j2_5_evidence_id": "j2_evidence_gate_v1",
+  "ort_version": "1.23.2",
+  "ort_tag": "v1.23.2",
+  "ort_source_commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278",
+  "sdk_platform": "linux-aarch64",
+  "sdk_build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+  "sdk_main_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "local_attempt_id": "j3.1_aarch64_build_v1",
+  "local_attempt_manifest_sha256": "368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871",
+  "compiler": "GCC/G++ 11.4.0",
+  "system_cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "yaml_cpp": "0.7.0",
+  "openssl": "3.0.2",
+  "header_layout": "nested",
+  "privacy_status": "PASS; no private absolute paths, host identifiers, credentials or dynamic timestamps"
+}

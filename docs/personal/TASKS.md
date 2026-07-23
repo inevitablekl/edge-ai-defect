@@ -2386,3 +2386,14 @@ NEU-DET
 - J2：`COMPLETE`；J3.1：`READY`；J3 尚未执行；J3.0：`NOT_DEFINED`。
 - J2 未包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 performance benchmark。
 - Next authorized task：`J3.1 — aarch64 build and CMake portability`；J3.1 未执行。
+- J3.2：`READY`；J3：`IN PROGRESS`；J3.0：`NOT_DEFINED`。
+
+### Stage J J3.1 aarch64 build and CMake portability
+
+- J3.1：`COMPLETE`；source commit：`7935c708465e14ea8786a64ecd1bf5f14096c333`。
+- Evidence ID：`j3_1_aarch64_build_v1`；published manifest SHA256：`ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5`；local attempt manifest SHA256：`368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871`。
+- linux-aarch64 nested header layout：`PASS`；linux-x64 flat layout compatibility retained；x86 regression未在本卡执行，留待 J3.7。
+- Full `edge_ai_infer` Release build：`PASS`；binary 为 AArch64 ELF64；application `--help`：`PASS`；OpenCV 4.5.4、yaml-cpp 0.7、OpenSSL 3.0.2 和 ORT C++ link：`PASS`。
+- 未执行模型加载、inference、CTest、benchmark、TensorRT、CUDA EP 或 J3.2；系统包安装已由用户在本次重试前完成，本次验证未修改系统。
+- J3.2：`READY`；J3：`IN PROGRESS`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J3.2 — RuntimeConfig v2`；J3.2 未执行。

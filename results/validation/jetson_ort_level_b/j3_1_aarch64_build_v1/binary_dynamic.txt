@@ -1,0 +1,8 @@
+binary_sha256=30ed762cdb82c3c25dcce320f9e53480fe6bd305323601a554aa21a72bd0c383
+elf=ELF64 LSB PIE executable, ARM aarch64
+needed=libonnxruntime.so.1, libcrypto.so.3, libyaml-cpp.so.0.7, libopencv_imgcodecs.so.4.5d, libopencv_imgproc.so.4.5d, libopencv_core.so.4.5d
+runpath=Stage J linux-aarch64 SDK lib
+resolved_ort=Stage J linux-aarch64 SDK lib/libonnxruntime.so.1
+resolved_ort_sha256=6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740
+ldd=all required dependencies resolved; no not-found entries
+help_exit=0
