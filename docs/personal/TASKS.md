@@ -2315,7 +2315,7 @@ NEU-DET
 - System CMake 3.22.1 不满足 ORT v1.23.2 的 CMake >=3.28 要求；使用外部 staging 的 official CMake 3.28.6 aarch64 binary，通过 `--cmake_path` 构建，未修改系统 CMake 或 `/usr/local`。
 - Build PASS：Release、shared library、CPU-only、`--skip_tests`、parallel 4；开始 `23:49:15`，结束 `00:47:22`，elapsed `3487s`，exit code `0`。
 - Artifact PASS：`libonnxruntime.so.1.23.2`、headers、CMake package config 均生成；主要 ELF 为 ARM aarch64；CMake cache 确认 CUDA/TensorRT 及其 interfaces 为 `OFF`。
-- External SDK：`/home/orin/edge-ai-local-build/ort-sdk/`，包含 `include/`、`lib/`、`lib/cmake/onnxruntime/`，约 `51M`；SDK SHA256 manifest：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
+- External SDK：`historical_external_ort_sdk`，包含 `include/`、`lib/`、`lib/cmake/onnxruntime/`，约 `51M`；SDK SHA256 manifest：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
 - 未执行测试、benchmark、inference、CUDA EP、TensorRT EP 或 GPU build；未修改源码、configs、tests 或 results。
 - Next authorized task：`J3.0 — C++ Project Dependency and Configure Discovery`；不得跳过 J3.0。
 
@@ -2342,4 +2342,20 @@ NEU-DET
 - SDK/artifact Gate：headers、library、symlink/targets、AArch64/ELF64、SONAME、NEEDED、ldd、CMake package relocatability 和 local manifest 全部 `PASS`；attempt final manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
 - 本次未执行 CTest、SDK binary、inference、benchmark、RPATH smoke、J2.3、J2.4、J2.5 或 J3；未修改生产源码、系统 CMake 或 `/usr/local`。
 - J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。
+
+### 2026-07-23T22:00:04+08:00 - Stage J D045 and J2.2 v2 Evidence Reconciliation
+
+- D045 `Accept J2.2 v2 Non-Build Evidence Reconciliation`：`Accepted`。
+- Reconciliation v1：`PASS`；formal v2 attempt unchanged；formal attempt
+  manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- New canonical source aggregate：`stage_j_ort_source_aggregate_v1`，SHA256
+  `c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`。
+- Historical aggregate `4f460795adeab01ac3a0b207ff18ec9d6af01d3957456af59dcb201645e9c5ab`
+  downgraded to `historical_recorded_not_future_authority`；command/exit
+  reconciliation completed；missing timestamps remain `not_recorded` with no
+  backfill；four wrapper typos accepted as non-substantive。
+- No ORT rebuild required；v2 formal attempt remains immutable。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4：`PENDING`；J2.5：`PENDING`；J2
+  overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
 - Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。

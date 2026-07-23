@@ -2753,3 +2753,79 @@ After formal J2.2 remediation PASS: J2.2 becomes COMPLETE and J2.3 becomes
 READY. After J2.3 PASS: J2.3 becomes COMPLETE and J2.4 becomes READY. After
 J2.4 PASS: J2.4 becomes COMPLETE and J2.5 becomes READY. After J2.5 PASS:
 J2 becomes COMPLETE and J3.1 becomes READY.
+
+### D045 - Accept J2.2 v2 Non-Build Evidence Reconciliation
+
+时间：2026-07-23T22:00:04+08:00
+
+状态：`Accepted`
+
+D045 accepts the non-build evidence reconciliation for the immutable
+`j2.2_formal_clean_v2` attempt. The formal build, independent install and SDK
+technical results remain valid, and J2.2 remains `COMPLETE`. No second ORT
+full clean build is required. The v2 local attempt and its manifest remain
+immutable; this decision authorizes an independent reconciliation document and
+does not backfill the original attempt.
+
+D045 only corrects the non-substantive evidence-field requirements identified
+under D044. It does not change the ORT tag or commit, build flags, CPU-only
+contract, formal SDK, J2 task order, J2.4/J2.5 gates or the J3 boundary.
+
+#### Accepted evidence deviations
+
+1. Command and exit-code indexing: commands 001–006 have no independent
+   `exit_codes.tsv` rows; command 007 uses the semantic ID
+   `environment_preflight`; later command and exit-row identifiers are not
+   numerically identical. The substantive clone, source-gate, build, install,
+   artifact and local-manifest operations have verifiable successful exit
+   rows. The original `commands.txt` and `exit_codes.tsv` must not be changed.
+
+2. Timestamp fields: `source_ready`, `verification_end` and `attempt_end` are
+   `not_recorded`. No timestamp is fabricated from file mtimes or current
+   time. The recorded build and install boundaries remain valid and the gap
+   does not trigger a rebuild.
+
+3. Wrapper path typos: 008a is `HARMLESS_WRAPPER_TYPO`; 013a and 018a are
+   `RECORDED_NON_SUBSTANTIVE_FAILURE`; 020a is `HARMLESS_WRAPPER_TYPO`. The
+   wrong target did not exist and received no files. Clone and help were not
+   executed when their redirections failed. The two read-only snapshot and
+   provenance operations ran without saved wrapper output and were then
+   executed correctly in the same v2 attempt. Formal build stdout/stderr were
+   retained; no cross-attempt copying or evidence splicing occurred.
+
+4. The historical source aggregate
+   `4f460795adeab01ac3a0b207ff18ec9d6af01d3957456af59dcb201645e9c5ab` is
+   classified as `historical_recorded_not_future_authority`. It is retained,
+   is not claimed to be independently reproducible, and need not equal the
+   new canonical aggregate.
+
+#### Canonical source aggregate contract
+
+The new reconciliation identity is frozen as
+`stage_j_ort_source_aggregate_v1`. Its UTF-8/LF payload is derived from the
+superproject Git index and Git object blob bytes, preserves mode, hashes
+symlink target blobs without following worktree symlinks, represents gitlinks
+with their recorded submodule commits, and normalizes clean recursive
+submodules by UTF-8 path order. It does not depend on mtime, inode, absolute
+path, hostname, current time or worktree enumeration order.
+
+The reconciliation records the canonical payload SHA256, algorithm,
+entry/submodule counts and an independently reproducible code block. A new
+aggregate is a post-PASS reconciliation identity, not a replacement historical
+timestamp or original-attempt record.
+
+#### Status and rebuild authority
+
+The reconciliation PASS establishes `J2.3 READY`; it does not execute J2.3.
+J2.4 and J2.5 remain pending, J2 remains `IN PROGRESS`, J3 remains
+`BLOCKED_BY_J2.5`, and J3.0 remains `NOT_DEFINED`. J2.3 must use only the
+formal v2 SDK, must not use the historical development SDK, and must not
+rebuild ORT. Future rebuild is required only if the ORT tag/commit/version,
+recursive submodule commits, compiler/external CMake/build command, SDK
+library/header/symlink/SONAME, main library SHA, formal build/install logs or
+exit codes, or the canonical aggregate under the same source state changes or
+fails validation.
+
+The D045 contract commit is intentionally a placeholder until the owner
+reviews and records the repository commit. No push, merge, rebase or tag is
+authorized by this decision.

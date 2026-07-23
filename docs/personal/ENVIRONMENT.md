@@ -857,7 +857,7 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 
 ### CPU-only artifact and SDK record
 
-- External SDK staging：`/home/orin/edge-ai-local-build/ort-sdk/`；owner/group `orin/orin`；mode `775`；size approximately `51M`。
+- External SDK staging：`historical_external_ort_sdk`；owner/group `orin/orin`；mode `775`；size approximately `51M`。
 - SDK contains `include/`、`lib/` and `lib/cmake/onnxruntime/`；headers include `onnxruntime_c_api.h` and `onnxruntime_cxx_api.h`。
 - `lib/libonnxruntime.so.1.23.2`：ARM aarch64 ELF shared object；SHA256 `bd6193ae6028a9e1a16e2cc567e14bd9ea61760686c2d9d3c07df5524a7e362a`。
 - `lib/libonnxruntime_providers_shared.so`：ARM aarch64 ELF shared object；SHA256 `2558ceb1670e58d0e6103c2b528af7b7802f850b2145b9f10d71d8283f525a21`。
