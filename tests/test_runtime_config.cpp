@@ -87,6 +87,48 @@ timing:
 )yaml";
 }
 
+std::string valid_yaml_v2() {
+    return R"yaml(schema_version: 2
+
+backend:
+  type: onnxruntime_cpu
+
+onnxruntime:
+  execution_mode: sequential
+  graph_optimization_level: all
+  intra_op_threads: 1
+  inter_op_threads: 1
+  intra_op_allow_spinning: true
+  inter_op_allow_spinning: true
+  cpu_arena_enabled: true
+  memory_pattern_enabled: true
+
+runtime:
+  opencv_num_threads: 1
+
+model:
+  path: ../models/frozen.onnx
+  contract_path: ../contracts/frozen.yaml
+
+input:
+  type: directory
+  directory: ../images
+
+output:
+  json_path: ../results/serial.json
+  console: true
+  overwrite: false
+
+postprocess:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_det: 300
+  max_nms: 30000
+  max_wh: 7680.0
+  agnostic: false
+)yaml";
+}
+
 std::string replace_once(std::string source,
                          const std::string& original,
                          const std::string& replacement) {
@@ -244,6 +286,81 @@ void test_valid_config_and_paths(TestContext& context, const Options& options) {
                    "postprocess fields mismatch");
 }
 
+void test_v2_config_and_isolation(TestContext& context, const Options& options) {
+    const std::filesystem::path config_dir = options.temp_dir / "configs_v2";
+    std::error_code error;
+    std::filesystem::create_directories(config_dir, error);
+    context.expect(!error,
+                   "v2 valid config setup",
+                   "could not create config directory");
+    const std::filesystem::path config_path = config_dir / "runtime_v2.yaml";
+    context.expect(write_text_file(config_path, valid_yaml_v2()),
+                   "v2 valid config setup",
+                   "could not write YAML");
+
+    runtime::RuntimeConfig config;
+    const core::Status status = runtime::RuntimeConfigLoader::load(config_path, &config);
+    context.expect(status.ok(), "v2 valid config", status.message());
+    if (status.ok()) {
+        context.expect(config.schema_version == 2,
+                       "v2 valid config",
+                       "schema version mismatch");
+        context.expect(config.model_path == options.temp_dir / "models/frozen.onnx",
+                       "v2 model path",
+                       "model.path must resolve relative to config directory");
+        context.expect(config.onnxruntime.execution_mode == "sequential" &&
+                           config.onnxruntime.graph_optimization_level == "all" &&
+                           config.onnxruntime.intra_op_threads == 1U &&
+                           config.onnxruntime.inter_op_threads == 1U &&
+                           config.onnxruntime.intra_op_allow_spinning &&
+                           config.onnxruntime.inter_op_allow_spinning &&
+                           config.onnxruntime.cpu_arena_enabled &&
+                           config.onnxruntime.memory_pattern_enabled,
+                       "v2 onnxruntime options",
+                       "ORT options mismatch");
+        context.expect(config.opencv_num_threads == 1U,
+                       "v2 runtime options",
+                       "OpenCV thread count mismatch");
+        context.expect(config.postprocess_config.confidence_threshold == 0.25F &&
+                           config.postprocess_config.max_det == 300U &&
+                           config.postprocess_config.max_nms == 30000U,
+                       "v2 postprocess options",
+                       "postprocess fields mismatch");
+    }
+
+    expect_failure(context,
+                   options,
+                   "v2_rejects_v1_timing",
+                   valid_yaml_v2() + "\ntiming:\n  enabled: true\n",
+                   "$.timing");
+    expect_failure(context,
+                   options,
+                   "v2_rejects_v1_postprocess_name",
+                   replace_once(valid_yaml_v2(),
+                                "  conf_threshold: 0.25",
+                                "  confidence_threshold: 0.25"),
+                   "postprocess.confidence_threshold");
+    expect_failure(context,
+                   options,
+                   "v1_rejects_v2_onnxruntime",
+                   replace_once(valid_yaml(),
+                                "model:\n",
+                                "onnxruntime:\n  execution_mode: sequential\nmodel:\n"),
+                   "$.onnxruntime");
+    expect_failure(context,
+                   options,
+                   "v1_rejects_schema_v2_without_v2_fields",
+                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 2"),
+                   "$.timing");
+    expect_failure(context,
+                   options,
+                   "v2_missing_required_field",
+                   replace_once(valid_yaml_v2(),
+                                "  memory_pattern_enabled: true\n",
+                                ""),
+                   "onnxruntime.memory_pattern_enabled");
+}
+
 void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
@@ -282,7 +399,7 @@ void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
                    "invalid_schema_version",
-                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 2"),
+                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 3"),
                    "schema_version");
     expect_failure(context,
                    options,
@@ -372,6 +489,7 @@ int main(int argc, char* argv[]) {
 
     TestContext context;
     test_valid_config_and_paths(context, options);
+    test_v2_config_and_isolation(context, options);
     test_schema_failures(context, options);
     test_loader_argument_failures(context, options);
 

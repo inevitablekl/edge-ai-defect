@@ -9,6 +9,17 @@
 
 namespace edge_ai_defect::runtime {
 
+struct OnnxRuntimeConfig {
+    std::string execution_mode;
+    std::string graph_optimization_level;
+    std::uint32_t intra_op_threads = 0;
+    std::uint32_t inter_op_threads = 0;
+    bool intra_op_allow_spinning = false;
+    bool inter_op_allow_spinning = false;
+    bool cpu_arena_enabled = false;
+    bool memory_pattern_enabled = false;
+};
+
 struct RuntimeConfig {
     std::uint32_t schema_version = 0;
 
@@ -27,6 +38,9 @@ struct RuntimeConfig {
     postprocess::PostprocessConfig postprocess_config;
 
     bool timing_enabled = false;
+
+    OnnxRuntimeConfig onnxruntime;
+    std::uint32_t opencv_num_threads = 0;
 };
 
 class RuntimeConfigLoader {
