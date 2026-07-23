@@ -22,6 +22,22 @@ option(
     OFF
 )
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
+    set(_onnxruntime_platform_example "linux-aarch64")
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64)$")
+    set(_onnxruntime_platform_example "linux-x64")
+else()
+    set(_onnxruntime_platform_example "linux-${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
+set(
+    _onnxruntime_root_example
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/onnxruntime/1.23.2/${_onnxruntime_platform_example}"
+)
+
+message(STATUS "ONNX Runtime detected processor: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "ONNX Runtime selected SDK platform example: ${_onnxruntime_platform_example}")
+
 set(
     EDGE_AI_FROZEN_ONNX_PATH
     ""
@@ -40,7 +56,7 @@ if(EDGE_AI_ENABLE_MODEL_SMOKE)
             "EDGE_AI_FROZEN_ONNX_PATH is empty while model smoke tests are enabled.\n"
             "Configure with:\n"
             "  cmake -S . -B build "
-            "-DONNXRUNTIME_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/third_party/onnxruntime/1.23.2/linux-x64 "
+            "-DONNXRUNTIME_ROOT=${_onnxruntime_root_example} "
             "-DEDGE_AI_ENABLE_MODEL_SMOKE=ON "
             "-DEDGE_AI_FROZEN_ONNX_PATH=${_edge_ai_frozen_onnx_example}"
         )
@@ -51,7 +67,7 @@ if(EDGE_AI_ENABLE_MODEL_SMOKE)
             "Frozen ONNX model does not exist: ${EDGE_AI_FROZEN_ONNX_PATH}\n"
             "Configure with:\n"
             "  cmake -S . -B build "
-            "-DONNXRUNTIME_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/third_party/onnxruntime/1.23.2/linux-x64 "
+            "-DONNXRUNTIME_ROOT=${_onnxruntime_root_example} "
             "-DEDGE_AI_ENABLE_MODEL_SMOKE=ON "
             "-DEDGE_AI_FROZEN_ONNX_PATH=${_edge_ai_frozen_onnx_example}"
         )
@@ -65,16 +81,12 @@ set(
     "Path to the ONNX Runtime C++ SDK root"
 )
 
-set(
-    _onnxruntime_root_example
-    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/onnxruntime/1.23.2/linux-x64"
-)
-
 if(NOT ONNXRUNTIME_ROOT)
     message(FATAL_ERROR
         "ONNXRUNTIME_ROOT is empty.\n"
         "Expected SDK structure:\n"
-        "  <root>/include/onnxruntime_cxx_api.h\n"
+        "  <root>/include/onnxruntime_cxx_api.h or\n"
+        "  <root>/include/onnxruntime/onnxruntime_cxx_api.h\n"
         "  <root>/lib/libonnxruntime.so\n"
         "Configure with:\n"
         "  cmake -S . -B build -DONNXRUNTIME_ROOT=${_onnxruntime_root_example}"
@@ -82,22 +94,33 @@ if(NOT ONNXRUNTIME_ROOT)
 endif()
 
 set(
-    _onnxruntime_header
-    "${ONNXRUNTIME_ROOT}/include/onnxruntime_cxx_api.h"
-)
-set(
     _onnxruntime_library
     "${ONNXRUNTIME_ROOT}/lib/libonnxruntime.so"
 )
 
-if(NOT EXISTS "${_onnxruntime_header}")
+if(EXISTS "${ONNXRUNTIME_ROOT}/include/onnxruntime_cxx_api.h"
+   AND EXISTS "${ONNXRUNTIME_ROOT}/include/onnxruntime_c_api.h")
+    set(_onnxruntime_include_dir "${ONNXRUNTIME_ROOT}/include")
+    set(_onnxruntime_header_layout "flat")
+    set(_onnxruntime_header "${_onnxruntime_include_dir}/onnxruntime_cxx_api.h")
+elseif(EXISTS "${ONNXRUNTIME_ROOT}/include/onnxruntime/onnxruntime_cxx_api.h"
+       AND EXISTS "${ONNXRUNTIME_ROOT}/include/onnxruntime/onnxruntime_c_api.h")
+    set(_onnxruntime_include_dir "${ONNXRUNTIME_ROOT}/include/onnxruntime")
+    set(_onnxruntime_header_layout "nested")
+    set(_onnxruntime_header "${_onnxruntime_include_dir}/onnxruntime_cxx_api.h")
+else()
     message(FATAL_ERROR
-        "ONNX Runtime C++ header is missing: ${_onnxruntime_header}\n"
-        "Expected SDK structure: <root>/include/onnxruntime_cxx_api.h\n"
+        "ONNX Runtime C++ headers are missing. Checked:\n"
+        "  ${ONNXRUNTIME_ROOT}/include/onnxruntime_cxx_api.h\n"
+        "  ${ONNXRUNTIME_ROOT}/include/onnxruntime/onnxruntime_cxx_api.h\n"
+        "Each candidate directory must also contain onnxruntime_c_api.h.\n"
         "Configure with:\n"
         "  cmake -S . -B build -DONNXRUNTIME_ROOT=${_onnxruntime_root_example}"
     )
 endif()
+
+message(STATUS "ONNX Runtime selected header layout: ${_onnxruntime_header_layout}")
+message(STATUS "ONNX Runtime selected include directory type: ${_onnxruntime_header_layout}")
 
 if(NOT EXISTS "${_onnxruntime_library}")
     message(FATAL_ERROR
@@ -112,7 +135,7 @@ add_library(onnxruntime::onnxruntime SHARED IMPORTED GLOBAL)
 set_target_properties(onnxruntime::onnxruntime
     PROPERTIES
         IMPORTED_LOCATION "${_onnxruntime_library}"
-        INTERFACE_INCLUDE_DIRECTORIES "${ONNXRUNTIME_ROOT}/include"
+        INTERFACE_INCLUDE_DIRECTORIES "${_onnxruntime_include_dir}"
 )
 
 add_library(edge_ai_core STATIC
