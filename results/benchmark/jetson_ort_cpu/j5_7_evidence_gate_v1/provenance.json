@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_evidence_gate_v1",
+  "task": "J5.7",
+  "status": "BLOCKED",
+  "gate_type": "read_only_existing_evidence_gate",
+  "starting_commit": "0558d46fa02ca8f280d054c88962ac8b54f84dc4",
+  "source_changes": false,
+  "benchmark_rerun": false,
+  "evidence_modified": false,
+  "frozen_protocol_modified": false,
+  "frozen_assets": {
+    "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "profiles": {
+    "controlled": "k1",
+    "tuned": "k5"
+  },
+  "blocker": "J5.5 published Evidence lacks per-run formal latency statistics and sample standard deviation; raw telemetry is explicitly outside the published directory",
+  "historical_attempts_retained": true,
+  "next_stage_authorized": false
+}
