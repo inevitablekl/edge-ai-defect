@@ -1,0 +1,15 @@
+git branch --show-current
+git rev-parse HEAD
+git status --porcelain=v1
+sha256sum models/onnx/yolov8n_neudet_frozen.onnx
+sha256sum configs/model_contracts/yolov8n_neudet_frozen.yaml configs/stage_j/test_inventory.yaml tests/data/m5/manifests/level_c_original_corpus.json tests/data/m5/manifests/level_c_derived_corpus.json
+find . -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.bmp' \) -print
+nvpmodel -q
+jetson_clocks --show
+systemctl is-active nvfancontrol
+cat /sys/class/hwmon/hwmon0/pwm1
+g++ --version
+cmake --version
+pkg-config --modversion opencv4
+
+Result: stopped at the frozen corpus gate. No build, reference, runtime, matching, or determinism command was executed.

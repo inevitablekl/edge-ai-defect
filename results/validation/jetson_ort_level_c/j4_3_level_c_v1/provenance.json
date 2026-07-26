@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j4_3_level_c_v1",
+  "task_id": "J4.3",
+  "status": "FAILED",
+  "source_commit": "00e13bfb06f2f357806c9172f12c684642693205",
+  "branch": "feature/jetson-onnxruntime",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "original_corpus_manifest_sha256": "08fb6ab80f83b878d60fee725c7b142dfbdb131b95d1d168cd905da1d25fa88a",
+  "derived_corpus_manifest_sha256": "9dedf3f89cbec42a0e150855471945b296bf1c311c8232de9393f8ada99cdf7b",
+  "inventory_sha256": "9a25ee9cda5bf264394c53f2910d295ef9b621b6ab0a555e28fe993c42f82868",
+  "j4_2_evidence": "j4_2_level_b_v2",
+  "j4_2_final_status": "COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION",
+  "d048_status": "Accepted",
+  "privacy_status": "PASS",
+  "reference_or_golden_regenerated": false,
+  "model_or_onnx_modified": false,
+  "historical_evidence_modified": false
+}

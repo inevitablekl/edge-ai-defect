@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "RECORDED_BEFORE_STOP",
+  "device": "Jetson Orin Nano Super Developer Kit",
+  "architecture": "aarch64",
+  "l4t": "R36.5",
+  "kernel": "5.15.185-tegra",
+  "cpu_control": "CPU 5 required; application was not started",
+  "power_mode": {"name": "MAXN_SUPER", "mode_id": 2},
+  "fan": {"pwm": 255, "nvfancontrol": "inactive"},
+  "onnxruntime": {"version": "1.23.2", "provider": "CPUExecutionProvider"},
+  "opencv": {"version": "4.5.4"},
+  "execution_started": false
+}

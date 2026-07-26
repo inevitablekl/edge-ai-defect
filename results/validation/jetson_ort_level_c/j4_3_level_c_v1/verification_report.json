@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "task_id": "J4.3",
+  "status": "FAILED",
+  "stop_reason": "Level C corpus gate failed: 0/16 required frozen images were available",
+  "gates": {
+    "branch": "PASS",
+    "worktree_clean_at_start": "PASS",
+    "j4_2_evidence": "PASS",
+    "j4_2_final_status": "PASS",
+    "d048_accepted": "PASS",
+    "model_sha256": "PASS",
+    "preprocess_contract_drift": "PASS",
+    "postprocess_contract_drift": "PASS",
+    "corpus_12_original_plus_4_derived": "FAIL",
+    "controlled_runtime": "NOT_RUN",
+    "release_build": "NOT_RUN",
+    "reference_comparison": "NOT_RUN",
+    "matching_16_of_16": "NOT_RUN",
+    "determinism_two_process": "NOT_RUN",
+    "historical_inventory_sha": "PASS"
+  },
+  "protected_assets_modified": false,
+  "j4_4_started": false
+}
