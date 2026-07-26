@@ -34,7 +34,8 @@ void write_usage(std::ostream& output) {
 runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
                                    const model::ModelContract& contract) {
     runtime::RunMetadata metadata;
-    metadata.schema_version = config.schema_version;
+    // RuntimeConfig schema and result metadata schema are independent contracts.
+    metadata.schema_version = 1U;
     metadata.backend_type = config.backend_type;
     metadata.model_filename = config.model_path.filename().string();
     metadata.model_sha256 = contract.expected_onnx_sha256;
