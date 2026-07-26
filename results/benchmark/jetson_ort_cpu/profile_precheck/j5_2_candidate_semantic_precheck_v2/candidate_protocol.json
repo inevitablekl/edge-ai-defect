@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task": "J5.2",
+  "attempt": "j5.2_candidate_semantic_precheck_v2",
+  "status": "PASS",
+  "runtime_config_schema_version": 2,
+  "result_metadata_schema_version": 1,
+  "reference": {
+    "logical_file": "benchmark_python_reference_run_1.json",
+    "sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7"
+  },
+  "comparison": {
+    "matching": "class-aware deterministic maximum bipartite matching",
+    "confidence_abs_tolerance": 0.0001,
+    "bbox_coordinate_abs_tolerance_px": 0.01,
+    "candidate_index": "diagnostic only"
+  },
+  "execution": {
+    "candidate_count": 5,
+    "runs_per_candidate": 2,
+    "total_runs": 10,
+    "separate_processes": true,
+    "performance_measurement": false,
+    "images_per_cycle": 20
+  },
+  "postprocess": {
+    "confidence": 0.25,
+    "iou": 0.45,
+    "max_det": 300,
+    "max_nms": 30000,
+    "max_wh": 7680,
+    "agnostic": false,
+    "multi_label": false
+  },
+  "candidates": [
+    "k1",
+    "k2",
+    "k4",
+    "k5",
+    "k6"
+  ]
+}

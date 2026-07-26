@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "k1",
+      "reference": "benchmark_python_reference_run_1.json",
+      "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+      "runs": [
+        {
+          "run": 1,
+          "comparison_report": "comparison_k1_run1.json",
+          "comparison_report_sha256": "228ebbf7ca588f70d7f33886595955ad80ee2def5102c61e95d0add000cf3adb",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        },
+        {
+          "run": 2,
+          "comparison_report": "comparison_k1_run2.json",
+          "comparison_report_sha256": "cfea1734cc05167b611d95a1b13aec5a1a92783d5e6a4a2c7fb8086e58d025ad",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        }
+      ],
+      "campaign_max_confidence_abs_error": 2.65265835569517e-06,
+      "campaign_max_bbox_coordinate_abs_error": 0.0003051264160163214,
+      "semantic_pass": true
+    },
+    {
+      "profile": "k2",
+      "reference": "benchmark_python_reference_run_1.json",
+      "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+      "runs": [
+        {
+          "run": 1,
+          "comparison_report": "comparison_k2_run1.json",
+          "comparison_report_sha256": "e04d17ffdcf17073a93e012be282eac8b3626648e6f949e244193b897473d904",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        },
+        {
+          "run": 2,
+          "comparison_report": "comparison_k2_run2.json",
+          "comparison_report_sha256": "5732d9eda0970ac640b2f21770d789e0d414365d441483bf2572cd90323ca289",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        }
+      ],
+      "campaign_max_confidence_abs_error": 2.65265835569517e-06,
+      "campaign_max_bbox_coordinate_abs_error": 0.0003051264160163214,
+      "semantic_pass": true
+    },
+    {
+      "profile": "k4",
+      "reference": "benchmark_python_reference_run_1.json",
+      "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+      "runs": [
+        {
+          "run": 1,
+          "comparison_report": "comparison_k4_run1.json",
+          "comparison_report_sha256": "500038409897014a19bc30cd56f6862a600eb20aff9fbcc9ae62b72aa1b11e65",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.4136583557377023e-06,
+          "max_bbox_coordinate_abs_error": 0.000320426416017483,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        },
+        {
+          "run": 2,
+          "comparison_report": "comparison_k4_run2.json",
+          "comparison_report_sha256": "c52278220c0862542ce66b9cfa273ded3fd4b693add1fe04ee8987c511cbaca7",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.4136583557377023e-06,
+          "max_bbox_coordinate_abs_error": 0.000320426416017483,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        }
+      ],
+      "campaign_max_confidence_abs_error": 2.4136583557377023e-06,
+      "campaign_max_bbox_coordinate_abs_error": 0.000320426416017483,
+      "semantic_pass": true
+    },
+    {
+      "profile": "k5",
+      "reference": "benchmark_python_reference_run_1.json",
+      "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+      "runs": [
+        {
+          "run": 1,
+          "comparison_report": "comparison_k5_run1.json",
+          "comparison_report_sha256": "781cd422cc1e81a32c3046e29531a130f4a0fb80b7263cd06267c91ef202ad8e",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        },
+        {
+          "run": 2,
+          "comparison_report": "comparison_k5_run2.json",
+          "comparison_report_sha256": "573ff8f237d53d6a1ba7be9531a8d608c9caff1ff634bd7603298d503aff9fe1",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        }
+      ],
+      "campaign_max_confidence_abs_error": 2.65265835569517e-06,
+      "campaign_max_bbox_coordinate_abs_error": 0.0003051264160163214,
+      "semantic_pass": true
+    },
+    {
+      "profile": "k6",
+      "reference": "benchmark_python_reference_run_1.json",
+      "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+      "runs": [
+        {
+          "run": 1,
+          "comparison_report": "comparison_k6_run1.json",
+          "comparison_report_sha256": "052a914b95ee8a258ef7ef6746540d06afc9fd0d61cf0f38c4f7bc26eb7fe543",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003280264160139268,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        },
+        {
+          "run": 2,
+          "comparison_report": "comparison_k6_run2.json",
+          "comparison_report_sha256": "6ac7b7652ae12f0a3b37587eb948de4d81c77c2dfac68c681d143ef2adffd082",
+          "status": "PASS",
+          "image_count": 20,
+          "passed_images": 20,
+          "failed_images": 0,
+          "max_confidence_abs_error": 2.65265835569517e-06,
+          "max_bbox_coordinate_abs_error": 0.0003280264160139268,
+          "unmatched": 0,
+          "all_finite": true,
+          "class_aware_maximum_bipartite_matching": true
+        }
+      ],
+      "campaign_max_confidence_abs_error": 2.65265835569517e-06,
+      "campaign_max_bbox_coordinate_abs_error": 0.0003280264160139268,
+      "semantic_pass": true
+    }
+  ],
+  "all_candidates_semantic_pass": true
+}

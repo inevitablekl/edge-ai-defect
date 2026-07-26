@@ -2561,3 +2561,32 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - No semantic comparison executed。
 - J5.3：`BLOCKED`。
 - Next authorized action：D050 source remediation。
+
+### Stage J J5.2 Candidate Semantic Precheck
+
+- D050：`Accepted`；governance commit：
+  `8db5f5d04d258d360fb54b1d97aac3c2553c54a5`。
+- Source remediation：`COMPLETE`；source commit：
+  `16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855`。
+- v1 attempt：`FAILED_SCHEMA_BRIDGE`，保持不变。
+- v2 attempt：`PASS`；Published Evidence：
+  `results/benchmark/jetson_ort_cpu/profile_precheck/j5_2_candidate_semantic_precheck_v2`。
+- Candidates：`1, 2, 4, 5, 6`；runs：`10 separate processes`。
+- Candidate k1 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k2 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k4 expected cycle SHA：
+  `56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295`。
+- Candidate k5 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k6 expected cycle SHA：
+  `3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426`。
+- All candidates deterministic：`PASS`。
+- All candidates Python Reference semantic comparison：`20/20 PASS`。
+- Maximum confidence error：`2.65265835569517e-06`。
+- Maximum bbox coordinate error：`0.0003280264160139268 px`。
+- Regression：Model Smoke OFF applicable `24/24 PASS`；Model Smoke ON applicable
+  `31/31 PASS`；historical Level B remains `EXPECTED_CROSS_ARCH_FAILURE` under D048。
+- J5.2：`COMPLETE`。
+- J5.3：`READY`；J5.3 未执行。
