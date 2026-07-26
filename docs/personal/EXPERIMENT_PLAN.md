@@ -1248,3 +1248,26 @@ existing J5 Evidence.
 - Stage T：`NOT_AUTHORIZED`。
 - This status does not claim original J5.7 v0.3 PASS, J8 PASS, J9 COMPLETE or
   STAGE J CLOSED。
+
+## Stage J J6 Research-Grade Tuned k5 Stability Evidence
+
+J6 is `COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE` from source commit
+`7ff24d008f2450954b3fdc190688f1a3b9840788`. The required preflight passed for
+Jetson Orin Nano Super, aarch64, L4T R36.5, MAXN_SUPER, CPU online `0-5`, k5
+CPU affinity `1-5`, ORT intra/inter threads `5/1`, and OpenCV threads `1`.
+
+The single continuous measured window was `1800.0649718600034 s` and produced
+`743` cycles / `14860` frames with zero failures. All cycles passed correctness,
+matched the frozen expected cycle SHA, and showed no cycle hash drift. The
+immutable Published Evidence is
+`results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1/`; its
+`sha256sum -c` verification passed. The raw local attempt is retained outside
+the repository at `/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`.
+
+Telemetry recorded required thermal sources and CPU/GPU frequency. VmRSS had
+357 valid samples and the generated resource summary is `PASS` (`6736 KB` to
+`142876 KB`, delta `136140 KB`). VDD_IN, EMC frequency, one initial CPU usage
+sample, the final VmRSS sample, and cv0/cv1/cv2 thermal zones were unavailable
+and are recorded as unavailable in the Evidence; no values were fabricated.
+
+J7 is `READY`; J8/J9 remain `NOT_STARTED`; Stage T remains `NOT_AUTHORIZED`.

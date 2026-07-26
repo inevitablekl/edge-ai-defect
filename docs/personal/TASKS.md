@@ -2742,3 +2742,25 @@ Stage J Plan or historical Evidence.
 - J6：`READY`；requires separate authorization and was not executed。
 - Stage T：`NOT_AUTHORIZED`。
 - J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。
+
+### Stage J J6 Research-Grade Tuned k5 Stability Campaign
+
+- J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。
+- Starting/source commit：`7ff24d008f2450954b3fdc190688f1a3b9840788`。
+- Preflight：`PASS`；Jetson Orin Nano Super、aarch64、L4T R36.5、MAXN_SUPER、
+  CPU online `0-5`、k5 affinity `1-5`、ORT intra/inter `5/1`、OpenCV threads `1`。
+- Continuous measured duration：`1800.0649718600034 s`（30 minutes requirement met）。
+- Workload：`743` cycles，`14860` frames，`0` failures。
+- Correctness：`PASS`；all cycles passed，expected cycle SHA matched，`hash_drift=false`。
+- Memory：telemetry recorded；VmRSS summary `PASS`，357 valid samples，
+  `6736 KB → 142876 KB`，delta `136140 KB`。
+- Thermal/frequency：required thermal sources recorded with no thermal errors；CPU/GPU
+  frequency samples recorded。
+- Unavailable interfaces recorded as facts：VDD_IN `358/358` unavailable，EMC
+  frequency `358/358` unavailable，initial CPU utilization sample unavailable，
+  final VmRSS sample unavailable；cv0/cv1/cv2 excluded thermal zones unavailable。
+- Immutable Published Evidence：
+  `results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1`；
+  `sha256sum -c`：`PASS`。Raw local attempt retained at
+  `/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`。
+- J7：`READY`；J8/J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。

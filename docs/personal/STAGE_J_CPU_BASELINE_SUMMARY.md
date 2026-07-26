@@ -86,3 +86,33 @@ The research-grade J5 Gate v2 verdict is
 - J6：`READY`，但本任务未执行 J6。
 - Stage T：`NOT_AUTHORIZED`。
 - J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。
+
+## 10. J6 Research-Grade Tuned k5 Stability
+
+J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。The campaign started from
+`7ff24d008f2450954b3fdc190688f1a3b9840788` after a passing frozen-asset and
+platform preflight. It used the tuned k5 profile: CPU affinity `1-5`, ORT
+intra/inter threads `5/1`, and OpenCV threads `1`.
+
+The one continuous measured window was `1800.0649718600034 s`; it completed
+`743` cycles and `14860` frames with zero failures. All cycle correctness checks
+passed, the frozen expected cycle SHA matched, and cycle hash drift was false.
+Published Evidence:
+`results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1/`;
+its SHA256 manifest verification passed. The local raw attempt is retained at
+`/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`.
+
+Telemetry recorded the required thermal sources with no thermal errors and
+recorded CPU/GPU frequency. VmRSS had 357 valid samples; the Evidence resource
+summary is `PASS`, with `6736 KB` starting, `142876 KB` ending, and delta
+`136140 KB`. VDD_IN and EMC frequency were unavailable for all 358 telemetry
+samples; one initial CPU utilization sample, the final VmRSS sample, and cv0/cv1/cv2
+thermal zones were also unavailable. These limitations are recorded in the
+Evidence and are not filled with inferred values.
+
+## 11. Current live status after J6
+
+- J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。
+- J7：`READY`。
+- J8/J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`。

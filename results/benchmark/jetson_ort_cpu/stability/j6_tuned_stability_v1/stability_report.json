@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "evidence_id": "j6_tuned_stability_v1",
+  "profile": "k5",
+  "duration_minutes": 30.0,
+  "measured_duration_seconds": 1800.0649718600034,
+  "cycle_count": 743,
+  "frame_count": 14860,
+  "failure_count": 0,
+  "correctness_failures": 0,
+  "memory_observation": "telemetry_recorded"
+}

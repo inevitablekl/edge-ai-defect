@@ -1,0 +1,1 @@
+python3 tools/benchmark/run_stage_j_stability.py --config /home/orin/edge-ai-local-evidence/stage_j/j5_attempts/j5.2_candidate_semantic_precheck_v2/config_k5.yaml --corpus /home/orin/edge-ai-local-evidence/stage_j/j5_corpus --duration-minutes 30 --evidence-id j6_tuned_stability_v1
