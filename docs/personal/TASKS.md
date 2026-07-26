@@ -2781,3 +2781,18 @@ Stage J Plan or historical Evidence.
   registry、privacy/asset policy and retention checks `PASS`；tracked Stage J
   published bytes `4130789`，below `26214400` bytes。
 - J8：`READY_FOR_AUDIT`；J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。
+
+### Stage J J8 Lightweight Audit
+
+- J8 lightweight audit：`COMPLETE`；Evidence：
+  `results/audit/stage_j_lightweight_audit/stage_j_audit_v1`。
+- Audit scope：research-grade lightweight chain audit；未执行原 J8 Deep
+  Evidence Gate、benchmark 或 inference；未修改 J1–J7 Evidence、模型、
+  contract、corpus、runtime 配置或 Stage J Plan。
+- J7 consolidation manifest、J5.1–J6 manifests、冻结 SHA chain 和 J5.1–J7
+  commit ancestry：`PASS`。
+- Stage J research baseline：`COMPLETE`；J5.5 limitation、J6 unavailable
+  power interface 和无 production-readiness claim 均已记录。
+- J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`；可进入下一阶段 planning review，但执行仍需
+  独立 governance authorization。

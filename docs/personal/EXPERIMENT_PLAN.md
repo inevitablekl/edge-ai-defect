@@ -1296,3 +1296,21 @@ Stage J Plan were not modified.
 J8 is `READY_FOR_AUDIT`; J9 is `NOT_STARTED`; Stage T remains
 `NOT_AUTHORIZED`. This consolidation does not claim J8 PASS, Stage J CLOSED or
 production readiness.
+
+## Stage J J8 Lightweight Audit
+
+The Stage J lightweight audit is `COMPLETE` at
+`results/audit/stage_j_lightweight_audit/stage_j_audit_v1/`. This is a
+research-grade lightweight audit, not the original J8 Deep Evidence Gate.
+It performed no benchmark or inference and did not modify J1–J7 Evidence, the
+model, contract, corpus, runtime configuration or the frozen Stage J Plan.
+
+The J7 consolidation manifest, all J5.1–J6 Evidence manifests, frozen model /
+contract / corpus / reference / expected-cycle SHA chain and J5.1–J7 commit
+ancestry passed verification. The report records the Controlled k1 baseline,
+Tuned k5 baseline, 30-minute k5 stability result, J5.5 documented limitation,
+unavailable power interface and the absence of a production-readiness claim.
+
+Stage J research baseline：`COMPLETE`。J9 remains `NOT_STARTED`. Stage T may
+enter next-stage planning review, but Stage T execution remains
+`NOT_AUTHORIZED` until separate governance authorization.
