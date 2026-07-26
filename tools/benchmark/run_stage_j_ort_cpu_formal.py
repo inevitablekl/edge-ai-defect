@@ -12,6 +12,7 @@ import copy
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -228,6 +229,50 @@ def sample_process_threads(pid: int) -> list[dict[str, Any]]:
     return samples
 
 
+def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[str, Any], tuple[int, int]]:
+    cpu_values = []
+    for line in Path("/proc/stat").read_text(encoding="utf-8").splitlines():
+        fields = line.split()
+        if fields and re.fullmatch(r"cpu[1-5]", fields[0]):
+            cpu_values.append([int(value) for value in fields[1:8]])
+    total = sum(sum(values) for values in cpu_values)
+    idle = sum(values[3] + values[4] for values in cpu_values)
+    utilization = None
+    if previous_cpu is not None:
+        delta_total = total - previous_cpu[0]
+        delta_idle = idle - previous_cpu[1]
+        if delta_total > 0:
+            utilization = 100.0 * (delta_total - delta_idle) / delta_total
+    memory: dict[str, int] = {}
+    for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+        key, separator, value = line.partition(":")
+        if separator and key in {"MemTotal", "MemAvailable", "SwapTotal", "SwapFree"}:
+            memory[key] = int(value.split()[0])
+    temperatures = {}
+    for type_path in Path("/sys/class/thermal").glob("thermal_zone*/type"):
+        try:
+            zone_type = type_path.read_text(encoding="utf-8").strip()
+            temperatures[zone_type] = int((type_path.parent / "temp").read_text())
+        except (OSError, ValueError):
+            continue
+    frequencies = {}
+    for frequency_path in Path("/sys/devices/system/cpu").glob(
+            "cpufreq/policy*/scaling_cur_freq"):
+        try:
+            frequencies[frequency_path.parent.parent.name] = int(
+                frequency_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+    snapshot = {
+        "monotonic_ns": time.monotonic_ns(),
+        "cpu_utilization_percent_cpu1_5": utilization,
+        "ram_kb": memory,
+        "temperature_millicelsius": temperatures,
+        "cpu_frequency_khz": frequencies,
+    }
+    return snapshot, (total, idle)
+
+
 def check_preflight(
     *,
     runner: Path,
@@ -384,6 +429,7 @@ def invoke_profile_runner(
         "application_tid_affinity_samples": [],
         "telemetry_tid_affinity_samples": [],
         "tegrastats_lines": [],
+        "system_samples": [],
     }
     tegrastats = None
     reader = None
@@ -402,6 +448,9 @@ def invoke_profile_runner(
                     "realtime_ns": time.time_ns(),
                     "monotonic_ns": time.monotonic_ns(),
                     "raw": line.rstrip("\n"),
+                    "vdd_in_mw": (
+                        float(match.group(1)) if (match := re.search(
+                            r"VDD_IN\s+(\d+(?:\.\d+)?)/", line)) else None),
                 })
 
         reader = threading.Thread(target=collect_tegrastats, daemon=True)
@@ -410,6 +459,7 @@ def invoke_profile_runner(
     started = time.monotonic()
     process = None
     process_ended = started
+    previous_cpu = None
     try:
         process = subprocess.Popen(
             command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -420,6 +470,9 @@ def invoke_profile_runner(
                     Path(f"/proc/{process.pid}/status"))
                 if vmrss is not None:
                     telemetry["vmrss_kb_samples"].append(vmrss)
+                if formal_telemetry:
+                    snapshot, previous_cpu = system_snapshot(previous_cpu)
+                    telemetry["system_samples"].append(snapshot)
                 tid_samples = sample_process_threads(process.pid)
                 telemetry["application_tid_affinity_samples"].extend(tid_samples)
                 if not process_affinity.issubset(cpu_set):
@@ -478,6 +531,8 @@ def invoke_profile_runner(
             raise BenchmarkError("tegrastats sampling coverage is invalid")
         if not telemetry["telemetry_tid_affinity_samples"]:
             raise BenchmarkError("tegrastats affinity was not sampled")
+        if not telemetry["system_samples"]:
+            raise BenchmarkError("system telemetry was not sampled")
         rail_names = ("VDD_IN", "VDD_CPU_GPU_CV", "VDD_SOC")
         if any(not any(name in item["raw"] for item in lines)
                for name in rail_names):
@@ -539,24 +594,48 @@ def execute_formal_campaign(
         summaries = []
         telemetry = [pilot_telemetry]
         for index in range(1, 6):
+            run_dir = staging / f"run_{index:02d}"
             parsed, wall, samples = _execute_one(
-                runner, template, corpus, staging / f"run_{index:02d}", total,
+                runner, template, corpus, run_dir, total,
                 formal_telemetry=True)
             verify_cycle_correctness(
                 parsed["data"], expected_cycle_json, FROZEN_SHA["expected_cycle"])
-            summaries.append(analyze_formal_run(
-                parsed, measured, run_index=index, process_wall_seconds=wall))
+            summary = analyze_formal_run(
+                parsed, measured, run_index=index, process_wall_seconds=wall)
+            summary["payload_sha256"] = parsed["raw_sha256"]
+            summary["trace_sha256"] = sha256_file(run_dir / "trace.jsonl")
+            summary_path = run_dir / "summary.json"
+            write_stable_json(summary_path, summary)
+            summary["report_sha256"] = sha256_file(summary_path)
+            summaries.append(summary)
             telemetry.append(samples)
         aggregate = aggregate_formal_runs(summaries)
         write_stable_json(staging / "sizing.json", sizing)
         write_stable_json(staging / "aggregate.json", aggregate)
         write_stable_json(staging / "telemetry_index.json", {
             "schema_version": 1,
-            "sampler": "VmRSS and process-affinity /proc sampler",
+            "sampler": "tegrastats, VmRSS, system metrics and all-TID affinity sampler",
             "runs": telemetry,
+        })
+        write_stable_json(staging / "verification_report.json", {
+            "schema_version": 1,
+            "status": "PASS",
+            "profile": "k5",
+            "pilot": {"status": "PASS", "frame_count": len(pilot["records"])},
+            "formal_run_count": len(summaries),
+            "formal_runs": [
+                {"run_index": item["run_index"], "status": item["status"],
+                 "payload_sha256": item["payload_sha256"],
+                 "report_sha256": item["report_sha256"]}
+                for item in summaries
+            ],
+            "expected_cycle_sha256": FROZEN_SHA["expected_cycle"],
+            "semantic_comparison": "PASS",
+            "outlier_policy": "keep_all_measured_samples",
         })
         staging.rename(local_attempt_target)
 
+        evidence_target.parent.mkdir(parents=True, exist_ok=True)
         evidence_staging = Path(tempfile.mkdtemp(
             prefix=f".{evidence_target.name}.", dir=str(evidence_target.parent)))
         try:
@@ -564,20 +643,46 @@ def execute_formal_campaign(
                             evidence_staging / "sizing.json")
             shutil.copyfile(local_attempt_target / "aggregate.json",
                             evidence_staging / "aggregate.json")
+            for name in ("telemetry_index.json", "verification_report.json"):
+                shutil.copyfile(local_attempt_target / name, evidence_staging / name)
+            runs_target = evidence_staging / "runs"
+            runs_target.mkdir()
+            for index in range(1, 6):
+                shutil.copyfile(
+                    local_attempt_target / f"run_{index:02d}" / "summary.json",
+                    runs_target / f"run_{index:02d}_summary.json")
+            (evidence_staging / "README.md").write_text(
+                "# Stage J J5.6 Tuned k5 Formal Baseline\n\n"
+                "Five independent formal runs passed the frozen k5 protocol.\n"
+                "This Evidence was published atomically by the Stage J v2\n"
+                "formal orchestrator. J5.7 was not executed.\n",
+                encoding="utf-8", newline="\n")
             write_stable_json(evidence_staging / "provenance.json", {
                 "schema_version": 1,
                 "source_commit": source_commit,
                 "profile": "k5",
                 "cpu_set": [1, 2, 3, 4, 5],
                 "formal_run_count": 5,
+                "build_artifact_scope": "external_verified_release_artifact",
+                "expected_cycle_sha256": FROZEN_SHA["expected_cycle"],
             })
             atomic_publish(evidence_staging, evidence_target)
         except Exception:
             shutil.rmtree(evidence_staging, ignore_errors=True)
             raise
         return aggregate
-    except Exception:
-        shutil.rmtree(staging, ignore_errors=True)
+    except Exception as exc:
+        if staging.exists() and not local_attempt_target.exists():
+            try:
+                write_stable_json(staging / "failure.json", {
+                    "schema_version": 1,
+                    "status": "FAIL",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                })
+                staging.rename(local_attempt_target)
+            except OSError:
+                pass
         raise
     finally:
         os.sched_setaffinity(0, original_affinity)
