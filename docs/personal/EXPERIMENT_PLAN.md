@@ -1226,3 +1226,25 @@ D052 `Adopt Research-Grade Stage J Remediation and Closeout Policy` 已接受。
 - J9：`NOT_AUTHORIZED`。
 - Stage J CPU chain：`PARTIALLY_COMPLETE`，不得写为 `COMPLETE` 或 `FROZEN`。
 - Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。
+
+## Stage J Research-Grade J5 Gate v2
+
+This append-only status records D053 without modifying Stage J Plan v0.3 or
+existing J5 Evidence.
+
+- D053：`Accepted`。
+- Original J5.7 v1：`BLOCKED under original frozen v0.3 contract`。
+- J5.5：`Controlled 1-Core Resource and Reproducibility Reference`。Its
+  supplement is deterministically derived from immutable published summaries;
+  `latency_scope=whole_process_wall_time` and per-frame latency distribution,
+  per-frame sample standard deviation and independently reconstructable raw
+  telemetry are `not_available`。
+- J5.6 v3：`Tuned k5 Formal CPU Performance Baseline`；five independent formal
+  runs with required measured-window statistics, correctness, determinism,
+  telemetry and SHA verification。
+- Research-grade J5 Gate v2：`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`。
+- J6：`READY` for a separately authorized research-grade stability task；本次
+  未执行 J6。
+- Stage T：`NOT_AUTHORIZED`。
+- This status does not claim original J5.7 v0.3 PASS, J8 PASS, J9 COMPLETE or
+  STAGE J CLOSED。

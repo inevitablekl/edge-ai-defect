@@ -63,3 +63,26 @@ D048 cross-architecture numerical limitation remains accepted: cross-architectur
 - J8 original frozen v0.3：`FAIL`。
 - Stage J CPU chain：`PARTIALLY_COMPLETE`。
 - Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。
+
+## 9. Research-Grade J5 Gate v2
+
+D053 is `Accepted`. The original J5.7 v1 result remains
+`BLOCKED under the original frozen v0.3 contract` and its Evidence is
+unchanged.
+
+J5.5 is classified as the `Controlled 1-Core Resource and Reproducibility
+Reference`. Its deterministic supplement does not invent per-frame timing:
+latency scope is explicitly `whole_process_wall_time`; measured-window
+per-frame latency distributions, per-frame sample standard deviation and
+independently reconstructable raw telemetry remain unavailable.
+
+J5.6 v3 is the `Tuned k5 Formal CPU Performance Baseline`, with five PASS
+formal processes and complete measured-window statistics, correctness,
+determinism, telemetry and SHA evidence.
+
+The research-grade J5 Gate v2 verdict is
+`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`.
+
+- J6：`READY`，但本任务未执行 J6。
+- Stage T：`NOT_AUTHORIZED`。
+- J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。

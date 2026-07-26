@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "PASS_WITH_DOCUMENTED_LIMITATION",
+  "profile": "k1",
+  "source_scope": "immutable published J5.5 summaries only",
+  "process_count": 5,
+  "processed_frames_each_run": 560,
+  "latency_scope": "whole_process_wall_time",
+  "whole_process_wall_time_ms": {
+    "sample_count": 5,
+    "mean": 242561.4,
+    "minimum": 242308.0,
+    "maximum": 242779.0,
+    "P50": 242604.0,
+    "P95": 242751.8,
+    "P99": 242773.56,
+    "sample_standard_deviation": 178.78003244210467
+  },
+  "fps_scope": "published whole-process FPS values",
+  "fps": {
+    "sample_count": 5,
+    "mean": 2.3086948022000002,
+    "minimum": 2.306624543,
+    "maximum": 2.311108176,
+    "P50": 2.308288404,
+    "P95": 2.3107936398,
+    "P99": 2.31104526876,
+    "sample_standard_deviation": 0.0017019573436848378
+  },
+  "resource_summary": {
+    "max_VmRSS_kB": {
+      "sample_count": 5,
+      "mean": 139589.6,
+      "minimum": 136356.0,
+      "maximum": 146848.0,
+      "P50": 138364.0,
+      "P95": 145272.0,
+      "P99": 146532.8,
+      "sample_standard_deviation": 4176.450741957817
+    }
+  },
+  "correctness": {
+    "all_runs_semantic_pass": true,
+    "expected_cycle_sha256_values": [
+      "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+    ],
+    "payload_sha256_values": [
+      "4ba1642e7b13e4218d419fc4a8a4a87ce8b165172cf940cc5e1d562c8bf78b35"
+    ]
+  },
+  "not_available": [
+    "measured_window_per_frame_latency_distribution",
+    "per_frame_latency_P50_P95_P99",
+    "per_frame_latency_sample_standard_deviation",
+    "independently_reconstructable_raw_telemetry"
+  ],
+  "prohibited_inference": [
+    "process_wall_ms / frame_count was not used as per-frame latency",
+    "no per-frame distribution was inferred from aggregate values"
+  ]
+}

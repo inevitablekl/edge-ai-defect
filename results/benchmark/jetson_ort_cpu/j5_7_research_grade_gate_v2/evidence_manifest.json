@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_research_grade_gate_v2",
+  "verdict": "PASS_WITH_DOCUMENTED_J5_5_LIMITATION",
+  "inputs": [
+    {"task": "J5.1", "path": "results/benchmark/jetson_ort_cpu/python_reference/j5_1_python_reference_v1", "status": "PASS", "sha256sums_sha256": "490fcd11764999cfac4f01c23d84668844dd644f72d52ffbc6d39e6d25859030"},
+    {"task": "J5.2", "path": "results/benchmark/jetson_ort_cpu/profile_precheck/j5_2_candidate_semantic_precheck_v2", "status": "PASS", "sha256sums_sha256": "b5935ee21f5d6ba9b2438a0e1f5dd981dee75ccdf534674dc93dfc28ddde8477"},
+    {"task": "J5.3", "path": "results/benchmark/jetson_ort_cpu/profile_sizing/j5_3_candidate_sizing_v1", "status": "PASS", "sha256sums_sha256": "99ae9af9d47fc52181d968d897e6cdf3fca77c41dca8b92202ab037da215ffbf"},
+    {"task": "J5.4", "path": "results/benchmark/jetson_ort_cpu/profile_selection/j5_4_profile_selection_v1", "status": "PASS", "sha256sums_sha256": "db9ee4cada738db30d2a2f6c989932dde0e869b50965afc0efe2b5a034f3477e"},
+    {"task": "J5.5", "path": "results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1", "status": "PASS_WITH_DOCUMENTED_LIMITATION", "sha256sums_sha256": "c62fe62092c2b53a9bd66193069831b339a3f06fc46d5310dc6840dde41dc2f7"},
+    {"task": "J5.5 supplement", "path": "results/benchmark/jetson_ort_cpu/controlled_supplement/j5_5_controlled_supplement_v1", "status": "PASS", "sha256sums_sha256": "36b6cd1cd5695ea44fa82292ab78aa00394e10b732042720fb3b75ede9f35c19"},
+    {"task": "J5.6", "path": "results/benchmark/jetson_ort_cpu/tuned/j5_6_tuned_formal_baseline_v3", "status": "PASS", "sha256sums_sha256": "c67953bf157a13ad889ab7ce2459c0609003cef4b1edfd67976a527fec280987"},
+    {"task": "Original J5.7", "path": "results/benchmark/jetson_ort_cpu/j5_7_evidence_gate_v1", "status": "BLOCKED_PRESERVED", "sha256sums_sha256": "5fa1646b9cb59f7ea60b60f4cf57d4bf678dd1d61a441935a79a99d99412ad47"}
+  ],
+  "historical_failed_attempts": [
+    "/home/orin/edge-ai-local-evidence/stage_j/j5_attempts/j5_6_tuned_formal_baseline_v1",
+    "/home/orin/edge-ai-local-evidence/stage_j/j5_attempts/j5_6_tuned_formal_baseline_v2"
+  ],
+  "existing_j5_evidence_modified": false
+}

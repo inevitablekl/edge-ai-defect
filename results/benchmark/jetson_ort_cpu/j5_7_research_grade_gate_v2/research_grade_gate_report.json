@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_research_grade_gate_v2",
+  "verdict": "PASS_WITH_DOCUMENTED_J5_5_LIMITATION",
+  "starting_commit": "27099c8e9de7a9f157d09a825267f2da84cb8fb8",
+  "original_j5_7": {
+    "evidence_id": "j5_7_evidence_gate_v1",
+    "verdict": "BLOCKED",
+    "status": "preserved_unchanged",
+    "reason": "blocked under original frozen §22.4/J5.7 contract"
+  },
+  "j5_evidence": {
+    "j5_1": "PASS",
+    "j5_2": "PASS",
+    "j5_3": "PASS",
+    "j5_4": "PASS",
+    "j5_5": "PASS_WITH_DOCUMENTED_J5_5_LIMITATION",
+    "j5_5_supplement": "PASS",
+    "j5_6": "PASS",
+    "existing_manifests": "PASS"
+  },
+  "j5_5": {
+    "profile": "k1",
+    "role": "Controlled 1-Core Resource and Reproducibility Reference",
+    "separate_processes": 5,
+    "frames_each_run": 560,
+    "semantic_correctness": "PASS",
+    "determinism": "PASS",
+    "whole_process_wall_time": "PASS",
+    "fps": "PASS",
+    "resource_summary": "PASS",
+    "supplement_source": "immutable published summaries only",
+    "limitation": "per-frame measured-window latency distribution, per-frame sample standard deviation and independently reconstructable raw telemetry are not available",
+    "per_frame_data_invented": false
+  },
+  "j5_6": {
+    "profile": "k5",
+    "role": "Tuned k5 Formal CPU Performance Baseline",
+    "separate_processes": 5,
+    "warmup_frames_each": 60,
+    "measured_frames_each": 500,
+    "total_frames_each": 560,
+    "latency_statistics": "PASS",
+    "fps_definitions": "PASS",
+    "correctness": "PASS",
+    "determinism": "PASS",
+    "telemetry": "PASS",
+    "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "frozen_assets": {
+    "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "profiles": {
+    "controlled": {"profile": "k1", "cpu_set": "5", "ort_intra": 1, "ort_inter": 1},
+    "tuned": {"profile": "k5", "cpu_set": "1-5", "ort_intra": 5, "ort_inter": 1}
+  },
+  "historical_failed_attempts_retained": true,
+  "j6": "READY",
+  "stage_t": "NOT_AUTHORIZED",
+  "j8": "NOT_AUTHORIZED",
+  "j9": "NOT_AUTHORIZED"
+}

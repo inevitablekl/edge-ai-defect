@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_research_grade_gate_v2",
+  "status": "PASS_WITH_DOCUMENTED_J5_5_LIMITATION",
+  "gates": {
+    "all_existing_manifests": "PASS",
+    "frozen_asset_sha": "PASS",
+    "j5_1_asset_provenance_correctness": "PASS",
+    "j5_2_asset_provenance_correctness": "PASS",
+    "j5_3_asset_provenance_correctness": "PASS",
+    "j5_4_asset_provenance_correctness": "PASS",
+    "controlled_profile_k1": "PASS",
+    "tuned_profile_k5": "PASS",
+    "j5_5_historical_facts": "PASS",
+    "j5_5_supplement_traceability": "PASS",
+    "j5_5_limitation_disclosed": "PASS",
+    "j5_5_per_frame_data_fabricated": "PASS_FALSE",
+    "j5_6_formal_statistics": "PASS",
+    "j5_6_correctness_determinism_sha": "PASS",
+    "j5_6_telemetry": "PASS",
+    "original_j5_7_v1_preserved": "PASS",
+    "historical_j5_6_v1_v2_retained": "PASS"
+  },
+  "original_j5_7_status": "BLOCKED under original frozen v0.3 contract",
+  "j5_5_limitation": "whole-process wall time and published resource summary are valid; measured-window per-frame latency distribution, per-frame sample standard deviation and independently reconstructable raw telemetry are not available",
+  "j6_authorization": "READY",
+  "stage_t_authorization": "NOT_AUTHORIZED",
+  "j8_authorization": "NOT_AUTHORIZED",
+  "j9_authorization": "NOT_AUTHORIZED"
+}

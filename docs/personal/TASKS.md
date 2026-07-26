@@ -2723,3 +2723,22 @@ the J5.6 tooling-readiness state.
 - J5.7：`BLOCKED_BY_J5.6`；not executed。
 - J6：`NOT_COMPLETE`；J7：`NOT_STARTED`；J8 remains `FAIL`；J9 and Stage T
   remain `NOT_AUTHORIZED`。
+
+### Stage J Research-Grade J5 Gate Remediation
+
+This append-only status section records D053 and does not rewrite the frozen
+Stage J Plan or historical Evidence.
+
+- D053：`Accepted`。
+- Original J5.7 v1：`BLOCKED under original frozen v0.3 contract`；Evidence
+  remains unchanged。
+- J5.5：`Controlled 1-Core Resource and Reproducibility Reference`；its
+  deterministic supplement reports whole-process wall time, FPS and actually
+  published resource values only. Per-frame latency distribution and
+  independently reconstructable raw telemetry remain unavailable。
+- J5.6 v3：`Tuned k5 Formal CPU Performance Baseline`；five-run formal Evidence
+  PASS。
+- Research-grade J5 Gate v2：`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`。
+- J6：`READY`；requires separate authorization and was not executed。
+- Stage T：`NOT_AUTHORIZED`。
+- J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。

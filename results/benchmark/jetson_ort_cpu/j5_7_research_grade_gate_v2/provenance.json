@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_research_grade_gate_v2",
+  "task": "J5.7 research-grade gate remediation",
+  "status": "PASS_WITH_DOCUMENTED_J5_5_LIMITATION",
+  "source_commit": "27099c8e9de7a9f157d09a825267f2da84cb8fb8",
+  "d053": "Accepted",
+  "original_j5_7_v1_status": "BLOCKED under original frozen v0.3 contract",
+  "benchmark_rerun": false,
+  "inference_rerun": false,
+  "existing_j5_evidence_modified": false,
+  "frozen_plan_modified": false,
+  "frozen_assets": {
+    "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "profiles": {
+    "controlled": "k1 / CPU5 / ORT 1/1",
+    "tuned": "k5 / CPU1-5 / ORT 5/1"
+  },
+  "j5_5_supplement_source": "results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1",
+  "j5_5_supplement_sha256": "36b6cd1cd5695ea44fa82292ab78aa00394e10b732042720fb3b75ede9f35c19",
+  "historical_failed_attempts_retained": true,
+  "j6": "READY",
+  "stage_t": "NOT_AUTHORIZED"
+}
