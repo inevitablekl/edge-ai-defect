@@ -988,3 +988,20 @@ The final J3 environment and validation facts are:
 - No production source or inference algorithm change；no ORT rebuild；no
   benchmark, latency/FPS campaign, preprocessing/postprocessing, TensorRT,
   CUDA EP, Pipeline, ROS2 or Level C execution。
+
+### Stage J J5.1 Frozen Python Reference Environment
+
+- WSL kernel：`6.18.33.2-microsoft-standard-WSL2`；architecture：`x86_64`。
+- Python：`3.10.12`；NumPy：`1.26.4`；OpenCV Python：`4.10.0`；
+  ONNX Runtime：`1.23.2`；PyYAML：`6.0.2`。
+- Actual ORT provider：`CPUExecutionProvider`；execution mode：
+  `ORT_SEQUENTIAL`；graph optimization：`ORT_ENABLE_ALL`；intra/inter-op：`1/1`。
+- CPU model：`Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz`。
+- Model SHA256：`c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944`；
+  contract SHA256：`9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`；
+  benchmark manifest SHA256：`235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab`。
+- Reference SHA256：`1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7`。
+- Tool SHA256：`m5_level_c_reference.py`=`d59ff5efaad737e6f3dbe6ed5508cc7a644be366b9b24ad2bf53ebfe21265640`；
+  `m5_level_c_common.py`=`aef39cf5b9ae8b9d60edef5fc8f4bb1a77045619547cb9f4d8f5490ae3b894ab`；
+  `prepare_m5_corpus.py`=`3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f`。
+- No Jetson benchmark；no performance result；no TensorRT、CUDA、Pipeline 或 telemetry。

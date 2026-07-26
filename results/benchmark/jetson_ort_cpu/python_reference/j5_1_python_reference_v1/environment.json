@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "architecture": "x86_64",
+  "wsl_kernel": "6.18.33.2-microsoft-standard-WSL2",
+  "cpu_model": "Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz",
+  "python": "3.10.12",
+  "dependencies": {
+    "numpy": "1.26.4",
+    "opencv_python": "4.10.0",
+    "onnxruntime": "1.23.2",
+    "pyyaml": "6.0.2"
+  },
+  "ort": {
+    "actual_session_provider": "CPUExecutionProvider",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "intra_op_num_threads": 1,
+    "inter_op_num_threads": 1
+  },
+  "frozen_asset_sha256": {
+    "model": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "benchmark_manifest": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "m5_level_c_reference.py": "d59ff5efaad737e6f3dbe6ed5508cc7a644be366b9b24ad2bf53ebfe21265640",
+    "m5_level_c_common.py": "aef39cf5b9ae8b9d60edef5fc8f4bb1a77045619547cb9f4d8f5490ae3b894ab",
+    "prepare_m5_corpus.py": "3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f"
+  },
+  "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+  "scope": {
+    "no_jetson_benchmark": true,
+    "no_performance_result": true,
+    "no_tensor_rt": true,
+    "no_cuda": true,
+    "no_pipeline": true
+  }
+}

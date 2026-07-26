@@ -2532,3 +2532,21 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - J5.1c：`PENDING`；
 - J5.2：`NOT_STARTED`；
 - Current authorized campaign：`J5.1 Python Reference Campaign`。
+
+### Stage J J5.1 Python Reference
+
+- D049：`Accepted`；
+- J5.1a：`COMPLETE`；
+- J5.1b：`COMPLETE`；
+- J5.1c：`COMPLETE`；
+- J5.1：`COMPLETE`；
+- Corpus：`20/20 PASS`；
+- Python Reference architecture：`x86_64`；
+- Two separate-process runs：`byte-identical PASS`；
+- benchmark_python_reference_sha256：`1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7`；
+- Evidence ID：`j5_1_python_reference_v1`；
+- Published manifest SHA：`490fcd11764999cfac4f01c23d84668844dd644f72d52ffbc6d39e6d25859030`；
+- Local attempt：`j5.1_python_reference_v1`；
+- J5.2：`READY`；
+- J5.2 未执行；
+- Next authorized task：`J5.2 — Candidate semantic precheck`。
