@@ -291,9 +291,15 @@ if(BUILD_TESTING)
         COMMAND ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_j_ort_cpu_formal.py
     )
+    add_test(
+        NAME stage_j_stability_unit
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_j_stability.py
+    )
     set_tests_properties(
         stage_j_ort_cpu_analyzer_unit
         stage_j_ort_cpu_formal_unit
+        stage_j_stability_unit
         PROPERTIES LABELS "stage-j;benchmark;tooling"
     )
     set_tests_properties(
