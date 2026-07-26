@@ -2796,3 +2796,14 @@ Stage J Plan or historical Evidence.
 - J9：`NOT_STARTED`。
 - Stage T：`NOT_AUTHORIZED`；可进入下一阶段 planning review，但执行仍需
   独立 governance authorization。
+
+### Stage J Closeout and Stage K Planning Entry
+
+- Documentation audit：`COMPLETE`；历史 snapshot 与当前 live status 已区分。
+- Stage J Research Baseline：`COMPLETE`。
+- J5.7 Research-grade gate：`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`。
+- J5.5 limitation、J6 power-interface limitation、原 J8 Deep Evidence Gate
+  `FAIL` 事实及 J8 lightweight audit 的非替代定位均保留。
+- Final report：`docs/personal/STAGE_J_FINAL_REPORT.md`。
+- Stage K：`READY_FOR_PLANNING`。
+- Stage T：`NOT_STARTED`；进入 planning review，尚未授权实现或执行。

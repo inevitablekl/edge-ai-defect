@@ -1314,3 +1314,16 @@ unavailable power interface and the absence of a production-readiness claim.
 Stage J research baseline：`COMPLETE`。J9 remains `NOT_STARTED`. Stage T may
 enter next-stage planning review, but Stage T execution remains
 `NOT_AUTHORIZED` until separate governance authorization.
+
+## Stage J Closeout and Stage K Planning Entry
+
+The current Stage J Research Baseline status is `COMPLETE`. The final report is
+`docs/personal/STAGE_J_FINAL_REPORT.md`.
+
+Earlier planning and remediation sections retain their historical snapshots;
+the current closeout status is append-only and is authoritative for the
+completed J5.1–J8-lightweight chain. J5.5 and J6 limitations remain explicit,
+and the original J8 Deep Evidence Gate is not replaced by the lightweight audit.
+
+Stage K is `READY_FOR_PLANNING`. Stage T is `NOT_STARTED` and remains subject
+to separate next-stage planning and governance authorization。
