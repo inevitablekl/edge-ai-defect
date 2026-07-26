@@ -2424,3 +2424,30 @@ NEU-DET
 - J3.9：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；strict LeakSanitizer 结果为 792 bytes / 3 allocations，ASan 无 heap corruption/use-after-free/invalid memory access，UBSan PASS；remediation ownership classification 为第三方 OpenCV/TBB 初始化泄漏。
 - J3：`IN PROGRESS`，等待 J3.10 Evidence Gate 完成；J4 未启动。
 - 本记录不修改 production source、test logic、CMake sanitizer flags、Release build、ORT SDK 或 frozen assets。
+
+### Stage J J3 Closeout and J4 Entry — D047
+
+This final section is the authoritative live-status section for the current
+Stage J state. Historical entries above are retained and are not live status。
+
+- J3.1：`COMPLETE`；
+- J3.2：`COMPLETE`；
+- J3.3：`COMPLETE`；
+- J3.4：`COMPLETE`；
+- J3.5：`COMPLETE_WITH_RECONCILED_PROVENANCE`；correct source commit：
+  `9b146317922561c55d91ad7126dbde4164b0c800`；
+- J3.6：`COMPLETE`；
+- J3.7：`COMPLETE`；
+- J3.8：`COMPLETE`；
+- J3.9：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J3.10 v1：superseded for final provenance authority；
+- J3.10 v2：`PASS`；
+- J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J4：`NOT_STARTED`；
+- J4.1：`READY`；J4.2/J4.3/J4.4：`PENDING`；
+- next authorized task：`J4.1 — Level A correctness`；
+- J4.1 未执行；
+- Stage T：`NOT_STARTED`；Stage P：`NOT_STARTED`。
+
+The latest section at the end of this file is the current live-status
+authority。

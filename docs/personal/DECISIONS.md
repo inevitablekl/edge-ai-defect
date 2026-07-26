@@ -2885,3 +2885,84 @@ This acceptance must not affect J4 inference pipeline work, benchmark work,
 TensorRT, CUDA EP, ROS2, camera operation or any later runtime gate. Any
 future change to the OpenCV/TBB runtime, sanitizer policy or J3.9 acceptance
 requires a new Decision.
+
+### D047 - Reconcile J3 Provenance and Freeze J4 Entry Interpretation
+
+状态：`Accepted`
+
+#### J3.5 provenance reconciliation
+
+- Incorrect recorded source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`。
+- Correct source commit：`9b146317922561c55d91ad7126dbde4164b0c800`。
+- J3.5 Evidence commit：`8d57466516b470b2889a10b680e2ffa2034fcf26`。
+- The correct source commit is a direct ancestor of the Evidence commit。
+- The Evidence commit adds only documentation and the J3.5 Evidence；no
+  production source was changed。
+- The original J3.5 Evidence remains immutable；the original technical result
+  remains `PASS` and does not require a technical rerun。
+- Final J3.5 status：`COMPLETE_WITH_RECONCILED_PROVENANCE`。
+
+#### J3.10 authority
+
+- `j3_10_j3_evidence_gate_v1` is retained unchanged。
+- Because v1 inherited the invalid J3.5 source SHA, its disposition is
+  `SUPERSEDED_FOR_FINAL_AUTHORITY_BY_J3_10_V2`。
+- `j3_10_j3_evidence_gate_v2` is the sole final J3 provenance authority after
+  its PASS。
+- J3.1–J3.9 technical tests are not rerun and no old Evidence is modified。
+
+#### Stage J authority hierarchy
+
+The authority order is frozen as follows:
+
+1. Stage J Plan v0.3；
+2. Accepted Decisions D041–D047；
+3. Frozen Stage J Task Cards, as interpreted by later accepted Decisions；
+4. Published Evidence；
+5. The latest live-status section at the end of `docs/personal/TASKS.md`；
+6. README, PROJECT_BRIEF, EXPERIMENT_PLAN, ENVIRONMENT and ARCHITECTURE as
+   summaries only。
+
+`PENDING` in a frozen Task Card is the card-definition status, not the live
+execution status。
+
+#### J4 protocol section mapping
+
+The authoritative mapping is:
+
+- J4.1 — Level A correctness：Stage J Plan §18.1；
+- J4.2 — Level B runtime/integration：Stage J Plan §18.2；
+- J4.3 — Level C robustness：Stage J Plan §18.3；
+- J4.4 — Cross-level Evidence gate：Stage J Plan §18 and §26。
+
+The frozen Task Cards' J4 `Parent protocol sections: §28` reference is a
+`FROZEN_CROSS_REFERENCE_DEFECT` because Plan §28 is J7 Consolidation. The
+Task Cards are not modified；this Decision is the formal interpretation。
+
+#### J4.3 dependency interpretation
+
+The Task Card dependency `J4.2 PASS; J3.9 PASS` is interpreted as follows:
+
+- J4.2 must actually PASS；
+- the J3.9 dependency is satisfied by the retained strict-failure Evidence,
+  remediation classification B, Accepted Decision D046, and
+  `J3.10 v2 PASS_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`。
+
+This interpretation satisfies only the J4.3 entry dependency. J3.9 is not
+rewritten as strict PASS；the LeakSanitizer finding is not deleted, hidden or
+suppressed；and the J4.3 gate is not relaxed. J4.3 itself remains the Plan
+§18.3 Level C scope: 16 images, class-aware maximum bipartite matching,
+confidence/bounding-box tolerance, and byte-identical payloads across two
+canonical Jetson runs. J4.3 does not start a new sanitizer campaign; any such
+campaign requires a new Decision。
+
+#### Live transition state
+
+After D047 and J3.10 v2 PASS:
+
+- J0 `COMPLETE`；J1 `COMPLETE`；J2 `COMPLETE`；
+- J3 `COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J4 `NOT_STARTED`；J4.1 `READY`；J4.2/J4.3/J4.4 `PENDING`；
+- Stage T `NOT_STARTED`；Stage P `NOT_STARTED`。
+
+The next authorized task is `J4.1 — Level A correctness`。

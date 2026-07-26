@@ -706,3 +706,31 @@ The frozen deployment model contract is:
 | Output | `output0` | `float32` | `[1, 10, 8400]` | static |
 
 The current frozen artifact is `models/onnx/yolov8n_neudet_frozen.onnx`. Historical 320/416/640 experiment planning and historical ONNX path examples are future experiment context, not inputs to the current C++ baseline.
+
+## Current Stage J Implemented Baseline
+
+The implemented Stage J CPU baseline includes:
+
+- `DirectorySource`；
+- `Preprocessor`；
+- `OnnxRuntimeEngine`；
+- `PostProcessor`；
+- `SerialRunner`；
+- RuntimeConfig v1/v2 isolation；
+- `OrtOptionsRecord`；
+- `OpenCvThreadPolicyRecord`；
+- `IFrameTraceObserver` / `TraceRecorder`；
+- `PortableControlSession`。
+
+The following are not implemented in the Stage J production path or do not
+belong to Stage J:
+
+- `TensorRTEngine` production path；
+- `PipelineRunner` production path；
+- camera/RTSP runtime；
+- ROS2 runtime；
+- CUDA EP；
+- GPU preprocessing/NMS。
+
+J4 is a correctness-validation phase, not a new architecture-development
+phase.

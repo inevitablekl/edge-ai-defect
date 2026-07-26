@@ -53,13 +53,13 @@ Not available
 
 ## 3. 当前环境总览
 
-当前规划状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041：`Accepted`；J0 Planning Freeze：`COMPLETE`；Stage J execution：`PENDING J1`；J1：`BLOCKED pending device`；Device-observed facts：`pending J1`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
+当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | planned target; pending J1 |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J3 verified; J4.1 ready |
 
 ---
 
@@ -906,6 +906,30 @@ J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
 - J2.4 GPU discovery warning 分类：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；runtime exit 0、CPU provider PASS、无缺失动态库或 GPU EP 初始化。
 - J2 最终范围：formal aarch64 CPU SDK build、package、manifest 和无 `LD_LIBRARY_PATH` runtime/RPATH smoke；不包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 benchmark。
 - J2：`COMPLETE`；J3.1：`READY`；J3：尚未开始；J3.0：`NOT_DEFINED`。Next authorized task：`J3.1 — aarch64 build and CMake portability`。
+
+### Stage J J3 Final Environment and Validation Summary
+
+The final J3 environment and validation facts are:
+
+- Jetson Linux/L4T `R36.5`；
+- kernel `5.15.185`；
+- architecture `aarch64`；
+- GCC/G++ `11.4.0`；
+- CMake `3.22.1`；
+- ONNX Runtime `1.23.2` CPU；
+- OpenCV `4.5.4`；
+- yaml-cpp `0.7.0`；
+- OpenSSL `3.0.2`；
+- final production source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；
+- corrected J3.5 source commit：`9b146317922561c55d91ad7126dbde4164b0c800`；
+- J3.7 Evidence：`j3_7_historical_v1_v1`；
+- J3.8 Evidence：`j3_8_jetson_regression_v1`；
+- J3.9 strict failure Evidence：`j3_9_jetson_asan_ubsan_v1`；
+- J3.9 remediation Evidence：`j3_9_remediation_investigation_v1`；
+- D046：Accepted third-party OpenCV/TBB LeakSanitizer limitation；
+- J3.10 v2 Evidence：`j3_10_j3_evidence_gate_v2`；
+- J4.1：`READY`；
+- no model loading, inference or benchmark was executed during J3 closeout。
 ### Stage J J3.1 aarch64 build and CMake portability
 
 - Native Jetson architecture：`aarch64`；GCC/G++：`11.4.0`；system CMake：`3.22.1`；C++ standard：`C++17`。

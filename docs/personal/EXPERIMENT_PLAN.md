@@ -121,24 +121,23 @@ M5 在该环境采集工程 baseline，用于复现当前 C++ Serial pipeline �
 当前状态：
 
 ```text
-Stage J planned target: Jetson Orin Nano Super Developer Kit 8GB
+Stage J verified target: Jetson Orin Nano Super Developer Kit 8GB
 Storage/root filesystem: 256GB NVMe
-JetPack: 6.2.2 planned
-Jetson Linux / L4T: 36.5 planned
-OS: Ubuntu 22.04-based planned
-Architecture: aarch64 planned
-ONNX Runtime C++: 1.23.2 native source build planned
-Execution Provider: CPUExecutionProvider only planned
-Mode: MAXN_SUPER planned
-Cooling: active fan planned
-Status: planned target; pending J1 verification
+JetPack: 6.2.2 / Jetson Linux L4T 36.5
+OS: Ubuntu 22.04-based
+Architecture: aarch64
+ONNX Runtime C++: 1.23.2 native source build
+Execution Provider: CPUExecutionProvider only
+Mode: MAXN_SUPER
+Cooling: active fan
+Status: J1–J3 verified
 ```
 
-以上是 Stage J planned target，不是 J0 已验证的 Jetson observed facts。实际设备信息在 J1 采集并冻结。
+以上为 J1–J3 已验证的 Jetson facts。
 
 ### 4.4 Stage J 研究定位与边界
 
-当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041：`Accepted`；J0：`COMPLETE`；Stage J execution：`PENDING J1`；J1：`BLOCKED pending device`；implementation branch：`feature/jetson-onnxruntime`；no Jetson experiment has run；Stage J formal Evidence：`not generated`。Stage T 和 Stage P 尚未开始。
+当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
 
 Stage J 的正式定位是 **Jetson Orin Nano Super ONNX Runtime CPU Baselines**，目标包括：
 
