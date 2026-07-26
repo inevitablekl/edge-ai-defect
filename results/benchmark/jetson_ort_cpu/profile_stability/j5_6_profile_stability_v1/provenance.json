@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "starting_commit": "ba9926f452358dde33434b31b6be7916d690d3ba",
+  "branch": "feature/jetson-onnxruntime",
+  "binary_sha256": "418c9ee95737261259ad64c2b91fe206cb00df0ef8a521c28da4cb25e6e1dd23",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+  "j5_1_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+  "d051": "Tuned k5; CPU set 1-5; intra_op_threads=5; inter_op_threads=1",
+  "expected_semantic_output_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+  "source_changes": false,
+  "decisions_changes": false,
+  "profile_comparison": false,
+  "push": false
+}

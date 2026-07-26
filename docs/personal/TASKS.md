@@ -2631,3 +2631,16 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - Evidence：`j5_5_profile_baseline_v1`。
 - Next：`J5.6 Tuned Profile Stability`；状态 `READY`。
 - J5.6 未执行。
+
+### Stage J J5.6 Tuned Profile Stability Test
+
+- J5.5：COMPLETE。
+- Status：COMPLETE。
+- Tuned Profile：k5。
+- CPU affinity：1-5。
+- ORT：CPUExecutionProvider；intra_op_threads=5；inter_op_threads=1。
+- Duration：30 minutes（1800546 ms）。
+- Stability result：771/771 inference cycles successful；0 failures。
+- Correctness：all cycles semantic output SHA identical；NaN/Inf checks PASS。
+- Evidence：j5_6_profile_stability_v1。
+- Stage J CPU Baseline：COMPLETE。
