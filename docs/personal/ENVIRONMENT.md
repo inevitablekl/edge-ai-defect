@@ -965,3 +965,26 @@ The final J3 environment and validation facts are:
   two independent reports byte-identical；historical guards `5/5 PASS`。
 - No model loading, inference, benchmark, latency/FPS campaign, TensorRT,
   CUDA EP, ROS2, camera, Pipeline, Level B or Level C was executed。
+
+### Stage J J4.2 D048 Cross-Architecture Numerical Acceptance
+
+- Python reference boundary：x86_64 WSL2；Jetson execution boundary：aarch64；
+  both use ORT `1.23.2` and `CPUExecutionProvider` with the frozen model,
+  input and Python golden。
+- Jetson controlled profile：CPU `5` on online/allowed CPUs `0-5`；OpenCV
+  requested/reported `1/1`；MAXN_SUPER mode `2`；fan PWM `255`；
+  `nvfancontrol` inactive；J1-accepted `jetson_clocks --fan` state。
+- Original strict J4.2 result remains failed：MAE
+  `6.972924584434146e-06`；max_abs `0.001068115234375`；strict Plan Gate
+  pass：`false`。
+- D048 v2 result：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；
+  overall MAE `6.972924584434146e-06`；bbox max_abs
+  `0.001068115234375`；score max_abs `4.76837158203125e-07`；all 84000
+  values finite；two Jetson processes byte-identical。
+- Canonical Jetson raw SHA256：
+  `a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`。
+- D048 is limited to the frozen Jetson Orin Nano Super / L4T R36.5 / aarch64 /
+  ORT 1.23.2 CPU-only combination and does not relax J4.3's Level C Gate。
+- No production source or inference algorithm change；no ORT rebuild；no
+  benchmark, latency/FPS campaign, preprocessing/postprocessing, TensorRT,
+  CUDA EP, Pipeline, ROS2 or Level C execution。

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "python_reference": {
+    "architecture": "x86_64",
+    "determinism": "PASS",
+    "onnxruntime": "1.23.2",
+    "provider": "CPUExecutionProvider"
+  },
+  "jetson_target": {
+    "architecture": "aarch64",
+    "determinism": "PASS",
+    "onnxruntime": "1.23.2",
+    "provider": "CPUExecutionProvider"
+  },
+  "historical_x86_cpp_exact_match": true,
+  "root_cause_confidence": "supported engineering attribution, not single-kernel proof",
+  "classification": "SUPPORTED_CROSS_ARCH_ORT_CPU_NUMERICAL_DRIFT"
+}

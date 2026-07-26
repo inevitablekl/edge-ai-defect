@@ -1,0 +1,4 @@
+Controlled Profile: MAXN_SUPER mode 2; fan PWM 255; nvfancontrol inactive; taskset -c 5; env -u LD_LIBRARY_PATH
+Formal runner: stage_j_onnx_runtime_level_b with frozen RuntimeConfig v2, input, model and CPUExecutionProvider
+Analyzer: analyze_stage_j_level_b.py with frozen Python golden
+Historical regression: runtime_config, ort_runtime_smoke, ort_model_contract_smoke, onnx_runtime_engine_initialization, onnx_runtime_engine_run, onnx_runtime_engine_level_b

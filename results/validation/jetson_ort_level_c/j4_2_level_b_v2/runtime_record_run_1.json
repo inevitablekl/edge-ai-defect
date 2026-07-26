@@ -1,0 +1,27 @@
+{
+  "requested_runtime_options": {"schema_version":2,"backend_type":"onnxruntime_cpu","execution_mode":"sequential","graph_optimization_level":"all","intra_op_threads":1,"inter_op_threads":1,"intra_op_allow_spinning":true,"inter_op_allow_spinning":true,"cpu_arena_enabled":true,"memory_pattern_enabled":true},
+  "applied_runtime_options": {"schema_version":2,"backend_type":"onnxruntime_cpu","execution_mode":"sequential","graph_optimization_level":"all","intra_op_threads":1,"inter_op_threads":1,"intra_op_allow_spinning":true,"inter_op_allow_spinning":true,"cpu_arena_enabled":true,"memory_pattern_enabled":true},
+  "requested_applied_match": true,
+  "session_creation_succeeded": true,
+  "queried_runtime_options": {
+    "runtime_queryable": false,
+    "verification_method": "successful_applied_api_call"
+  },
+  "field_verification": {
+    "execution_provider": "CPUExecutionProvider",
+    "execution_provider_only": true
+  },
+  "opencv_thread_policy": {
+    "requested": 1,
+    "reported": 1,
+    "opencv_version": "4.5.4",
+    "build_information_sha256": "ad3a462554501bb77ea4f6434c87e536ad21618af7a391f1416d3fea82509d9f",
+    "parallel_framework": "TBB (ver 2020.3 interface 11103)"
+  },
+  "input_contract": {"dtype": "float32", "layout": "NCHW", "shape": [1, 3, 640, 640], "element_count": 1228800},
+  "output_contract": {"dtype": "float32", "layout": "BCN", "shape": [1, 10, 8400], "element_count": 84000},
+  "output_finite_count": 84000,
+  "output_nan_count": 0,
+  "output_positive_inf_count": 0,
+  "output_negative_inf_count": 0
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "run_1_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "run_2_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "byte_identical": true,
+  "canonical_published_raw_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "shape": [
+    1,
+    10,
+    8400
+  ],
+  "dtype": "float32",
+  "layout": "BCN",
+  "element_count": 84000
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "strict_plan_gate": {
+    "mae_limit": 1e-06,
+    "max_abs_limit": 0.0001,
+    "pass": false
+  },
+  "run_1": {
+    "mae": 6.972924584434146e-06,
+    "max_abs": 0.001068115234375
+  },
+  "run_2": {
+    "mae": 6.972924584434146e-06,
+    "max_abs": 0.001068115234375
+  },
+  "strict_plan_gate_pass": false
+}

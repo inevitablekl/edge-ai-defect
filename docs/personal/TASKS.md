@@ -2465,3 +2465,36 @@ authority。
   unchanged。
 - J4：`IN PROGRESS`；J4.2：`READY`；J4.2 未执行。
 - Next authorized task：`J4.2 — Level B runtime/integration`。
+
+### Stage J J4.2 Level B under D048
+
+This final section is the authoritative live-status section. The original
+strict result and v1 attempt remain retained.
+
+- Original J4.2 v1 strict Plan §18.2 Gate：`FAILED`；the original formal
+  19-file attempt remains valid with original manifest SHA256
+  `74dd6d1ae56099f084f55cfe35564bc91c66c5979c60d2932761b5edbb20d764`。
+- Later v1 forensic files are acceptable append-only historical artifacts and
+  do not replace the original formal result。
+- D048：`Accepted`；governance commit：
+  `a180a13df8b0a38750cb535f734c6907ce6beefe`；analyzer source commit：
+  `fa258bdffb0c1ac5483b3fc352264edb7db51a29`。
+- v2 formal attempt：`j4.2_level_b_v2`；Published Evidence：
+  `j4_2_level_b_v2`；published manifest SHA256：
+  `74656fab3d0146716686d975e39764038026f89e28f95830e8f128acb8e92f75`。
+- Strict result remains visible：`strict_plan_gate_pass=false`；overall MAE
+  `6.972924584434146e-06`；overall max_abs `0.001068115234375`。
+- D048 result：`d048_cross_arch_acceptance_pass=true`；canonical Jetson raw
+  SHA256
+  `a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`；
+  bbox max_abs `0.001068115234375`；score max_abs
+  `4.76837158203125e-07`；finite/NaN/+Inf/-Inf：`84000/0/0/0`。
+- Two-process raw output and reports：byte-identical；requested/applied ORT
+  options match；OpenCV requested/reported `1/1`；historical regression：
+  five applicable tests PASS and the strict historical Level B comparator is
+  `EXPECTED_CROSS_ARCH_FAILURE`。
+- Model Smoke inventory remains OFF `31` and ON `39`；frozen inventory SHA
+  unchanged。
+- J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4：`IN
+  PROGRESS`；J4.3：`READY_UNDER_D048`；J4.3 未执行。
+- Next authorized task：`J4.3 — Level C robustness`。
