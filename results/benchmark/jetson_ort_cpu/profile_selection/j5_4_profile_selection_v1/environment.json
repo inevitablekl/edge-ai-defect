@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "hardware": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+  "architecture": "aarch64",
+  "kernel": "5.15.185-tegra",
+  "l4t": "R36.5",
+  "jetpack_target": "6.2.2",
+  "ubuntu": "22.04.5",
+  "cpu_online_and_allowed": "0-5",
+  "power_mode": "MAXN_SUPER",
+  "power_mode_id": 2,
+  "jetson_clocks_show": {
+    "status": "not_observed",
+    "reason": "command requires root; no clock state was changed"
+  },
+  "fan_pwm": 255,
+  "nvfancontrol": "inactive",
+  "nproc": 6,
+  "ort": {
+    "version": "1.23.2",
+    "provider": "CPUExecutionProvider",
+    "cuda_ep": false,
+    "tensorrt_ep": false,
+    "sdk_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+    "shared_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740"
+  },
+  "observed_runtime_constraints": [
+    "nvpmodel unchanged",
+    "jetson_clocks unchanged",
+    "fan unchanged",
+    "CPU governor unchanged"
+  ],
+  "selection_source_evidence": "j5_3_candidate_sizing_v1",
+  "runtime_state_changed": false
+}

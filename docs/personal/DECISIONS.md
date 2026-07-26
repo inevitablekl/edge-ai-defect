@@ -3099,3 +3099,35 @@ production inference algorithm change.
 8. J5.2 v1 attempt 保持 `FAILED`，不追加或覆盖。
 
 9. remediation 后必须创建新的 J5.2 attempt，并重新执行全部候选。
+
+### D051 - Freeze J5 CPU Profile Selection
+
+状态：`Accepted`
+
+1. Controlled profile：candidate `k1`；CPU set `5`；
+   `intra_op_threads=1`；`inter_op_threads=1`。
+
+2. Tuned profile：candidate `k5`；CPU set `1-5`；
+   `intra_op_threads=5`；`inter_op_threads=1`。
+
+3. 选择依据：J5.3 Candidate Sizing Evidence
+   `j5_3_candidate_sizing_v1`。Selection 综合 cycle latency、CPU
+   utilization、VmRSS、temperature、VDD_IN power 和 determinism，不以单个
+   指标决定。
+
+4. k1 作为 Controlled profile：候选集合中总在线 CPU utilization、VmRSS、
+   temperature 和 VDD_IN current mean 最低；两次输出均精确匹配 J5.2 frozen
+   semantic SHA。其较高 latency 是 Controlled 最小资源/可复现角色的已接受代价。
+
+5. k5 作为 Tuned profile：cycle mean 相对 k1 降低 `74.25%`，相对 k4
+   降低 `16.87%`。k6 相对 k5 仅再降低 `3.48%`，但总在线 CPU utilization
+   增加 `11.28` 个百分点、VmRSS max 增加 `540 KB`、最高温度增加 `0.438 C`、
+   VDD_IN current mean 增加约 `5.47%`；因此按收益递减原则选择较低线程数 k5，
+   不选择最高线程 k6。
+
+6. 保持：model unchanged；ORT build/version/provider unchanged；不启用新的 EP
+   或 ORT feature；contract unchanged；semantic SHA unchanged。k1/k5 仅分别冻结
+   J5.3 已验证的 candidate thread setting。J5.4 只读分析 J5.3 Evidence，未重新运行。
+
+7. 后续 J5.5/J5.6 必须使用本 Decision 冻结的 Controlled `k1` 与 Tuned `k5`
+   profile；不得在后续任务中静默改变候选、CPU set 或 ORT thread settings。

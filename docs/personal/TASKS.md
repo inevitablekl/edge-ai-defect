@@ -2605,3 +2605,14 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - J5.3：`COMPLETE`。
 - J5.4：`READY`。
 - J5.4 未执行。
+
+### Stage J J5.4 Profile Selection
+
+- J5.3：`COMPLETE`。
+- Controlled profile：`k1`。
+- Tuned profile：`k5`。
+- Selection evidence：`j5_4_profile_selection_v1`。
+- Selection：只读分析 J5.3 sizing Evidence，未重新运行。
+- D051：`Accepted`；冻结 J5 CPU profile selection。
+- J5.5：`READY`。
+- J5.5 未执行。

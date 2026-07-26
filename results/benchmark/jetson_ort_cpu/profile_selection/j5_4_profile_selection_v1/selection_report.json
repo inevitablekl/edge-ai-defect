@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "selection_type": "J5.4 Profile Selection",
+  "rerun_performed": false,
+  "controlled_profile": {
+    "candidate": "k1",
+    "cpu_set": "5",
+    "intra_op_threads": 1,
+    "inter_op_threads": 1
+  },
+  "tuned_profile": {
+    "candidate": "k5",
+    "cpu_set": "1-5",
+    "intra_op_threads": 5,
+    "inter_op_threads": 1
+  },
+  "selection_criteria": [
+    "cycle latency",
+    "CPU utilization",
+    "memory",
+    "temperature",
+    "power",
+    "determinism"
+  ],
+  "selection_table": [
+    {
+      "candidate": "k1",
+      "cpu_set": "5",
+      "intra_threads": 1,
+      "inter_threads": 1,
+      "cycle_mean_ms": 8864.5,
+      "cycle_p50_ms": 8864.5,
+      "cycle_p95_ms": 8867.65,
+      "cycle_p99_ms": 8867.93,
+      "cycle_values_ms": [
+        8868.0,
+        8861.0
+      ],
+      "vmrss_mean_kb": 137034.0,
+      "vmrss_max_kb": 138268,
+      "cpu_utilization_definition": "mean tegrastats CPU utilization across all six online CPUs and all during samples",
+      "cpu_utilization_all_online_mean_pct": 15.88888888888889,
+      "cpu_utilization_active_set_mean_pct": 89.0,
+      "temperature_tj_mean_c": 43.68366666666666,
+      "temperature_tj_max_c": 44.093,
+      "vdd_in_current_mean_mw": 7883.555555555556,
+      "vdd_in_current_peak_mw": 8181.0,
+      "vdd_in_average_mean_mw": 7610.333333333333,
+      "determinism": "PASS",
+      "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+      "latency_reduction_vs_k1_pct": 0.0,
+      "latency_reduction_vs_previous_candidate_pct": null
+    },
+    {
+      "candidate": "k2",
+      "cpu_set": "4-5",
+      "intra_threads": 2,
+      "inter_threads": 1,
+      "cycle_mean_ms": 4784.5,
+      "cycle_p50_ms": 4784.5,
+      "cycle_p95_ms": 4806.55,
+      "cycle_p99_ms": 4808.51,
+      "cycle_values_ms": [
+        4760.0,
+        4809.0
+      ],
+      "vmrss_mean_kb": 138164.0,
+      "vmrss_max_kb": 138212,
+      "cpu_utilization_definition": "mean tegrastats CPU utilization across all six online CPUs and all during samples",
+      "cpu_utilization_all_online_mean_pct": 27.216666666666676,
+      "cpu_utilization_active_set_mean_pct": 79.15,
+      "temperature_tj_mean_c": 44.1435,
+      "temperature_tj_max_c": 44.406,
+      "vdd_in_current_mean_mw": 8497.6,
+      "vdd_in_current_peak_mw": 8981.0,
+      "vdd_in_average_mean_mw": 7928.2,
+      "determinism": "PASS",
+      "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+      "latency_reduction_vs_k1_pct": 46.0262846184218,
+      "latency_reduction_vs_previous_candidate_pct": 46.0262846184218
+    },
+    {
+      "candidate": "k4",
+      "cpu_set": "2-5",
+      "intra_threads": 4,
+      "inter_threads": 1,
+      "cycle_mean_ms": 2744.5,
+      "cycle_p50_ms": 2744.5,
+      "cycle_p95_ms": 2789.95,
+      "cycle_p99_ms": 2793.99,
+      "cycle_values_ms": [
+        2795.0,
+        2694.0
+      ],
+      "vmrss_mean_kb": 138240.0,
+      "vmrss_max_kb": 138400,
+      "cpu_utilization_definition": "mean tegrastats CPU utilization across all six online CPUs and all during samples",
+      "cpu_utilization_all_online_mean_pct": 43.388888888888886,
+      "cpu_utilization_active_set_mean_pct": 63.166666666666664,
+      "temperature_tj_mean_c": 44.74433333333334,
+      "temperature_tj_max_c": 45.562,
+      "vdd_in_current_mean_mw": 9330.333333333334,
+      "vdd_in_current_peak_mw": 10816.0,
+      "vdd_in_average_mean_mw": 8258.833333333334,
+      "determinism": "PASS",
+      "expected_cycle_sha256": "56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295",
+      "latency_reduction_vs_k1_pct": 69.03942692763269,
+      "latency_reduction_vs_previous_candidate_pct": 42.63768418852545
+    },
+    {
+      "candidate": "k5",
+      "cpu_set": "1-5",
+      "intra_threads": 5,
+      "inter_threads": 1,
+      "cycle_mean_ms": 2281.5,
+      "cycle_p50_ms": 2281.5,
+      "cycle_p95_ms": 2289.15,
+      "cycle_p99_ms": 2289.83,
+      "cycle_values_ms": [
+        2273.0,
+        2290.0
+      ],
+      "vmrss_mean_kb": 138316.0,
+      "vmrss_max_kb": 138372,
+      "cpu_utilization_definition": "mean tegrastats CPU utilization across all six online CPUs and all during samples",
+      "cpu_utilization_all_online_mean_pct": 54.47222222222223,
+      "cpu_utilization_active_set_mean_pct": 64.06666666666666,
+      "temperature_tj_mean_c": 45.093333333333334,
+      "temperature_tj_max_c": 45.968,
+      "vdd_in_current_mean_mw": 9852.166666666666,
+      "vdd_in_current_peak_mw": 11649.0,
+      "vdd_in_average_mean_mw": 8541.5,
+      "determinism": "PASS",
+      "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+      "latency_reduction_vs_k1_pct": 74.26250775565457,
+      "latency_reduction_vs_previous_candidate_pct": 16.87010384405174
+    },
+    {
+      "candidate": "k6",
+      "cpu_set": "0-5",
+      "intra_threads": 6,
+      "inter_threads": 1,
+      "cycle_mean_ms": 2202.0,
+      "cycle_p50_ms": 2202.0,
+      "cycle_p95_ms": 2222.7,
+      "cycle_p99_ms": 2224.54,
+      "cycle_values_ms": [
+        2225.0,
+        2179.0
+      ],
+      "vmrss_mean_kb": 138750.0,
+      "vmrss_max_kb": 138912,
+      "cpu_utilization_definition": "mean tegrastats CPU utilization across all six online CPUs and all during samples",
+      "cpu_utilization_all_online_mean_pct": 65.75,
+      "cpu_utilization_active_set_mean_pct": 65.75,
+      "temperature_tj_mean_c": 45.400666666666666,
+      "temperature_tj_max_c": 46.406,
+      "vdd_in_current_mean_mw": 10391.333333333334,
+      "vdd_in_current_peak_mw": 12296.0,
+      "vdd_in_average_mean_mw": 8999.833333333334,
+      "determinism": "PASS",
+      "expected_cycle_sha256": "3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426",
+      "latency_reduction_vs_k1_pct": 75.15934344858705,
+      "latency_reduction_vs_previous_candidate_pct": 3.4845496383957952
+    }
+  ],
+  "controlled_reasoning": [
+    "k1 is the lowest-thread candidate and is the default Controlled candidate.",
+    "k1 has the lowest all-online-CPU mean utilization, lowest VmRSS mean/max among the candidate set, lowest observed temperature maximum, and lowest observed VDD_IN current mean.",
+    "Both k1 runs are deterministic and exactly match the frozen J5.2 expected cycle SHA.",
+    "The higher cycle time is accepted for the Controlled role because this role prioritizes minimal resource use and reproducibility over tuned latency."
+  ],
+  "tuned_reasoning": [
+    "k5 reduces cycle mean by 74.25% versus k1 and by 16.87% versus k4.",
+    "k6 reduces cycle mean only 3.48% versus k5, while increasing all-online-CPU mean utilization by 11.28 percentage points, VmRSS maximum by 540 KB, temperature maximum by 0.438 C, and VDD_IN current mean by 5.47%.",
+    "k5 is therefore selected as the lower-thread tuned profile under diminishing latency returns; k6 is not selected solely because it has the lowest latency.",
+    "Both k5 runs are deterministic and exactly match the frozen J5.2 expected cycle SHA."
+  ],
+  "limitations": [
+    "J5.3 process-invocation cycle wall timing includes process/session startup.",
+    "Frozen v2 application did not emit per-stage inference/preprocess/postprocess timing.",
+    "EMC was not reported in observed tegrastats lines.",
+    "This is profile selection evidence, not a formal performance baseline."
+  ]
+}
