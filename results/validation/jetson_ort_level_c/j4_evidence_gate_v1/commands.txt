@@ -1,0 +1,10 @@
+git branch --show-current
+git rev-parse HEAD
+git status --porcelain=v1
+sha256sum docs/personal/STAGE_J_EXECUTION_PLAN.md docs/personal/STAGE_J_TASK_CARDS.md configs/stage_j/test_inventory.yaml
+sha256sum -c results/validation/jetson_ort_level_c/j4_1_level_a_v1/sha256sums.txt
+sha256sum -c results/validation/jetson_ort_level_c/j4_2_level_b_v2/sha256sums.txt
+cd results/validation/jetson_ort_level_c/j4_3_level_c_v2 && sha256sum -c sha256sums.txt
+JSON validity and privacy audit for J4.1/J4.2/J4.3 Evidence
+No model, ONNX, corpus, manifest, golden, frozen plan, task card, or historical Evidence was modified.
+J5, TensorRT, CUDA EP, benchmark optimization, and ROS2 were not executed.

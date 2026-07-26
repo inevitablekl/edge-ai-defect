@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j4_evidence_gate_v1",
+  "status": "PASS_WITH_ACCEPTED_J4_2_LIMITATION",
+  "frozen_plan_sha256": "a723ae1ffae70366c743531386f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+  "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+  "test_inventory_sha256": "9a25ee9cda5bf264394c53f2910d295ef9b621b6ab0a555e28fe993c42f82868",
+  "evidence_chain": [
+    {"task": "J4.1", "path": "results/validation/jetson_ort_level_c/j4_1_level_a_v1", "status": "PASS", "sha256sums_sha256": "2afb5d945013922501d65fc534eaf37c263ba2fadb435f70400bf64a814d79d2"},
+    {"task": "J4.2", "path": "results/validation/jetson_ort_level_c/j4_2_level_b_v2", "status": "COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION", "sha256sums_sha256": "74656fab3d0146716686d975e39764038026f89e28f95830e8f128acb8e92f75"},
+    {"task": "J4.3", "path": "results/validation/jetson_ort_level_c/j4_3_level_c_v2", "status": "PASS", "sha256sums_sha256": "9f81759fb8b715ad2188b14093344fdc3aa8f9ade523dade4ce8487dc5bc4bb8"}
+  ],
+  "j4_3_assets": {
+    "corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+    "reference_sha256": "bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486",
+    "matching_report_sha256": "2f7c65195ba61d84cfc3d1d8f2914c66324ac5e43733ce1da6e6cfa6e3200e85",
+    "payload_sha256": "6a8753a6ebf4bb724f51d1674f49cab7e55647d3155161bcda8c9dd008baf60b",
+    "report_sha256": "2f7c65195ba61d84cfc3d1d8f2914c66324ac5e43733ce1da6e6cfa6e3200e85"
+  }
+}

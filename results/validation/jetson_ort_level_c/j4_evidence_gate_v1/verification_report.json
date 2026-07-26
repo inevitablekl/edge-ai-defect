@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "task_id": "J4.4",
+  "status": "PASS_WITH_ACCEPTED_J4_2_LIMITATION",
+  "preconditions": {"worktree_clean": true, "frozen_plan_sha_pass": true, "frozen_task_cards_sha_pass": true, "test_inventory_sha_pass": true, "j4_1_evidence_pass": true, "j4_2_evidence_pass_under_d048": true, "j4_3_evidence_pass": true},
+  "evidence_chain_audit": {"manifest_sha_pass": true, "file_integrity_pass": true, "json_validity_pass": true, "privacy_pass": true, "provenance_pass": true, "historical_evidence_modified": false},
+  "j4_results": {"j4_1": {"status": "COMPLETE", "level_a": "8/8 PASS", "determinism": "PASS"}, "j4_2": {"status": "COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION", "strict_gate": "FAILED", "d048": "Accepted"}, "j4_3": {"status": "COMPLETE", "images": "16/16 PASS", "matched": 54, "unmatched": 0, "determinism": "PASS"}},
+  "j4_2_limitation": {"strict_gate": "FAILED", "reason": "cross architecture ORT CPU numerical drift", "strict_mae": 6.972924584434146e-06, "strict_max_abs": 0.001068115234375, "accepted_by": "D048", "accepted_mae_limit": 1e-05, "accepted_max_abs_limit": 0.01, "accepted_bbox_max_abs_limit": 0.01, "accepted_score_max_abs_limit": 0.0001, "strict_failure_relabelled_as_pass": false},
+  "j4_3_regression": {"corpus_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8d67f8b85175960f3e2dcd", "reference_sha256": "bed59648cb2d4c10a5635ad7e79d90b05b926dfaa64808e67ecee7b34cfde486", "matched_count": 54, "unmatched_count": 0, "maximum_confidence_error": 2.65265835569517e-06, "maximum_bbox_error_px": 0.0003051264160163214, "deterministic_payload_sha256": "6a8753a6ebf4bb724f51d1674f49cab7e55647d3155161bcda8c9dd008baf60b", "deterministic_report_sha256": "2f7c65195ba61d84cfc3d1d8f2914c66324ac5e43733ce1da6e6cfa6e3200e85", "v2_schema_mismatch": {"classification": "expected boundary behavior", "historically_retained": true, "acceptance_relaxed": false}},
+  "known_limitations": ["J4.2 strict cross-architecture numerical gate failed and is accepted only under D048", "Current application ResultSink schema boundary requires the retained v1-compatible J4.3 entry"],
+  "accepted_deviations": ["D048 platform-specific ORT CPU numerical envelope"],
+  "remaining_risks": ["J4.2 cross-architecture numerical drift remains a known portability limitation", "TensorRT/CUDA/Pipeline performance and resource behavior are not validated"],
+  "next_stage_started": false,
+  "j5_started": false,
+  "tensorrt_started": false,
+  "cuda_ep_started": false,
+  "benchmark_optimization_started": false,
+  "ros2_started": false
+}
