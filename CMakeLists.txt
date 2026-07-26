@@ -214,23 +214,37 @@ target_link_libraries(edge_ai_runtime
         yaml-cpp
 )
 
-add_executable(edge_ai_infer
-    src/main.cpp
+add_library(edge_ai_application STATIC
+    src/application_runner.cpp
 )
-target_compile_definitions(edge_ai_infer
-    PRIVATE
-        EDGE_AI_DEFECT_VERSION="${PROJECT_VERSION}"
+target_include_directories(edge_ai_application
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(edge_ai_infer
-    PRIVATE
+target_link_libraries(edge_ai_application
+    PUBLIC
         edge_ai_core
         edge_ai_backend_ort
         edge_ai_runtime
 )
+
+add_executable(edge_ai_infer src/main.cpp)
+target_compile_definitions(edge_ai_infer
+    PRIVATE EDGE_AI_DEFECT_VERSION="${PROJECT_VERSION}"
+)
+target_link_libraries(edge_ai_infer PRIVATE edge_ai_application)
 set_target_properties(edge_ai_infer
     PROPERTIES
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
         OUTPUT_NAME edge_ai_defect
+)
+
+add_executable(stage_j_profile_runner
+    tools/benchmark/stage_j_profile_runner.cpp
+)
+target_link_libraries(stage_j_profile_runner PRIVATE edge_ai_application)
+set_target_properties(stage_j_profile_runner
+    PROPERTIES BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
 if(BUILD_TESTING)
@@ -266,6 +280,21 @@ if(BUILD_TESTING)
         NAME m5_ort_cpu_runner_unit
         COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_m5_ort_cpu_runner.py
+    )
+    add_test(
+        NAME stage_j_ort_cpu_analyzer_unit
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_j_ort_cpu_analyze.py
+    )
+    add_test(
+        NAME stage_j_ort_cpu_formal_unit
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_j_ort_cpu_formal.py
+    )
+    set_tests_properties(
+        stage_j_ort_cpu_analyzer_unit
+        stage_j_ort_cpu_formal_unit
+        PROPERTIES LABELS "stage-j;benchmark;tooling"
     )
     set_tests_properties(
         m5_ort_cpu_common_unit
@@ -563,6 +592,7 @@ if(BUILD_TESTING)
             ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_application_smoke.py
             --mode off
             --executable $<TARGET_FILE:edge_ai_infer>
+            --profile-runner $<TARGET_FILE:stage_j_profile_runner>
             --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/application_smoke
             --contract ${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml
     )
@@ -959,6 +989,7 @@ if(BUILD_TESTING)
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_application_smoke.py
                 --mode on
                 --executable $<TARGET_FILE:edge_ai_infer>
+                --profile-runner $<TARGET_FILE:stage_j_profile_runner>
                 --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/application_smoke
                 --contract ${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml
                 --model ${EDGE_AI_FROZEN_ONNX_PATH}

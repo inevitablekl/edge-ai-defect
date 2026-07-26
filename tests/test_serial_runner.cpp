@@ -480,6 +480,20 @@ void test_trace_observer_and_recorder(TestContext& context) {
     context.expect(empty_recorder.flush().ok() && empty_output.str().empty(),
                    "empty trace",
                    "empty trace must flush without output");
+
+    std::ostringstream failed_output;
+    failed_output.setstate(std::ios::badbit);
+    runtime::TraceRecorder failed_recorder(failed_output);
+    context.expect(failed_recorder.on_stage_begin(
+                       0, runtime::FrameTraceStage::kSource, 1).ok(),
+                   "failed trace begin", "begin must not write");
+    const core::Status failed_write = failed_recorder.on_stage_end(
+        0, runtime::FrameTraceStage::kSource, 2);
+    context.expect(!failed_write.ok() &&
+                       failed_write.message().find("output write failed") !=
+                           std::string::npos,
+                   "trace write failure propagation",
+                   "TraceRecorder must report stream write failure");
 }
 
 }  // namespace

@@ -209,6 +209,33 @@ def verify_json(path, expected_names, expected_sizes):
     return raw
 
 
+def verify_profile_json(path, expected_names):
+    parsed = json.loads(path.read_text(encoding="utf-8"))
+    require(len(parsed["images"]) == len(expected_names), "wrong profile image count")
+    for image, name in zip(parsed["images"], expected_names):
+        require(image["relative_path"] == name, "wrong profile image order")
+        timing = image.get("timing_ms")
+        require(list(timing or {}) == [
+            "source", "preprocess", "inference", "postprocess", "pre_sink_total"
+        ], "benchmark timing schema missing")
+        require(all(isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+                    for value in timing.values()), "invalid benchmark timing")
+
+
+def verify_trace(path, frame_count):
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    require(len(records) == frame_count * 5 + 1, "wrong trace record count")
+    for index in range(frame_count):
+        frame = records[index * 5:(index + 1) * 5]
+        require([item["cycle_id"] for item in frame] == [index] * 5,
+                "wrong trace cycle id")
+        require([item["stage"] for item in frame] ==
+                ["source", "preprocess", "inference", "postprocess", "sink"],
+                "wrong trace stage order")
+    require(records[-1]["cycle_id"] == frame_count and records[-1]["stage"] == "source",
+            "missing EOF source probe")
+
+
 def run_off(arguments):
     root = Path(arguments.temp_dir) / "application_off"
     root.mkdir(parents=True, exist_ok=True)
@@ -257,6 +284,24 @@ def run_off(arguments):
     require(not list(root.glob("*.json")),
             "OFF application failures left a final JSON target")
 
+    if arguments.profile_runner:
+        profile_runner = Path(arguments.profile_runner)
+        trace = root / "schema_v1.trace.jsonl"
+        result = run(profile_runner, [
+            "--config", str(missing_contract), "--trace-jsonl", str(trace)
+        ], 2)
+        require("requires schema_version 2" in result.stderr,
+                "benchmark runner accepted schema v1")
+        trace.write_text("existing\n", encoding="utf-8")
+        v2_config = root / "existing_trace_v2.yaml"
+        write_config_v2(v2_config, Path(arguments.contract), root / "missing.onnx",
+                        root / "missing_input", root / "unused.json")
+        result = run(profile_runner, [
+            "--config", str(v2_config), "--trace-jsonl", str(trace)
+        ], 2)
+        require("already exists" in result.stderr,
+                "benchmark runner accepted existing trace target")
+
 
 def run_on(arguments):
     root = Path(arguments.temp_dir) / "application_on"
@@ -289,6 +334,21 @@ def run_on(arguments):
     v2_second = verify_json(v2_result_path, expected_names, expected_sizes)
     require(v2_first == v2_second,
             "RuntimeConfig v2 JSON is not byte-identical across overwrite run")
+
+    if arguments.profile_runner:
+        profile_result = root / "profile_result.json"
+        profile_config = root / "profile_v2.yaml"
+        profile_trace = root / "profile_trace.jsonl"
+        profile_result.unlink(missing_ok=True)
+        profile_trace.unlink(missing_ok=True)
+        write_config_v2(profile_config, Path(arguments.contract), Path(arguments.model),
+                        images, profile_result)
+        profiled = run(Path(arguments.profile_runner), [
+            "--config", str(profile_config), "--trace-jsonl", str(profile_trace)
+        ], 0)
+        require(profiled.stdout == "", "profile runner wrote large stdout")
+        verify_profile_json(profile_result, expected_names)
+        verify_trace(profile_trace, 2)
 
     console_path = root / "console.json"
     console_config = root / "console_smoke.yaml"
@@ -346,6 +406,7 @@ def main():
     parser.add_argument("--temp-dir", required=True)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--model")
+    parser.add_argument("--profile-runner")
     arguments = parser.parse_args()
     if arguments.mode == "on":
         require(arguments.model is not None, "--model is required for ON smoke")

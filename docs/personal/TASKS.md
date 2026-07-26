@@ -2677,3 +2677,49 @@ Consolidation section as the current live-status authority.
 - Stage J CPU chain：`PARTIALLY_COMPLETE`；不得声称 `COMPLETE` 或 `FROZEN`。
 - Current authorized task：D052 governance reconciliation followed by J5.6
   Tuned k-Core formal baseline remediation only。
+
+### Stage J Remediation R2 — v2 Formal Baseline Tooling
+
+This append-only section supersedes the preceding D052 remediation status for
+the J5.6 tooling-readiness state.
+
+- R2 tooling remediation：`COMPLETE`。
+- Starting source commit：
+  `e95fd61c9b1c4fc9ec80620606d935fedca458b4`；tooling source is the commit
+  carrying this section with subject `feat: add Stage J formal baseline tooling`。
+- RuntimeConfig schema：unchanged；schema v2 continues to reject a top-level
+  `timing` field。
+- Production executable：`edge_ai_defect` CLI、exit-code/error behavior and
+  timing-disabled v2 Result JSON behavior remain unchanged。
+- Benchmark-only timing bridge：`stage_j_profile_runner` uses schema v2,
+  explicitly enables existing `FrameTimings`, and records the existing
+  monotonic stage trace；production CLI/config cannot enable this bridge。
+- Offline tooling：Stage J strict timing/trace analyzer and a default
+  preflight-only Jetson orchestrator are implemented；formal execution requires
+  explicit `--execute-formal --profile k5 --evidence-id <new-id>`。
+- Release build：Jetson `aarch64`、GCC/G++ `11.4.0`、CMake `3.22.1`、OpenCV
+  C++ `4.5.4`、ONNX Runtime C++ `1.23.2`，Model Smoke OFF/ON configurations
+  both built successfully。
+- Model Smoke OFF applicable regression：`29/29 PASS`。
+- R2 critical ON regression：`6/6 PASS`，covering analyzer/orchestrator,
+  RuntimeConfig, SerialRunner, production CLI and application ORT smoke。
+- Full ON visibility run：`36/41 PASS`；four historical M5 Python tests were
+  not executable because Jetson system Python lacks `cv2`，and the existing
+  Level B comparison retained its D048 cross-architecture numerical failure
+  (`MAE=6.97292e-06`, `max_abs=0.00106812`)。Neither condition was hidden or
+  changed by R2。
+- ASan/UBSan model-independent checks：SerialRunner and application CLI
+  `PASS`；RuntimeConfig `PASS` with leak detection disabled。LeakSanitizer
+  separately reported the existing OpenCV/TBB `cv::setNumThreads` process-exit
+  allocation (`792 bytes`)，with no R2 stack frame。
+- One authorized development smoke：`PASS`；k5 affinity `1-5`，`40/40`
+  frames，`2/2` canonical cycle SHA，`40/40` complete real-frame traces，
+  finite/non-negative timing present for every frame，and sampled process
+  affinity remained within `1-5`。Output remained temporary；no formal local
+  attempt and no Published Evidence were created。
+- J5.6 Tuned k-Core formal baseline：
+  `READY_FOR_FORMAL_EXECUTION`；the formal five-run campaign has not been
+  executed。
+- J5.7：`BLOCKED_BY_J5.6`；not executed。
+- J6：`NOT_COMPLETE`；J7：`NOT_STARTED`；J8 remains `FAIL`；J9 and Stage T
+  remain `NOT_AUTHORIZED`。
