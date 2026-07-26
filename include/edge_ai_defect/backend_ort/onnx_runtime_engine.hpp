@@ -2,6 +2,7 @@
 
 #include "edge_ai_defect/inference/inference_engine.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
+#include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
 
 #include <memory>
 
@@ -29,6 +30,8 @@ public:
     [[nodiscard]] core::Status run(
         const core::HostTensor& input,
         core::HostTensor* output) override;
+
+    [[nodiscard]] const OrtOptionsRecord* applied_options_record() const noexcept;
 
 private:
     class Impl;

@@ -904,7 +904,7 @@ if(BUILD_TESTING)
                 LABELS "m2;onnxruntime;run;model-asset"
         )
 
-        add_executable(test_onnx_runtime_engine_level_b
+    add_executable(test_onnx_runtime_engine_level_b
             tests/test_onnx_runtime_engine_level_b.cpp
         )
         target_link_libraries(test_onnx_runtime_engine_level_b
@@ -932,10 +932,25 @@ if(BUILD_TESTING)
                 --report
                 "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/onnx_runtime_engine_level_b/comparison_report.json"
         )
-        set_tests_properties(onnx_runtime_engine_level_b
+    set_tests_properties(onnx_runtime_engine_level_b
             PROPERTIES
-                LABELS "m2;onnxruntime;level-b;model-asset;evidence"
-        )
+            LABELS "m2;onnxruntime;level-b;model-asset;evidence"
+    )
+
+    add_executable(stage_j_onnx_runtime_level_b
+        tests/stage_j_onnx_runtime_level_b.cpp
+    )
+    target_link_libraries(stage_j_onnx_runtime_level_b
+        PRIVATE
+            edge_ai_backend_ort
+            edge_ai_runtime
+            edge_ai_core
+    )
+    set_target_properties(stage_j_onnx_runtime_level_b
+        PROPERTIES
+            BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
 
         add_test(
             NAME application_ort_smoke

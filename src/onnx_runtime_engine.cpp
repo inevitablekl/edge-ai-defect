@@ -469,4 +469,8 @@ core::Status OnnxRuntimeEngine::run(const core::HostTensor& input,
     }
 }
 
+const OrtOptionsRecord* OnnxRuntimeEngine::applied_options_record() const noexcept {
+    return impl_ == nullptr ? nullptr : impl_->options_record.get();
+}
+
 }  // namespace edge_ai_defect::backend_ort
