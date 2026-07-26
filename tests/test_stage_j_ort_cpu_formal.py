@@ -16,6 +16,7 @@ from run_stage_j_ort_cpu_formal import (
     validate_profile,
     parse_cpu_list,
     safe_read_sysfs_text,
+    collect_thermal_snapshot,
 )
 
 
@@ -33,6 +34,70 @@ def profile():
 
 
 class StageJFormalTests(unittest.TestCase):
+    def _thermal_fixture(self, zones):
+        import tempfile
+        root = Path(tempfile.mkdtemp())
+        paths = []
+        for index, (zone, value) in enumerate(zones.items()):
+            zone_dir = root / f"thermal_zone{index}"
+            zone_dir.mkdir()
+            (zone_dir / "type").write_text(zone, encoding="utf-8")
+            if value is not None:
+                (zone_dir / "temp").write_text(value, encoding="utf-8")
+            paths.append(zone_dir / "type")
+        return root, paths
+
+    def test_required_thermal_zone_valid_passes(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            self.assertEqual(len(result["temperature_millicelsius"]), 6)
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_required_thermal_zone_missing_fails(self):
+        root, paths = self._thermal_fixture({"cpu-thermal": None})
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "error")
+            self.assertIn("cpu-thermal", result["thermal_errors"][-1]["missing"])
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_excluded_thermal_zone_none_passes_as_unavailable(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        zones["cv0"] = None
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            self.assertEqual(result["excluded_thermal"][0]["status"], "unavailable")
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_excluded_thermal_zone_missing_passes_as_unavailable(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            excluded = {item["zone"]: item for item in result["excluded_thermal"]}
+            self.assertEqual(excluded["cv1"]["status"], "unavailable")
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
     def test_safe_sysfs_reader_string(self):
         result = safe_read_sysfs_text("/sys/test", lambda _: " 42\n")
         self.assertEqual(result, {

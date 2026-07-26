@@ -66,6 +66,7 @@ REQUIRED_THERMAL_TYPES = {
     "soc2-thermal",
     "tj-thermal",
 }
+EXCLUDED_THERMAL_TYPES = {"cv0", "cv1", "cv2"}
 
 
 def _git(*arguments: str, root: Path = REPO_ROOT) -> str:
@@ -297,6 +298,93 @@ def validate_thermal_sources() -> dict[str, Any]:
     return {"status": "PASS", "sources": discovered}
 
 
+def collect_thermal_snapshot(
+    type_paths: list[Path] | None = None,
+) -> dict[str, Any]:
+    """Collect only the D042 required thermal set as a run-validating signal.
+
+    The cv0/cv1/cv2 zones are inventory-only on this platform.  Their temp
+    files may return None or be absent and must remain visible in telemetry
+    without invalidating a formal run.
+    """
+    temperatures: dict[str, int] = {}
+    thermal_errors: list[dict[str, Any]] = []
+    excluded_thermal: list[dict[str, Any]] = []
+    discovered_required: set[str] = set()
+    discovered_excluded: set[str] = set()
+    paths = type_paths if type_paths is not None else sorted(
+        Path("/sys/class/thermal").glob("thermal_zone*/type"))
+    for type_path in paths:
+        type_result = safe_read_sysfs_text(type_path)
+        if type_result["status"] != "ok":
+            thermal_errors.append(type_result)
+            continue
+        zone_type = type_result["value"]
+        if zone_type not in REQUIRED_THERMAL_TYPES | EXCLUDED_THERMAL_TYPES:
+            continue
+        temp_path = type_path.parent / "temp"
+        temp_result = safe_read_sysfs_text(temp_path)
+        if zone_type in EXCLUDED_THERMAL_TYPES:
+            discovered_excluded.add(zone_type)
+            excluded_entry: dict[str, Any] = {
+                "zone": zone_type,
+                "type_path": str(type_path),
+                "temp_path": str(temp_path),
+            }
+            if temp_result["status"] != "ok":
+                excluded_entry.update({
+                    "status": "unavailable",
+                    "detail": temp_result,
+                })
+            else:
+                try:
+                    excluded_entry.update({
+                        "status": "ok",
+                        "value": int(temp_result["value"]),
+                    })
+                except (TypeError, ValueError):
+                    excluded_entry.update({
+                        "status": "unavailable",
+                        "detail": {
+                            "status": "error",
+                            "path": temp_result["path"],
+                            "error": "thermal value is not an integer",
+                        },
+                    })
+            excluded_thermal.append(excluded_entry)
+            continue
+        if temp_result["status"] != "ok":
+            thermal_errors.append(temp_result)
+            continue
+        try:
+            temperatures[zone_type] = int(temp_result["value"])
+            discovered_required.add(zone_type)
+        except (TypeError, ValueError):
+            thermal_errors.append({
+                "status": "error", "path": temp_result["path"],
+                "error": "thermal value is not an integer",
+            })
+    missing_required = sorted(REQUIRED_THERMAL_TYPES - discovered_required)
+    for zone_type in sorted(EXCLUDED_THERMAL_TYPES - discovered_excluded):
+        excluded_thermal.append({
+            "zone": zone_type,
+            "status": "unavailable",
+            "detail": "thermal zone was not discovered",
+        })
+    if missing_required:
+        thermal_errors.append({
+            "status": "error",
+            "error": "required thermal zones missing",
+            "missing": missing_required,
+        })
+    return {
+        "temperature_millicelsius": temperatures,
+        "thermal_status": "error" if thermal_errors else "ok",
+        "thermal_errors": thermal_errors,
+        "excluded_thermal": excluded_thermal,
+    }
+
+
 def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[str, Any], tuple[int, int]]:
     cpu_values = []
     for line in Path("/proc/stat").read_text(encoding="utf-8").splitlines():
@@ -316,25 +404,7 @@ def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[s
         key, separator, value = line.partition(":")
         if separator and key in {"MemTotal", "MemAvailable", "SwapTotal", "SwapFree"}:
             memory[key] = int(value.split()[0])
-    temperatures = {}
-    thermal_errors = []
-    for type_path in Path("/sys/class/thermal").glob("thermal_zone*/type"):
-        type_result = safe_read_sysfs_text(type_path)
-        if type_result["status"] != "ok":
-            thermal_errors.append(type_result)
-            continue
-        zone_type = type_result["value"]
-        temp_result = safe_read_sysfs_text(type_path.parent / "temp")
-        if temp_result["status"] != "ok":
-            thermal_errors.append(temp_result)
-            continue
-        try:
-            temperatures[zone_type] = int(temp_result["value"])
-        except (TypeError, ValueError):
-            thermal_errors.append({
-                "status": "error", "path": temp_result["path"],
-                "error": "thermal value is not an integer",
-            })
+    thermal = collect_thermal_snapshot()
     frequencies = {}
     for frequency_path in Path("/sys/devices/system/cpu").glob(
             "cpufreq/policy*/scaling_cur_freq"):
@@ -347,9 +417,7 @@ def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[s
         "monotonic_ns": time.monotonic_ns(),
         "cpu_utilization_percent_cpu1_5": utilization,
         "ram_kb": memory,
-        "temperature_millicelsius": temperatures,
-        "thermal_status": "error" if thermal_errors else "ok",
-        "thermal_errors": thermal_errors,
+        **thermal,
         "cpu_frequency_khz": frequencies,
     }
     return snapshot, (total, idle)
