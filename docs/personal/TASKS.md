@@ -2451,3 +2451,17 @@ Stage J state. Historical entries above are retained and are not live status。
 
 The latest section at the end of this file is the current live-status
 authority。
+
+### Stage J J4.1 Level A correctness
+
+- J4.1：`COMPLETE`；source commit：`0ca8df90b2a5c0e76ceaa8475ad702db90cfaaf4`。
+- Published Evidence：`j4_1_level_a_v1`；published manifest SHA256：
+  `2afb5d945013922501d65fc534eaf37c263ba2fadb435f70400bf64a814d79d2`。
+- Formal controlled profile：CPU 5；OpenCV requested/reported threads `1/1`；
+  MAXN_SUPER；J1-accepted `jetson_clocks --fan` state。
+- J4.1 Level A：8/8 PASS；exact and resize cases both aggregate MAE `0` and
+  max_abs `0`；two-process report deterministic byte-identical PASS。
+- J4.1 historical guards：5/5 PASS；Model Smoke OFF inventory remains 31 and
+  unchanged。
+- J4：`IN PROGRESS`；J4.2：`READY`；J4.2 未执行。
+- Next authorized task：`J4.2 — Level B runtime/integration`。

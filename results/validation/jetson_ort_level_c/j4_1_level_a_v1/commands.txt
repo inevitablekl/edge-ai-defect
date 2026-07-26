@@ -1,0 +1,22 @@
+001 repository and frozen-asset preflight
+002 J3.10 v2 manifest validation
+003 J1 platform/power/clock/fan Evidence inspection
+004 development remediation configure and build
+005 development ctest -N inventory comparison
+006 development historical Level A guards
+007 development controlled wrapper smoke
+008 remediation source commit
+009 formal independent Release configure
+010 formal independent Release build
+011 formal CTest inventory and binary inspection
+012 formal taskset-controlled Level A run 1
+013 formal taskset-controlled Level A run 2
+014 formal JSON/report/thread/build-information validation
+015 formal historical five-guard validation
+016 local manifest generation and validation
+
+The timing wrapper probe used for configure was unavailable (exit 127);
+configure was then run successfully with shell elapsed measurement. No model
+loading, ORT inference, postprocess validation, benchmark, latency/FPS,
+TensorRT, CUDA EP, ROS2, camera, Pipeline, Level B, Level C or J4.2 command
+was executed.

@@ -949,3 +949,19 @@ The final J3 environment and validation facts are:
 - J3.6：`COMPLETE`；source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；Published Evidence：`j3_6_portable_control_v1`。
 - Portable control：`PortableControlSession::start` 完成 RuntimeConfig v2 加载/验证、ORT/OpenCV record 固定记录、executable/config/model/evidence/trace 路径记录；无环境变量覆盖。
 - J3.6 formal native aarch64 Release build、`runtime_config` 和 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+
+### Stage J J4.1 Level A Validation Summary
+
+- Jetson Linux/L4T：`R36.5.0`；kernel：`5.15.185-tegra`；architecture：`aarch64`。
+- GCC/G++：`11.4.0`；CMake：`3.22.1`；OpenCV C++：`4.5.4`；ORT：
+  `1.23.2 linux-aarch64 CPU`。
+- Controlled CPU：`5`；online/allowed CPUs：`0-5`；process affinity：
+  `taskset -c 5`。
+- Power/clock/fan：`MAXN_SUPER` / mode ID `2`；J1 accepted
+  `jetson_clocks --fan` state；fan PWM `255`；dynamic speed control disabled。
+- J4.1 source commit：`0ca8df90b2a5c0e76ceaa8475ad702db90cfaaf4`；formal
+  wrapper binary SHA256：`bc6c3df8049db8d1c3d38d27ce5dc5239595138a7d790e1ff99a8dd908fb3cd5`。
+- Level A result：`8/8 PASS`；exact/resize aggregate MAE and max_abs both `0`；
+  two independent reports byte-identical；historical guards `5/5 PASS`。
+- No model loading, inference, benchmark, latency/FPS campaign, TensorRT,
+  CUDA EP, ROS2, camera, Pipeline, Level B or Level C was executed。

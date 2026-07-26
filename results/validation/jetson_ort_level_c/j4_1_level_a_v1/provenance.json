@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j4_1_level_a_v1",
+  "task_id": "J4.1",
+  "j4_entry_commit": "8a05c2f974fc7214e268a0a2b5665d628437c068",
+  "j4_1_source_commit": "0ca8df90b2a5c0e76ceaa8475ad702db90cfaaf4",
+  "j4_1_source_commit_subject": "test: add controlled Stage J Level A validator",
+  "formal_binary_sha256": "bc6c3df8049db8d1c3d38d27ce5dc5239595138a7d790e1ff99a8dd908fb3cd5",
+  "cmake_sha256": "0c49babeb8776f12ea355d2de09d71d17a4d6a2f998062c2e348f306a60c6488",
+  "wrapper_sha256": "d81c35cc06ba369c73dac2b7cc8599b5ef30bc4073d9ab80781b75058e722b22",
+  "historical_validator_sha256": "cbf11b9af1437eac1d1fb6a8c6df1d7e77d84cbb3ae3f4256375d9cb8b0f7d20",
+  "level_a_manifest_sha256": "14cb8749f2b7d550707ad77e75a775d02f77c841bfe822f7ddb2f30742ab1b12",
+  "level_a_assets_sha256sums_sha256": "0a35ab6ca0c512d5a82656cf8a6e5a39d92206eddc5fd77e16c2da0d6d984b9b",
+  "historical_level_a_provenance_sha256": "a754c254713538f614d9c4da94da4dd12557e59adf856cdd210b3c6aee35af66",
+  "j3_10_v2_manifest_sha256": "33df459c8ccfdb7176b124c6f1b54987bd46947c02ed82282bd108aee90ee619",
+  "frozen_plan_sha256": "a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+  "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+  "frozen_test_inventory_sha256": "9a25ee9cda5bf264394c53f2910d295ef9b621b6ab0a555e28fe993c42f82868",
+  "local_attempt_id": "j4.1_level_a_v1",
+  "local_attempt_manifest_sha256": "a3a8f6072bb4572d2a3247c32c2685bdae9ee1ee45e3d74bf27e60fd18deb7c8",
+  "technical_rerun_scope": "formal controlled Level A validation; no model or inference",
+  "privacy_status": "PASS; logical paths only, no private absolute paths, hostname, PID, dynamic timestamp, binary, raw logs or SDK payload"
+}

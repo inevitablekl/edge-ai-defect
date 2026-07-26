@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "validation": "preprocess_level_a",
+  "reference": {
+    "implementation": "tools/validation/generate_preprocess_level_a.py",
+    "python_version": "3.10.12",
+    "numpy_version": "1.26.4",
+    "opencv_version": "4.10.0",
+    "input_color_order": "BGR",
+    "output_color_order": "RGB",
+    "interpolation": "INTER_LINEAR",
+    "padding_value": 114
+  },
+  "cpp": {
+    "opencv_version": "4.5.4"
+  },
+  "tensor_format": {
+    "dtype": "float32",
+    "byte_order": "little_endian",
+    "layout": "NCHW"
+  },
+  "tolerance_profiles": {
+    "exact": {"mae_limit": 9.9999999999999995e-08, "max_abs_limit": 9.9999999999999995e-08},
+    "resize": {"mae_limit": 0.00050000000000000001, "max_abs_limit": 0.0078441372549019599}
+  },
+  "cases": [
+    {
+      "id": "no_transform_gradient",
+      "target_shape": [1, 3, 4, 4],
+      "tolerance_profile": "exact",
+      "element_count": 48,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 9.9999999999999995e-08,
+      "max_abs_limit": 9.9999999999999995e-08,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "source_or_resized"
+      }
+    },
+    {
+      "id": "vertical_padding",
+      "target_shape": [1, 3, 8, 8],
+      "tolerance_profile": "exact",
+      "element_count": 192,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 9.9999999999999995e-08,
+      "max_abs_limit": 9.9999999999999995e-08,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    },
+    {
+      "id": "horizontal_padding",
+      "target_shape": [1, 3, 8, 8],
+      "tolerance_profile": "exact",
+      "element_count": 192,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 9.9999999999999995e-08,
+      "max_abs_limit": 9.9999999999999995e-08,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    },
+    {
+      "id": "odd_horizontal_padding",
+      "target_shape": [1, 3, 8, 8],
+      "tolerance_profile": "exact",
+      "element_count": 192,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 9.9999999999999995e-08,
+      "max_abs_limit": 9.9999999999999995e-08,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    },
+    {
+      "id": "non_integer_resize",
+      "target_shape": [1, 3, 11, 11],
+      "tolerance_profile": "resize",
+      "element_count": 363,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 0.00050000000000000001,
+      "max_abs_limit": 0.0078441372549019599,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    },
+    {
+      "id": "small_upscale",
+      "target_shape": [1, 3, 16, 16],
+      "tolerance_profile": "resize",
+      "element_count": 768,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 0.00050000000000000001,
+      "max_abs_limit": 0.0078441372549019599,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    },
+    {
+      "id": "rgb_color_blocks",
+      "target_shape": [1, 3, 2, 2],
+      "tolerance_profile": "exact",
+      "element_count": 12,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 9.9999999999999995e-08,
+      "max_abs_limit": 9.9999999999999995e-08,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "source_or_resized"
+      }
+    },
+    {
+      "id": "frozen_640_checkerboard",
+      "target_shape": [1, 3, 640, 640],
+      "tolerance_profile": "resize",
+      "element_count": 1228800,
+      "mae": 0,
+      "max_abs": 0,
+      "mae_limit": 0.00050000000000000001,
+      "max_abs_limit": 0.0078441372549019599,
+      "metadata_pass": true,
+      "tensor_pass": true,
+      "overall_pass": true,
+      "max_error": {
+        "index": 0,
+        "channel": 0,
+        "y": 0,
+        "x": 0,
+        "golden": 0,
+        "actual": 0,
+        "region": "padding"
+      }
+    }
+  ],
+  "aggregate": {
+    "case_count": 8,
+    "passed_case_count": 8,
+    "max_mae": 0,
+    "max_abs": 0,
+    "closest_limit_case": "no_transform_gradient",
+    "closest_limit_metric": "mae",
+    "closest_limit_margin": 9.9999999999999995e-08,
+    "final_pass": true
+  },
+  "frozen_case": {
+    "id": "frozen_640_checkerboard",
+    "target_shape": [1, 3, 640, 640]
+  }
+}
