@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "profile": "k4",
+  "run": 2,
+  "exit_code": 0,
+  "process_wall_ms": 2694.0,
+  "image_count": 20,
+  "telemetry_during_sample_count": 3,
+  "vmrss_sample_count": 50
+}

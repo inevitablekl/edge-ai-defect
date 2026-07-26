@@ -2590,3 +2590,18 @@ and J4.2 sections remain historical evidence and are not rewritten.
   `31/31 PASS`；historical Level B remains `EXPECTED_CROSS_ARCH_FAILURE` under D048。
 - J5.2：`COMPLETE`。
 - J5.3：`READY`；J5.3 未执行。
+
+### Stage J J5.3 Candidate Sizing
+
+- J5.2：`COMPLETE`。
+- Published Evidence：`results/benchmark/jetson_ort_cpu/profile_sizing/j5_3_candidate_sizing_v1`。
+- Profiles：`k1,k2,k4,k5,k6`。
+- Independent runs：`10`；每个 profile 两个独立进程，每次完成冻结 20-image cycle。
+- Resource sizing：`COMPLETE`；保留 RAM/SWAP/CPU/temperature/power/VmRSS 原始事实。
+- Latency characterization：`COMPLETE` for process-invocation `cycle_total_ms` distribution；冻结 v2 application 未输出 per-stage timing，`inference_ms/preprocess_ms/postprocess_ms` 记录为 unavailable，未推导。
+- Candidate sizing only；不是正式性能 baseline；未执行长时间稳定性测试。
+- All run exit codes：`0`；semantic output SHA：`10/10` 命中 J5.2 对应 profile expected cycle SHA。
+- sha256 manifest verification：`PASS`；published evidence 不含图片、hostname、IP、用户路径或 credentials。
+- J5.3：`COMPLETE`。
+- J5.4：`READY`。
+- J5.4 未执行。

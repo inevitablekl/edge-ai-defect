@@ -1,0 +1,799 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "runs": {
+    "candidate_k1_run1": {
+      "profile": "k1",
+      "run": 1,
+      "exit_code": 0,
+      "process_wall_ms": 8868.0,
+      "vmrss_max_kb": 135800,
+      "vmrss_sample_count": 168,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 9,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2157,
+          2234,
+          2232,
+          2233,
+          2233,
+          2234,
+          2234,
+          2233,
+          2235
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            2.0,
+            0.0,
+            2.0,
+            0.0,
+            0.0,
+            100.0
+          ],
+          [
+            3.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            100.0
+          ],
+          [
+            4.0,
+            2.0,
+            1.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            4.0,
+            3.0,
+            1.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            1.0,
+            2.0,
+            1.0,
+            0.0,
+            0.0,
+            100.0
+          ],
+          [
+            1.0,
+            1.0,
+            2.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            2.0,
+            3.0,
+            10.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            2.0,
+            3.0,
+            2.0,
+            1.0,
+            0.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.343,
+          43.312,
+          43.531,
+          43.437,
+          43.468,
+          43.437,
+          43.531,
+          43.656,
+          43.75
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "7896mW/7352mW",
+          "7977mW/7560mW",
+          "8018mW/7675mW",
+          "7977mW/7735mW",
+          "8018mW/7782mW",
+          "7977mW/7810mW",
+          "8181mW/7857mW",
+          "8059mW/7879mW"
+        ]
+      }
+    },
+    "candidate_k1_run2": {
+      "profile": "k1",
+      "run": 2,
+      "exit_code": 0,
+      "process_wall_ms": 8861.0,
+      "vmrss_max_kb": 138268,
+      "vmrss_sample_count": 168,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 9,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2112,
+          2187,
+          2188,
+          2187,
+          2187,
+          2186,
+          2184,
+          2186,
+          2187
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            2.0,
+            2.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            0.0,
+            2.0,
+            2.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            1.0,
+            2.0,
+            1.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            0.0,
+            2.0,
+            2.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            1.0,
+            2.0,
+            0.0,
+            1.0,
+            0.0,
+            100.0
+          ],
+          [
+            1.0,
+            1.0,
+            1.0,
+            2.0,
+            0.0,
+            100.0
+          ],
+          [
+            10.0,
+            1.0,
+            3.0,
+            2.0,
+            0.0,
+            100.0
+          ],
+          [
+            2.0,
+            3.0,
+            2.0,
+            1.0,
+            1.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.75,
+          43.812,
+          43.906,
+          43.875,
+          43.937,
+          44.0,
+          44.093,
+          43.656,
+          43.812
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "7896mW/7352mW",
+          "8018mW/7574mW",
+          "8018mW/7685mW",
+          "7977mW/7743mW",
+          "8018mW/7789mW",
+          "8018mW/7822mW",
+          "8181mW/7867mW",
+          "8059mW/7888mW"
+        ]
+      }
+    },
+    "candidate_k2_run1": {
+      "profile": "k2",
+      "run": 1,
+      "exit_code": 0,
+      "process_wall_ms": 4760.0,
+      "vmrss_max_kb": 138212,
+      "vmrss_sample_count": 90,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 5,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2149,
+          2230,
+          2229,
+          2230,
+          2231
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            3.0,
+            0.0,
+            100.0,
+            91.0
+          ],
+          [
+            0.0,
+            3.0,
+            2.0,
+            1.0,
+            100.0,
+            100.0
+          ],
+          [
+            2.0,
+            2.0,
+            1.0,
+            1.0,
+            100.0,
+            100.0
+          ],
+          [
+            3.0,
+            1.0,
+            2.0,
+            1.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.5,
+          44.281,
+          44.281,
+          44.031,
+          44.281
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "8737mW/7773mW",
+          "8940mW/8162mW",
+          "8981mW/8367mW",
+          "8981mW/8489mW"
+        ]
+      }
+    },
+    "candidate_k2_run2": {
+      "profile": "k2",
+      "run": 2,
+      "exit_code": 0,
+      "process_wall_ms": 4809.0,
+      "vmrss_max_kb": 138116,
+      "vmrss_sample_count": 91,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 5,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2113,
+          2194,
+          2198,
+          2198,
+          2200
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            1.0,
+            2.0,
+            100.0,
+            90.0
+          ],
+          [
+            1.0,
+            2.0,
+            2.0,
+            1.0,
+            100.0,
+            100.0
+          ],
+          [
+            2.0,
+            3.0,
+            0.0,
+            1.0,
+            100.0,
+            100.0
+          ],
+          [
+            0.0,
+            2.0,
+            2.0,
+            1.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.625,
+          44.343,
+          44.312,
+          44.375,
+          44.406
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "8778mW/7793mW",
+          "8981mW/8189mW",
+          "8981mW/8387mW",
+          "8981mW/8506mW"
+        ]
+      }
+    },
+    "candidate_k4_run1": {
+      "profile": "k4",
+      "run": 1,
+      "exit_code": 0,
+      "process_wall_ms": 2795.0,
+      "vmrss_max_kb": 138080,
+      "vmrss_sample_count": 52,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2139,
+          2223,
+          2223
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            1.0,
+            1.0,
+            0.0,
+            2.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            2.0,
+            76.0,
+            94.0,
+            89.0,
+            88.0
+          ],
+          [
+            8.0,
+            5.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.5,
+          45.218,
+          45.281
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "10306mW/8557mW",
+          "10776mW/9297mW"
+        ]
+      }
+    },
+    "candidate_k4_run2": {
+      "profile": "k4",
+      "run": 2,
+      "exit_code": 0,
+      "process_wall_ms": 2694.0,
+      "vmrss_max_kb": 138400,
+      "vmrss_sample_count": 50,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2118,
+          2191,
+          2189
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            6.0,
+            8.0,
+            90.0,
+            100.0,
+            88.0,
+            86.0
+          ],
+          [
+            7.0,
+            3.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.687,
+          45.218,
+          45.562
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6889mW/6889mW",
+          "10387mW/8638mW",
+          "10816mW/9364mW"
+        ]
+      }
+    },
+    "candidate_k5_run1": {
+      "profile": "k5",
+      "run": 1,
+      "exit_code": 0,
+      "process_wall_ms": 2273.0,
+      "vmrss_max_kb": 138372,
+      "vmrss_sample_count": 42,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2141,
+          2218,
+          2218
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            5.0,
+            96.0,
+            95.0,
+            90.0,
+            90.0,
+            90.0
+          ],
+          [
+            9.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.812,
+          45.5,
+          45.687
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "11100mW/8954mW",
+          "11608mW/9839mW"
+        ]
+      }
+    },
+    "candidate_k5_run2": {
+      "profile": "k5",
+      "run": 2,
+      "exit_code": 0,
+      "process_wall_ms": 2290.0,
+      "vmrss_max_kb": 138260,
+      "vmrss_sample_count": 42,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2108,
+          2189,
+          2189
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            14.0,
+            89.0,
+            89.0,
+            100.0,
+            92.0,
+            89.0
+          ],
+          [
+            11.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          43.937,
+          45.656,
+          45.968
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "11140mW/8974mW",
+          "11649mW/9866mW"
+        ]
+      }
+    },
+    "candidate_k6_run1": {
+      "profile": "k6",
+      "run": 1,
+      "exit_code": 0,
+      "process_wall_ms": 2225.0,
+      "vmrss_max_kb": 138588,
+      "vmrss_sample_count": 31,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2149,
+          2219,
+          2219
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            2.0,
+            2.0,
+            60.0,
+            3.0,
+            0.0,
+            0.0
+          ],
+          [
+            97.0,
+            94.0,
+            97.0,
+            84.0,
+            90.0,
+            87.0
+          ],
+          [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          44.062,
+          45.718,
+          46.0
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "7530mW/7530mW",
+          "11729mW/9630mW",
+          "12296mW/10518mW"
+        ]
+      }
+    },
+    "candidate_k6_run2": {
+      "profile": "k6",
+      "run": 2,
+      "exit_code": 0,
+      "process_wall_ms": 2179.0,
+      "vmrss_max_kb": 138912,
+      "vmrss_sample_count": 31,
+      "tegrastats": {
+        "before_sample_count": 2,
+        "during_sample_count": 3,
+        "after_sample_count": 2,
+        "during_ram_used_mb": [
+          2109,
+          2199,
+          2202
+        ],
+        "during_swap_used_mb": [
+          1,
+          1,
+          1
+        ],
+        "during_cpu_percent": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            100.0,
+            90.0,
+            90.0,
+            90.0,
+            90.0,
+            90.0
+          ],
+          [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        ],
+        "during_temperature_tj_c": [
+          44.218,
+          46.0,
+          46.406
+        ],
+        "during_emc_reported": false,
+        "during_vdd_in_raw": [
+          "6808mW/6808mW",
+          "11689mW/9249mW",
+          "12296mW/10264mW"
+        ]
+      }
+    }
+  },
+  "emc_reported_in_during_samples": false
+}

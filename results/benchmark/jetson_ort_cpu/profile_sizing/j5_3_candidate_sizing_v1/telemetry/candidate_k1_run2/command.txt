@@ -1,0 +1,4 @@
+edge_ai_defect --config <candidate_k1_config>
+profile=k1
+run=2
+cpu_set=5

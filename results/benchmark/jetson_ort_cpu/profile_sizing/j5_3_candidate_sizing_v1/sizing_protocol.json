@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "classification": "Candidate sizing only",
+  "formal_performance_baseline": false,
+  "profiles": [
+    "k1",
+    "k2",
+    "k4",
+    "k5",
+    "k6"
+  ],
+  "independent_processes_per_profile": 2,
+  "total_runs": 10,
+  "images_per_run": 20,
+  "new_process_each_run": true,
+  "ort_session_loaded_each_run": true,
+  "warm_cache_long_reuse": false,
+  "daemon_mode": false,
+  "long_running_stability_test": false,
+  "telemetry": [
+    "tegrastats before",
+    "tegrastats during full process interval",
+    "tegrastats after",
+    "/proc/self/status VmRSS"
+  ],
+  "requested_facts": [
+    "RAM used",
+    "SWAP",
+    "CPU utilization",
+    "EMC",
+    "temperature",
+    "power rail if available"
+  ],
+  "emc_result": "not reported by observed tegrastats lines; retained as unavailable fact",
+  "latency_metrics": [
+    "cycle_total_ms",
+    "inference_ms",
+    "preprocess_ms",
+    "postprocess_ms"
+  ],
+  "stage_latency_result": "inference_ms/preprocess_ms/postprocess_ms unavailable from frozen v2 application output; not inferred",
+  "excluded_scope": [
+    "J5.4",
+    "J5.5",
+    "J5.6",
+    "TensorRT",
+    "CUDA EP",
+    "Pipeline",
+    "ROS2",
+    "long-duration stability"
+  ]
+}
