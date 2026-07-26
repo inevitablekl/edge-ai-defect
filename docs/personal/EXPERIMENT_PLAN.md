@@ -1208,3 +1208,21 @@ J5.5 Purpose：建立 Jetson Orin Nano Super CPU-only controlled baseline。
 - J5.1–J5.6：全部 COMPLETE；本 CPU-only baseline chain 已完成整理与冻结。
 
 该总结仅描述 ONNX Runtime CPU baseline，不代表 TensorRT、CUDA EP 或最终 GPU 优化性能。
+
+## Stage J D052 Remediation Live Status
+
+D052 `Adopt Research-Grade Stage J Remediation and Closeout Policy` 已接受。
+本节是当前 Stage J 实验状态说明，不修改冻结 Stage J Plan v0.3。
+
+- J5.1–J5.5：`COMPLETE`；不重新执行。
+- J5.6 Tuned k-Core formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- `j5_6_profile_stability_v1`：
+  `HISTORICAL_PRE_J6_STABILITY_RUN`；是真实 30 分钟运行记录，但不是 J5.6
+  formal baseline，也不是完整 J6 Evidence。
+- J5.7：`BLOCKED_BY_J5.6`。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- J9：`NOT_AUTHORIZED`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`，不得写为 `COMPLETE` 或 `FROZEN`。
+- Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。

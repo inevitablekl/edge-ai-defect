@@ -2,7 +2,9 @@
 
 ## 1. Objective
 
-完成 Jetson Orin Nano Super 上冻结模型、冻结 corpus 和 ONNX Runtime CPUExecutionProvider 的 J5.1–J5.6 CPU-only baseline chain，形成可复核的 Controlled baseline 与 Tuned stability evidence。
+记录 Jetson Orin Nano Super 上冻结模型、冻结 corpus 和 ONNX Runtime
+CPUExecutionProvider 的 Stage J CPU baseline 当前事实。D052 后该链为
+`PARTIALLY_COMPLETE`，J5.6 Tuned formal baseline 尚待补齐。
 
 ## 2. Frozen environment
 
@@ -30,22 +32,34 @@
 | J5.3 Candidate sizing | COMPLETE | j5_3_candidate_sizing_v1 |
 | J5.4 Profile freeze | COMPLETE; k1/k5 frozen | j5_4_profile_selection_v1 |
 | J5.5 Controlled baseline | COMPLETE; k1 | j5_5_profile_baseline_v1 |
-| J5.6 Tuned stability | COMPLETE; k5 | j5_6_profile_stability_v1 |
+| J5.6 Tuned formal baseline | MISSING / READY_FOR_REMEDIATION | Not generated |
+| Historical 30-minute k5 run | HISTORICAL_PRE_J6_STABILITY_RUN | j5_6_profile_stability_v1 |
 
-All six Evidence directories passed their published SHA256 verification.
+现有六个历史 Evidence 目录均通过各自已发布 SHA256 manifest 校验；这不构成
+J5.6 Tuned formal baseline、J5.7、J6、J7 或 J8 PASS。
 
 ## 5. Controlled profile result
 
 Controlled k1 used CPU5 and ORT intra/inter threads 1/1. The five-run baseline measured approximately 2.31 FPS, with semantic output matching the frozen expected SHA and byte-identical deterministic payloads.
 
-## 6. Tuned profile result
+## 6. Historical tuned-profile stability fact
 
 Tuned k5 used CPU1-5 and ORT intra/inter threads 5/1. The 30-minute continuous stability run processed 15420 frames across 771 cycles, with 0 failures. All cycles matched the frozen semantic output SHA; no NaN or Inf was detected.
+
+该目录按 D052 分类为 `HISTORICAL_PRE_J6_STABILITY_RUN`。它不是冻结计划中的
+J5.6 Tuned formal baseline，也不是完整 J6 Evidence。
 
 ## 7. Known limitation
 
 D048 cross-architecture numerical limitation remains accepted: cross-architecture floating-point differences limit direct byte-level numerical equivalence claims. The J5 semantic checks use the frozen contract and accepted comparison boundary.
 
-## 8. Future work
+## 8. Current live status
 
-TensorRT/GPU backend work is future scope. TensorRT, CUDA EP, FP16, ROS2 and related GPU optimization were not started by this consolidation.
+- J5.1–J5.5：`COMPLETE`。
+- J5.6 Tuned formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- J5.7：`BLOCKED_BY_J5.6`。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`。
+- Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。

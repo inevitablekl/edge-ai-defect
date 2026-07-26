@@ -3131,3 +3131,68 @@ production inference algorithm change.
 
 7. 后续 J5.5/J5.6 必须使用本 Decision 冻结的 Controlled `k1` 与 Tuned `k5`
    profile；不得在后续任务中静默改变候选、CPU set 或 ORT thread settings。
+
+### D052 - Adopt Research-Grade Stage J Remediation and Closeout Policy
+
+状态：`Accepted`
+
+1. Stage J Plan v0.3 保持冻结；不修改其历史文本或 SHA。
+
+2. 当前诊断结论保持为：
+   `J8 FAIL under the original frozen v0.3 Deep Evidence Gate`。
+
+3. 当前仓库不得声称：
+   - `J8 v0.3 PASS`；
+   - `J9 COMPLETE`；
+   - `STAGE J CLOSED`。
+
+4. 当前项目用途为：
+   - 研究生毕业设计；
+   - 学术论文实验；
+   - 求职工程项目。
+
+5. 对论文和后续 Stage T 具有实质价值且必须补齐：
+   - Tuned k5 五次正式 baseline；
+   - 可复核的 30 分钟 k5 stability Evidence；
+   - J5 Evidence Gate；
+   - Stage J Consolidation；
+   - final research-grade independent audit。
+
+6. 不重新执行：
+   - J1–J4；
+   - J5.1–J5.5；
+   - ORT build；
+   - 模型、ModelContract、corpus；
+   - profile selection。
+
+7. 现有
+   `results/benchmark/jetson_ort_cpu/profile_stability/j5_6_profile_stability_v1`
+   重新分类为 `HISTORICAL_PRE_J6_STABILITY_RUN`。它是真实的 30 分钟运行记录，
+   但不是冻结计划中的 J5.6 Tuned formal baseline，也不是完整 J6 Evidence。
+   历史目录不得删除、覆盖或重命名，不得伪装为完整 PASS。
+
+8. J5.5/J5.6 历史 manifest 中的 `./` 路径形式分类为
+   `ACCEPTED_NON_SUBSTANTIVE_MANIFEST_PATH_FORMAT_DEVIATION`。旧 Evidence
+   不修改；后续 Consolidation 使用规范化 repo-relative 索引；不得声称旧
+   manifest 可按 v0.3 规则 byte-identical 重建。
+
+9. OC/UV、thermal throttle 或 power throttle 接口若平台不可用：
+   - 记录 `unavailable`；
+   - 保留原始探测命令和返回结果；
+   - 禁止声称 counter PASS；
+   - 不能仅因接口缺失宣称无 throttling。
+
+10. 补齐任务完成后允许的最终状态是
+    `STAGE_J_COMPLETE_WITH_DOCUMENTED_EVIDENCE_LIMITATIONS`，不是
+    `J8_PASS_UNDER_ORIGINAL_V0_3`。
+
+11. 只有新的 research-grade final audit PASS 后，才允许规划 Stage T。
+
+12. 本 Decision 不改变：
+    - 模型；
+    - preprocessing/postprocessing；
+    - ORT CPU 语义；
+    - J4 容差；
+    - D048；
+    - k1/k5 profile；
+    - benchmark 统计真实性要求。

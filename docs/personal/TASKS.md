@@ -2656,3 +2656,24 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - J5.6 Tuned stability：COMPLETE；30 minutes，15420 frames，0 failures。
 - CPU-only ONNX Runtime baseline chain：FROZEN。
 - Next stage：TensorRT/GPU backend work，未开始。
+
+### Stage J D052 Remediation Live Status
+
+This append-only section supersedes the preceding Stage J CPU Baseline
+Consolidation section as the current live-status authority.
+
+- D052：`Accepted`。
+- J5.1–J5.5：`COMPLETE`；不重新执行。
+- J5.6 Tuned k-Core formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- Existing `j5_6_profile_stability_v1`：
+  `HISTORICAL_PRE_J6_STABILITY_RUN`；它是真实 30 分钟运行记录，但不是 J5.6
+  Tuned formal baseline，也不是完整 J6 Evidence。
+- J5.7：`BLOCKED_BY_J5.6`；未执行。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- J9：`NOT_AUTHORIZED`。
+- Stage T：`NOT_AUTHORIZED`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`；不得声称 `COMPLETE` 或 `FROZEN`。
+- Current authorized task：D052 governance reconciliation followed by J5.6
+  Tuned k-Core formal baseline remediation only。
