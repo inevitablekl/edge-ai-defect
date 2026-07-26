@@ -51,6 +51,12 @@ FROZEN_SHA = {
     "python_reference": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
     "expected_cycle": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
 }
+EXPECTED_EXTERNAL_ARTIFACT_SHA256 = {
+    "stage_j_profile_runner":
+        "e5a69f3be8f64ed0ac086148998040e8380f4eb2610ae1959829ca215829c725",
+    "edge_ai_defect":
+        "bd02668f345dd0c232a0a84f64309d0b04017b177c33cbd29e32fcf45f114014",
+}
 
 
 def _git(*arguments: str, root: Path = REPO_ROOT) -> str:
@@ -118,7 +124,8 @@ def validate_formal_platform(
     model_text: str | None = None,
     nvpmodel_text: str | None = None,
     clocks_text: str | None = None,
-) -> None:
+    manual_verification_text: str | None = None,
+) -> dict[str, str]:
     system = platform.system() if system is None else system
     machine = platform.machine() if machine is None else machine
     if system != "Linux" or machine != "aarch64":
@@ -131,6 +138,23 @@ def validate_formal_platform(
             raise PreflightError(f"cannot read Jetson model: {exc}") from exc
     if "Jetson Orin Nano" not in model_text:
         raise PreflightError("formal execution requires the frozen Jetson Orin Nano platform")
+    if manual_verification_text is not None:
+        required = (
+            "manual platform verification",
+            "Jetson Orin Nano",
+            "R36.5",
+            "0-5 online",
+            "GPU",
+            "EMC",
+            "MAXN_SUPER",
+            "FAN Dynamic Speed Control=disabled",
+            "hwmon0_pwm1=255",
+            "sudo jetson_clocks --show",
+            "sudo nvpmodel -q",
+        )
+        if any(item not in manual_verification_text for item in required):
+            raise PreflightError("manual platform verification is incomplete")
+        return {"source": "manual_platform_verification"}
     if nvpmodel_text is None:
         result = subprocess.run(
             ["nvpmodel", "-q"], text=True, stdout=subprocess.PIPE,
@@ -151,6 +175,7 @@ def validate_formal_platform(
         raise PreflightError("jetson_clocks locked state is not visible")
     if "FAN Dynamic Speed Control=disabled" not in clocks_text:
         raise PreflightError("jetson_clocks fan control is not frozen")
+    return {"source": "live_read_only_platform_query"}
 
 
 def parse_cpu_list(value: str) -> set[int]:
@@ -212,6 +237,8 @@ def check_preflight(
     execute_formal: bool,
     evidence_target: Path | None = None,
     local_attempt_target: Path | None = None,
+    production_executable: Path | None = None,
+    platform_verification: Path | None = None,
     repo_root: Path = REPO_ROOT,
 ) -> dict[str, Any]:
     if _git("branch", "--show-current", root=repo_root) != EXPECTED_BRANCH:
@@ -221,6 +248,15 @@ def check_preflight(
     commit = _git("rev-parse", "HEAD", root=repo_root)
     if not runner.is_file() or not os.access(runner, os.X_OK):
         raise PreflightError("stage_j_profile_runner is not executable")
+    production = production_executable or runner.parent / "edge_ai_defect"
+    if not production.is_file() or not os.access(production, os.X_OK):
+        raise PreflightError("edge_ai_defect Release artifact is not executable")
+    runner_sha = sha256_file(runner)
+    production_sha = sha256_file(production)
+    if runner_sha != EXPECTED_EXTERNAL_ARTIFACT_SHA256["stage_j_profile_runner"]:
+        raise PreflightError("stage_j_profile_runner external artifact SHA drift")
+    if production_sha != EXPECTED_EXTERNAL_ARTIFACT_SHA256["edge_ai_defect"]:
+        raise PreflightError("edge_ai_defect external artifact SHA drift")
     config = _load_yaml(config_template)
     validate_profile(config, profile=profile)
     observed = validate_asset_shas(asset_paths)
@@ -230,8 +266,15 @@ def check_preflight(
         raise PreflightError(f"CPU affinity unavailable: {exc}") from exc
     if not CPU_SET.issubset(allowed):
         raise PreflightError("CPU set 1-5 is not available")
+    manual_text = None
+    if platform_verification is not None:
+        try:
+            manual_text = platform_verification.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise PreflightError(f"cannot read manual platform verification: {exc}") from exc
+    platform_info = validate_formal_platform(
+        manual_verification_text=manual_text)
     if execute_formal:
-        validate_formal_platform()
         if profile != "k5":
             raise PreflightError("formal execution requires explicit --profile k5")
         for target in (evidence_target, local_attempt_target):
@@ -253,6 +296,14 @@ def check_preflight(
         "profile": "k5",
         "cpu_set": [1, 2, 3, 4, 5],
         "asset_sha256": observed,
+        "platform": platform_info,
+        "build_artifact": {
+            "scope": "external_verified_release_artifact",
+            "stage_j_profile_runner": str(runner),
+            "stage_j_profile_runner_sha256": runner_sha,
+            "edge_ai_defect": str(production),
+            "edge_ai_defect_sha256": production_sha,
+        },
     }
 
 
@@ -541,10 +592,12 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--profile")
     parser.add_argument("--evidence-id")
     parser.add_argument("--runner", required=True, type=Path)
+    parser.add_argument("--production-executable", type=Path)
     parser.add_argument("--config-template", required=True, type=Path)
     parser.add_argument("--corpus-dir", required=True, type=Path)
     parser.add_argument("--expected-cycle-json", required=True, type=Path)
     parser.add_argument("--python-reference", required=True, type=Path)
+    parser.add_argument("--platform-verification", type=Path)
     parser.add_argument("--local-attempt-root", type=Path, default=Path("/tmp/stage_j_attempts"))
     parser.add_argument(
         "--evidence-root", type=Path,
@@ -574,12 +627,14 @@ def main(argv: list[str] | None = None) -> int:
         }
         info = check_preflight(
             runner=args.runner,
+            production_executable=args.production_executable,
             config_template=args.config_template,
             asset_paths=assets,
             profile=args.profile,
             execute_formal=args.execute_formal,
             evidence_target=evidence_target,
             local_attempt_target=local_target,
+            platform_verification=args.platform_verification,
         )
         report: dict[str, Any] = {"mode": "preflight-only", "preflight": info}
         if args.development_smoke:

@@ -40,6 +40,26 @@ class StageJFormalTests(unittest.TestCase):
                 nvpmodel_text="MAXN_SUPER",
                 clocks_text="FreqOverride=1")
 
+    def test_accepts_manual_platform_verification_without_fan1_input(self):
+        from run_stage_j_ort_cpu_formal import validate_formal_platform
+        text = """manual platform verification
+sudo jetson_clocks --show
+Jetson Orin Nano Engineering Reference Developer Kit Super
+R36.5
+CPU 0-5 online
+GPU 1020 MHz locked
+EMC 3199000000 MHz
+MAXN_SUPER
+FAN Dynamic Speed Control=disabled
+hwmon0_pwm1=255
+sudo nvpmodel -q
+"""
+        self.assertEqual(
+            validate_formal_platform(
+                system="Linux", machine="aarch64",
+                manual_verification_text=text)["source"],
+            "manual_platform_verification")
+
     def test_rejects_wrong_profile_and_cpu_set(self):
         with self.assertRaises(PreflightError):
             validate_profile(profile(), profile="k4")
