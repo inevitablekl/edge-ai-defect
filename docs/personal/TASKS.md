@@ -2550,3 +2550,14 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - J5.2：`READY`；
 - J5.2 未执行；
 - Next authorized task：`J5.2 — Candidate semantic precheck`。
+
+### Stage J J5.2 First Attempt
+
+- Attempt：`j5.2_candidate_semantic_precheck_v1`。
+- Status：`FAILED_SCHEMA_BRIDGE`。
+- Failure occurred before first frame inference。
+- Candidate A run 1 exit code：`4`。
+- Root cause：RuntimeConfig v2 schema propagated into RunMetadata schema。
+- No semantic comparison executed。
+- J5.3：`BLOCKED`。
+- Next authorized action：D050 source remediation。

@@ -3075,3 +3075,27 @@ production inference algorithm change.
 7. The J5.1 Python Reference Campaign is the current authorized campaign.
    J5.2 and all later J5 work remain unauthorized until J5.1 is complete and
    separately reviewed.
+
+### D050 - Decouple RuntimeConfig Schema from Result Metadata Schema
+
+状态：`Accepted`
+
+1. RuntimeConfig schema 与 RunMetadata/JsonSink output schema 是独立合同。
+
+2. Stage J RuntimeConfig v2 继续保持 `schema_version=2`。
+
+3. 当前 JsonSink detection output schema 继续保持 `schema_version=1`。
+
+4. 禁止把 RuntimeConfig schema 直接传播为 RunMetadata schema。
+
+5. 修复范围仅限 schema bridge，不改变 model、ModelContract、preprocessing、
+   ORT inference、postprocessing、Detection、JSON detection 字段、JsonSink
+   output schema、RuntimeConfig v1/v2 isolation 或 D048。
+
+6. J4.3 中保留的 v2 failure 是历史事实，不修改历史 Evidence。
+
+7. J4.3 成功的 v1-compatible Level C Evidence 继续有效。
+
+8. J5.2 v1 attempt 保持 `FAILED`，不追加或覆盖。
+
+9. remediation 后必须创建新的 J5.2 attempt，并重新执行全部候选。
