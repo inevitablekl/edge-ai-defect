@@ -58,6 +58,14 @@ EXPECTED_EXTERNAL_ARTIFACT_SHA256 = {
     "edge_ai_defect":
         "bd02668f345dd0c232a0a84f64309d0b04017b177c33cbd29e32fcf45f114014",
 }
+REQUIRED_THERMAL_TYPES = {
+    "cpu-thermal",
+    "gpu-thermal",
+    "soc0-thermal",
+    "soc1-thermal",
+    "soc2-thermal",
+    "tj-thermal",
+}
 
 
 def _git(*arguments: str, root: Path = REPO_ROOT) -> str:
@@ -229,6 +237,66 @@ def sample_process_threads(pid: int) -> list[dict[str, Any]]:
     return samples
 
 
+def safe_read_sysfs_text(
+    path: Path | str,
+    reader: Callable[[Path], bytes | str | None] | None = None,
+) -> dict[str, Any]:
+    """Read sysfs-like data without allowing device quirks to crash a run."""
+    target = Path(path)
+    try:
+        value = (reader or (lambda item: item.read_bytes()))(target)
+        if value is None:
+            return {"status": "error", "path": str(target), "error": "read returned None"}
+        if isinstance(value, bytes):
+            value = value.decode("utf-8")
+        elif not isinstance(value, str):
+            return {
+                "status": "error", "path": str(target),
+                "error": f"unsupported read type: {type(value).__name__}",
+            }
+        return {"status": "ok", "path": str(target), "value": value.strip("\x00\r\n \t")}
+    except (OSError, UnicodeError, TypeError, ValueError) as exc:
+        return {"status": "error", "path": str(target), "error": str(exc)}
+
+
+def validate_thermal_sources() -> dict[str, Any]:
+    """Validate the frozen required thermal set before formal execution."""
+    discovered: dict[str, dict[str, str]] = {}
+    errors: list[dict[str, Any]] = []
+    try:
+        type_paths = sorted(Path("/sys/class/thermal").glob("thermal_zone*/type"))
+    except OSError as exc:
+        raise PreflightError(f"thermal source discovery failed: {exc}") from exc
+    for type_path in type_paths:
+        type_result = safe_read_sysfs_text(type_path)
+        if type_result["status"] != "ok":
+            errors.append(type_result)
+            continue
+        zone_type = type_result["value"]
+        if zone_type not in REQUIRED_THERMAL_TYPES:
+            continue
+        temp_path = type_path.parent / "temp"
+        temp_result = safe_read_sysfs_text(temp_path)
+        if temp_result["status"] != "ok":
+            errors.append(temp_result)
+            continue
+        try:
+            int(temp_result["value"])
+        except (TypeError, ValueError):
+            errors.append({
+                "status": "error", "path": str(temp_path),
+                "error": "thermal value is not an integer",
+            })
+            continue
+        discovered[zone_type] = {"type_path": str(type_path), "temp_path": str(temp_path)}
+    missing = sorted(REQUIRED_THERMAL_TYPES - set(discovered))
+    if missing or errors:
+        raise PreflightError(
+            "required thermal telemetry unavailable: " +
+            json.dumps({"missing": missing, "errors": errors}, sort_keys=True))
+    return {"status": "PASS", "sources": discovered}
+
+
 def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[str, Any], tuple[int, int]]:
     cpu_values = []
     for line in Path("/proc/stat").read_text(encoding="utf-8").splitlines():
@@ -249,12 +317,24 @@ def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[s
         if separator and key in {"MemTotal", "MemAvailable", "SwapTotal", "SwapFree"}:
             memory[key] = int(value.split()[0])
     temperatures = {}
+    thermal_errors = []
     for type_path in Path("/sys/class/thermal").glob("thermal_zone*/type"):
-        try:
-            zone_type = type_path.read_text(encoding="utf-8").strip()
-            temperatures[zone_type] = int((type_path.parent / "temp").read_text())
-        except (OSError, ValueError):
+        type_result = safe_read_sysfs_text(type_path)
+        if type_result["status"] != "ok":
+            thermal_errors.append(type_result)
             continue
+        zone_type = type_result["value"]
+        temp_result = safe_read_sysfs_text(type_path.parent / "temp")
+        if temp_result["status"] != "ok":
+            thermal_errors.append(temp_result)
+            continue
+        try:
+            temperatures[zone_type] = int(temp_result["value"])
+        except (TypeError, ValueError):
+            thermal_errors.append({
+                "status": "error", "path": temp_result["path"],
+                "error": "thermal value is not an integer",
+            })
     frequencies = {}
     for frequency_path in Path("/sys/devices/system/cpu").glob(
             "cpufreq/policy*/scaling_cur_freq"):
@@ -268,6 +348,8 @@ def system_snapshot(previous_cpu: tuple[int, int] | None = None) -> tuple[dict[s
         "cpu_utilization_percent_cpu1_5": utilization,
         "ram_kb": memory,
         "temperature_millicelsius": temperatures,
+        "thermal_status": "error" if thermal_errors else "ok",
+        "thermal_errors": thermal_errors,
         "cpu_frequency_khz": frequencies,
     }
     return snapshot, (total, idle)
@@ -334,6 +416,9 @@ def check_preflight(
             raise PreflightError(f"cannot read online CPU set: {exc}") from exc
         if online != {0, 1, 2, 3, 4, 5} or 0 not in allowed:
             raise PreflightError("frozen online/telemetry CPU set is unavailable")
+        thermal_info = validate_thermal_sources()
+    else:
+        thermal_info = {"status": "not_checked"}
     return {
         "status": "PASS",
         "branch": EXPECTED_BRANCH,
@@ -349,6 +434,7 @@ def check_preflight(
             "edge_ai_defect": str(production),
             "edge_ai_defect_sha256": production_sha,
         },
+        "thermal": thermal_info,
     }
 
 
@@ -533,6 +619,14 @@ def invoke_profile_runner(
             raise BenchmarkError("tegrastats affinity was not sampled")
         if not telemetry["system_samples"]:
             raise BenchmarkError("system telemetry was not sampled")
+        thermal_failures = [
+            sample for sample in telemetry["system_samples"]
+            if sample.get("thermal_status") != "ok"
+        ]
+        if thermal_failures:
+            raise BenchmarkError(
+                "required thermal telemetry failed during run: " +
+                json.dumps(thermal_failures, sort_keys=True))
         rail_names = ("VDD_IN", "VDD_CPU_GPU_CV", "VDD_SOC")
         if any(not any(name in item["raw"] for item in lines)
                for name in rail_names):

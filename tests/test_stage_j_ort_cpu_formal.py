@@ -15,6 +15,7 @@ from run_stage_j_ort_cpu_formal import (
     validate_formal_platform,
     validate_profile,
     parse_cpu_list,
+    safe_read_sysfs_text,
 )
 
 
@@ -32,6 +33,27 @@ def profile():
 
 
 class StageJFormalTests(unittest.TestCase):
+    def test_safe_sysfs_reader_string(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: " 42\n")
+        self.assertEqual(result, {
+            "status": "ok", "path": "/sys/test", "value": "42"
+        })
+
+    def test_safe_sysfs_reader_bytes(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: b" 43\n")
+        self.assertEqual(result["status"], "ok")
+        self.assertEqual(result["value"], "43")
+
+    def test_safe_sysfs_reader_none(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: None)
+        self.assertEqual(result["status"], "error")
+        self.assertIn("None", result["error"])
+
+    def test_safe_sysfs_reader_missing_path(self):
+        result = safe_read_sysfs_text("/path/that/does/not/exist")
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["path"], "/path/that/does/not/exist")
+
     def test_rejects_x86_formal(self):
         with self.assertRaises(PreflightError):
             validate_formal_platform(
