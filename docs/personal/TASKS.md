@@ -2629,5 +2629,5 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - Correctness：`5/5 PASS`；semantic output 命中 J5.2 k1 expected SHA。
 - Determinism：payload SHA/report SHA `byte-identical PASS`。
 - Evidence：`j5_5_profile_baseline_v1`。
-- J5.6：`READY`。
+- Next：`J5.6 Tuned Profile Stability`；状态 `READY`。
 - J5.6 未执行。

@@ -20,7 +20,7 @@ The training and ONNX export stages are complete: nine formal training experimen
 
 The training, frozen model, ONNX export, and PyTorch/ORT validation are complete. The C++ ONNX Runtime CPU Serial Baseline M0–M5 is CLOSED; WSL2 Level A/B/C validation and the WSL2 x86_64 ORT CPU engineering baseline are complete.
 
-Stage J Plan v0.3 is FROZEN and J0 Planning Freeze is COMPLETE. Jetson hardware execution has completed J1–J4, including the formal ONNX Runtime 1.23.2 aarch64 CPU SDK build, native application build, RuntimeConfig v2, ORT options, OpenCV policy, trace, portable-control validation, and J4 evidence consolidation. J4.2 retains its strict cross-architecture numerical limitation under Accepted D048. The next authorized task is `J5.1 Benchmark Python Reference Preparation`; TensorRT FP16 belongs to later Stage T, and Pipeline belongs to later Stage P.
+Stage J Plan v0.3 is FROZEN and J0 Planning Freeze is COMPLETE. Jetson hardware execution has completed J1–J4, including the formal ONNX Runtime 1.23.2 aarch64 CPU SDK build, native application build, RuntimeConfig v2, ORT options, OpenCV policy, trace, portable-control validation, and J4 evidence consolidation. J4.2 retains its strict cross-architecture numerical limitation under Accepted D048. Stage J J5.5 CPU Controlled Profile Benchmark is `COMPLETE` (Controlled profile `k1`, CPU-only); the next authorized task is `J5.6 Tuned Profile Stability`. TensorRT FP16 belongs to later Stage T, and Pipeline belongs to later Stage P.
 
 ## Documentation
 

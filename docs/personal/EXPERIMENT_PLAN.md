@@ -1181,3 +1181,19 @@ Consolidation。失效状态只记录在阶段文档；旧 Evidence 内不增加
 Stable regeneration 必须先在 staging A 生成六文件，再使用相同冻结输入在独立 staging B 生成；五个内容文件及
 `sha256sums.txt` 均须 byte-identical，验证通过后才可单次原子发布。当前状态保持：M5.5 Consolidation Remediation
 Generation `PENDING`、M5.6 Gate rerun `PENDING`、M5.7 `PENDING`、M5 overall `IN_PROGRESS`。
+
+## Stage J J5.5 CPU Controlled Profile Benchmark
+
+J5.5 Purpose：建立 Jetson Orin Nano Super CPU-only controlled baseline。
+
+- Status：`COMPLETE`。
+- Profile：`k1`。
+- ORT：`CPUExecutionProvider`；CPU affinity `5`。
+- Protocol：5 independent processes；pilot 60 frames；measurement 500 frames；每次运行至少 30 seconds。
+- Results summary：FPS 约 `2.31`；average frame latency 约 `433 ms/frame`（560-frame process-wall baseline / 560）。
+- CPU5 utilization：`99.59%`。
+- Temperature：最大 `45.41 C`。
+- Power：`8050.73 mW`。
+- Evidence：`results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1/`。
+
+该结果为 CPU baseline，不代表最终优化性能。Tuned profile `k5` 保留给 J5.6 Tuned Profile Stability。
