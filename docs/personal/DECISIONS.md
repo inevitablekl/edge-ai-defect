@@ -2966,3 +2966,70 @@ After D047 and J3.10 v2 PASS:
 - Stage T `NOT_STARTED`；Stage P `NOT_STARTED`。
 
 The next authorized task is `J4.1 — Level A correctness`。
+
+### D048 - Accept Platform-Specific AArch64 ORT CPU Numerical Envelope for J4.2
+
+状态：`Accepted`
+
+#### Strict Plan result remains unchanged
+
+The original Stage J Plan §18.2 strict Gate remains authoritative:
+
+- overall MAE `<= 1e-6`；
+- overall max_abs `<= 1e-4`。
+
+The original Jetson `j4.2_level_b_v1` result does not satisfy that Gate and is
+retained unchanged as a strict failure. `strict_plan_gate_pass=false` remains
+the permanent record. The Python golden, production inference code, model,
+contract and original attempt are not rewritten.
+
+#### Evidence basis
+
+The accepted classification is
+`SUPPORTED_CROSS_ARCH_ORT_CPU_NUMERICAL_DRIFT`, not a proven single-kernel
+root cause. The evidence is:
+
+- the same frozen model, input, ORT 1.23.2 and CPUExecutionProvider were used；
+- the historical x86 C++ result exactly matched the Python golden；
+- the WSL x86_64 Python reference was deterministic across two processes；
+- the Jetson aarch64 C++ result was deterministic across two processes；
+- Jetson `ORT_ENABLE_ALL` versus `ORT_DISABLE_ALL` diagnostics produced the
+  same result；
+- Jetson intra/inter-op `1/1` diagnostics produced the same result；
+- the mismatch is concentrated in the bbox group, while score error is much
+  smaller；
+- all output values are finite。
+
+#### D048 AArch64 acceptance policy
+
+This policy is limited to the frozen combination of Jetson Orin Nano Super,
+L4T R36.5, aarch64, the formal Stage J ORT 1.23.2 CPU-only build,
+CPUExecutionProvider only, the frozen model/input/Python golden hashes,
+Controlled 1-Core, ORT sequential/all/1/1 with spinning enabled, OpenCV
+threads 1, MAXN_SUPER and `jetson_clocks --fan`.
+
+The D048 acceptance Gate requires two deterministic separate-process Jetson
+outputs, canonical raw SHA256
+`a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`, the
+declared float32 BCN `[1,10,8400]` contract, all 84000 values finite,
+requested/applied options matching, session creation success, OpenCV 1/1,
+and unchanged model/input/golden/config/binary/ORT/contract identities.
+Its numerical envelope is overall MAE `<= 1e-5`, overall max_abs `<= 0.01`,
+bbox max_abs `<= 0.01`, and score max_abs `<= 1e-4`.
+
+The policy field is `d048_cross_arch_acceptance_pass`; it is distinct from
+`strict_plan_gate_pass` and does not rewrite the strict result.
+
+#### Final J4.2 and J4.3 interpretation
+
+When `strict_plan_gate_pass=false` and
+`d048_cross_arch_acceptance_pass=true`, J4.2 is
+`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`. D048 supplements
+and supersedes only D047's strict wording that J4.2 must actually PASS for
+this documented cross-architecture limitation. J4.3's own §18.3 Gate is not
+relaxed: its 16/16 checks, confidence and bbox tolerances, class-aware
+matching and byte-identical canonical payload requirements remain unchanged.
+
+D048 is invalidated by any ORT/build, model, input/golden, RuntimeConfig
+semantic, CPU provider, JetPack/L4T, architecture, canonical raw SHA or
+production inference algorithm change.
