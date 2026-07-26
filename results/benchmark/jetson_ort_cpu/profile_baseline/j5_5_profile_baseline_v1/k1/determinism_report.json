@@ -1,0 +1,11 @@
+{
+  "profile": "k1",
+  "runs": 5,
+  "all_exit_code_zero": true,
+  "all_processed_frames_560": true,
+  "all_cycles_semantically_equivalent": true,
+  "payload_sha_byte_identical": true,
+  "semantic_report_sha_byte_identical": true,
+  "raw_payload_sha256": "4ba1642e7b13e4218d419fc4a8a4a87ce8b165172cf940cc5e1d562c8bf78b35",
+  "semantic_report_sha256": "3f15d28ccbe5c11f57340b1eb32d4581bc306ca184d08a6bd5226c0e67293ece"
+}

@@ -2616,3 +2616,18 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - D051：`Accepted`；冻结 J5 CPU profile selection。
 - J5.5：`READY`。
 - J5.5 未执行。
+
+### Stage J J5.5 CPU Profile Benchmark
+
+- J5.4：`COMPLETE`。
+- Status：`COMPLETE`。
+- Controlled Profile：`k1`。
+- Tuned Profile：`k5` reserved for J5.6；未执行。
+- Pilot：`60/60 PASS`。
+- Formal runs：`5 independent processes PASS`。
+- Formal workload：每次 `560` frames（60 warmup + 500 measured），每次 `>=30s`。
+- Correctness：`5/5 PASS`；semantic output 命中 J5.2 k1 expected SHA。
+- Determinism：payload SHA/report SHA `byte-identical PASS`。
+- Evidence：`j5_5_profile_baseline_v1`。
+- J5.6：`READY`。
+- J5.6 未执行。
