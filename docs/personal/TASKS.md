@@ -2644,3 +2644,15 @@ and J4.2 sections remain historical evidence and are not rewritten.
 - Correctness：all cycles semantic output SHA identical；NaN/Inf checks PASS。
 - Evidence：j5_6_profile_stability_v1。
 - Stage J CPU Baseline：COMPLETE。
+
+### Stage J CPU Baseline Consolidation
+
+- Status：COMPLETE。
+- J5.1 Reference：COMPLETE。
+- J5.2 Semantic validation：COMPLETE。
+- J5.3 Candidate sizing：COMPLETE。
+- J5.4 Profile freeze：COMPLETE；Controlled k1，Tuned k5。
+- J5.5 Controlled baseline：COMPLETE。
+- J5.6 Tuned stability：COMPLETE；30 minutes，15420 frames，0 failures。
+- CPU-only ONNX Runtime baseline chain：FROZEN。
+- Next stage：TensorRT/GPU backend work，未开始。

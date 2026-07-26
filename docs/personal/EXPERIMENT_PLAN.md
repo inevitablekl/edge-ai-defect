@@ -1197,3 +1197,14 @@ J5.5 Purpose：建立 Jetson Orin Nano Super CPU-only controlled baseline。
 - Evidence：`results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1/`。
 
 该结果为 CPU baseline，不代表最终优化性能。Tuned profile `k5` 保留给 J5.6 Tuned Profile Stability。
+
+## Stage J CPU Baseline Summary
+
+- Hardware：Jetson Orin Nano Super。
+- Backend：ONNX Runtime 1.23.2，CPUExecutionProvider。
+- Controlled：k1，CPU5，FPS 约 2.31。
+- Tuned：k5，CPU1-5。
+- Stability：30 minutes，15420 frames，0 failures。
+- J5.1–J5.6：全部 COMPLETE；本 CPU-only baseline chain 已完成整理与冻结。
+
+该总结仅描述 ONNX Runtime CPU baseline，不代表 TensorRT、CUDA EP 或最终 GPU 优化性能。
