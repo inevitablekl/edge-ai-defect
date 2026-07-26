@@ -3196,3 +3196,44 @@ production inference algorithm change.
     - D048；
     - k1/k5 profile；
     - benchmark 统计真实性要求。
+
+### D053 - Accept Controlled k1 Historical Statistics Limitation and Adopt Research-Grade J5 Gate
+
+状态：`Accepted`
+
+1. 原始 Stage J Plan v0.3 不修改。原始 J5.7 v1 结论保持为：
+   `BLOCKED under the original frozen §22.4/J5.7 contract`。
+
+2. 不声称 original J5.7 v0.3 PASS、J8 v0.3 PASS、J9 COMPLETE 或
+   STAGE J CLOSED。
+
+3. J5.5 k1 已真实完成五个 separate processes、每次 560 frames、semantic
+   correctness、determinism、whole-process wall time、FPS 和 resource summary。
+
+4. J5.5 不具备 measured-window per-frame latency distribution、per-frame
+   P50/P95/P99、per-frame sample standard deviation，或 published raw
+   telemetry chain 的独立重建能力。上述缺口不得通过文档虚构或从缺失原始数据
+   推导，且不重新运行 J5.5。
+
+5. J5.5 的研究级角色调整为：
+   `Controlled 1-Core Resource and Reproducibility Reference`。
+   它是次要工程基线，不作为 Stage T speedup 的主要分母。
+
+6. J5.6 v3 的研究级角色为：
+   `Tuned k5 Formal CPU Performance Baseline`。
+   它是论文和后续 Stage T 对照设计中的正式 ORT CPU baseline；Stage T 仍未授权。
+
+7. 允许从 immutable J5.5 published summaries 确定性生成补充统计，但不得修改
+   旧 Evidence、虚构 per-frame 数据、将 whole-process wall time 称为 per-frame
+   latency，或从缺失原始数据推导分布。补充报告必须明确使用
+   `latency_scope=whole_process_wall_time`，并列出不可用指标。
+
+8. 新的 research-grade J5 Gate 可以判定为
+   `PASS_WITH_DOCUMENTED_J5_5_LIMITATION`，前提是 J5.1–J5.4 asset/provenance/
+   correctness PASS，J5.5 事实和限制完整记录，J5.6 v3 formal statistics、
+   correctness、determinism、telemetry 和 SHA PASS，且未发现模型、Corpus、
+   Reference 或 Profile 漂移。
+
+9. 该 research-grade Gate PASS 后允许进入 J6，但不直接授权 Stage T。Stage T
+   仍需 J6 research-grade stability、J7 consolidation 和 final research-grade
+   independent audit PASS。
