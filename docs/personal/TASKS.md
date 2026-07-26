@@ -2764,3 +2764,20 @@ Stage J Plan or historical Evidence.
   `sha256sum -c`：`PASS`。Raw local attempt retained at
   `/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`。
 - J7：`READY`；J8/J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。
+
+### Stage J J7 Evidence Consolidation
+
+- J7：`COMPLETE`；Published consolidation：
+  `results/consolidation/stage_j/stage_j_cpu_baseline_v1`。
+- Consolidation source HEAD：`209b81aaf943984445bce674b4077414a8be6820`；
+  branch：`feature/jetson-onnxruntime`；generation worktree clean。
+- J5.1–J6：all seven input Evidence SHA manifests `PASS`。
+- Frozen SHA chain：model、contract、corpus manifest、Python reference and
+  expected cycle all match；input source commit ancestry to consolidation source
+  HEAD `PASS`。
+- J5.5：`PASS_WITH_DOCUMENTED_LIMITATION`；J6：
+  `PASS_WITH_RESEARCH_GRADE_EVIDENCE`。
+- Consolidation self-validation：fixed seven-file set、JSON parsing、attempt
+  registry、privacy/asset policy and retention checks `PASS`；tracked Stage J
+  published bytes `4130789`，below `26214400` bytes。
+- J8：`READY_FOR_AUDIT`；J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。

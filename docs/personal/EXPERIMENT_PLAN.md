@@ -1271,3 +1271,28 @@ sample, the final VmRSS sample, and cv0/cv1/cv2 thermal zones were unavailable
 and are recorded as unavailable in the Evidence; no values were fabricated.
 
 J7 is `READY`; J8/J9 remain `NOT_STARTED`; Stage T remains `NOT_AUTHORIZED`.
+
+## Stage J J7 Evidence Consolidation
+
+J7 is `COMPLETE`. The immutable consolidation is
+`results/consolidation/stage_j/stage_j_cpu_baseline_v1/`, generated from clean
+HEAD `209b81aaf943984445bce674b4077414a8be6820` on
+`feature/jetson-onnxruntime`. It contains the frozen seven-file contract:
+`README.txt`, `evidence_index.json`, `verification_report.json`,
+`attempt_registry.json`, `provenance.json`, `commands.txt` and
+`sha256sums.txt`.
+
+All J5.1–J6 input Evidence manifests passed `sha256sum -c`. The frozen model,
+contract, corpus manifest, Python reference and expected-cycle SHA chain passed;
+all seven input source commits are ancestors of the consolidation source HEAD.
+J5.5 remains `PASS_WITH_DOCUMENTED_LIMITATION`; J6 remains
+`PASS_WITH_RESEARCH_GRADE_EVIDENCE`.
+
+The consolidation self-validation passed fixed-file, JSON, attempt-integrity,
+privacy, asset-policy and retention checks. Total published Stage J bytes were
+`4130789`, below the `26214400` byte limit. Existing Evidence and the frozen
+Stage J Plan were not modified.
+
+J8 is `READY_FOR_AUDIT`; J9 is `NOT_STARTED`; Stage T remains
+`NOT_AUTHORIZED`. This consolidation does not claim J8 PASS, Stage J CLOSED or
+production readiness.

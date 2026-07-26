@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "evidence_id": "stage_j_cpu_baseline_v1",
+  "attempts": [
+    {
+      "attempt_id": "j5.1_python_reference_v1",
+      "attempt_type": "python_reference",
+      "status": "PASS",
+      "failure_category": null,
+      "source_commit": "0379a4f9edbb44cb8f2dc2c272e0a9f2888ba48f",
+      "local_manifest_sha256": "9f10092f0e821117505d84c3c0d22db44407714137f5655b2616faac9dca4b9f",
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_1_python_reference_v1"
+    },
+    {
+      "attempt_id": "j5.2_candidate_semantic_precheck_v1",
+      "attempt_type": "candidate_semantic_precheck",
+      "status": "FAILED_SCHEMA_BRIDGE",
+      "failure_category": "schema_bridge",
+      "source_commit": null,
+      "local_manifest_sha256": null,
+      "superseded_attempt": "j5.2_candidate_semantic_precheck_v2",
+      "triggered_full_rerun": true,
+      "published_evidence_id": null,
+      "retention": "retained unchanged outside published Evidence"
+    },
+    {
+      "attempt_id": "j5.2_candidate_semantic_precheck_v2",
+      "attempt_type": "candidate_semantic_precheck",
+      "status": "PASS",
+      "failure_category": null,
+      "source_commit": "16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855",
+      "local_manifest_sha256": "b5935ee21f5d6ba9b2438a0e1f5dd981dee75ccdf534674dc93dfc28ddde8477",
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_2_candidate_semantic_precheck_v2"
+    },
+    {
+      "attempt_id": "j5.3_candidate_sizing_v1",
+      "attempt_type": "candidate_sizing",
+      "status": "PASS",
+      "failure_category": null,
+      "source_commit": "264f497c1de6db04fdc0109a4fcb7ed0c74f500c",
+      "local_manifest_sha256": null,
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_3_candidate_sizing_v1",
+      "local_manifest_note": "not recorded in published provenance"
+    },
+    {
+      "attempt_id": "j5.4_profile_selection_v1",
+      "attempt_type": "profile_selection",
+      "status": "PASS",
+      "failure_category": null,
+      "source_commit": "a7da79907b5fb529d375626560a7ec3817639cd2",
+      "local_manifest_sha256": null,
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_4_profile_selection_v1",
+      "local_manifest_note": "not recorded in published provenance"
+    },
+    {
+      "attempt_id": "j5.5_profile_baseline_v1",
+      "attempt_type": "controlled_k1_formal_baseline",
+      "status": "PASS_WITH_DOCUMENTED_LIMITATION",
+      "failure_category": null,
+      "source_commit": "b3826e011fd201a481c00011ce054f76bf7af649",
+      "local_manifest_sha256": null,
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_5_profile_baseline_v1",
+      "local_manifest_note": "not recorded in published provenance"
+    },
+    {
+      "attempt_id": "j5.6_tuned_formal_baseline_v3",
+      "attempt_type": "tuned_k5_formal_baseline",
+      "status": "PASS",
+      "failure_category": null,
+      "source_commit": "480876aff91edecd800758407f6618d78295cbcc",
+      "local_manifest_sha256": null,
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j5_6_tuned_formal_baseline_v3",
+      "local_manifest_note": "raw local attempt has no top-level manifest"
+    },
+    {
+      "attempt_id": "j6_tuned_stability_v1",
+      "attempt_type": "tuned_k5_stability_campaign",
+      "status": "PASS_WITH_RESEARCH_GRADE_EVIDENCE",
+      "failure_category": null,
+      "source_commit": "7ff24d008f2450954b3fdc190688f1a3b9840788",
+      "local_manifest_sha256": "cca4f2b237435061cfa5a2828ef6ea87db74e3ecbcb074372c4c60399de6db7d",
+      "superseded_attempt": null,
+      "triggered_full_rerun": false,
+      "published_evidence_id": "j6_tuned_stability_v1"
+    }
+  ]
+}

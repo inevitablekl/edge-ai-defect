@@ -85,6 +85,7 @@ The research-grade J5 Gate v2 verdict is
 
 - J6：`READY`，但本任务未执行 J6。
 - Stage T：`NOT_AUTHORIZED`。
+
 - J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。
 
 ## 10. J6 Research-Grade Tuned k5 Stability
@@ -115,4 +116,28 @@ Evidence and are not filled with inferred values.
 - J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。
 - J7：`READY`。
 - J8/J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`。
+
+## 12. J7 Evidence Consolidation
+
+J7：`COMPLETE`。The consolidated Stage J CPU baseline is published at
+`results/consolidation/stage_j/stage_j_cpu_baseline_v1/` from clean source HEAD
+`209b81aaf943984445bce674b4077414a8be6820` on
+`feature/jetson-onnxruntime`.
+
+All seven J5.1–J6 input Evidence manifests passed verification. The frozen
+model, contract, corpus manifest, Python reference and expected-cycle SHA chain
+matched; all input source commits were verified as ancestors of the
+consolidation source HEAD. The fixed seven-file consolidation set, attempt
+registry, JSON parsing, privacy/asset checks and retention check passed.
+
+J5.5 remains `PASS_WITH_DOCUMENTED_LIMITATION`; J6 remains
+`PASS_WITH_RESEARCH_GRADE_EVIDENCE`. Published Stage J bytes total `4130789`,
+below the `26214400` byte limit.
+
+## 13. Current live status after J7
+
+- J7：`COMPLETE`。
+- J8：`READY_FOR_AUDIT`。
+- J9：`NOT_STARTED`。
 - Stage T：`NOT_AUTHORIZED`。

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "evidence_id": "stage_j_cpu_baseline_v1",
+  "checks": {
+    "working_tree_clean_before_generation": "PASS",
+    "branch": "PASS",
+    "head": "PASS",
+    "frozen_sha_chain": "PASS",
+    "all_input_evidence_manifests": "PASS",
+    "commit_ancestry": "PASS",
+    "profile_roles": "PASS",
+    "j5_5_limitation_documented": "PASS",
+    "j6_research_grade_result": "PASS",
+    "attempt_registry": "PASS",
+    "privacy_scan": "PASS",
+    "asset_policy": "PASS",
+    "retention": "PASS",
+    "sha256sums_self_exclusion": "PASS",
+    "sha256sums_format": "PASS",
+    "forbidden_scope": "PASS"
+  },
+  "head": {
+    "branch": "feature/jetson-onnxruntime",
+    "commit": "209b81aaf943984445bce674b4077414a8be6820",
+    "worktree_clean": true
+  },
+  "frozen_assets": {
+    "model": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "input_manifest_sha256": {
+    "j5_1": "490fcd11764999cfac4f01c23d84668844dd644f72d52ffbc6d39e6d25859030",
+    "j5_2": "b5935ee21f5d6ba9b2438a0e1f5dd981dee75ccdf534674dc93dfc28ddde8477",
+    "j5_3": "99ae9af9d47fc52181d968d897e6cdf3fca77c41dca8b92202ab037da215ffbf",
+    "j5_4": "db9ee4cada738db30d2a2f6c989932dde0e869b50965afc0efe2b5a034f3477e",
+    "j5_5": "c62fe62092c2b53a9bd66193069831b339a3f06fc46d5310dc6840dde41dc2f7",
+    "j5_6": "c67953bf157a13ad889ab7ce2459c0609003cef4b1edfd67976a527fec280987",
+    "j6": "ff32e56c3b4aafcb0d527275d1d7cfb5e57ca166d38f4c57459937d5f1661af2"
+  },
+  "commit_ancestry": {
+    "0379a4f9edbb44cb8f2dc2c272e0a9f2888ba48f": "PASS",
+    "16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855": "PASS",
+    "264f497c1de6db04fdc0109a4fcb7ed0c74f500c": "PASS",
+    "a7da79907b5fb529d375626560a7ec3817639cd2": "PASS",
+    "b3826e011fd201a481c00011ce054f76bf7af649": "PASS",
+    "480876aff91edecd800758407f6618d78295cbcc": "PASS",
+    "7ff24d008f2450954b3fdc190688f1a3b9840788": "PASS"
+  },
+  "retention": {
+    "limit_bytes": 26214400,
+    "consolidation_budget_bytes": 2097152,
+    "status": "PASS"
+  },
+  "forbidden_scope": [
+    "J8 not executed",
+    "J9 not executed",
+    "Stage T not authorized",
+    "TensorRT/CUDA EP/FP16/INT8 not executed",
+    "Stage J Plan and existing Evidence not modified"
+  ]
+}
