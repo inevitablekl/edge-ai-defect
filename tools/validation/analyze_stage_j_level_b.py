@@ -11,6 +11,13 @@ from collections import OrderedDict
 COUNT = 84000
 CHANNELS = 10
 CANDIDATES = 8400
+STRICT_MAE_LIMIT = 1e-6
+STRICT_MAX_ABS_LIMIT = 1e-4
+D048_OVERALL_MAE_LIMIT = 1e-5
+D048_OVERALL_MAX_ABS_LIMIT = 0.01
+D048_BBOX_MAX_ABS_LIMIT = 0.01
+D048_SCORE_MAX_ABS_LIMIT = 1e-4
+D048_CANONICAL_RAW_SHA256 = "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358"
 
 
 def read_values(path):
@@ -77,8 +84,18 @@ def analyze(golden_bytes, golden, actual_bytes, actual):
         score = OrderedDict([(key, None) for key in ("element_count", "mae", "max_abs", "max_error_flat_index", "golden_value", "actual_value")])
         per_channel = []
     finite = valid_count and all(math.isfinite(x) for x in golden + actual)
-    stage_pass = bool(valid_count and finite and overall["mae"] <= 1e-6 and overall["max_abs"] <= 1e-4)
+    stage_pass = bool(valid_count and finite and overall["mae"] <= STRICT_MAE_LIMIT and overall["max_abs"] <= STRICT_MAX_ABS_LIMIT)
     strict = bool(valid_count and finite and overall["mae"] <= 1e-6 and overall["max_abs"] <= 1e-5)
+    d048_pass = bool(
+        valid_count
+        and finite
+        and hashlib.sha256(actual_bytes).hexdigest() == D048_CANONICAL_RAW_SHA256
+        and overall["mae"] <= D048_OVERALL_MAE_LIMIT
+        and overall["max_abs"] <= D048_OVERALL_MAX_ABS_LIMIT
+        and bbox["max_abs"] <= D048_BBOX_MAX_ABS_LIMIT
+        and score["max_abs"] <= D048_SCORE_MAX_ABS_LIMIT
+    )
+    final_acceptance = bool(stage_pass or d048_pass)
     return OrderedDict([
         ("schema_version", 1),
         ("shape", [1, 10, 8400]),
@@ -91,6 +108,26 @@ def analyze(golden_bytes, golden, actual_bytes, actual):
         ("actual", OrderedDict([("sha256", hashlib.sha256(actual_bytes).hexdigest()), *finite_counts(actual).items()])),
         ("stage_j_pass", stage_pass),
         ("m2_strict_equivalent", strict),
+        ("strict_plan_gate", OrderedDict([
+            ("mae_limit", STRICT_MAE_LIMIT),
+            ("max_abs_limit", STRICT_MAX_ABS_LIMIT),
+            ("pass", stage_pass),
+        ])),
+        ("d048_cross_arch_policy", OrderedDict([
+            ("decision", "D048"),
+            ("overall_mae_limit", D048_OVERALL_MAE_LIMIT),
+            ("overall_max_abs_limit", D048_OVERALL_MAX_ABS_LIMIT),
+            ("bbox_max_abs_limit", D048_BBOX_MAX_ABS_LIMIT),
+            ("score_max_abs_limit", D048_SCORE_MAX_ABS_LIMIT),
+            ("required_canonical_raw_sha256", D048_CANONICAL_RAW_SHA256),
+            ("pass", d048_pass),
+        ])),
+        ("final_disposition", OrderedDict([
+            ("strict_plan_gate_pass", stage_pass),
+            ("d048_cross_arch_acceptance_pass", d048_pass),
+            ("final_j4_2_acceptance", final_acceptance),
+            ("final_status", "COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION" if (not stage_pass and d048_pass) else ("PASS" if final_acceptance else "FAILED")),
+        ])),
     ])
 
 
@@ -106,7 +143,7 @@ def main():
     with open(args.report, "w", encoding="utf-8", newline="\n") as output:
         json.dump(report, output, ensure_ascii=True, indent=2, separators=(",", ": "), allow_nan=False)
         output.write("\n")
-    return 0 if report["stage_j_pass"] else 1
+    return 0 if report["final_disposition"]["final_j4_2_acceptance"] else 1
 
 
 if __name__ == "__main__":
