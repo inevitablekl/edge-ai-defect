@@ -2498,3 +2498,26 @@ strict result and v1 attempt remain retained.
 - J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4：`IN
   PROGRESS`；J4.3：`READY_UNDER_D048`；J4.3 未执行。
 - Next authorized task：`J4.3 — Level C robustness`。
+
+### Stage J J4 Final Live Status / Pre-J5 Entry
+
+This append-only section is the current live-status authority. Earlier J4.1
+and J4.2 sections remain historical evidence and are not rewritten.
+
+- Current branch：`feature/jetson-onnxruntime`。
+- Current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`；documentation
+  synchronization began from a clean worktree。
+- J4.1：`COMPLETE`。
+- J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；the strict
+  cross-architecture numerical gate remains failed and is accepted only under
+  D048：`Accepted`。
+- J4.3：`COMPLETE`。
+- J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；published final Evidence：
+  `results/validation/jetson_ort_level_c/j4_evidence_gate_v1`。
+- J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`。
+- Stage T、Stage P、J5.2 and later work：not started。
+- Next authorized task：`J5.1 Benchmark Python Reference Preparation`。
+- J5.1 entry audit：`NOT_READY_MISSING_BENCHMARK_CORPUS_ASSETS`。The frozen
+  20-image benchmark manifest exists, but the corresponding 20 image files
+  are not currently available in the repository or visible local evidence
+  corpus; no images were generated or downloaded during this audit。

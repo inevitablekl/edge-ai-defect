@@ -53,13 +53,13 @@ Not available
 
 ## 3. 当前环境总览
 
-当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
+当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D048：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`；J4.1：`COMPLETE`；J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4.3：`COMPLETE`；J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；implementation branch：`feature/jetson-onnxruntime`；current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`。Stage T 和 Stage P 尚未开始。下一授权任务：`J5.1 Benchmark Python Reference Preparation`。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J3 verified; J4.1 ready |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J4 verified; J4.2 accepted under D048; J5.1 entry preparation |
 
 ---
 
