@@ -3033,3 +3033,45 @@ matching and byte-identical canonical payload requirements remain unchanged.
 D048 is invalidated by any ORT/build, model, input/golden, RuntimeConfig
 semantic, CPU provider, JetPack/L4T, architecture, canonical raw SHA or
 production inference algorithm change.
+
+### D049 - Reconcile J5 Task Mapping and Authorize the J5.1 Python Reference Campaign
+
+状态：`Accepted`
+
+1. The Stage J Plan remains the highest authority.
+
+2. The frozen Task Cards' J5.1–J5.7 references to Stage J Plan §24.6–§24.8,
+   §26–§28 are classified as `FROZEN_CROSS_REFERENCE_DEFECT` because the
+   Plan contains only §24.1–§24.4 and Plan §28 is J7 Consolidation rather
+   than the J5 execution protocol. The Task Cards remain frozen and are not
+   modified.
+
+3. The authoritative task mapping is:
+
+   - J5.1a Reference protocol/provenance: Plan §10.3, §19.1, §26–§27;
+   - J5.1b Python Reference dual run: Plan §19.1;
+   - J5.1c smoke/evidence budget: Plan §26–§27;
+   - J5.2 Candidate semantic precheck: Plan §19.2–§19.3;
+   - J5.3 Candidate sizing: Plan §20;
+   - J5.4 Profile selection: Plan §21;
+   - J5.5/J5.6 formal baselines: Plan §22;
+   - J5.7 J5 Evidence gate: Plan §26–§27 and the J5 matrix in §30.
+
+4. Formal J5.1 Reference execution is authorized only in the frozen WSL
+   x86_64 Python Reference environment. The Jetson 20-image corpus copy is
+   reserved for J5.2 and later Jetson campaigns and cannot replace the x86
+   Python Reference authority.
+
+5. The current M5 Reference, common helper and corpus preparation tool SHA256
+   values match the historical provenance. Existing frozen M5 Reference
+   tooling is therefore reused unchanged:
+   `EXISTING_FROZEN_M5_REFERENCE_TOOLING_REUSED_UNCHANGED`.
+   No second Reference pipeline and no source modification are authorized.
+
+6. The historical corpus recovery report remains unchanged. The new 20/20
+   validation resolves current live readiness without rewriting the historical
+   blocked recovery attempt.
+
+7. The J5.1 Python Reference Campaign is the current authorized campaign.
+   J5.2 and all later J5 work remain unauthorized until J5.1 is complete and
+   separately reviewed.

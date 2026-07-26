@@ -2521,3 +2521,14 @@ and J4.2 sections remain historical evidence and are not rewritten.
   20-image benchmark manifest exists, but the corresponding 20 image files
   are not currently available in the repository or visible local evidence
   corpus; no images were generated or downloaded during this audit。
+
+### Stage J J5.1 Entry Resolution
+
+- Historical corpus recovery attempt：`BLOCKED`，保留；
+- D049：`Accepted`；
+- benchmark corpus：`20/20 PASS`；
+- J5.1a：`READY`；
+- J5.1b：`BLOCKED_BY_J5.1a`；
+- J5.1c：`PENDING`；
+- J5.2：`NOT_STARTED`；
+- Current authorized campaign：`J5.1 Python Reference Campaign`。
