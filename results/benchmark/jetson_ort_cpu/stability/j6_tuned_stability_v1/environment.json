@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "profile": "k5",
+  "cpu_set": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "assets": {
+    "model": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+  },
+  "platform": {
+    "source": "manual_platform_verification"
+  },
+  "runner": {
+    "path": "/home/orin/edge-ai-local-build/r2-stage-j-tooling-on/stage_j_profile_runner",
+    "sha256": "e5a69f3be8f64ed0ac086148998040e8380f4eb2610ae1959829ca215829c725"
+  },
+  "targets": {
+    "evidence": "/home/orin/edge-ai/edge-ai-defect/results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1",
+    "local_attempt": "/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1"
+  }
+}

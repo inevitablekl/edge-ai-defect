@@ -1,0 +1,16 @@
+001 git branch --show-current
+002 git rev-parse HEAD
+003 git log -1 --format='%H%n%s'
+004 git status --porcelain=v1
+005 sha256sum frozen Stage J Plan, Task Cards and test inventory
+006 git show HEAD frozen asset blobs and sha256sum
+007 git cat-file and ancestry checks for J3.5 provenance
+008 git diff --name-only correct J3.5 source to Evidence commit
+009 sha256sum -c original J3.5 Evidence manifest
+010 sha256sum -c original J3.10 v1 Evidence manifest
+011 inspect D046, J3 chain, frozen J4 card references and current-status documents
+012 create D047, v2 Evidence and documentation synchronization
+013 validate JSON, exact file sets, manifests, privacy and git diff --check
+
+No configure, build, CTest, model loading, inference, benchmark, sanitizer,
+ORT rebuild, TensorRT, CUDA EP, ROS2, camera or J4.1 command was executed.

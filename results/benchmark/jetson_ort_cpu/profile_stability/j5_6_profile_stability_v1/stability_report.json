@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "stage": "J5.6",
+  "status": "COMPLETE",
+  "profile": "k5",
+  "protocol": {
+    "duration_ms": 1800546,
+    "duration_minutes": 30.0091,
+    "cycle_count": 771,
+    "frames_per_cycle": 20,
+    "total_frames": 15420,
+    "continuous_loop": true
+  },
+  "runtime": {
+    "cpu_affinity": "1-5",
+    "execution_provider": "CPUExecutionProvider",
+    "execution_mode": "sequential",
+    "graph_optimization_level": "all",
+    "intra_op_threads": 5,
+    "inter_op_threads": 1,
+    "opencv_num_threads": 1
+  },
+  "runtime_result": {
+    "success_cycles": 771,
+    "failure_cycles": 0,
+    "cycle_success_rate": 1.0,
+    "mean_cycle_wall_ms": 2292.464,
+    "median_cycle_wall_ms": 2285.0,
+    "min_cycle_wall_ms": 2242.0,
+    "max_cycle_wall_ms": 2561.0
+  },
+  "memory": {
+    "VmRSS_min_kB": 136756,
+    "VmRSS_mean_kB": 139212.778,
+    "VmRSS_max_kB": 144972,
+    "first_10_cycles_mean_kB": 139085.6,
+    "last_10_cycles_mean_kB": 139647.6,
+    "last_minus_first_10_mean_kB": 562.0,
+    "interpretation": "No material RSS drift observed within this run."
+  },
+  "thermal_power_frequency": {
+    "cpu_temperature_mean_celsius": 50.907,
+    "cpu_temperature_max_celsius": 51.843,
+    "gpu_temperature_mean_celsius": 49.336,
+    "gpu_temperature_max_celsius": 50.031,
+    "VDD_IN_mean_mW": 11349.396,
+    "VDD_IN_min_mW": 10022.0,
+    "VDD_IN_max_mW": 11891.0,
+    "cpu_frequency_observed_MHz": 1728,
+    "gpu_frequency_snapshot_MHz": 1020,
+    "GR3D_utilization_mean_percent": 0.0,
+    "thermal_throttle_counter": "unavailable",
+    "power_throttle_counter": "unavailable"
+  },
+  "correctness": {
+    "all_cycles_semantic_pass": true,
+    "output_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+    "finite_value_checks_pass": 771,
+    "nan_or_inf_detected": false
+  },
+  "determinism": {
+    "unique_output_sha_count": 1,
+    "all_output_sha_identical": true
+  },
+  "not_executed": ["profile comparison", "profile reselection", "TensorRT", "CUDA EP", "Pipeline", "ROS2"]
+}

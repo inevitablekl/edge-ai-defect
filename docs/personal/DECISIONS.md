@@ -2090,3 +2090,1150 @@ Clarification（M5.5 Consolidation Evidence Remediation Planning Freeze，2026-0
 - Stable regeneration 必须在 staging A/B 使用完全相同的冻结输入生成并比较六文件；五个内容文件和
   `sha256sums.txt` 必须 byte-identical，随后才可原子发布。新 consolidation 完成前，M5.5 remediation generation、M5.6
   Gate rerun 和 M5.7 均保持 PENDING；不得 patch 历史 consolidation。
+
+### D041 - Freeze Stage J Jetson ONNX Runtime CPU Baseline Route
+
+时间：
+
+```text
+2026-07-21
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+M0～M5 C++ ONNX Runtime CPU Serial Baseline 已完成并关闭，当前已有 WSL2 x86_64 正确性验证和工程基线。下一步需要在同一目标 Jetson 上建立可信的 ONNX Runtime CPU baseline，作为后续 Stage T TensorRT FP16 同设备比较的参考。WSL 与 Jetson 只做环境差异描述，不计算正式 speedup。
+
+本决策依据冻结计划 [`docs/personal/STAGE_J_EXECUTION_PLAN.md`](STAGE_J_EXECUTION_PLAN.md)：
+
+- Plan version：`Stage J Plan v0.3`
+- Document status：`FROZEN`
+- Plan SHA256：`a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd`
+
+Decision：
+
+#### A. 阶段分离
+
+冻结阶段关系：
+
+- Stage J：Jetson ONNX Runtime CPU Baselines；
+- Stage T：TensorRT FP16；
+- Stage P：Pipeline / System Optimization；
+- Stage R：Research Extension。
+
+Stage J 不实现 TensorRT、CUDA EP、TensorRT EP、FP16、INT8、PipelineRunner、ROS2、Qt、摄像头、RTSP、PLC，也不引入通用插件或通用 Factory 系统。
+
+#### B. 目标平台合同
+
+Stage J 的 planned target 为 Jetson Orin Nano Super Developer Kit、8GB、256GB NVMe、JetPack 6.2.2、Jetson Linux / L4T 36.5、Ubuntu 22.04-based root filesystem、aarch64、MAXN_SUPER、主动风扇和 Jetson 原生构建。
+
+以上是 planned target，不是 J0 已验证的 observed facts。所有设备事实必须在 J1 采集并冻结，包括实际 thermal zone、CPU frequency sysfs、MAXN_SUPER mode ID、OC/UV counter、sustained throttling 目标频率、tegrastats rail、allowed/online CPU set 以及 Jetson 工具链版本。
+
+#### C. ONNX Runtime 合同
+
+冻结使用官方 ONNX Runtime 1.23.2 source，在 Jetson 上进行原生 aarch64 Release shared-library 构建，仅使用 CPUExecutionProvider、FP32，且不做交叉编译。禁止 CUDA EP、TensorRT EP、XNNPACK、ACL/ArmNN、OpenMP、minimal build、reduced operator config、training、custom ops、LTO 和人为 `-march=native`。
+
+#### D. 继承的推理语义
+
+Stage J 不重新定义 Frozen ONNX 和 SHA、ModelContract、HostTensor、Preprocessor / LetterBox、PostProcessor / NMS、Detection、IInferenceEngine、SerialRunner 的处理顺序、Level A/B/C Reference 和容差、以及 class-aware maximum bipartite matching。原则上不修改这些公共合同。
+
+#### E. RuntimeConfig v2 与 Protocol 分离
+
+RuntimeConfig v2 只管理进程内部软件配置；StageJRunProtocol 管理实验执行条件、CPU set、thermal、telemetry、campaign 和 Evidence。schema v1 保留历史兼容路径；v1 与 v2 字段禁止混用；launcher 不得绕过 RuntimeConfig 修改 Engine 私有状态；正式协议开始后 Resolved Protocol SHA 不得变化。
+
+#### F. ORT 配置证据模型
+
+冻结 `requested options`、`applied options`、`queried options` 三层证据。`applied` 只能由 Engine 实际成功调用 ORT API 后记录，不得由调用方复制 requested 值；`queried` 仅用于 ORT 1.23.2 真正支持独立查询的字段；不可查询字段以成功的配置 API 调用作为应用证据。不得宣称所有 SessionOptions 均已完成独立运行时回读。
+
+#### G. CPU Profile
+
+冻结两套正式 CPU baseline 角色：Controlled 1-Core Application Profile 和 Tuned k-Core Application Profile。
+
+Controlled 固定为 ORT sequential、`intra=1`、`inter=1`、OpenCV threads=1、spinning enabled 和固定单核 affinity。
+
+Tuned 候选为 `unique({1, 2, 4, non_cpu0_count, all_allowed_cpu_count})`，并固定 `intra_op_threads = k`、`inter_op_threads = 1`、ORT sequential、OpenCV threads=1 和 spinning enabled。不得将 `inter_op_threads` 设为 `k`，不得切换 ORT parallel mode。
+
+Tuned 结论只能限定为当前模型、20 图 workload、当前 JetPack、ORT build、MAXN_SUPER 和预注册候选集合中的最优 Profile，不得声称普遍最优线程数。
+
+#### H. 正确性 Gate
+
+冻结 J4 Level A/B/C、J5 20 图 Python Reference，以及每个 Candidate Profile 的两次 separate-process semantic precheck。每个 precheck 进程重新创建 ORT Session 且只执行一个完整 20 图 cycle；不同 Profile 不要求 byte-identical，但每个 Profile 必须分别与 Python Reference 在冻结容差内语义一致；性能 run 的每个完整 cycle SHA 必须匹配该 Profile 的 expected SHA。
+
+#### I. Benchmark 和稳定性
+
+Selection Campaign 使用完整平衡 rotation；正式 Controlled/Tuned baseline 各执行五次 separate-process repetitions；每次正式 measured window 至少 30 秒；任一正式 run 无效则整套五次重跑；不删除 outlier。J6 只验证 Tuned Profile，持续运行至少 30 分钟。Controlled 1-Core 不做独立 30 分钟稳定性测试，除非新增 Decision。
+
+#### J. 实验控制
+
+冻结 MAXN_SUPER、`jetson_clocks --fan`、Thermal Gate、application affinity、telemetry affinity、TID 生命周期采样、tegrastats、rail telemetry、OC/UV counter Gate、monotonic Frame Trace 和 telemetry coverage Gate。实际设备路径、rail 名称、mode ID 和目标频率在 J1 冻结，不得在 J0 猜测。
+
+#### K. Evidence
+
+冻结 local attempt 与 published Evidence 分离；published Evidence 只能来自一个完整 PASS attempt 或 campaign，禁止拼接、patch 或覆盖历史 Evidence。J7 负责 Consolidation，J8 负责只读独立重建审计，J9 仅进行文档收尾。Stage J tracked Evidence 总预算不超过 25 MiB。`sha256sums.txt` 不包含自身，输入按 repo-relative UTF-8 path byte order 排序，输出使用固定 `<sha256><two spaces><relative_path>` 格式和 LF 行尾，不允许绝对路径或动态元数据影响 byte-identical 重建。
+
+选择理由：
+
+1. ORT CPU baseline 与 TensorRT FP16 必须在同一 Jetson、相同模型、corpus、功耗和 Trace 定义下比较；
+2. WSL x86 与 Jetson aarch64 不适合计算正式 speedup；
+3. 先完成 CPU baseline 可以隔离平台迁移、跨架构正确性和 TensorRT 优化变量；
+4. Controlled 与 Tuned 两套 Profile 分别提供受控参考和当前 workload 下的实用 CPU 性能；
+5. RuntimeConfig 与 Run Protocol 分离可以避免实验编排层绕过应用合同；
+6. 严格 Evidence 和 Deep Gate 用于防止部分重跑、证据拼接和结论污染；
+7. Stage J 不提前引入 TensorRT/Pipeline，可避免同时改变多个关键变量。
+
+影响范围：
+
+- Stage J 开始前必须先完成 J0；
+- Stage J implementation branch 尚未创建；
+- production 代码修改尚未开始；
+- J1 前不得将 planned target 写成 observed fact；
+- RuntimeConfig v2 必须保持 v1 兼容；
+- 当前 `IInferenceEngine` 不因 Stage J 扩展；
+- 后续 Stage T 必须继承 Stage J 的 trace 和统计语义；
+- Stage J 不产生 TensorRT、Pipeline 或最终 Jetson 性能结论；
+- WSL M5 Evidence 不回写、不改名、不重算。
+
+风险与限制：
+
+- Jetson 尚未到货；
+- JetPack/L4T/MAXN_SUPER 实际状态未验证；
+- ORT 1.23.2 aarch64 build command 尚需在 J2 基于真实 `build.sh --help` 冻结；
+- 多线程 Profile 可能产生可容忍的浮点差异；
+- telemetry 与 all-core candidate 可能在 CPU0 上重叠；
+- thermal zone、frequency、OC/UV 和 rail 路径依赖设备事实；
+- 严格 campaign invalidation 可能增加实机重复运行成本；
+- Stage J 只能证明 30 分钟受控持续运行，不能证明生产长期稳定性。
+
+替代方案及拒绝理由：
+
+- 在 WSL 上直接交叉编译 Jetson binary：拒绝，因为 Stage J 要求目标设备原生构建；
+- 使用非目标设备上的 TensorRT 代替 Jetson TensorRT：拒绝，因为这不构成同设备参考；
+- Stage J 同时实现 TensorRT 和 Pipeline：拒绝，因为会同时改变多个关键变量；
+- 只测试单一 ORT 线程数：拒绝，因为无法形成 Controlled 与 Tuned 两种角色；
+- 将 all-core 或某个 k 直接预设为最优：拒绝，因为 Profile 必须经过预注册候选和选择协议；
+- 使用 WSL 与 Jetson 计算正式 speedup：拒绝，因为跨设备结果不可作正式加速比；
+- 使用一个进程内两个 cycle 替代 separate-process semantic precheck：拒绝，因为无法覆盖进程级 Session 重建边界；
+- 允许局部补跑后拼接正式 campaign：拒绝，因为会破坏 campaign 完整性；
+- 将不可查询的 SessionOptions 伪装成 queried actual values：拒绝，因为会污染配置证据语义。
+
+后续调整：
+
+Stage J 范围、RuntimeConfig 与 Protocol 权威关系、J4/J5 语义 Gate、Profile 选择规则、Thermal/Telemetry 合同、Evidence 和 Deep Gate 边界的变化，必须通过新的 Decision 记录，并重新评估受影响 Gate。当前设备事实、ORT 实际 build command 和目标频率不在本 Decision 中预先编造。
+
+### D042 - Freeze Stage J Jetson Telemetry and Throttling Contract
+
+时间：
+
+```text
+2026-07-22
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Context：
+
+J1.4 Phase A 已完成 thermal、frequency、EMC、tegrastats、rail、OC/UV
+和 environment-drift discovery。原始 Phase A attempt 未包含全部 OC/UV 与
+INA3221 字段；根据用户明确的 J1 discovery 工程协议裁决，J1 discovery
+允许使用多个独立、不可变、repository-external raw attempt 组成 composite
+evidence。本裁决不改变 J5/J6 formal benchmark/stability campaign 的连续性、
+不可拼接和不可删除要求。
+
+Evidence provenance：
+
+1. Phase A discovery raw SHA256：
+   `91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`
+   覆盖 thermal zones、30 秒 thermal/frequency sampling、CPU/GPU/EMC
+   sources、tegrastats、rail-name set、environment-drift candidates 和
+   sustained-throttling candidate。
+2. Supplemental OC/UV/INA3221 raw SHA256：
+   `75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`
+   覆盖 hwmon identity/realpath、OC1/2/3 counters、throttle-enable fields、
+   INA3221 labels 和实际 alarm paths/values。
+
+两个 raw attempt 均 repository-external、untracked、immutable 且未作为
+Published Evidence。旧 Phase A raw 未被修改或覆盖；J1.4 composite discovery
+evidence v1 不伪装为单一 raw attempt。中间未通过 provenance/字段完整性 Gate
+的 supplemental attempts 不属于 composite evidence。
+
+Observed platform facts：
+
+- Device：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，Tegra234。
+- Power mode：`MAXN_SUPER` / ID `2`；CPU online `0-5`。
+- CPU policies：policy0 CPUs `0-3`，policy4 CPUs `4-5`；driver `tegra194`，
+  governor `schedutil`；target/min/max `1728000 kHz`。
+- GPU devfreq：
+  `/sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu`；
+  target/min/max `1020000000 Hz`，governor `nvhost_podgov`。
+- EMC configuration/cap source：`/sys/kernel/nvpmodel_clk_cap/emc`，
+  target `3199000000 Hz`；`jetson_clocks --show` reports current/max
+  `3199000000` and `FreqOverride=1`。
+- Fan：PWM `255`，dynamic speed control disabled；nvfancontrol inactive
+  after `jetson_clocks --fan`。
+
+Thermal contract：
+
+- Raw unit is milli-degree Celsius; gates use raw integer values and display
+  conversion is `raw / 1000.0`.
+- Required readable relevant set is exactly:
+  `cpu-thermal` (`thermal_zone0`), `gpu-thermal` (`thermal_zone1`),
+  `soc0-thermal` (`thermal_zone5`), `soc1-thermal` (`thermal_zone6`),
+  `soc2-thermal` (`thermal_zone7`) and `tj-thermal` (`thermal_zone8`).
+- `cv0-thermal`, `cv1-thermal` and `cv2-thermal` at `thermal_zone2-4` are
+  inventory members but stably return `EAGAIN`; they are excluded from the
+  numeric hard maximum, never converted to zero, and any future stable value
+  requires relevant-set review.
+- Each formal sample takes the maximum of the readable relevant set. A read
+  failure in any required zone invalidates that sample; no forward fill or
+  interpolation is allowed.
+- Any required zone at or above its lowest passive trip is a hard
+  thermal-throttling failure; critical trip is an immediate hard failure.
+  Active trips alone do not define throttling; frequency Gate is independent.
+- Formal `T_idle_ref` remains a later protocol operation: 5-minute idle,
+  60 one-second maxima, median reference, 30-second pre-run wait,
+  `T_idle_ref + 2°C` and 10-second range `<= 1°C`, timeout 600 seconds.
+  J1.4 did not establish a formal reference.
+
+Frequency and EMC authority：
+
+- CPU runtime sources are policy0/policy4 `scaling_cur_freq`; downward
+  deviation means observed value below `1728000 kHz`.
+- GPU runtime source is the discovered devfreq `cur_freq`; downward
+  deviation means observed value below `1020000000 Hz`.
+- EMC cap and `jetson_clocks --show` current/max/`FreqOverride` are
+  preflight/postflight authority only. No independent reliable ordinary-user
+  1 Hz EMC runtime source was found, and tegrastats does not report EMC
+  frequency. EMC therefore does not enter the 1 Hz sustained sequence.
+- Formal start/end EMC Gate requires cap/current/max `3199000000` and
+  `FreqOverride=1`; mismatch is environment-drift hard failure.
+
+tegrastats and rail contract：
+
+- Executable: `/usr/bin/tegrastats`; package `nvidia-l4t-tools`
+  `36.5.0-20260115194252`; interval `1000 ms`.
+- Formal lines carry UTC and `CLOCK_MONOTONIC ns`; gap `>2500 ms` invalidates
+  the run; telemetry coverage must be at least `0.90` and sample count must
+  satisfy the formal protocol.
+- Rail-name set is exactly `VDD_IN`, `VDD_CPU_GPU_CV`, `VDD_SOC`.
+- Rail telemetry is onboard rail telemetry, not wall power, PSU input power,
+  precision energy measurement or calibrated external power-meter data.
+- For `current_power / average_power`, both values are retained. The first
+  value in mW is used for arithmetic mean, time-weighted linear mean, min,
+  max, Type-7 P50/P95 and count. The second device-emitted value is diagnostic
+  only and is not averaged or used for precise energy integration.
+
+OC/UV and INA3221 hard Gate：
+
+- `soctherm_oc` realpath is
+  `/sys/devices/platform/soctherm-oc-event/hwmon/hwmon3`.
+- OC1 Under Voltage:
+  `/sys/class/hwmon/hwmon3/oc1_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc1_throt_en`, current `1`.
+- OC2 Average Overcurrent:
+  `/sys/class/hwmon/hwmon3/oc2_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc2_throt_en`, current `1`.
+- OC3 Instantaneous Overcurrent:
+  `/sys/class/hwmon/hwmon3/oc3_event_cnt`, current `0`,
+  `/sys/class/hwmon/hwmon3/oc3_throt_en`, current `1`.
+- Counters are cumulative; they are not cleared before a run. Each attempt
+  records start/end and compares deltas. Any positive delta is a hard failure;
+  reboot requires a new baseline. dmesg is diagnostic only.
+- INA3221 realpath is
+  `/sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon1`.
+  Labels are `in1_label=VDD_IN`, `in2_label=VDD_CPU_GPU_CV`,
+  `in3_label=VDD_SOC`, plus `in7_label=sum of shunt voltages`.
+  Observed current-alarm paths are `curr1/2/3_crit_alarm`,
+  `curr1/2/3_max_alarm` and `curr4_crit_alarm`; all observed values are `0`.
+  Formal telemetry samples every alarm field at 1 second; any non-zero value
+  is a hard failure.
+
+Stage J Sustained Throttling Algorithm v1：
+
+- Sample every 1 second with `CLOCK_MONOTONIC ns`.
+- Monitor CPU policy0/policy4 `scaling_cur_freq` and GPU `cur_freq`.
+- A downward-deviation sample is `observed < target`.
+- Three consecutive valid one-second downward samples for the same source are
+  a sustained-throttling event and hard-fail the current run/campaign.
+- One or two consecutive samples are warnings unless an OC/UV counter delta or
+  alarm occurs, which is a hard failure.
+- Upward values, configuration mismatch, CPU-set changes, mode changes,
+  EMC Gate mismatch or fan-state mismatch are environment-drift hard failures.
+- Gap `>2500 ms`, coverage `<0.90`, insufficient samples or required-source
+  read failure invalidates the run; no fill or interpolation.
+- Thermal and frequency Gates are independent and both are recorded when
+  simultaneous. EMC is excluded from the 1 Hz sequence.
+- With all allowed CPUs, telemetry is pinned to CPU0; CPU0 overlap with the
+  application is recorded as an interference limitation.
+
+Environment-drift contract：
+
+Hard-match fields are kernel release, `/etc/nv_tegra_release` SHA256,
+`nvidia-l4t-core` version, active nvpmodel config path/SHA256, mode name/ID,
+CPU present/possible/online/allowed sets, policy paths/mappings and targets,
+GPU path and targets, EMC cap/show/FreqOverride, fan PWM/control state,
+thermal type/path sets, tegrastats path/package version, rail-name set,
+OC/UV paths and enable values, and wrapper SHA256 values. Attempt preflight
+mismatch prevents startup; in-run mismatch invalidates the run and is never
+silently repaired. Boot ID is recorded per resolved attempt; reboot invalidates
+the reference and requires new preflight, thermal reference and protocol.
+
+Rationale and consequences：
+
+This Decision converts J1 observed telemetry facts into explicit formal Gates,
+separates EMC cap from runtime measurement, preserves INA3221/onboard rail
+limitations, and makes OC/UV counter deltas auditable. It does not validate
+workload throttling, establish `T_idle_ref`, change system state, or authorize
+J1.5 by itself. J5/J6 formal runs remain single continuous attempts with no
+post-hoc telemetry patching, deletion or evidence splicing.
+
+### D043 - Freeze Stage J1.5 Published Evidence Contract
+
+时间：
+
+```text
+2026-07-22
+```
+
+状态：
+
+```text
+Accepted
+```
+
+Purpose：
+
+本 Decision 定义 J1.5 Platform Evidence Gate 的 Published Evidence artifact
+contract，补全 evidence root、required files、machine-readable schema、manifest
+和 privacy/redaction 规则。D043 不执行 J1.5，不授权 J2，也不改变 D041 或 D042。
+
+Evidence root：
+
+```text
+results/platform/jetson/environment/j1_baseline_v1/
+```
+
+Required files：
+
+```text
+README.md
+PLATFORM_ACCEPTANCE.md
+TOOLCHAIN_INVENTORY.md
+POWER_CLOCK_ACCEPTANCE.md
+TELEMETRY_CONTRACT.md
+EVIDENCE_PROVENANCE.md
+environment_snapshot.yaml
+sha256sums.txt
+```
+
+Published Evidence must contain exactly the required artifact set above. It is
+tracked, sanitized and derived from reviewed local evidence; local raw evidence
+remains external, untracked and immutable preservation, and is not Published
+Evidence.
+
+Manifest contract：
+
+`sha256sums.txt` excludes itself, contains only Published Evidence-root-relative
+paths, sorts paths by UTF-8 byte order, uses deterministic formatting and LF
+line endings, and contains no absolute path, directory entry or duplicate path.
+Each line uses:
+
+```text
+<sha256><two spaces><relative-path>
+```
+
+The manifest must be validated with `sha256sum -c sha256sums.txt` from the
+Published Evidence root. The local evidence manifest must not be copied as the
+Published Evidence manifest.
+
+`environment_snapshot.yaml` contract：
+
+```yaml
+schema_version: 1
+```
+
+The top-level schema must contain these required sections:
+
+```text
+device
+software
+toolchain
+power
+clock
+fan
+thermal
+telemetry
+evidence_provenance
+```
+
+Observed, planned, missing and null meanings must remain distinct. Formatting
+is UTF-8, LF and deterministic; no YAML anchors, aliases or environment
+variable expansion are allowed.
+
+Privacy and redaction：
+
+Published Evidence must not contain serial numbers, MAC addresses, IP
+addresses, UUID/PARTUUID values, passwords, tokens, credentials, sudoers
+content or private-key paths. It must not contain `/home/orin`,
+`/tmp/edge-ai-j1*` or `raw_output.txt`. Logical evidence labels, basenames,
+booleans, package versions and SHA256 values are allowed where they do not
+reveal a prohibited identifier.
+
+Evidence source rules：
+
+- Local raw evidence: repository-external, untracked and immutable preservation;
+  it is not Published Evidence.
+- Published Evidence: tracked, sanitized and derived; it must never directly
+  copy unreviewed raw output.
+- Raw evidence absolute local paths are not portable Published Evidence
+  locators; provenance uses logical evidence IDs and relative preservation
+  labels.
+
+Size and validation：
+
+- Total tracked Evidence under this contract is `<=25 MiB`.
+- All files are UTF-8 with LF line endings.
+- File ordering and manifest generation are deterministic.
+- Validation must check the exact file set, parser validity, line endings,
+  privacy scan, no absolute local paths, no raw files, no duplicate evidence,
+  total size and manifest checksums before J1.5 can pass.
+
+Consequences：
+
+D043 supplies the missing J1.5 contract but does not create the evidence
+directory or any results files. J1.5 must use only this exact root and file set,
+must preserve the distinction between local raw evidence and derived tracked
+evidence, and must remain blocked if any required artifact or schema validation
+is unavailable. J1.5 remains a separate gate; J1 and Stage J are not completed
+by this Decision alone.
+
+### D044 - Freeze J2 Formal Build Remediation and SDK Packaging Contract
+
+时间：2026-07-23T19:30:42+08:00
+
+状态：`Accepted`
+
+D044 only completes the execution, artifact, provenance and evidence contract
+for the existing J2.2 formal build remediation and J2.3 SDK packaging work. It
+does not change the Stage J scope, ORT version, CPU-only contract, J2 task
+numbering, J2.4 RPATH Gate, J2.5 Evidence Gate or J3 task boundary. J3.0 is not
+a task in the frozen sequence.
+
+#### Historical J2.2 attempt disposition
+
+The existing external SDK is technically valid for the facts already audited:
+the main and providers-shared library hashes match the recorded values, the
+payload is AArch64 ELF64, the SONAME and symlink chain are valid, CUDA/TensorRT
+dependencies are absent, and the CMake package uses `_IMPORT_PREFIX`.
+
+The existing external build and SDK artifacts, failed-build directory and raw
+logs must not be deleted, modified or overwritten. The historical successful
+build is classified as:
+
+`development_build_valid_artifact_not_formal_published_evidence`
+
+The historical attempt cannot independently satisfy the complete frozen J2.2
+provenance Gate because the source tree is no longer available for independent
+verification, the successful build has no independent exit-code record and the
+local attempt/staging manifest is incomplete. This disposition does not mean
+that the SDK is corrupt or that the historical technical build failed.
+
+The historical J2.2 attempt disposition is `SUPERSEDED`. `SUPERSEDED` means it
+is not the sole authoritative source for future formal J2.2 Published Evidence;
+it does not invalidate its already observed technical artifact facts.
+
+#### Frozen J2 status correction
+
+- J2.2: `IN_PROGRESS` pending formal remediation PASS.
+- J2.3: `BLOCKED` pending formal J2.2 remediation PASS.
+- J2.4: `PENDING`.
+- J2.5: `PENDING`.
+- J2 overall: `IN PROGRESS`.
+- J3: `BLOCKED_BY_J2.5`.
+- J3.0: `NOT_DEFINED`.
+
+Historical status entries are retained for audit history and are not silently
+rewritten. The live status is corrected by the current task record.
+
+#### J2 local attempt contract
+
+The repository-external local attempt root is:
+
+`/home/orin/edge-ai-local-evidence/stage_j/j2_attempts/`
+
+Each attempt uses an immutable, non-overwriting directory named
+`<task_id>_<semantic_name>_v<integer>`. The first formal remediation attempt is
+`j2.2_formal_clean_v1`. A failed attempt is retained intact and the next attempt
+increments the version; no attempt directory may be reused or overwritten.
+
+Each formal attempt must contain exactly these required files:
+
+```text
+README.txt
+commands.txt
+stdout.log
+stderr.log
+exit_codes.tsv
+timestamps.tsv
+environment.txt
+source_provenance.txt
+build_configuration.txt
+artifact_inventory.txt
+sha256sums.txt
+```
+
+`tegrastats.log` is optional and may exist only when telemetry is actually
+collected. Command logs must record executed commands in order and must never
+present planned commands as executed commands. stdout/stderr must preserve raw
+command boundaries without post-hoc deletion or concatenation across attempts.
+
+`exit_codes.tsv` uses the fixed columns `sequence`, `command_id` and
+`exit_code`, and records source acquisition, source verification, submodule
+preparation, configure/build, install/staging, artifact verification and local
+manifest verification. `timestamps.tsv` uses `event`, `iso8601_local` and
+`monotonic_ns`, and records attempt start, source ready, build start/end,
+install start/end, verification end and attempt end.
+
+The remaining attempt files record, respectively, the attempt identity and
+disposition; execution environment; official source URL, exact tag/commit,
+VERSION_NUMBER, clean status, submodules and source inventory; the exact
+build.sh command and CPU-only cache/flag facts; and the complete artifact,
+ELF, dependency, header, package, license and notice inventory.
+
+The attempt-local `sha256sums.txt` excludes itself, uses attempt-root-relative
+paths, UTF-8 byte-order sorting, two spaces between hash and path, LF line
+endings, and covers every regular file. Symlinks are recorded separately in
+`artifact_inventory.txt`. `sha256sum -c` must pass for every entry.
+
+#### J2.2 formal remediation paths
+
+The first formal remediation uses new, previously nonexistent roots and does
+not reuse or remove historical artifacts:
+
+```text
+Source: /home/orin/edge-ai-local-build/j2.2-formal-v1/source/
+Build: /home/orin/edge-ai-local-build/j2.2-formal-v1/build/
+Installed SDK: /home/orin/edge-ai-local-build/j2.2-formal-v1/sdk/
+Local attempt: /home/orin/edge-ai-local-evidence/stage_j/j2_attempts/j2.2_formal_clean_v1/
+```
+
+The source must come from the official ONNX Runtime repository, tag `v1.23.2`,
+commit `a83fc4d58cb48eb68890dd689f94f28288cf2278`, with a clean tree, complete
+recursive submodules and `VERSION_NUMBER=1.23.2`.
+
+#### J2.2 formal build contract
+
+The formal build is native AArch64, Release, shared-library, CPU
+ExecutionProvider, upstream tests skipped and parallelism four. It uses the
+external CMake 3.28.6 binary at
+`/home/orin/edge-ai-local-build/cmake-3.28/bin/cmake`; the archive SHA256 must
+be `7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7`.
+
+Before execution, the actual v1.23.2 `build.sh --help` output must be checked.
+The planned command semantics are exactly:
+
+```text
+./build.sh --build_dir <fixed-new-build-root> \
+  --cmake_path <external-cmake> --config Release --build_shared_lib \
+  --skip_tests --parallel 4 --update --build
+```
+
+If staging requires a separate install command, it must be recorded with its
+own exit code and must use the successful build/install output rather than
+manually selecting headers. Any actual parameter change stops the formal
+attempt and requires a new decision.
+
+The formal build must not enable CUDA EP, TensorRT EP, XNNPACK, ACL, ArmNN,
+OpenMP, minimal build, reduced operator configuration, training, custom ops,
+LTO or manual `-march=native`.
+
+#### J2.3 local SDK contract
+
+The final Stage J local SDK logical root is:
+
+```text
+third_party/onnxruntime/1.23.2/linux-aarch64/
+```
+
+The complete payload remains local-only and must not enter Git. The required
+logical structure is:
+
+```text
+include/
+lib/
+BUILD_MANIFEST.json
+HEADER_SHA256SUMS.txt
+FILE_SHA256SUMS.txt
+LICENSE
+THIRD_PARTY_NOTICES
+README.md
+```
+
+The include/lib payload, including real symlinks, must come entirely from one
+formal J2.2 PASS SDK. Failed-build artifacts and mixed SDK attempts are
+prohibited. J2.3 may track only the metadata, license/notice and README files;
+its controlled `.gitignore` update must prevent `.so` files and complete SDK
+headers from entering Git.
+
+`BUILD_MANIFEST.json` uses schema version 1 and records the artifact kind
+`onnxruntime_aarch64_cpu_sdk`, status `complete`, ORT 1.23.2, AArch64,
+FP32, CPUExecutionProvider, source/build/toolchain/SDK facts, libraries,
+headers, CMake package, features, license, provenance and limitations. It
+uses logical or repository-relative paths only, distinguishes observed from
+unverified facts, contains no NaN/Infinity or absolute local paths, and never
+uses the historical superseded build as the active artifact source.
+
+`HEADER_SHA256SUMS.txt` covers only regular files under `include/` using SDK
+root-relative paths. `FILE_SHA256SUMS.txt` covers regular include/lib/CMake
+package files plus BUILD_MANIFEST.json, LICENSE, THIRD_PARTY_NOTICES and
+README.md. Each excludes itself, the other manifest and symlinks; both use
+UTF-8 byte-order sorting, LF endings and two spaces between hash and path.
+Symlink path, target and resolved target are recorded in BUILD_MANIFEST.json.
+
+LICENSE and THIRD_PARTY_NOTICES must be obtained from a newly retrieved and
+verified official ORT v1.23.2 source. They must not be reconstructed from
+memory, copied from an unknown web page or substituted with an individual
+dependency license. Source-relative path, source commit, source SHA, copy
+command and destination SHA are recorded.
+
+#### J2.3 Published Evidence contract
+
+The frozen Published Evidence logical root is:
+
+```text
+results/build/onnxruntime_aarch64/j2_sdk_v1/
+```
+
+It contains exactly:
+
+```text
+README.md
+provenance.json
+verification_report.json
+commands.txt
+sha256sums.txt
+```
+
+`provenance.json` and `verification_report.json` use schema version 1. They
+record the evidence/task/contract identity, source and formal attempt
+provenance, all manifest and artifact hashes, historical superseded attempt,
+privacy status, exact file-set and manifest validation, clean source/build
+exit codes, ELF/SONAME/symlink/ldd facts, CPU-only absence of CUDA/TensorRT,
+CMake package relocatability, license/notice validation, tracked size and
+limitations. Absolute local paths are prohibited.
+
+`commands.txt` records only commands actually used for J2.3 packaging,
+copying, manifest generation, validation, privacy scan and Git checks.
+`sha256sums.txt` excludes itself, is root-relative, deterministic, LF-only,
+and must pass `sha256sum -c` for the exact five-file set.
+
+#### Privacy and invalidation
+
+Tracked Published Evidence must not contain home/tmp paths, IP or MAC
+addresses, serials, UUID/PARTUUID values, passwords, tokens, credentials,
+sudoers content, private-key paths or raw output files. Logical labels,
+basenames, versions, booleans, commits and SHA256 values are allowed.
+
+Any change to ORT source/tag/commit, build flags, compiler, external CMake,
+CPU-only configuration, source/build/SDK attempt, public headers, libraries,
+symlinks/SONAME, license/notice source, manifest schema or generation rules
+invalidates formal J2.2/J2.3. Documentation-only changes do not invalidate
+the SDK.
+
+After formal J2.2 remediation PASS: J2.2 becomes COMPLETE and J2.3 becomes
+READY. After J2.3 PASS: J2.3 becomes COMPLETE and J2.4 becomes READY. After
+J2.4 PASS: J2.4 becomes COMPLETE and J2.5 becomes READY. After J2.5 PASS:
+J2 becomes COMPLETE and J3.1 becomes READY.
+
+### D045 - Accept J2.2 v2 Non-Build Evidence Reconciliation
+
+时间：2026-07-23T22:00:04+08:00
+
+状态：`Accepted`
+
+D045 accepts the non-build evidence reconciliation for the immutable
+`j2.2_formal_clean_v2` attempt. The formal build, independent install and SDK
+technical results remain valid, and J2.2 remains `COMPLETE`. No second ORT
+full clean build is required. The v2 local attempt and its manifest remain
+immutable; this decision authorizes an independent reconciliation document and
+does not backfill the original attempt.
+
+D045 only corrects the non-substantive evidence-field requirements identified
+under D044. It does not change the ORT tag or commit, build flags, CPU-only
+contract, formal SDK, J2 task order, J2.4/J2.5 gates or the J3 boundary.
+
+#### Accepted evidence deviations
+
+1. Command and exit-code indexing: commands 001–006 have no independent
+   `exit_codes.tsv` rows; command 007 uses the semantic ID
+   `environment_preflight`; later command and exit-row identifiers are not
+   numerically identical. The substantive clone, source-gate, build, install,
+   artifact and local-manifest operations have verifiable successful exit
+   rows. The original `commands.txt` and `exit_codes.tsv` must not be changed.
+
+2. Timestamp fields: `source_ready`, `verification_end` and `attempt_end` are
+   `not_recorded`. No timestamp is fabricated from file mtimes or current
+   time. The recorded build and install boundaries remain valid and the gap
+   does not trigger a rebuild.
+
+3. Wrapper path typos: 008a is `HARMLESS_WRAPPER_TYPO`; 013a and 018a are
+   `RECORDED_NON_SUBSTANTIVE_FAILURE`; 020a is `HARMLESS_WRAPPER_TYPO`. The
+   wrong target did not exist and received no files. Clone and help were not
+   executed when their redirections failed. The two read-only snapshot and
+   provenance operations ran without saved wrapper output and were then
+   executed correctly in the same v2 attempt. Formal build stdout/stderr were
+   retained; no cross-attempt copying or evidence splicing occurred.
+
+4. The historical source aggregate
+   `4f460795adeab01ac3a0b207ff18ec9d6af01d3957456af59dcb201645e9c5ab` is
+   classified as `historical_recorded_not_future_authority`. It is retained,
+   is not claimed to be independently reproducible, and need not equal the
+   new canonical aggregate.
+
+#### Canonical source aggregate contract
+
+The new reconciliation identity is frozen as
+`stage_j_ort_source_aggregate_v1`. Its UTF-8/LF payload is derived from the
+superproject Git index and Git object blob bytes, preserves mode, hashes
+symlink target blobs without following worktree symlinks, represents gitlinks
+with their recorded submodule commits, and normalizes clean recursive
+submodules by UTF-8 path order. It does not depend on mtime, inode, absolute
+path, hostname, current time or worktree enumeration order.
+
+The reconciliation records the canonical payload SHA256, algorithm,
+entry/submodule counts and an independently reproducible code block. A new
+aggregate is a post-PASS reconciliation identity, not a replacement historical
+timestamp or original-attempt record.
+
+#### Status and rebuild authority
+
+The reconciliation PASS establishes `J2.3 READY`; it does not execute J2.3.
+J2.4 and J2.5 remain pending, J2 remains `IN PROGRESS`, J3 remains
+`BLOCKED_BY_J2.5`, and J3.0 remains `NOT_DEFINED`. J2.3 must use only the
+formal v2 SDK, must not use the historical development SDK, and must not
+rebuild ORT. Future rebuild is required only if the ORT tag/commit/version,
+recursive submodule commits, compiler/external CMake/build command, SDK
+library/header/symlink/SONAME, main library SHA, formal build/install logs or
+exit codes, or the canonical aggregate under the same source state changes or
+fails validation.
+
+The D045 contract commit is intentionally a placeholder until the owner
+reviews and records the repository commit. No push, merge, rebase or tag is
+authorized by this decision.
+
+### D046 - Accept third-party OpenCV/TBB Leak Limitation in J3.9 Sanitizer Validation
+
+时间：2026-07-24T01:27:43+08:00
+
+状态：`Accepted`
+
+#### Decision scope
+
+D046 is limited to the J3.9 Jetson ASan/UBSan validation gate. It records the
+formal disposition of the existing sanitizer failure after the independent
+J3.9 remediation investigation. It does not change production source, test
+logic, CMake sanitizer flags, Release build behavior, ORT SDK contents or
+frozen assets.
+
+#### Recorded strict sanitizer result
+
+- ASan: no heap corruption, use-after-free or invalid memory access was
+  observed.
+- UBSan: PASS; no undefined-behavior diagnostic was emitted.
+- LeakSanitizer: detected 792 bytes in 3 allocations during the
+  `runtime_config` test.
+- The original J3.9 configure and build completed successfully; `serial_runner`
+  passed and `runtime_config` failed only on the LeakSanitizer report.
+
+#### Ownership conclusion
+
+The remediation Evidence `j3_9_remediation_investigation_v1` records:
+
+- Scenario A reproduced the leak with the current code and leak detection
+  enabled.
+- Scenario B bypassed only OpenCV thread-policy activation in a diagnostic
+  shim, and the leak disappeared.
+- The allocation stack is below the project boundary in OpenCV/TBB
+  initialization (`cv::setNumThreads(int)` and `libtbb.so.2`).
+- Scenario C disabled leak detection and produced no non-leak ASan/UBSan
+  diagnostic.
+- No project-owned allocation was identified.
+
+The accepted ownership classification is:
+
+`B — third-party OpenCV/TBB initialization leak`
+
+#### Acceptance and limitations
+
+For J3.9 only, the project accepts this third-party initialization leak as a
+documented limitation and does not require strict LeakSanitizer PASS for the
+J3.9 final disposition. ASan and UBSan checks remain required and are not
+weakened. No leak suppression is added, and no production source change is
+authorized or required by this Decision. The existing Release runtime
+validation remains valid.
+
+This acceptance must not affect J4 inference pipeline work, benchmark work,
+TensorRT, CUDA EP, ROS2, camera operation or any later runtime gate. Any
+future change to the OpenCV/TBB runtime, sanitizer policy or J3.9 acceptance
+requires a new Decision.
+
+### D047 - Reconcile J3 Provenance and Freeze J4 Entry Interpretation
+
+状态：`Accepted`
+
+#### J3.5 provenance reconciliation
+
+- Incorrect recorded source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`。
+- Correct source commit：`9b146317922561c55d91ad7126dbde4164b0c800`。
+- J3.5 Evidence commit：`8d57466516b470b2889a10b680e2ffa2034fcf26`。
+- The correct source commit is a direct ancestor of the Evidence commit。
+- The Evidence commit adds only documentation and the J3.5 Evidence；no
+  production source was changed。
+- The original J3.5 Evidence remains immutable；the original technical result
+  remains `PASS` and does not require a technical rerun。
+- Final J3.5 status：`COMPLETE_WITH_RECONCILED_PROVENANCE`。
+
+#### J3.10 authority
+
+- `j3_10_j3_evidence_gate_v1` is retained unchanged。
+- Because v1 inherited the invalid J3.5 source SHA, its disposition is
+  `SUPERSEDED_FOR_FINAL_AUTHORITY_BY_J3_10_V2`。
+- `j3_10_j3_evidence_gate_v2` is the sole final J3 provenance authority after
+  its PASS。
+- J3.1–J3.9 technical tests are not rerun and no old Evidence is modified。
+
+#### Stage J authority hierarchy
+
+The authority order is frozen as follows:
+
+1. Stage J Plan v0.3；
+2. Accepted Decisions D041–D047；
+3. Frozen Stage J Task Cards, as interpreted by later accepted Decisions；
+4. Published Evidence；
+5. The latest live-status section at the end of `docs/personal/TASKS.md`；
+6. README, PROJECT_BRIEF, EXPERIMENT_PLAN, ENVIRONMENT and ARCHITECTURE as
+   summaries only。
+
+`PENDING` in a frozen Task Card is the card-definition status, not the live
+execution status。
+
+#### J4 protocol section mapping
+
+The authoritative mapping is:
+
+- J4.1 — Level A correctness：Stage J Plan §18.1；
+- J4.2 — Level B runtime/integration：Stage J Plan §18.2；
+- J4.3 — Level C robustness：Stage J Plan §18.3；
+- J4.4 — Cross-level Evidence gate：Stage J Plan §18 and §26。
+
+The frozen Task Cards' J4 `Parent protocol sections: §28` reference is a
+`FROZEN_CROSS_REFERENCE_DEFECT` because Plan §28 is J7 Consolidation. The
+Task Cards are not modified；this Decision is the formal interpretation。
+
+#### J4.3 dependency interpretation
+
+The Task Card dependency `J4.2 PASS; J3.9 PASS` is interpreted as follows:
+
+- J4.2 must actually PASS；
+- the J3.9 dependency is satisfied by the retained strict-failure Evidence,
+  remediation classification B, Accepted Decision D046, and
+  `J3.10 v2 PASS_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`。
+
+This interpretation satisfies only the J4.3 entry dependency. J3.9 is not
+rewritten as strict PASS；the LeakSanitizer finding is not deleted, hidden or
+suppressed；and the J4.3 gate is not relaxed. J4.3 itself remains the Plan
+§18.3 Level C scope: 16 images, class-aware maximum bipartite matching,
+confidence/bounding-box tolerance, and byte-identical payloads across two
+canonical Jetson runs. J4.3 does not start a new sanitizer campaign; any such
+campaign requires a new Decision。
+
+#### Live transition state
+
+After D047 and J3.10 v2 PASS:
+
+- J0 `COMPLETE`；J1 `COMPLETE`；J2 `COMPLETE`；
+- J3 `COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J4 `NOT_STARTED`；J4.1 `READY`；J4.2/J4.3/J4.4 `PENDING`；
+- Stage T `NOT_STARTED`；Stage P `NOT_STARTED`。
+
+The next authorized task is `J4.1 — Level A correctness`。
+
+### D048 - Accept Platform-Specific AArch64 ORT CPU Numerical Envelope for J4.2
+
+状态：`Accepted`
+
+#### Strict Plan result remains unchanged
+
+The original Stage J Plan §18.2 strict Gate remains authoritative:
+
+- overall MAE `<= 1e-6`；
+- overall max_abs `<= 1e-4`。
+
+The original Jetson `j4.2_level_b_v1` result does not satisfy that Gate and is
+retained unchanged as a strict failure. `strict_plan_gate_pass=false` remains
+the permanent record. The Python golden, production inference code, model,
+contract and original attempt are not rewritten.
+
+#### Evidence basis
+
+The accepted classification is
+`SUPPORTED_CROSS_ARCH_ORT_CPU_NUMERICAL_DRIFT`, not a proven single-kernel
+root cause. The evidence is:
+
+- the same frozen model, input, ORT 1.23.2 and CPUExecutionProvider were used；
+- the historical x86 C++ result exactly matched the Python golden；
+- the WSL x86_64 Python reference was deterministic across two processes；
+- the Jetson aarch64 C++ result was deterministic across two processes；
+- Jetson `ORT_ENABLE_ALL` versus `ORT_DISABLE_ALL` diagnostics produced the
+  same result；
+- Jetson intra/inter-op `1/1` diagnostics produced the same result；
+- the mismatch is concentrated in the bbox group, while score error is much
+  smaller；
+- all output values are finite。
+
+#### D048 AArch64 acceptance policy
+
+This policy is limited to the frozen combination of Jetson Orin Nano Super,
+L4T R36.5, aarch64, the formal Stage J ORT 1.23.2 CPU-only build,
+CPUExecutionProvider only, the frozen model/input/Python golden hashes,
+Controlled 1-Core, ORT sequential/all/1/1 with spinning enabled, OpenCV
+threads 1, MAXN_SUPER and `jetson_clocks --fan`.
+
+The D048 acceptance Gate requires two deterministic separate-process Jetson
+outputs, canonical raw SHA256
+`a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`, the
+declared float32 BCN `[1,10,8400]` contract, all 84000 values finite,
+requested/applied options matching, session creation success, OpenCV 1/1,
+and unchanged model/input/golden/config/binary/ORT/contract identities.
+Its numerical envelope is overall MAE `<= 1e-5`, overall max_abs `<= 0.01`,
+bbox max_abs `<= 0.01`, and score max_abs `<= 1e-4`.
+
+The policy field is `d048_cross_arch_acceptance_pass`; it is distinct from
+`strict_plan_gate_pass` and does not rewrite the strict result.
+
+#### Final J4.2 and J4.3 interpretation
+
+When `strict_plan_gate_pass=false` and
+`d048_cross_arch_acceptance_pass=true`, J4.2 is
+`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`. D048 supplements
+and supersedes only D047's strict wording that J4.2 must actually PASS for
+this documented cross-architecture limitation. J4.3's own §18.3 Gate is not
+relaxed: its 16/16 checks, confidence and bbox tolerances, class-aware
+matching and byte-identical canonical payload requirements remain unchanged.
+
+D048 is invalidated by any ORT/build, model, input/golden, RuntimeConfig
+semantic, CPU provider, JetPack/L4T, architecture, canonical raw SHA or
+production inference algorithm change.
+
+### D049 - Reconcile J5 Task Mapping and Authorize the J5.1 Python Reference Campaign
+
+状态：`Accepted`
+
+1. The Stage J Plan remains the highest authority.
+
+2. The frozen Task Cards' J5.1–J5.7 references to Stage J Plan §24.6–§24.8,
+   §26–§28 are classified as `FROZEN_CROSS_REFERENCE_DEFECT` because the
+   Plan contains only §24.1–§24.4 and Plan §28 is J7 Consolidation rather
+   than the J5 execution protocol. The Task Cards remain frozen and are not
+   modified.
+
+3. The authoritative task mapping is:
+
+   - J5.1a Reference protocol/provenance: Plan §10.3, §19.1, §26–§27;
+   - J5.1b Python Reference dual run: Plan §19.1;
+   - J5.1c smoke/evidence budget: Plan §26–§27;
+   - J5.2 Candidate semantic precheck: Plan §19.2–§19.3;
+   - J5.3 Candidate sizing: Plan §20;
+   - J5.4 Profile selection: Plan §21;
+   - J5.5/J5.6 formal baselines: Plan §22;
+   - J5.7 J5 Evidence gate: Plan §26–§27 and the J5 matrix in §30.
+
+4. Formal J5.1 Reference execution is authorized only in the frozen WSL
+   x86_64 Python Reference environment. The Jetson 20-image corpus copy is
+   reserved for J5.2 and later Jetson campaigns and cannot replace the x86
+   Python Reference authority.
+
+5. The current M5 Reference, common helper and corpus preparation tool SHA256
+   values match the historical provenance. Existing frozen M5 Reference
+   tooling is therefore reused unchanged:
+   `EXISTING_FROZEN_M5_REFERENCE_TOOLING_REUSED_UNCHANGED`.
+   No second Reference pipeline and no source modification are authorized.
+
+6. The historical corpus recovery report remains unchanged. The new 20/20
+   validation resolves current live readiness without rewriting the historical
+   blocked recovery attempt.
+
+7. The J5.1 Python Reference Campaign is the current authorized campaign.
+   J5.2 and all later J5 work remain unauthorized until J5.1 is complete and
+   separately reviewed.
+
+### D050 - Decouple RuntimeConfig Schema from Result Metadata Schema
+
+状态：`Accepted`
+
+1. RuntimeConfig schema 与 RunMetadata/JsonSink output schema 是独立合同。
+
+2. Stage J RuntimeConfig v2 继续保持 `schema_version=2`。
+
+3. 当前 JsonSink detection output schema 继续保持 `schema_version=1`。
+
+4. 禁止把 RuntimeConfig schema 直接传播为 RunMetadata schema。
+
+5. 修复范围仅限 schema bridge，不改变 model、ModelContract、preprocessing、
+   ORT inference、postprocessing、Detection、JSON detection 字段、JsonSink
+   output schema、RuntimeConfig v1/v2 isolation 或 D048。
+
+6. J4.3 中保留的 v2 failure 是历史事实，不修改历史 Evidence。
+
+7. J4.3 成功的 v1-compatible Level C Evidence 继续有效。
+
+8. J5.2 v1 attempt 保持 `FAILED`，不追加或覆盖。
+
+9. remediation 后必须创建新的 J5.2 attempt，并重新执行全部候选。
+
+### D051 - Freeze J5 CPU Profile Selection
+
+状态：`Accepted`
+
+1. Controlled profile：candidate `k1`；CPU set `5`；
+   `intra_op_threads=1`；`inter_op_threads=1`。
+
+2. Tuned profile：candidate `k5`；CPU set `1-5`；
+   `intra_op_threads=5`；`inter_op_threads=1`。
+
+3. 选择依据：J5.3 Candidate Sizing Evidence
+   `j5_3_candidate_sizing_v1`。Selection 综合 cycle latency、CPU
+   utilization、VmRSS、temperature、VDD_IN power 和 determinism，不以单个
+   指标决定。
+
+4. k1 作为 Controlled profile：候选集合中总在线 CPU utilization、VmRSS、
+   temperature 和 VDD_IN current mean 最低；两次输出均精确匹配 J5.2 frozen
+   semantic SHA。其较高 latency 是 Controlled 最小资源/可复现角色的已接受代价。
+
+5. k5 作为 Tuned profile：cycle mean 相对 k1 降低 `74.25%`，相对 k4
+   降低 `16.87%`。k6 相对 k5 仅再降低 `3.48%`，但总在线 CPU utilization
+   增加 `11.28` 个百分点、VmRSS max 增加 `540 KB`、最高温度增加 `0.438 C`、
+   VDD_IN current mean 增加约 `5.47%`；因此按收益递减原则选择较低线程数 k5，
+   不选择最高线程 k6。
+
+6. 保持：model unchanged；ORT build/version/provider unchanged；不启用新的 EP
+   或 ORT feature；contract unchanged；semantic SHA unchanged。k1/k5 仅分别冻结
+   J5.3 已验证的 candidate thread setting。J5.4 只读分析 J5.3 Evidence，未重新运行。
+
+7. 后续 J5.5/J5.6 必须使用本 Decision 冻结的 Controlled `k1` 与 Tuned `k5`
+   profile；不得在后续任务中静默改变候选、CPU set 或 ORT thread settings。
+
+### D052 - Adopt Research-Grade Stage J Remediation and Closeout Policy
+
+状态：`Accepted`
+
+1. Stage J Plan v0.3 保持冻结；不修改其历史文本或 SHA。
+
+2. 当前诊断结论保持为：
+   `J8 FAIL under the original frozen v0.3 Deep Evidence Gate`。
+
+3. 当前仓库不得声称：
+   - `J8 v0.3 PASS`；
+   - `J9 COMPLETE`；
+   - `STAGE J CLOSED`。
+
+4. 当前项目用途为：
+   - 研究生毕业设计；
+   - 学术论文实验；
+   - 求职工程项目。
+
+5. 对论文和后续 Stage T 具有实质价值且必须补齐：
+   - Tuned k5 五次正式 baseline；
+   - 可复核的 30 分钟 k5 stability Evidence；
+   - J5 Evidence Gate；
+   - Stage J Consolidation；
+   - final research-grade independent audit。
+
+6. 不重新执行：
+   - J1–J4；
+   - J5.1–J5.5；
+   - ORT build；
+   - 模型、ModelContract、corpus；
+   - profile selection。
+
+7. 现有
+   `results/benchmark/jetson_ort_cpu/profile_stability/j5_6_profile_stability_v1`
+   重新分类为 `HISTORICAL_PRE_J6_STABILITY_RUN`。它是真实的 30 分钟运行记录，
+   但不是冻结计划中的 J5.6 Tuned formal baseline，也不是完整 J6 Evidence。
+   历史目录不得删除、覆盖或重命名，不得伪装为完整 PASS。
+
+8. J5.5/J5.6 历史 manifest 中的 `./` 路径形式分类为
+   `ACCEPTED_NON_SUBSTANTIVE_MANIFEST_PATH_FORMAT_DEVIATION`。旧 Evidence
+   不修改；后续 Consolidation 使用规范化 repo-relative 索引；不得声称旧
+   manifest 可按 v0.3 规则 byte-identical 重建。
+
+9. OC/UV、thermal throttle 或 power throttle 接口若平台不可用：
+   - 记录 `unavailable`；
+   - 保留原始探测命令和返回结果；
+   - 禁止声称 counter PASS；
+   - 不能仅因接口缺失宣称无 throttling。
+
+10. 补齐任务完成后允许的最终状态是
+    `STAGE_J_COMPLETE_WITH_DOCUMENTED_EVIDENCE_LIMITATIONS`，不是
+    `J8_PASS_UNDER_ORIGINAL_V0_3`。
+
+11. 只有新的 research-grade final audit PASS 后，才允许规划 Stage T。
+
+12. 本 Decision 不改变：
+    - 模型；
+    - preprocessing/postprocessing；
+    - ORT CPU 语义；
+    - J4 容差；
+    - D048；
+    - k1/k5 profile；
+    - benchmark 统计真实性要求。
+
+### D053 - Accept Controlled k1 Historical Statistics Limitation and Adopt Research-Grade J5 Gate
+
+状态：`Accepted`
+
+1. 原始 Stage J Plan v0.3 不修改。原始 J5.7 v1 结论保持为：
+   `BLOCKED under the original frozen §22.4/J5.7 contract`。
+
+2. 不声称 original J5.7 v0.3 PASS、J8 v0.3 PASS、J9 COMPLETE 或
+   STAGE J CLOSED。
+
+3. J5.5 k1 已真实完成五个 separate processes、每次 560 frames、semantic
+   correctness、determinism、whole-process wall time、FPS 和 resource summary。
+
+4. J5.5 不具备 measured-window per-frame latency distribution、per-frame
+   P50/P95/P99、per-frame sample standard deviation，或 published raw
+   telemetry chain 的独立重建能力。上述缺口不得通过文档虚构或从缺失原始数据
+   推导，且不重新运行 J5.5。
+
+5. J5.5 的研究级角色调整为：
+   `Controlled 1-Core Resource and Reproducibility Reference`。
+   它是次要工程基线，不作为 Stage T speedup 的主要分母。
+
+6. J5.6 v3 的研究级角色为：
+   `Tuned k5 Formal CPU Performance Baseline`。
+   它是论文和后续 Stage T 对照设计中的正式 ORT CPU baseline；Stage T 仍未授权。
+
+7. 允许从 immutable J5.5 published summaries 确定性生成补充统计，但不得修改
+   旧 Evidence、虚构 per-frame 数据、将 whole-process wall time 称为 per-frame
+   latency，或从缺失原始数据推导分布。补充报告必须明确使用
+   `latency_scope=whole_process_wall_time`，并列出不可用指标。
+
+8. 新的 research-grade J5 Gate 可以判定为
+   `PASS_WITH_DOCUMENTED_J5_5_LIMITATION`，前提是 J5.1–J5.4 asset/provenance/
+   correctness PASS，J5.5 事实和限制完整记录，J5.6 v3 formal statistics、
+   correctness、determinism、telemetry 和 SHA PASS，且未发现模型、Corpus、
+   Reference 或 Profile 漂移。
+
+9. 该 research-grade Gate PASS 后允许进入 J6，但不直接授权 Stage T。Stage T
+   仍需 J6 research-grade stability、J7 consolidation 和 final research-grade
+   independent audit PASS。

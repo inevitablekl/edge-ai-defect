@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_5_controlled_supplement_v1",
+  "source_evidence_id": "j5_5_profile_baseline_v1",
+  "source_manifest_status": "PASS",
+  "generation_scope": "deterministic derivation from published summaries",
+  "benchmark_rerun": false,
+  "per_frame_data_invented": false,
+  "latency_scope": "whole_process_wall_time",
+  "source_evidence_sha256": "c62fe62092c2b53a9bd66193069831b339a3f06fc46d5310dc6840dde41dc2f7"
+}

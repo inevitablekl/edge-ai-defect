@@ -1,0 +1,18 @@
+# J5.2 v2 sanitized command record
+# Source commit: 16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855
+# Binary: edge_ai_defect; ORT CPU-only 1.23.2 SDK; LD_LIBRARY_PATH unset
+# Reference: benchmark_python_reference_run_1.json
+# Corpus: frozen 20-image j5_corpus
+# Candidate execution commands (each command was a separate process):
+taskset -c 5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k1.yaml  # run 1, exit 0
+taskset -c 5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k1.yaml  # run 2, exit 0
+taskset -c 4-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k2.yaml  # run 1, exit 0
+taskset -c 4-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k2.yaml  # run 2, exit 0
+taskset -c 2-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k4.yaml  # run 1, exit 0
+taskset -c 2-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k4.yaml  # run 2, exit 0
+taskset -c 1-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k5.yaml  # run 1, exit 0
+taskset -c 1-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k5.yaml  # run 2, exit 0
+taskset -c 0-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k6.yaml  # run 1, exit 0
+taskset -c 0-5 env -u LD_LIBRARY_PATH edge_ai_defect --config config_k6.yaml  # run 2, exit 0
+# Comparator: m5_level_c_compare.py with class-aware maximum matching
+# Comparator tolerance: confidence <= 1e-4; bbox coordinate <= 0.01 px

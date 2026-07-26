@@ -1,0 +1,10 @@
+{
+  "format": "JSON Lines",
+  "record_field_order": ["cycle_id", "stage", "start_ns", "end_ns", "duration_ns"],
+  "stage_values": ["source", "preprocess", "inference", "postprocess", "sink"],
+  "timestamp_unit": "nanoseconds",
+  "timestamp_source": "std::chrono::steady_clock",
+  "ordering": "completion order in SerialRunner callback sequence",
+  "buffering": "one active stage; no unbounded event cache",
+  "flush": "after each completed record by default, plus explicit flush()"
+}

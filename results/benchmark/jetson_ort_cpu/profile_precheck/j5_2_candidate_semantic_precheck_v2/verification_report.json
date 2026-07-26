@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "gates": {
+    "platform": "PASS",
+    "ort_sdk": "PASS",
+    "corpus_20_of_20": "PASS",
+    "candidate_count_5": "PASS",
+    "separate_process_runs_10": "PASS",
+    "process_exit_codes": "PASS",
+    "within_profile_byte_determinism": "PASS",
+    "semantic_20_of_20_all_profiles": "PASS",
+    "confidence_tolerance": "PASS",
+    "bbox_tolerance": "PASS",
+    "finite_outputs": "PASS"
+  },
+  "maximum_confidence_abs_error": 2.65265835569517e-06,
+  "maximum_bbox_coordinate_abs_error_px": 0.0003280264160139268,
+  "j5_3": "READY; not executed"
+}

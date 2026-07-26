@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "final_status": "PASS",
+  "configuration_probe": {
+    "exit_code": 2,
+    "status": "REJECTED_BEFORE_INFERENCE",
+    "error": "$.timing: unknown field",
+    "scope": "non-candidate setup probe; no candidate result counted"
+  },
+  "preliminary_telemetry_attempt": {
+    "status": "RETAINED_OUTSIDE_PUBLISHED_EVIDENCE",
+    "reason": "one tegrastats logfile had an appended pre-probe sample; final 10 runs were repeated with truncated logs"
+  },
+  "final_runs": {
+    "count": 10,
+    "all_exit_code_zero": true,
+    "all_processed_20_images": true
+  }
+}

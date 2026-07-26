@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_9_jetson_asan_ubsan_v1",
+  "task_id": "J3.9",
+  "repository_observation_commit": "54100d12212147ccaf0dc98ccc355d15362f20da",
+  "production_source_commit": "94576b6fe81e2f853c30c41826d039d016e093b0",
+  "source_commit": null,
+  "local_attempt_id": "j3.9_jetson_asan_ubsan_v1",
+  "local_attempt_manifest_sha256": "69e80b2d92e9b34bfc8c8359358951578eb7ccdf9ebee951f68808b90833ab22",
+  "frozen_plan_sha256": "a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+  "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+  "commit_boundary": "evidence-only; no source commit",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}

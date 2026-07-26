@@ -1,0 +1,635 @@
+schema_version: 1
+inventory_kind: stage_j_baseline_test_inventory
+status: frozen
+stage: J0
+subtask: J0.4
+
+source:
+  branch: main
+  commit: 2da4d2cae6c5075e516c7edcfbd28e52f5301299
+  stage_j_plan:
+    path: docs/personal/STAGE_J_EXECUTION_PLAN.md
+    version: "v0.3"
+    sha256: a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd
+  decision: D041
+
+ordering:
+  test_names: utf8_byte_order
+
+expected_counts:
+  model_smoke_off: 31
+  model_smoke_on: 39
+  model_smoke_on_only: 8
+  total_unique_baseline_tests: 39
+
+inventory_evidence:
+  cmake_static_registration: verified
+  fresh_temporary_configure:
+    model_smoke_off: verified
+    model_smoke_on: verified
+  stale_build_metadata:
+    detected: true
+    used_as_authority: false
+    directories:
+      - path: build/off
+        observed_test_count: 24
+        disposition: excluded_from_inventory
+      - path: build
+        observed_test_count: 32
+        disposition: excluded_from_inventory
+    reason: >
+      These build trees were configured before the current HEAD added seven M5
+      tests and do not represent the current CMake test registration.
+
+classification_definitions:
+  portable_required: >
+    Existing M0-M5 test that does not depend on x86-specific behavior and is
+    planned for x86 Release and Jetson Release.
+  model_asset_required: >
+    Test requiring a frozen ONNX, ModelContract, Level A/B/C asset, benchmark
+    corpus, or another tracked model-related asset. Historical asset-backed
+    tests may still be registered in Model Smoke OFF by the current CMake.
+  x86_only: >
+    Test requiring WSL/x86_64-specific SDK, tool, historical environment, or
+    Python/PyTorch reference behavior and excluded from Jetson Release.
+  jetson_only: >
+    Test requiring Jetson, aarch64, nvpmodel, tegrastats, sysfs, MAXN_SUPER,
+    or another Stage J device capability.
+  sanitizer_required: >
+    Model-independent portable C++ executable test suitable for both Jetson
+    ASan and UBSan configurations.
+
+stale_build_metadata:
+  detected: true
+  directories:
+    - path: build/off
+      observed_test_count: 24
+      disposition: excluded_from_inventory
+    - path: build
+      observed_test_count: 32
+      disposition: excluded_from_inventory
+  reason: >
+    These build trees were configured before the current HEAD added seven M5
+    tests and do not represent the current CMake test registration.
+
+baseline_tests:
+  - name: application_cli
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:application_cli"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: true, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python subprocess contract test; CMake supplies the tracked ModelContract and it is portable."
+  - name: application_ort_smoke
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:application_ort_smoke"}
+    command_kind: python
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: true, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Model Smoke ON Python wrapper invokes the real application with frozen ONNX and contract."
+  - name: cli_parser
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:cli_parser"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent CLI parser executable."
+  - name: cpu_preprocessor
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:cpu_preprocessor"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct CPU preprocessing contract test with synthetic input."
+  - name: directory_source
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:directory_source"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct deterministic directory-source test; no platform-specific filesystem API."
+  - name: inference_engine_contract
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:inference_engine_contract"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent inference interface contract test."
+  - name: letterbox_geometry
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:letterbox_geometry"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct synthetic LetterBox geometry test."
+  - name: m5_corpus_preparation
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_corpus_preparation"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: true, python_runtime: true}
+    rationale: "Python manifest and deterministic corpus-preparation contract using tracked M5 corpus manifests."
+  - name: m5_level_c_compare_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_level_c_compare_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python comparator unit tests use synthetic payloads and deterministic matching logic."
+  - name: m5_level_c_reference_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_level_c_reference_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python reference helper tests use synthetic images and arrays, not a frozen model."
+  - name: m5_level_c_runner_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_level_c_runner_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python Level C runner tests use temporary synthetic payloads and mocked execution."
+  - name: m5_ort_cpu_analyzer_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_ort_cpu_analyzer_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python analyzer tests cover strict JSON/timing parsing and deterministic summaries."
+  - name: m5_ort_cpu_common_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_ort_cpu_common_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: true, python_runtime: true}
+    rationale: "Python benchmark protocol/math tests validate the tracked 20-image corpus manifest."
+  - name: m5_ort_cpu_runner_unit
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:m5_ort_cpu_runner_unit"}
+    command_kind: python
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: true}
+    rationale: "Python runner orchestration tests use fake applications and temporary protocol data."
+  - name: model_contract
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:model_contract"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: true, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct contract-loader test reads the tracked frozen ModelContract."
+  - name: onnx_runtime_engine_initialization
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:onnx_runtime_engine_initialization"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: true, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON C++ ORT engine initialization with frozen ONNX and ModelContract."
+  - name: onnx_runtime_engine_level_b
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:onnx_runtime_engine_level_b"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: true, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON Level B C++ raw-output comparison uses frozen tensor/golden assets."
+  - name: onnx_runtime_engine_run
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:onnx_runtime_engine_run"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: true, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON C++ ORT engine run uses the frozen model and contract."
+  - name: ort_inference_smoke
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:ort_inference_smoke"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON direct ORT inference smoke with the frozen ONNX."
+  - name: ort_model_contract_mismatch
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:ort_model_contract_mismatch"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: true, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON negative contract check loads the frozen model and deliberately mismatches contract data."
+  - name: ort_model_contract_smoke
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:ort_model_contract_smoke"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON positive ORT model contract smoke with the frozen ONNX."
+  - name: ort_model_missing_path
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:EDGE_AI_ENABLE_MODEL_SMOKE:ort_model_missing_path"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: false, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: true, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Model Smoke ON negative missing-model-path check uses the smoke executable and frozen model context."
+  - name: ort_runtime_smoke
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:ort_runtime_smoke"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent ORT runtime API smoke with synthetic tensors."
+  - name: postprocessor_contract
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_contract"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent PostProcessor contract executable."
+  - name: postprocessor_decode
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_decode"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct synthetic YOLO decode test."
+  - name: postprocessor_nms
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_nms"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct synthetic class-aware NMS test."
+  - name: postprocessor_process
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_process"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct synthetic end-to-end PostProcessor process test."
+  - name: postprocessor_reference
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_reference"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct reference-evidence executable reads tracked PostProcessor reference assets."
+  - name: postprocessor_reference_malformed
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:postprocessor_reference_malformed"}
+    command_kind: cmake_script
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "CMake validator wrapper checks malformed tracked PostProcessor reference assets."
+  - name: preprocess_level_a
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:preprocess_level_a"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Level A executable compares against tracked preprocessing golden assets."
+  - name: preprocess_level_a_assets_sha256
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:preprocess_level_a_assets_sha256"}
+    command_kind: cmake_script
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "CMake evidence wrapper verifies tracked Level A asset SHA256 values."
+  - name: preprocess_level_a_manifest_guard
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:preprocess_level_a_manifest_guard"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Level A manifest guard reads tracked manifest and assets."
+  - name: preprocess_level_a_numeric_guard
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:preprocess_level_a_numeric_guard"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Level A numeric guard compares tracked golden numeric assets."
+  - name: preprocess_level_a_provenance
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:preprocess_level_a_provenance"}
+    command_kind: cmake_script
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: excluded, ubsan: excluded}
+    tags: [portable_required, model_asset_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "CMake evidence wrapper verifies tracked Level A provenance."
+  - name: result_sinks
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:result_sinks"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct deterministic ResultSink executable with temporary output."
+  - name: runtime_config
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:runtime_config"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent strict RuntimeConfig executable."
+  - name: runtime_types
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:runtime_types"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent runtime type contract executable."
+  - name: serial_runner
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:serial_runner"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent SerialRunner executable."
+  - name: test_core
+    source_definition: {file: CMakeLists.txt, line_or_block: "BUILD_TESTING:test_core"}
+    command_kind: cpp_executable
+    registered_when: {model_smoke_off: true, model_smoke_on: true}
+    platform: {x86_release: required, jetson_release: required}
+    sanitizer: {asan: required, ubsan: required}
+    tags: [portable_required, sanitizer_required]
+    requirements: {frozen_model: false, model_contract: false, dataset_or_corpus: false, python_runtime: false}
+    rationale: "Direct model-independent core types and status executable."
+
+derived_groups:
+  model_smoke_off:
+    - application_cli
+    - cli_parser
+    - cpu_preprocessor
+    - directory_source
+    - inference_engine_contract
+    - letterbox_geometry
+    - m5_corpus_preparation
+    - m5_level_c_compare_unit
+    - m5_level_c_reference_unit
+    - m5_level_c_runner_unit
+    - m5_ort_cpu_analyzer_unit
+    - m5_ort_cpu_common_unit
+    - m5_ort_cpu_runner_unit
+    - model_contract
+    - ort_runtime_smoke
+    - postprocessor_contract
+    - postprocessor_decode
+    - postprocessor_nms
+    - postprocessor_process
+    - postprocessor_reference
+    - postprocessor_reference_malformed
+    - preprocess_level_a
+    - preprocess_level_a_assets_sha256
+    - preprocess_level_a_manifest_guard
+    - preprocess_level_a_numeric_guard
+    - preprocess_level_a_provenance
+    - result_sinks
+    - runtime_config
+    - runtime_types
+    - serial_runner
+    - test_core
+  model_smoke_on:
+    - application_cli
+    - application_ort_smoke
+    - cli_parser
+    - cpu_preprocessor
+    - directory_source
+    - inference_engine_contract
+    - letterbox_geometry
+    - m5_corpus_preparation
+    - m5_level_c_compare_unit
+    - m5_level_c_reference_unit
+    - m5_level_c_runner_unit
+    - m5_ort_cpu_analyzer_unit
+    - m5_ort_cpu_common_unit
+    - m5_ort_cpu_runner_unit
+    - model_contract
+    - onnx_runtime_engine_initialization
+    - onnx_runtime_engine_level_b
+    - onnx_runtime_engine_run
+    - ort_inference_smoke
+    - ort_model_contract_mismatch
+    - ort_model_contract_smoke
+    - ort_model_missing_path
+    - ort_runtime_smoke
+    - postprocessor_contract
+    - postprocessor_decode
+    - postprocessor_nms
+    - postprocessor_process
+    - postprocessor_reference
+    - postprocessor_reference_malformed
+    - preprocess_level_a
+    - preprocess_level_a_assets_sha256
+    - preprocess_level_a_manifest_guard
+    - preprocess_level_a_numeric_guard
+    - preprocess_level_a_provenance
+    - result_sinks
+    - runtime_config
+    - runtime_types
+    - serial_runner
+    - test_core
+  portable_required:
+    - application_cli
+    - application_ort_smoke
+    - cli_parser
+    - cpu_preprocessor
+    - directory_source
+    - inference_engine_contract
+    - letterbox_geometry
+    - m5_corpus_preparation
+    - m5_level_c_compare_unit
+    - m5_level_c_reference_unit
+    - m5_level_c_runner_unit
+    - m5_ort_cpu_analyzer_unit
+    - m5_ort_cpu_common_unit
+    - m5_ort_cpu_runner_unit
+    - model_contract
+    - onnx_runtime_engine_initialization
+    - onnx_runtime_engine_level_b
+    - onnx_runtime_engine_run
+    - ort_inference_smoke
+    - ort_model_contract_mismatch
+    - ort_model_contract_smoke
+    - ort_model_missing_path
+    - ort_runtime_smoke
+    - postprocessor_contract
+    - postprocessor_decode
+    - postprocessor_nms
+    - postprocessor_process
+    - postprocessor_reference
+    - postprocessor_reference_malformed
+    - preprocess_level_a
+    - preprocess_level_a_assets_sha256
+    - preprocess_level_a_manifest_guard
+    - preprocess_level_a_numeric_guard
+    - preprocess_level_a_provenance
+    - result_sinks
+    - runtime_config
+    - runtime_types
+    - serial_runner
+    - test_core
+  model_asset_required:
+    - application_cli
+    - application_ort_smoke
+    - m5_corpus_preparation
+    - m5_ort_cpu_common_unit
+    - model_contract
+    - onnx_runtime_engine_initialization
+    - onnx_runtime_engine_level_b
+    - onnx_runtime_engine_run
+    - ort_inference_smoke
+    - ort_model_contract_mismatch
+    - ort_model_contract_smoke
+    - ort_model_missing_path
+    - postprocessor_reference
+    - postprocessor_reference_malformed
+    - preprocess_level_a
+    - preprocess_level_a_assets_sha256
+    - preprocess_level_a_manifest_guard
+    - preprocess_level_a_numeric_guard
+    - preprocess_level_a_provenance
+  x86_only: []
+  jetson_only: []
+  sanitizer_required:
+    - cli_parser
+    - cpu_preprocessor
+    - directory_source
+    - inference_engine_contract
+    - letterbox_geometry
+    - ort_runtime_smoke
+    - postprocessor_contract
+    - postprocessor_decode
+    - postprocessor_nms
+    - postprocessor_process
+    - result_sinks
+    - runtime_config
+    - runtime_types
+    - serial_runner
+    - test_core
+
+planned_stage_j_test_requirements:
+  - requirement_id: JTEST-001
+    capability: "RuntimeConfig v1 compatibility and historical OpenCV/ORT settings"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-002
+    capability: "RuntimeConfig v2 strict schema and application_kind validation"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-003
+    capability: "ORT requested/applied/queried configuration record and Session failure propagation"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-004
+    capability: "OpenCV thread contract before first decode or resize"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-005
+    capability: "FrameTraceObserver ordering, failure propagation, and cleanup diagnostics"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-006
+    capability: "FrameTraceRecorder fixed capacity, monotonic sequence, and no-I/O contract"
+    planned_milestone: J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-007
+    capability: "aarch64 SDK RPATH smoke with env -u LD_LIBRARY_PATH and SONAME checks"
+    planned_milestone: J2/J3
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-008
+    capability: "Stage J process/TID affinity parser and validator"
+    planned_milestone: J3/J5
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-009
+    capability: "Canonical writer parity across J4/J5 offline and J6 online tools"
+    planned_milestone: J4/J6
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-010
+    capability: "Stage J launcher Resolved Protocol validation and invalid campaign handling"
+    planned_milestone: J5
+    ctest_name: null
+    status: not_implemented
+  - requirement_id: JTEST-011
+    capability: "Deterministic Evidence reconstruction and sha256sums self-exclusion"
+    planned_milestone: J7/J8
+    ctest_name: null
+    status: not_implemented

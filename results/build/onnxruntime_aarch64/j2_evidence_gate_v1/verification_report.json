@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_evidence_gate_v1",
+  "result": "PASS",
+  "checks": [
+    {
+      "id": "repository_and_frozen_asset_gate",
+      "result": "PASS",
+      "detail": "clean aa1e44e1 HEAD, expected branch, frozen plan/task/inventory hashes unchanged"
+    },
+    {
+      "id": "commit_lineage",
+      "result": "PASS",
+      "detail": "D044, formal v2, D045, J2.3 and J2.4 commits are current HEAD ancestors"
+    },
+    {
+      "id": "j2_2_attempt_integrity",
+      "result": "PASS",
+      "detail": "formal v2 exact 11-file attempt and 10 of 10 manifest checks; build/install exit 0"
+    },
+    {
+      "id": "d045_reconciliation",
+      "result": "PASS",
+      "detail": "Accepted; canonical aggregate stage_j_ort_source_aggregate_v1; rebuild_required=false; no_backfill preserved"
+    },
+    {
+      "id": "j2_3_sdk_manifests",
+      "result": "PASS",
+      "detail": "headers 13 of 13 and files 24 of 24; BUILD_MANIFEST and main library SHA match"
+    },
+    {
+      "id": "j2_3_evidence",
+      "result": "PASS",
+      "detail": "j2_sdk_v1 exact five-file set and 4 of 4 manifest checks"
+    },
+    {
+      "id": "j2_4_attempt",
+      "result": "PASS",
+      "detail": "j2.4_rpath_smoke_v1 exact ten-file set and 9 of 9 manifest checks; configure/build/runtime exit 0"
+    },
+    {
+      "id": "j2_4_evidence",
+      "result": "PASS",
+      "detail": "j2_rpath_smoke_v1 exact seven-file set and 6 of 6 manifest checks"
+    },
+    {
+      "id": "rpath_runtime_provider",
+      "result": "PASS",
+      "detail": "ELF64 AArch64, libonnxruntime.so.1 NEEDED, Stage J RUNPATH, no LD_LIBRARY_PATH, ORT 1.23.2 and CPUExecutionProvider"
+    },
+    {
+      "id": "gpu_warning",
+      "result": "PASS",
+      "detail": "INFORMATIONAL_PLATFORM_DISCOVERY_WARNING; runtime exit 0, no GPU EP, missing library or Ort::Exception"
+    },
+    {
+      "id": "historical_j2_records",
+      "result": "PASS",
+      "detail": "J2.0 and J2.1 retained as historical planning/feasibility records; no pseudo Published Evidence created"
+    },
+    {
+      "id": "privacy_and_tracking",
+      "result": "PASS",
+      "detail": "no payload, binary, private path or prohibited identifier in tracked J2 Evidence"
+    },
+    {
+      "id": "tracked_size",
+      "result": "PASS",
+      "detail": "tracked results size 1542075 bytes, below 25 MiB Stage J budget"
+    },
+    {
+      "id": "j2_5_local_attempt",
+      "result": "PASS",
+      "detail": "exact 11-file attempt and 10 of 10 manifest checks"
+    }
+  ],
+  "final_status": {
+    "J2.5": "COMPLETE",
+    "J2": "COMPLETE",
+    "J3.1": "READY",
+    "J3": "NOT_STARTED",
+    "J3.0": "NOT_DEFINED"
+  }
+}

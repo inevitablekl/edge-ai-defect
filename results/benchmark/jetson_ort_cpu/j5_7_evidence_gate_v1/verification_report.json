@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_7_evidence_gate_v1",
+  "status": "BLOCKED",
+  "gates": {
+    "j5_1_sha256sums": "PASS",
+    "j5_2_sha256sums": "PASS",
+    "j5_3_sha256sums": "PASS",
+    "j5_4_sha256sums": "PASS",
+    "j5_5_sha256sums": "PASS",
+    "j5_6_sha256sums": "PASS",
+    "frozen_asset_sha": "PASS",
+    "provenance_chain": "PASS_WITH_LIMITATION",
+    "controlled_profile_k1": "PASS",
+    "tuned_profile_k5": "PASS",
+    "j5_1_reference": "PASS",
+    "j5_2_semantic_precheck": "PASS",
+    "j5_3_sizing": "PASS",
+    "j5_4_selection": "PASS",
+    "j5_5_formal_statistics_completeness": "BLOCKED",
+    "j5_6_formal_statistics_completeness": "PASS",
+    "historical_failed_attempt_retention": "PASS",
+    "j6_scope_not_started": "PASS"
+  },
+  "profiles": {
+    "controlled": {
+      "profile": "k1",
+      "independent_processes": 5,
+      "processed_frames_each": 560,
+      "semantic_sha": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+      "statistics_status": "INCOMPLETE_PUBLISHED_PER_RUN_DETAIL"
+    },
+    "tuned": {
+      "profile": "k5",
+      "independent_processes": 5,
+      "measured_frames_each": 500,
+      "total_frames_each": 560,
+      "semantic_sha": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+      "statistics_status": "PASS"
+    }
+  },
+  "blockers": [
+    {
+      "evidence": "j5_5_profile_baseline_v1",
+      "reason": "Published per-run summaries omit the §22.4 latency-statistics set; aggregate report has no sample standard deviation; raw telemetry is retained outside published Evidence."
+    }
+  ],
+  "j6_authorization": "NOT_GRANTED"
+}

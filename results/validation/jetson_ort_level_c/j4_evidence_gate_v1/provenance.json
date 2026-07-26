@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j4_evidence_gate_v1",
+  "task_id": "J4.4",
+  "status": "PASS_WITH_ACCEPTED_J4_2_LIMITATION",
+  "source_commit": "5c9cee302bad4032f0e8509c6e7d1f3ba2edaf04",
+  "branch": "feature/jetson-onnxruntime",
+  "frozen_plan_sha256": "a723ae1ffae70366c743531386f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+  "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+  "test_inventory_sha256": "9a25ee9cda5bf264394c53f2910d295ef9b621b6ab0a555e28fe993c42f82868",
+  "j4_2_decision": "D048 Accepted",
+  "historical_evidence_modified": false,
+  "privacy_status": "PASS"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "decision": "D048",
+  "d048_cross_arch_acceptance_pass": true,
+  "required_canonical_raw_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "run_1_raw_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "run_2_raw_sha256": "a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358",
+  "byte_identical": true,
+  "overall_mae": 6.972924584434146e-06,
+  "overall_max_abs": 0.001068115234375,
+  "bbox_max_abs": 0.001068115234375,
+  "score_max_abs": 4.76837158203125e-07,
+  "finite_count": 84000,
+  "nan_count": 0,
+  "positive_inf_count": 0,
+  "negative_inf_count": 0,
+  "limits": {
+    "overall_mae": 1e-05,
+    "overall_max_abs": 0.01,
+    "bbox_max_abs": 0.01,
+    "score_max_abs": 0.0001
+  }
+}

@@ -121,7 +121,7 @@ The system should support:
 
 ### Current development-stage boundary
 
-The current branch implements the C++17 ONNX Runtime CPU Serial Baseline first. WSL2 is the development and software-architecture validation environment; Jetson remains the target environment for TensorRT FP16 and performance experiments. This separation does not change the Jetson + TensorRT project direction.
+The current active work is Stage J Jetson ONNX Runtime CPU correctness validation. J0–J3 are complete and J4 A/B/C correctness is next. Stage J does not include TensorRT, Pipeline, ROS2 or camera runtime. TensorRT belongs to Stage T; Pipeline belongs to Stage P.
 * command-line execution
 
 ---

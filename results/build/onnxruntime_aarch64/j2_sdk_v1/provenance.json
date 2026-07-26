@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_sdk_v1",
+  "task_id": "J2.3",
+  "repository_source_commit": "0218d9ddf20abc61442b7e2783d7a9c52993ba82",
+  "contract_decisions": [
+    "D044",
+    "D045"
+  ],
+  "ort": {
+    "version": "1.23.2",
+    "tag": "v1.23.2",
+    "commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278"
+  },
+  "formal_attempt_id": "j2.2_formal_clean_v2",
+  "formal_attempt_manifest_sha256": "a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32",
+  "canonical_source_aggregate_sha256": "c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c",
+  "build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+  "header_manifest_sha256": "3aace362a8a6d65f9852e501df69d4b33720e51f5017c4e7d25d21d33ffe9029",
+  "file_manifest_sha256": "8fb13ae5f579a4c148725ed5e1ce96ba1fe25c6d0024ec377517fdf8c5d99f02",
+  "main_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "license_sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+  "third_party_notice_sha256": "e9e90971a8e75a9a8ac0c6412e29c1202d079998389915aa485f46c816c3b4cc",
+  "historical_v1": "BLOCKED",
+  "historical_development_build": "SUPERSEDED",
+  "privacy_status": "PASS"
+}

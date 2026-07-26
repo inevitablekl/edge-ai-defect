@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_rpath_smoke_v1",
+  "task_id": "J2.4",
+  "result": "PASS",
+  "checks": [
+    {
+      "id": "sdk_manifest",
+      "result": "PASS",
+      "detail": "J2.3 BUILD_MANIFEST, header manifest 13 of 13, file manifest 24 of 24, main library SHA and symlink chain verified"
+    },
+    {
+      "id": "configure",
+      "result": "PASS",
+      "detail": "minimal external consumer configure exit code 0"
+    },
+    {
+      "id": "build",
+      "result": "PASS",
+      "detail": "j2_rpath_smoke consumer build exit code 0"
+    },
+    {
+      "id": "binary_architecture",
+      "result": "PASS",
+      "detail": "ELF64 AArch64 PIE executable"
+    },
+    {
+      "id": "needed",
+      "result": "PASS",
+      "detail": "NEEDED contains libonnxruntime.so.1"
+    },
+    {
+      "id": "rpath_runpath",
+      "result": "PASS",
+      "detail": "RUNPATH resolves to third_party/onnxruntime/1.23.2/linux-aarch64/lib"
+    },
+    {
+      "id": "ld_library_path_absent",
+      "result": "PASS",
+      "detail": "child environment removed LD_LIBRARY_PATH"
+    },
+    {
+      "id": "exact_resolution",
+      "result": "PASS",
+      "detail": "libonnxruntime.so.1 resolves to Stage J local SDK"
+    },
+    {
+      "id": "resolved_library_sha256",
+      "result": "PASS",
+      "detail": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740"
+    },
+    {
+      "id": "dependency_scan",
+      "result": "PASS",
+      "detail": "no not-found, CUDA, TensorRT or cuDNN dependency"
+    },
+    {
+      "id": "runtime_version",
+      "result": "PASS",
+      "detail": "ONNX Runtime version 1.23.2"
+    },
+    {
+      "id": "cpu_provider",
+      "result": "PASS",
+      "detail": "CPUExecutionProvider present; prohibited providers absent"
+    },
+    {
+      "id": "ort_env_lifecycle",
+      "result": "PASS",
+      "detail": "Ort::Env creation succeeded"
+    },
+    {
+      "id": "ort_session_options_lifecycle",
+      "result": "PASS",
+      "detail": "Ort::SessionOptions creation succeeded"
+    },
+    {
+      "id": "runtime_exit",
+      "result": "PASS",
+      "detail": "runtime smoke exit code 0"
+    },
+    {
+      "id": "model_inference",
+      "result": "NOT_EXECUTED_BY_CONTRACT",
+      "detail": "no model was loaded and no inference, CTest or benchmark was executed"
+    },
+    {
+      "id": "local_attempt_manifest",
+      "result": "PASS",
+      "detail": "9 of 9 local attempt files verified"
+    },
+    {
+      "id": "privacy",
+      "result": "PASS",
+      "detail": "no binary, SDK payload, build directory, private absolute path or dynamic timestamp"
+    }
+  ],
+  "runtime_stderr": "non-fatal Jetson GPU discovery warning recorded only in local raw attempt; CPU-only smoke passed",
+  "status_after_j2_4": {
+    "J2.4": "COMPLETE",
+    "J2.5": "READY",
+    "J2": "IN PROGRESS",
+    "J3": "BLOCKED_BY_J2.5",
+    "J3.0": "NOT_DEFINED"
+  }
+}

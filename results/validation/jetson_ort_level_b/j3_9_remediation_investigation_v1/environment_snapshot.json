@@ -1,0 +1,20 @@
+{
+  "platform": {
+    "jetson_linux": true,
+    "kernel": "5.15.185 Jetson Linux",
+    "l4t_release": "R36.5",
+    "architecture": "aarch64",
+    "cpu_model": "Cortex-A78AE"
+  },
+  "toolchain": {
+    "compiler": "GCC/G++ 11.4.0",
+    "cmake": "3.22.1",
+    "language_standard": "C++17"
+  },
+  "dependencies": {
+    "onnxruntime": "1.23.2 linux-aarch64 CPU only",
+    "opencv": "4.5.4",
+    "yaml_cpp": "0.7.0",
+    "tbb": "system libtbb.so.2"
+  }
+}

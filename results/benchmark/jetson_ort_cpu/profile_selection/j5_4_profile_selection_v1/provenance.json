@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_4_profile_selection_v1",
+  "task": "J5.4",
+  "status": "PASS",
+  "starting_commit": "a7da79907b5fb529d375626560a7ec3817639cd2",
+  "branch": "feature/jetson-onnxruntime",
+  "j5_3_evidence_id": "j5_3_candidate_sizing_v1",
+  "j5_3_manifest_sha256": "99ae9af9d47fc52181d968d897e6cdf3fca77c41dca8b92202ab037da215ffbf",
+  "j5_3_candidate_profiles_sha256": "0520a623cd90c43b226153dad92b2e4b78a4346b5e0e63edfabfaa582c9aa989",
+  "j5_3_latency_summary_sha256": "4e792c7a37c4a6ce76f03a6c554f330d54ea4b71c6a9e234df405c871d9ddd43",
+  "j5_3_telemetry_summary_sha256": "22dd19c08d095c933ac2ef068e8b274a25e36730bbd835c5e3ed59c891aff066",
+  "controlled_profile": "k1",
+  "tuned_profile": "k5",
+  "candidate_set": [
+    "k1",
+    "k2",
+    "k4",
+    "k5",
+    "k6"
+  ],
+  "model_unchanged": true,
+  "ort_unchanged": true,
+  "contract_unchanged": true,
+  "semantic_sha_unchanged": true,
+  "selection_without_rerun": true,
+  "images_in_published_evidence": false,
+  "hostname_ip_credentials": "absent",
+  "push_performed": false
+}

@@ -1,0 +1,23 @@
+J2.3 SDK packaging and manifest actual command record
+
+001 target_gate: verify the local aarch64 SDK target did not exist
+002 payload_copy: mkdir target and cp -a <formal-v2-sdk>/include <formal-v2-sdk>/lib target; preserve symlinks and modes
+003 license_copy: cp <formal-v2-source>/LICENSE target/LICENSE
+004 notice_copy: cp <formal-v2-source>/ThirdPartyNotices.txt target/THIRD_PARTY_NOTICES
+005 gitignore_update: add the exact aarch64 include and lib payload ignore rules while retaining linux-x64 strategy
+006 header_manifest: find include regular files in UTF-8 byte order and run sha256sum
+007 header_manifest_verify: sha256sum -c HEADER_SHA256SUMS.txt from SDK root
+008 build_manifest: write deterministic BUILD_MANIFEST.json with fixed key order and no private paths
+009 sdk_readme: write deterministic SDK README.md
+010 file_manifest: hash regular include/lib files and metadata files in UTF-8 byte order
+011 file_manifest_verify: sha256sum -c FILE_SHA256SUMS.txt from SDK root
+012 static_elf_dependency_checks: file, readelf and ldd checks on the copied shared libraries
+013 cmake_privacy_check: scan installed CMake package and pkg-config metadata for private absolute paths
+014 canonical_source_check: independently reproduce the D045 canonical source aggregate without writing files
+015 evidence_files: write deterministic Published Evidence README, provenance, verification report and command record
+016 evidence_manifest: hash the four Published Evidence files in root-relative UTF-8 byte order
+017 evidence_manifest_verify: sha256sum -c sha256sums.txt from Published Evidence root
+
+The formal SDK and source are represented by logical labels above to keep
+private local paths out of Published Evidence. No J2.2 historical command is
+recorded here.

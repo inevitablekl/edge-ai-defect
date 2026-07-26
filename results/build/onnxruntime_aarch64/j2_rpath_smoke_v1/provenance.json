@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j2_rpath_smoke_v1",
+  "task_id": "J2.4",
+  "repository_source_commit": "5079484d729ad6bf8229835d7d702460dcfa49ad",
+  "j2_3_commit": "5079484d729ad6bf8229835d7d702460dcfa49ad",
+  "ort": {
+    "version": "1.23.2",
+    "tag": "v1.23.2",
+    "commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278"
+  },
+  "canonical_source_aggregate_sha256": "c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c",
+  "formal_attempt_manifest_sha256": "a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32",
+  "build_manifest_sha256": "94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406",
+  "main_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "smoke_source_sha256": "b4a2bd7d0a7f7f57b7cfdc87ac3dbcd5f56a6b55914f43b5aeb768fdca1d2f2e",
+  "smoke_binary_sha256": "d08391424b42d0720293cc9b5a07431d33f8b2763296e25912d03e1951a20d40",
+  "local_attempt_id": "j2.4_rpath_smoke_v1",
+  "local_attempt_manifest_sha256": "3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03",
+  "privacy_status": "PASS"
+}

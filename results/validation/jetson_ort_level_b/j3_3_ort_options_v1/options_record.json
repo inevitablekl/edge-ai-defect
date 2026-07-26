@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "backend_type": "onnxruntime_cpu",
+  "execution_mode": "sequential",
+  "graph_optimization_level": "all",
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "intra_op_allow_spinning": true,
+  "inter_op_allow_spinning": true,
+  "cpu_arena_enabled": true,
+  "memory_pattern_enabled": true
+}

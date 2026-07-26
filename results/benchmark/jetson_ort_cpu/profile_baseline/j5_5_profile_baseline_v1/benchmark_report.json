@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "stage": "J5.5",
+  "status": "COMPLETE",
+  "executed_profiles": ["k1"],
+  "reserved_profiles": ["k5"],
+  "protocol": {"pilot_frames": 60, "warmup_frames": 60, "measured_frames": 500, "processed_frames": 560, "independent_processes": 5, "minimum_seconds": 30},
+  "latency_metric": "process_wall_ms_for_560_frames",
+  "latency_note": "Frozen schema-v2 config does not enable per-frame timing fields; no stage latency was inferred.",
+  "latency_ms": {"mean": 242561.4, "median": 242604.0, "p95": 242779.0, "p99": 242779.0, "min": 242308.0, "max": 242779.0},
+  "throughput_fps": {"mean": 2.3086948023, "median": 2.3082884041, "p95": 2.3111081764, "p99": 2.3111081764, "min": 2.3066245433, "max": 2.3111081764},
+  "resource_summary": {"VmRSS_max_kB_by_run": [146848, 138968, 137412, 138364, 136356], "CPU5_utilization_mean_percent": 99.59, "temperature_tj_mean_celsius": 44.53, "temperature_tj_max_observed_celsius": 45.41, "power_VDD_IN_mean_mW": 8050.73, "RAM_used_mean_MB_across_runs": 2189.62},
+  "correctness": {"all_runs_pass": true, "frames_each_run": 560, "cycles_each_run": 28, "detections_each_run": 1904, "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"},
+  "determinism": {"payload_sha_byte_identical": true, "semantic_report_sha_byte_identical": true},
+  "k5_executed": false
+}

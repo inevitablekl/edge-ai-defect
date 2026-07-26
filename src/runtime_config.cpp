@@ -108,17 +108,30 @@ Status parse_nonempty_path(const YAML::Node& node,
     return Status::success();
 }
 
-Status parse_schema_version(const YAML::Node& root, RuntimeConfig* output) {
+Status parse_schema_version(const YAML::Node& root, std::int64_t* output) {
     std::int64_t schema_version = 0;
     const Status status =
         parse_scalar(root["schema_version"], "schema_version", &schema_version);
     if (!status.ok()) {
         return status;
     }
-    if (schema_version != 1) {
-        return schema_error("schema_version", "must be exactly 1");
+    *output = schema_version;
+    return Status::success();
+}
+
+Status parse_positive_uint32(const YAML::Node& node,
+                             const std::string& path,
+                             std::uint32_t* output) {
+    std::int64_t value = 0;
+    const Status status = parse_scalar(node, path, &value);
+    if (!status.ok()) {
+        return status;
     }
-    output->schema_version = 1;
+    if (value <= 0 || static_cast<std::uint64_t>(value) >
+                          std::numeric_limits<std::uint32_t>::max()) {
+        return schema_error(path, "must be a positive uint32");
+    }
+    *output = static_cast<std::uint32_t>(value);
     return Status::success();
 }
 
@@ -283,9 +296,179 @@ Status parse_timing(const YAML::Node& node, RuntimeConfig* output) {
     return parse_scalar(node["enabled"], "timing.enabled", &output->timing_enabled);
 }
 
-Status parse_runtime_config(const YAML::Node& root,
-                            const std::filesystem::path& config_directory,
-                            RuntimeConfig* output) {
+Status parse_model_v2(const YAML::Node& node,
+                      const std::filesystem::path& config_directory,
+                      RuntimeConfig* output) {
+    const Status mapping_status =
+        validate_mapping(node, "model", {"path", "contract_path"});
+    if (!mapping_status.ok()) {
+        return mapping_status;
+    }
+
+    Status status = parse_nonempty_path(node["path"],
+                                        "model.path",
+                                        config_directory,
+                                        &output->model_path);
+    if (!status.ok()) {
+        return status;
+    }
+    return parse_nonempty_path(node["contract_path"],
+                               "model.contract_path",
+                               config_directory,
+                               &output->model_contract_path);
+}
+
+Status parse_onnxruntime_v2(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(
+        node,
+        "onnxruntime",
+        {"execution_mode", "graph_optimization_level", "intra_op_threads",
+         "inter_op_threads", "intra_op_allow_spinning",
+         "inter_op_allow_spinning", "cpu_arena_enabled",
+         "memory_pattern_enabled"});
+    if (!mapping_status.ok()) {
+        return mapping_status;
+    }
+
+    OnnxRuntimeConfig config;
+    Status status = parse_scalar(node["execution_mode"],
+                                 "onnxruntime.execution_mode",
+                                 &config.execution_mode);
+    if (!status.ok()) {
+        return status;
+    }
+    if (config.execution_mode != "sequential") {
+        return schema_error("onnxruntime.execution_mode",
+                            "must be exactly 'sequential'");
+    }
+    status = parse_scalar(node["graph_optimization_level"],
+                          "onnxruntime.graph_optimization_level",
+                          &config.graph_optimization_level);
+    if (!status.ok()) {
+        return status;
+    }
+    if (config.graph_optimization_level != "all") {
+        return schema_error("onnxruntime.graph_optimization_level",
+                            "must be exactly 'all'");
+    }
+    status = parse_positive_uint32(node["intra_op_threads"],
+                                   "onnxruntime.intra_op_threads",
+                                   &config.intra_op_threads);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_positive_uint32(node["inter_op_threads"],
+                                   "onnxruntime.inter_op_threads",
+                                   &config.inter_op_threads);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["intra_op_allow_spinning"],
+                          "onnxruntime.intra_op_allow_spinning",
+                          &config.intra_op_allow_spinning);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["inter_op_allow_spinning"],
+                          "onnxruntime.inter_op_allow_spinning",
+                          &config.inter_op_allow_spinning);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["cpu_arena_enabled"],
+                          "onnxruntime.cpu_arena_enabled",
+                          &config.cpu_arena_enabled);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["memory_pattern_enabled"],
+                          "onnxruntime.memory_pattern_enabled",
+                          &config.memory_pattern_enabled);
+    if (!status.ok()) {
+        return status;
+    }
+
+    output->onnxruntime = config;
+    return Status::success();
+}
+
+Status parse_runtime_v2(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(
+        node, "runtime", {"opencv_num_threads"});
+    if (!mapping_status.ok()) {
+        return mapping_status;
+    }
+    return parse_positive_uint32(node["opencv_num_threads"],
+                                 "runtime.opencv_num_threads",
+                                 &output->opencv_num_threads);
+}
+
+Status parse_postprocess_v2(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(
+        node,
+        "postprocess",
+        {"conf_threshold", "iou_threshold", "max_nms", "max_det",
+         "max_wh", "agnostic"});
+    if (!mapping_status.ok()) {
+        return mapping_status;
+    }
+
+    postprocess::PostprocessConfig config;
+    Status status = parse_scalar(node["conf_threshold"],
+                                 "postprocess.conf_threshold",
+                                 &config.confidence_threshold);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["iou_threshold"],
+                          "postprocess.iou_threshold",
+                          &config.iou_threshold);
+    if (!status.ok()) {
+        return status;
+    }
+
+    std::int64_t max_nms = 0;
+    status = parse_scalar(node["max_nms"], "postprocess.max_nms", &max_nms);
+    if (!status.ok()) {
+        return status;
+    }
+    std::int64_t max_det = 0;
+    status = parse_scalar(node["max_det"], "postprocess.max_det", &max_det);
+    if (!status.ok()) {
+        return status;
+    }
+    if (max_nms < 0 || max_det < 0 ||
+        static_cast<std::uint64_t>(max_nms) >
+            std::numeric_limits<std::size_t>::max() ||
+        static_cast<std::uint64_t>(max_det) >
+            std::numeric_limits<std::size_t>::max()) {
+        return schema_error("postprocess", "max_nms and max_det must fit size_t");
+    }
+    config.max_nms = static_cast<std::size_t>(max_nms);
+    config.max_det = static_cast<std::size_t>(max_det);
+
+    status = parse_scalar(node["max_wh"], "postprocess.max_wh", &config.max_wh);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_scalar(node["agnostic"], "postprocess.agnostic", &config.agnostic);
+    if (!status.ok()) {
+        return status;
+    }
+    config.multi_label = false;
+
+    status = postprocess::validate_postprocess_config(config);
+    if (!status.ok()) {
+        return Status::failure(status.code(),
+                               "postprocess: " + status.message());
+    }
+    output->postprocess_config = config;
+    return Status::success();
+}
+
+Status parse_runtime_config_v1(const YAML::Node& root,
+                               const std::filesystem::path& config_directory,
+                               RuntimeConfig* output) {
     const Status root_status = validate_mapping(
         root,
         "$",
@@ -296,11 +479,8 @@ Status parse_runtime_config(const YAML::Node& root,
     }
 
     RuntimeConfig config;
-    Status status = parse_schema_version(root, &config);
-    if (!status.ok()) {
-        return status;
-    }
-    status = parse_backend(root["backend"], &config);
+    config.schema_version = 1;
+    Status status = parse_backend(root["backend"], &config);
     if (!status.ok()) {
         return status;
     }
@@ -327,6 +507,70 @@ Status parse_runtime_config(const YAML::Node& root,
 
     *output = std::move(config);
     return Status::success();
+}
+
+Status parse_runtime_config_v2(const YAML::Node& root,
+                               const std::filesystem::path& config_directory,
+                               RuntimeConfig* output) {
+    const Status root_status = validate_mapping(
+        root,
+        "$",
+        {"schema_version", "backend", "onnxruntime", "runtime", "model",
+         "input", "output", "postprocess"});
+    if (!root_status.ok()) {
+        return root_status;
+    }
+
+    RuntimeConfig config;
+    config.schema_version = 2;
+    Status status = parse_backend(root["backend"], &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_onnxruntime_v2(root["onnxruntime"], &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_runtime_v2(root["runtime"], &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_model_v2(root["model"], config_directory, &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_input(root["input"], config_directory, &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_output(root["output"], config_directory, &config);
+    if (!status.ok()) {
+        return status;
+    }
+    status = parse_postprocess_v2(root["postprocess"], &config);
+    if (!status.ok()) {
+        return status;
+    }
+
+    *output = std::move(config);
+    return Status::success();
+}
+
+Status parse_runtime_config(const YAML::Node& root,
+                            const std::filesystem::path& config_directory,
+                            RuntimeConfig* output) {
+    std::int64_t schema_version = 0;
+    Status status = parse_schema_version(root, &schema_version);
+    if (!status.ok()) {
+        return status;
+    }
+    if (schema_version == 1) {
+        return parse_runtime_config_v1(root, config_directory, output);
+    }
+    if (schema_version == 2) {
+        return parse_runtime_config_v2(root, config_directory, output);
+    }
+    return schema_error("schema_version", "must be exactly 1 or 2");
 }
 
 }  // namespace

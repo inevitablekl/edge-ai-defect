@@ -1,0 +1,20 @@
+{
+  "device": "Jetson Orin Nano Engineering Reference Developer Kit Super",
+  "architecture": "aarch64",
+  "kernel": "5.15.185-tegra",
+  "l4t": "R36.5",
+  "toolchain": {
+    "gcc": "11.4.0",
+    "cmake": "3.22.1",
+    "opencv": "4.5.4",
+    "yaml_cpp": "0.7.0"
+  },
+  "maxn_super": {
+    "mode_id": 2
+  },
+  "fan": {
+    "pwm": 255,
+    "nvfancontrol": "inactive"
+  },
+  "private_paths_excluded_from_published": true
+}

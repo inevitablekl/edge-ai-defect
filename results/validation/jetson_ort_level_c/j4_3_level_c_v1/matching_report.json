@@ -1,0 +1,1 @@
+{"schema_version": 1, "status": "NOT_RUN", "reason": "No reference or C++ payload was produced", "algorithm": "class-aware maximum bipartite matching", "confidence_tolerance": 0.0001, "bbox_coordinate_tolerance_px": 0.01, "matched_count": null, "unmatched_count": null, "maximum_confidence_error": null, "maximum_bbox_error_px": null}

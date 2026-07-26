@@ -121,18 +121,49 @@ M5 在该环境采集工程 baseline，用于复现当前 C++ Serial pipeline �
 当前状态：
 
 ```text
-Jetson model: TBD
-JetPack version: TBD
-CUDA version: TBD
-TensorRT version: TBD
-ONNX Runtime C++ version: TBD
+Stage J verified target: Jetson Orin Nano Super Developer Kit 8GB
+Storage/root filesystem: 256GB NVMe
+JetPack: 6.2.2 / Jetson Linux L4T 36.5
+OS: Ubuntu 22.04-based
+Architecture: aarch64
+ONNX Runtime C++: 1.23.2 native source build
+Execution Provider: CPUExecutionProvider only
+Mode: MAXN_SUPER
+Cooling: active fan
+Status: J1–J3 verified
 ```
 
-以上信息在 Jetson 设备确定后补充。
+以上为 J1–J3 已验证的 Jetson facts。
 
----
+### 4.4 Stage J 研究定位与边界
 
-### 4.4 开发验证与论文性能实验平台边界
+当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
+
+Stage J 的正式定位是 **Jetson Orin Nano Super ONNX Runtime CPU Baselines**，目标包括：
+
+- Jetson aarch64 原生构建和运行；
+- Level A/B/C 跨平台正确性；
+- Controlled 1-Core baseline；
+- Tuned k-Core baseline；
+- Tuned 30-minute stability；
+- 为 Stage T 提供同设备 CPU reference。
+
+Stage J 不包含 TensorRT、FP16、INT8、CUDA EP、Pipeline、ROS2、Qt、摄像头以及 320/416 输入实验。TensorRT FP16 属于后续 Stage T，Pipeline / System Optimization 属于后续 Stage P；这些长期路线保留，但不在 Stage J 提前实现。
+
+WSL2 M5 与 Jetson Stage J 只做环境和实现差异描述，不计算 WSL→Jetson 正式 speedup，不将不同硬件结果作为优化收益。正式后端性能比较从 Stage T 开始，必须在同一 Jetson、同一模型、同一 corpus、相同功耗/时钟/风扇和相同 Trace 语义下比较：ORT CPU Tuned vs TensorRT FP16。
+
+Stage J 详细协议唯一引用：`docs/personal/STAGE_J_EXECUTION_PLAN.md`。
+
+```text
+version: v0.3
+status: FROZEN
+SHA256: a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd
+Decision: D041
+```
+
+本文件不建立第二套 Stage J 阈值或流程；实验执行以冻结计划和后续正式 Decision 为准。
+
+### 4.5 开发验证与论文性能实验平台边界
 
 开发验证阶段：
 
@@ -901,16 +932,16 @@ TensorRT 在所有设备上都有固定倍数加速。
 
 | 事项                                | 状态  | 补充时机             |
 | --------------------------------- | --- | ---------------- |
-| Jetson model                      | TBD | Jetson 设备确定后     |
-| JetPack version                   | TBD | Jetson 环境配置后     |
-| CUDA version                      | TBD | Jetson 环境配置后     |
-| TensorRT version                  | TBD | Jetson 环境配置后     |
+| Jetson model                      | planned target; pending J1 | J1 设备验收后     |
+| JetPack version                   | planned target 6.2.2; pending J1 | J1 环境验收后     |
+| CUDA version                      | pending J1 | J1 环境验收后     |
+| TensorRT version                  | pending J1 / Stage T | Stage T 环境验收后     |
 | ONNX Runtime C++ version          | 1.23.2 | M2 已冻结并验证 |
-| TensorRT engine generation method | TBD | TensorRT 部署前     |
-| Resource monitoring method        | TBD | 性能实验前            |
+| TensorRT engine generation method | pending Stage T | TensorRT 部署前     |
+| Resource monitoring method        | pending J1 | J1/性能实验前            |
 | M5 WSL2 warmup                    | 50 | M5.0 已冻结            |
 | M5 WSL2 measured requirement      | >=500 且 >=30s | M5.0 已冻结 |
-| 后续 Jetson warmup/measured        | TBD | Jetson 实验阶段重新冻结   |
+| 后续 Jetson warmup/measured        | pending J1 | Jetson 实验阶段重新冻结   |
 | Stability test input source       | TBD | 稳定性测试前           |
 | Paper table final format          | TBD | 实验结果产生后          |
 
@@ -1150,3 +1181,136 @@ Consolidation。失效状态只记录在阶段文档；旧 Evidence 内不增加
 Stable regeneration 必须先在 staging A 生成六文件，再使用相同冻结输入在独立 staging B 生成；五个内容文件及
 `sha256sums.txt` 均须 byte-identical，验证通过后才可单次原子发布。当前状态保持：M5.5 Consolidation Remediation
 Generation `PENDING`、M5.6 Gate rerun `PENDING`、M5.7 `PENDING`、M5 overall `IN_PROGRESS`。
+
+## Stage J J5.5 CPU Controlled Profile Benchmark
+
+J5.5 Purpose：建立 Jetson Orin Nano Super CPU-only controlled baseline。
+
+- Status：`COMPLETE`。
+- Profile：`k1`。
+- ORT：`CPUExecutionProvider`；CPU affinity `5`。
+- Protocol：5 independent processes；pilot 60 frames；measurement 500 frames；每次运行至少 30 seconds。
+- Results summary：FPS 约 `2.31`；average frame latency 约 `433 ms/frame`（560-frame process-wall baseline / 560）。
+- CPU5 utilization：`99.59%`。
+- Temperature：最大 `45.41 C`。
+- Power：`8050.73 mW`。
+- Evidence：`results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1/`。
+
+该结果为 CPU baseline，不代表最终优化性能。Tuned profile `k5` 保留给 J5.6 Tuned Profile Stability。
+
+## Stage J CPU Baseline Summary
+
+- Hardware：Jetson Orin Nano Super。
+- Backend：ONNX Runtime 1.23.2，CPUExecutionProvider。
+- Controlled：k1，CPU5，FPS 约 2.31。
+- Tuned：k5，CPU1-5。
+- Stability：30 minutes，15420 frames，0 failures。
+- J5.1–J5.6：全部 COMPLETE；本 CPU-only baseline chain 已完成整理与冻结。
+
+该总结仅描述 ONNX Runtime CPU baseline，不代表 TensorRT、CUDA EP 或最终 GPU 优化性能。
+
+## Stage J D052 Remediation Live Status
+
+D052 `Adopt Research-Grade Stage J Remediation and Closeout Policy` 已接受。
+本节是当前 Stage J 实验状态说明，不修改冻结 Stage J Plan v0.3。
+
+- J5.1–J5.5：`COMPLETE`；不重新执行。
+- J5.6 Tuned k-Core formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- `j5_6_profile_stability_v1`：
+  `HISTORICAL_PRE_J6_STABILITY_RUN`；是真实 30 分钟运行记录，但不是 J5.6
+  formal baseline，也不是完整 J6 Evidence。
+- J5.7：`BLOCKED_BY_J5.6`。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- J9：`NOT_AUTHORIZED`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`，不得写为 `COMPLETE` 或 `FROZEN`。
+- Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。
+
+## Stage J Research-Grade J5 Gate v2
+
+This append-only status records D053 without modifying Stage J Plan v0.3 or
+existing J5 Evidence.
+
+- D053：`Accepted`。
+- Original J5.7 v1：`BLOCKED under original frozen v0.3 contract`。
+- J5.5：`Controlled 1-Core Resource and Reproducibility Reference`。Its
+  supplement is deterministically derived from immutable published summaries;
+  `latency_scope=whole_process_wall_time` and per-frame latency distribution,
+  per-frame sample standard deviation and independently reconstructable raw
+  telemetry are `not_available`。
+- J5.6 v3：`Tuned k5 Formal CPU Performance Baseline`；five independent formal
+  runs with required measured-window statistics, correctness, determinism,
+  telemetry and SHA verification。
+- Research-grade J5 Gate v2：`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`。
+- J6：`READY` for a separately authorized research-grade stability task；本次
+  未执行 J6。
+- Stage T：`NOT_AUTHORIZED`。
+- This status does not claim original J5.7 v0.3 PASS, J8 PASS, J9 COMPLETE or
+  STAGE J CLOSED。
+
+## Stage J J6 Research-Grade Tuned k5 Stability Evidence
+
+J6 is `COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE` from source commit
+`7ff24d008f2450954b3fdc190688f1a3b9840788`. The required preflight passed for
+Jetson Orin Nano Super, aarch64, L4T R36.5, MAXN_SUPER, CPU online `0-5`, k5
+CPU affinity `1-5`, ORT intra/inter threads `5/1`, and OpenCV threads `1`.
+
+The single continuous measured window was `1800.0649718600034 s` and produced
+`743` cycles / `14860` frames with zero failures. All cycles passed correctness,
+matched the frozen expected cycle SHA, and showed no cycle hash drift. The
+immutable Published Evidence is
+`results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1/`; its
+`sha256sum -c` verification passed. The raw local attempt is retained outside
+the repository at `/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`.
+
+Telemetry recorded required thermal sources and CPU/GPU frequency. VmRSS had
+357 valid samples and the generated resource summary is `PASS` (`6736 KB` to
+`142876 KB`, delta `136140 KB`). VDD_IN, EMC frequency, one initial CPU usage
+sample, the final VmRSS sample, and cv0/cv1/cv2 thermal zones were unavailable
+and are recorded as unavailable in the Evidence; no values were fabricated.
+
+J7 is `READY`; J8/J9 remain `NOT_STARTED`; Stage T remains `NOT_AUTHORIZED`.
+
+## Stage J J7 Evidence Consolidation
+
+J7 is `COMPLETE`. The immutable consolidation is
+`results/consolidation/stage_j/stage_j_cpu_baseline_v1/`, generated from clean
+HEAD `209b81aaf943984445bce674b4077414a8be6820` on
+`feature/jetson-onnxruntime`. It contains the frozen seven-file contract:
+`README.txt`, `evidence_index.json`, `verification_report.json`,
+`attempt_registry.json`, `provenance.json`, `commands.txt` and
+`sha256sums.txt`.
+
+All J5.1–J6 input Evidence manifests passed `sha256sum -c`. The frozen model,
+contract, corpus manifest, Python reference and expected-cycle SHA chain passed;
+all seven input source commits are ancestors of the consolidation source HEAD.
+J5.5 remains `PASS_WITH_DOCUMENTED_LIMITATION`; J6 remains
+`PASS_WITH_RESEARCH_GRADE_EVIDENCE`.
+
+The consolidation self-validation passed fixed-file, JSON, attempt-integrity,
+privacy, asset-policy and retention checks. Total published Stage J bytes were
+`4130789`, below the `26214400` byte limit. Existing Evidence and the frozen
+Stage J Plan were not modified.
+
+J8 is `READY_FOR_AUDIT`; J9 is `NOT_STARTED`; Stage T remains
+`NOT_AUTHORIZED`. This consolidation does not claim J8 PASS, Stage J CLOSED or
+production readiness.
+
+## Stage J J8 Lightweight Audit
+
+The Stage J lightweight audit is `COMPLETE` at
+`results/audit/stage_j_lightweight_audit/stage_j_audit_v1/`. This is a
+research-grade lightweight audit, not the original J8 Deep Evidence Gate.
+It performed no benchmark or inference and did not modify J1–J7 Evidence, the
+model, contract, corpus, runtime configuration or the frozen Stage J Plan.
+
+The J7 consolidation manifest, all J5.1–J6 Evidence manifests, frozen model /
+contract / corpus / reference / expected-cycle SHA chain and J5.1–J7 commit
+ancestry passed verification. The report records the Controlled k1 baseline,
+Tuned k5 baseline, 30-minute k5 stability result, J5.5 documented limitation,
+unavailable power interface and the absence of a production-readiness claim.
+
+Stage J research baseline：`COMPLETE`。J9 remains `NOT_STARTED`. Stage T may
+enter next-stage planning review, but Stage T execution remains
+`NOT_AUTHORIZED` until separate governance authorization.

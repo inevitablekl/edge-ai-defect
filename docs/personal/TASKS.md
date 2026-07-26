@@ -2078,3 +2078,721 @@ NEU-DET
 
 -
 ```
+
+### 2026-07-21 - Stage J J0 Planning Freeze
+
+当前工作：
+
+- 同步 Stage J Plan v0.3、Decision D041 以及项目全局规划文档的当前状态。
+
+修改文件：
+
+- `AGENTS.md`
+- `README.md`
+- `docs/personal/TASKS.md`
+- `docs/personal/ENVIRONMENT.md`
+- `docs/personal/EXPERIMENT_PLAN.md`
+
+已完成：
+
+- J0.1：`COMPLETE`；新增 `docs/personal/STAGE_J_EXECUTION_PLAN.md`；Plan v0.3 `FROZEN`；commit `87d4459f4d25e630f38ae279b0423e39036e64af`。
+- J0.2：`COMPLETE`；新增 Decision D041；commit `38e8e068a6d38e69b8845098197d6632cef4f5b0`。
+- J0.3：`COMPLETE`；同步 AGENTS、README、TASKS、ENVIRONMENT、EXPERIMENT_PLAN；commit to be recorded by Git history。
+
+当前状态：
+
+- `M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；J0：`IN PROGRESS`；Stage J：`PENDING`；Stage T/Stage P：未开始。
+- J0：`IN PROGRESS`；Stage J：`PENDING`。
+- Stage J implementation branch：`not created`。
+- Stage J production code：`not modified`。
+- Stage J formal Evidence：`not generated`。
+- Device-observed facts：`pending J1`；planned target 与 observed fact 保持分离。
+
+未完成：
+
+- J0.4 测试名称与分类清单；
+- J0.5 里程碑任务卡；
+- J0.6 Git 起点核验和分支创建。
+
+阻塞问题：
+
+- 无；Jetson 实机验收仍等待 J1，尚未开始 Stage J 实现。
+
+下一步计划：
+
+- 完成 J0.4、J0.5 和 J0.6；不得将上述任务提前标记为完成。
+
+备注：
+
+- 本记录时间：`2026-07-21 22:52:39 CST`。
+
+### 2026-07-21 - Stage J J0.4 Baseline Test Inventory
+
+当前工作：
+
+- 冻结当前 HEAD 的 CMake/CTest baseline test inventory 和 Stage J 测试分类。
+
+已完成：
+
+- J0.4：`COMPLETE`；新增 `configs/stage_j/test_inventory.yaml`。
+- source commit：`2da4d2cae6c5075e516c7edcfbd28e52f5301299`。
+- Model Smoke OFF：31；Model Smoke ON：39；ON-only：8；unique baseline：39。
+- 分类数量：`portable_required=39`、`model_asset_required=19`、`x86_only=0`、`jetson_only=0`、`sanitizer_required=15`。
+- 未来 Stage J requirements：JTEST-001～JTEST-011，共 11 项，均为 `not_implemented` 且无 CTest 名称。
+
+第一次 J0.4 attempt：
+
+- 因旧任务预期 28/39 与当前 HEAD 旧 build metadata 的 24/32 不一致，按 Gate 停止；未修改文件、未创建提交。
+- 该次停止不是代码失败或测试失败。
+
+第二次 J0.4 attempt：
+
+- 发现仓库内旧 `build/off` 和 `build` metadata 与当前 CMake 静态注册不一致；旧 metadata 缺少 7 个 M5 tests。
+- 未修改文件、未创建提交；该次停止不是代码失败或测试失败。
+
+最终处理：
+
+- 保留旧 build directories 不变，并将其标记为 stale、排除出 inventory 权威来源。
+- 使用仓库外临时 OFF/ON configure 生成 fresh CTest metadata；当前 CMake 静态注册与 fresh metadata exact match。
+- 未新增真实测试、未运行 CTest 实际测试、未编译、未修改 CMake。
+
+当前状态：
+
+- J0：`IN PROGRESS`；Stage J：`PENDING`。
+- Stage J implementation branch：`not created`。
+- Stage J production code：`not modified`。
+- Stage J formal Evidence：`not generated`。
+- J0.5、J0.6：`PENDING`。
+
+下一步计划：
+
+- J0.5 里程碑任务卡；
+- J0.6 Git 起点核验和 Stage J 分支创建。
+
+备注：
+
+- 本记录时间：`2026-07-21T23:47:11+08:00`。
+- J0.4 commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J0.5 Milestone Task Cards
+
+- J0.5：`COMPLETE`；新增并冻结 [`docs/personal/STAGE_J_TASK_CARDS.md`](STAGE_J_TASK_CARDS.md)，版本 `v0.1`，文档状态 `FROZEN`。
+- 父协议：Stage J Plan v0.3（`FROZEN`）；Decision D041：`Accepted`。
+- 任务卡覆盖 J1–J9，共 45 张：J1（5）、J2（6）、J3（10）、J4（4）、J5（10，含 J5.1a/J5.1b/J5.1c）、J6（4）、J7（2）、J8（2）、J9（2）。
+- J1 设备依赖卡保持 `BLOCKED`；J2–J9 均未执行且未标记 `COMPLETE`。J0.6 分支创建仍为 `PENDING`，J0 仍为 `IN PROGRESS`。
+- 卡片冻结了依赖图、硬 Gate、PASS/FAIL/BLOCKED、失效与重跑范围、source/Evidence 分离提交策略及用户 merge/tag/backup/push 交接责任。
+- 起始 source commit：`6e1c46ac4f9d09ef2e620f316723957144a66cf0`；Stage J production 未修改；J1–J9 formal Evidence 未生成。
+- 本记录时间：`2026-07-22T00:01:04+08:00`。
+- J0.5 commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J0.6 Planning Freeze Closeout
+
+- J0.6：`COMPLETE`；J0：`COMPLETE`；J0.1–J0.5 均已完成。
+- Stage J Plan v0.3：`FROZEN`；D041：`Accepted`；test inventory Model Smoke OFF=`31` / ON=`39`；Task Cards v0.1：`FROZEN`，共 45 张。
+- 最终 J0 base commit：commit to be recorded by Git history。
+- 目标分支：`feature/jetson-onnxruntime`；该分支将在本 closeout commit 后立即从最终 main HEAD 创建。
+- Stage J production code 未修改；未执行 build/test/benchmark；Stage J formal Evidence 未生成。
+- Stage J execution：`PENDING J1`；J1：`BLOCKED pending device arrival`；下一张任务卡：J1.1 — Device Identity, Storage and Flash Acceptance。
+- implementation branch：`feature/jetson-onnxruntime`；device-observed facts：`pending J1`；Stage T/P 尚未开始。
+- 本记录时间：`2026-07-22T00:07:37+08:00`。
+- J0.6 closeout commit：commit to be recorded by Git history。
+
+### 2026-07-22 - Stage J J1.1 Device Acceptance
+
+- J1.1：`COMPLETE`；设备身份为 Jetson Orin Nano Super / `aarch64` / Tegra234。
+- MemTotal：`7,976,910,848` bytes，符合 nominal 8GB SKU。
+- NVMe：PUSKILL 256GB，`256,060,514,304` bytes；rootfs 位于 NVMe，ext4 read-write。
+- Boot slot A/B：正常；SMART critical warning=`0`，media errors=`0`。
+- `unsafe_shutdowns=11` 为历史累计值；当前无明确 NVMe 故障，后续继续观察是否增长。
+- Fan、heatsink、稳定原装电源、设备独占和无已知随机重启/掉盘问题：`USER_CONFIRMED`。
+- Network/SSH/sudo：available；sudo 仅通过 command-scoped read-only wrapper 提供给 Codex，unrestricted NOPASSWD 为 false。
+- 用户在正式采集前安装了临时受限只读 wrapper：`/usr/local/sbin/edge-ai-j1-readonly`；sudo authorization 为 command-scoped NOPASSWD。该变更不安装软件、不改变功耗模式、时钟、风扇或推理环境；J1.4 完成或不再需要特权采集后由用户手工移除。
+- 未安装软件；未改变 nvpmodel、时钟、风扇或系统配置；未运行 build/test/benchmark。
+- 原始采集保存在 repository-external temporary location，未加入 Git，未作为 Published Evidence。
+- J1 overall：`IN PROGRESS`；J1.2：`READY_WITH_WARNINGS`；J1.3～J1.5：`PENDING`。
+- Carry-forward warnings：CMake、OpenCV metadata、Python `cv2`、15W mode、MAXN_SUPER、jetson_clocks root requirement、unsafe shutdown counter。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T23:14:52+08:00 - Stage J J1.4 Post-D042 Closeout Verification
+
+- 当前 HEAD `697a58ee3f4f4a93fe507e7b48a27e5906f08d09` 保持不变；worktree clean。
+- D042：`Accepted`；未修改 D042，不新增 D043。
+- Stable evidence manifest validation：全部 `OK`；authoritative Phase A/final supplemental SHA 与 D042 一致；superseded attempts retained。
+- J1.4：`COMPLETE`；J1 remains `IN PROGRESS`；J1.5：`READY`。
+- MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked state、fan PWM 255 和 nvfancontrol inactive 均 retained。
+- 未执行 workload、build、test、benchmark 或 J1.5；未发生 system、wrapper 或 sudoers 变更。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T22:55:09+08:00 - Stage J J1.4 Telemetry and Throttling Freeze
+
+- J1.4 Phase A：`DISCOVERY_PASS`；用户授权 J1 discovery 使用 composite immutable discovery evidence。
+- J1.4：`COMPLETE`；新增 D042 `Freeze Stage J Jetson Telemetry and Throttling Contract`，状态 `Accepted`。
+- Composite raw SHA：Phase A `91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`；supplemental `75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`；均 repository-external、untracked、not Published Evidence。
+- Frozen thermal relevant set：cpu/gpu/soc0/soc1/soc2/tj；CV0/CV1/CV2 因稳定 `EAGAIN` 排除 numeric hard maximum。
+- CPU/GPU/EMC authority、tegrastats `1000 ms`、rail current/average semantics、OC1 Under Voltage / OC2 Average Overcurrent / OC3 Instantaneous Overcurrent 已冻结。
+- OC/UV counter delta、throttle-enable、INA3221 alarm Gate 已冻结；当前 counter 为 `0`、enable 为 `1`、alarm 为 `0`。
+- `Stage J Sustained Throttling Algorithm v1` 与 environment-drift/boot invalidation 规则已冻结；all-core telemetry CPU0 overlap limitation 已记录。
+- 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；未发生系统、production 或 wrapper/sudoers 变更。
+- J1 overall：`IN PROGRESS`；J1.5：`READY`。不得将 J1 标记为 COMPLETE。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22 - Stage J J1.3 MAXN_SUPER and Clock-Control Acceptance
+
+- J1.3：`COMPLETE`；Phase A：`DISCOVERY_PASS`。
+- Pre-change 15W/ID=`0` successfully changed to MAXN_SUPER/ID=`2` using the fixed command-scoped power-control wrapper；未使用 `--force`，无需 reboot。
+- CPU online set remained `0-5`。
+- `jetson_clocks` applied successfully；observed locked state: CPU `1728000`，GPU `1020000000`，EMC `3199000000`。
+- `jetson_clocks --fan` applied successfully；PWM=`255`，fan dynamic speed control disabled，nvfancontrol enabled but inactive after the apply。
+- Post-change query remained MAXN_SUPER/ID=`2`，无 silent fallback；NVMe `unsafe_shutdowns=11` 未增加。
+- First Phase B attempt stopped before changes because Codex could not read root-owned sudoers SHA；second stopped before changes because user SHA labels conflicted。用户随后通过明确标签提供 wrapper/sudoers SHA 和 `visudo parsed OK` 证据；wrapper SHA 由 Codex 独立复核。
+- Wrapper self-test PASS；unrestricted sudo negative check PASS；未读取 sudoers 正文。
+- 未安装 package、未修改 wrapper/sudoers、未执行 reboot、未运行 configure/build/test/benchmark。
+- raw attempt repository-external、untracked、not Published Evidence；未加入 Git。
+- J1 overall：`IN PROGRESS`；J1.4：`READY`；J1.5：`PENDING`。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22 - Stage J J1.2 Platform and Toolchain Inventory
+
+- J1.2：`COMPLETE`；L4T observed `R36.5.0`，JetPack meta-package 未安装，APT candidate 为 `6.2.2+b24`，exact installed JetPack 未独立验证。
+- Ubuntu `22.04.5`，kernel `5.15.185-tegra`，architecture `aarch64`，glibc `2.35`；online/allowed CPU 均为 `0-5`。
+- GCC/G++ `11.4.0`，Make `4.3`，pkg-config `0.29.2`；CMake/CTest、Ninja、patchelf 缺失。
+- Python `3.10.12`，python3-dev、NumPy `1.21.5`、PyYAML `5.4.1` 可用；pip/venv、ONNX、Python ORT、Python cv2 不可用。
+- OpenCV C++ classification：`RUNTIME_AND_HEADERS_PRESENT_METADATA_MISSING`；runtime/headers 4.5.4 和 Debian component packages 存在，但 pkg-config/CMake metadata 缺失。
+- yaml-cpp：未发现 header、runtime 或 metadata，阻塞 J3 configure/build。
+- 系统 ONNX Runtime：未发现；J2 构建官方 1.23.2 SDK，不以系统缺失判定 J1.2 失败。
+- CUDA 12.6、cuDNN runtime libraries、TensorRT 10.3 为 recorded-only pre-existing facts；未使用这些后端，未开始 Stage T。
+- dpkg audit 无异常，未发现 held packages；root/var/tmp 均约 11% 使用率。
+- Remediation：CMake/CTest 在 J2.1/J2.2 前处理；OpenCV metadata 和 yaml-cpp 在 J3.1 前处理；ORT 在 J2 构建；Python cv2 当前不阻塞 C++ Stage J。
+- 未安装或修复软件；未修改 APT、系统配置、功耗、时钟或风扇；未运行 configure/build/test/benchmark；未开始 J1.3。
+- raw attempt 为 repository-external、untracked、not Published Evidence；未记录随机临时路径。
+- J1 overall：`IN PROGRESS`；J1.3：`READY_WITH_WARNINGS`。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T23:15:49+08:00 - Stage J J1.4 Final Closeout Status
+
+- Post-D042 closeout verification：`PASS`；stable evidence manifest 全部 `OK`，权威 Phase A/final supplemental SHA 与 D042 一致。
+- J1.4：`COMPLETE`；J1 remains `IN PROGRESS`；J1.5：`READY`。
+- 当前 controlled device state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive。
+- 未执行 J1.5；未发生 workload/build/test/benchmark、reboot、system、wrapper 或 sudoers 变更。
+- Closeout commit：`0fbbbbcb6acdfbb0b5ca2e0e9cc16b37aaed2222`；后续仅为本末尾状态记录修正。
+
+### 2026-07-22T23:29:14+08:00 - Stage J J1.5 Platform Evidence Gate
+
+- J1.5：`COMPLETE`；Published Evidence validation、privacy/redaction 和 consistency Gate：`PASS`。
+- Published Evidence logical root：`results/platform/jetson/environment/j1_baseline_v1/`；exact required file set 和 schema 按 D043 冻结。
+- Published manifest SHA256：`6fb506bd47ce52bcc80c7f8067e4c9bf3547040af937aa273b413154c7d10d46`；local manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- J1.1～J1.5：`COMPLETE`；J1：`COMPLETE`；Stage J remains `IN PROGRESS`。
+- Next authorized task：`J2.0 — Build Interface Discovery`；status `READY_WITH_WARNINGS`，carrying CMake/OpenCV metadata/yaml-cpp gaps and ORT 1.23.2 pending J2。
+- 未安装软件；未执行 build/test/benchmark；未发生 system、power、clock、fan、wrapper 或 sudoers 变更；J2 未开始。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22T23:33:18+08:00 - Stage J J2.0 Build Interface Discovery
+
+- J2.0：`COMPLETE`；J2.1：`READY_WITH_WARNINGS`。
+- Read-only facts：aarch64、Ubuntu 22.04.5、GCC/G++ 11.4、Make 4.3、Git 2.34.1、Python 3.10.12。
+- CMake/CTest、Ninja、protoc、flatc 缺失；NumPy/PyYAML/google.protobuf 可用；Python flatbuffers 不可用。
+- OpenCV runtime/header 存在但 metadata 缺失；yaml-cpp 缺失；build-essential 已安装；NVMe 约 197G 可用。
+- ORT 1.23.2 native aarch64 Release shared-library CPU-only strategy 已记录；真实 build.sh 参数仍需 J2.1 验证。
+- 未安装软件；未执行 configure/build/CTest、benchmark、inference；J2.1 尚未开始。
+- Commit：`commit to be recorded by Git history`。
+
+### 2026-07-22 - Stage J J2.1 Development Feasibility Probe
+
+- J2.1：`COMPLETE`；J2.2：`READY_WITH_WARNINGS`；未开始 J2.2。
+- Starting gate PASS：branch `feature/jetson-onnxruntime`、HEAD `56d0c9ba7dfc50ff02fa9e481ae3a1026357df0c`、worktree clean；Plan、Inventory、Task Cards frozen SHA 全部匹配。
+- Read-only dependency probe：GCC/G++ 11.4、Make 4.3、Git 2.34.1、Python 3.10.12、NumPy 1.21.5、PyYAML 5.4.1、google.protobuf import available；CMake/CTest、Ninja、protoc、flatc 和 Python flatbuffers unavailable。APT candidate versions已记录，未安装任何包。
+- ORT source probe PASS：repository-external shallow clone，tag `v1.23.2`，source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278`，`VERSION_NUMBER=1.23.2`；仅阅读 `build.sh`、`build.py` 和 `build_args.py`，未调用脚本。
+- J2.2 strategy：native aarch64、Release、shared library、CPU-only/CPUExecutionProvider；不传 `--use_cuda`、`--use_tensorrt` 或其他 GPU EP 参数；计划使用 `--skip_tests`、保守 `--parallel 4` 和外部 staging prefix。
+- Feasibility：`PASS_WITH_WARNINGS`；CMake、protobuf/flatbuffers tooling 和 Python flatbuffers 必须在授权安装/准备后解决；当前 NVMe 约 `197G` 可用，建议至少保留 `20 GiB`。
+- 未执行完整 ORT 编译、CMake configure、CTest、benchmark、inference、TensorRT、CUDA EP 或 GPU build；未创建仓库 build 目录。
+- Next authorized task：`J2.2 — ONNX Runtime CPU-only Build`，仍须遵守安装授权与 CPU-only 约束。
+
+### 2026-07-23 - Stage J J2.2 ONNX Runtime CPU-only Build
+
+- J2.2：`COMPLETE`；J3：`READY`；未开始 J3。
+- Resume preflight PASS：branch `feature/jetson-onnxruntime`、HEAD `7a41a91c5d45150f55aa866b5c0fd35a24018536`、worktree clean；用户已安装七个授权依赖包。
+- ORT v1.23.2 source tag/HEAD：`v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- System CMake 3.22.1 不满足 ORT v1.23.2 的 CMake >=3.28 要求；使用外部 staging 的 official CMake 3.28.6 aarch64 binary，通过 `--cmake_path` 构建，未修改系统 CMake 或 `/usr/local`。
+- Build PASS：Release、shared library、CPU-only、`--skip_tests`、parallel 4；开始 `23:49:15`，结束 `00:47:22`，elapsed `3487s`，exit code `0`。
+- Artifact PASS：`libonnxruntime.so.1.23.2`、headers、CMake package config 均生成；主要 ELF 为 ARM aarch64；CMake cache 确认 CUDA/TensorRT 及其 interfaces 为 `OFF`。
+- External SDK：`historical_external_ort_sdk`，包含 `include/`、`lib/`、`lib/cmake/onnxruntime/`，约 `51M`；SDK SHA256 manifest：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
+- 未执行测试、benchmark、inference、CUDA EP、TensorRT EP 或 GPU build；未修改源码、configs、tests 或 results。
+- Next authorized task：`J3.0 — C++ Project Dependency and Configure Discovery`；不得跳过 J3.0。
+
+### Stage J D044 J2 Formal Build Remediation Contract
+
+- D044 `Freeze J2 Formal Build Remediation and SDK Packaging Contract`：`Accepted`。
+- Existing external SDK is technically valid for the audited ELF, SONAME, symlink, dependency and CMake-package facts, but is not formal Published Evidence.
+- Historical J2.2 attempt disposition：`SUPERSEDED` as formal Evidence authority；this does not classify the SDK as damaged or the technical build as failed。
+- J2.2：`IN_PROGRESS` pending formal clean-build remediation PASS。
+- J2.3：`BLOCKED` pending formal J2.2 remediation PASS。
+- J2.4：`PENDING`。
+- J2.5：`PENDING`。
+- J2 overall：`IN PROGRESS`。
+- J3：`BLOCKED_BY_J2.5`。
+- J3.0：`NOT_DEFINED`；历史记录保留，不作为当前 live status。
+- Next authorized operation：`J2.2 Formal clean build remediation attempt v1`。
+- 本次仅冻结 planning contract；未执行 ORT clone、build、SDK packaging、J2.3、J2.4、J2.5、J3、test 或 inference。
+
+### 2026-07-23 - Stage J D044 J2.2 Formal Clean Build Remediation v2
+
+- D044：`Accepted`；v1 attempt `j2.2_formal_clean_v1` 的 `BLOCKED` 状态保留且 evidence 未修改；historical development build 标记为 `SUPERSEDED`，不作为 formal Evidence authority。
+- v2 formal attempt：`j2.2_formal_clean_v2`，结果 `PASS`；ORT `v1.23.2` source commit：`a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- Formal build：native AArch64、Release、shared library、CPU-only、external CMake `3.28.6`、parallel `4`，exit code `0`；independent install exit code `0`。
+- SDK/artifact Gate：headers、library、symlink/targets、AArch64/ELF64、SONAME、NEEDED、ldd、CMake package relocatability 和 local manifest 全部 `PASS`；attempt final manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- 本次未执行 CTest、SDK binary、inference、benchmark、RPATH smoke、J2.3、J2.4、J2.5 或 J3；未修改生产源码、系统 CMake 或 `/usr/local`。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。
+
+### 2026-07-23T22:00:04+08:00 - Stage J D045 and J2.2 v2 Evidence Reconciliation
+
+- D045 `Accept J2.2 v2 Non-Build Evidence Reconciliation`：`Accepted`。
+- Reconciliation v1：`PASS`；formal v2 attempt unchanged；formal attempt
+  manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- New canonical source aggregate：`stage_j_ort_source_aggregate_v1`，SHA256
+  `c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`。
+- Historical aggregate `4f460795adeab01ac3a0b207ff18ec9d6af01d3957456af59dcb201645e9c5ab`
+  downgraded to `historical_recorded_not_future_authority`；command/exit
+  reconciliation completed；missing timestamps remain `not_recorded` with no
+  backfill；four wrapper typos accepted as non-substantive。
+- No ORT rebuild required；v2 formal attempt remains immutable。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4：`PENDING`；J2.5：`PENDING`；J2
+  overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 未执行。
+
+### Stage J J2.3 SDK packaging and manifest
+
+- J2.3：`COMPLETE`；formal v2 SDK used exclusively；no ORT rebuild。
+- Local SDK metadata、headers manifest、file manifest、license 和 third-party notice：`PASS`；payload 保持 local-only 且未被 Git 跟踪。
+- Published Evidence `results/build/onnxruntime_aarch64/j2_sdk_v1/`：`PASS`；exact file set 为 README、provenance、verification report、commands 和 sha256sums；无 payload、`.so`、完整 headers 或绝对私有路径。
+- J2.4：`READY`；J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- 本次未执行 J2.4 RPATH smoke；未执行 J2.5、binary/runtime smoke、inference、benchmark、CTest 或 J3。
+- Next authorized task：`J2.4 — RPATH smoke`。
+
+### Stage J J2.4 RPATH smoke
+
+- J2.4：`COMPLETE`；Evidence ID：`j2_rpath_smoke_v1`。
+- `env -u LD_LIBRARY_PATH`：`PASS`；RPATH/RUNPATH 精确解析到 Stage J SDK；runtime version `1.23.2`：`PASS`；`CPUExecutionProvider`：`PASS`。
+- `Ort::Env`、`Ort::SessionOptions` lifecycle：`PASS`；无模型加载、inference、CTest 或 benchmark。
+- Local attempt `j2.4_rpath_smoke_v1`：9/9 manifest PASS；Published Evidence：6/6 manifest PASS；binary 未进入 Git，SDK payload 未被跟踪。
+- J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。
+
+### Stage J J2.5 J2 Evidence gate
+
+- J2.5：`COMPLETE`；Evidence ID：`j2_evidence_gate_v1`。
+- J2.2 formal v2、D045 reconciliation、J2.3 SDK Evidence 和 J2.4 RPATH/runtime Evidence chain：`PASS`。
+- GPU discovery warning：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；未改变 runtime exit、ORT version、CPU provider 或动态库解析结果。
+- J2：`COMPLETE`；J3.1：`READY`；J3 尚未执行；J3.0：`NOT_DEFINED`。
+- J2 未包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 performance benchmark。
+- Next authorized task：`J3.1 — aarch64 build and CMake portability`；J3.1 未执行。
+- J3.2：`READY`；J3：`IN PROGRESS`；J3.0：`NOT_DEFINED`。
+
+### Stage J J3.1 aarch64 build and CMake portability
+
+- J3.1：`COMPLETE`；source commit：`7935c708465e14ea8786a64ecd1bf5f14096c333`。
+- Evidence ID：`j3_1_aarch64_build_v1`；published manifest SHA256：`ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5`；local attempt manifest SHA256：`368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871`。
+- linux-aarch64 nested header layout：`PASS`；linux-x64 flat layout compatibility retained；x86 regression未在本卡执行，留待 J3.7。
+- Full `edge_ai_infer` Release build：`PASS`；binary 为 AArch64 ELF64；application `--help`：`PASS`；OpenCV 4.5.4、yaml-cpp 0.7、OpenSSL 3.0.2 和 ORT C++ link：`PASS`。
+- 未执行模型加载、inference、CTest、benchmark、TensorRT、CUDA EP 或 J3.2；系统包安装已由用户在本次重试前完成，本次验证未修改系统。
+- J3.2：`READY`；J3：`IN PROGRESS`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J3.2 — RuntimeConfig v2`；J3.2 未执行。
+- J3.3：`COMPLETE`；source commit：`de022b19e0dd54c156cd7463c64d97eeb112180f`；Published Evidence：`j3_3_ort_options_v1`。
+- RuntimeConfig v2 到 ORT SessionOptions 映射、不可变 options record、默认值、非法配置、稳定输出和 model-free application 测试：`PASS`。
+- 未执行模型加载、inference、benchmark、TensorRT、CUDA EP、ROS2、camera 或 pipeline。
+- J3.4：`READY`；J3：`IN PROGRESS`；J3.3 未扩大到 OpenCV thread policy。
+- Next authorized task：`J3.4 — OpenCV thread policy`；J3.4 未执行。
+- J3.4：`COMPLETE`；source commit：`05e2d4c47e7a95bf3f8796ef501d12e27b618082`；Published Evidence：`j3_4_opencv_thread_policy_v1`。
+- OpenCV thread policy 的初始化时机、requested/applied/version/active record、默认值、非法值、稳定输出和 `cv::getNumThreads` readback 测试：`PASS`。
+- 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+- J3.5：`READY`；J3：`IN PROGRESS`；J3.4 未扩大到 trace observer。
+- Next authorized task：`J3.5 — Trace observer and recorder`；J3.5 未执行。
+- J3.5：`COMPLETE`；source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`；Published Evidence：`j3_5_trace_observer_v1`。
+- `IFrameTraceObserver`、`TraceRecorder`、SerialRunner stage callbacks、JSONL stable ordering、monotonic timestamp、empty trace and flush policy tests：`PASS`。
+- 未执行 inference、benchmark、camera、TensorRT、CUDA 或 ROS2；未修改 inference algorithm。
+- J3.6：`READY`；J3：`IN PROGRESS`；J3.5 未扩大到 portable control utilities。
+- Next authorized task：`J3.6 — Portable control utilities`；J3.6 未执行。
+- J3.6：`COMPLETE`；source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；Published Evidence：`j3_6_portable_control_v1`。
+- `PortableControlSession`、参数/路径校验、evidence/trace 输出目录策略、固定 control record、环境信息入口和 no-overwrite 行为：`PASS`。
+- formal native aarch64 Release build、`runtime_config` 与 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+- J3.7：`READY`；J3：`IN PROGRESS`；J3.6 未扩大到 historical v1 regression。
+- Next authorized task：`J3.7 — Historical v1 regression`；J3.7 未执行。
+
+### 2026-07-24T01:27:43+08:00 - Stage J J3.10 Evidence Gate disposition
+
+- D046 `Accept third-party OpenCV/TBB Leak Limitation in J3.9 Sanitizer Validation`：`Accepted`。
+- J3.9：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；strict LeakSanitizer 结果为 792 bytes / 3 allocations，ASan 无 heap corruption/use-after-free/invalid memory access，UBSan PASS；remediation ownership classification 为第三方 OpenCV/TBB 初始化泄漏。
+- J3：`IN PROGRESS`，等待 J3.10 Evidence Gate 完成；J4 未启动。
+- 本记录不修改 production source、test logic、CMake sanitizer flags、Release build、ORT SDK 或 frozen assets。
+
+### Stage J J3 Closeout and J4 Entry — D047
+
+This final section is the authoritative live-status section for the current
+Stage J state. Historical entries above are retained and are not live status。
+
+- J3.1：`COMPLETE`；
+- J3.2：`COMPLETE`；
+- J3.3：`COMPLETE`；
+- J3.4：`COMPLETE`；
+- J3.5：`COMPLETE_WITH_RECONCILED_PROVENANCE`；correct source commit：
+  `9b146317922561c55d91ad7126dbde4164b0c800`；
+- J3.6：`COMPLETE`；
+- J3.7：`COMPLETE`；
+- J3.8：`COMPLETE`；
+- J3.9：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J3.10 v1：superseded for final provenance authority；
+- J3.10 v2：`PASS`；
+- J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；
+- J4：`NOT_STARTED`；
+- J4.1：`READY`；J4.2/J4.3/J4.4：`PENDING`；
+- next authorized task：`J4.1 — Level A correctness`；
+- J4.1 未执行；
+- Stage T：`NOT_STARTED`；Stage P：`NOT_STARTED`。
+
+The latest section at the end of this file is the current live-status
+authority。
+
+### Stage J J4.1 Level A correctness
+
+- J4.1：`COMPLETE`；source commit：`0ca8df90b2a5c0e76ceaa8475ad702db90cfaaf4`。
+- Published Evidence：`j4_1_level_a_v1`；published manifest SHA256：
+  `2afb5d945013922501d65fc534eaf37c263ba2fadb435f70400bf64a814d79d2`。
+- Formal controlled profile：CPU 5；OpenCV requested/reported threads `1/1`；
+  MAXN_SUPER；J1-accepted `jetson_clocks --fan` state。
+- J4.1 Level A：8/8 PASS；exact and resize cases both aggregate MAE `0` and
+  max_abs `0`；two-process report deterministic byte-identical PASS。
+- J4.1 historical guards：5/5 PASS；Model Smoke OFF inventory remains 31 and
+  unchanged。
+- J4：`IN PROGRESS`；J4.2：`READY`；J4.2 未执行。
+- Next authorized task：`J4.2 — Level B runtime/integration`。
+
+### Stage J J4.2 Level B under D048
+
+This final section is the authoritative live-status section. The original
+strict result and v1 attempt remain retained.
+
+- Original J4.2 v1 strict Plan §18.2 Gate：`FAILED`；the original formal
+  19-file attempt remains valid with original manifest SHA256
+  `74dd6d1ae56099f084f55cfe35564bc91c66c5979c60d2932761b5edbb20d764`。
+- Later v1 forensic files are acceptable append-only historical artifacts and
+  do not replace the original formal result。
+- D048：`Accepted`；governance commit：
+  `a180a13df8b0a38750cb535f734c6907ce6beefe`；analyzer source commit：
+  `fa258bdffb0c1ac5483b3fc352264edb7db51a29`。
+- v2 formal attempt：`j4.2_level_b_v2`；Published Evidence：
+  `j4_2_level_b_v2`；published manifest SHA256：
+  `74656fab3d0146716686d975e39764038026f89e28f95830e8f128acb8e92f75`。
+- Strict result remains visible：`strict_plan_gate_pass=false`；overall MAE
+  `6.972924584434146e-06`；overall max_abs `0.001068115234375`。
+- D048 result：`d048_cross_arch_acceptance_pass=true`；canonical Jetson raw
+  SHA256
+  `a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`；
+  bbox max_abs `0.001068115234375`；score max_abs
+  `4.76837158203125e-07`；finite/NaN/+Inf/-Inf：`84000/0/0/0`。
+- Two-process raw output and reports：byte-identical；requested/applied ORT
+  options match；OpenCV requested/reported `1/1`；historical regression：
+  five applicable tests PASS and the strict historical Level B comparator is
+  `EXPECTED_CROSS_ARCH_FAILURE`。
+- Model Smoke inventory remains OFF `31` and ON `39`；frozen inventory SHA
+  unchanged。
+- J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4：`IN
+  PROGRESS`；J4.3：`READY_UNDER_D048`；J4.3 未执行。
+- Next authorized task：`J4.3 — Level C robustness`。
+
+### Stage J J4 Final Live Status / Pre-J5 Entry
+
+This append-only section is the current live-status authority. Earlier J4.1
+and J4.2 sections remain historical evidence and are not rewritten.
+
+- Current branch：`feature/jetson-onnxruntime`。
+- Current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`；documentation
+  synchronization began from a clean worktree。
+- J4.1：`COMPLETE`。
+- J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；the strict
+  cross-architecture numerical gate remains failed and is accepted only under
+  D048：`Accepted`。
+- J4.3：`COMPLETE`。
+- J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；published final Evidence：
+  `results/validation/jetson_ort_level_c/j4_evidence_gate_v1`。
+- J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`。
+- Stage T、Stage P、J5.2 and later work：not started。
+- Next authorized task：`J5.1 Benchmark Python Reference Preparation`。
+- J5.1 entry audit：`NOT_READY_MISSING_BENCHMARK_CORPUS_ASSETS`。The frozen
+  20-image benchmark manifest exists, but the corresponding 20 image files
+  are not currently available in the repository or visible local evidence
+  corpus; no images were generated or downloaded during this audit。
+
+### Stage J J5.1 Entry Resolution
+
+- Historical corpus recovery attempt：`BLOCKED`，保留；
+- D049：`Accepted`；
+- benchmark corpus：`20/20 PASS`；
+- J5.1a：`READY`；
+- J5.1b：`BLOCKED_BY_J5.1a`；
+- J5.1c：`PENDING`；
+- J5.2：`NOT_STARTED`；
+- Current authorized campaign：`J5.1 Python Reference Campaign`。
+
+### Stage J J5.1 Python Reference
+
+- D049：`Accepted`；
+- J5.1a：`COMPLETE`；
+- J5.1b：`COMPLETE`；
+- J5.1c：`COMPLETE`；
+- J5.1：`COMPLETE`；
+- Corpus：`20/20 PASS`；
+- Python Reference architecture：`x86_64`；
+- Two separate-process runs：`byte-identical PASS`；
+- benchmark_python_reference_sha256：`1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7`；
+- Evidence ID：`j5_1_python_reference_v1`；
+- Published manifest SHA：`490fcd11764999cfac4f01c23d84668844dd644f72d52ffbc6d39e6d25859030`；
+- Local attempt：`j5.1_python_reference_v1`；
+- J5.2：`READY`；
+- J5.2 未执行；
+- Next authorized task：`J5.2 — Candidate semantic precheck`。
+
+### Stage J J5.2 First Attempt
+
+- Attempt：`j5.2_candidate_semantic_precheck_v1`。
+- Status：`FAILED_SCHEMA_BRIDGE`。
+- Failure occurred before first frame inference。
+- Candidate A run 1 exit code：`4`。
+- Root cause：RuntimeConfig v2 schema propagated into RunMetadata schema。
+- No semantic comparison executed。
+- J5.3：`BLOCKED`。
+- Next authorized action：D050 source remediation。
+
+### Stage J J5.2 Candidate Semantic Precheck
+
+- D050：`Accepted`；governance commit：
+  `8db5f5d04d258d360fb54b1d97aac3c2553c54a5`。
+- Source remediation：`COMPLETE`；source commit：
+  `16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855`。
+- v1 attempt：`FAILED_SCHEMA_BRIDGE`，保持不变。
+- v2 attempt：`PASS`；Published Evidence：
+  `results/benchmark/jetson_ort_cpu/profile_precheck/j5_2_candidate_semantic_precheck_v2`。
+- Candidates：`1, 2, 4, 5, 6`；runs：`10 separate processes`。
+- Candidate k1 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k2 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k4 expected cycle SHA：
+  `56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295`。
+- Candidate k5 expected cycle SHA：
+  `dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f`。
+- Candidate k6 expected cycle SHA：
+  `3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426`。
+- All candidates deterministic：`PASS`。
+- All candidates Python Reference semantic comparison：`20/20 PASS`。
+- Maximum confidence error：`2.65265835569517e-06`。
+- Maximum bbox coordinate error：`0.0003280264160139268 px`。
+- Regression：Model Smoke OFF applicable `24/24 PASS`；Model Smoke ON applicable
+  `31/31 PASS`；historical Level B remains `EXPECTED_CROSS_ARCH_FAILURE` under D048。
+- J5.2：`COMPLETE`。
+- J5.3：`READY`；J5.3 未执行。
+
+### Stage J J5.3 Candidate Sizing
+
+- J5.2：`COMPLETE`。
+- Published Evidence：`results/benchmark/jetson_ort_cpu/profile_sizing/j5_3_candidate_sizing_v1`。
+- Profiles：`k1,k2,k4,k5,k6`。
+- Independent runs：`10`；每个 profile 两个独立进程，每次完成冻结 20-image cycle。
+- Resource sizing：`COMPLETE`；保留 RAM/SWAP/CPU/temperature/power/VmRSS 原始事实。
+- Latency characterization：`COMPLETE` for process-invocation `cycle_total_ms` distribution；冻结 v2 application 未输出 per-stage timing，`inference_ms/preprocess_ms/postprocess_ms` 记录为 unavailable，未推导。
+- Candidate sizing only；不是正式性能 baseline；未执行长时间稳定性测试。
+- All run exit codes：`0`；semantic output SHA：`10/10` 命中 J5.2 对应 profile expected cycle SHA。
+- sha256 manifest verification：`PASS`；published evidence 不含图片、hostname、IP、用户路径或 credentials。
+- J5.3：`COMPLETE`。
+- J5.4：`READY`。
+- J5.4 未执行。
+
+### Stage J J5.4 Profile Selection
+
+- J5.3：`COMPLETE`。
+- Controlled profile：`k1`。
+- Tuned profile：`k5`。
+- Selection evidence：`j5_4_profile_selection_v1`。
+- Selection：只读分析 J5.3 sizing Evidence，未重新运行。
+- D051：`Accepted`；冻结 J5 CPU profile selection。
+- J5.5：`READY`。
+- J5.5 未执行。
+
+### Stage J J5.5 CPU Profile Benchmark
+
+- J5.4：`COMPLETE`。
+- Status：`COMPLETE`。
+- Controlled Profile：`k1`。
+- Tuned Profile：`k5` reserved for J5.6；未执行。
+- Pilot：`60/60 PASS`。
+- Formal runs：`5 independent processes PASS`。
+- Formal workload：每次 `560` frames（60 warmup + 500 measured），每次 `>=30s`。
+- Correctness：`5/5 PASS`；semantic output 命中 J5.2 k1 expected SHA。
+- Determinism：payload SHA/report SHA `byte-identical PASS`。
+- Evidence：`j5_5_profile_baseline_v1`。
+- Next：`J5.6 Tuned Profile Stability`；状态 `READY`。
+- J5.6 未执行。
+
+### Stage J J5.6 Tuned Profile Stability Test
+
+- J5.5：COMPLETE。
+- Status：COMPLETE。
+- Tuned Profile：k5。
+- CPU affinity：1-5。
+- ORT：CPUExecutionProvider；intra_op_threads=5；inter_op_threads=1。
+- Duration：30 minutes（1800546 ms）。
+- Stability result：771/771 inference cycles successful；0 failures。
+- Correctness：all cycles semantic output SHA identical；NaN/Inf checks PASS。
+- Evidence：j5_6_profile_stability_v1。
+- Stage J CPU Baseline：COMPLETE。
+
+### Stage J CPU Baseline Consolidation
+
+- Status：COMPLETE。
+- J5.1 Reference：COMPLETE。
+- J5.2 Semantic validation：COMPLETE。
+- J5.3 Candidate sizing：COMPLETE。
+- J5.4 Profile freeze：COMPLETE；Controlled k1，Tuned k5。
+- J5.5 Controlled baseline：COMPLETE。
+- J5.6 Tuned stability：COMPLETE；30 minutes，15420 frames，0 failures。
+- CPU-only ONNX Runtime baseline chain：FROZEN。
+- Next stage：TensorRT/GPU backend work，未开始。
+
+### Stage J D052 Remediation Live Status
+
+This append-only section supersedes the preceding Stage J CPU Baseline
+Consolidation section as the current live-status authority.
+
+- D052：`Accepted`。
+- J5.1–J5.5：`COMPLETE`；不重新执行。
+- J5.6 Tuned k-Core formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- Existing `j5_6_profile_stability_v1`：
+  `HISTORICAL_PRE_J6_STABILITY_RUN`；它是真实 30 分钟运行记录，但不是 J5.6
+  Tuned formal baseline，也不是完整 J6 Evidence。
+- J5.7：`BLOCKED_BY_J5.6`；未执行。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- J9：`NOT_AUTHORIZED`。
+- Stage T：`NOT_AUTHORIZED`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`；不得声称 `COMPLETE` 或 `FROZEN`。
+- Current authorized task：D052 governance reconciliation followed by J5.6
+  Tuned k-Core formal baseline remediation only。
+
+### Stage J Remediation R2 — v2 Formal Baseline Tooling
+
+This append-only section supersedes the preceding D052 remediation status for
+the J5.6 tooling-readiness state.
+
+- R2 tooling remediation：`COMPLETE`。
+- Starting source commit：
+  `e95fd61c9b1c4fc9ec80620606d935fedca458b4`；tooling source is the commit
+  carrying this section with subject `feat: add Stage J formal baseline tooling`。
+- RuntimeConfig schema：unchanged；schema v2 continues to reject a top-level
+  `timing` field。
+- Production executable：`edge_ai_defect` CLI、exit-code/error behavior and
+  timing-disabled v2 Result JSON behavior remain unchanged。
+- Benchmark-only timing bridge：`stage_j_profile_runner` uses schema v2,
+  explicitly enables existing `FrameTimings`, and records the existing
+  monotonic stage trace；production CLI/config cannot enable this bridge。
+- Offline tooling：Stage J strict timing/trace analyzer and a default
+  preflight-only Jetson orchestrator are implemented；formal execution requires
+  explicit `--execute-formal --profile k5 --evidence-id <new-id>`。
+- Release build：Jetson `aarch64`、GCC/G++ `11.4.0`、CMake `3.22.1`、OpenCV
+  C++ `4.5.4`、ONNX Runtime C++ `1.23.2`，Model Smoke OFF/ON configurations
+  both built successfully。
+- Model Smoke OFF applicable regression：`29/29 PASS`。
+- R2 critical ON regression：`6/6 PASS`，covering analyzer/orchestrator,
+  RuntimeConfig, SerialRunner, production CLI and application ORT smoke。
+- Full ON visibility run：`36/41 PASS`；four historical M5 Python tests were
+  not executable because Jetson system Python lacks `cv2`，and the existing
+  Level B comparison retained its D048 cross-architecture numerical failure
+  (`MAE=6.97292e-06`, `max_abs=0.00106812`)。Neither condition was hidden or
+  changed by R2。
+- ASan/UBSan model-independent checks：SerialRunner and application CLI
+  `PASS`；RuntimeConfig `PASS` with leak detection disabled。LeakSanitizer
+  separately reported the existing OpenCV/TBB `cv::setNumThreads` process-exit
+  allocation (`792 bytes`)，with no R2 stack frame。
+- One authorized development smoke：`PASS`；k5 affinity `1-5`，`40/40`
+  frames，`2/2` canonical cycle SHA，`40/40` complete real-frame traces，
+  finite/non-negative timing present for every frame，and sampled process
+  affinity remained within `1-5`。Output remained temporary；no formal local
+  attempt and no Published Evidence were created。
+- J5.6 Tuned k-Core formal baseline：
+  `READY_FOR_FORMAL_EXECUTION`；the formal five-run campaign has not been
+  executed。
+- J5.7：`BLOCKED_BY_J5.6`；not executed。
+- J6：`NOT_COMPLETE`；J7：`NOT_STARTED`；J8 remains `FAIL`；J9 and Stage T
+  remain `NOT_AUTHORIZED`。
+
+### Stage J Research-Grade J5 Gate Remediation
+
+This append-only status section records D053 and does not rewrite the frozen
+Stage J Plan or historical Evidence.
+
+- D053：`Accepted`。
+- Original J5.7 v1：`BLOCKED under original frozen v0.3 contract`；Evidence
+  remains unchanged。
+- J5.5：`Controlled 1-Core Resource and Reproducibility Reference`；its
+  deterministic supplement reports whole-process wall time, FPS and actually
+  published resource values only. Per-frame latency distribution and
+  independently reconstructable raw telemetry remain unavailable。
+- J5.6 v3：`Tuned k5 Formal CPU Performance Baseline`；five-run formal Evidence
+  PASS。
+- Research-grade J5 Gate v2：`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`。
+- J6：`READY`；requires separate authorization and was not executed。
+- Stage T：`NOT_AUTHORIZED`。
+- J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。
+
+### Stage J J6 Research-Grade Tuned k5 Stability Campaign
+
+- J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。
+- Starting/source commit：`7ff24d008f2450954b3fdc190688f1a3b9840788`。
+- Preflight：`PASS`；Jetson Orin Nano Super、aarch64、L4T R36.5、MAXN_SUPER、
+  CPU online `0-5`、k5 affinity `1-5`、ORT intra/inter `5/1`、OpenCV threads `1`。
+- Continuous measured duration：`1800.0649718600034 s`（30 minutes requirement met）。
+- Workload：`743` cycles，`14860` frames，`0` failures。
+- Correctness：`PASS`；all cycles passed，expected cycle SHA matched，`hash_drift=false`。
+- Memory：telemetry recorded；VmRSS summary `PASS`，357 valid samples，
+  `6736 KB → 142876 KB`，delta `136140 KB`。
+- Thermal/frequency：required thermal sources recorded with no thermal errors；CPU/GPU
+  frequency samples recorded。
+- Unavailable interfaces recorded as facts：VDD_IN `358/358` unavailable，EMC
+  frequency `358/358` unavailable，initial CPU utilization sample unavailable，
+  final VmRSS sample unavailable；cv0/cv1/cv2 excluded thermal zones unavailable。
+- Immutable Published Evidence：
+  `results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1`；
+  `sha256sum -c`：`PASS`。Raw local attempt retained at
+  `/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`。
+- J7：`READY`；J8/J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。
+
+### Stage J J7 Evidence Consolidation
+
+- J7：`COMPLETE`；Published consolidation：
+  `results/consolidation/stage_j/stage_j_cpu_baseline_v1`。
+- Consolidation source HEAD：`209b81aaf943984445bce674b4077414a8be6820`；
+  branch：`feature/jetson-onnxruntime`；generation worktree clean。
+- J5.1–J6：all seven input Evidence SHA manifests `PASS`。
+- Frozen SHA chain：model、contract、corpus manifest、Python reference and
+  expected cycle all match；input source commit ancestry to consolidation source
+  HEAD `PASS`。
+- J5.5：`PASS_WITH_DOCUMENTED_LIMITATION`；J6：
+  `PASS_WITH_RESEARCH_GRADE_EVIDENCE`。
+- Consolidation self-validation：fixed seven-file set、JSON parsing、attempt
+  registry、privacy/asset policy and retention checks `PASS`；tracked Stage J
+  published bytes `4130789`，below `26214400` bytes。
+- J8：`READY_FOR_AUDIT`；J9：`NOT_STARTED`；Stage T：`NOT_AUTHORIZED`。
+
+### Stage J J8 Lightweight Audit
+
+- J8 lightweight audit：`COMPLETE`；Evidence：
+  `results/audit/stage_j_lightweight_audit/stage_j_audit_v1`。
+- Audit scope：research-grade lightweight chain audit；未执行原 J8 Deep
+  Evidence Gate、benchmark 或 inference；未修改 J1–J7 Evidence、模型、
+  contract、corpus、runtime 配置或 Stage J Plan。
+- J7 consolidation manifest、J5.1–J6 manifests、冻结 SHA chain 和 J5.1–J7
+  commit ancestry：`PASS`。
+- Stage J research baseline：`COMPLETE`；J5.5 limitation、J6 unavailable
+  power interface 和无 production-readiness claim 均已记录。
+- J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`；可进入下一阶段 planning review，但执行仍需
+  独立 governance authorization。

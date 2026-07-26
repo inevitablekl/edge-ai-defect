@@ -1,0 +1,143 @@
+# Stage J CPU Baseline Summary
+
+## 1. Objective
+
+记录 Jetson Orin Nano Super 上冻结模型、冻结 corpus 和 ONNX Runtime
+CPUExecutionProvider 的 Stage J CPU baseline 当前事实。D052 后该链为
+`PARTIALLY_COMPLETE`，J5.6 Tuned formal baseline 尚待补齐。
+
+## 2. Frozen environment
+
+- Hardware: Jetson Orin Nano Super Developer Kit。
+- Architecture: aarch64。
+- JetPack: 6.2.2；L4T R36.5。
+- Runtime: ONNX Runtime 1.23.2，CPUExecutionProvider。
+- Mode: Serial；MAXN_SUPER；active fan。
+- Controlled profile: k1，CPU affinity 5，intra/inter threads 1/1。
+- Tuned profile: k5，CPU affinity 1-5，intra/inter threads 5/1。
+
+## 3. Model contract
+
+- Model: models/onnx/yolov8n_neudet_frozen.onnx
+- Model SHA256: c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944
+- J5 corpus manifest SHA256: 235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab
+- J5.1 reference SHA256: 1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7
+
+## 4. J5.1–J5.6 results
+
+| Task | Result | Evidence |
+|---|---|---|
+| J5.1 Reference | COMPLETE | j5_1_python_reference_v1 |
+| J5.2 Semantic validation | COMPLETE | j5_2_candidate_semantic_precheck_v2 |
+| J5.3 Candidate sizing | COMPLETE | j5_3_candidate_sizing_v1 |
+| J5.4 Profile freeze | COMPLETE; k1/k5 frozen | j5_4_profile_selection_v1 |
+| J5.5 Controlled baseline | COMPLETE; k1 | j5_5_profile_baseline_v1 |
+| J5.6 Tuned formal baseline | MISSING / READY_FOR_REMEDIATION | Not generated |
+| Historical 30-minute k5 run | HISTORICAL_PRE_J6_STABILITY_RUN | j5_6_profile_stability_v1 |
+
+现有六个历史 Evidence 目录均通过各自已发布 SHA256 manifest 校验；这不构成
+J5.6 Tuned formal baseline、J5.7、J6、J7 或 J8 PASS。
+
+## 5. Controlled profile result
+
+Controlled k1 used CPU5 and ORT intra/inter threads 1/1. The five-run baseline measured approximately 2.31 FPS, with semantic output matching the frozen expected SHA and byte-identical deterministic payloads.
+
+## 6. Historical tuned-profile stability fact
+
+Tuned k5 used CPU1-5 and ORT intra/inter threads 5/1. The 30-minute continuous stability run processed 15420 frames across 771 cycles, with 0 failures. All cycles matched the frozen semantic output SHA; no NaN or Inf was detected.
+
+该目录按 D052 分类为 `HISTORICAL_PRE_J6_STABILITY_RUN`。它不是冻结计划中的
+J5.6 Tuned formal baseline，也不是完整 J6 Evidence。
+
+## 7. Known limitation
+
+D048 cross-architecture numerical limitation remains accepted: cross-architecture floating-point differences limit direct byte-level numerical equivalence claims. The J5 semantic checks use the frozen contract and accepted comparison boundary.
+
+## 8. Current live status
+
+- J5.1–J5.5：`COMPLETE`。
+- J5.6 Tuned formal baseline：`MISSING / READY_FOR_REMEDIATION`。
+- J5.7：`BLOCKED_BY_J5.6`。
+- J6：`NOT_COMPLETE`。
+- J7：`NOT_STARTED`。
+- J8 original frozen v0.3：`FAIL`。
+- Stage J CPU chain：`PARTIALLY_COMPLETE`。
+- Stage T：`NOT_AUTHORIZED`；只有新的 research-grade final audit PASS 后才可规划。
+
+## 9. Research-Grade J5 Gate v2
+
+D053 is `Accepted`. The original J5.7 v1 result remains
+`BLOCKED under the original frozen v0.3 contract` and its Evidence is
+unchanged.
+
+J5.5 is classified as the `Controlled 1-Core Resource and Reproducibility
+Reference`. Its deterministic supplement does not invent per-frame timing:
+latency scope is explicitly `whole_process_wall_time`; measured-window
+per-frame latency distributions, per-frame sample standard deviation and
+independently reconstructable raw telemetry remain unavailable.
+
+J5.6 v3 is the `Tuned k5 Formal CPU Performance Baseline`, with five PASS
+formal processes and complete measured-window statistics, correctness,
+determinism, telemetry and SHA evidence.
+
+The research-grade J5 Gate v2 verdict is
+`PASS_WITH_DOCUMENTED_J5_5_LIMITATION`.
+
+- J6：`READY`，但本任务未执行 J6。
+- Stage T：`NOT_AUTHORIZED`。
+
+- J7/J8/J9：未执行；不得声称 J8 PASS、J9 COMPLETE 或 Stage J CLOSED。
+
+## 10. J6 Research-Grade Tuned k5 Stability
+
+J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。The campaign started from
+`7ff24d008f2450954b3fdc190688f1a3b9840788` after a passing frozen-asset and
+platform preflight. It used the tuned k5 profile: CPU affinity `1-5`, ORT
+intra/inter threads `5/1`, and OpenCV threads `1`.
+
+The one continuous measured window was `1800.0649718600034 s`; it completed
+`743` cycles and `14860` frames with zero failures. All cycle correctness checks
+passed, the frozen expected cycle SHA matched, and cycle hash drift was false.
+Published Evidence:
+`results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1/`;
+its SHA256 manifest verification passed. The local raw attempt is retained at
+`/home/orin/edge-ai-local-evidence/stage_j/j6_attempts/j6_tuned_stability_v1`.
+
+Telemetry recorded the required thermal sources with no thermal errors and
+recorded CPU/GPU frequency. VmRSS had 357 valid samples; the Evidence resource
+summary is `PASS`, with `6736 KB` starting, `142876 KB` ending, and delta
+`136140 KB`. VDD_IN and EMC frequency were unavailable for all 358 telemetry
+samples; one initial CPU utilization sample, the final VmRSS sample, and cv0/cv1/cv2
+thermal zones were also unavailable. These limitations are recorded in the
+Evidence and are not filled with inferred values.
+
+## 11. Current live status after J6
+
+- J6：`COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE`。
+- J7：`READY`。
+- J8/J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`。
+
+## 12. J7 Evidence Consolidation
+
+J7：`COMPLETE`。The consolidated Stage J CPU baseline is published at
+`results/consolidation/stage_j/stage_j_cpu_baseline_v1/` from clean source HEAD
+`209b81aaf943984445bce674b4077414a8be6820` on
+`feature/jetson-onnxruntime`.
+
+All seven J5.1–J6 input Evidence manifests passed verification. The frozen
+model, contract, corpus manifest, Python reference and expected-cycle SHA chain
+matched; all input source commits were verified as ancestors of the
+consolidation source HEAD. The fixed seven-file consolidation set, attempt
+registry, JSON parsing, privacy/asset checks and retention check passed.
+
+J5.5 remains `PASS_WITH_DOCUMENTED_LIMITATION`; J6 remains
+`PASS_WITH_RESEARCH_GRADE_EVIDENCE`. Published Stage J bytes total `4130789`,
+below the `26214400` byte limit.
+
+## 13. Current live status after J7
+
+- J7：`COMPLETE`。
+- J8：`READY_FOR_AUDIT`。
+- J9：`NOT_STARTED`。
+- Stage T：`NOT_AUTHORIZED`。

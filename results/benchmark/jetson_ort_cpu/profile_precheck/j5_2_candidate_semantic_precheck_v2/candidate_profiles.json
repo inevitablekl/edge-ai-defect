@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "profile": "k1",
+      "k": 1,
+      "cpu_set": "5",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1,
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true,
+      "opencv_num_threads": 1,
+      "config_sha256": "b0ea8044a66ca156cc93c6548e5f0cdacd8d4b5056eac1e1cce26e9a170e9d59",
+      "runs": 2,
+      "separate_processes": true,
+      "process_exit_codes": [
+        0,
+        0
+      ],
+      "output_sha256": [
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+      ],
+      "profile_expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+    },
+    {
+      "profile": "k2",
+      "k": 2,
+      "cpu_set": "4-5",
+      "intra_op_threads": 2,
+      "inter_op_threads": 1,
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true,
+      "opencv_num_threads": 1,
+      "config_sha256": "967ee72761c3c3b73119d504188e0dffbf5de7d0b16e3a2760d16d0ec8c7ec03",
+      "runs": 2,
+      "separate_processes": true,
+      "process_exit_codes": [
+        0,
+        0
+      ],
+      "output_sha256": [
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+      ],
+      "profile_expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+    },
+    {
+      "profile": "k4",
+      "k": 4,
+      "cpu_set": "2-5",
+      "intra_op_threads": 4,
+      "inter_op_threads": 1,
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true,
+      "opencv_num_threads": 1,
+      "config_sha256": "97540723434b24f0e592e5ca29945ca33826743a8423ae816d080b12cc350347",
+      "runs": 2,
+      "separate_processes": true,
+      "process_exit_codes": [
+        0,
+        0
+      ],
+      "output_sha256": [
+        "56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295",
+        "56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295"
+      ],
+      "profile_expected_cycle_sha256": "56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295"
+    },
+    {
+      "profile": "k5",
+      "k": 5,
+      "cpu_set": "1-5",
+      "intra_op_threads": 5,
+      "inter_op_threads": 1,
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true,
+      "opencv_num_threads": 1,
+      "config_sha256": "0e9ff7ac8fea1684bb27d85ed795427cdad531285bc8688d4ad027209bf7e8f3",
+      "runs": 2,
+      "separate_processes": true,
+      "process_exit_codes": [
+        0,
+        0
+      ],
+      "output_sha256": [
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+        "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+      ],
+      "profile_expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+    },
+    {
+      "profile": "k6",
+      "k": 6,
+      "cpu_set": "0-5",
+      "intra_op_threads": 6,
+      "inter_op_threads": 1,
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true,
+      "opencv_num_threads": 1,
+      "config_sha256": "bd1ed055069c10ae104af0cf770398cd4e991f93bf2dd26111a6e98a79f4b5ed",
+      "runs": 2,
+      "separate_processes": true,
+      "process_exit_codes": [
+        0,
+        0
+      ],
+      "output_sha256": [
+        "3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426",
+        "3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426"
+      ],
+      "profile_expected_cycle_sha256": "3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426"
+    }
+  ]
+}

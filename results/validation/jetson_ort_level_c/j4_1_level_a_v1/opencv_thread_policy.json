@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "requested_threads": 1,
+  "reported_threads": 1,
+  "opencv_version": "4.5.4",
+  "policy_active": true,
+  "build_information_sha256": "ad3a462554501bb77ea4f6434c87e536ad21618af7a391f1416d3fea82509d9f",
+  "parallel_backend_or_framework": "TBB (ver 2020.3 interface 11103)",
+  "run_1_run_2_match": true,
+  "run_1_requested_reported": [1, 1],
+  "run_2_requested_reported": [1, 1]
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "source_commit": "480876aff91edecd800758407f6618d78295cbcc",
+  "profile": "k5",
+  "cpu_set": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "formal_run_count": 5,
+  "build_artifact_scope": "external_verified_release_artifact",
+  "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f"
+}

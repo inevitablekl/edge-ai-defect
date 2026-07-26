@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+
+import copy
+from pathlib import Path
+import sys
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools/benchmark"))
+
+from m5_ort_cpu_common import PreflightError
+from run_stage_j_ort_cpu_formal import (
+    CPU_SET,
+    validate_asset_shas,
+    validate_formal_platform,
+    validate_profile,
+    parse_cpu_list,
+    safe_read_sysfs_text,
+    collect_thermal_snapshot,
+)
+
+
+def profile():
+    return {
+        "schema_version": 2,
+        "backend": {"type": "onnxruntime_cpu"},
+        "onnxruntime": {
+            "execution_mode": "sequential",
+            "intra_op_threads": 5,
+            "inter_op_threads": 1,
+        },
+        "runtime": {"opencv_num_threads": 1},
+    }
+
+
+class StageJFormalTests(unittest.TestCase):
+    def _thermal_fixture(self, zones):
+        import tempfile
+        root = Path(tempfile.mkdtemp())
+        paths = []
+        for index, (zone, value) in enumerate(zones.items()):
+            zone_dir = root / f"thermal_zone{index}"
+            zone_dir.mkdir()
+            (zone_dir / "type").write_text(zone, encoding="utf-8")
+            if value is not None:
+                (zone_dir / "temp").write_text(value, encoding="utf-8")
+            paths.append(zone_dir / "type")
+        return root, paths
+
+    def test_required_thermal_zone_valid_passes(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            self.assertEqual(len(result["temperature_millicelsius"]), 6)
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_required_thermal_zone_missing_fails(self):
+        root, paths = self._thermal_fixture({"cpu-thermal": None})
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "error")
+            self.assertIn("cpu-thermal", result["thermal_errors"][-1]["missing"])
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_excluded_thermal_zone_none_passes_as_unavailable(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        zones["cv0"] = None
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            self.assertEqual(result["excluded_thermal"][0]["status"], "unavailable")
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_excluded_thermal_zone_missing_passes_as_unavailable(self):
+        zones = {zone: "42000" for zone in (
+            "cpu-thermal", "gpu-thermal", "soc0-thermal", "soc1-thermal",
+            "soc2-thermal", "tj-thermal")}
+        root, paths = self._thermal_fixture(zones)
+        try:
+            result = collect_thermal_snapshot(paths)
+            self.assertEqual(result["thermal_status"], "ok")
+            excluded = {item["zone"]: item for item in result["excluded_thermal"]}
+            self.assertEqual(excluded["cv1"]["status"], "unavailable")
+        finally:
+            import shutil
+            shutil.rmtree(root)
+
+    def test_safe_sysfs_reader_string(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: " 42\n")
+        self.assertEqual(result, {
+            "status": "ok", "path": "/sys/test", "value": "42"
+        })
+
+    def test_safe_sysfs_reader_bytes(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: b" 43\n")
+        self.assertEqual(result["status"], "ok")
+        self.assertEqual(result["value"], "43")
+
+    def test_safe_sysfs_reader_none(self):
+        result = safe_read_sysfs_text("/sys/test", lambda _: None)
+        self.assertEqual(result["status"], "error")
+        self.assertIn("None", result["error"])
+
+    def test_safe_sysfs_reader_missing_path(self):
+        result = safe_read_sysfs_text("/path/that/does/not/exist")
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["path"], "/path/that/does/not/exist")
+
+    def test_rejects_x86_formal(self):
+        with self.assertRaises(PreflightError):
+            validate_formal_platform(
+                system="Linux", machine="x86_64",
+                model_text="NVIDIA Jetson Orin Nano",
+                nvpmodel_text="MAXN_SUPER",
+                clocks_text="FreqOverride=1")
+
+    def test_accepts_manual_platform_verification_without_fan1_input(self):
+        from run_stage_j_ort_cpu_formal import validate_formal_platform
+        text = """manual platform verification
+sudo jetson_clocks --show
+Jetson Orin Nano Engineering Reference Developer Kit Super
+R36.5
+CPU 0-5 online
+GPU 1020 MHz locked
+EMC 3199000000 MHz
+MAXN_SUPER
+FAN Dynamic Speed Control=disabled
+hwmon0_pwm1=255
+sudo nvpmodel -q
+"""
+        self.assertEqual(
+            validate_formal_platform(
+                system="Linux", machine="aarch64",
+                manual_verification_text=text)["source"],
+            "manual_platform_verification")
+
+    def test_rejects_wrong_profile_and_cpu_set(self):
+        with self.assertRaises(PreflightError):
+            validate_profile(profile(), profile="k4")
+        with self.assertRaises(PreflightError):
+            validate_profile(profile(), profile="k5", cpu_set={1, 2, 3, 4})
+        validate_profile(profile(), profile="k5", cpu_set=CPU_SET)
+
+    def test_linux_cpu_list_parser(self):
+        self.assertEqual(parse_cpu_list("0-3,5\n"), {0, 1, 2, 3, 5})
+        with self.assertRaises(Exception):
+            parse_cpu_list("5-1")
+
+    def test_rejects_wrong_k_value(self):
+        value = profile()
+        value["onnxruntime"]["intra_op_threads"] = 4
+        with self.assertRaises(PreflightError):
+            validate_profile(value, profile="k5")
+
+    def test_rejects_timing_in_v2_profile(self):
+        value = profile()
+        value["timing"] = {"enabled": True}
+        with self.assertRaises(PreflightError):
+            validate_profile(value, profile="k5")
+
+    def test_rejects_asset_sha_drift(self):
+        with self.assertRaises(PreflightError):
+            validate_asset_shas({})
+
+    def test_formal_authorization_is_explicit_in_cli(self):
+        source = (ROOT / "tools/benchmark/run_stage_j_ort_cpu_formal.py").read_text(
+            encoding="utf-8")
+        self.assertIn("if args.execute_formal and (args.profile != \"k5\" or not args.evidence_id)", source)
+        self.assertIn("mode.add_argument(\"--execute-formal\"", source)
+
+
+if __name__ == "__main__":
+    unittest.main()

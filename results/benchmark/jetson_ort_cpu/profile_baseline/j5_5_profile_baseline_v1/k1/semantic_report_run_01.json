@@ -1,0 +1,1 @@
+{"schema_version":1,"profile":"k1","cycle_count":28,"frames_per_cycle":20,"all_cycles_semantic_equivalent":true,"all_cycles_expected_sha256":"dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f","total_detections":1904,"comparison":"exact detection object equality against frozen J5.2 k1 payload for each repeated cycle"}

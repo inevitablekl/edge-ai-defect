@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_10_j3_evidence_gate_v1",
+  "task_id": "J3.10",
+  "repository_observation_commit": "36c58eb7d6d29192ead786bcef2ef398899eafed",
+  "production_source_commit": "94576b6fe81e2f853c30c41826d039d016e093b0",
+  "source_commit": null,
+  "evidence_commit": null,
+  "decision_id": "D046",
+  "decision_status": "Accepted",
+  "local_attempt_id": "j3.10_evidence_gate_v1",
+  "local_attempt_manifest_sha256": "469b3700981b568f6d0dd1d6f1af8c3e33e977c8edae3ec0744e7ad33babb6ea",
+  "frozen_plan_sha256": "a723ae1ffae70366c7435313869f5a2ec1318c47ed43398ffdfcf40e8ba6a9bd",
+  "frozen_task_cards_sha256": "01d4862ad4d7cb59d8f1834f39de8f29c960868ac9b9732773ef0f7d65d3956c",
+  "attempt_type": "J3 final evidence gate after accepted J3.9 limitation",
+  "commit_boundary": "documentation and evidence only; no production source commit",
+  "published_evidence_policy": "derived from one complete accepted gate attempt; original failure evidence retained",
+  "privacy_status": "PASS; logical paths only, no private absolute paths, host identifiers or credentials"
+}

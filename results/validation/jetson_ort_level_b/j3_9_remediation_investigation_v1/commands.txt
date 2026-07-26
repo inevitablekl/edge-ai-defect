@@ -1,0 +1,5 @@
+gate: verify current J3.9 failure evidence manifest, branch/worktree and Frozen SHA
+configure/build: independent ASan/UBSan diagnostic build with unchanged J3.9 flags
+scenario_a: current code, detect_leaks=1, runtime_config only
+scenario_b: diagnostic-only LD_PRELOAD shim, detect_leaks=1, runtime_config only
+scenario_c: current code, detect_leaks=0, runtime_config only

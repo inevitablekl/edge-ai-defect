@@ -1,0 +1,6 @@
+{
+  "requested_threads": 1,
+  "applied_threads": 1,
+  "opencv_version": "4.5.4",
+  "policy_active": true
+}

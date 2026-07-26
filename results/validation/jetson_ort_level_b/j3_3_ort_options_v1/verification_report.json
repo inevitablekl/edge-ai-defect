@@ -1,0 +1,32 @@
+{
+  "task": "J3.3",
+  "result": "PASS",
+  "configure_exit": 0,
+  "build_exit": 0,
+  "runtime_config_ctest_exit": 0,
+  "architecture": "aarch64",
+  "cxx_standard": "C++17",
+  "options_mapping": "RuntimeConfig v2 to ORT SessionOptions",
+  "options_record": "immutable const-field record with stable canonical JSON",
+  "covered_options": [
+    "execution_mode",
+    "graph_optimization_level",
+    "intra_op_threads",
+    "inter_op_threads",
+    "intra_op_allow_spinning",
+    "inter_op_allow_spinning",
+    "cpu_arena_enabled",
+    "memory_pattern_enabled"
+  ],
+  "test_coverage": [
+    "v2 mapping",
+    "default values",
+    "invalid schema/backend/execution/thread configuration",
+    "stable record output",
+    "model-free SessionOptions application"
+  ],
+  "model_loading": "not run",
+  "inference": "not run",
+  "benchmark": "not run",
+  "result_scope": "J3.3 only"
+}

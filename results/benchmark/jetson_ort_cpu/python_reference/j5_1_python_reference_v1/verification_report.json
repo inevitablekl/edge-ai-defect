@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "corpus": {
+    "image_count": 20,
+    "filename_order": "0000-0019 PASS",
+    "dimensions": "20/20 200x200 PASS",
+    "source_prepared_sha_identity": "20/20 PASS",
+    "manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab"
+  },
+  "strict_json": {
+    "run_1": "PASS",
+    "run_2": "PASS",
+    "duplicate_key_rejection": "PASS",
+    "non_finite_rejection": "PASS",
+    "utf8_single_lf": "PASS"
+  },
+  "image_order": "PASS",
+  "finite_values": "PASS",
+  "two_process_byte_identity": "PASS",
+  "output_sha_identity": "PASS",
+  "frozen_asset_integrity": "PASS",
+  "no_second_reference_pipeline": true,
+  "smoke": {
+    "help": "PASS",
+    "missing_required_argument": "PASS",
+    "existing_output_refusal": "PASS",
+    "manifest_validator_self_test": "PASS",
+    "evidence_budget": "PASS"
+  },
+  "summary": {
+    "image_count": 20,
+    "detection_count": 68,
+    "per_class_counts": [8, 25, 10, 4, 7, 14]
+  },
+  "final_verdict": "PASS"
+}

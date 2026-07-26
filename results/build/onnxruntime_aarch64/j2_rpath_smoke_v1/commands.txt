@@ -1,0 +1,16 @@
+J2.4 RPATH smoke Published Evidence command record
+
+001 repository gate: verify feature/jetson-onnxruntime, source commit, clean worktree and J2 live status
+002 SDK gate: verify BUILD_MANIFEST, HEADER_SHA256SUMS, FILE_SHA256SUMS, main library SHA and symlinks
+003 external consumer setup: create a temporary source, build, and empty working directory outside the repository
+004 configure: /usr/bin/cmake -S <consumer-source> -B <consumer-build> -DCMAKE_BUILD_TYPE=Release -DORT_SDK_ROOT=<stage-j-sdk> -DSMOKE_SOURCE=<repository-smoke-source>
+005 build: /usr/bin/cmake --build <consumer-build> --target j2_rpath_smoke --parallel 2
+006 binary inspection: file, sha256sum, readelf -h, readelf -d and ldd on the consumer binary
+007 child environment: env -u LD_LIBRARY_PATH /bin/sh -c 'test -z "${LD_LIBRARY_PATH+x}"'
+008 resolution: env -u LD_LIBRARY_PATH ldd <consumer-binary>; resolve and hash libonnxruntime.so.1
+009 runtime: cd <empty-cwd> && env -u LD_LIBRARY_PATH <consumer-binary> 1.23.2
+010 local attempt close: verify 9 of 9 local attempt files and record local manifest SHA
+011 Published Evidence: preserve runtime stdout, write logical-path metadata and generate 6-file sha256 manifest
+
+All private filesystem paths above are represented by logical labels in this
+Published Evidence. No J2.5 or J3 command was executed.

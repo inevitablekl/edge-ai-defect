@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "onnxruntime_aarch64_cpu_sdk",
+  "status": "complete",
+  "onnxruntime": {
+    "version": "1.23.2",
+    "tag": "v1.23.2",
+    "commit": "a83fc4d58cb48eb68890dd689f94f28288cf2278"
+  },
+  "source": {
+    "canonical_aggregate_algorithm": "stage_j_ort_source_aggregate_v1",
+    "canonical_aggregate_sha256": "c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c",
+    "clean": true,
+    "submodules_clean": true
+  },
+  "build": {
+    "configuration": {
+      "type": "Release",
+      "shared_library": true,
+      "cpu_only": true,
+      "execution_provider": "CPUExecutionProvider",
+      "parallel_jobs": 4,
+      "tests": "skipped",
+      "generator": "Unix Makefiles",
+      "external_cmake": "3.28.6"
+    },
+    "shared_library": "lib/libonnxruntime.so.1.23.2",
+    "execution_provider": "CPUExecutionProvider",
+    "build_exit_code": 0,
+    "install_exit_code": 0,
+    "elapsed_seconds": 3882.266
+  },
+  "toolchain": {
+    "architecture": "aarch64",
+    "compiler": "GCC/G++ 11.4.0",
+    "external_cmake_version": "3.28.6",
+    "external_cmake_archive_sha256": "7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7"
+  },
+  "sdk": {
+    "formal_attempt_id": "j2.2_formal_clean_v2",
+    "formal_attempt_manifest_sha256": "a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32",
+    "logical_source": "j2.2-formal-v2/source",
+    "logical_build": "j2.2-formal-v2/build",
+    "logical_sdk": "j2.2-formal-v2/sdk"
+  },
+  "libraries": [
+    {
+      "path": "lib/libonnxruntime.so.1.23.2",
+      "sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+      "elf_class": "ELF64",
+      "machine": "AArch64",
+      "soname": "libonnxruntime.so.1",
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-aarch64.so.1"
+      ],
+      "symlink_chain": [
+        "lib/libonnxruntime.so -> libonnxruntime.so.1",
+        "lib/libonnxruntime.so.1 -> libonnxruntime.so.1.23.2"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "lib/libonnxruntime_providers_shared.so",
+      "sha256": "2558ceb1670e58d0e6103c2b528af7b7802f850b2145b9f10d71d8283f525a21",
+      "elf_class": "ELF64",
+      "machine": "AArch64",
+      "soname": "libonnxruntime_providers_shared.so",
+      "needed": [],
+      "symlink_chain": [],
+      "runpath": null
+    }
+  ],
+  "headers": {
+    "count": 13,
+    "manifest": "HEADER_SHA256SUMS.txt",
+    "manifest_sha256": "3aace362a8a6d65f9852e501df69d4b33720e51f5017c4e7d25d21d33ffe9029"
+  },
+  "cmake_package": {
+    "files": [
+      "lib/cmake/onnxruntime/onnxruntimeConfig.cmake",
+      "lib/cmake/onnxruntime/onnxruntimeConfigVersion.cmake",
+      "lib/cmake/onnxruntime/onnxruntimeTargets-release.cmake",
+      "lib/cmake/onnxruntime/onnxruntimeTargets.cmake"
+    ],
+    "relocatable": true
+  },
+  "features": {
+    "CPUExecutionProvider": true,
+    "MLAS": true,
+    "AArch64": true,
+    "CUDA": false,
+    "TensorRT": false,
+    "XNNPACK": false,
+    "ACL": false,
+    "ArmNN": false,
+    "OpenMP": false,
+    "minimal": false,
+    "reduced_ops": false,
+    "training": false,
+    "LTO": false,
+    "manual_march_native": false
+  },
+  "license": {
+    "original_source_path": "LICENSE",
+    "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+    "destination": "LICENSE"
+  },
+  "third_party_notice": {
+    "original_source_path": "ThirdPartyNotices.txt",
+    "sha256": "e9e90971a8e75a9a8ac0c6412e29c1202d079998389915aa485f46c816c3b4cc",
+    "destination": "THIRD_PARTY_NOTICES"
+  },
+  "provenance": {
+    "repository_source_commit": "0218d9ddf20abc61442b7e2783d7a9c52993ba82",
+    "D044": "Accepted",
+    "D045": "Accepted",
+    "reconciliation_document": "docs/personal/J2_2_V2_EVIDENCE_RECONCILIATION.md"
+  },
+  "limitations": {
+    "upstream_tests_skipped": true,
+    "runtime_RPATH_smoke": "pending J2.4",
+    "J2_evidence_gate": "pending J2.5"
+  }
+}

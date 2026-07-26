@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "audit_id": "stage_j_audit_v1",
+  "audit_type": "research_grade_lightweight_audit",
+  "status": "COMPLETE",
+  "source_commit": "ceb188a3611e3a8e7705286f4000002e3329e64f",
+  "scope": {
+    "stage": "J",
+    "backend": "onnxruntime_cpu",
+    "runtime_mode": "serial",
+    "deep_reconstruction": false,
+    "benchmark_executed": false,
+    "existing_evidence_modified": false,
+    "frozen_plan_modified": false,
+    "configuration_modified": false
+  },
+  "verified_assets": {
+    "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+    "python_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+    "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+    "j7_consolidation_manifest": "PASS"
+  },
+  "stage_status": {
+    "J1": "COMPLETE",
+    "J2": "COMPLETE",
+    "J3": "COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION",
+    "J4": "COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION",
+    "J5.1": "COMPLETE",
+    "J5.2": "COMPLETE",
+    "J5.3": "COMPLETE",
+    "J5.4": "COMPLETE",
+    "J5.5": "COMPLETE_WITH_DOCUMENTED_LIMITATION",
+    "J5.6": "COMPLETE",
+    "J6": "COMPLETE_WITH_RESEARCH_GRADE_EVIDENCE",
+    "J7": "COMPLETE"
+  },
+  "experimental_results_summary": {
+    "controlled_k1": {
+      "status": "PASS_WITH_DOCUMENTED_LIMITATION",
+      "formal_runs": 5,
+      "processed_frames_per_run": 560,
+      "mean_process_wall_throughput_fps": 2.3086948023,
+      "limitation": "per-frame timing distribution and independently reconstructable raw telemetry unavailable"
+    },
+    "tuned_k5": {
+      "status": "PASS",
+      "formal_runs": 5,
+      "cpu_affinity": [1, 2, 3, 4, 5],
+      "ort_intra_op_threads": 5,
+      "ort_inter_op_threads": 1
+    },
+    "stability_30min": {
+      "status": "PASS_WITH_RESEARCH_GRADE_EVIDENCE",
+      "duration_seconds": 1800.0649718600034,
+      "cycles": 743,
+      "frames": 14860,
+      "failures": 0,
+      "correctness": "PASS",
+      "hash_drift": false
+    }
+  },
+  "limitations": [
+    "J5.5 documented limitation remains active.",
+    "J6 VDD_IN power interface was unavailable and recorded as unavailable.",
+    "Other unavailable telemetry interfaces remain recorded in J6 Evidence.",
+    "This audit makes no production-readiness claim.",
+    "This audit is not the original deep reconstruction."
+  ],
+  "final_decision": {
+    "stage_j_research_baseline": "COMPLETE",
+    "lightweight_audit": "COMPLETE",
+    "original_deep_reconstruction": "NOT_EXECUTED",
+    "stage_t_planning": "MAY_PROCEED_TO_NEXT_STAGE_PLANNING_REVIEW",
+    "stage_t_execution_authorization": "NOT_AUTHORIZED",
+    "J9": "NOT_STARTED"
+  }
+}

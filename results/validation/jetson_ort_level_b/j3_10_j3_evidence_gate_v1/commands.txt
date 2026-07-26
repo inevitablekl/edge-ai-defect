@@ -1,0 +1,15 @@
+001 git status --short --branch
+002 git rev-parse HEAD
+003 sha256sum docs/personal/STAGE_J_EXECUTION_PLAN.md docs/personal/STAGE_J_TASK_CARDS.md
+004 rg J3.9/J3.10 status, provenance and evidence references
+005 sha256sum -c each existing J3 Published Evidence sha256sums.txt
+006 validate JSON files and check git diff --check
+007 create D046 and append J3.10 status record
+008 create J3.10 evidence index, verification report and provenance
+009 create repository-external local attempt j3.10_evidence_gate_v1
+010 generate deterministic Published Evidence sha256sums.txt
+011 validate J3.10 JSON, manifest and privacy/scope fields
+012 git diff --check and final git status --short --branch
+
+No configure, build, CTest, model loading, inference, benchmark, ORT rebuild,
+TensorRT, CUDA EP, ROS2 or camera command was executed by J3.10.

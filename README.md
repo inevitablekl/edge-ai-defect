@@ -6,15 +6,21 @@ This project develops a reproducible industrial defect-detection deployment pipe
 
 ```text
 NEU-DET → YOLOv8n → frozen PyTorch model → ONNX
-→ C++ ONNX Runtime baseline → TensorRT FP16 → Jetson
-→ serial/pipeline profiling
+→ C++ ONNX Runtime baseline (M0–M5 CLOSED)
+→ Stage J Jetson ONNX Runtime CPU Baselines
+→ Stage T TensorRT FP16
+→ Stage P Serial / Pipeline profiling
 ```
 
 ## Current Status
 
+Status contract: `M0–M5 CLOSED`; `Stage J J0–J3 COMPLETE`; `J3 COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`; `J4 COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`; `J4.1 COMPLETE`; `J4.2 COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`; `J4.3 COMPLETE`; `J4.4 PASS_WITH_ACCEPTED_J4_2_LIMITATION`; `D048 Accepted`. Current HEAD: `ee2ff2546736c8349d0e34cffe547f1f68690cb6`. Stage T (TensorRT FP16) and Stage P (Pipeline) have not started.
+
 The training and ONNX export stages are complete: nine formal training experiments were recorded, the final model was frozen, held-out test evaluation and offline archiving were completed, and the frozen ONNX model was validated. Model weights and training archives are intentionally excluded from Git; frozen deployment artifacts are identified by SHA256 in the project evidence and model contract.
 
-The C++ ONNX Runtime CPU Serial Baseline is closed. M5 is now in progress at the planning boundary: M5.0 has frozen the Level C validation and WSL2 x86_64 ONNX Runtime CPU Engineering Baseline plan, and M5.1 corpus preparation is the next task. Level C and the formal benchmark have not yet been executed.
+The training, frozen model, ONNX export, and PyTorch/ORT validation are complete. The C++ ONNX Runtime CPU Serial Baseline M0–M5 is CLOSED; WSL2 Level A/B/C validation and the WSL2 x86_64 ORT CPU engineering baseline are complete.
+
+Stage J Plan v0.3 is FROZEN and J0 Planning Freeze is COMPLETE. Jetson hardware execution has completed J1–J4, including the formal ONNX Runtime 1.23.2 aarch64 CPU SDK build, native application build, RuntimeConfig v2, ORT options, OpenCV policy, trace, portable-control validation, and J4 evidence consolidation. J4.2 retains its strict cross-architecture numerical limitation under Accepted D048. Stage J J5.5 CPU Controlled Profile Benchmark is `COMPLETE` (Controlled profile `k1`, CPU-only); the next authorized task is `J5.6 Tuned Profile Stability`. TensorRT FP16 belongs to later Stage T, and Pipeline belongs to later Stage P.
 
 ## Documentation
 

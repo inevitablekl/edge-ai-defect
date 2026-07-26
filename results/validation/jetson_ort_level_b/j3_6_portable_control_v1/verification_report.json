@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "configure_exit": 0,
+  "build_exit": 0,
+  "ctest_exit": 0,
+  "ctest_filter": "^(runtime_config|serial_runner)$",
+  "ctest_passed": 2,
+  "ctest_failed": 0,
+  "tests": [
+    "parameter and path normalization",
+    "RuntimeConfig v2 load and validation entry",
+    "missing config rejection",
+    "invalid executable and evidence path rejection",
+    "default evidence and trace output paths",
+    "explicit relative trace path and parent preparation",
+    "deterministic canonical record",
+    "fixed executable/config/model/ORT/OpenCV/trace fields",
+    "evidence no-overwrite policy"
+  ],
+  "control_behavior": [
+    "startup wrapper does not load a model",
+    "startup wrapper does not run inference",
+    "critical parameters are explicit API inputs",
+    "only user-selected evidence directories are prepared",
+    "no system package or system configuration changes"
+  ],
+  "excluded_operations": [
+    "inference",
+    "benchmark",
+    "camera",
+    "TensorRT",
+    "CUDA",
+    "ROS2"
+  ]
+}

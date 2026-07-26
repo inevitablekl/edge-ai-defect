@@ -1,0 +1,20 @@
+{
+  "build": "independent native aarch64 C++17 ASan/UBSan diagnostic build",
+  "compile_flags": [
+    "-fsanitize=address",
+    "-fsanitize=undefined",
+    "-fno-omit-frame-pointer"
+  ],
+  "linker_flags": [
+    "-fsanitize=address",
+    "-fsanitize=undefined"
+  ],
+  "scenario_a_and_c": "current production code and existing test logic",
+  "scenario_b": "LD_PRELOAD diagnostic-only shim; setNumThreads no-op and getNumThreads returns 1",
+  "scenario_b_preload_order": "libasan.so.6 before diagnostic shim",
+  "asan_options_a_b": "detect_leaks=1:halt_on_error=1:print_summary=1",
+  "asan_options_c": "detect_leaks=0:halt_on_error=1:print_summary=1",
+  "ubsan_options": "halt_on_error=1:print_stacktrace=1",
+  "shim_committed": false,
+  "leak_suppression_added": false
+}

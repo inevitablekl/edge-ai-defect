@@ -24,6 +24,16 @@ timing:
 """
 
 
+POSTPROCESS_V2 = """postprocess:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_nms: 30000
+  max_det: 300
+  max_wh: 7680
+  agnostic: false
+"""
+
+
 def run(executable, arguments, expected_code):
     result = subprocess.run(
         [str(executable), *arguments],
@@ -45,11 +55,15 @@ def assert_failure(result, expected_code, required_stderr_substrings):
             f"expected exit {expected_code}, got {result.returncode}")
     require(result.stdout == "", f"failure unexpectedly wrote stdout: {result.stdout!r}")
     require(result.stderr, "failure did not write stderr")
-    require(result.stderr.startswith("error: "),
+    stderr_lines = [line for line in result.stderr.splitlines()
+                    if "GPU device discovery failed" not in line]
+    normalized_stderr = "\n".join(stderr_lines)
+    require(normalized_stderr.startswith("error: "),
             f"failure stderr lacks application error prefix: {result.stderr!r}")
-    require("Traceback" not in result.stderr, "failure stderr exposed a traceback")
+    require("Traceback" not in normalized_stderr,
+            "failure stderr exposed a traceback")
     for substring in required_stderr_substrings:
-        require(substring in result.stderr,
+        require(substring in normalized_stderr,
                 f"failure stderr lacks {substring!r}: {result.stderr!r}")
 
 
@@ -91,6 +105,36 @@ def write_config(path, contract_path, model_path, input_directory, json_path,
         f"  console: {'true' if console else 'false'}\n"
         f"  overwrite: {'true' if overwrite else 'false'}\n"
         + POSTPROCESS,
+        encoding="utf-8",
+    )
+
+
+def write_config_v2(path, contract_path, model_path, input_directory, json_path,
+                    console=False, overwrite=True):
+    path.write_text(
+        "schema_version: 2\n"
+        "backend:\n  type: onnxruntime_cpu\n"
+        "onnxruntime:\n"
+        "  execution_mode: sequential\n"
+        "  graph_optimization_level: all\n"
+        "  intra_op_threads: 1\n"
+        "  inter_op_threads: 1\n"
+        "  intra_op_allow_spinning: true\n"
+        "  inter_op_allow_spinning: true\n"
+        "  cpu_arena_enabled: true\n"
+        "  memory_pattern_enabled: true\n"
+        "runtime:\n  opencv_num_threads: 1\n"
+        "model:\n"
+        f"  path: {yaml_quote(model_path)}\n"
+        f"  contract_path: {yaml_quote(contract_path)}\n"
+        "input:\n"
+        "  type: directory\n"
+        f"  directory: {yaml_quote(input_directory)}\n"
+        "output:\n"
+        f"  json_path: {yaml_quote(json_path)}\n"
+        f"  console: {'true' if console else 'false'}\n"
+        f"  overwrite: {'true' if overwrite else 'false'}\n"
+        + POSTPROCESS_V2,
         encoding="utf-8",
     )
 
@@ -165,6 +209,33 @@ def verify_json(path, expected_names, expected_sizes):
     return raw
 
 
+def verify_profile_json(path, expected_names):
+    parsed = json.loads(path.read_text(encoding="utf-8"))
+    require(len(parsed["images"]) == len(expected_names), "wrong profile image count")
+    for image, name in zip(parsed["images"], expected_names):
+        require(image["relative_path"] == name, "wrong profile image order")
+        timing = image.get("timing_ms")
+        require(list(timing or {}) == [
+            "source", "preprocess", "inference", "postprocess", "pre_sink_total"
+        ], "benchmark timing schema missing")
+        require(all(isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+                    for value in timing.values()), "invalid benchmark timing")
+
+
+def verify_trace(path, frame_count):
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    require(len(records) == frame_count * 5 + 1, "wrong trace record count")
+    for index in range(frame_count):
+        frame = records[index * 5:(index + 1) * 5]
+        require([item["cycle_id"] for item in frame] == [index] * 5,
+                "wrong trace cycle id")
+        require([item["stage"] for item in frame] ==
+                ["source", "preprocess", "inference", "postprocess", "sink"],
+                "wrong trace stage order")
+    require(records[-1]["cycle_id"] == frame_count and records[-1]["stage"] == "source",
+            "missing EOF source probe")
+
+
 def run_off(arguments):
     root = Path(arguments.temp_dir) / "application_off"
     root.mkdir(parents=True, exist_ok=True)
@@ -213,6 +284,24 @@ def run_off(arguments):
     require(not list(root.glob("*.json")),
             "OFF application failures left a final JSON target")
 
+    if arguments.profile_runner:
+        profile_runner = Path(arguments.profile_runner)
+        trace = root / "schema_v1.trace.jsonl"
+        result = run(profile_runner, [
+            "--config", str(missing_contract), "--trace-jsonl", str(trace)
+        ], 2)
+        require("requires schema_version 2" in result.stderr,
+                "benchmark runner accepted schema v1")
+        trace.write_text("existing\n", encoding="utf-8")
+        v2_config = root / "existing_trace_v2.yaml"
+        write_config_v2(v2_config, Path(arguments.contract), root / "missing.onnx",
+                        root / "missing_input", root / "unused.json")
+        result = run(profile_runner, [
+            "--config", str(v2_config), "--trace-jsonl", str(trace)
+        ], 2)
+        require("already exists" in result.stderr,
+                "benchmark runner accepted existing trace target")
+
 
 def run_on(arguments):
     root = Path(arguments.temp_dir) / "application_on"
@@ -235,15 +324,44 @@ def run_on(arguments):
     require(first == second and first_sha256 == hashlib.sha256(second).hexdigest(),
             "timing-disabled JSON is not byte-identical across overwrite run")
 
+    v2_result_path = root / "v2_result.json"
+    v2_config = root / "runtime_v2_smoke.yaml"
+    write_config_v2(v2_config, Path(arguments.contract), Path(arguments.model), images,
+                    v2_result_path)
+    run(executable, ["--config", str(v2_config)], 0)
+    v2_first = verify_json(v2_result_path, expected_names, expected_sizes)
+    run(executable, ["--config", str(v2_config)], 0)
+    v2_second = verify_json(v2_result_path, expected_names, expected_sizes)
+    require(v2_first == v2_second,
+            "RuntimeConfig v2 JSON is not byte-identical across overwrite run")
+
+    if arguments.profile_runner:
+        profile_result = root / "profile_result.json"
+        profile_config = root / "profile_v2.yaml"
+        profile_trace = root / "profile_trace.jsonl"
+        profile_result.unlink(missing_ok=True)
+        profile_trace.unlink(missing_ok=True)
+        write_config_v2(profile_config, Path(arguments.contract), Path(arguments.model),
+                        images, profile_result)
+        profiled = run(Path(arguments.profile_runner), [
+            "--config", str(profile_config), "--trace-jsonl", str(profile_trace)
+        ], 0)
+        require(profiled.stdout == "", "profile runner wrote large stdout")
+        verify_profile_json(profile_result, expected_names)
+        verify_trace(profile_trace, 2)
+
     console_path = root / "console.json"
     console_config = root / "console_smoke.yaml"
     write_config(console_config, Path(arguments.contract), Path(arguments.model), images,
                  console_path, console=True)
     console = run(executable, ["--config", str(console_config)], 0)
+    allowed_ort_warning = (not console.stderr or
+                           "GPU device discovery failed" in console.stderr)
     require("RUN backend=onnxruntime_cpu" in console.stdout and
             console.stdout.count("IMAGE index=") == 2 and
             "SUMMARY processed_images=2" in console.stdout and
-            "_ms=" not in console.stdout and not console.stderr,
+            "_ms=" not in console.stdout and allowed_ort_warning and
+            "error:" not in console.stderr,
             "console smoke output contract violated")
     verify_json(console_path, expected_names, expected_sizes)
 
@@ -288,6 +406,7 @@ def main():
     parser.add_argument("--temp-dir", required=True)
     parser.add_argument("--contract", required=True)
     parser.add_argument("--model")
+    parser.add_argument("--profile-runner")
     arguments = parser.parse_args()
     if arguments.mode == "on":
         require(arguments.model is not None, "--model is required for ON smoke")

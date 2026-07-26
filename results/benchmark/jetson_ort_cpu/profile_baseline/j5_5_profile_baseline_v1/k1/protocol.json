@@ -1,0 +1,12 @@
+{
+  "profile": "k1",
+  "cpu_affinity": "5",
+  "onnxruntime": {"execution_mode": "sequential", "graph_optimization_level": "all", "intra_op_threads": 1, "inter_op_threads": 1, "intra_op_allow_spinning": true, "inter_op_allow_spinning": true, "cpu_arena_enabled": true, "memory_pattern_enabled": true},
+  "pilot_frames": 60,
+  "warmup_frames": 60,
+  "measured_frames": 500,
+  "total_frames": 560,
+  "independent_processes": 5,
+  "minimum_seconds": 30,
+  "tuned_k5_executed": false
+}

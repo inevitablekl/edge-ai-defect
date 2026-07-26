@@ -1,0 +1,3 @@
+taskset -c 5 env -u LD_LIBRARY_PATH edge_ai_defect --config formal_run_N.yaml
+5 independent processes; N=01..05
+Raw JSON and telemetry were retained outside the published evidence to keep evidence small.

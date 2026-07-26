@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "device": {
+    "model": "Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "architecture": "aarch64",
+    "l4t": "R36.5.0",
+    "kernel": "5.15.185-tegra"
+  },
+  "toolchain": {
+    "gcc": "11.4.0",
+    "gxx": "11.4.0",
+    "cmake": "3.22.1",
+    "opencv_cpp": "4.5.4",
+    "yaml_cpp": "0.7.0",
+    "openssl": "3.0.2",
+    "ort_sdk": "1.23.2 linux-aarch64 CPU"
+  },
+  "power_clock_fan": {
+    "nvpmodel": "MAXN_SUPER",
+    "nvpmodel_mode_id": 2,
+    "jetson_clocks_fan": "J1_ACCEPTED_ACTIVE_NO_REBOOT",
+    "fan_pwm": 255,
+    "dynamic_speed_control": "disabled",
+    "current_unprivileged_jetson_clocks_show": "unavailable; root required"
+  },
+  "control": {
+    "online_cpus": "0-5",
+    "allowed_cpus": "0-5",
+    "selected_control_cpu": 5
+  },
+  "privacy_status": "PASS; no private absolute paths, hostname, PID, dynamic timestamp, model or SDK payload"
+}

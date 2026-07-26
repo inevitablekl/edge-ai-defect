@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "profile": "k5",
+  "pilot": {
+    "status": "PASS",
+    "frame_count": 260
+  },
+  "formal_run_count": 5,
+  "formal_runs": [
+    {
+      "run_index": 1,
+      "status": "PASS",
+      "payload_sha256": "aa78ebb1d967c28b151b0486b276539fa5a941ef134a3c346ee8d38782f936d1",
+      "report_sha256": "c706d804ad622348d7363fa95986d7b96a0c305cd8ab2397fbae66f690daadb1"
+    },
+    {
+      "run_index": 2,
+      "status": "PASS",
+      "payload_sha256": "3cdbd79b11d3bcad8d2bc274b8f1ece7287c8ce2db8c6720ea948bd41be3d1e0",
+      "report_sha256": "479d30aeddb350c218ba2cd8860fe5b4ddbf3c47528cee9d455b1c3cfd9e3cc0"
+    },
+    {
+      "run_index": 3,
+      "status": "PASS",
+      "payload_sha256": "b5c6bd355ebc11a3bffb77b5066bf0d21b44fd515db19ec65cb2abfc624b6ccc",
+      "report_sha256": "2b06813c6d322693a8cd4527767882de584861a169714d035edc326050479695"
+    },
+    {
+      "run_index": 4,
+      "status": "PASS",
+      "payload_sha256": "78d92c2faf1df18b7ffab08812ed7e63c74a49df9834836d7c40250eb17ce43e",
+      "report_sha256": "b33a36cad97d184eb4a1717d776c41d58543f18a851c969a388881c3369afaca"
+    },
+    {
+      "run_index": 5,
+      "status": "PASS",
+      "payload_sha256": "d5738c878d770553d4a2bfb13a148f0ec9417e922ec39d7d3ef44b8bdff3d49b",
+      "report_sha256": "8d2734edaaae96c36ce9902c022919e9d9434ed770af6c18ce682394d8c039a8"
+    }
+  ],
+  "expected_cycle_sha256": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+  "semantic_comparison": "PASS",
+  "outlier_policy": "keep_all_measured_samples"
+}

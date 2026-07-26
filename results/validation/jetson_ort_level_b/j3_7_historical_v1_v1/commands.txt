@@ -1,0 +1,4 @@
+dependency_gate: ctest --test-dir <existing-formal-build> -R '^(runtime_config|serial_runner)$' --output-on-failure
+historical_regression: ctest --test-dir <existing-formal-build> -R '^runtime_config$' --output-on-failure
+fixture_hashes: sha256sum <v1-fixture> <v2-fixture> <v1-with-v2-field-fixture>
+scope: evidence-only; no executable launch, model loading, inference, benchmark or system modification

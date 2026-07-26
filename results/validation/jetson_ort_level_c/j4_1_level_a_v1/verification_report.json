@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j4_1_level_a_v1",
+  "task_id": "J4.1",
+  "verdict": "PASS",
+  "formal_runs": {
+    "run_1_exit": 0,
+    "run_2_exit": 0,
+    "two_process_reports_byte_identical": true,
+    "report_sha256": "08b1112b066a881eeddf47e2183bd96c43de3c976b3c8e53e62fafb13ff9c0fc",
+    "opencv_build_information_sha256_match": true,
+    "parallel_backend_match": true
+  },
+  "level_a_aggregate": {
+    "case_count": 8,
+    "passed_case_count_run_1": 8,
+    "passed_case_count_run_2": 8,
+    "max_mae": 0,
+    "max_abs": 0,
+    "metadata_pass": true,
+    "shape_pass": true,
+    "dtype_pass": true,
+    "nchw_layout_pass": true,
+    "element_count_pass": true,
+    "finite_values_pass": true,
+    "final_pass": true
+  },
+  "tolerance_results": {
+    "exact_case_count": 5,
+    "exact_max_mae": 0,
+    "exact_max_abs": 0,
+    "exact_mae_limit": 1.0e-7,
+    "exact_max_abs_limit": 1.0e-7,
+    "resize_case_count": 3,
+    "resize_max_mae": 0,
+    "resize_max_abs": 0,
+    "resize_mae_limit": 5.0e-4,
+    "resize_max_abs_limit": 0.00784413725490196,
+    "all_cases_within_tolerance": true
+  },
+  "historical_guards": {
+    "preprocess_level_a": "PASS",
+    "preprocess_level_a_assets_sha256": "PASS",
+    "preprocess_level_a_manifest_guard": "PASS",
+    "preprocess_level_a_numeric_guard": "PASS",
+    "preprocess_level_a_provenance": "PASS",
+    "pass_count": 5,
+    "inventory_model_smoke_off_count": 31,
+    "inventory_unchanged": true,
+    "new_ctest_registered": false
+  },
+  "scope_validation": {
+    "historical_validator_modified": false,
+    "historical_evidence_modified": false,
+    "golden_regenerated": false,
+    "tolerance_changed": false,
+    "model_loading": false,
+    "ort_inference": false,
+    "postprocess_validation": false,
+    "level_b": false,
+    "level_c": false,
+    "benchmark": false,
+    "tensorrt": false,
+    "cuda_ep": false,
+    "ros2": false,
+    "camera": false,
+    "pipeline": false,
+    "j4_2_started": false
+  },
+  "final_status": "J4.1_COMPLETE"
+}

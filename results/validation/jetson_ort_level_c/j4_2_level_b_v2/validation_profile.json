@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "architecture": "aarch64",
+  "controlled_cpu": 5,
+  "online_cpus": "0-5",
+  "process_affinity": "5",
+  "opencv": {
+    "requested_threads": 1,
+    "reported_threads": 1,
+    "version": "4.5.4"
+  },
+  "onnxruntime": {
+    "version": "1.23.2",
+    "execution_mode": "sequential",
+    "graph_optimization_level": "all",
+    "intra_op_threads": 1,
+    "inter_op_threads": 1,
+    "intra_op_allow_spinning": true,
+    "inter_op_allow_spinning": true,
+    "cpu_arena_enabled": true,
+    "memory_pattern_enabled": true,
+    "provider": "CPUExecutionProvider"
+  },
+  "power_clock_fan": {
+    "nvpmodel": "MAXN_SUPER",
+    "mode_id": 2,
+    "fan_pwm": 255,
+    "nvfancontrol": "inactive",
+    "jetson_clocks": "J1 accepted; unprivileged show requires root"
+  },
+  "benchmark": false,
+  "preprocessing": false,
+  "postprocessing": false
+}

@@ -1,0 +1,16 @@
+{
+  "classification": "B",
+  "label": "third-party OpenCV/TBB initialization leak",
+  "confidence": "high",
+  "observations": [
+    "Scenario A current code reproduces the original leak stack",
+    "The allocation frames are in libtbb.so.2 and OpenCV cv::setNumThreads",
+    "Scenario B removes only the OpenCV thread activation and the leak disappears",
+    "Scenario C removes only leak detection and shows no other sanitizer diagnostic"
+  ],
+  "project_owned_allocation_evidence": false,
+  "project_trigger": "PortableControlSession::start calls OpenCvThreadPolicyRecord::apply",
+  "recommended_action": "investigate/resolve third-party OpenCV-TBB shutdown behavior under owner authorization; do not add suppression in this card",
+  "production_source_change": "not required by this investigation",
+  "j3_9_status": "blocked pending an approved strict sanitizer disposition"
+}

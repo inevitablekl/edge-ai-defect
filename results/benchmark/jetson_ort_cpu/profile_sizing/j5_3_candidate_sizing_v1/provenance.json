@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_3_candidate_sizing_v1",
+  "task": "J5.3",
+  "status": "PASS",
+  "starting_commit": "264f497c1de6db04fdc0109a4fcb7ed0c74f500c",
+  "branch": "feature/jetson-onnxruntime",
+  "j5_2_evidence_id": "j5_2_candidate_semantic_precheck_v2",
+  "binary_sha256": "418c9ee95737261259ad64c2b91fe206cb00df0ef8a521c28da4cb25e6e1dd23",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+  "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+  "expected_cycle_sha256": {
+    "k1": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+    "k2": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+    "k4": "56b15b7ac607957ce881729a69495b50222852f57ce615006f1c0ad6e88c4295",
+    "k5": "dff5686b46de48416d9038ccc40b573eb1c59830ba9e96eac5becbdb6bb0746f",
+    "k6": "3a71707310c91c7102326dd488fff2b5e77937e7933252b5b86e4156db219426"
+  },
+  "run_count": 10,
+  "semantic_output_sha256_check": "10/10 exact SHA matches J5.2 expected cycle SHA",
+  "model_unchanged": true,
+  "contract_unchanged": true,
+  "images_in_published_evidence": false,
+  "absolute_user_paths_in_published_evidence": false,
+  "hostname_ip_credentials": "absent",
+  "source_changes_during_attempt": false,
+  "push_performed": false
+}

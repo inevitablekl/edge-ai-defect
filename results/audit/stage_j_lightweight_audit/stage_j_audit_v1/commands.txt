@@ -1,0 +1,17 @@
+Stage J lightweight audit commands and results
+
+01 | git status --porcelain=v1 | . | exit_code=0 | PASS (empty)
+02 | git rev-parse HEAD | . | exit_code=0 | PASS
+03 | find results/consolidation/stage_j/stage_j_cpu_baseline_v1 -maxdepth 1 -type f | . | exit_code=0 | PASS
+04 | sha256sum -c sha256sums.txt | results/consolidation/stage_j/stage_j_cpu_baseline_v1 | exit_code=0 | PASS
+05 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/python_reference/j5_1_python_reference_v1 | exit_code=0 | PASS
+06 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/profile_precheck/j5_2_candidate_semantic_precheck_v2 | exit_code=0 | PASS
+07 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/profile_sizing/j5_3_candidate_sizing_v1 | exit_code=0 | PASS
+08 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/profile_selection/j5_4_profile_selection_v1 | exit_code=0 | PASS
+09 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/profile_baseline/j5_5_profile_baseline_v1 | exit_code=0 | PASS
+10 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/tuned/j5_6_tuned_formal_baseline_v3 | exit_code=0 | PASS
+11 | sha256sum -c sha256sums.txt | results/benchmark/jetson_ort_cpu/stability/j6_tuned_stability_v1 | exit_code=0 | PASS
+12 | git merge-base --is-ancestor <source-commit> HEAD | . | exit_code=0 | PASS for J5.1-J7
+13 | sha256sum frozen model contract corpus reference expected cycle | . | exit_code=0 | PASS
+14 | generate read-only audit report from J7 index and published Evidence | . | exit_code=0 | PASS; no benchmark executed
+15 | sha256sum -c sha256sums.txt | results/audit/stage_j_lightweight_audit/stage_j_audit_v1 | exit_code=0 | PASS

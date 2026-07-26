@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "duration": "PASS",
+  "cycles": 743,
+  "frames": 14860,
+  "failures": 0,
+  "correctness": "PASS",
+  "hash_drift": false,
+  "telemetry_samples": 358,
+  "profile": "k5"
+}

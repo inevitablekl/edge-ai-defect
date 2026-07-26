@@ -1,0 +1,11 @@
+{
+  "platform": "Jetson Orin Nano Super Developer Kit",
+  "architecture": "aarch64",
+  "jetpack": "6.2.2",
+  "l4t": "R36.5",
+  "cpu_online": "0-5",
+  "power_mode": "MAXN_SUPER",
+  "fan": "active fan; pwm 255; nvfancontrol inactive",
+  "runtime": {"onnxruntime": "1.23.2", "execution_provider": "CPUExecutionProvider", "cuda_ep": false, "tensorrt": false, "opencv_num_threads": 1},
+  "identity_policy": "hostname, IP, credentials, and user paths omitted"
+}

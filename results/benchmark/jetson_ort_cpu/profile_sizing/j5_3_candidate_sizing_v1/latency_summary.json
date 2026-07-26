@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "classification": "Candidate sizing only; not a formal performance baseline.",
+  "measurement_boundary": "process invocation wall interval for one 20-image application run; includes process/session startup because frozen v2 RuntimeConfig does not expose application timing fields",
+  "percentile_method": "Hyndman-Fan type 7",
+  "metrics": {
+    "cycle_total_ms": {
+      "unit": "ms",
+      "available": true,
+      "per_image": false
+    },
+    "inference_ms": {
+      "available": false,
+      "reason": "not emitted by frozen v2 RuntimeConfig application"
+    },
+    "preprocess_ms": {
+      "available": false,
+      "reason": "not emitted by frozen v2 RuntimeConfig application"
+    },
+    "postprocess_ms": {
+      "available": false,
+      "reason": "not emitted by frozen v2 RuntimeConfig application"
+    }
+  },
+  "profiles": {
+    "k1": {
+      "k": 1,
+      "runs": 2,
+      "cycle_total_ms": {
+        "values": [
+          8868.0,
+          8861.0
+        ],
+        "mean": 8864.5,
+        "p50": 8864.5,
+        "p95": 8867.65,
+        "p99": 8867.93,
+        "min": 8861.0,
+        "max": 8868.0
+      },
+      "per_image_inference_ms": null,
+      "preprocess_ms": null,
+      "postprocess_ms": null,
+      "note": "Application timing fields unavailable under frozen v2 RuntimeConfig; no per-stage values inferred."
+    },
+    "k2": {
+      "k": 2,
+      "runs": 2,
+      "cycle_total_ms": {
+        "values": [
+          4760.0,
+          4809.0
+        ],
+        "mean": 4784.5,
+        "p50": 4784.5,
+        "p95": 4806.55,
+        "p99": 4808.51,
+        "min": 4760.0,
+        "max": 4809.0
+      },
+      "per_image_inference_ms": null,
+      "preprocess_ms": null,
+      "postprocess_ms": null,
+      "note": "Application timing fields unavailable under frozen v2 RuntimeConfig; no per-stage values inferred."
+    },
+    "k4": {
+      "k": 4,
+      "runs": 2,
+      "cycle_total_ms": {
+        "values": [
+          2795.0,
+          2694.0
+        ],
+        "mean": 2744.5,
+        "p50": 2744.5,
+        "p95": 2789.95,
+        "p99": 2793.99,
+        "min": 2694.0,
+        "max": 2795.0
+      },
+      "per_image_inference_ms": null,
+      "preprocess_ms": null,
+      "postprocess_ms": null,
+      "note": "Application timing fields unavailable under frozen v2 RuntimeConfig; no per-stage values inferred."
+    },
+    "k5": {
+      "k": 5,
+      "runs": 2,
+      "cycle_total_ms": {
+        "values": [
+          2273.0,
+          2290.0
+        ],
+        "mean": 2281.5,
+        "p50": 2281.5,
+        "p95": 2289.15,
+        "p99": 2289.83,
+        "min": 2273.0,
+        "max": 2290.0
+      },
+      "per_image_inference_ms": null,
+      "preprocess_ms": null,
+      "postprocess_ms": null,
+      "note": "Application timing fields unavailable under frozen v2 RuntimeConfig; no per-stage values inferred."
+    },
+    "k6": {
+      "k": 6,
+      "runs": 2,
+      "cycle_total_ms": {
+        "values": [
+          2225.0,
+          2179.0
+        ],
+        "mean": 2202.0,
+        "p50": 2202.0,
+        "p95": 2222.7,
+        "p99": 2224.54,
+        "min": 2179.0,
+        "max": 2225.0
+      },
+      "per_image_inference_ms": null,
+      "preprocess_ms": null,
+      "postprocess_ms": null,
+      "note": "Application timing fields unavailable under frozen v2 RuntimeConfig; no per-stage values inferred."
+    }
+  }
+}

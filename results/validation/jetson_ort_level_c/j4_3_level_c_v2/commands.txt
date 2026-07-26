@@ -1,0 +1,17 @@
+git branch --show-current
+git rev-parse HEAD
+git status --porcelain=v1
+sha256sum models/onnx/yolov8n_neudet_frozen.onnx
+cmake -S . -B <external-j4.3-release-build> -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DONNXRUNTIME_ROOT=<frozen-ort-1.23.2-sdk> -DEDGE_AI_ENABLE_MODEL_SMOKE=ON -DEDGE_AI_FROZEN_ONNX_PATH=models/onnx/yolov8n_neudet_frozen.onnx
+cmake --build <external-j4.3-release-build> --parallel 4
+env -u LD_LIBRARY_PATH taskset -c 5 <external-j4.3-release-build>/edge_ai_defect --config <run-1-v1-runtime.yaml>
+env -u LD_LIBRARY_PATH taskset -c 5 <external-j4.3-release-build>/edge_ai_defect --config <run-2-v1-runtime.yaml>
+python3 tools/validation/m5_level_c_compare.py --python-reference reference.json --cpp-result cpp_result.json --output matching_report.json
+cmp run_1/cpp_result.json run_2/cpp_result.json
+cmp run_1/matching_report.json run_2/matching_report.json
+ctest --test-dir <external-j4.3-release-build> --output-on-failure -R '^(runtime_config|ort_runtime_smoke|ort_model_contract_smoke|onnx_runtime_engine_initialization|onnx_runtime_engine_run|onnx_runtime_engine_level_b)$'
+
+The first v2 RuntimeConfig attempt failed before inference with the retained
+error `RunMetadata schema_version must be 1`; no acceptance was relaxed and
+the v1-compatible entry used for the successful E2E run kept the frozen model,
+postprocess, CPU provider, ORT 1/1 options and CPU 5 affinity.

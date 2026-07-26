@@ -1,0 +1,8 @@
+repository_gate=branch,HEAD,worktree status
+sdk_gate=sha256 BUILD_MANIFEST.json; sha256 lib/libonnxruntime.so.1.23.2; sha256sum -c HEADER_SHA256SUMS.txt; sha256sum -c FILE_SHA256SUMS.txt
+dependency_gate=dpkg-query; cmake --version; gcc --version; g++ --version; pkg-config --modversion opencv4; pkg-config --modversion yaml-cpp
+configure=cmake -S . -B <FORMAL_BUILD> -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DOpenCV_DIR=<SYSTEM_OPENCV4_CMAKE_DIR> -DONNXRUNTIME_ROOT=<STAGE_J_LINUX_AARCH64_SDK>
+build=cmake --build <FORMAL_BUILD> --target edge_ai_infer --parallel 4
+inspection=file <FORMAL_BUILD>/edge_ai_defect; readelf -h <FORMAL_BUILD>/edge_ai_defect; readelf -d <FORMAL_BUILD>/edge_ai_defect; ldd <FORMAL_BUILD>/edge_ai_defect
+smoke=env -u LD_LIBRARY_PATH <FORMAL_BUILD>/edge_ai_defect --help
+excluded=no model, inference, benchmark, CTest, TensorRT, CUDA EP or J3.2

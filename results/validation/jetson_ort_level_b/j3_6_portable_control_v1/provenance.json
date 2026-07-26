@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j3_6_portable_control_v1",
+  "task_id": "J3.6",
+  "repository_source_commit": "94576b6fe81e2f853c30c41826d039d016e093b0",
+  "j3_5_commit": "8d57466516b470b2889a10b680e2ffa2034fcf26",
+  "local_attempt_id": "j3.6_portable_control_v1",
+  "local_attempt_manifest_sha256": "561390cf6dc245f62358e9d922017b3ff7eccbae354336429e88f220f0e3e508",
+  "architecture": "aarch64",
+  "language_standard": "C++17",
+  "compiler": "GCC/G++ 11.4.0",
+  "cmake": "3.22.1",
+  "opencv": "4.5.4",
+  "yaml_cpp": "0.7.0",
+  "openssl": "3.0.2",
+  "onnxruntime_sdk": "1.23.2 linux-aarch64",
+  "ort_execution_provider": "CPU only; no model loading or inference",
+  "environment_override_policy": "critical parameters are explicit API inputs; no environment-variable override",
+  "privacy_status": "PASS; no private absolute paths, host identifiers or credentials"
+}

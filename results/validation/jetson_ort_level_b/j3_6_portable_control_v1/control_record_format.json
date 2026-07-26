@@ -1,0 +1,33 @@
+{
+  "format": "canonical JSON",
+  "top_level_key_order": [
+    "schema_version",
+    "executable_path",
+    "config_path",
+    "model_path",
+    "evidence_directory",
+    "evidence_record_path",
+    "ort_options",
+    "opencv_thread_policy",
+    "trace_output_path",
+    "environment"
+  ],
+  "required_fixed_fields": [
+    "executable_path",
+    "config_path",
+    "model_path",
+    "ort_options",
+    "opencv_thread_policy",
+    "trace_output_path"
+  ],
+  "startup_api": "PortableControlSession::start",
+  "config_api": "RuntimeConfigLoader::load",
+  "ort_record_api": "OrtOptionsRecord::create",
+  "opencv_record_api": "OpenCvThreadPolicyRecord::apply",
+  "environment_api": "PortableEnvironmentInfo::capture",
+  "default_evidence_record": "<evidence_directory>/run_control.json",
+  "default_trace_output": "<evidence_directory>/trace.jsonl",
+  "relative_trace_policy": "resolve below evidence_directory and prepare parent directory",
+  "overwrite_policy": "run_control.json is not overwritten unless overwrite_evidence is true",
+  "environment_policy": "no environment-variable override"
+}

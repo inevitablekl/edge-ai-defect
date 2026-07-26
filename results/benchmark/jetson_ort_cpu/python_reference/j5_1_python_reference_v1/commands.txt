@@ -1,0 +1,7 @@
+git fetch origin feature/jetson-onnxruntime
+git merge-base --is-ancestor e7cf79fd9180ada7ca076dc2dd4467e500282258 origin/feature/jetson-onnxruntime
+.venv/bin/python tools/validation/prepare_m5_corpus.py --mode benchmark --dataset-root data/yolo/neu_det/images/val --output-dir <attempt>/prepared
+env -u LD_LIBRARY_PATH .venv/bin/python tools/validation/m5_level_c_reference.py --config <attempt>/reference_runtime_config.yaml --input-dir <attempt>/prepared --output <attempt>/benchmark_python_reference_run_1.json
+env -u LD_LIBRARY_PATH .venv/bin/python tools/validation/m5_level_c_reference.py --config <attempt>/reference_runtime_config.yaml --input-dir <attempt>/prepared --output <attempt>/benchmark_python_reference_run_2.json
+.venv/bin/python tools/validation/m5_level_c_reference.py --help
+.venv/bin/python tools/validation/m5_level_c_reference.py --config <attempt>/reference_runtime_config.yaml

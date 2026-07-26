@@ -53,11 +53,13 @@ Not available
 
 ## 3. 当前环境总览
 
+当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D048：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`；J4.1：`COMPLETE`；J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4.3：`COMPLETE`；J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；implementation branch：`feature/jetson-onnxruntime`；current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`。Stage T 和 Stage P 尚未开始。下一授权任务：`J5.1 Benchmark Python Reference Preparation`。
+
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Jetson TensorRT FP16 部署和论文核心性能实验 | TBD |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J4 verified; J4.2 accepted under D048; J5.1 entry preparation |
 
 ---
 
@@ -161,22 +163,68 @@ Not available
 
 | 项目 | 当前值 |
 |---|---|
-| Jetson model | TBD |
-| JetPack version | TBD |
-| Ubuntu / L4T version | TBD |
-| CUDA version | TBD |
-| TensorRT version | TBD |
-| cuDNN version | TBD |
-| ONNX Runtime C++ version | TBD |
-| OpenCV version | TBD |
-| CMake version | TBD |
-| C++ compiler | TBD |
-| Power mode | TBD |
-| Resource monitoring method | TBD |
+| Jetson model | planned target; pending J1 |
+| JetPack version | planned target 6.2.2; pending J1 |
+| Ubuntu / L4T version | planned target Ubuntu 22.04-based / L4T 36.5; pending J1 |
+| CUDA version | pending J1 |
+| TensorRT version | pending J1 / Stage T |
+| cuDNN version | pending J1 |
+| ONNX Runtime C++ version | planned 1.23.2 native source build; pending J1/J2 |
+| OpenCV version | pending J1 |
+| CMake version | pending J1 |
+| C++ compiler | pending J1 |
+| Power mode | planned MAXN_SUPER; pending J1 |
+| Resource monitoring method | pending J1 |
 
 说明：
 
-Jetson 平台是最终 TensorRT FP16 部署和论文核心性能数据采集平台。
+Jetson 平台是 Stage J CPU baseline、后续 Stage T TensorRT FP16 部署和论文核心性能数据采集平台；本表为 planned target，不是 hardware observed fact。
+
+### 6.1 Stage J Planned Jetson Target
+
+> **Status: planned target; not yet observed on hardware. All device-specific values require J1 verification.**
+
+```text
+device: Jetson Orin Nano Super Developer Kit
+memory: 8GB
+storage: 256GB NVMe
+root filesystem: NVMe
+JetPack: 6.2.2
+L4T: 36.5
+architecture: aarch64
+OS: Ubuntu 22.04-based
+ONNX Runtime: 1.23.2 native source build
+EP: CPUExecutionProvider
+mode: MAXN_SUPER planned
+cooling: active fan planned
+build: native Jetson build
+cross-compilation: excluded from Stage J
+```
+
+这些是冻结的 planned target 合同，不是 J0 或当前 WSL 环境的 Jetson observed facts。
+
+### 6.2 J1 Observed Facts Placeholder
+
+以下字段在 J1 前保持 `pending J1`，不得填入推测值：
+
+| Field | Status |
+|---|---|
+| actual SKU | pending J1 |
+| serial / board identifiers | pending J1 |
+| actual JetPack | pending J1 |
+| actual L4T | pending J1 |
+| actual GCC | pending J1 |
+| actual CMake | pending J1 |
+| actual OpenCV | pending J1 |
+| actual Python | pending J1 |
+| actual online CPUs | pending J1 |
+| actual allowed CPUs | pending J1 |
+| actual MAXN_SUPER mode ID | pending J1 |
+| actual thermal zones | pending J1 |
+| actual frequency paths | pending J1 |
+| actual tegrastats rails | pending J1 |
+| actual OC/UV paths | pending J1 |
+| actual power supply status | pending J1 |
 
 ---
 
@@ -496,3 +544,464 @@ experiments/logs/<run_id>/environment_snapshot.txt
 | Jetson | TensorRT、FP16、目标设备性能测试 | TensorRT 与性能阶段开始后使用 |
 
 不同环境的用途必须隔离记录；不得将 WSL2 CPU 验证表述为 Jetson 或 TensorRT 性能证据。
+
+## 13. Stage J J1.1 Device Acceptance
+
+J1.1 状态：`COMPLETE`。
+
+本节只记录 J1.1 已观察并验收的 Jetson 设备事实；J1.2～J1.4 的平台、工具链、功耗、时钟、温度和 rail/OC/UV 验收仍未完成。
+
+- 设备型号：NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super。
+- Architecture：`aarch64`；device-tree compatible 包含 `nvidia,tegra234`。
+- L4T observed：`R36.5.0`。
+- MemTotal：`7,976,910,848` bytes；与 nominal 8GB SKU 合理一致。
+- NVMe：PUSKILL 256GB，`256,060,514,304` bytes；未记录设备序列号。
+- Rootfs：位于 NVMe，ext4，read-write；J1.1 采集时约 11% 使用率。
+- Boot：bootloader slot A/B 均报告 `normal`；NVIDIA L4T bootloader/core/initrd/kernel 包存在。
+- NVMe SMART：critical warning `0`，media errors `0`，error log 无明确当前故障。
+- `unsafe_shutdowns=11`：历史累计计数；当前无 media error、critical warning 或 SMART error log，后续需观察是否增长。
+- Network/SSH：available。
+- sudo：通过 command-scoped read-only wrapper 进行特权采集；unrestricted NOPASSWD 为 false。
+- Active fan：`USER_CONFIRMED`。
+- Heatsink secure：`USER_CONFIRMED`。
+- Stable original power adapter：`USER_CONFIRMED`。
+- Device exclusivity：`USER_CONFIRMED`。
+- Known random reboot, power loss or NVMe drop：用户未报告。
+
+Carry-forward warnings：CMake 缺失；OpenCV pkg-config/CMake metadata 缺失；Python `cv2` 不可用；当前 nvpmodel mode 为 15W；MAXN_SUPER 尚未验证；jetson_clocks 查询要求 root；unsafe shutdown counter 需后续观察。
+
+J1.1 期间未安装软件，未改变 nvpmodel、时钟、风扇或系统配置，未运行 build/test/benchmark。原始采集保存在仓库外临时目录，未作为 Published Evidence 或 Git 文件。
+
+## 14. Stage J J1.2 Platform and Toolchain Inventory
+
+J1.2 状态：`COMPLETE`。
+
+### Observed platform
+
+- OS：Ubuntu 22.04.5 LTS。
+- Kernel：`5.15.185-tegra`。
+- Architecture：`aarch64`。
+- L4T：`R36.5.0`；NVIDIA L4T package family observed at `36.5.0-20260115194252`。
+- glibc：`2.35`。
+- Online/allowed CPUs：`0-5` / `0-5`。
+
+### JetPack and NVIDIA provenance
+
+- Installed `nvidia-jetpack` meta-package：not installed。
+- APT metadata candidate：`nvidia-jetpack 6.2.2+b24`；`nvidia-jetpack-runtime` and `nvidia-jetpack-dev` have the same candidate.
+- NVIDIA APT sources：configured for Jetson `common`, `t234` and `ffmpeg`, repository series `r36`。
+- Exact installed JetPack version：not independently verified；the APT candidate is not evidence that the meta-package is installed.
+- L4T/core/kernel/bootloader/initrd/tools packages：installed and consistent with observed L4T `R36.5.0`。
+
+### Native toolchain
+
+- GCC/G++：`11.4.0`。
+- CMake/CTest：missing。
+- Make：`4.3`。
+- Ninja：missing。
+- pkg-config：`0.29.2`。
+- Git：`2.34.1`。
+- binutils：installed；`readelf` and `objdump` available。
+- `patchelf`：missing。
+
+Capability/remediation matrix：
+
+| Capability | Observed | Required milestone | Deadline/action |
+|---|---|---|---|
+| GCC/G++/Make | present | J2/J3 | none currently |
+| CMake/CTest | missing | J2.1/J2.2/J3 | user-approved minimal installation before first CMake task |
+| Ninja | missing | optional | no action unless selected by later build protocol |
+| pkg-config/binutils | present | J2/J3 | none currently |
+| patchelf | missing | J2.3 if required by packaging | assess before J2.3 |
+
+### Python
+
+- Python：`/usr/bin/python3.10`, version `3.10.12`。
+- python3-dev：installed。
+- pip/ensurepip：unavailable。
+- venv：package not installed。
+- NumPy：`1.21.5`；PyYAML：`5.4.1`。
+- ONNX, ONNX Runtime Python and Python `cv2`：unavailable。
+- Python TensorRT binding：unavailable (ImportError)。
+
+### OpenCV C++
+
+Classification: `RUNTIME_AND_HEADERS_PRESENT_METADATA_MISSING`。
+
+- Runtime libraries：present。
+- Headers/component headers：present。
+- Version: `4.5.4`。
+- Debian component packages: `4.5.4+dfsg-9ubuntu4` installed for core/imgproc/imgcodecs development and runtime components。
+- pkg-config metadata: missing。
+- CMake package metadata: missing。
+- Python `cv2`: unavailable。
+- CUDA support: not required by Stage J1.2。
+- J3 impact: native configure/build remains blocked until metadata and build dependency remediation is defined and completed。
+
+### yaml-cpp and ONNX Runtime
+
+- yaml-cpp: `NOT_FOUND`; header, runtime, pkg-config metadata and CMake metadata not found. This blocks J3 configure/build until remediation。
+- System ONNX Runtime: not found; Python ONNX Runtime unavailable. This is expected to be resolved by the official ONNX Runtime 1.23.2 build in J2 and is not a J1.2 failure。
+
+### CUDA/cuDNN/TensorRT pre-existing facts
+
+These are recorded only and were not used by Stage J:
+
+- CUDA toolkit/runtime: `/usr/local/cuda-12.6`, toolkit `12.6.11`, cudart `12.6.68`。
+- cuDNN runtime libraries: present; `libcudnn9`/`libcudnn9-dev` package status was not installed in dpkg query。
+- TensorRT packages: `10.3.0.30-1+cuda12.5` runtime/dev/parser packages installed。
+- `trtexec`: unavailable。
+- TensorRT Python binding: unavailable。
+- No TensorRT smoke, CUDA inference or Stage T work was executed。
+
+### Package and storage health
+
+- `dpkg --audit`: no output; no incomplete package state observed。
+- Held packages: none observed。
+- Root, `/var` and `/tmp`: NVMe ext4, approximately 11% used, approximately 211 GB available。
+
+### Planned versus observed summary
+
+| Field | Planned target | Observed fact | Status |
+|---|---|---|---|
+| Device | Jetson Orin Nano Super | Jetson Orin Nano Engineering Reference Developer Kit Super | MATCH |
+| Memory | nominal 8GB | MemTotal 7,976,910,848 bytes | MATCH |
+| NVMe | 256GB class | 256,060,514,304 bytes | MATCH |
+| Architecture | aarch64 | aarch64 | MATCH |
+| Ubuntu | 22.04 | 22.04.5 LTS | MATCH |
+| L4T | 36.5 planned | R36.5.0 | MATCH |
+| JetPack | 6.2.2 planned | APT candidate 6.2.2+b24; meta-package not installed | NOT_INDEPENDENTLY_VERIFIED |
+| GCC/G++ | 11.x | 11.4.0 | MATCH |
+| glibc | 2.35 | 2.35 | MATCH |
+| CMake | required | not installed | NOT_INSTALLED |
+| OpenCV C++ | 4.x | 4.5.4 runtime/headers, metadata missing | OBSERVED_DIFFERENCE |
+| yaml-cpp | 0.7.x | not found | NOT_INSTALLED |
+| Python | 3.10 | 3.10.12 | MATCH |
+| Online/allowed CPUs | 0-5 / 0-5 | 0-5 / 0-5 | MATCH |
+| ORT | official 1.23.2 in J2 | not found | NOT_INSTALLED |
+| CUDA/cuDNN/TensorRT | recorded only | CUDA 12.6, cuDNN libs, TensorRT 10.3 observed | NOT_APPLICABLE_IN_J1.2 |
+
+J1.2 did not install packages, modify APT sources, alter system settings, run configure/build/test/benchmark, or begin J1.3。
+
+## 15. Stage J J1.3 MAXN_SUPER and Clock-Control Acceptance
+
+J1.3 状态：`COMPLETE`。
+
+- Phase A discovery：`DISCOVERY_PASS`；active nvpmodel configuration SHA256 remained `5b3c6779df10506928fb9f6a9213d7a9ad0c4ef0a3fe542a95031103079a2dcf`。
+- Pre-change mode：15W / ID `0`；post-change mode：`MAXN_SUPER` / ID `2`。
+- MAXN_SUPER apply：observed successful；未使用 `--force`；无需 reboot，boot ID unchanged。
+- CPU online set：`0-5` before and after。
+- `jetson_clocks` apply：observed successful；CPU locked at `1728000`，GPU locked at `1020000000`，EMC observed at `3199000000`。
+- `jetson_clocks --fan` apply：observed successful；PWM observed `255`，`FAN Dynamic Speed Control=disabled`。
+- Post-state `nvfancontrol.service`：enabled but inactive after fan-control apply；该状态与 `jetson_clocks --fan` 的 observed state 一致。
+- Post-state `nvpmodel.service`：enabled but inactive after boot-time completion。
+- No silent fallback：post-change query remained `MAXN_SUPER` / ID `2`。
+- NVMe `unsafe_shutdowns` remained `11`；SMART critical warning/media errors remained clear。
+- Phase B used only the command-scoped power-control wrapper and the existing read-only wrapper；unrestricted sudo remained unavailable。
+
+The first Phase B attempt stopped before system changes because Codex could not read the root-owned sudoers SHA. The second stopped before system changes because the two user-provided SHA labels conflicted. The user then supplied explicitly labelled wrapper/sudoers SHA values and `visudo` validation evidence; wrapper SHA was independently rechecked by Codex.
+
+J1.3 did not install packages, modify wrappers/sudoers, run build/test/benchmark, or perform reboot. This acceptance does not complete J1.4 thermal, rail, OC/UV or long-duration stability work.
+
+## 16. Stage J J1.4 Telemetry and Throttling Contract
+
+J1.4 状态：`COMPLETE`。Decision D042：`Accepted`。
+
+J1.4 使用 composite immutable discovery evidence v1：
+
+- Phase A raw SHA256：`91eb86daebd31a96e6ddc74b9beda89c7aa466e7d74f0da53a0ea291689f99a0`；覆盖 thermal、frequency、EMC、tegrastats、rail-name、environment-drift 和 sustained-throttling discovery。
+- Supplemental raw SHA256：`75cb07a6149b6b69b3774397ee58bd754743aa7df9181f86d9749833d17732a5`；覆盖 OC/UV counters、throttle-enable fields、hwmon identity/realpath、INA3221 labels 和 alarm values。
+- 两个 raw attempt 均 repository-external、untracked、immutable、not Published Evidence；不修改旧 raw、不伪装为单一 raw。
+
+### Thermal
+
+Raw unit 为 milli-degree Celsius；正式 Gate 使用 raw integer，展示时除以 `1000.0`。Readable relevant set：
+
+- `cpu-thermal`：`/sys/class/thermal/thermal_zone0/temp`
+- `gpu-thermal`：`/sys/class/thermal/thermal_zone1/temp`
+- `soc0-thermal`：`/sys/class/thermal/thermal_zone5/temp`
+- `soc1-thermal`：`/sys/class/thermal/thermal_zone6/temp`
+- `soc2-thermal`：`/sys/class/thermal/thermal_zone7/temp`
+- `tj-thermal`：`/sys/class/thermal/thermal_zone8/temp`
+
+`cv0-thermal`、`cv1-thermal`、`cv2-thermal` 位于 `thermal_zone2-4`，稳定返回 `EAGAIN`，仅纳入 inventory，不纳入 numeric hard maximum，不转换为零。正式样本要求所有 required readable zones 成功读取；不 forward-fill、不插值。Passive/critical trip 和 formal `T_idle_ref` 规则由 D042 冻结；本任务未建立正式 `T_idle_ref`。
+
+### Frequency and EMC
+
+- CPU sources：policy0/policy4 `scaling_cur_freq`；affected CPUs 分别为 `0-3`、`4-5`；target/min/max `1728000 kHz`；governor `schedutil`。
+- GPU source：`/sys/devices/platform/bus@0/17000000.gpu/devfreq/17000000.gpu/cur_freq`；target/min/max `1020000000 Hz`；governor `nvhost_podgov`。
+- EMC cap source：`/sys/kernel/nvpmodel_clk_cap/emc`，`3199000000 Hz`；`jetson_clocks --show` current/max 为 `3199000000`，`FreqOverride=1`。未发现可靠普通用户可读的独立 1 Hz EMC runtime source；EMC 只做 preflight/postflight Gate。
+
+### tegrastats and rails
+
+`/usr/bin/tegrastats` 来自 `nvidia-l4t-tools 36.5.0-20260115194252`，正式 interval 为 `1000 ms`，每行记录 UTC 和 `CLOCK_MONOTONIC ns`。Gap `>2500 ms`、coverage `<0.90` 或 sample count 不足会使 run invalid。
+
+冻结 rail-name set：`VDD_IN`、`VDD_CPU_GPU_CV`、`VDD_SOC`。格式为 `current_power / average_power`，单位 mW；first value 用于正式统计，second value 仅保留为 device-emitted diagnostic。该数据只称为 onboard rail telemetry，不称为 wall power 或精密能量测量。
+
+### OC/UV and INA3221
+
+`soctherm_oc` realpath：`/sys/devices/platform/soctherm-oc-event/hwmon/hwmon3`。
+
+| Event | Counter | Enable | Observed |
+|---|---|---|---|
+| OC1 Under Voltage | `/sys/class/hwmon/hwmon3/oc1_event_cnt` | `oc1_throt_en` | `0 / 1` |
+| OC2 Average Overcurrent | `/sys/class/hwmon/hwmon3/oc2_event_cnt` | `oc2_throt_en` | `0 / 1` |
+| OC3 Instantaneous Overcurrent | `/sys/class/hwmon/hwmon3/oc3_event_cnt` | `oc3_throt_en` | `0 / 1` |
+
+Counters 为 cumulative；每个 attempt/campaign 记录 start/end delta，不清零 counter；正 delta 为 hard failure，reboot 后必须重新建立 baseline。
+
+INA3221 realpath：`/sys/devices/platform/bus@0/c240000.i2c/i2c-1/1-0040/hwmon/hwmon1`。Labels：`in1_label=VDD_IN`、`in2_label=VDD_CPU_GPU_CV`、`in3_label=VDD_SOC`、`in7_label=sum of shunt voltages`。Observed alarm paths：`curr1/2/3_crit_alarm`、`curr1/2/3_max_alarm`、`curr4_crit_alarm`，全部 observed value 为 `0`；formal telemetry 每秒采样，任一非零 alarm 为 hard failure。
+
+### Sustained throttling and environment drift
+
+D042 冻结 `Stage J Sustained Throttling Algorithm v1`：每秒使用 monotonic timestamp 采集 CPU policy0/policy4 和 GPU runtime frequency；同一 source 连续 3 个有效样本低于 target 即 hard fail。上升值、配置不一致、CPU set/mode/EMC/fan 状态变化为 environment-drift hard failure；gap、coverage、required-source read failure 按 run invalid 处理。EMC 不进入 1 Hz sequence；all-core profile 下 telemetry 固定 CPU0，记录 CPU0 overlap limitation。
+
+Environment-drift hard-match fields 包括 kernel/L4T/package/config SHA、mode/CPU sets、frequency paths/targets、EMC、fan、thermal path/type sets、tegrastats/package、rail set、OC/UV paths/enables 和 wrapper SHA。Boot ID 变化使 resolved reference 失效，reboot 后必须重新 preflight、thermal reference 和 protocol。
+
+J1.4 未执行 workload、benchmark、正式 T_idle_ref 或稳定性验证；MAXN_SUPER、locked clocks 和 fan state 保持不变。
+
+### J1.4 Post-D042 closeout verification
+
+- Stable local evidence manifest validation：全部记录 `OK`；manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- Component A 和 final supplemental stable copies 的 SHA256 与 D042 一致；证据目录无可写路径。
+- Superseded supplemental attempts 保留、未修改、未删除，且不作为最终合同 authority。
+- J1.4 closeout verification confirmed `J1.4 COMPLETE`、`J1 IN PROGRESS`、`J1.5 READY`。
+- Closeout 未执行 workload/build/test/benchmark/J1.5，未改变 device state、system settings、wrapper 或 sudoers。
+
+## 17. Stage J J1.5 Platform Evidence Gate
+
+J1.5 状态：`COMPLETE`；J1 状态：`COMPLETE`；Stage J 状态：`IN PROGRESS`。
+
+- Published Evidence logical root：`results/platform/jetson/environment/j1_baseline_v1/`。
+- Published Evidence exact file set：README、platform acceptance、toolchain inventory、power/clock acceptance、telemetry contract、evidence provenance、`environment_snapshot.yaml` 和 `sha256sums.txt`。
+- Published manifest SHA256：`6fb506bd47ce52bcc80c7f8067e4c9bf3547040af937aa273b413154c7d10d46`。
+- Local preservation manifest SHA256：`ed7acc2296dc1c76eb4e8231907570d17551e71b30cfbc7b56cb8113562870cb`。
+- Published Evidence：tracked、sanitized、derived；local raw evidence：external、untracked、immutable、not Published Evidence。
+- Evidence total size：`14309` bytes；tracked limit `<=25 MiB`。
+- YAML schema parse、manifest checksum、UTF-8/LF、deterministic ordering、privacy/redaction 和 cross-document consistency：`PASS`。
+- Carried gaps：CMake missing；OpenCV metadata missing；yaml-cpp missing；ORT 1.23.2 pending J2；JetPack exact installed version not independently verified；Python `cv2` non-blocking。
+- Device controlled state retained：MAXN_SUPER/ID 2、CPU online 0-5、CPU/GPU/EMC locked、PWM 255、nvfancontrol inactive；无 reboot/system/package change。
+- J1.5 未执行 build/test/benchmark；J2 尚未开始。
+
+## 18. Stage J J2.0 Build Interface Discovery
+
+J2.0 状态：`COMPLETE`；J2.1：`READY_WITH_WARNINGS`。
+
+### Read-only platform/toolchain facts
+
+- OS：Ubuntu `22.04.5 LTS`；kernel `5.15.185-tegra`；architecture `aarch64`。
+- GCC/G++：`11.4.0`；Make：`4.3`；Git：`2.34.1`；Python：`3.10.12`。
+- CMake/CTest：missing；Ninja：missing；未安装或修复。
+- `build-essential`：installed `12.9ubuntu3`；CMake APT candidate：`3.22.1-1ubuntu1.22.04.2`。
+- NumPy `1.21.5`、PyYAML `5.4.1` 和 Python `google.protobuf` import 可用；Python `flatbuffers` import 不可用。
+- `protoc`、`flatc`：not found；protobuf/flatbuffers development packages 未安装。
+- OpenCV runtime/header 存在，pkg-config/CMake metadata 缺失；yaml-cpp header/runtime 缺失。
+- Root NVMe filesystem：约 `197G` available、约 `11%` used；未创建 build directory。
+
+### ORT 1.23.2 CPU-only build interface strategy
+
+- Source acquisition：后续从官方 ONNX Runtime source repository 获取并固定 tag `v1.23.2`；J2.0 未下载 source。
+- Target：native Jetson `aarch64`，Release shared library，CPUExecutionProvider/CPU-only。
+- Candidate build interface：`build.sh --config Release --build_shared_lib --use_cpu --skip_tests --parallel <n>`；必要时通过 `--cmake_extra_defines CMAKE_INSTALL_PREFIX=<prefix>` 指定 install prefix。
+- 禁止项：CUDA EP、TensorRT EP、GPU build、configure、build、CTest、benchmark、inference。
+- Dependencies：CMake/CTest、GCC/G++/Make、Git、Python、NumPy/PyYAML，以及 build script 实际需要的 protobuf/flatbuffers tooling；J2.1 必须先依据真实 `build.sh --help` 验证参数和 dependency resolution。
+- Suggested install prefix：仓库外的固定 staging prefix；J2.0 未创建或写入 prefix。
+- Disk estimate：建议正式 build 前保留至少 `20 GiB` free；当前约 `197G` available。
+- Time estimate：native Release build 预计几十分钟；未实测，不是 benchmark 或 performance result。
+
+J2.0 未安装软件、未运行 configure/build/CTest、未下载 ONNX Runtime、未执行 benchmark/inference。J2.1 前必须解决或明确处理 CMake、protobuf/flatbuffers tooling 和构建依赖。
+
+## 19. Stage J J2.1 Development Feasibility Probe
+
+J2.1 状态：`COMPLETE`；J2.2：`READY_WITH_WARNINGS`；未开始 J2.2。
+
+### Probe result
+
+- Starting gate：branch `feature/jetson-onnxruntime`；HEAD `56d0c9ba7dfc50ff02fa9e481ae3a1026357df0c`；worktree clean；三个 frozen asset SHA 全部匹配。
+- Platform：Ubuntu `22.04.5 LTS`、kernel `5.15.185-tegra`、native `aarch64`、glibc `2.35`。
+- Toolchain：GCC/G++ `11.4.0`、Make `4.3`、Git `2.34.1`、Python `3.10.12`；`build-essential` installed；CMake/CTest、Ninja、`protoc` 和 `flatc` missing。
+- Package candidates were inspected read-only; no package or Python package was installed. Candidates: CMake `3.22.1-1ubuntu1.22.04.2`、Ninja `1.10.1-1`、protobuf `3.12.4-1ubuntu7.22.04.6`、flatbuffers compiler `1.12.1~git20200711.33e2d80+dfsg1-0.6`、pip `22.0.2+dfsg-1ubuntu0.7`、venv `3.10.6-1~22.04.1`。
+- Python：NumPy `1.21.5`、PyYAML `5.4.1`、`google.protobuf` import available；Python `flatbuffers` import unavailable。
+- ORT source was cloned only into a repository-external temporary directory using tag `v1.23.2`; observed source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278` and `VERSION_NUMBER=1.23.2`。`build.sh` only delegates to `tools/ci_build/build.py`；the parser source confirms the required interface flags. Neither script was invoked。
+
+### Frozen J2.2 build strategy
+
+- Source：official ONNX Runtime repository, tag `v1.23.2`。
+- Target：native Jetson `aarch64`，Release shared library，CPUExecutionProvider；CPU-only is represented by omitting `--use_cuda`、`--use_tensorrt` and all other non-CPU EP flags。
+- Candidate command：`build.sh --config Release --build_shared_lib --skip_tests --parallel 4 --cmake_extra_defines CMAKE_INSTALL_PREFIX=<external-staging-prefix>`。This is a plan only and was not executed。
+- Parallelism：start conservatively at 4 jobs on the 6-CPU online set；adjust only under J2.2 observation if memory pressure requires it。
+- Install prefix：repository-external staging prefix；none was created during this probe。
+- Dependencies：CMake/CTest、GCC/G++/Make、Git、Python, NumPy/PyYAML, protobuf compiler/development files and flatbuffers compiler/Python module; exact dependency resolution remains a J2.2 pre-build check。
+- Capacity estimate：retain at least `20 GiB` free; current NVMe filesystem has approximately `197G` available. Expected native Release build time is tens of minutes; not measured。
+
+### Risks and limitations
+
+- Existing JetPack CUDA/TensorRT libraries were not selected; CPU-only strategy must continue to omit their EP flags and CUDA definitions。
+- Protobuf candidate/runtime compatibility and flatbuffers tooling remain unvalidated until dependencies are made available through an authorized installation step。
+- GCC `11.4.0` and native aarch64 are plausible for this Ubuntu/L4T environment, but compiler compatibility is not proven until the later authorized build。
+- No configure, build, test, benchmark, inference, TensorRT, CUDA EP or GPU build was executed。
+
+## 20. Stage J J2.2 ONNX Runtime CPU-only Build
+
+J2.2 状态：`COMPLETE`；J3：`READY`；未开始 J3。
+
+### Build and dependency record
+
+- Starting gate：branch `feature/jetson-onnxruntime`；HEAD `7a41a91c5d45150f55aa866b5c0fd35a24018536`；worktree clean。
+- User-installed package versions：CMake `3.22.1-1ubuntu1.22.04.2`、Ninja `1.10.1-1`、protobuf compiler/development `3.12.4-1ubuntu7.22.04.6`、flatbuffers compiler/development/Python module `1.12.1~git20200711.33e2d80+dfsg1-0.6`。
+- ORT source：tag `v1.23.2`；source HEAD `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- System CMake 3.22.1 was insufficient for ORT v1.23.2. Official CMake `3.28.6` aarch64 binary was placed only in external staging and used through `--cmake_path`; system CMake and `/usr/local` were not changed. Archive SHA256：`7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7`。
+- Build command：`build.sh --build_dir <external>/ort-build --cmake_path <external>/cmake-3.28/bin/cmake --config Release --build_shared_lib --skip_tests --parallel 4 --update --build`。
+- Build interval：`2026-07-22T23:49:15+08:00` to `2026-07-23T00:47:22+08:00`；elapsed `3487 s`；exit code `0`。
+- Resource snapshot：CPU online `0-5`；memory `1.5Gi/7.4Gi` used before and `1.3Gi/7.4Gi` after；disk approximately `196G` available before and `195G` after。
+
+### CPU-only artifact and SDK record
+
+- External SDK staging：`historical_external_ort_sdk`；owner/group `orin/orin`；mode `775`；size approximately `51M`。
+- SDK contains `include/`、`lib/` and `lib/cmake/onnxruntime/`；headers include `onnxruntime_c_api.h` and `onnxruntime_cxx_api.h`。
+- `lib/libonnxruntime.so.1.23.2`：ARM aarch64 ELF shared object；SHA256 `bd6193ae6028a9e1a16e2cc567e14bd9ea61760686c2d9d3c07df5524a7e362a`。
+- `lib/libonnxruntime_providers_shared.so`：ARM aarch64 ELF shared object；SHA256 `2558ceb1670e58d0e6103c2b528af7b7802f850b2145b9f10d71d8283f525a21`。
+- SDK manifest `sha256sums.txt` SHA256：`e49aff468656baa91521dbcb3ec10564db7515be25f6643552d2dc9955921d9a`。
+- CMake cache verification：`CMAKE_BUILD_TYPE=Release`、shared library `ON`；CUDA/CUDA interface/TensorRT/TensorRT interface `OFF`；no CUDA or TensorRT runtime dependency in `libonnxruntime.so.1.23.2`。
+- System tests, benchmark, inference and J3 were not executed. The first CMake 3.22 attempt stopped at the minimum-version check before compilation; it was retained as external failure evidence only。
+
+## 21. Stage J J2.2 Formal Clean Build Remediation v2
+
+- D044：`Accepted`；historical development build：`SUPERSEDED` as formal Evidence authority；`j2.2_formal_clean_v1`：`BLOCKED` and retained immutable。
+- Formal attempt `j2.2_formal_clean_v2`：`PASS`；ORT source tag/commit：`v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`。
+- Build：native AArch64、Release、shared library、CPU-only，external CMake `3.28.6`，parallel `4`，elapsed `3883 s`，formal build exit `0`；independent install exit `0`。
+- SDK validation：public headers、`libonnxruntime.so` symlink chain、AArch64 ELF64、SONAME、NEEDED、ldd、CMake package relocatability 均 `PASS`；主库 SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- 未执行 SDK binary、CTest、inference、benchmark 或 RPATH smoke；未启用 CUDA/TensorRT/cuDNN；未修改系统 CMake、`/usr/local` 或生产源码。
+- J2.2：`COMPLETE`；J2.3：`READY`；J2.4/J2.5：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- Next authorized task：`J2.3 — SDK packaging and manifest`；J2.3 尚未执行。
+
+### Stage J J2.3 SDK packaging and manifest
+
+- J2.3：`COMPLETE`；只使用 formal v2 SDK，未使用 historical development SDK、v1 SDK 或新的 ORT 构建产物。
+- Local SDK logical path：`third_party/onnxruntime/1.23.2/linux-aarch64/`；`include/` 和 `lib/` 为 local-only payload，保留真实 symlink，不进入 Git。
+- ORT：`1.23.2` / `v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`；formal attempt：`j2.2_formal_clean_v2`；attempt manifest SHA256：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`。
+- Canonical source aggregate SHA256：`c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`；main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- Metadata SHA256：`BUILD_MANIFEST.json` `94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406`；`HEADER_SHA256SUMS.txt` `3aace362a8a6d65f9852e501df69d4b33720e51f5017c4e7d25d21d33ffe9029`；`FILE_SHA256SUMS.txt` `8fb13ae5f579a4c148725ed5e1ce96ba1fe25c6d0024ec377517fdf8c5d99f02`。
+- Official source license SHA256：`2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c`；third-party notice SHA256：`e9e90971a8e75a9a8ac0c6412e29c1202d079998389915aa485f46c816c3b4cc`。
+- Published Evidence：`j2_sdk_v1`；Evidence manifest 4/4 PASS；无 payload、`.so`、完整 headers 或绝对私有路径。
+- J2.4 runtime/RPATH smoke：`PENDING`；J2.5 Evidence gate：`PENDING`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`。
+- 未执行 binary/runtime smoke、inference、benchmark、CTest、J2.4、J2.5 或 J3。Next authorized task：`J2.4 — RPATH smoke`。
+
+### Stage J J2.4 RPATH smoke
+
+- J2.4：`COMPLETE`；使用 formal Stage J aarch64 SDK 完成仓库外最小 consumer configure/build 和基本 ORT runtime smoke。
+- Smoke binary SHA256：`d08391424b42d0720293cc9b5a07431d33f8b2763296e25912d03e1951a20d40`；SDK main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- `RUNPATH` 解析到 logical path：`third_party/onnxruntime/1.23.2/linux-aarch64/lib`；清除 `LD_LIBRARY_PATH` 后精确解析到 Stage J SDK，resolved library SHA PASS。
+- Runtime：ORT `1.23.2`、`CPUExecutionProvider`、`Ort::Env` 和 `Ort::SessionOptions` 均 PASS；未加载模型，未执行 inference、CTest 或 benchmark。
+- Local attempt：`j2.4_rpath_smoke_v1`；manifest SHA256：`3cb3bc88814340bed450b037236e3d03eaaf06aee37674e5e8a4075b419dad03`。Published Evidence：`j2_rpath_smoke_v1`。
+- J2.5：`READY`；J2 overall：`IN PROGRESS`；J3：`BLOCKED_BY_J2.5`；J3.0：`NOT_DEFINED`。
+- Next authorized task：`J2.5 — J2 Evidence gate`；J2.5 未执行。
+
+### Stage J J2.5 J2 Evidence gate
+
+- J2.5：`COMPLETE`；J2 Evidence chain J2.2 formal v2、D045、J2.3 和 J2.4：`PASS`。
+- ORT：`1.23.2` / `v1.23.2` / `a83fc4d58cb48eb68890dd689f94f28288cf2278`；canonical source aggregate：`c060f538ac72eb5d801781ac1c5fb6c1a12001ce57f873a952ea37aebce3f81c`。
+- Formal attempt manifest：`a4028cbca5ced9abbd95d1aedaa5f83b55ee062820700fb44fbd6e479f2d2b32`；SDK main library：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- J2.3 Evidence：`j2_sdk_v1`；J2.4 Evidence：`j2_rpath_smoke_v1`；J2.5 Evidence：`j2_evidence_gate_v1`。
+- J2.4 GPU discovery warning 分类：`INFORMATIONAL_PLATFORM_DISCOVERY_WARNING`；runtime exit 0、CPU provider PASS、无缺失动态库或 GPU EP 初始化。
+- J2 最终范围：formal aarch64 CPU SDK build、package、manifest 和无 `LD_LIBRARY_PATH` runtime/RPATH smoke；不包含 upstream ORT tests、模型加载/inference、完整项目 Jetson build 或 benchmark。
+- J2：`COMPLETE`；J3.1：`READY`；J3：尚未开始；J3.0：`NOT_DEFINED`。Next authorized task：`J3.1 — aarch64 build and CMake portability`。
+
+### Stage J J3 Final Environment and Validation Summary
+
+The final J3 environment and validation facts are:
+
+- Jetson Linux/L4T `R36.5`；
+- kernel `5.15.185`；
+- architecture `aarch64`；
+- GCC/G++ `11.4.0`；
+- CMake `3.22.1`；
+- ONNX Runtime `1.23.2` CPU；
+- OpenCV `4.5.4`；
+- yaml-cpp `0.7.0`；
+- OpenSSL `3.0.2`；
+- final production source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；
+- corrected J3.5 source commit：`9b146317922561c55d91ad7126dbde4164b0c800`；
+- J3.7 Evidence：`j3_7_historical_v1_v1`；
+- J3.8 Evidence：`j3_8_jetson_regression_v1`；
+- J3.9 strict failure Evidence：`j3_9_jetson_asan_ubsan_v1`；
+- J3.9 remediation Evidence：`j3_9_remediation_investigation_v1`；
+- D046：Accepted third-party OpenCV/TBB LeakSanitizer limitation；
+- J3.10 v2 Evidence：`j3_10_j3_evidence_gate_v2`；
+- J4.1：`READY`；
+- no model loading, inference or benchmark was executed during J3 closeout。
+### Stage J J3.1 aarch64 build and CMake portability
+
+- Native Jetson architecture：`aarch64`；GCC/G++：`11.4.0`；system CMake：`3.22.1`；C++ standard：`C++17`。
+- Development dependencies used：OpenCV `4.5.4`、yaml-cpp `0.7.0`、OpenSSL `3.0.2`、pkg-config `0.29.2`。
+- Source commit：`7935c708465e14ea8786a64ecd1bf5f14096c333`。
+- Formal `edge_ai_defect` binary SHA256：`30ed762cdb82c3c25dcce320f9e53480fe6bd305323601a554aa21a72bd0c383`。
+- ORT SDK：`1.23.2`，platform `linux-aarch64`；BUILD_MANIFEST SHA256：`94c5430c879715e3e8015cef5143b69d115c55dfcfc3221bf0c16fb5cfe21406`；main library SHA256：`6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740`。
+- Selected ONNX Runtime header layout：nested；include directory：SDK `include/onnxruntime`；flat layout compatibility retained。
+- Published Evidence：`j3_1_aarch64_build_v1`；published manifest SHA256：`ed3794bb2cbceca1114aaacb9471dc5eb7186fcd623f85acd36b672327944bd5`；local attempt manifest SHA256：`368c4dd2f480d100d73206981e97e5be9b6291a7ecb4f2b9eeaa5abd493cb871`。
+- Full Release build、dynamic dependency resolution and non-model `--help` smoke：`PASS`；未执行模型加载、inference、benchmark、CTest、TensorRT、CUDA EP 或 J3.2。
+- J3.3：`COMPLETE`；source commit：`de022b19e0dd54c156cd7463c64d97eeb112180f`；Published Evidence：`j3_3_ort_options_v1`；native aarch64 Release build and model-free ORT options test：`PASS`。
+- `OrtOptionsRecord` records RuntimeConfig v2 schema/backend, execution mode, graph optimization, thread, spinning, CPU arena and memory-pattern values with stable canonical output；未执行模型加载或 inference。
+- J3.4：`COMPLETE`；source commit：`05e2d4c47e7a95bf3f8796ef501d12e27b618082`；Published Evidence：`j3_4_opencv_thread_policy_v1`。
+- OpenCV `4.5.4` policy：RuntimeConfig v2 `opencv_num_threads=1` 显式映射到 `cv::setNumThreads(1)`，readback applied=`1`，policy active：`true`；未使用环境变量覆盖。
+- J3.5：`COMPLETE`；source commit：`9b14631a773518b9eea73d875af1e46b4e3a0b9e`；Published Evidence：`j3_5_trace_observer_v1`。
+- Trace format：deterministic JSON Lines；stages：source/preprocess/inference/postprocess/sink；clock：`steady_clock` ns；recorder only retains one active stage and flushes per completed record by default。
+- J3.6：`COMPLETE`；source commit：`94576b6fe81e2f853c30c41826d039d016e093b0`；Published Evidence：`j3_6_portable_control_v1`。
+- Portable control：`PortableControlSession::start` 完成 RuntimeConfig v2 加载/验证、ORT/OpenCV record 固定记录、executable/config/model/evidence/trace 路径记录；无环境变量覆盖。
+- J3.6 formal native aarch64 Release build、`runtime_config` 和 `serial_runner`：`PASS`；未执行模型加载、inference、benchmark、camera、TensorRT、CUDA 或 ROS2。
+
+### Stage J J4.1 Level A Validation Summary
+
+- Jetson Linux/L4T：`R36.5.0`；kernel：`5.15.185-tegra`；architecture：`aarch64`。
+- GCC/G++：`11.4.0`；CMake：`3.22.1`；OpenCV C++：`4.5.4`；ORT：
+  `1.23.2 linux-aarch64 CPU`。
+- Controlled CPU：`5`；online/allowed CPUs：`0-5`；process affinity：
+  `taskset -c 5`。
+- Power/clock/fan：`MAXN_SUPER` / mode ID `2`；J1 accepted
+  `jetson_clocks --fan` state；fan PWM `255`；dynamic speed control disabled。
+- J4.1 source commit：`0ca8df90b2a5c0e76ceaa8475ad702db90cfaaf4`；formal
+  wrapper binary SHA256：`bc6c3df8049db8d1c3d38d27ce5dc5239595138a7d790e1ff99a8dd908fb3cd5`。
+- Level A result：`8/8 PASS`；exact/resize aggregate MAE and max_abs both `0`；
+  two independent reports byte-identical；historical guards `5/5 PASS`。
+- No model loading, inference, benchmark, latency/FPS campaign, TensorRT,
+  CUDA EP, ROS2, camera, Pipeline, Level B or Level C was executed。
+
+### Stage J J4.2 D048 Cross-Architecture Numerical Acceptance
+
+- Python reference boundary：x86_64 WSL2；Jetson execution boundary：aarch64；
+  both use ORT `1.23.2` and `CPUExecutionProvider` with the frozen model,
+  input and Python golden。
+- Jetson controlled profile：CPU `5` on online/allowed CPUs `0-5`；OpenCV
+  requested/reported `1/1`；MAXN_SUPER mode `2`；fan PWM `255`；
+  `nvfancontrol` inactive；J1-accepted `jetson_clocks --fan` state。
+- Original strict J4.2 result remains failed：MAE
+  `6.972924584434146e-06`；max_abs `0.001068115234375`；strict Plan Gate
+  pass：`false`。
+- D048 v2 result：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；
+  overall MAE `6.972924584434146e-06`；bbox max_abs
+  `0.001068115234375`；score max_abs `4.76837158203125e-07`；all 84000
+  values finite；two Jetson processes byte-identical。
+- Canonical Jetson raw SHA256：
+  `a64a1028c3ce0c3b6cf2263122fe555338a75dd38bd9cbb6b0f62495359af358`。
+- D048 is limited to the frozen Jetson Orin Nano Super / L4T R36.5 / aarch64 /
+  ORT 1.23.2 CPU-only combination and does not relax J4.3's Level C Gate。
+- No production source or inference algorithm change；no ORT rebuild；no
+  benchmark, latency/FPS campaign, preprocessing/postprocessing, TensorRT,
+  CUDA EP, Pipeline, ROS2 or Level C execution。
+
+### Stage J J5.1 Frozen Python Reference Environment
+
+- WSL kernel：`6.18.33.2-microsoft-standard-WSL2`；architecture：`x86_64`。
+- Python：`3.10.12`；NumPy：`1.26.4`；OpenCV Python：`4.10.0`；
+  ONNX Runtime：`1.23.2`；PyYAML：`6.0.2`。
+- Actual ORT provider：`CPUExecutionProvider`；execution mode：
+  `ORT_SEQUENTIAL`；graph optimization：`ORT_ENABLE_ALL`；intra/inter-op：`1/1`。
+- CPU model：`Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz`。
+- Model SHA256：`c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944`；
+  contract SHA256：`9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`；
+  benchmark manifest SHA256：`235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab`。
+- Reference SHA256：`1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7`。
+- Tool SHA256：`m5_level_c_reference.py`=`d59ff5efaad737e6f3dbe6ed5508cc7a644be366b9b24ad2bf53ebfe21265640`；
+  `m5_level_c_common.py`=`aef39cf5b9ae8b9d60edef5fc8f4bb1a77045619547cb9f4d8f5490ae3b894ab`；
+  `prepare_m5_corpus.py`=`3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f`。
+- No Jetson benchmark；no performance result；no TensorRT、CUDA、Pipeline 或 telemetry。

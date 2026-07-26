@@ -48,20 +48,51 @@ bool timing_is_valid(const FrameTimings& timing) {
                timing.pre_sink_total_ms >= 0.0;
 }
 
+std::uint64_t monotonic_timestamp_ns(const Clock::time_point& timestamp) {
+    return static_cast<std::uint64_t>(
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            timestamp.time_since_epoch())
+            .count());
+}
+
+Status trace_begin(IFrameTraceObserver* observer,
+                   std::size_t cycle_id,
+                   FrameTraceStage stage,
+                   const Clock::time_point& timestamp) {
+    if (observer == nullptr) {
+        return Status::success();
+    }
+    return observer->on_stage_begin(cycle_id, stage,
+                                    monotonic_timestamp_ns(timestamp));
+}
+
+Status trace_end(IFrameTraceObserver* observer,
+                 std::size_t cycle_id,
+                 FrameTraceStage stage,
+                 const Clock::time_point& timestamp) {
+    if (observer == nullptr) {
+        return Status::success();
+    }
+    return observer->on_stage_end(cycle_id, stage,
+                                  monotonic_timestamp_ns(timestamp));
+}
+
 }  // namespace
 
 SerialRunner::SerialRunner(ImageSource& source,
                            preprocess::Preprocessor& preprocessor,
-                           const core::TensorInfo& model_input_info,
-                           inference::IInferenceEngine& engine,
-                           postprocess::PostProcessor& postprocessor,
-                           IResultSink& sink)
+                               const core::TensorInfo& model_input_info,
+                               inference::IInferenceEngine& engine,
+                               postprocess::PostProcessor& postprocessor,
+                               IResultSink& sink,
+                               IFrameTraceObserver* trace_observer)
     : source_(source),
       preprocessor_(preprocessor),
       model_input_info_(model_input_info),
       engine_(engine),
       postprocessor_(postprocessor),
-      sink_(sink) {}
+      sink_(sink),
+      trace_observer_(trace_observer) {}
 
 core::Status SerialRunner::run(const RunMetadata& metadata,
                                RunSummary* summary) {
@@ -71,16 +102,30 @@ core::Status SerialRunner::run(const RunMetadata& metadata,
     }
 
     RunSummary staged_summary;
+    std::size_t cycle_id = 0;
     const Status begin_status = sink_.begin_run(metadata);
     if (!begin_status.ok()) {
         return stage_failure("sink.begin_run", begin_status);
     }
 
     while (true) {
+        const std::size_t current_cycle_id = cycle_id++;
         const Clock::time_point pre_sink_start = Clock::now();
+        const Status source_trace_begin = trace_begin(
+            trace_observer_, current_cycle_id, FrameTraceStage::kSource,
+            pre_sink_start);
+        if (!source_trace_begin.ok()) {
+            return stage_failure("trace.source.begin", source_trace_begin);
+        }
         std::optional<ImageItem> item;
         const Status source_status = source_.next(&item);
         const Clock::time_point source_end = Clock::now();
+        const Status source_trace_end = trace_end(
+            trace_observer_, current_cycle_id, FrameTraceStage::kSource,
+            source_end);
+        if (!source_trace_end.ok()) {
+            return stage_failure("trace.source.end", source_trace_end);
+        }
         if (!source_status.ok()) {
             return stage_failure("source", source_status);
         }
@@ -90,26 +135,68 @@ core::Status SerialRunner::run(const RunMetadata& metadata,
 
         preprocess::PreprocessedFrame preprocessed;
         const Clock::time_point preprocess_start = Clock::now();
+        const Status preprocess_trace_begin = trace_begin(
+            trace_observer_, current_cycle_id, FrameTraceStage::kPreprocess,
+            preprocess_start);
+        if (!preprocess_trace_begin.ok()) {
+            return stage_failure("trace.preprocess.begin", preprocess_trace_begin,
+                                 &*item);
+        }
         const Status preprocess_status = preprocessor_.preprocess(
             item->image_bgr, model_input_info_, &preprocessed);
         const Clock::time_point preprocess_end = Clock::now();
+        const Status preprocess_trace_end = trace_end(
+            trace_observer_, current_cycle_id, FrameTraceStage::kPreprocess,
+            preprocess_end);
+        if (!preprocess_trace_end.ok()) {
+            return stage_failure("trace.preprocess.end", preprocess_trace_end,
+                                 &*item);
+        }
         if (!preprocess_status.ok()) {
             return stage_failure("preprocess", preprocess_status, &*item);
         }
 
         core::HostTensor raw_output;
         const Clock::time_point inference_start = Clock::now();
+        const Status inference_trace_begin = trace_begin(
+            trace_observer_, current_cycle_id, FrameTraceStage::kInference,
+            inference_start);
+        if (!inference_trace_begin.ok()) {
+            return stage_failure("trace.inference.begin", inference_trace_begin,
+                                 &*item);
+        }
         const Status inference_status = engine_.run(preprocessed.tensor, &raw_output);
         const Clock::time_point inference_end = Clock::now();
+        const Status inference_trace_end = trace_end(
+            trace_observer_, current_cycle_id, FrameTraceStage::kInference,
+            inference_end);
+        if (!inference_trace_end.ok()) {
+            return stage_failure("trace.inference.end", inference_trace_end,
+                                 &*item);
+        }
         if (!inference_status.ok()) {
             return stage_failure("inference", inference_status, &*item);
         }
 
         std::vector<postprocess::Detection> detections;
         const Clock::time_point postprocess_start = Clock::now();
+        const Status postprocess_trace_begin = trace_begin(
+            trace_observer_, current_cycle_id, FrameTraceStage::kPostprocess,
+            postprocess_start);
+        if (!postprocess_trace_begin.ok()) {
+            return stage_failure("trace.postprocess.begin", postprocess_trace_begin,
+                                 &*item);
+        }
         const Status postprocess_status = postprocessor_.process(
             raw_output, preprocessed.transform, &detections);
         const Clock::time_point postprocess_end = Clock::now();
+        const Status postprocess_trace_end = trace_end(
+            trace_observer_, current_cycle_id, FrameTraceStage::kPostprocess,
+            postprocess_end);
+        if (!postprocess_trace_end.ok()) {
+            return stage_failure("trace.postprocess.end", postprocess_trace_end,
+                                 &*item);
+        }
         if (!postprocess_status.ok()) {
             return stage_failure("postprocess", postprocess_status, &*item);
         }
@@ -146,7 +233,20 @@ core::Status SerialRunner::run(const RunMetadata& metadata,
             frame.timings = timing;
         }
 
+        const Clock::time_point sink_start = Clock::now();
+        const Status sink_trace_begin = trace_begin(
+            trace_observer_, current_cycle_id, FrameTraceStage::kSink,
+            sink_start);
+        if (!sink_trace_begin.ok()) {
+            return stage_failure("trace.sink.begin", sink_trace_begin, &*item);
+        }
         const Status write_status = sink_.write_frame(frame);
+        const Clock::time_point sink_end = Clock::now();
+        const Status sink_trace_end = trace_end(
+            trace_observer_, current_cycle_id, FrameTraceStage::kSink, sink_end);
+        if (!sink_trace_end.ok()) {
+            return stage_failure("trace.sink.end", sink_trace_end, &*item);
+        }
         if (!write_status.ok()) {
             return stage_failure("sink.write_frame", write_status, &*item);
         }

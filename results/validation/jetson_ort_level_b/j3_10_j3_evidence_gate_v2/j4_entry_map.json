@@ -1,0 +1,24 @@
+{
+  "J4.1": {
+    "plan_section": "18.1",
+    "task": "Level A correctness",
+    "status": "READY"
+  },
+  "J4.2": {
+    "plan_section": "18.2",
+    "task": "Level B runtime/integration",
+    "status": "PENDING"
+  },
+  "J4.3": {
+    "plan_section": "18.3",
+    "task": "Level C robustness",
+    "status": "PENDING",
+    "j3_9_dependency": "SATISFIED_BY_D046_AND_J3_10_V2",
+    "new_sanitizer_campaign": false
+  },
+  "J4.4": {
+    "plan_sections": ["18", "26"],
+    "task": "Cross-level Evidence gate",
+    "status": "PENDING"
+  }
+}

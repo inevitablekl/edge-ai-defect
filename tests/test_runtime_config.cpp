@@ -1,4 +1,10 @@
+#include "edge_ai_defect/backend_ort/onnx_runtime_options.hpp"
+#include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
+#include "edge_ai_defect/runtime/portable_control.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
+
+#include <opencv2/core.hpp>
+#include <onnxruntime_cxx_api.h>
 
 #include <filesystem>
 #include <fstream>
@@ -9,6 +15,7 @@
 namespace {
 
 namespace core = edge_ai_defect::core;
+namespace backend_ort = edge_ai_defect::backend_ort;
 namespace runtime = edge_ai_defect::runtime;
 
 class TestContext {
@@ -84,6 +91,48 @@ postprocess:
 
 timing:
   enabled: true
+)yaml";
+}
+
+std::string valid_yaml_v2() {
+    return R"yaml(schema_version: 2
+
+backend:
+  type: onnxruntime_cpu
+
+onnxruntime:
+  execution_mode: sequential
+  graph_optimization_level: all
+  intra_op_threads: 1
+  inter_op_threads: 1
+  intra_op_allow_spinning: true
+  inter_op_allow_spinning: true
+  cpu_arena_enabled: true
+  memory_pattern_enabled: true
+
+runtime:
+  opencv_num_threads: 1
+
+model:
+  path: ../models/frozen.onnx
+  contract_path: ../contracts/frozen.yaml
+
+input:
+  type: directory
+  directory: ../images
+
+output:
+  json_path: ../results/serial.json
+  console: true
+  overwrite: false
+
+postprocess:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_det: 300
+  max_nms: 30000
+  max_wh: 7680.0
+  agnostic: false
 )yaml";
 }
 
@@ -244,6 +293,323 @@ void test_valid_config_and_paths(TestContext& context, const Options& options) {
                    "postprocess fields mismatch");
 }
 
+void test_v2_config_and_isolation(TestContext& context, const Options& options) {
+    const std::filesystem::path config_dir = options.temp_dir / "configs_v2";
+    std::error_code error;
+    std::filesystem::create_directories(config_dir, error);
+    context.expect(!error,
+                   "v2 valid config setup",
+                   "could not create config directory");
+    const std::filesystem::path config_path = config_dir / "runtime_v2.yaml";
+    context.expect(write_text_file(config_path, valid_yaml_v2()),
+                   "v2 valid config setup",
+                   "could not write YAML");
+
+    runtime::RuntimeConfig config;
+    const core::Status status = runtime::RuntimeConfigLoader::load(config_path, &config);
+    context.expect(status.ok(), "v2 valid config", status.message());
+    if (status.ok()) {
+        context.expect(config.schema_version == 2,
+                       "v2 valid config",
+                       "schema version mismatch");
+        context.expect(config.model_path == options.temp_dir / "models/frozen.onnx",
+                       "v2 model path",
+                       "model.path must resolve relative to config directory");
+        context.expect(config.onnxruntime.execution_mode == "sequential" &&
+                           config.onnxruntime.graph_optimization_level == "all" &&
+                           config.onnxruntime.intra_op_threads == 1U &&
+                           config.onnxruntime.inter_op_threads == 1U &&
+                           config.onnxruntime.intra_op_allow_spinning &&
+                           config.onnxruntime.inter_op_allow_spinning &&
+                           config.onnxruntime.cpu_arena_enabled &&
+                           config.onnxruntime.memory_pattern_enabled,
+                       "v2 onnxruntime options",
+                       "ORT options mismatch");
+        context.expect(config.opencv_num_threads == 1U,
+                       "v2 runtime options",
+                       "OpenCV thread count mismatch");
+        context.expect(config.postprocess_config.confidence_threshold == 0.25F &&
+                           config.postprocess_config.max_det == 300U &&
+                           config.postprocess_config.max_nms == 30000U,
+                       "v2 postprocess options",
+                       "postprocess fields mismatch");
+    }
+
+    expect_failure(context,
+                   options,
+                   "v2_rejects_v1_timing",
+                   valid_yaml_v2() + "\ntiming:\n  enabled: true\n",
+                   "$.timing");
+    expect_failure(context,
+                   options,
+                   "v2_rejects_v1_postprocess_name",
+                   replace_once(valid_yaml_v2(),
+                                "  conf_threshold: 0.25",
+                                "  confidence_threshold: 0.25"),
+                   "postprocess.confidence_threshold");
+    expect_failure(context,
+                   options,
+                   "v1_rejects_v2_onnxruntime",
+                   replace_once(valid_yaml(),
+                                "model:\n",
+                                "onnxruntime:\n  execution_mode: sequential\nmodel:\n"),
+                   "$.onnxruntime");
+    expect_failure(context,
+                   options,
+                   "v1_rejects_schema_v2_without_v2_fields",
+                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 2"),
+                   "$.timing");
+    expect_failure(context,
+                   options,
+                   "v2_missing_required_field",
+                   replace_once(valid_yaml_v2(),
+                                "  memory_pattern_enabled: true\n",
+                                ""),
+                   "onnxruntime.memory_pattern_enabled");
+}
+
+void test_ort_options_record(TestContext& context) {
+    runtime::RuntimeConfig config;
+    config.schema_version = 2;
+    config.backend_type = "onnxruntime_cpu";
+
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> record;
+    const core::Status record_status =
+        backend_ort::OrtOptionsRecord::create(config, &record);
+    context.expect(record_status.ok(),
+                   "ORT options default record",
+                   record_status.message());
+    if (!record_status.ok()) {
+        return;
+    }
+
+    context.expect(record->schema_version() == 2U &&
+                       record->backend_type() == "onnxruntime_cpu" &&
+                       record->execution_mode() == "sequential" &&
+                       record->graph_optimization_level() == "all" &&
+                       record->intra_op_threads() == 1U &&
+                       record->inter_op_threads() == 1U &&
+                       record->intra_op_allow_spinning() &&
+                       record->inter_op_allow_spinning() &&
+                       record->cpu_arena_enabled() &&
+                       record->memory_pattern_enabled(),
+                   "ORT options default values",
+                   "default option values mismatch");
+
+    const std::string expected_record =
+        "{\"schema_version\":2,\"backend_type\":\"onnxruntime_cpu\","
+        "\"execution_mode\":\"sequential\",\"graph_optimization_level\":\"all\","
+        "\"intra_op_threads\":1,\"inter_op_threads\":1,"
+        "\"intra_op_allow_spinning\":true,\"inter_op_allow_spinning\":true,"
+        "\"cpu_arena_enabled\":true,\"memory_pattern_enabled\":true}";
+    context.expect(record->canonical_json() == expected_record,
+                   "ORT options stable record",
+                   "canonical record output changed");
+
+    Ort::SessionOptions session_options;
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> applied_record;
+    const core::Status apply_status = backend_ort::apply_ort_options(
+        config, &session_options, &applied_record);
+    context.expect(apply_status.ok(),
+                   "ORT options application",
+                   apply_status.message());
+    context.expect(applied_record != nullptr &&
+                       applied_record->canonical_json() == expected_record,
+                   "ORT options applied record",
+                   "applied record mismatch");
+
+    runtime::RuntimeConfig invalid = config;
+    invalid.schema_version = 1;
+    std::unique_ptr<const backend_ort::OrtOptionsRecord> rejected;
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid schema",
+                   "schema v1 must be rejected");
+    invalid = config;
+    invalid.onnxruntime.execution_mode = "parallel";
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid execution mode",
+                   "unsupported execution mode must be rejected");
+    invalid = config;
+    invalid.onnxruntime.intra_op_threads = 0;
+    context.expect(!backend_ort::OrtOptionsRecord::create(invalid, &rejected).ok(),
+                   "ORT options invalid thread count",
+                   "zero thread count must be rejected");
+}
+
+void test_opencv_thread_policy(TestContext& context) {
+    const int previous_threads = cv::getNumThreads();
+    runtime::RuntimeConfig config;
+    config.schema_version = 2;
+    config.opencv_num_threads = 1;
+
+    std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> record;
+    const core::Status status =
+        runtime::OpenCvThreadPolicyRecord::apply(config, &record);
+    context.expect(status.ok(), "OpenCV policy mapping", status.message());
+    if (status.ok()) {
+        context.expect(record->requested_threads() == 1U &&
+                           record->applied_threads() == 1U &&
+                           record->opencv_version() == CV_VERSION &&
+                           record->policy_active(),
+                       "OpenCV policy record",
+                       "requested/applied/version/active mismatch");
+        const std::string expected =
+            "{\"requested_threads\":1,\"applied_threads\":1,\"opencv_version\":\"" +
+            std::string(CV_VERSION) + "\",\"policy_active\":true}";
+        context.expect(record->canonical_json() == expected,
+                       "OpenCV policy stable output",
+                       "canonical policy record changed");
+        context.expect(cv::getNumThreads() == 1,
+                       "OpenCV policy application",
+                       "cv::getNumThreads did not report requested value");
+    }
+
+    runtime::RuntimeConfig invalid = config;
+    invalid.schema_version = 1;
+    std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> rejected;
+    context.expect(!runtime::OpenCvThreadPolicyRecord::apply(invalid, &rejected).ok(),
+                   "OpenCV policy invalid schema",
+                   "schema v1 must be rejected");
+    invalid = config;
+    invalid.opencv_num_threads = 0;
+    context.expect(!runtime::OpenCvThreadPolicyRecord::apply(invalid, &rejected).ok(),
+                   "OpenCV policy invalid thread count",
+                   "zero thread count must be rejected");
+
+    cv::setNumThreads(previous_threads);
+}
+
+void test_portable_control(TestContext& context, const Options& options) {
+    const std::filesystem::path config_path =
+        options.temp_dir / "portable_control" / "runtime_v2.yaml";
+    const std::filesystem::path evidence_directory =
+        options.temp_dir / "portable_control" / "evidence";
+    std::error_code error;
+    std::filesystem::create_directories(config_path.parent_path(), error);
+    context.expect(!error,
+                   "portable control setup",
+                   "could not create config directory");
+    context.expect(write_text_file(config_path, valid_yaml_v2()),
+                   "portable control setup",
+                   "could not write YAML");
+
+    runtime::PortableControlOptions control_options;
+    control_options.executable_path = "/bin/true";
+    control_options.config_path = config_path;
+    control_options.evidence_directory = evidence_directory;
+
+    std::unique_ptr<const runtime::PortableControlSession> session;
+    const core::Status start_status =
+        runtime::PortableControlSession::start(control_options, &session);
+    context.expect(start_status.ok(),
+                   "portable control startup",
+                   start_status.message());
+    if (!start_status.ok()) {
+        return;
+    }
+
+    const std::filesystem::path expected_config_path =
+        std::filesystem::absolute(config_path).lexically_normal();
+    const std::filesystem::path expected_evidence_directory =
+        std::filesystem::absolute(evidence_directory).lexically_normal();
+    context.expect(session->config_path() == expected_config_path,
+                   "portable control config path",
+                   "config path normalization mismatch");
+    context.expect(session->evidence_directory() == expected_evidence_directory,
+                   "portable control evidence path",
+                   "evidence directory normalization mismatch");
+    context.expect(session->trace_output_path() ==
+                       expected_evidence_directory / "trace.jsonl",
+                   "portable control trace path",
+                   "default trace path mismatch");
+    context.expect(session->config().schema_version == 2U &&
+                       session->config().model_path == options.temp_dir / "models/frozen.onnx",
+                   "portable control config record",
+                   "loaded model/config values mismatch");
+    context.expect(session->ort_options().canonical_json().find(
+                       "\"backend_type\":\"onnxruntime_cpu\"") !=
+                       std::string::npos,
+                   "portable control ORT record",
+                   "ORT record is not included");
+    context.expect(session->opencv_thread_policy().policy_active(),
+                   "portable control OpenCV record",
+                   "OpenCV policy is not active");
+
+    const std::string first_record = session->canonical_json();
+    context.expect(first_record == session->canonical_json(),
+                   "portable control deterministic record",
+                   "canonical record is not stable");
+    context.expect(first_record.find("\"executable_path\":\"") != std::string::npos &&
+                       first_record.find("\"config_path\":\"") != std::string::npos &&
+                       first_record.find("\"model_path\":\"") != std::string::npos &&
+                       first_record.find("\"ort_options\":") != std::string::npos &&
+                       first_record.find("\"opencv_thread_policy\":") != std::string::npos &&
+                       first_record.find("\"trace_output_path\":\"") != std::string::npos,
+                   "portable control fixed record",
+                   "required control fields are missing");
+
+    const core::Status write_status = session->write_evidence_record();
+    context.expect(write_status.ok(),
+                   "portable control evidence write",
+                   write_status.message());
+    if (write_status.ok()) {
+        std::ifstream input(session->evidence_record_path());
+        std::string written_record;
+        std::getline(input, written_record);
+        context.expect(written_record == first_record,
+                       "portable control evidence content",
+                       "written evidence differs from canonical record");
+    context.expect(!session->write_evidence_record().ok(),
+                       "portable control no overwrite",
+                       "existing evidence must not be overwritten by default");
+    }
+
+    runtime::PortableControlOptions explicit_trace = control_options;
+    explicit_trace.evidence_directory =
+        options.temp_dir / "portable_control" / "explicit_evidence";
+    explicit_trace.trace_output_path = "nested/trace.jsonl";
+    std::unique_ptr<const runtime::PortableControlSession> explicit_session;
+    const core::Status explicit_status =
+        runtime::PortableControlSession::start(explicit_trace, &explicit_session);
+    context.expect(explicit_status.ok(),
+                   "portable control explicit trace path",
+                   explicit_status.message());
+    if (explicit_status.ok()) {
+        const std::filesystem::path expected_explicit_trace =
+            std::filesystem::absolute(explicit_trace.evidence_directory)
+                .lexically_normal() /
+            "nested/trace.jsonl";
+        context.expect(explicit_session->trace_output_path() ==
+                           expected_explicit_trace,
+                       "portable control explicit trace path",
+                       "relative trace path normalization mismatch");
+        context.expect(std::filesystem::is_directory(
+                           explicit_session->trace_output_path().parent_path()),
+                       "portable control explicit trace path",
+                       "trace parent directory was not prepared");
+    }
+
+    runtime::PortableControlOptions invalid = control_options;
+    invalid.config_path = options.temp_dir / "missing-runtime.yaml";
+    std::unique_ptr<const runtime::PortableControlSession> rejected;
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control missing config",
+                   "missing config must fail");
+    invalid = control_options;
+    invalid.executable_path = options.temp_dir / "not-an-executable";
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control invalid executable",
+                   "invalid executable path must fail");
+    invalid = control_options;
+    invalid.evidence_directory = options.temp_dir / "evidence-file";
+    context.expect(write_text_file(invalid.evidence_directory, "not-a-directory"),
+                   "portable control invalid output setup",
+                   "could not create invalid output sentinel");
+    context.expect(!runtime::PortableControlSession::start(invalid, &rejected).ok(),
+                   "portable control invalid evidence path",
+                   "file path must not be accepted as evidence directory");
+}
+
 void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
@@ -282,7 +648,7 @@ void test_schema_failures(TestContext& context, const Options& options) {
     expect_failure(context,
                    options,
                    "invalid_schema_version",
-                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 2"),
+                   replace_once(valid_yaml(), "schema_version: 1", "schema_version: 3"),
                    "schema_version");
     expect_failure(context,
                    options,
@@ -372,6 +738,10 @@ int main(int argc, char* argv[]) {
 
     TestContext context;
     test_valid_config_and_paths(context, options);
+    test_v2_config_and_isolation(context, options);
+    test_ort_options_record(context);
+    test_opencv_thread_policy(context);
+    test_portable_control(context, options);
     test_schema_failures(context, options);
     test_loader_argument_failures(context, options);
 

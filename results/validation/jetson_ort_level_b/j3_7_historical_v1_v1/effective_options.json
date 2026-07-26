@@ -1,0 +1,33 @@
+{
+  "basis": "RuntimeConfigLoader, existing runtime_config test assertions and unchanged main.cpp schema branch",
+  "v1": {
+    "schema_version": 1,
+    "backend_type": "onnxruntime_cpu",
+    "timing_enabled": true,
+    "ort_options_record": null,
+    "opencv_thread_policy": null,
+    "engine_initialization_path": "legacy initialize(contract, model_path)",
+    "v2_fields_accepted": false
+  },
+  "v2": {
+    "schema_version": 2,
+    "backend_type": "onnxruntime_cpu",
+    "ort_options_record": {
+      "execution_mode": "sequential",
+      "graph_optimization_level": "all",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1,
+      "intra_op_allow_spinning": true,
+      "inter_op_allow_spinning": true,
+      "cpu_arena_enabled": true,
+      "memory_pattern_enabled": true
+    },
+    "opencv_thread_policy": {
+      "requested_threads": 1,
+      "explicit_policy_path": true
+    },
+    "engine_initialization_path": "v2 initialize(config, contract, model_path)",
+    "v1_fields_accepted": false
+  },
+  "compatibility_result": "PASS; differences are schema-explicit and isolated"
+}

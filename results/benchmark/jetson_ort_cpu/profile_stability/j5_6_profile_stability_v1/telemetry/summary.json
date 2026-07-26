@@ -1,0 +1,17 @@
+{
+  "tegrastats_samples": 1790,
+  "cycle_log_records": 771,
+  "cpu_utilization_mean_percent_by_cpu_1_to_5": [93.30, 93.01, 92.78, 91.37, 91.15],
+  "cpu_frequency_mean_MHz_by_cpu_1_to_5": [1728, 1728, 1728, 1728, 1728],
+  "gpu_frequency_snapshot_MHz": 1020,
+  "GR3D_utilization_mean_percent": 0.0,
+  "cpu_temperature_mean_max_celsius": [50.907, 51.843],
+  "gpu_temperature_mean_max_celsius": [49.336, 50.031],
+  "tj_mean_max_celsius": [50.907, 51.843],
+  "VDD_IN_mean_min_max_mW": [11349.396, 10022.0, 11891.0],
+  "RAM_used_mean_min_max_MB": [2170.884, 2077.0, 2206.0],
+  "SWAP_used_mean_min_max_MB": [1.0, 1.0, 1.0],
+  "thermal_throttle_counter": "unavailable",
+  "power_throttle_counter": "unavailable",
+  "throttle_observation_note": "No explicit throttle event field was present in tegrastats output; sysfs throttle counter paths were unavailable."
+}

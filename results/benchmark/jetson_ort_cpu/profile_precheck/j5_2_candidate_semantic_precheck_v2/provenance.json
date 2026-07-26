@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "evidence_id": "j5_2_candidate_semantic_precheck_v2",
+  "task": "J5.2",
+  "status": "PASS",
+  "d050_commit": "8db5f5d9",
+  "source_commit": "16e4cb3d0ab769cb5d1933a9759dbb87ff2ec855",
+  "binary_sha256": "418c9ee95737261259ad64c2b91fe206cb00df0ef8a521c28da4cb25e6e1dd23",
+  "model_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "corpus_manifest_sha256": "235b062cb82166709e2ff800ec71bf92396d5348508281f822ef116d5f0962ab",
+  "python_reference_sha256": "1c31cfd41b4377c989baf35d57352280bb84f26b1942a8e26ac60076e61392a7",
+  "ort_sdk_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "historical_v1_attempt": "FAILED_SCHEMA_BRIDGE; retained unchanged",
+  "images_in_evidence": false,
+  "absolute_paths_in_published_evidence": false,
+  "runtime_identifiers": "absent"
+}
