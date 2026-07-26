@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "task_id": "J4.3",
+  "status": "PASS",
+  "corpus_gate": {"jpg_count": 12, "bmp_count": 4, "manifest_present": true, "sha_and_dimensions_match": true},
+  "formal_execution": {"process_count": 2, "processed_images_per_run": 16, "detections_per_run": 54, "backend": "onnxruntime_cpu", "pipeline": "image -> preprocess -> ORT CPU inference -> postprocess -> Detection"},
+  "matching": {"algorithm": "class-aware maximum bipartite matching", "confidence_tolerance": 0.0001, "bbox_coordinate_tolerance_px": 0.01, "matched_count": 54, "unmatched_count": 0, "maximum_confidence_error": 2.65265835569517e-06, "maximum_bbox_error_px": 0.0003051264160163214, "passed_images": 16, "failed_images": 0},
+  "determinism": {"payload_byte_identical": true, "report_byte_identical": true},
+  "historical_regression": {"inventory_sha256_unchanged": true, "inventory_model_smoke_off": 31, "inventory_model_smoke_on": 39, "targeted_ctest_pass": 5, "targeted_ctest_expected_d048_level_b_failure": true},
+  "v2_config_attempt": {"status": "FAILED_BEFORE_INFERENCE", "reason": "RunMetadata schema_version must be 1", "retained_in_local_attempt": true},
+  "j4_4_started": false,
+  "protected_assets_modified": false
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "architecture": "aarch64",
+  "kernel": "5.15.185-tegra",
+  "l4t": "R36.5",
+  "device": "Jetson Orin Nano Super Developer Kit",
+  "controlled_cpu": 5,
+  "power_mode": {"name": "MAXN_SUPER", "mode_id": 2},
+  "fan": {"pwm": 255, "nvfancontrol": "inactive"},
+  "onnxruntime": {"version": "1.23.2", "provider": "CPUExecutionProvider", "execution_mode": "sequential", "graph_optimization_level": "all", "intra_op_threads": 1, "inter_op_threads": 1},
+  "opencv": {"version": "4.5.4"},
+  "yaml_cpp": "0.7.0"
+}

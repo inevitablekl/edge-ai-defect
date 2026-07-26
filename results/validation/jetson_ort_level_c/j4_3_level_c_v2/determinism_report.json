@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "independent_processes": 2,
+  "payload_byte_identical": true,
+  "report_byte_identical": true,
+  "canonical_payload_sha256": "6a8753a6ebf4bb724f51d1674f49cab7e55647d3155161bcda8c9dd008baf60b",
+  "canonical_report_sha256": "2f7c65195ba61d84cfc3d1d8f2914c66324ac5e43733ce1da6e6cfa6e3200e85"
+}
