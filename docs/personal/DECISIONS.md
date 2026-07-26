@@ -3237,3 +3237,27 @@ production inference algorithm change.
 9. 该 research-grade Gate PASS 后允许进入 J6，但不直接授权 Stage T。Stage T
    仍需 J6 research-grade stability、J7 consolidation 和 final research-grade
    independent audit PASS。
+
+### D054 - Close Stage J Research Baseline and Open Stage K Planning
+
+状态：`Accepted`
+
+1. 基于已发布且通过 manifest 验证的 J5.1–J7 Evidence、J8 lightweight audit
+   和最终文档审查，Stage J Research Baseline 正式状态为
+   `COMPLETE`。
+
+2. J8 lightweight audit 的定位是 research-grade lightweight closeout audit；
+   它不等同于原冻结 J8 Deep Evidence Gate，不声称原 J8 Deep Gate 通过，也
+   不修改原 J8 `FAIL` 历史事实。
+
+3. 下列限制继续对论文和工程结论有效：J5.5 process-wall statistics
+   limitation、J6 unavailable power telemetry，以及未进行 TensorRT/GPU
+   backend 和 production validation。
+
+4. Stage J closeout 只修改允许的最终报告、状态文档和本 Decision；不修改
+   冻结 Stage J Plan、J1–J7 Evidence、模型、contract、corpus 或 runtime
+   SHA，也不删除历史失败 attempt。
+
+5. Stage K Planning：`READY_FOR_PLANNING`，允许开始下一阶段规划审查。
+   Stage T remains `NOT_STARTED` and `NOT_AUTHORIZED` for implementation or
+   execution until separate next-stage planning and governance authorization。

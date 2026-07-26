@@ -6,6 +6,10 @@
 CPUExecutionProvider 的 Stage J CPU baseline 当前事实。D052 后该链为
 `PARTIALLY_COMPLETE`，J5.6 Tuned formal baseline 尚待补齐。
 
+Historical snapshot notice: Sections 1-9 preserve earlier Stage J snapshots and
+are not the current status authority. The latest append-only closeout section
+below reflects the actual published J5.1-J8-lightweight Evidence chain.
+
 ## 2. Frozen environment
 
 - Hardware: Jetson Orin Nano Super Developer Kit。
@@ -141,3 +145,14 @@ below the `26214400` byte limit.
 - J8：`READY_FOR_AUDIT`。
 - J9：`NOT_STARTED`。
 - Stage T：`NOT_AUTHORIZED`。
+
+## 14. Stage J Closeout and Stage K Planning Entry
+
+- Stage J Research Baseline：`COMPLETE`。
+- J8 lightweight audit：`COMPLETE`；the original Deep Evidence Gate remains a
+  separate historical `FAIL` and is not replaced by the lightweight audit。
+- J5.5 process-wall statistics limitation and J6 unavailable power telemetry
+  limitation remain part of the final interpretation。
+- Stage K：`READY_FOR_PLANNING`。
+- Stage T：`NOT_STARTED`；planning review and separate governance authorization
+  are required before implementation or execution。
