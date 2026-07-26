@@ -744,6 +744,20 @@ if(BUILD_TESTING)
             LABELS "m1;preprocess;level-a;evidence;provenance"
     )
 
+    add_executable(stage_j_preprocess_level_a
+        tests/stage_j_preprocess_level_a.cpp
+    )
+    target_link_libraries(stage_j_preprocess_level_a
+        PRIVATE
+            edge_ai_core
+            preprocess_level_a_compare_test_support
+            preprocess_level_a_manifest_test_support
+    )
+    set_target_properties(stage_j_preprocess_level_a
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+
     add_executable(test_ort_runtime_smoke
         tests/smoke/ort_runtime_smoke.cpp
     )
