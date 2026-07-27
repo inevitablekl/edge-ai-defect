@@ -96,7 +96,7 @@ def manifest(path: Path, *, image_id: str = "image", tensor_path: Path | None = 
         "entries": [{
             "image_id": image_id,
             "input_tensor_path": str(tensor_path),
-            "input_sha256": sha or sha256(tensor_path),
+            "input_tensor_sha256": sha or sha256(tensor_path),
             "dtype": "float32",
             "byte_order": "little_endian",
             "layout": "NCHW",

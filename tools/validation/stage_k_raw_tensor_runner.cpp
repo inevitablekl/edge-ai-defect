@@ -248,8 +248,8 @@ core::Status parse_input_manifest(const fs::path& path, std::vector<InputEntry>*
             if (!status.ok() || entry.tensor_path_text.empty()) return failure(core::ErrorCode::kSchemaViolation, "entry input_tensor_path must not be empty");
             const fs::path raw_path(entry.tensor_path_text);
             entry.tensor_path = (raw_path.is_absolute() ? raw_path : path.parent_path() / raw_path).lexically_normal();
-            status = scalar(node["input_sha256"], "entries[" + std::to_string(index) + "].input_sha256", &entry.sha256);
-            if (!status.ok() || !is_lowercase_sha256(entry.sha256)) return failure(core::ErrorCode::kSchemaViolation, "entry input_sha256 must be lowercase SHA256");
+            status = scalar(node["input_tensor_sha256"], "entries[" + std::to_string(index) + "].input_tensor_sha256", &entry.sha256);
+            if (!status.ok() || !is_lowercase_sha256(entry.sha256)) return failure(core::ErrorCode::kSchemaViolation, "entry input_tensor_sha256 must be lowercase SHA256");
             status = exact_string(node["dtype"], "entries[" + std::to_string(index) + "].dtype", "float32");
             if (!status.ok()) return status;
             status = exact_string(node["byte_order"], "entries[" + std::to_string(index) + "].byte_order", "little_endian");
