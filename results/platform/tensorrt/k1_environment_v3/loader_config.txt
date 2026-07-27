@@ -1,0 +1,42 @@
+=== /etc/ld.so.conf ===
+include /etc/ld.so.conf.d/*.conf
+
+=== /etc/ld.so.conf.d/*.conf ===
+/etc/ld.so.conf.d/aarch64-linux-gnu.conf
+==== /etc/ld.so.conf.d/aarch64-linux-gnu.conf
+# Multiarch support
+/usr/local/lib/aarch64-linux-gnu
+/lib/aarch64-linux-gnu
+/usr/lib/aarch64-linux-gnu
+/etc/ld.so.conf.d/fakeroot-aarch64-linux-gnu.conf
+==== /etc/ld.so.conf.d/fakeroot-aarch64-linux-gnu.conf
+/usr/lib/aarch64-linux-gnu/libfakeroot
+/etc/ld.so.conf.d/nvidia-tegra.conf
+==== /etc/ld.so.conf.d/nvidia-tegra.conf
+# SPDX-FileCopyrightText: Copyright (c) 2013-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-NvidiaProprietary
+#
+# NVIDIA CORPORATION, its affiliates and licensors retain all intellectual
+# property and proprietary rights in and to this material, related
+# documentation and any modifications thereto. Any use, reproduction,
+# disclosure or distribution of this material and related documentation
+# without an express license agreement from NVIDIA CORPORATION or
+# its affiliates is strictly prohibited.
+
+/usr/lib/aarch64-linux-gnu/nvidia
+/etc/ld.so.conf.d/gds-12-6.conf
+==== /etc/ld.so.conf.d/gds-12-6.conf
+/usr/local/cuda-12.6/targets/aarch64-linux/lib
+/etc/ld.so.conf.d/000_cuda.conf
+==== /etc/ld.so.conf.d/000_cuda.conf
+/usr/local/cuda/targets/aarch64-linux/lib
+/etc/ld.so.conf.d/libc.conf
+==== /etc/ld.so.conf.d/libc.conf
+# libc default configuration
+/usr/local/lib
+/etc/ld.so.conf.d/988_cuda-12.conf
+==== /etc/ld.so.conf.d/988_cuda-12.conf
+/usr/local/cuda-12/targets/aarch64-linux/lib
+/etc/ld.so.conf.d/fakechroot-aarch64-linux-gnu.conf
+==== /etc/ld.so.conf.d/fakechroot-aarch64-linux-gnu.conf
+/usr/lib/aarch64-linux-gnu/fakechroot
