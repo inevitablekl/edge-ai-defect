@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "attempt_id": "k5_correctness_v2",
+  "status": "ORT_CONTROL_PASS_WITH_INHERITED_CROSS_ARCH_LIMITATION",
+  "source_commit": "838e2bfbfc84cb378ea629f9ff316828ed86fe09",
+  "previous_failure_evidence": "results/validation/jetson_tensorrt_fp16/k5_correctness_v1",
+  "reference": {
+    "bundle_id": "stage_k_level_b_reference_v1",
+    "archive_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+    "input_identity": "16/16 SHA unchanged"
+  },
+  "d063": {
+    "decision_commit": "838e2bfbfc84cb378ea629f9ff316828ed86fe09",
+    "evaluation": "INHERITED_CROSS_ARCH_LIMITATION",
+    "strict_gate_unchanged": true
+  },
+  "ort_level_b": {
+    "inference": "16/16 PASS",
+    "strict": "FAIL 0/16",
+    "repeatability": "PASS 16/16 byte-identical",
+    "bbox_dominated": true,
+    "score_bounded": true
+  },
+  "ort_level_c": {
+    "status": "PASS",
+    "processed_images": 16,
+    "passed_images": 16,
+    "confidence_tolerance": 0.0001,
+    "bbox_tolerance": 0.01
+  },
+  "downstream": {
+    "tensorrt_level_b": "NOT_EXECUTED",
+    "tensorrt_level_c": "NOT_EXECUTED",
+    "k6": "NOT_EXECUTED",
+    "benchmark": "NOT_EXECUTED",
+    "stability": "NOT_EXECUTED"
+  }
+}

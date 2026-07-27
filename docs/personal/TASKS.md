@@ -3054,3 +3054,18 @@ Stage J Plan or historical Evidence.
 - D063 updates only the ORT control disposition path. It does not change
   TensorRT tolerances, the Reference Bundle, ONNX, or ModelContract. K5
   rerun is required before K6；TensorRT Level B/C and K6 remain unexecuted。
+
+### 2026-07-28 - Stage K K5.2 ORT Control Re-evaluation after D063
+
+- New immutable Evidence：`results/validation/jetson_tensorrt_fp16/k5_correctness_v2/`；旧
+  `k5_correctness_v1` failure Evidence unchanged。
+- ORT Level B：16/16 inference `PASS`；strict Gate remains `FAIL` under the
+  unchanged thresholds；Jetson repeatability `16/16 byte-identical`。
+- D063 inherited evaluation：input identity、exact output shape、finite output、
+  bbox-dominated numerical pattern、bounded score channels and no anomalous
+  single-point failure all satisfy the disposition conditions。
+- ORT Level C：原始 Stage J strict semantic comparison `16/16 PASS`；confidence
+  and bbox tolerances unchanged。
+- Current ORT Control disposition：`INHERITED_CROSS_ARCH_LIMITATION`。这不是
+  TensorRT correctness closeout；TensorRT Level B/C、benchmark、stability、
+  Pipeline 与 K6 均未执行。

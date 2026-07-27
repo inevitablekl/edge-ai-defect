@@ -1,0 +1,1273 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "tolerances": {
+    "confidence_abs": 0.0001,
+    "bbox_coordinate_abs": 0.01
+  },
+  "inputs": {
+    "python_reference": "reference.json",
+    "cpp_result": "ort_level_c_result.json"
+  },
+  "image_results": [
+    {
+      "sequence_index": 0,
+      "relative_path": "0000_crazing_51.jpg",
+      "status": "PASS",
+      "detection_count": 0,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 0.0,
+      "max_bbox_coordinate_abs_error": 0.0,
+      "matched_pairs": []
+    },
+    {
+      "sequence_index": 1,
+      "relative_path": "0001_crazing_10.jpg",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 4.1765386965542106e-07,
+      "max_bbox_coordinate_abs_error": 8.733959961659821e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 0,
+          "python_candidate_index": 8349,
+          "cpp_candidate_index": 8349,
+          "confidence_abs_error": 1.193331604087966e-07,
+          "bbox_max_abs_error": 8.733959961659821e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 0,
+          "python_candidate_index": 8212,
+          "cpp_candidate_index": 8212,
+          "confidence_abs_error": 4.1765386965542106e-07,
+          "bbox_max_abs_error": 8.040942381626337e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 2,
+      "relative_path": "0002_inclusion_18.jpg",
+      "status": "PASS",
+      "detection_count": 12,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 12,
+          "cpp_count": 12,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 2.65265835569517e-06,
+      "max_bbox_coordinate_abs_error": 0.00018349023437735923,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 1,
+          "python_candidate_index": 7553,
+          "cpp_candidate_index": 7553,
+          "confidence_abs_error": 2.3871221921378805e-07,
+          "bbox_max_abs_error": 7.520019522644361e-06
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 1,
+          "python_candidate_index": 8101,
+          "cpp_candidate_index": 8101,
+          "confidence_abs_error": 1.7862475587548943e-07,
+          "bbox_max_abs_error": 1.9073485624999942e-05
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 1,
+          "python_candidate_index": 7873,
+          "cpp_candidate_index": 7873,
+          "confidence_abs_error": 2.9850192262426134e-07,
+          "bbox_max_abs_error": 3.766845708241817e-06
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 1,
+          "python_candidate_index": 7855,
+          "cpp_candidate_index": 7855,
+          "confidence_abs_error": 5.362248535201175e-07,
+          "bbox_max_abs_error": 3.070898438295444e-05
+        },
+        {
+          "python_detection_index": 4,
+          "cpp_detection_index": 4,
+          "class_id": 1,
+          "python_candidate_index": 6751,
+          "cpp_candidate_index": 6751,
+          "confidence_abs_error": 1.784307861463219e-07,
+          "bbox_max_abs_error": 7.654003908896811e-06
+        },
+        {
+          "python_detection_index": 5,
+          "cpp_detection_index": 5,
+          "class_id": 1,
+          "python_candidate_index": 8153,
+          "cpp_candidate_index": 8153,
+          "confidence_abs_error": 1.7857556156020138e-07,
+          "bbox_max_abs_error": 0.00018349023437735923
+        },
+        {
+          "python_detection_index": 6,
+          "cpp_detection_index": 6,
+          "class_id": 1,
+          "python_candidate_index": 6856,
+          "cpp_candidate_index": 6856,
+          "confidence_abs_error": 3.254394531637672e-10,
+          "bbox_max_abs_error": 1.3342553714323913e-05
+        },
+        {
+          "python_detection_index": 7,
+          "cpp_detection_index": 7,
+          "class_id": 1,
+          "python_candidate_index": 7647,
+          "cpp_candidate_index": 7647,
+          "confidence_abs_error": 2.149658229200213e-10,
+          "bbox_max_abs_error": 8.612756346337846e-06
+        },
+        {
+          "python_detection_index": 8,
+          "cpp_detection_index": 8,
+          "class_id": 1,
+          "python_candidate_index": 7215,
+          "cpp_candidate_index": 7215,
+          "confidence_abs_error": 1.3708254089639382e-06,
+          "bbox_max_abs_error": 7.635253908233608e-06
+        },
+        {
+          "python_detection_index": 9,
+          "cpp_detection_index": 9,
+          "class_id": 1,
+          "python_candidate_index": 7404,
+          "cpp_candidate_index": 7404,
+          "confidence_abs_error": 2.65265835569517e-06,
+          "bbox_max_abs_error": 2.6706787110697405e-05
+        },
+        {
+          "python_detection_index": 10,
+          "cpp_detection_index": 10,
+          "class_id": 1,
+          "python_candidate_index": 7348,
+          "cpp_candidate_index": 7348,
+          "confidence_abs_error": 8.916954041815472e-08,
+          "bbox_max_abs_error": 1.101831054484137e-05
+        },
+        {
+          "python_detection_index": 11,
+          "cpp_detection_index": 11,
+          "class_id": 1,
+          "python_candidate_index": 6495,
+          "cpp_candidate_index": 6495,
+          "confidence_abs_error": 1.1898974611179725e-07,
+          "bbox_max_abs_error": 1.767915649253382e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 3,
+      "relative_path": "0003_inclusion_217.jpg",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 9.243609924158847e-07,
+      "max_bbox_coordinate_abs_error": 2.2791503909047606e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 1,
+          "python_candidate_index": 8169,
+          "cpp_candidate_index": 8169,
+          "confidence_abs_error": 2.2796631249377697e-10,
+          "bbox_max_abs_error": 4.024658196044584e-06
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 1,
+          "python_candidate_index": 6709,
+          "cpp_candidate_index": 6709,
+          "confidence_abs_error": 9.243609924158847e-07,
+          "bbox_max_abs_error": 2.2791503909047606e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 4,
+      "relative_path": "0004_patches_156.jpg",
+      "status": "PASS",
+      "detection_count": 3,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 3,
+          "cpp_count": 3,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 1.788032836791409e-07,
+      "max_bbox_coordinate_abs_error": 1.1493896479919385e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 2,
+          "python_candidate_index": 7021,
+          "cpp_candidate_index": 7021,
+          "confidence_abs_error": 1.7879016112054558e-07,
+          "bbox_max_abs_error": 1.1493896479919385e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 2,
+          "python_candidate_index": 8270,
+          "cpp_candidate_index": 8270,
+          "confidence_abs_error": 5.983303830170428e-08,
+          "bbox_max_abs_error": 3.894775389312599e-06
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 2,
+          "python_candidate_index": 4318,
+          "cpp_candidate_index": 4318,
+          "confidence_abs_error": 1.788032836791409e-07,
+          "bbox_max_abs_error": 7.852050771361974e-06
+        }
+      ]
+    },
+    {
+      "sequence_index": 5,
+      "relative_path": "0005_patches_211.jpg",
+      "status": "PASS",
+      "detection_count": 4,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 4,
+          "cpp_count": 4,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 6.559429320818211e-07,
+      "max_bbox_coordinate_abs_error": 5.725288086111391e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 2,
+          "python_candidate_index": 8213,
+          "cpp_candidate_index": 8213,
+          "confidence_abs_error": 4.76861785836391e-07,
+          "bbox_max_abs_error": 5.725288086111391e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 2,
+          "python_candidate_index": 6445,
+          "cpp_candidate_index": 6445,
+          "confidence_abs_error": 6.559429320818211e-07,
+          "bbox_max_abs_error": 3.783190917872048e-06
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 2,
+          "python_candidate_index": 6682,
+          "cpp_candidate_index": 6682,
+          "confidence_abs_error": 1.7838436894290766e-07,
+          "bbox_max_abs_error": 4.812805173060042e-06
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 2,
+          "python_candidate_index": 8208,
+          "cpp_candidate_index": 8208,
+          "confidence_abs_error": 2.0817347717860812e-07,
+          "bbox_max_abs_error": 1.3301977539015297e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 6,
+      "relative_path": "0006_pitted_surface_224.jpg",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 1,
+          "cpp_count": 1,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 1,
+          "cpp_count": 1,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 2.388696594413098e-07,
+      "max_bbox_coordinate_abs_error": 2.278076172501642e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 1,
+          "python_candidate_index": 4798,
+          "cpp_candidate_index": 4798,
+          "confidence_abs_error": 2.388696594413098e-07,
+          "bbox_max_abs_error": 7.770019522013172e-06
+        },
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 3,
+          "python_candidate_index": 8170,
+          "cpp_candidate_index": 8170,
+          "confidence_abs_error": 2.709965585268037e-11,
+          "bbox_max_abs_error": 2.278076172501642e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 7,
+      "relative_path": "0007_pitted_surface_231.jpg",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 4.76928344705918e-07,
+      "max_bbox_coordinate_abs_error": 0.0003051264160163214,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 3,
+          "python_candidate_index": 8185,
+          "cpp_candidate_index": 8185,
+          "confidence_abs_error": 4.76928344705918e-07,
+          "bbox_max_abs_error": 1.907405273438023e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 3,
+          "python_candidate_index": 8191,
+          "cpp_candidate_index": 8191,
+          "confidence_abs_error": 4.467812957931194e-07,
+          "bbox_max_abs_error": 0.0003051264160163214
+        }
+      ]
+    },
+    {
+      "sequence_index": 8,
+      "relative_path": "0008_rolled-in_scale_146.jpg",
+      "status": "PASS",
+      "detection_count": 4,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 4,
+          "cpp_count": 4,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 3.575019531520951e-07,
+      "max_bbox_coordinate_abs_error": 1.4306357421389748e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 4,
+          "python_candidate_index": 8090,
+          "cpp_candidate_index": 8090,
+          "confidence_abs_error": 1.054687448487357e-10,
+          "bbox_max_abs_error": 4.764177246485701e-06
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 4,
+          "python_candidate_index": 8282,
+          "cpp_candidate_index": 8282,
+          "confidence_abs_error": 3.575019531520951e-07,
+          "bbox_max_abs_error": 5.698071291249107e-06
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 4,
+          "python_candidate_index": 8114,
+          "cpp_candidate_index": 8114,
+          "confidence_abs_error": 1.194025573969526e-07,
+          "bbox_max_abs_error": 1.4306357421389748e-05
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 4,
+          "python_candidate_index": 8312,
+          "cpp_candidate_index": 8312,
+          "confidence_abs_error": 2.6859208679397284e-07,
+          "bbox_max_abs_error": 7.848144520039568e-06
+        }
+      ]
+    },
+    {
+      "sequence_index": 9,
+      "relative_path": "0009_rolled-in_scale_262.jpg",
+      "status": "PASS",
+      "detection_count": 1,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 1,
+          "cpp_count": 1,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 5.664976653885212e-07,
+      "max_bbox_coordinate_abs_error": 7.641210935105391e-06,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 4,
+          "python_candidate_index": 8103,
+          "cpp_candidate_index": 8103,
+          "confidence_abs_error": 5.664976653885212e-07,
+          "bbox_max_abs_error": 7.641210935105391e-06
+        }
+      ]
+    },
+    {
+      "sequence_index": 10,
+      "relative_path": "0010_scratches_126.jpg",
+      "status": "PASS",
+      "detection_count": 4,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 7.15668823203508e-07,
+      "max_bbox_coordinate_abs_error": 4.537597655485115e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 1,
+          "python_candidate_index": 8213,
+          "cpp_candidate_index": 8213,
+          "confidence_abs_error": 1.0162315433603908e-11,
+          "bbox_max_abs_error": 1.906162109399645e-05
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 1,
+          "python_candidate_index": 8238,
+          "cpp_candidate_index": 8238,
+          "confidence_abs_error": 3.5748114013411936e-07,
+          "bbox_max_abs_error": 4.537597655485115e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 5,
+          "python_candidate_index": 8165,
+          "cpp_candidate_index": 8165,
+          "confidence_abs_error": 7.15668823203508e-07,
+          "bbox_max_abs_error": 9.537048828112127e-06
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 5,
+          "python_candidate_index": 6449,
+          "cpp_candidate_index": 6449,
+          "confidence_abs_error": 4.1740216066843416e-07,
+          "bbox_max_abs_error": 9.36975098397852e-07
+        }
+      ]
+    },
+    {
+      "sequence_index": 11,
+      "relative_path": "0011_scratches_246.jpg",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 2.3795697023931695e-07,
+      "max_bbox_coordinate_abs_error": 9.54057128907948e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 5,
+          "python_candidate_index": 8330,
+          "cpp_candidate_index": 8330,
+          "confidence_abs_error": 2.3795071413257318e-07,
+          "bbox_max_abs_error": 7.4262695193283434e-06
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 5,
+          "python_candidate_index": 8130,
+          "cpp_candidate_index": 8130,
+          "confidence_abs_error": 2.3795697023931695e-07,
+          "bbox_max_abs_error": 9.54057128907948e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 12,
+      "relative_path": "0012_derived_319x201_crazing_10.bmp",
+      "status": "PASS",
+      "detection_count": 2,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 8.340162354070202e-07,
+      "max_bbox_coordinate_abs_error": 3.061182495134318e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 0,
+          "python_candidate_index": 8268,
+          "cpp_candidate_index": 8268,
+          "confidence_abs_error": 8.340162354070202e-07,
+          "bbox_max_abs_error": 2.9710021948403664e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 0,
+          "python_candidate_index": 8154,
+          "cpp_candidate_index": 8154,
+          "confidence_abs_error": 1.1959097290237253e-07,
+          "bbox_max_abs_error": 3.061182495134318e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 13,
+      "relative_path": "0013_derived_201x319_inclusion_18.bmp",
+      "status": "PASS",
+      "detection_count": 8,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 8,
+          "cpp_count": 8,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 2.4432947998143106e-06,
+      "max_bbox_coordinate_abs_error": 8.113899232853328e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 1,
+          "python_candidate_index": 1973,
+          "cpp_candidate_index": 1973,
+          "confidence_abs_error": 5.955537719648518e-07,
+          "bbox_max_abs_error": 1.576441954398433e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 1,
+          "python_candidate_index": 8191,
+          "cpp_candidate_index": 8191,
+          "confidence_abs_error": 1.7905273441698455e-07,
+          "bbox_max_abs_error": 3.40019225859578e-05
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 1,
+          "python_candidate_index": 8125,
+          "cpp_candidate_index": 8125,
+          "confidence_abs_error": 5.96885375570011e-08,
+          "bbox_max_abs_error": 4.946983335685218e-05
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 1,
+          "python_candidate_index": 7469,
+          "cpp_candidate_index": 7469,
+          "confidence_abs_error": 3.578693237304975e-07,
+          "bbox_max_abs_error": 2.9716888462871793e-05
+        },
+        {
+          "python_detection_index": 4,
+          "cpp_detection_index": 4,
+          "class_id": 1,
+          "python_candidate_index": 7411,
+          "cpp_candidate_index": 7411,
+          "confidence_abs_error": 7.744956359578836e-07,
+          "bbox_max_abs_error": 8.113899232853328e-05
+        },
+        {
+          "python_detection_index": 5,
+          "cpp_detection_index": 5,
+          "class_id": 1,
+          "python_candidate_index": 3234,
+          "cpp_candidate_index": 3234,
+          "confidence_abs_error": 2.4432947998143106e-06,
+          "bbox_max_abs_error": 7.881851189495137e-06
+        },
+        {
+          "python_detection_index": 6,
+          "cpp_detection_index": 6,
+          "class_id": 1,
+          "python_candidate_index": 7668,
+          "cpp_candidate_index": 7668,
+          "confidence_abs_error": 4.770586852775871e-07,
+          "bbox_max_abs_error": 7.090026826972462e-06
+        },
+        {
+          "python_detection_index": 7,
+          "cpp_detection_index": 7,
+          "class_id": 1,
+          "python_candidate_index": 4673,
+          "cpp_candidate_index": 4673,
+          "confidence_abs_error": 1.9075047912320287e-06,
+          "bbox_max_abs_error": 4.672363274949021e-06
+        }
+      ]
+    },
+    {
+      "sequence_index": 14,
+      "relative_path": "0014_derived_321x199_pitted_surface_224.bmp",
+      "status": "PASS",
+      "detection_count": 1,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 1,
+          "cpp_count": 1,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 1.7897332760252738e-07,
+      "max_bbox_coordinate_abs_error": 3.756988525083216e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 3,
+          "python_candidate_index": 8169,
+          "cpp_candidate_index": 8169,
+          "confidence_abs_error": 1.7897332760252738e-07,
+          "bbox_max_abs_error": 3.756988525083216e-05
+        }
+      ]
+    },
+    {
+      "sequence_index": 15,
+      "relative_path": "0015_derived_199x321_scratches_126.bmp",
+      "status": "PASS",
+      "detection_count": 5,
+      "class_results": [
+        {
+          "class_id": 0,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 1,
+          "python_count": 3,
+          "cpp_count": 3,
+          "status": "PASS"
+        },
+        {
+          "class_id": 2,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 3,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 4,
+          "python_count": 0,
+          "cpp_count": 0,
+          "status": "PASS"
+        },
+        {
+          "class_id": 5,
+          "python_count": 2,
+          "cpp_count": 2,
+          "status": "PASS"
+        }
+      ],
+      "max_confidence_abs_error": 4.770303955181632e-07,
+      "max_bbox_coordinate_abs_error": 3.8288269081476756e-05,
+      "matched_pairs": [
+        {
+          "python_detection_index": 0,
+          "cpp_detection_index": 0,
+          "class_id": 1,
+          "python_candidate_index": 8210,
+          "cpp_candidate_index": 8210,
+          "confidence_abs_error": 3.5764215089439944e-07,
+          "bbox_max_abs_error": 3.499984740074069e-05
+        },
+        {
+          "python_detection_index": 1,
+          "cpp_detection_index": 1,
+          "class_id": 1,
+          "python_candidate_index": 8245,
+          "cpp_candidate_index": 8245,
+          "confidence_abs_error": 1.787737732295014e-07,
+          "bbox_max_abs_error": 3.163885497770025e-05
+        },
+        {
+          "python_detection_index": 4,
+          "cpp_detection_index": 4,
+          "class_id": 1,
+          "python_candidate_index": 8255,
+          "cpp_candidate_index": 8255,
+          "confidence_abs_error": 2.0897563168809086e-07,
+          "bbox_max_abs_error": 3.8288269081476756e-05
+        },
+        {
+          "python_detection_index": 2,
+          "cpp_detection_index": 2,
+          "class_id": 5,
+          "python_candidate_index": 8148,
+          "cpp_candidate_index": 8148,
+          "confidence_abs_error": 1.195827026290175e-07,
+          "bbox_max_abs_error": 6.667236306157065e-06
+        },
+        {
+          "python_detection_index": 3,
+          "cpp_detection_index": 3,
+          "class_id": 5,
+          "python_candidate_index": 8170,
+          "cpp_candidate_index": 8170,
+          "confidence_abs_error": 4.770303955181632e-07,
+          "bbox_max_abs_error": 3.271984860475641e-05
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "image_count": 16,
+    "passed_images": 16,
+    "failed_images": 0
+  },
+  "failures": []
+}

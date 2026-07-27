@@ -1382,3 +1382,21 @@ Local evidence is under
 `/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
 tracked summary evidence is under
 `results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.
+
+## Stage K K5.2 ORT Control Re-evaluation after D063
+
+Updated 2026-07-28. New immutable Evidence is tracked under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v2/`; the prior
+`k5_correctness_v1` failure Evidence remains unchanged.
+
+The strict ORT Level B Gate remains failed with its unchanged thresholds.
+The D063 inherited evaluation passed: input identity, exact output shape,
+finite output, and 16/16 Jetson repeatability passed; drift remains
+bbox-dominated and score channels remain bounded. Original strict ORT Level C
+semantic comparison passed 16/16 under the unchanged confidence `1e-4` and
+bbox-coordinate `0.01` limits.
+
+Current ORT Control disposition is
+`INHERITED_CROSS_ARCH_LIMITATION`. This is not a full TensorRT correctness
+closeout: TensorRT Level B/C, benchmark, stability, Pipeline, and K6 remain
+unexecuted.

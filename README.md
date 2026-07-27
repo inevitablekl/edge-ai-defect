@@ -14,7 +14,7 @@ NEU-DET → YOLOv8n → frozen PyTorch model → ONNX
 
 ## Current Status
 
-Status contract: `M0–M5 CLOSED`; Stage J `COMPLETE`; Stage K Execution Plan `FINAL`; K0 Planning Freeze `COMPLETE`; K1 Platform Acceptance `PASS`; D062 `ACCEPTED`; K2/K3/K4 `COMPLETE`; K5 `FAILED_BY_GATE_REVIEW_PENDING_D063`; D063 `ADDED`. Stage K formal correctness campaign remains failed; K6 is not ready and Stage P remains required downstream scope and is not authorized before Stage K closeout.
+Status contract: `M0–M5 CLOSED`; Stage J `COMPLETE`; Stage K Execution Plan `FINAL`; K0 Planning Freeze `COMPLETE`; K1 Platform Acceptance `PASS`; D062 `ACCEPTED`; K2/K3/K4 `COMPLETE`; K5 ORT Control `INHERITED_CROSS_ARCH_LIMITATION`; D063 `ADDED`. TensorRT Level B/C and K6 remain unexecuted; Stage P remains required downstream scope and is not authorized before Stage K closeout.
 
 The training and ONNX export stages are complete: nine formal training experiments were recorded, the final model was frozen, held-out test evaluation and offline archiving were completed, and the frozen ONNX model was validated. Model weights and training archives are intentionally excluded from Git; frozen deployment artifacts are identified by SHA256 in the project evidence and model contract.
 
