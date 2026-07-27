@@ -1021,3 +1021,23 @@ K1 has not executed. No K1 smoke, trtexec help result, TensorRT Engine, CUDA or
 TensorRT compile/link result is recorded here. TensorRT and CUDA values remain
 limited to previously recorded Stage J platform facts and the frozen Stage K
 plan; no new package was installed or upgraded.
+
+## Stage K K1 Platform Acceptance Attempt (2026-07-27)
+
+- Verified on branch `feature/jetson-tensorrt-fp16`, starting commit
+  `865b3c0060a7c6ae5aea05b9f52bf79c4c344c59`；Evidence：
+  `results/platform/tensorrt/k1_environment_v1`。
+- Platform facts：NVIDIA Jetson Orin Nano Engineering Reference Developer Kit
+  Super，`aarch64`，Ubuntu `22.04.5`，L4T `R36.5.0`，nvpmodel
+  `MAXN_SUPER`；non-interactive sudo unavailable，未改变 power/clock 状态。
+- CUDA facts：`/usr/local/cuda -> /usr/local/cuda-12.6`，
+  `cuda_runtime_api.h` 与 `libcudart.so` 存在，CUDA package/runtime path
+  `12.6.68`；`nvcc` 不在 PATH，但 `/usr/local/cuda/bin/nvcc` 可运行。
+- TensorRT facts：`NvInfer.h`、`NvInferRuntime.h`、`NvInferPlugin.h` 和
+  `libnvinfer.so.10.3.0` 存在，package/runtime `10.3.0.30`；
+  `libnvinfer.so` 的 `libnvdla_compiler.so` 依赖在本机缺失。
+- `trtexec`：`/usr/src/tensorrt/bin/trtexec`，TensorRT `v100300`，help 可用；
+  `tegrastats` 基本采样可用。
+- K1 host-only g++ smoke 因缺失 `libnvdla_compiler.so` 在链接阶段阻塞，
+  因而 K1 未通过；该事实不覆盖或修改 Stage J 历史记录。JetPack `6.2.2`
+  作为 L4T `R36.5` 目标合同记录，但 `nvidia-jetpack` meta-package 未安装。

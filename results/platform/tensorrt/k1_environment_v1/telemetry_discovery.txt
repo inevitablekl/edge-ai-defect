@@ -1,0 +1,5 @@
+$ command -v jetson_release || true
+$ ls -l /usr/bin/tegrastats 2>&1 || true
+-rwxr-xr-x 1 root root 80520 Jan 16  2026 /usr/bin/tegrastats
+$ command -v tegrastats || true
+/usr/bin/tegrastats

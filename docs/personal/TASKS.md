@@ -2822,3 +2822,23 @@ Stage J Plan or historical Evidence.
   K0 实现。
 - Stage P Pipeline 是必需下游范围，但当前未授权：
   `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`。
+
+### 2026-07-27T20:29:04+08:00 - Stage K K1 Platform Acceptance Attempt
+
+- Branch：`feature/jetson-tensorrt-fp16`；starting commit：
+  `865b3c0060a7c6ae5aea05b9f52bf79c4c344c59`。
+- K1 Evidence：`results/platform/tensorrt/k1_environment_v1`。
+- Observed platform：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，L4T `R36.5.0`，`MAXN_SUPER`；CUDA path
+  `/usr/local/cuda -> /usr/local/cuda-12.6`，CUDA package/runtime path `12.6.68`。
+- TensorRT headers/runtime package：`10.3.0.30-1+cuda12.5`；`NvInferPlugin.h`
+  与 `libnvinfer_plugin.so` 可用，仅记录，未初始化 plugin。
+- `trtexec`：`/usr/src/tensorrt/bin/trtexec`；输出 TensorRT `v100300`，
+  `--help` 返回 `0`。
+- `tegrastats`：`/usr/bin/tegrastats`；5 秒采样记录 RAM、CPU、GPU、温度和电源
+  rail；EMC 字段在本样本中不可用，作为 optional limitation 记录。
+- host-only `g++` smoke：`BLOCKED`；`libnvinfer.so` 的必需依赖
+  `libnvdla_compiler.so` 在系统路径和 dpkg 数据库中均未发现，故链接失败，
+  未产生可执行文件，未进入 CUDA/TensorRT Runtime 调用。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。未安装/升级软件，
+  未修改系统配置、电源模式、jetson_clocks 或生产代码。

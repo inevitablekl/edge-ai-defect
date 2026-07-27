@@ -1,0 +1,43 @@
+compile failed; ldd and run not attempted
+ldd_exit_code=not_run
+$ ldd /usr/lib/aarch64-linux-gnu/libnvinfer.so
+	linux-vdso.so.1 (0x0000ffffa9a12000)
+	libnvdla_compiler.so => not found
+	libcudla.so.1 => /usr/local/cuda/targets/aarch64-linux/lib/libcudla.so.1 (0x0000ffff9b6f0000)
+	libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffff9b4c0000)
+	libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffff9b420000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff9b3f0000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffff9b240000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffa99d9000)
+	libnvcudla.so => /lib/aarch64-linux-gnu/libnvcudla.so (0x0000ffff9b210000)
+	libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x0000ffff9b1f0000)
+	libcuda.so => /lib/aarch64-linux-gnu/libcuda.so (0x0000ffff98980000)
+	libnvdla_runtime.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so (0x0000ffff98320000)
+	librt.so.1 => /lib/aarch64-linux-gnu/librt.so.1 (0x0000ffff98300000)
+	libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x0000ffff982e0000)
+	libnvrm_gpu.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_gpu.so (0x0000ffff98260000)
+	libnvrm_mem.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_mem.so (0x0000ffff98240000)
+	libnvrm_host1x.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_host1x.so (0x0000ffff98210000)
+	libnvsocsys.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsocsys.so (0x0000ffff981f0000)
+	libnvos.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvos.so (0x0000ffff981c0000)
+	libnvtegrahv.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvtegrahv.so (0x0000ffff981a0000)
+	libnvrm_sync.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_sync.so (0x0000ffff98180000)
+	libnvsciipc.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsciipc.so (0x0000ffff98140000)
+	libnvrm_chip.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_chip.so (0x0000ffff98120000)
+$ readelf -d /usr/lib/aarch64-linux-gnu/libnvinfer.so | grep -E 'NEEDED|RPATH|RUNPATH'
+ 0x0000000000000001 (NEEDED)             Shared library: [libnvdla_compiler.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcudla.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-aarch64.so.1]
+$ find /usr/lib /lib /usr/local/lib -name 'libnvdla_compiler.so*' 2>/dev/null
+$ ldconfig -p | grep -E 'nvdla|cudla' || true
+	libnvdla_runtime.so (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so
+	libnvcudla.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvcudla.so
+	libnvcudla.so (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libnvcudla.so
+	libcudla.so.1 (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudla.so.1
+	libcudla.so (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudla.so
+$ dpkg-query -S 'libnvdla_compiler.so*' 2>&1 || true
+dpkg-query: no path found matching pattern *libnvdla_compiler.so**

@@ -1,0 +1,2 @@
+TMP_DIR=/tmp/edge-ai-k1-trt-smoke.lgKtFf
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -I/usr/local/cuda-12.6/targets/aarch64-linux/include -I/usr/include/aarch64-linux-gnu results/platform/tensorrt/k1_environment_v1/k1_runtime_smoke.cpp -o /tmp/edge-ai-k1-trt-smoke.lgKtFf/k1_runtime_smoke -L/usr/lib/aarch64-linux-gnu -L/usr/local/cuda-12.6/targets/aarch64-linux/lib -lnvinfer -lcudart -ldl -pthread
