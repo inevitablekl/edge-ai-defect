@@ -1,0 +1,12 @@
+git rev-parse HEAD
+cmake -S . -B /home/orin/edge-ai-local-build/k5_correctness_v1/ca83935_release -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DEDGE_AI_ENABLE_TENSORRT=ON -DEDGE_AI_ENABLE_MODEL_SMOKE=ON -DONNXRUNTIME_ROOT=$PWD/third_party/onnxruntime/1.23.2/linux-aarch64 -DEDGE_AI_FROZEN_ONNX_PATH=$PWD/models/onnx/yolov8n_neudet_frozen.onnx
+cmake --build /home/orin/edge-ai-local-build/k5_correctness_v1/ca83935_release --parallel $(nproc)
+ctest --test-dir /home/orin/edge-ai-local-build/k5_correctness_v1/ca83935_release --output-on-failure -R stage_k
+stage_k_raw_tensor_runner --config configs/ort_level_b_v2.yaml --input-manifest stage_k_level_b_reference_v1/input_manifest.json --output-dir ort_level_b/run_1/raw --run-id k5_ort_level_b_run_1 --source-commit ca8393556689b738ac8991530f5eabb11696d560
+stage_k_raw_tensor_runner --config configs/ort_level_b_v2.yaml --input-manifest stage_k_level_b_reference_v1/input_manifest.json --output-dir ort_level_b/run_2/raw --run-id k5_ort_level_b_run_2 --source-commit ca8393556689b738ac8991530f5eabb11696d560
+stage_k_raw_tensor_runner --config configs/tensorrt_v3.yaml --input-manifest stage_k_level_b_reference_v1/input_manifest.json --output-dir tensorrt_level_b/run_1/raw --run-id k5_tensorrt_level_b_run_1 --source-commit ca8393556689b738ac8991530f5eabb11696d560
+stage_k_level_b_compare.py --repeatability-manifest-a ort_level_b/run_1/raw/output_manifest.json --repeatability-manifest-b ort_level_b/run_2/raw/output_manifest.json
+stage_k_level_b_compare.py --policy ort_strict --reference-manifest stage_k_level_b_reference_v1/reference_output_manifest.json --candidate-manifest ort_level_b/run_1/raw/output_manifest.json
+stage_k_level_b_compare.py --policy ort_strict --reference-manifest stage_k_level_b_reference_v1/reference_output_manifest.json --candidate-manifest ort_level_b/run_2/raw/output_manifest.json
+stage_k_level_b_compare.py --policy ort_cross_arch --reference-manifest stage_k_level_b_reference_v1/reference_output_manifest.json --candidate-manifest ort_level_b/run_1/raw/output_manifest.json
+stage_k_level_b_compare.py --policy ort_cross_arch --reference-manifest stage_k_level_b_reference_v1/reference_output_manifest.json --candidate-manifest ort_level_b/run_2/raw/output_manifest.json

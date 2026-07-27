@@ -3010,3 +3010,32 @@ Stage J Plan or historical Evidence.
   size：`13072955` bytes。
 - Jetson transfer：`JETSON_TRANSFER_PENDING`；当前 WSL 没有明确 SSH target，
   未猜测 IP、用户名或认证方式。K5.1：`COMPLETE`；K5.2 尚未执行。
+
+### 2026-07-27T23:49:10+08:00 - Stage K K5.2–K5.6 Correctness Campaign
+
+- K5.1 reference asset accepted: archive SHA256
+  `fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`,
+  size `13072955` bytes; bundle manifest, ONNX, ModelContract, input manifest,
+  reference output manifest, 16/16 inputs and 16/16 outputs passed verification.
+- K5.2 Level C comparator and focused tests were implemented. Source commits:
+  `dcb10a55909b78928fef95fa825c51514ec0e512`,
+  `c54020c18c98dbee408131f6642680f44d3ab433`, and
+  `ca8393556689b738ac8991530f5eabb11696d560`; the final fresh Release build
+  passed the focused 12/12 CTest set.
+- Formal attempt 001 was retained and invalidated by two discovered raw-runner
+  contract/identity defects. Attempt 002 is the current formal attempt after
+  the fixes; raw artifacts remain local-only.
+- ORT Level B repeatability passed: 16/16 outputs were byte-identical across
+  two runs. Strict comparison passed 0/16. Cross-architecture comparison
+  passed 4/16; worst overall MAE was `2.0134166237853822e-05`, exceeding the
+  `1e-5` limit, while the other reported maxima remained within their limits.
+  Disposition: `ORT_CONTROL_FAIL`.
+- The K5 gate therefore stopped before formal ORT Level C, TensorRT Level B,
+  TensorRT Level C, and boundary investigation. K5 status: `FAILED` / formal
+  result `K5 FAIL`; K6 is `NOT READY`. No benchmark, stability, Pipeline,
+  GPU preprocessing/NMS, INT8, DLA, dynamic-shape, ROS2, camera, or DeepStream
+  work was executed.
+- Evidence: local attempt data is under
+  `/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
+  the small tracked summary is under
+  `results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.

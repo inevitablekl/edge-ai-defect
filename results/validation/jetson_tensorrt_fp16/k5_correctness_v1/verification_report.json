@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "attempt_id": "attempt_002",
+  "implementation_commit": "ca8393556689b738ac8991530f5eabb11696d560",
+  "build_directory": "/home/orin/edge-ai-local-build/k5_correctness_v1/ca83935_release",
+  "reference_bundle_id": "stage_k_level_b_reference_v1",
+  "reference_bundle_archive_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+  "reference_bundle_acceptance": "PASS",
+  "focused_ctest": "12/12 PASS",
+  "ort_level_b": {
+    "run_1": "16/16 SUCCESS",
+    "run_2": "16/16 SUCCESS",
+    "repeatability": "PASS 16/16 byte-identical",
+    "strict_run_1": "FAIL 0/16",
+    "strict_run_2": "FAIL 0/16",
+    "cross_arch_run_1": "FAIL 4/16",
+    "cross_arch_run_2": "FAIL 4/16",
+    "worst_overall_mae": 0.000020134160237857,
+    "worst_overall_max_abs": 0.009490966796875,
+    "cross_arch_overall_mae_limit": 0.00001,
+    "cross_arch_overall_max_abs_limit": 0.01,
+    "ort_control_disposition": "ORT_CONTROL_FAIL"
+  },
+  "downstream": {
+    "ort_level_c": "NOT_EXECUTED_AFTER_ORT_CONTROL_FAIL",
+    "tensorrt_level_b": "NOT_FORMALLY_EXECUTED_AFTER_ORT_CONTROL_FAIL",
+    "tensorrt_level_c": "NOT_EXECUTED",
+    "targeted_investigation": "NOT_TRIGGERED",
+    "final_gate": "K5 FAIL"
+  },
+  "limitations": [
+    "The TensorRT raw output directory exists from the grouped pre-control runner invocation but has not been compared or accepted as formal K5.3 Evidence.",
+    "No performance, benchmark, stability, Pipeline or K6 claim is made."
+  ]
+}

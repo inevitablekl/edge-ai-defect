@@ -1350,3 +1350,29 @@ TensorRT Engine Build remains
 `NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`. Stage K production
 implementation remains `NOT_AUTHORIZED_BEFORE_K3`; Stage P remains required
 downstream scope and is not authorized before Stage K closeout.
+
+## Stage K K5 Correctness Campaign Live Status
+
+Updated 2026-07-27. The accepted K5.1 reference bundle is
+`stage_k_level_b_reference_v1` (archive SHA256
+`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`,
+13,072,955 bytes), with 16/16 inputs and 16/16 reference outputs verified.
+
+The final K5 implementation is at commit
+`ca8393556689b738ac8991530f5eabb11696d560`; its fresh Release build passed
+the focused 12/12 CTest set. Formal attempt 001 is retained but invalidated
+because two raw-runner contract/identity defects were found. Attempt 002 is
+the current formal attempt.
+
+ORT Level B repeatability passed 16/16 byte-identical outputs. The strict
+comparison passed 0/16 and the cross-architecture comparison passed 4/16;
+the worst overall MAE was `2.0134166237853822e-05` against the `1e-5` limit.
+This is `ORT_CONTROL_FAIL`, so the K5 gate stopped before ORT Level C,
+TensorRT Level B/C, and boundary investigation. Formal status is `K5 FAIL`;
+K6 is `NOT READY`. No benchmark, stability, Pipeline, GPU preprocessing/NMS,
+INT8, DLA, dynamic-shape, ROS2, camera, or DeepStream work was executed.
+
+Local evidence is under
+`/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
+tracked summary evidence is under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.

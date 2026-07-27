@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "ORT_CONTROL_FAIL",
+  "ort_control_disposition": "NONE_ACCEPTED",
+  "run_1": {"raw_entries": 16, "strict": "FAIL", "cross_architecture": "FAIL"},
+  "run_2": {"raw_entries": 16, "strict": "FAIL", "cross_architecture": "FAIL"},
+  "repeatability": {"entries": 16, "byte_identical": 16, "status": "PASS"},
+  "strict_policy": {"overall_mae": 0.000001, "overall_max_abs": 0.0001},
+  "cross_architecture_policy": {"overall_mae": 0.00001, "overall_max_abs": 0.01, "bbox_max_abs": 0.01, "score_max_abs": 0.0001},
+  "worst_observed": {"overall_mae": 0.000020134160237857, "overall_max_abs": 0.009490966796875, "bbox_max_abs": 0.009490966796875, "score_max_abs": 0.000006496906280518},
+  "failed_tensor_counts": {"strict_run_1": 16, "strict_run_2": 16, "cross_arch_run_1": 12, "cross_arch_run_2": 12},
+  "disposition_reason": "Both runs were repeatable, but cross-architecture overall MAE exceeded the frozen limit; K5 stopped without inherited limitation acceptance."
+}

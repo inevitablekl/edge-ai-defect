@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "attempt": "attempt_002",
+  "configs": [
+    {"name": "ort_level_b_v2.yaml", "sha256": "ace74d7b3bb1106906b4ad42007f71bf252e68c9494ed108efbc9092ec3fc91b"},
+    {"name": "ort_level_c_run_2_v2.yaml", "sha256": "539befe84621bc359596bd316b2bb55aaadb660496eb8bae5bf5a40f2d1a8793"},
+    {"name": "tensorrt_v3.yaml", "sha256": "a0911a825db4005590a1437421c4fc002b6bed354aa8b3ef12c4fd6da6e0903e"}
+  ],
+  "shared_semantics": {"corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd", "confidence_threshold": 0.25, "iou_threshold": 0.45, "max_nms": 30000, "max_det": 300, "max_wh": 7680.0, "agnostic": false, "multi_label": false, "opencv_num_threads": 1}
+}

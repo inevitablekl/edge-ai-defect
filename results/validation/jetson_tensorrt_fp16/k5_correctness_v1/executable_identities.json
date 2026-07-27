@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "implementation_commit": "ca8393556689b738ac8991530f5eabb11696d560",
+  "raw_runner_sha256": "35d9ebbd9352e9688a6c4b331d7c895dca9479cbae17c317d9e41451e593f6ad",
+  "application_sha256": "97b17a66c093a4db5a7a983d751513547587c609e6562e0e42c077ee1f1c8ad7",
+  "onnxruntime_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+  "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "level_b_comparator_sha256": "6a718ed4284f04144e85d419656860dff18317e65a6127d31b2fde9e819b6a7e",
+  "level_c_comparator_sha256": "bb84ed6ea2bb6379725c399fe434e548b1b9d1c735ec9935bdd53f1801a3d719"
+}
