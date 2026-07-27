@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_level_b_reference_archive_provenance",
+  "bundle_id": "stage_k_level_b_reference_v1",
+  "archive_filename": "stage_k_level_b_reference_v1.tar.gz",
+  "archive_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+  "archive_size_bytes": 13072955,
+  "bundle_manifest_sha256": "a7afa83c4ec3de665665b66527f2c6ce27cfcc872ba6e21ccce45d60512603ea",
+  "sha256sums_sha256": "441e4877b38953086d4c279a66f5d9b5e5e2f2163e7f465143f969d8dcc14f3f",
+  "source_git_commit": "c9586c219178eeec17864c8c2cf75a1d5bc90101",
+  "creation_timestamp": "2026-07-27T15:04:35Z",
+  "limitations": [
+    "canonical bundle archive only",
+    "raw source images are excluded",
+    "TensorRT was not executed in this round"
+  ]
+}

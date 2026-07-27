@@ -2992,3 +2992,21 @@ Stage J Plan or historical Evidence.
   该结果标记为 `NON_FORMAL_TOOLING_SMOKE_ONLY`，不构成 K5 PASS 或正式 Evidence。
 - 本轮未执行 Level C、boundary disposition、K6、benchmark、stability、Pipeline、
   GPU preprocessing/NMS 或正式 16-image correctness campaign。
+
+### 2026-07-27T23:05:41+08:00 - Stage K K5.1 Python ORT Reference Bundle
+
+- 执行环境：WSL2 x86_64；Python 3.10.12；ONNX Runtime 1.23.2；OpenCV
+  4.10.0；NumPy 1.26.4；实际 ORT provider 为 `CPUExecutionProvider`。
+- Reference Bundle ID：`stage_k_level_b_reference_v1`；冻结 J4.3 v2 corpus
+  manifest SHA256：`687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd`；
+  source commit：`c9586c219178eeec17864c8c2cf75a1d5bc90101`。
+- Generator：`tools/validation/generate_stage_k_level_b_reference.py`，SHA256：
+  `ddfffdb71e5fb0276c3fff4a16701ad18e9a93ca783793e9a56eefd988e9f8e7`。
+  16/16 input tensor 和 16/16 Python ORT raw output 已生成并通过合同、SHA
+  与独立 regeneration byte-identical 检查。
+- Canonical archive：
+  `/home/ros2/edge-ai-local-evidence/stage_k/reference/stage_k_level_b_reference_v1.tar.gz`；
+  SHA256：`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`；
+  size：`13072955` bytes。
+- Jetson transfer：`JETSON_TRANSFER_PENDING`；当前 WSL 没有明确 SSH target，
+  未猜测 IP、用户名或认证方式。K5.1：`COMPLETE`；K5.2 尚未执行。

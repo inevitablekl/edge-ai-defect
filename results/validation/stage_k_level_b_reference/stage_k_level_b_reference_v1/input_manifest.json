@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_raw_tensor_input_manifest",
+  "bundle_id": "stage_k_level_b_reference_v1",
+  "source_git_commit": "c9586c219178eeec17864c8c2cf75a1d5bc90101",
+  "corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "dtype": "float32",
+  "byte_order": "little_endian",
+  "layout": "NCHW",
+  "shape": [
+    1,
+    3,
+    640,
+    640
+  ],
+  "element_count": 1228800,
+  "byte_size": 4915200,
+  "entry_count": 16,
+  "entries": [
+    {
+      "image_id": "0000_crazing_51",
+      "corpus_relative_identity": "0000_crazing_51.jpg",
+      "source_image_sha256": "185daa31428cf2467d48f9f57ff582575d07a796cd26d77f3e05537bae681503",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0000_crazing_51.input.f32le",
+      "input_tensor_sha256": "2e353f448b488a8f49593b34fc93cac95454badfce9cecbc9c4738e8a8037939",
+      "input_filename": "inputs/0000_crazing_51.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0001_crazing_10",
+      "corpus_relative_identity": "0001_crazing_10.jpg",
+      "source_image_sha256": "522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0001_crazing_10.input.f32le",
+      "input_tensor_sha256": "ff9b298de4d107d4d10c666f2172a2092736a1353ff426dc4b2f761c78e5704f",
+      "input_filename": "inputs/0001_crazing_10.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0002_inclusion_18",
+      "corpus_relative_identity": "0002_inclusion_18.jpg",
+      "source_image_sha256": "c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0002_inclusion_18.input.f32le",
+      "input_tensor_sha256": "22cb5aaf45388065cba28e375393aea0d723fbf7bd411c162fb1e6cbaba993aa",
+      "input_filename": "inputs/0002_inclusion_18.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0003_inclusion_217",
+      "corpus_relative_identity": "0003_inclusion_217.jpg",
+      "source_image_sha256": "e40821c51a341286572663cbba1159e7efe8a7cd729c763a5c439d851e6a9c77",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0003_inclusion_217.input.f32le",
+      "input_tensor_sha256": "43fe48e56c790981789898cab9c3655051d7a68f02925dfa817feac3a351d71d",
+      "input_filename": "inputs/0003_inclusion_217.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0004_patches_156",
+      "corpus_relative_identity": "0004_patches_156.jpg",
+      "source_image_sha256": "9961f0ffde85a40516f54262b3fa74eb35cee24fc87a54d4fe8f07b7e7fb2ec2",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0004_patches_156.input.f32le",
+      "input_tensor_sha256": "e14279b92252310635e1e79a95ff200b6827b101b7816205d4e3747716609cc8",
+      "input_filename": "inputs/0004_patches_156.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0005_patches_211",
+      "corpus_relative_identity": "0005_patches_211.jpg",
+      "source_image_sha256": "f988631bac3b31eac7be7a1f56e118d14d3327989ce4b454370761c5c8700305",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0005_patches_211.input.f32le",
+      "input_tensor_sha256": "46e31407bbc2d06c213c2f61cadd0a04b2ac1b31aff4715900ff8ba3bdab5617",
+      "input_filename": "inputs/0005_patches_211.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0006_pitted_surface_224",
+      "corpus_relative_identity": "0006_pitted_surface_224.jpg",
+      "source_image_sha256": "419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0006_pitted_surface_224.input.f32le",
+      "input_tensor_sha256": "6d7c023047bac9eade5559a28af61135a326502b5e43f1786e76c990700312a9",
+      "input_filename": "inputs/0006_pitted_surface_224.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0007_pitted_surface_231",
+      "corpus_relative_identity": "0007_pitted_surface_231.jpg",
+      "source_image_sha256": "0bfa310238545597ac7a48495a85ae1a945d2f6f8e4fa470d1bce5f4648c931c",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0007_pitted_surface_231.input.f32le",
+      "input_tensor_sha256": "9ee5a4057a41e10dc32fc0c9eefced88976451379cabe113c1e0a7dc5199b9ed",
+      "input_filename": "inputs/0007_pitted_surface_231.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0008_rolled-in_scale_146",
+      "corpus_relative_identity": "0008_rolled-in_scale_146.jpg",
+      "source_image_sha256": "4b76ee7c33602b95115a2acec07b4cd74cab87eeb2cdc2a602534646cbed047b",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0008_rolled-in_scale_146.input.f32le",
+      "input_tensor_sha256": "674e60c977617334fa9a6aac3fc4328108369538abb8fcf68a343477218690a7",
+      "input_filename": "inputs/0008_rolled-in_scale_146.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0009_rolled-in_scale_262",
+      "corpus_relative_identity": "0009_rolled-in_scale_262.jpg",
+      "source_image_sha256": "67cab4d93752e5def8a7d34b72504c1ecacadc673f252d4d719b716aeda0c083",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0009_rolled-in_scale_262.input.f32le",
+      "input_tensor_sha256": "0d4be35f8478bb83d3ad2e2f89960d1c1515124c586e7876bf7c909139cc340b",
+      "input_filename": "inputs/0009_rolled-in_scale_262.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0010_scratches_126",
+      "corpus_relative_identity": "0010_scratches_126.jpg",
+      "source_image_sha256": "fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0010_scratches_126.input.f32le",
+      "input_tensor_sha256": "bd43863afea010db8a31f5fa09d7769d4dba75b16405622e64545e2783251897",
+      "input_filename": "inputs/0010_scratches_126.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0011_scratches_246",
+      "corpus_relative_identity": "0011_scratches_246.jpg",
+      "source_image_sha256": "06811a835826c47ad78e91e90cb758f6334f348d21765375b2ce9146be1309b4",
+      "original_width": 200,
+      "original_height": 200,
+      "input_tensor_path": "inputs/0011_scratches_246.input.f32le",
+      "input_tensor_sha256": "2c9ba0912196d3ed60c7ec436e64a3a9a796ec8b1eebe37f780165f0ca9aa9c3",
+      "input_filename": "inputs/0011_scratches_246.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0012_derived_319x201_crazing_10",
+      "corpus_relative_identity": "0012_derived_319x201_crazing_10.bmp",
+      "source_image_sha256": "8b7457f25d17344440dbd26ada74a6373bf0a177a0e4b89ce754ff12893f9b29",
+      "original_width": 319,
+      "original_height": 201,
+      "input_tensor_path": "inputs/0012_derived_319x201_crazing_10.input.f32le",
+      "input_tensor_sha256": "9b844f1d2f797f49b692457027bc35484794aff3e6ba05081ef922c41a0ee066",
+      "input_filename": "inputs/0012_derived_319x201_crazing_10.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0013_derived_201x319_inclusion_18",
+      "corpus_relative_identity": "0013_derived_201x319_inclusion_18.bmp",
+      "source_image_sha256": "1b2c956884c7b7e573cfa634e3a93e5a510ca41d6d6b54cd44aa6148e3538ccb",
+      "original_width": 201,
+      "original_height": 319,
+      "input_tensor_path": "inputs/0013_derived_201x319_inclusion_18.input.f32le",
+      "input_tensor_sha256": "1c46622fe0f41f070dd960cf175b2c8afcf843f4b2adc0d6023d0f2a48a307ee",
+      "input_filename": "inputs/0013_derived_201x319_inclusion_18.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0014_derived_321x199_pitted_surface_224",
+      "corpus_relative_identity": "0014_derived_321x199_pitted_surface_224.bmp",
+      "source_image_sha256": "01e52085c57fe641d20ce3212f88dd40ac80f0604676b7bc9d5c7fa080214bbb",
+      "original_width": 321,
+      "original_height": 199,
+      "input_tensor_path": "inputs/0014_derived_321x199_pitted_surface_224.input.f32le",
+      "input_tensor_sha256": "d6d53f09f3ed2cf6adcbebc72ac74aa386bc8b6dba70b805efccecbc36e6dde7",
+      "input_filename": "inputs/0014_derived_321x199_pitted_surface_224.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    },
+    {
+      "image_id": "0015_derived_199x321_scratches_126",
+      "corpus_relative_identity": "0015_derived_199x321_scratches_126.bmp",
+      "source_image_sha256": "fbe8c46a58125d8cd58c623efc4da5fed8cc162f3ff2f53aad86363273336dd4",
+      "original_width": 199,
+      "original_height": 321,
+      "input_tensor_path": "inputs/0015_derived_199x321_scratches_126.input.f32le",
+      "input_tensor_sha256": "8db43cf3b33291e2c7077ecf6b57c1b21efb226d3d2d73178a2a63a9bad218a4",
+      "input_filename": "inputs/0015_derived_199x321_scratches_126.input.f32le",
+      "dtype": "float32",
+      "byte_order": "little_endian",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "element_count": 1228800,
+      "byte_size": 4915200
+    }
+  ]
+}
