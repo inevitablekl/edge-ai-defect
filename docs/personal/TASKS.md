@@ -2950,3 +2950,21 @@ Stage J Plan or historical Evidence.
   缺少 `cv2` 而失败，不属于 K3 代码失败。
 - K3：`COMPLETE`；K4：`READY`。未执行 TensorRT inference、engine load、CUDA
   stream/buffer、benchmark、pipeline 或生产 TensorRT backend。
+
+### 2026-07-27T22:30:00+08:00 - Stage K K4 TensorRtEngine Implementation
+
+- K4 实现真实 TensorRT 10.x backend；OFF 配置使用无 CUDA stub，ON 配置构建
+  `edge_ai_backend_trt` 并链接 CUDA Runtime/TensorRT。
+- 初始化严格执行 RuntimeConfig/Manifest/hash/ModelContract 校验，随后创建
+  TensorRT Runtime、Engine、单个 ExecutionContext、单个 CUDA stream 和持久化
+  input/output device buffers；Tensor 名称、静态 shape、FP32 dtype 和 device
+  location 均验证。
+- `run()` 仅使用 HostTensor、`cudaMemcpyAsync`、`setTensorAddress()`、
+  `enqueueV3()`、`cudaStreamSynchronize()` 和 output copy；无 binding index、
+  `enqueueV2`、每帧 CUDA allocation、dynamic batch 或 multi-stream。
+- Jetson 真实 Engine 单元/集成测试通过：null output、empty/invalid input、engine
+  hash、contract hash、ModelContract/tensor mismatch、output unchanged、两次连续
+  inference、finite output 和 exact output shape 均覆盖。
+- ON 全量构建与 K4 smoke、OFF 构建与 ORT/K3 regression 均通过。K4：`COMPLETE`；
+  K5：`READY`。未执行 benchmark、correctness campaign、Pipeline 或 GPU
+  preprocessing/NMS。

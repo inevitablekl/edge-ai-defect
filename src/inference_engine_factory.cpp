@@ -1,6 +1,7 @@
 #include "edge_ai_defect/inference/inference_engine_factory.hpp"
 
 #include "edge_ai_defect/backend_ort/onnx_runtime_engine.hpp"
+#include "edge_ai_defect/backend_tensorrt/tensorrt_engine.hpp"
 
 namespace edge_ai_defect::inference {
 
@@ -23,9 +24,11 @@ core::Status create_inference_engine(
         return core::Status::success();
     }
     if (config.backend_type == "tensorrt_fp16") {
-        return core::Status::failure(
-            core::ErrorCode::kBackendInitializationError,
-            "TensorRT backend factory dispatch is not implemented until K4");
+        auto engine = std::make_unique<backend_tensorrt::TensorRtEngine>();
+        core::Status status = engine->initialize(config, contract);
+        if (!status.ok()) return status;
+        *output = std::move(engine);
+        return core::Status::success();
     }
     return core::Status::failure(core::ErrorCode::kSchemaViolation,
                                  "unsupported backend.type: " + config.backend_type);

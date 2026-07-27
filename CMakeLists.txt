@@ -202,13 +202,20 @@ if(EDGE_AI_ENABLE_TENSORRT)
             "EDGE_AI_ENABLE_TENSORRT=ON requires cuda_runtime_api.h, libcudart.so, "
             "NvInfer.h, and libnvinfer.so")
     endif()
-    add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
+    add_library(edge_ai_backend_trt STATIC
+        src/tensorrt_engine.cpp
+        src/tensorrt_logger.cpp
+        src/cuda_status.cpp)
     target_include_directories(edge_ai_backend_trt PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         ${EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR}
         ${EDGE_AI_TENSORRT_INCLUDE_DIR})
     target_link_libraries(edge_ai_backend_trt PUBLIC
         edge_ai_core ${EDGE_AI_TENSORRT_CUDART_LIBRARY} ${EDGE_AI_TENSORRT_LIBRARY})
+else()
+    add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
+    target_include_directories(edge_ai_backend_trt PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 endif()
 
 add_library(edge_ai_postprocess STATIC
@@ -258,6 +265,7 @@ add_library(edge_ai_backend_factory STATIC src/inference_engine_factory.cpp)
 target_include_directories(edge_ai_backend_factory PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 target_link_libraries(edge_ai_backend_factory PUBLIC edge_ai_backend_ort)
+target_link_libraries(edge_ai_backend_factory PUBLIC edge_ai_backend_trt)
 
 add_library(edge_ai_application STATIC
     src/application_runner.cpp
@@ -554,6 +562,23 @@ if(BUILD_TESTING)
     set_tests_properties(k3_foundation PROPERTIES
         LABELS "stage-k;k3;schema;factory"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
+    if(EDGE_AI_ENABLE_TENSORRT)
+        add_executable(test_tensorrt_engine tests/test_tensorrt_engine.cpp)
+        target_link_libraries(test_tensorrt_engine PRIVATE
+            edge_ai_backend_trt edge_ai_runtime edge_ai_core)
+        set_target_properties(test_tensorrt_engine PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests")
+        add_test(NAME tensorrt_engine
+            COMMAND test_tensorrt_engine
+                "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine"
+                "${CMAKE_CURRENT_SOURCE_DIR}/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json"
+                "${CMAKE_CURRENT_SOURCE_DIR}/configs/model_contracts/yolov8n_neudet_frozen.yaml"
+                "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/tensorrt_engine")
+        set_tests_properties(tensorrt_engine PROPERTIES
+            LABELS "stage-k;k4;tensorrt;runtime"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    endif()
 
     add_executable(test_cli
         tests/test_cli.cpp

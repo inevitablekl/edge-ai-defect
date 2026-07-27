@@ -15,6 +15,8 @@ struct TensorRtEngineManifest {
     std::string artifact_kind;
     std::string engine_id;
     std::filesystem::path engine_path;
+    std::filesystem::path source_onnx_path;
+    std::filesystem::path model_contract_path;
     std::string engine_sha256;
     std::string source_onnx_sha256;
     std::string model_contract_sha256;

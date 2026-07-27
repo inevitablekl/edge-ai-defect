@@ -1130,3 +1130,15 @@ plan; no new package was installed or upgraded.
   factory 仍返回 `NOT_IMPLEMENTED`，推理实现保留到 K4。
 - 本阶段未执行 TensorRT inference、CUDA stream/buffer allocation、engine load、
   benchmark、Pipeline 或生产 TensorRT backend。
+
+## Stage K K4 TensorRtEngine Implementation (2026-07-27)
+
+- ON build 在真实 Jetson TensorRT 10.x 环境成功构建并运行
+  `TensorRtEngine`；OFF build 保持无 CUDA/TensorRT 依赖并使用明确 disabled stub。
+- K4 使用单个 TensorRT Runtime、ICudaEngine、IExecutionContext、CUDA stream 和
+  持久化 device buffers；每帧只进行 HostTensor↔device copy、named tensor address
+  binding、`enqueueV3` 和同步。
+- K4 smoke 使用冻结 Engine Manifest，验证 Engine/ONNX/ModelContract SHA、静态
+  tensor contract、FP32 I/O、有限输出和连续两次 inference。未进行性能或广泛
+  correctness campaign。
+- 当前状态：K4 `COMPLETE`；K5 `READY`。

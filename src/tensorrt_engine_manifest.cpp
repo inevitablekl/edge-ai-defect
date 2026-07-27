@@ -138,10 +138,12 @@ core::Status TensorRtEngineManifestLoader::load(
         status = tensor(root["output"], "output", &value.output); if (!status.ok()) return status;
         std::string source_onnx, contract_path; status = scalar(root["source_onnx"], "source_onnx", &source_onnx); if (!status.ok()) return status;
         status = scalar(root["model_contract"], "model_contract", &contract_path); if (!status.ok()) return status;
+        value.source_onnx_path = resolve(manifest_path, source_onnx);
+        value.model_contract_path = resolve(manifest_path, contract_path);
         std::string actual;
         if (!sha256_text(value.engine_path, &actual) || actual != value.engine_sha256) return error(ErrorCode::kModelContractMismatch, "engine_sha256", "engine artifact hash mismatch or unreadable");
-        if (!sha256_text(resolve(manifest_path, source_onnx), &actual) || actual != value.source_onnx_sha256) return error(ErrorCode::kModelContractMismatch, "source_onnx_sha256", "source ONNX hash mismatch or unreadable");
-        if (!sha256_text(resolve(manifest_path, contract_path), &actual) || actual != value.model_contract_sha256) return error(ErrorCode::kModelContractMismatch, "model_contract_sha256", "model contract hash mismatch or unreadable");
+        if (!sha256_text(value.source_onnx_path, &actual) || actual != value.source_onnx_sha256) return error(ErrorCode::kModelContractMismatch, "source_onnx_sha256", "source ONNX hash mismatch or unreadable");
+        if (!sha256_text(value.model_contract_path, &actual) || actual != value.model_contract_sha256) return error(ErrorCode::kModelContractMismatch, "model_contract_sha256", "model contract hash mismatch or unreadable");
         if (expected_contract != nullptr && (!same_tensor(value.input, expected_contract->input) || !same_tensor(value.output, expected_contract->output))) return error(ErrorCode::kModelContractMismatch, "tensor_contract", "manifest tensors do not match ModelContract");
         *output = std::move(value);
         return Status::success();
