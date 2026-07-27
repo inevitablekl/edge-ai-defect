@@ -340,6 +340,17 @@ if(BUILD_TESTING)
     )
 
     add_test(
+        NAME stage_k_level_c_compare_unit
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_k_level_c_compare.py
+    )
+    set_tests_properties(stage_k_level_c_compare_unit
+        PROPERTIES
+            LABELS "stage-k;k5;level-c;validation"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+
+    add_test(
         NAME stage_k_raw_tensor_runner_help
         COMMAND stage_k_raw_tensor_runner --help
     )
