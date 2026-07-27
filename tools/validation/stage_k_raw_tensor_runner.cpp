@@ -528,7 +528,7 @@ int main(int argc, char** argv) {
         std::string output_sha;
         status = sha256_file(options.output_dir / output_filename, &output_sha);
         if (!status.ok()) { std::cerr << "entry " << entries[index].image_id << ": cannot hash output\n"; return 7; }
-        records.push_back({entries[index].image_id, entries[index].tensor_path.filename().string(), entries[index].sha256, output_filename, output_sha});
+        records.push_back({entries[index].image_id, entries[index].tensor_path_text, entries[index].sha256, output_filename, output_sha});
     }
     const std::string manifest = output_manifest_json(options, config, contract, runtime_sha, contract_sha, model_sha, engine_sha, engine_manifest_sha, input_manifest_sha, records);
     status = publish_manifest(options.output_dir / "output_manifest.json", manifest);
