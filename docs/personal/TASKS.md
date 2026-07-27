@@ -3069,3 +3069,17 @@ Stage J Plan or historical Evidence.
 - Current ORT Control disposition：`INHERITED_CROSS_ARCH_LIMITATION`。这不是
   TensorRT correctness closeout；TensorRT Level B/C、benchmark、stability、
   Pipeline 与 K6 均未执行。
+
+### 2026-07-28 - Stage K K5.3 TensorRT Level B Correctness Evaluation
+
+- New immutable Evidence：`results/validation/jetson_tensorrt_fp16/k5_correctness_v3/`。
+  Frozen Engine SHA、ONNX SHA、ModelContract SHA 与 Reference Bundle SHA
+  均完成身份核对，未重新 build Engine。
+- TensorRT raw output：16/16 inference `PASS`；shape exact `[1,10,8400]`；
+  finite output 16/16。
+- Frozen `tensorrt_fp16` Level B comparator：`1/16 PASS`、`15/16 FAIL`。
+  最大 bbox `max_abs=23.29144287109375` 超过 `4.0`；最大 score
+  `max_abs=0.021184921264648438` 超过 `0.02`。
+- K5.3：`TENSORRT_LEVEL_B_FAIL`。未修改 TensorRT tolerance、Engine、ONNX、
+  ModelContract、Reference Bundle 或 ORT control；TensorRT Level C、boundary
+  investigation、benchmark、stability、Pipeline 与 K6 均未执行。

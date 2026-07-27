@@ -1400,3 +1400,18 @@ Current ORT Control disposition is
 `INHERITED_CROSS_ARCH_LIMITATION`. This is not a full TensorRT correctness
 closeout: TensorRT Level B/C, benchmark, stability, Pipeline, and K6 remain
 unexecuted.
+
+## Stage K K5.3 TensorRT Level B Correctness
+
+Updated 2026-07-28. New immutable Evidence is tracked under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v3/`.
+
+The frozen TensorRT Engine produced 16/16 raw FP32 BCN outputs with exact
+shape `[1,10,8400]` and finite values. The frozen `tensorrt_fp16` Level B
+policy comparison passed 1/16 tensors and failed 15/16. The maximum bbox
+absolute error was `23.29144287109375`, exceeding the unchanged `4.0` limit;
+the maximum score absolute error was `0.021184921264648438`, exceeding the
+unchanged `0.02` limit. Formal result: `TENSORRT_LEVEL_B_FAIL`.
+
+TensorRT Level C, boundary investigation, benchmark, stability, Pipeline,
+and K6 were not executed.
