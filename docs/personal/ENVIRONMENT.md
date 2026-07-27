@@ -1041,3 +1041,27 @@ plan; no new package was installed or upgraded.
 - K1 host-only g++ smoke 因缺失 `libnvdla_compiler.so` 在链接阶段阻塞，
   因而 K1 未通过；该事实不覆盖或修改 Stage J 历史记录。JetPack `6.2.2`
   作为 L4T `R36.5` 目标合同记录，但 `nvidia-jetpack` meta-package 未安装。
+
+## Stage K K1-R2 Package Repair Re-attempt (2026-07-27)
+
+- Exact package installed after the authorized manual retry：
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252`，architecture `arm64`。
+  `nvidia-l4t-core=36.5.0-20260115194252` and TensorRT
+  `10.3.0.30-1+cuda12.5` were preserved；`dpkg --audit` was empty。
+- Installed library：
+  `/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so`；AArch64 ELF；SONAME
+  `libnvdla_compiler.so`；SHA256
+  `c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec`。
+- TensorRT runtime link verification remains blocked：`libnvinfer.so.10`
+  has DT_NEEDED `libnvdla_compiler.so`, but `ldd` reports it as `not found`.
+  No manual `ldconfig`, loader configuration change, symlink, or copied library
+  was used.
+- Host-only smoke source SHA256 matches K1 v1：
+  `8b0fe4859262ad00ace06b47639d14e3a79504bb8bff40337797b929f95b04cb`。
+  Ordinary g++ compilation succeeded, but binary `ldd` and runtime loading
+  failed on the unresolved DLA compiler dependency; CUDA device/stream and
+  TensorRT Runtime creation were not accepted.
+- K1-R2 Evidence：`results/platform/tensorrt/k1_environment_v2`。This does
+  not claim Stage K uses DLA as an execution device; the package was installed
+  only to satisfy the TensorRT runtime dependency chain. K1 remains `BLOCKED`；
+  D062 and K2 remain unauthorized.

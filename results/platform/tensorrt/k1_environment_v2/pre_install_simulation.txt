@@ -1,0 +1,12 @@
+NOTE: This is only a simulation!
+      apt-get needs root privileges for real execution.
+      Keep also in mind that locking is deactivated,
+      so don't depend on the relevance to the real current situation!
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following NEW packages will be installed:
+  nvidia-l4t-dla-compiler
+0 upgraded, 1 newly installed, 0 to remove and 355 not upgraded.
+Inst nvidia-l4t-dla-compiler (36.5.0-20260115194252 L4T Jetson:stable [arm64])
+Conf nvidia-l4t-dla-compiler (36.5.0-20260115194252 L4T Jetson:stable [arm64])

@@ -1,0 +1,12 @@
+/.
+/usr
+/usr/lib
+/usr/lib/aarch64-linux-gnu
+/usr/lib/aarch64-linux-gnu/nvidia
+/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+/usr/share
+/usr/share/doc
+/usr/share/doc/nvidia-l4t-dla-compiler
+/usr/share/doc/nvidia-l4t-dla-compiler/LICENSE.nvdla.gz
+/usr/share/doc/nvidia-l4t-dla-compiler/changelog.Debian.gz
+/usr/share/doc/nvidia-l4t-dla-compiler/copyright

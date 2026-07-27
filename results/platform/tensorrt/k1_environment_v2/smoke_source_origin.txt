@@ -1,0 +1,2 @@
+Copied unchanged from:
+results/platform/tensorrt/k1_environment_v1/k1_runtime_smoke.cpp

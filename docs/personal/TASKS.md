@@ -2842,3 +2842,29 @@ Stage J Plan or historical Evidence.
   未产生可执行文件，未进入 CUDA/TensorRT Runtime 调用。
 - K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。未安装/升级软件，
   未修改系统配置、电源模式、jetson_clocks 或生产代码。
+
+### 2026-07-27T20:57:30+08:00 - Stage K K1-R2 Package Repair and Platform Re-attempt
+
+- Starting branch：`feature/jetson-tensorrt-fp16`；starting commit：
+  `56e0c3d2991c1f541e5611460d440fc1cfbaadbe`；previous blocked Evidence：
+  `results/platform/tensorrt/k1_environment_v1`。
+- K1-R1 classification：`C_ABSENT_MATCHING_PACKAGE_AVAILABLE`。安装前 gate
+  重新确认 `nvidia-l4t-core=36.5.0-20260115194252`，candidate 为精确版本
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252`、`arm64`；APT simulation
+  仅新增该一个包，无升级、删除或降级。
+- 用户随后手动执行了唯一授权的精确安装命令；APT history 与 dpkg 均确认
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252:arm64` 已安装。Codex
+  未认证的首次安装尝试 exit code `1` 原样保留在 v2 Evidence，未覆盖。
+- `libnvdla_compiler.so` 已存在且为 AArch64 ELF，SONAME 为
+  `libnvdla_compiler.so`，SHA256：
+  `c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec`；但
+  `ldconfig -p`/`ldd libnvinfer.so.10` 仍显示 `libnvdla_compiler.so => not found`。
+  按授权未运行手工 `ldconfig`、未修改 loader 配置、未建 symlink。
+- 普通 `g++` smoke 编译 exit code `0`；smoke binary `ldd` 仍有
+  `libnvdla_compiler.so => not found`，运行 exit code `127`，未完成 CUDA
+  device/stream 或 TensorRT Runtime lifecycle。
+- CUDA 12.6.68、TensorRT 10.3.0.30、`trtexec --help` 和 tegrastats 基本
+  采样已记录；`trtexec --version` 因无 model 返回 `1`，未执行 ONNX 或 Engine。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
+  `results/platform/tensorrt/k1_environment_v2`。未修改生产代码或 Stage K
+  计划/Decision 文档。
