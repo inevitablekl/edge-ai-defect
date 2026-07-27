@@ -54,17 +54,17 @@ Not available
 ## 3. 当前环境总览
 
 当前状态：Stage J `COMPLETE`；Stage K Execution Plan `FINAL`；K0 Planning
-Freeze `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`；K1 Platform
-Acceptance `READY_AFTER_K0_FREEZE_COMMIT`；TensorRT Engine Build
-`NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`；Stage P Pipeline
+Freeze `COMPLETE`；K1 Platform Acceptance `PASS`；D062 `ACCEPTED`；K2/K3/K4
+`COMPLETE`；K5 Correctness Tooling Foundation implementation slice
+`COMPLETE`，但 K5 formal correctness campaign 尚未执行；Stage P Pipeline
 `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`。本文件只记录已知平台事实和阶段
-状态；本轮未执行 K1 smoke、trtexec、Engine build 或 compile/link smoke。
+状态；TensorRT Engine 保持 local-only，不作为 Git artifact。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Stage J Jetson CPU baseline；Stage K TensorRT FP16 planned target | J1–J4 verified; Stage K K0 frozen; K1 not executed |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；Stage K TensorRT FP16 serial/correctness tooling | J1–J4 verified; K1 PASS; D062 accepted; K2–K4 complete; K5 tooling slice complete |
 
 ---
 

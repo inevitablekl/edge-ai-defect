@@ -14,7 +14,7 @@ include(CTest)
 
 option(
     EDGE_AI_ENABLE_TENSORRT
-    "Enable the TensorRT backend foundation target (no inference implementation)"
+    "Enable the TensorRT backend"
     OFF
 )
 
@@ -300,12 +300,84 @@ set_target_properties(stage_j_profile_runner
     PROPERTIES BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_k_raw_tensor_runner
+    tools/validation/stage_k_raw_tensor_runner.cpp
+)
+target_link_libraries(stage_k_raw_tensor_runner
+    PRIVATE
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        # TensorRtEngine uses the existing engine-manifest loader in
+        # edge_ai_runtime; keep the static-library order explicit for both
+        # TensorRT ON and OFF builds.
+        edge_ai_backend_trt
+        edge_ai_runtime
+)
+set_target_properties(stage_k_raw_tensor_runner
+    PROPERTIES
+        BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
         set(EDGE_AI_M5_PYTHON_EXECUTABLE "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
     else()
         set(EDGE_AI_M5_PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+    endif()
+
+    add_test(
+        NAME stage_k_level_b_compare_unit
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_k_level_b_compare.py
+    )
+    set_tests_properties(stage_k_level_b_compare_unit
+        PROPERTIES
+            LABELS "stage-k;k5;level-b;validation"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+
+    add_test(
+        NAME stage_k_raw_tensor_runner_help
+        COMMAND stage_k_raw_tensor_runner --help
+    )
+    set_tests_properties(stage_k_raw_tensor_runner_help
+        PROPERTIES
+            LABELS "stage-k;k5;raw-tensor;validation"
+    )
+
+    add_test(
+        NAME stage_k_raw_tensor_runner_ort
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_k_raw_tensor_runner.py
+            --runner $<TARGET_FILE:stage_k_raw_tensor_runner>
+            --repo-root ${CMAKE_CURRENT_SOURCE_DIR}
+            --mode ort
+            --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/stage_k_raw_tensor_runner
+    )
+    set_tests_properties(stage_k_raw_tensor_runner_ort
+        PROPERTIES
+            LABELS "stage-k;k5;raw-tensor;ort;validation"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+
+    if(EDGE_AI_ENABLE_TENSORRT)
+        add_test(
+            NAME stage_k_raw_tensor_runner_tensorrt
+            COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_k_raw_tensor_runner.py
+                --runner $<TARGET_FILE:stage_k_raw_tensor_runner>
+                --repo-root ${CMAKE_CURRENT_SOURCE_DIR}
+                --mode trt
+                --temp-dir ${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/stage_k_raw_tensor_runner
+        )
+        set_tests_properties(stage_k_raw_tensor_runner_tensorrt
+            PROPERTIES
+                LABELS "stage-k;k5;raw-tensor;tensorrt;validation"
+                WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        )
     endif()
 
     add_test(

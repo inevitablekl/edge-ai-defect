@@ -2968,3 +2968,27 @@ Stage J Plan or historical Evidence.
 - ON 全量构建与 K4 smoke、OFF 构建与 ORT/K3 regression 均通过。K4：`COMPLETE`；
   K5：`READY`。未执行 benchmark、correctness campaign、Pipeline 或 GPU
   preprocessing/NMS。
+
+### 2026-07-27T22:45:51+08:00 - Stage K K5 Correctness Tooling Foundation
+
+- 起点确认：branch `feature/jetson-tensorrt-fp16`、HEAD
+  `710fd517e673906fb9d506e7e4f85d38618e9a1a`、worktree clean。
+- 新增 backend-neutral `stage_k_raw_tensor_runner`：通过 RuntimeConfig v2/v3、
+  ModelContractLoader、`create_inference_engine()` 和 `IInferenceEngine::run()`
+  处理 frozen FP32 NCHW input raw tensor，输出 atomic FP32 BCN raw tensor 与
+  output manifest；不执行 preprocessing/postprocessing，不实现 fallback。
+- 新增 `stage_k_level_b_compare.py`：strict JSON、逐 tensor identity/contract/
+  finite/SHA 校验，ORT strict/cross-architecture 与 TensorRT FP16 policy，
+  Hyndman–Fan Type 7 P99，以及 ORT output SHA repeatability check。新增 synthetic
+  focused tests，不依赖 OpenCV；新增 raw runner subprocess tests 覆盖 malformed/
+  missing/SHA/size/shape/non-finite/config/overwrite/order/output contract 和 failure
+  atomicity。
+- fresh OFF configure/build、OFF Stage K CTest、fresh ON configure/build、ON
+  Stage K CTest 与既有 K4 TensorRT test 通过。完整 OFF CTest 的四项历史 Python
+  测试因当前 `/usr/bin/python3.10` 缺少 `cv2` 失败，未安装依赖且不归因于本轮代码。
+- checkerboard 单 tensor ORT v2 与 TensorRT v3 tooling smoke 均生成合法 output
+  manifest；ORT repeatability SHA 比较通过。ORT/TensorRT comparator 产生真实
+  metrics，但 checkerboard TensorRT policy 因 bbox `max_abs` 超过 4.0 而 FAIL；
+  该结果标记为 `NON_FORMAL_TOOLING_SMOKE_ONLY`，不构成 K5 PASS 或正式 Evidence。
+- 本轮未执行 Level C、boundary disposition、K6、benchmark、stability、Pipeline、
+  GPU preprocessing/NMS 或正式 16-image correctness campaign。
