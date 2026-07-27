@@ -1077,7 +1077,10 @@ plan; no new package was installed or upgraded.
   Runtime/Driver, one Orin device, stream lifecycle and TensorRT Runtime
   lifecycle all passed.
 - `trtexec --help` and `ldd` passed. `trtexec --version` printed TensorRT
-  `v100300` but returned `1` because no model was supplied; this remains a
-  documented K1 mandatory-gate limitation.
-- K1-R4 Evidence：`results/platform/tensorrt/k1_environment_v4`。K1 remains
-  `BLOCKED`；D062 and K2 remain unauthorized。
+  `v100300` but returned `1` because no model was supplied; this is classified
+  as a `non-blocking CLI behavior limitation` and the raw failure is retained.
+  Independent TensorRT Runtime validation supersedes this command exit status
+  for K1 platform acceptance.
+- K1-R4 Evidence：`results/platform/tensorrt/k1_environment_v4`。K1 is now
+  `PASS`；D062 is `READY` but remains unexecuted/unaccepted；K2 remains
+  unauthorized。

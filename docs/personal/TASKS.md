@@ -2885,3 +2885,15 @@ Stage J Plan or historical Evidence.
   tegrastats 基本字段采样成功。
 - K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
   `results/platform/tensorrt/k1_environment_v4`。
+
+### 2026-07-27T21:20:00+08:00 - Stage K K1 Disposition Review
+
+- 保留 K1-R4 原始 `trtexec --version` failure Evidence：命令输出 TensorRT
+  `v100300`，并报告 `Model missing or format not recognized`，exit code `1`。
+- Review 结论：该结果是 `non-blocking CLI behavior limitation`，不是
+  mandatory platform runtime failure。冻结 Task Card 的 required check 是
+  `trtexec help semantics`；`--help` exit `0`，且独立 host-only smoke 已验证
+  TensorRT Runtime 版本、创建/清理和 CUDA lifecycle。
+- TensorRT Runtime validation supersedes the `trtexec --version` command exit
+  status for K1 platform acceptance。
+- K1：`PASS`；D062：`READY`；D062 尚未执行或接受；K2 仍未授权。

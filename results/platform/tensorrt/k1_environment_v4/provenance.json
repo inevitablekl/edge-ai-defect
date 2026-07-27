@@ -25,9 +25,9 @@
   "smoke_binary_sha256": "5ff81cd7be4eb989eeee68094399bceaa441cbd43fa877744f3fbb021168a915",
   "user_confirmed_manual_ldconfig": true,
   "creation_timestamp": "2026-07-27T21:12:55+08:00",
-  "disposition": "K1_BLOCKED",
+  "disposition": "K1_PASS",
   "limitations": [
     "The successful sudo ldconfig stdout and exit code were not captured by Codex; the user confirmed completion and the refreshed cache is independently verified.",
-    "trtexec --version prints TensorRT v100300 but exits 1 when no model is supplied."
+    "trtexec --version prints TensorRT v100300 but exits 1 when no model is supplied; classified as a non-blocking CLI behavior limitation because help semantics and independent TensorRT Runtime validation pass."
   ]
 }
