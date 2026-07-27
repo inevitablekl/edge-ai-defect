@@ -1,0 +1,1 @@
+5ff81cd7be4eb989eeee68094399bceaa441cbd43fa877744f3fbb021168a915  /tmp/edge-ai-k1-r4-trt-smoke.B4U1k1/k1_runtime_smoke

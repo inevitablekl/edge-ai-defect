@@ -1065,3 +1065,19 @@ plan; no new package was installed or upgraded.
   not claim Stage K uses DLA as an execution device; the package was installed
   only to satisfy the TensorRT runtime dependency chain. K1 remains `BLOCKED`；
   D062 and K2 remain unauthorized.
+
+## Stage K K1-R4 Dynamic Linker Cache Refresh (2026-07-27)
+
+- User-confirmed standard `sudo ldconfig` refreshed the loader cache; no
+  loader configuration file was changed. `ldconfig -p` now resolves
+  `libnvdla_compiler.so` to `/usr/lib/aarch64-linux-gnu/nvidia/`.
+- `libnvinfer.so.10` and the smoke binary have no unresolved dependencies.
+  Smoke source SHA remains
+  `8b0fe4859262ad00ace06b47639d14e3a79504bb8bff40337797b929f95b04cb`；CUDA
+  Runtime/Driver, one Orin device, stream lifecycle and TensorRT Runtime
+  lifecycle all passed.
+- `trtexec --help` and `ldd` passed. `trtexec --version` printed TensorRT
+  `v100300` but returned `1` because no model was supplied; this remains a
+  documented K1 mandatory-gate limitation.
+- K1-R4 Evidence：`results/platform/tensorrt/k1_environment_v4`。K1 remains
+  `BLOCKED`；D062 and K2 remain unauthorized。

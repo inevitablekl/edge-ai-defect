@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "artifact_kind": "platform_acceptance_evidence",
+  "stage": "Stage K1",
+  "task": "K1-R4",
+  "attempt_id": "k1_environment_v4",
+  "previous_attempt": "results/platform/tensorrt/k1_environment_v3",
+  "previous_evidence_commit": "48f63918235ffac7e77aa5de4ba3383ebd758a8e",
+  "source_commit": "48f63918235ffac7e77aa5de4ba3383ebd758a8e",
+  "original_r4_requested_head": "44d6ac385a3a2e61ac658346d653c00baa7f125e",
+  "branch": "feature/jetson-tensorrt-fp16",
+  "device_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+  "architecture": "aarch64",
+  "l4t_version": "R36.5.0",
+  "nvidia_l4t_core_version": "36.5.0-20260115194252",
+  "installed_package": "nvidia-l4t-dla-compiler",
+  "installed_package_version": "36.5.0-20260115194252",
+  "installed_package_architecture": "arm64",
+  "cuda_version": "12.6.68",
+  "tensorrt_version": "10.3.0.30",
+  "libnvdla_compiler_path": "/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so",
+  "libnvinfer_path": "/lib/aarch64-linux-gnu/libnvinfer.so.10",
+  "trtexec_path": "/usr/src/tensorrt/bin/trtexec",
+  "smoke_source_sha256": "8b0fe4859262ad00ace06b47639d14e3a79504bb8bff40337797b929f95b04cb",
+  "smoke_binary_sha256": "5ff81cd7be4eb989eeee68094399bceaa441cbd43fa877744f3fbb021168a915",
+  "user_confirmed_manual_ldconfig": true,
+  "creation_timestamp": "2026-07-27T21:12:55+08:00",
+  "disposition": "K1_BLOCKED",
+  "limitations": [
+    "The successful sudo ldconfig stdout and exit code were not captured by Codex; the user confirmed completion and the refreshed cache is independently verified.",
+    "trtexec --version prints TensorRT v100300 but exits 1 when no model is supplied."
+  ]
+}

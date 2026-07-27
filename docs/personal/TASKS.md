@@ -2868,3 +2868,20 @@ Stage J Plan or historical Evidence.
 - K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
   `results/platform/tensorrt/k1_environment_v2`。未修改生产代码或 Stage K
   计划/Decision 文档。
+
+### 2026-07-27T21:12:55+08:00 - Stage K K1-R4 Dynamic Linker Cache Refresh
+
+- K1-R3 Evidence 已提交：`48f63918235ffac7e77aa5de4ba3383ebd758a8e`；R4 实际
+  起点为该 commit，原 R4 请求 HEAD `44d6ac385a3a2e61ac658346d653c00baa7f125e`
+  保留在 ancestry 中。
+- 用户手动完成唯一授权系统维护动作 `sudo ldconfig`；Codex 未再次执行 sudo。
+  cache 现包含 `/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so`，
+  `ldd libnvinfer.so.10` 和 smoke binary 均无 `not found`。
+- K1 host-only smoke source SHA 与 v2 一致；普通 g++ 编译成功，CUDA Runtime/
+  Driver、device count/properties、stream create/destroy、TensorRT Runtime
+  create/cleanup 全部 `PASS`。
+- `trtexec --help` exit `0`、`ldd` clean；`trtexec --version` 输出 TensorRT
+  `v100300` 但因无 model exit `1`，因此按 mandatory version/help gate 保持失败。
+  tegrastats 基本字段采样成功。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
+  `results/platform/tensorrt/k1_environment_v4`。

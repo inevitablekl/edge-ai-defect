@@ -1,0 +1,4 @@
+User-confirmed manual maintenance action:
+sudo ldconfig
+This action was completed manually by the user. Codex did not execute sudo again.
+2026-07-27T21:12:14+08:00

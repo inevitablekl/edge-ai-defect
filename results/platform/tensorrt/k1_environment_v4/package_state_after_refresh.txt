@@ -1,0 +1,6 @@
+libnvinfer-dev	10.3.0.30-1+cuda12.5	arm64	installed
+libnvinfer-plugin10	10.3.0.30-1+cuda12.5	arm64	installed
+libnvinfer10	10.3.0.30-1+cuda12.5	arm64	installed
+libnvonnxparsers10	10.3.0.30-1+cuda12.5	arm64	installed
+nvidia-l4t-core	36.5.0-20260115194252	arm64	installed
+nvidia-l4t-dla-compiler	36.5.0-20260115194252	arm64	installed
