@@ -1118,3 +1118,15 @@ plan; no new package was installed or upgraded.
 - K2：`COMPLETE`；K3：`READY`。Engine 保持 local-only；未修改生产代码、CMake、
   RuntimeConfig 或 Pipeline。one-second load smoke 的 GPU variance warning
   仅作为 limitation 保留，不作为正式性能结论。
+
+## Stage K K3 Build and Schema Foundation (2026-07-27)
+
+- K3 使用同一 Jetson/aarch64 environment；CMake option
+  `EDGE_AI_ENABLE_TENSORRT` 默认 `OFF`。OFF build 不依赖 CUDA/TensorRT；ON
+  configure 检查 `cuda_runtime_api.h`、versioned `libcudart.so`、`NvInfer.h`
+  和 `libnvinfer.so`。
+- K3 仅建立 TensorRT build/schema foundation：RuntimeConfig v3、Engine Manifest
+  parser、Result JSON v2 metadata branch 和 backend factory skeleton。TensorRT
+  factory 仍返回 `NOT_IMPLEMENTED`，推理实现保留到 K4。
+- 本阶段未执行 TensorRT inference、CUDA stream/buffer allocation、engine load、
+  benchmark、Pipeline 或生产 TensorRT backend。

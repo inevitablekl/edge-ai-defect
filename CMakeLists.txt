@@ -12,6 +12,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CTest)
 
+option(
+    EDGE_AI_ENABLE_TENSORRT
+    "Enable the TensorRT backend foundation target (no inference implementation)"
+    OFF
+)
+
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
 find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs)
 find_package(OpenSSL REQUIRED)
@@ -173,6 +179,38 @@ target_link_libraries(edge_ai_backend_ort
         OpenSSL::Crypto
 )
 
+if(EDGE_AI_ENABLE_TENSORRT)
+    find_path(EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR cuda_runtime_api.h
+        PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include
+              /usr/include /usr/include/aarch64-linux-gnu)
+    find_library(EDGE_AI_TENSORRT_CUDART_LIBRARY NAMES cudart)
+    if(NOT EDGE_AI_TENSORRT_CUDART_LIBRARY)
+        find_file(EDGE_AI_TENSORRT_CUDART_LIBRARY
+            NAMES libcudart.so libcudart.so.12.6.68
+            PATHS /usr/local/cuda-12.6/targets/aarch64-linux/lib
+                  /usr/local/cuda/targets/aarch64-linux/lib)
+    endif()
+    find_path(EDGE_AI_TENSORRT_INCLUDE_DIR NvInfer.h
+        PATHS /usr/include/aarch64-linux-gnu /usr/include /usr/local/cuda/include
+              /usr/local/cuda/targets/aarch64-linux/include)
+    find_library(EDGE_AI_TENSORRT_LIBRARY NAMES nvinfer)
+    if(NOT EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR OR
+       NOT EDGE_AI_TENSORRT_CUDART_LIBRARY OR
+       NOT EDGE_AI_TENSORRT_INCLUDE_DIR OR
+       NOT EDGE_AI_TENSORRT_LIBRARY)
+        message(FATAL_ERROR
+            "EDGE_AI_ENABLE_TENSORRT=ON requires cuda_runtime_api.h, libcudart.so, "
+            "NvInfer.h, and libnvinfer.so")
+    endif()
+    add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
+    target_include_directories(edge_ai_backend_trt PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR}
+        ${EDGE_AI_TENSORRT_INCLUDE_DIR})
+    target_link_libraries(edge_ai_backend_trt PUBLIC
+        edge_ai_core ${EDGE_AI_TENSORRT_CUDART_LIBRARY} ${EDGE_AI_TENSORRT_LIBRARY})
+endif()
+
 add_library(edge_ai_postprocess STATIC
     src/postprocess_config.cpp
     src/postprocessor.cpp
@@ -200,6 +238,7 @@ add_library(edge_ai_runtime STATIC
     src/portable_control.cpp
     src/result_sink.cpp
     src/runtime_config.cpp
+    src/tensorrt_engine_manifest.cpp
     src/serial_runner.cpp
 )
 target_include_directories(edge_ai_runtime
@@ -212,7 +251,13 @@ target_link_libraries(edge_ai_runtime
     PRIVATE
         opencv_imgcodecs
         yaml-cpp
+        OpenSSL::Crypto
 )
+
+add_library(edge_ai_backend_factory STATIC src/inference_engine_factory.cpp)
+target_include_directories(edge_ai_backend_factory PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+target_link_libraries(edge_ai_backend_factory PUBLIC edge_ai_backend_ort)
 
 add_library(edge_ai_application STATIC
     src/application_runner.cpp
@@ -224,7 +269,7 @@ target_include_directories(edge_ai_application
 target_link_libraries(edge_ai_application
     PUBLIC
         edge_ai_core
-        edge_ai_backend_ort
+        edge_ai_backend_factory
         edge_ai_runtime
 )
 
@@ -496,6 +541,19 @@ if(BUILD_TESTING)
         PROPERTIES
             LABELS "m4;runtime;config"
     )
+
+    add_executable(test_k3_foundation tests/test_k3_foundation.cpp)
+    target_link_libraries(test_k3_foundation
+        PRIVATE edge_ai_backend_factory edge_ai_runtime edge_ai_core)
+    set_target_properties(test_k3_foundation PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests")
+    add_test(NAME k3_foundation
+        COMMAND test_k3_foundation
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/k3_foundation"
+            "${CMAKE_CURRENT_SOURCE_DIR}/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json")
+    set_tests_properties(k3_foundation PROPERTIES
+        LABELS "stage-k;k3;schema;factory"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
     add_executable(test_cli
         tests/test_cli.cpp

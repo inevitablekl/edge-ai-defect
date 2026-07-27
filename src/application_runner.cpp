@@ -1,6 +1,6 @@
 #include "edge_ai_defect/application/application_runner.hpp"
 
-#include "edge_ai_defect/backend_ort/onnx_runtime_engine.hpp"
+#include "edge_ai_defect/inference/inference_engine_factory.hpp"
 #include "edge_ai_defect/model/model_contract_loader.hpp"
 #include "edge_ai_defect/postprocess/postprocessor.hpp"
 #include "edge_ai_defect/preprocess/preprocessor.hpp"
@@ -61,12 +61,8 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     }
 
     preprocess::Preprocessor preprocessor;
-    backend_ort::OnnxRuntimeEngine engine;
-    if (config.schema_version == 2U) {
-        status = engine.initialize(config, contract, config.model_path);
-    } else {
-        status = engine.initialize(contract, config.model_path);
-    }
+    std::unique_ptr<inference::IInferenceEngine> engine;
+    status = inference::create_inference_engine(config, contract, &engine);
     if (!status.ok()) {
         return {status, false};
     }
@@ -97,7 +93,7 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     runtime::SerialRunner runner(*source,
                                  preprocessor,
                                  contract.input.tensor_info,
-                                 engine,
+                                 *engine,
                                  postprocessor,
                                  *sink,
                                  options.trace_observer);

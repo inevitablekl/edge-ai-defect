@@ -20,6 +20,12 @@ struct OnnxRuntimeConfig {
     bool memory_pattern_enabled = true;
 };
 
+struct TensorRtConfig {
+    std::filesystem::path engine_path;
+    std::filesystem::path engine_manifest_path;
+    std::uint32_t device_id = 0;
+};
+
 struct RuntimeConfig {
     std::uint32_t schema_version = 0;
 
@@ -40,6 +46,7 @@ struct RuntimeConfig {
     bool timing_enabled = false;
 
     OnnxRuntimeConfig onnxruntime;
+    TensorRtConfig tensorrt;
     std::uint32_t opencv_num_threads = 1;
 };
 

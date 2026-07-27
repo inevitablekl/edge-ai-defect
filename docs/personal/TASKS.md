@@ -2932,3 +2932,21 @@ Stage J Plan or historical Evidence.
   Engine 保持 local-only，不提交 Git。K2：`COMPLETE`；K3：`READY`。
 - smoke 的 one-second GPU variance warning 已保留；不将该 smoke 作为正式性能
   benchmark 或 speedup 结论。
+
+### 2026-07-27T22:00:00+08:00 - Stage K K3 Build and Schema Foundation
+
+- K3 起点确认：branch `feature/jetson-tensorrt-fp16`、HEAD
+  `bb537ea5dda43373882ea2622a8d9c8e67fca303`、worktree clean。
+- 新增 `EDGE_AI_ENABLE_TENSORRT`，默认 `OFF`；OFF 构建不引入 CUDA/TensorRT，
+  ON 构建检查 CUDA Runtime/TensorRT headers and libraries，并生成仅含
+  foundation stub 的 `edge_ai_backend_trt`，未启用 CUDA language 或 `.cu`。
+- RuntimeConfig v3 只接受 `tensorrt_fp16`、engine/manifest/device 字段；保持
+  v1/v2 parser 行为，unknown/duplicate/missing fields fail-fast，无环境变量覆盖。
+- 新增 TensorRT Engine Manifest parser（SHA256 与 input/output tensor identity
+  校验）、Result JSON v2 最小 metadata branch，以及 `create_inference_engine()`。
+  TensorRT factory dispatch 在 K3 明确返回 `NOT_IMPLEMENTED`。
+- OFF build、ON TensorRT foundation target、K3 专项 config/manifest/factory tests
+  和既有 C++ CTest 均通过；四项历史 Python CTest 因当前 `/usr/bin/python3.10`
+  缺少 `cv2` 而失败，不属于 K3 代码失败。
+- K3：`COMPLETE`；K4：`READY`。未执行 TensorRT inference、engine load、CUDA
+  stream/buffer、benchmark、pipeline 或生产 TensorRT backend。

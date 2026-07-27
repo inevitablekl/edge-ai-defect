@@ -45,6 +45,16 @@ runtime::RunMetadata metadata(bool timing_enabled = false) {
     return value;
 }
 
+runtime::RunMetadata tensorrt_metadata() {
+    runtime::RunMetadata value = metadata();
+    value.schema_version = 2;
+    value.backend_type = "tensorrt_fp16";
+    value.artifact_kind = "tensorrt_engine";
+    value.source_onnx_sha256 = std::string(64, 'b');
+    value.engine_manifest_filename = "engine.manifest.json";
+    return value;
+}
+
 runtime::FrameResult frame(std::size_t index = 0, bool timing_enabled = false) {
     runtime::FrameResult value;
     value.sequence_index = index;
@@ -163,6 +173,22 @@ void test_json(TestContext& context, const fs::path& root) {
     context.expect(text.find("\"candidate_index\": 123") < text.find("\"candidate_index\": 7"),
                    "json detection order", "Detection order changed");
     context.expect(no_temporary_files(root), "json temporary cleanup", "temporary file leaked");
+
+    const fs::path tensorrt_target = root / "tensorrt.json";
+    std::unique_ptr<runtime::JsonSink> tensorrt_output;
+    context.expect(runtime::JsonSink::create(tensorrt_target, false, &tensorrt_output).ok(),
+                   "json TensorRT create", "must succeed");
+    context.expect(tensorrt_output->begin_run(tensorrt_metadata()).ok(),
+                   "json TensorRT begin", "must succeed");
+    context.expect(tensorrt_output->write_frame(frame()).ok() &&
+                       tensorrt_output->end_run(summary()).ok(),
+                   "json TensorRT end", "must succeed");
+    const std::string tensorrt_text = read_text(tensorrt_target);
+    context.expect(tensorrt_text.find("\"schema_version\": 2") != std::string::npos &&
+                       tensorrt_text.find("\"artifact_kind\": \"tensorrt_engine\"") != std::string::npos &&
+                       tensorrt_text.find("\"source_onnx_sha256\"") != std::string::npos &&
+                       tensorrt_text.find("\"engine_manifest_filename\"") != std::string::npos,
+                   "json TensorRT metadata", "v2 metadata is incomplete");
 
     std::unique_ptr<runtime::JsonSink> existing;
     context.expect(!runtime::JsonSink::create(target, false, &existing).ok(),

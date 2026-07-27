@@ -27,6 +27,9 @@ struct RunMetadata {
     std::string model_filename;
     std::string model_sha256;
     std::string contract_filename;
+    std::string artifact_kind;
+    std::string source_onnx_sha256;
+    std::string engine_manifest_filename;
 
     std::vector<std::string> class_names;
     postprocess::PostprocessConfig postprocess_config;

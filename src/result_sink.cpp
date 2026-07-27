@@ -82,13 +82,15 @@ void write_timing(std::ostream& output, const FrameTimings& timing,
 }  // namespace
 
 core::Status validate_metadata(const RunMetadata& metadata) {
-    if (metadata.schema_version != 1U) {
+    const bool trt_v2 = metadata.schema_version == 2U &&
+                        metadata.backend_type == "tensorrt_fp16";
+    if (metadata.schema_version != 1U && !trt_v2) {
         return Status::failure(ErrorCode::kSchemaViolation,
-                               "RunMetadata schema_version must be 1");
+                               "RunMetadata schema_version must be 1 or TensorRT v2");
     }
-    if (metadata.backend_type != "onnxruntime_cpu") {
+    if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2) {
         return Status::failure(ErrorCode::kSchemaViolation,
-                               "RunMetadata backend_type must be onnxruntime_cpu");
+                               "RunMetadata backend_type is unsupported");
     }
     if (!is_filename(metadata.model_filename) || !is_filename(metadata.contract_filename)) {
         return Status::failure(ErrorCode::kInvalidArgument,
@@ -97,6 +99,12 @@ core::Status validate_metadata(const RunMetadata& metadata) {
     if (!is_lowercase_sha256(metadata.model_sha256)) {
         return Status::failure(ErrorCode::kInvalidArgument,
                                "RunMetadata model_sha256 must be lowercase SHA256");
+    }
+    if (trt_v2 && (metadata.artifact_kind != "tensorrt_engine" ||
+                   !is_lowercase_sha256(metadata.source_onnx_sha256) ||
+                   !is_filename(metadata.engine_manifest_filename))) {
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "TensorRT metadata is incomplete or invalid");
     }
     if (metadata.class_names.empty()) {
         return Status::failure(ErrorCode::kInvalidArgument,
@@ -202,15 +210,23 @@ std::string serialize_run(const RunMetadata& metadata,
                           const RunSummary& summary) {
     std::ostringstream output;
     output.imbue(std::locale::classic());
+    const bool trt_v2 = metadata.schema_version == 2U;
     output << "{\n"
-           << "  \"schema_version\": 1,\n"
+           << "  \"schema_version\": " << metadata.schema_version << ",\n"
            << "  \"backend\": {\n"
            << "    \"type\": \"" << json_escape(metadata.backend_type) << "\"\n"
            << "  },\n"
-           << "  \"model\": {\n"
-           << "    \"filename\": \"" << json_escape(metadata.model_filename) << "\",\n"
-           << "    \"sha256\": \"" << json_escape(metadata.model_sha256) << "\",\n"
-           << "    \"contract_filename\": \"" << json_escape(metadata.contract_filename) << "\",\n"
+           << "  \"model\": {\n";
+    if (trt_v2) {
+        output << "    \"artifact_kind\": \"" << json_escape(metadata.artifact_kind) << "\",\n";
+    }
+    output << "    \"filename\": \"" << json_escape(metadata.model_filename) << "\",\n"
+           << "    \"sha256\": \"" << json_escape(metadata.model_sha256) << "\",\n";
+    if (trt_v2) {
+        output << "    \"source_onnx_sha256\": \"" << json_escape(metadata.source_onnx_sha256) << "\",\n"
+               << "    \"engine_manifest_filename\": \"" << json_escape(metadata.engine_manifest_filename) << "\",\n";
+    }
+    output << "    \"contract_filename\": \"" << json_escape(metadata.contract_filename) << "\",\n"
            << "    \"classes\": [\n";
     for (std::size_t index = 0; index < metadata.class_names.size(); ++index) {
         output << "      \"" << json_escape(metadata.class_names[index]) << "\""

@@ -135,6 +135,19 @@ Status parse_positive_uint32(const YAML::Node& node,
     return Status::success();
 }
 
+Status parse_device_id(const YAML::Node& node, const std::string& path,
+                       std::uint32_t* output) {
+    std::int64_t value = 0;
+    const Status status = parse_scalar(node, path, &value);
+    if (!status.ok()) return status;
+    if (value < 0 || static_cast<std::uint64_t>(value) >
+                         std::numeric_limits<std::uint32_t>::max()) {
+        return schema_error(path, "must be a uint32 device id");
+    }
+    *output = static_cast<std::uint32_t>(value);
+    return Status::success();
+}
+
 Status parse_backend(const YAML::Node& node, RuntimeConfig* output) {
     const Status mapping_status = validate_mapping(node, "backend", {"type"});
     if (!mapping_status.ok()) {
@@ -556,6 +569,76 @@ Status parse_runtime_config_v2(const YAML::Node& root,
     return Status::success();
 }
 
+Status parse_tensorrt_v3(const YAML::Node& node,
+                         const std::filesystem::path& config_directory,
+                         RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(
+        node, "tensorrt", {"engine_path", "engine_manifest_path", "device_id"});
+    if (!mapping_status.ok()) return mapping_status;
+    Status status = parse_nonempty_path(node["engine_path"],
+                                        "tensorrt.engine_path",
+                                        config_directory,
+                                        &output->tensorrt.engine_path);
+    if (!status.ok()) return status;
+    status = parse_nonempty_path(node["engine_manifest_path"],
+                                 "tensorrt.engine_manifest_path",
+                                 config_directory,
+                                 &output->tensorrt.engine_manifest_path);
+    if (!status.ok()) return status;
+    return parse_device_id(node["device_id"], "tensorrt.device_id",
+                            &output->tensorrt.device_id);
+}
+
+Status parse_model_v3(const YAML::Node& node,
+                      const std::filesystem::path& config_directory,
+                      RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(node, "model", {"contract_path"});
+    if (!mapping_status.ok()) return mapping_status;
+    return parse_nonempty_path(node["contract_path"], "model.contract_path",
+                               config_directory, &output->model_contract_path);
+}
+
+Status parse_backend_v3(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(node, "backend", {"type"});
+    if (!mapping_status.ok()) return mapping_status;
+    Status status = parse_scalar(node["type"], "backend.type", &output->backend_type);
+    if (!status.ok()) return status;
+    if (output->backend_type != "tensorrt_fp16") {
+        return schema_error("backend.type", "must be exactly 'tensorrt_fp16'");
+    }
+    return Status::success();
+}
+
+Status parse_runtime_config_v3(const YAML::Node& root,
+                               const std::filesystem::path& config_directory,
+                               RuntimeConfig* output) {
+    if (!root["tensorrt"].IsDefined() && root["timing"].IsDefined()) {
+        return schema_error("schema_version", "schema 3 requires TensorRT configuration");
+    }
+    const Status root_status = validate_mapping(
+        root, "$", {"schema_version", "backend", "tensorrt", "runtime",
+                     "model", "input", "output", "postprocess"});
+    if (!root_status.ok()) return root_status;
+    RuntimeConfig config;
+    config.schema_version = 3;
+    Status status = parse_backend_v3(root["backend"], &config);
+    if (!status.ok()) return status;
+    status = parse_tensorrt_v3(root["tensorrt"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_runtime_v2(root["runtime"], &config);
+    if (!status.ok()) return status;
+    status = parse_model_v3(root["model"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_input(root["input"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_output(root["output"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_postprocess_v2(root["postprocess"], &config);
+    if (!status.ok()) return status;
+    *output = std::move(config);
+    return Status::success();
+}
+
 Status parse_runtime_config(const YAML::Node& root,
                             const std::filesystem::path& config_directory,
                             RuntimeConfig* output) {
@@ -570,7 +653,10 @@ Status parse_runtime_config(const YAML::Node& root,
     if (schema_version == 2) {
         return parse_runtime_config_v2(root, config_directory, output);
     }
-    return schema_error("schema_version", "must be exactly 1 or 2");
+    if (schema_version == 3) {
+        return parse_runtime_config_v3(root, config_directory, output);
+    }
+    return schema_error("schema_version", "must be exactly 1, 2, or 3");
 }
 
 }  // namespace
