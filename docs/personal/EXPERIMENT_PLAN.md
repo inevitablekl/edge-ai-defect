@@ -137,7 +137,9 @@ Status: J1–J3 verified
 
 ### 4.4 Stage J 研究定位与边界
 
-当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
+本段保留 Stage J 的历史实验边界快照；当前 live status 以文档末尾的
+Stage K K0 状态节为准。Stage J 已 `COMPLETE`，Stage K K0 已冻结，K1 是
+下一授权步骤；Stage P 仍为下游范围且在 Stage K closeout 前未授权。
 
 Stage J 的正式定位是 **Jetson Orin Nano Super ONNX Runtime CPU Baselines**，目标包括：
 
@@ -1327,3 +1329,24 @@ and the original J8 Deep Evidence Gate is not replaced by the lightweight audit.
 
 Stage K is `READY_FOR_PLANNING`. Stage T is `NOT_STARTED` and remains subject
 to separate next-stage planning and governance authorization。
+
+## Stage K K0 Current Live Status
+
+Stage J is `COMPLETE`. Stage K Execution Plan is `FINAL`. K0 Planning Freeze
+is `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`; K1 Platform Acceptance
+is `READY_AFTER_K0_FREEZE_COMMIT`.
+
+The Stage K backend comparison controls only backend substitution:
+
+same device
+same executable
+same corpus
+same preprocessing
+same postprocessing
+serial runtime
+backend substitution only
+
+TensorRT Engine Build remains
+`NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`. Stage K production
+implementation remains `NOT_AUTHORIZED_BEFORE_K3`; Stage P remains required
+downstream scope and is not authorized before Stage K closeout.

@@ -104,7 +104,12 @@ v1 MUST NOT include unless explicitly approved:
 
 ### Current C++ baseline phase
 
-The active implementation phase is limited to a C++17 ONNX Runtime CPU Serial Baseline with the frozen static ONNX contract `float32 [1,3,640,640] -> float32 [1,10,8400]`. TensorRT, Pipeline, ROS2, Qt, INT8, and GPU optimizations are not implementation scope for this phase.
+The Stage J C++17 ONNX Runtime CPU Serial Baseline remains the current
+production implementation baseline with the frozen static ONNX contract
+`float32 [1,3,640,640] -> float32 [1,10,8400]`. Stage K K0 is the current
+planning phase; TensorRT Engine Build is not authorized before K1 PASS and D062
+acceptance, production implementation is not authorized before K3, and Pipeline
+is not authorized before Stage K closeout.
 
 ---
 
@@ -689,3 +694,13 @@ YOLOv8n industrial defect detection
 → reproducible profiling logs
 → thesis, paper, and job-seeking evidence
 ```
+
+## Current Implementation Scope and Downstream Boundary
+
+Stage J is `COMPLETE`. Stage K K0 is frozen; K1 is the next authorized step.
+TensorRT Engine Build is not authorized before K1 PASS and D062 acceptance,
+and Stage K production implementation is not authorized before K3.
+
+Stage P Pipeline remains a required downstream requirement, but its
+implementation is not authorized before Stage K closeout. This status boundary
+does not remove the long-term TensorRT or Pipeline requirements.

@@ -1,0 +1,187 @@
+schema_version: 1
+inventory_kind: stage_k_k0_planning_inventory
+status: frozen_k0_baseline
+baseline_source_commit: e49f28dd60a49493538d1fd65e5e8fd81676e277
+
+stage_j_inventory:
+  path: configs/stage_j/test_inventory.yaml
+  sha256: 9a25ee9cda5bf264394c53f2910d295ef9b621b6ab0a555e28fe993c42f82868
+  frozen_model_smoke_off_count: 31
+  frozen_model_smoke_on_count: 39
+
+fresh_k0_baseline:
+  model_smoke_off_count: 34
+  model_smoke_on_count: 42
+  model_smoke_on_only_count: 8
+  source: fresh configure and ctest -N required by K0
+
+fresh_vs_stage_j_difference:
+  additional_registered_tests:
+    - stage_j_ort_cpu_analyzer_unit
+    - stage_j_ort_cpu_formal_unit
+    - stage_j_stability_unit
+  count_difference:
+    model_smoke_off: 3
+    model_smoke_on: 3
+
+registered_additions:
+  - name: stage_j_ort_cpu_analyzer_unit
+    registered_when: [model_smoke_off, model_smoke_on]
+    status: registered
+  - name: stage_j_ort_cpu_formal_unit
+    registered_when: [model_smoke_off, model_smoke_on]
+    status: registered
+  - name: stage_j_stability_unit
+    registered_when: [model_smoke_off, model_smoke_on]
+    status: registered
+
+planned_stage_k_capabilities:
+  - capability: TensorRT optional CMake OFF regression
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: RuntimeConfig v3 parser
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: RuntimeConfig v1/v2 regression
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Result JSON v2
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Result JSON v1 regression
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Engine Manifest parser
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Backend factory
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRtEngine initialization
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRtEngine contract mismatch
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRtEngine failure atomicity
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRtEngine finite output
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: No per-frame CUDA device allocation
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: No per-frame stream reconstruction
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: No per-frame ExecutionContext reconstruction
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Backend-neutral raw tensor runner
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Level B P99 comparator
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRT Level B
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRT Level C
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Stage K application integration
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Stage K profile runner
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Shared config semantics validator
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: 20-image semantic preflight
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: Benchmark analyzer adaptation
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+  - capability: TensorRT stability integration
+    status: planned_requirement
+    ctest_name: null
+    source_file: null
+
+asset_classification:
+  j4_3_16_image_corpus:
+    status: jetson_local_only_evidence
+    git_tracked: false
+  j4_3_manifest:
+    status: jetson_local_only_evidence
+    git_tracked: false
+  j5_1_20_image_python_reference:
+    status: git_tracked
+  j5_1_benchmark_corpus_manifest:
+    status: git_tracked
+
+platform_classification:
+  target: Jetson Orin Nano Super Developer Kit
+  status: planned_or_stage_j_observed_facts_only
+  k1_status: not_executed
+
+implementation_facts:
+  application_runner_directly_constructs: OnnxRuntimeEngine
+  application_runner_source: src/application_runner.cpp
+  serial_runner_dependency: IInferenceEngine
+  host_tensor_storage: std::vector<float>
+  host_tensor_failure_atomicity: caller_output_unchanged
+  current_result_json_schema_version: 1
+  current_result_backend: onnxruntime_cpu
+  runtime_config_supported_versions: [1, 2]
+  tensor_rt_backend: not_implemented
+  runtime_config_v3: not_implemented
+  result_json_v2: not_implemented
+  backend_factory: not_implemented
+  stage_k_profile_runner: not_implemented
+
+planned_harness_contract:
+  status: planned_requirement
+  input: raw FP32 little-endian
+  backend_selection: IInferenceEngine-selected backend
+  output: raw FP32 little-endian
+  manifest:
+    - shape
+    - dtype
+    - element_count
+    - byte_size
+    - sha256
+  comparator_extension:
+    percentile: Hyndman-Fan Type 7 P99
+    retained_metrics: [MAE, max_abs, bbox_channel, score_channel]
+  shared_harness_backends: [onnxruntime_cpu, tensorrt_fp16]
+  excluded:
+    - Artifact Database
+    - Replay Framework
+    - full-candidate NMS provenance system
+  k0_implementation: prohibited

@@ -121,7 +121,11 @@ The system should support:
 
 ### Current development-stage boundary
 
-The current active work is Stage J Jetson ONNX Runtime CPU correctness validation. J0–J3 are complete and J4 A/B/C correctness is next. Stage J does not include TensorRT, Pipeline, ROS2 or camera runtime. TensorRT belongs to Stage T; Pipeline belongs to Stage P.
+The historical Stage J work is complete. The current active boundary is Stage K
+K0 Planning Freeze: the Stage K v1.1 FINAL plan is frozen, K1 is the next
+authorized step, and TensorRT Engine Build remains unauthorized before K1 PASS
+and D062 acceptance. Stage P remains downstream and unauthorized before Stage K
+closeout.
 * command-line execution
 
 ---
@@ -565,3 +569,14 @@ The core value of this project is:
 > Deploy a trained YOLOv8n industrial defect detection model to Jetson with C++ and TensorRT FP16, and evaluate backend, runtime architecture, input size, and stability through reproducible experiments.
 
 The project should remain small, real, measurable, and explainable.
+
+## Current Stage Boundary
+
+Current live status: Stage J `COMPLETE`; Stage K Execution Plan `FINAL`;
+K0 Planning Freeze `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`;
+K1 Platform Acceptance `READY_AFTER_K0_FREEZE_COMMIT`.
+
+TensorRT Engine Build is `NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`.
+Stage K production implementation is
+`NOT_AUTHORIZED_BEFORE_K3`. Stage P Pipeline remains required downstream
+scope and is `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`.

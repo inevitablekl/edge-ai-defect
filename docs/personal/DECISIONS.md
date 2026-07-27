@@ -3261,3 +3261,129 @@ production inference algorithm change.
 5. Stage K Planning：`READY_FOR_PLANNING`，允许开始下一阶段规划审查。
    Stage T remains `NOT_STARTED` and `NOT_AUTHORIZED` for implementation or
    execution until separate next-stage planning and governance authorization。
+
+### D055 - Resolve Stage K and Historical Stage T Naming
+
+状态：`Accepted`
+
+D055 refines and freezes the formal execution naming after D054.
+D054 remains an unchanged historical planning fact and is not
+rewritten.
+
+Stage K is the formal TensorRT serial backend stage.
+Historical Stage T remains a non-executed placeholder.
+Stage J closure, accepted limitations and final Evidence remain
+historical facts.
+Stage K does not reopen superseded Stage J draft gates.
+Stage P remains the formal required downstream Pipeline stage.
+
+### D056 - Use Direct TensorRT C++ Runtime API
+
+状态：`Accepted`
+
+TensorRT candidate backend uses the direct TensorRT C++ Runtime API.
+ONNX Runtime TensorRT EP, provider fallback and ORT GPU rebuild
+are excluded.
+
+### D057 - Freeze Offline FP16-Enabled Engine Build
+
+状态：`Accepted`
+
+The Engine is built offline with trtexec.
+FP16 builder mode is enabled.
+The Engine is mixed precision; all-layer FP16 is not claimed.
+Host I/O remains FP32.
+Batch=1 and static 640×640 shape are frozen.
+An explicit memory-pool limit and exact command must be frozen
+by D062 after K1 and before formal K2 execution.
+
+### D058 - Preserve Synchronous HostTensor Backend Boundary
+
+状态：`Accepted`
+
+TensorRtEngine implements IInferenceEngine.
+The public API remains synchronous HostTensor input/output.
+inference_ms is backend host-roundtrip latency.
+Execution uses one CUDA stream with ordered H2D, enqueueV3,
+D2H and synchronization.
+Persistent CUDA device buffers are required. Per-frame CUDA
+allocation and per-frame stream or ExecutionContext creation are
+prohibited. Caller-owned output remains an owned HostTensor, so
+the Decision does not claim zero host allocation.
+CUDA preprocessing, pinned-buffer optimization, GPU NMS,
+multi-stream and Pipeline are excluded from Stage K.
+
+### D059 - Introduce RuntimeConfig v3 and Result Metadata v2
+
+状态：`Accepted`
+
+RuntimeConfig v3 accepts only tensorrt_fp16.
+v1/v2 behavior remains unchanged.
+v3 runtime requires Engine, Engine Manifest and ModelContract.
+The actual source ONNX file is not a runtime dependency.
+TensorRT support is optional through CMake.
+ORT Result JSON schema v1 remains unchanged.
+TensorRT Result JSON schema v2 is a minimal metadata extension
+of the existing v1 image, detection, postprocess, timing and
+summary body semantics.
+The existing candidate_index field remains for compatibility and
+diagnostic candidate identity, but it is not a normal matching
+criterion or sufficient boundary evidence by itself.
+The implementation reuses the existing sink and detection
+serialization path and does not introduce a schema registry or
+parallel sink framework.
+RuntimeConfig and Result JSON schema versions are independent
+version namespaces.
+
+### D060 - Freeze Correctness Authority and Numerical Policy
+
+状态：`Accepted`
+
+Python ORT explicit Reference remains authoritative.
+C++ ORT is the same-commit regression control.
+TensorRT is the candidate backend.
+C++ ORT Level C retains the Stage J strict detection tolerances.
+C++ ORT Level B first evaluates the Stage J strict raw-output Gate.
+When that strict Gate is not met solely because of the already
+accepted WSL-to-Jetson cross-architecture numerical behavior,
+a D048-derived per-tensor Gate may close the control with an
+explicit inherited cross-architecture limitation. The Jetson C++
+ORT output must be repeatable and its per-tensor canonical SHA
+must be recorded.
+Level B uses 16 frozen image-derived tensors and per-tensor MAE,
+Type-7 P99 where applicable, and max-absolute-error metrics.
+The derivative Reference Bundle is generated in the existing
+validated WSL Python ORT environment and transferred to Jetson
+with SHA verification.
+Level C uses original-image coordinates and deterministic maximum
+matching.
+Threshold-boundary variation requires exact candidate identity
+and raw-output evidence. A targeted diagnostic record is generated
+only when an actual mismatch or boundary case occurs.
+A full all-candidate postprocess provenance or replay framework
+is not a Stage K requirement.
+
+### D061 - Freeze Benchmark, Stability, Evidence and Downstream Scope
+
+状态：`Accepted`
+
+Formal comparison reruns ORT k5 and TensorRT from the same source
+commit and the same executable SHA.
+The backends use separately frozen configuration files and
+configuration SHA values. Shared RuntimeConfig fields are verified
+semantically equivalent. Timing-stage equivalence is verified
+through the common Stage K profile runner, executable and trace
+schema rather than configuration SHA equality.
+Five independent runs per backend, 60 warmup and 500 measured
+frames are sufficient. Run-level statistics and paired speedups
+are primary; pooled frames are descriptive only.
+TensorRT receives one 30-minute stability run using the inherited
+Stage J J6 stability and telemetry semantics.
+K0–K9 are logical gates and do not require separate full evidence
+packages, separate commits or separate implementation cycles.
+Stage P Pipeline optimization remains required downstream project
+scope, but is outside Stage K and is not authorized before Stage K
+closeout.
+Evidence remains research-grade and does not claim industrial
+certification. Only formal or decision-relevant failures require
+retention.

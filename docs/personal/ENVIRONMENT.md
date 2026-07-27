@@ -53,13 +53,18 @@ Not available
 
 ## 3. 当前环境总览
 
-当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D048：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`；J4.1：`COMPLETE`；J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4.3：`COMPLETE`；J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；implementation branch：`feature/jetson-onnxruntime`；current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`。Stage T 和 Stage P 尚未开始。下一授权任务：`J5.1 Benchmark Python Reference Preparation`。
+当前状态：Stage J `COMPLETE`；Stage K Execution Plan `FINAL`；K0 Planning
+Freeze `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`；K1 Platform
+Acceptance `READY_AFTER_K0_FREEZE_COMMIT`；TensorRT Engine Build
+`NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`；Stage P Pipeline
+`NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`。本文件只记录已知平台事实和阶段
+状态；本轮未执行 K1 smoke、trtexec、Engine build 或 compile/link smoke。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J4 verified; J4.2 accepted under D048; J5.1 entry preparation |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；Stage K TensorRT FP16 planned target | J1–J4 verified; Stage K K0 frozen; K1 not executed |
 
 ---
 
@@ -1005,3 +1010,14 @@ The final J3 environment and validation facts are:
   `m5_level_c_common.py`=`aef39cf5b9ae8b9d60edef5fc8f4bb1a77045619547cb9f4d8f5490ae3b894ab`；
   `prepare_m5_corpus.py`=`3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f`。
 - No Jetson benchmark；no performance result；no TensorRT、CUDA、Pipeline 或 telemetry。
+
+## Stage K K0 Environment Boundary
+
+The Stage K planned/verified target remains Jetson Orin Nano Super Developer
+Kit, aarch64, L4T R36.5 / JetPack 6.2.2, with the Stage J observed CPU-only ORT
+facts retained. These facts do not constitute K1 acceptance.
+
+K1 has not executed. No K1 smoke, trtexec help result, TensorRT Engine, CUDA or
+TensorRT compile/link result is recorded here. TensorRT and CUDA values remain
+limited to previously recorded Stage J platform facts and the frozen Stage K
+plan; no new package was installed or upgraded.
