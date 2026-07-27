@@ -1084,3 +1084,19 @@ plan; no new package was installed or upgraded.
 - K1-R4 Evidence：`results/platform/tensorrt/k1_environment_v4`。K1 is now
   `PASS`；D062 is `READY` but remains unexecuted/unaccepted；K2 remains
   unauthorized。
+
+## Stage K D062 Exact TensorRT Engine Build Contract (2026-07-27)
+
+- D062 contract Evidence：`results/platform/tensorrt/d062_contract_v1`；状态：
+  `D062 ACCEPTED`；K2：`READY`。
+- Environment：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，L4T `R36.5.0`，CUDA `12.6.68`，TensorRT `10.3.0.30`；trtexec：
+  `/usr/src/tensorrt/bin/trtexec`，`v100300`。
+- Frozen build contract uses FP16 builder mode with mixed precision、static
+  batch 1、`[1,3,640,640]`、FP32 CHW input/output and
+  `--memPoolSize=workspace:4096M`。TensorRT 10.3 help contains no
+  `--workspace`；dynamic shape flags are intentionally omitted。
+- Engine is local-only under `/home/orin/edge-ai-local-models/stage_k/`；K2
+  must produce the Engine, inspect it and run independent `--loadEngine` smoke
+  before any production backend work。
+- D062 阶段未执行 ONNX parsing、Engine build、save/load smoke 或生产代码修改。

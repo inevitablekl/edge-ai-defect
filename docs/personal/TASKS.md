@@ -2897,3 +2897,20 @@ Stage J Plan or historical Evidence.
 - TensorRT Runtime validation supersedes the `trtexec --version` command exit
   status for K1 platform acceptance。
 - K1：`PASS`；D062：`READY`；D062 尚未执行或接受；K2 仍未授权。
+
+### 2026-07-27T21:22:31+08:00 - Stage K D062 Exact TensorRT Engine Build Contract
+
+- D062 已基于 K1 PASS 的真实 Jetson 环境和 TensorRT 10.3 `trtexec --help`
+  语义完成冻结；Evidence：`results/platform/tensorrt/d062_contract_v1`。
+- 冻结 `trtexec`：`/usr/src/tensorrt/bin/trtexec`；TensorRT `10.3.0.30`；
+  CUDA `12.6.68`；L4T `R36.5.0`。
+- 冻结合同：frozen ONNX、FP16 builder mode、mixed precision、static batch 1、
+  input `[1,3,640,640]`、FP32 CHW I/O、
+  `--memPoolSize=workspace:4096M`、`--saveEngine` 和 `--skipInference`。
+  TensorRT 10.3 未提供 `--workspace`，不采用 TensorRT 8.x 参数。
+- Engine 和 build/inspection/load-smoke logs 使用
+  `/home/orin/edge-ai-local-models/stage_k/` 本地路径；Engine 不提交 Git；
+  K2 后跟踪 manifest。
+- 未执行 `--onnx`、`--saveEngine`、`--loadEngine`、Engine build、D062 smoke、
+  生产代码或 CMake 修改。
+- D062：`ACCEPTED`；K2：`READY`；正式 Engine build 仍必须等待 K2 独立授权。

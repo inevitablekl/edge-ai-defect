@@ -3387,3 +3387,54 @@ closeout.
 Evidence remains research-grade and does not claim industrial
 certification. Only formal or decision-relevant failures require
 retention.
+
+### D062 - Freeze Exact TensorRT Engine Build Contract
+
+状态：`Accepted`
+
+D062 freezes the offline TensorRT Engine build contract after K1 PASS on the
+real Jetson environment. No formal Engine was built while accepting this
+Decision.
+
+Environment identity:
+
+- Jetson Orin Nano Engineering Reference Developer Kit Super, `aarch64`
+- L4T `R36.5.0`
+- CUDA `12.6.68`
+- TensorRT `10.3.0.30`
+- trtexec `/usr/src/tensorrt/bin/trtexec`, TensorRT `v100300`
+- Frozen ONNX SHA256:
+  `c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944`
+- Frozen ModelContract SHA256:
+  `9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`
+
+Exact build contract:
+
+```text
+/usr/src/tensorrt/bin/trtexec \
+  --onnx=models/onnx/yolov8n_neudet_frozen.onnx \
+  --fp16 \
+  --memPoolSize=workspace:4096M \
+  --inputIOFormats=fp32:chw \
+  --outputIOFormats=fp32:chw \
+  --saveEngine=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine \
+  --skipInference
+```
+
+The frozen model contract is static batch 1, input `[1,3,640,640]`, output
+`[1,10,8400]`, with FP32 host I/O. `--minShapes`, `--optShapes`, and
+`--maxShapes` are intentionally omitted because dynamic profiles are disabled.
+TensorRT 10.3 help exposes `--memPoolSize=poolspec` and does not expose the
+TensorRT 8.x `--workspace` option. The selected `workspace:4096M` is an
+explicit reproducibility ceiling, not a measured optimum claim. FP16 enables
+mixed-precision builder selection; it does not claim all-layer FP16.
+
+Engine artifacts remain local-only under
+`/home/orin/edge-ai-local-models/stage_k/`. K2 will create and verify the
+Engine, build log, inspection log and independent load-engine smoke log.
+The tracked manifest is
+`models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`.
+
+D062 Evidence:
+`results/platform/tensorrt/d062_contract_v1`.
+K2 is `READY`; formal Engine build remains separately authorized only by K2.

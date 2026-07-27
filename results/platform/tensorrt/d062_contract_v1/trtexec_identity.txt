@@ -1,0 +1,4 @@
+/usr/src/tensorrt/bin/trtexec
+/usr/src/tensorrt/bin/trtexec
+/usr/src/tensorrt/bin/trtexec: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 3.7.0, BuildID[sha1]=7776b40107b3e4f8bea3a1e2803035a13a21d639, not stripped
+b800990508793a9bf50713d78d4fedfe475381d8cd749abda80909b9197fa1c4  /usr/src/tensorrt/bin/trtexec

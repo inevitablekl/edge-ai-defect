@@ -1,0 +1,12 @@
+No formal Engine build.
+No --onnx execution.
+No --saveEngine execution.
+No --loadEngine execution.
+No ONNX parsing.
+No D062 runtime smoke.
+No production C++ or CMake modification.
+No RuntimeConfig modification.
+No TensorRT backend creation.
+No package installation or system modification.
+No D063/D064 or K2 execution.
+No push, merge or tag.
