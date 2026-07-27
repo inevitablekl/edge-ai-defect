@@ -3039,3 +3039,18 @@ Stage J Plan or historical Evidence.
   `/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
   the small tracked summary is under
   `results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.
+
+### 2026-07-28 - Stage K D063 Decision Review and K5 Disposition
+
+- K5 current live status：`FAILED_BY_GATE_REVIEW_PENDING_D063`；formal K5
+  campaign remains failed by `ORT_CONTROL_FAIL`。
+- D063：`ADDED`。The decision review records the diagnostic verdict
+  `DIAGNOSIS_B` (`Architecture/kernel numerical drift dominant`) as the
+  inherited D048 cross-architecture ORT limitation.
+- Diagnostic evidence confirms input identity, Reference Bundle integrity,
+  Jetson ORT determinism, and no material influence from CPU arena, memory
+  pattern, or tested thread configurations. Drift remains bbox-dominated;
+  score channels remain stable。
+- D063 updates only the ORT control disposition path. It does not change
+  TensorRT tolerances, the Reference Bundle, ONNX, or ModelContract. K5
+  rerun is required before K6；TensorRT Level B/C and K6 remain unexecuted。

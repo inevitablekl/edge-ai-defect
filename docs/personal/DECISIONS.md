@@ -3438,3 +3438,48 @@ The tracked manifest is
 D062 Evidence:
 `results/platform/tensorrt/d062_contract_v1`.
 K2 is `READY`; formal Engine build remains separately authorized only by K2.
+
+### D063 - Accept Stage K ORT Cross-Architecture Numerical Limitation
+
+状态：`Accepted`
+
+Stage K K5 exposed numerical drift between WSL `x86_64` Python ONNX
+Runtime 1.23.2 and Jetson `aarch64` C++ ONNX Runtime 1.23.2. The formal
+K5 result remains `K5_FAILED` / `ORT_CONTROL_FAIL`; this Decision records
+the reviewed disposition path and does not rewrite that historical failure.
+
+新增诊断证据保存在
+`/home/orin/edge-ai-local-evidence/stage_k/diagnostics/ort_cross_arch_drift_diagnostic_v1/diagnostic_attempt_001/diagnostic_report.json`.
+The diagnostic verdict is `DIAGNOSIS_B` — architecture/kernel numerical
+drift dominant. The frozen Reference Bundle was verified with SHA256
+`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`;
+all 16/16 input tensor identities were verified. Jetson C++ ORT output was
+deterministic and 16/16 repeatability checks were byte-identical. CPU arena
+off, memory pattern off, and thread configurations `1/1`, `2/1`, and `4/1`
+showed no material runtime-configuration influence; only the `4/1` case
+showed a minor change. The remaining drift is bbox-dominated, while score
+channels remain stable at approximately `2.9e-8` MAE.
+
+Decision:
+
+- The observed behavior is the D048-inherited cross-architecture numerical
+  limitation class.
+- Stage K accepts this limitation as a known boundary of the ORT baseline
+  control, subject to the closure conditions below.
+- D063 does not modify TensorRT Level B tolerance, TensorRT Level C
+  tolerance, the Reference Bundle, ONNX, or ModelContract.
+
+ORT Level B may use the disposition
+`ORT_CONTROL_PASS_WITH_INHERITED_CROSS_ARCH_LIMITATION` only when all of the
+following are satisfied in the applicable formal review:
+
+- input identity `PASS`;
+- output shape `PASS`;
+- finite `PASS`;
+- Jetson repeatability `PASS`;
+- score deviation bounded;
+- bbox deviation within the accepted numerical envelope; and
+- no semantic regression.
+
+D063 does not make K5 pass, does not authorize TensorRT Level B/C or K6,
+and does not remove the requirement for a K5 rerun before K6.

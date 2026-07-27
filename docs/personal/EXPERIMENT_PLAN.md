@@ -1369,8 +1369,14 @@ comparison passed 0/16 and the cross-architecture comparison passed 4/16;
 the worst overall MAE was `2.0134166237853822e-05` against the `1e-5` limit.
 This is `ORT_CONTROL_FAIL`, so the K5 gate stopped before ORT Level C,
 TensorRT Level B/C, and boundary investigation. Formal status is `K5 FAIL`;
+live disposition is `FAILED_BY_GATE_REVIEW_PENDING_D063`; D063 is `ADDED`;
 K6 is `NOT READY`. No benchmark, stability, Pipeline, GPU preprocessing/NMS,
 INT8, DLA, dynamic-shape, ROS2, camera, or DeepStream work was executed.
+
+The D063 diagnostic review classified the observed drift as an inherited
+cross-architecture ORT numerical limitation (`DIAGNOSIS_B`). This updates
+only the ORT control disposition path; K5 remains failed and a K5 rerun is
+required before K6.
 
 Local evidence is under
 `/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
