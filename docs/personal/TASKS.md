@@ -2914,3 +2914,21 @@ Stage J Plan or historical Evidence.
 - 未执行 `--onnx`、`--saveEngine`、`--loadEngine`、Engine build、D062 smoke、
   生产代码或 CMake 修改。
 - D062：`ACCEPTED`；K2：`READY`；正式 Engine build 仍必须等待 K2 独立授权。
+
+### 2026-07-27T21:37:03+08:00 - Stage K K2 TensorRT Engine Build and Freeze
+
+- K2 使用 D062 唯一冻结 build command 成功生成正式 Engine；Evidence：
+  `results/build/tensorrt/k2_fp16_engine_v1`。
+- Engine：`/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine`；
+  size `8928756` bytes；SHA256：
+  `6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc`。
+- ONNX parser/build exit `0`；build log 显示 `Precision: FP32+FP16`、workspace
+  `4096 MiB`、FP32 CHW I/O、INT8 disabled、DLA disabled；无 custom/dynamic
+  plugin dependency。
+- Inspection exit `0`：`images=1x3x640x640`、`output0=1x10x8400`、static
+  profile min/opt/max 相同。Independent load smoke exit `0`，Engine deserialize、
+  binding creation 和 execution 均通过。
+- Manifest：`models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`；
+  Engine 保持 local-only，不提交 Git。K2：`COMPLETE`；K3：`READY`。
+- smoke 的 one-second GPU variance warning 已保留；不将该 smoke 作为正式性能
+  benchmark 或 speedup 结论。

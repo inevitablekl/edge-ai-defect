@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "task": "K2",
+  "disposition": "K2_COMPLETE",
+  "next_gate": "K3_READY",
+  "checks": [
+    {"check_id":"onnx_identity","description":"Frozen ONNX identity","mandatory":true,"status":"PASS","observed":"SHA256 c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944","expected":"D062 ONNX SHA","evidence_file":"build_identity.txt"},
+    {"check_id":"model_contract_identity","description":"Frozen ModelContract identity","mandatory":true,"status":"PASS","observed":"SHA256 9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190","expected":"D062 ModelContract SHA","evidence_file":"build_identity.txt"},
+    {"check_id":"build","description":"D062 exact trtexec Engine build","mandatory":true,"status":"PASS","observed":"exit code 0; Engine built in 404.044 sec","expected":"Successful build with frozen command","evidence_file":"build_complete.log"},
+    {"check_id":"engine_artifact","description":"Engine artifact identity","mandatory":true,"status":"PASS","observed":"8928756 bytes; SHA256 6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc","expected":"Recorded immutable artifact identity","evidence_file":"engine_sha256.txt"},
+    {"check_id":"inspection","description":"Engine inspection","mandatory":true,"status":"PASS","observed":"exit code 0; bindings, static profile and layer information recorded","expected":"Inspection succeeds","evidence_file":"inspection_complete.log"},
+    {"check_id":"static_shape","description":"Static shape/profile contract","mandatory":true,"status":"PASS","observed":"images 1x3x640x640; min=opt=max","expected":"D062 static shape","evidence_file":"engine_contract_verification.txt"},
+    {"check_id":"io_contract","description":"Input/output tensor contract","mandatory":true,"status":"PASS","observed":"images FP32 CHW and output0 FP32 CHW","expected":"D062 FP32 I/O contract","evidence_file":"engine_contract_verification.txt"},
+    {"check_id":"fp16","description":"FP16 builder mode","mandatory":true,"status":"PASS","observed":"Precision FP32+FP16","expected":"FP16-enabled mixed precision","evidence_file":"plugin_and_precision_inspection.txt"},
+    {"check_id":"int8_disabled","description":"INT8 disabled","mandatory":true,"status":"PASS","observed":"No INT8/calibration; calibration empty","expected":"INT8 disabled","evidence_file":"plugin_and_precision_inspection.txt"},
+    {"check_id":"dla_disabled","description":"DLA disabled","mandatory":true,"status":"PASS","observed":"DLACore empty; DLA standalone disabled","expected":"DLA disabled","evidence_file":"plugin_and_precision_inspection.txt"},
+    {"check_id":"plugin_inspection","description":"Plugin dependency inspection","mandatory":true,"status":"PASS","observed":"No custom/dynamic plugin; standard plugins loaded","expected":"Plugin state inspected","evidence_file":"plugin_and_precision_inspection.txt"},
+    {"check_id":"load_smoke","description":"Independent Engine load and execution smoke","mandatory":true,"status":"PASS","observed":"exit code 0; Engine deserialized; bindings created; trtexec PASSED","expected":"Successful load and execution","evidence_file":"load_smoke_complete.log"},
+    {"check_id":"no_production_change","description":"No production/K3/K4 change","mandatory":true,"status":"PASS","observed":"Only K2 Evidence and manifest pending","expected":"No production implementation","evidence_file":"git_state_before.txt"}
+  ]
+}

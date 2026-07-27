@@ -1,0 +1,14 @@
+git branch --show-current
+git rev-parse HEAD
+git status --short --branch
+sha256sum models/onnx/yolov8n_neudet_frozen.onnx
+sha256sum configs/model_contracts/yolov8n_neudet_frozen.yaml
+
+Executed exactly once:
+/usr/src/tensorrt/bin/trtexec --onnx=models/onnx/yolov8n_neudet_frozen.onnx --fp16 --memPoolSize=workspace:4096M --inputIOFormats=fp32:chw --outputIOFormats=fp32:chw --saveEngine=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine --skipInference
+
+Executed inspection:
+/usr/src/tensorrt/bin/trtexec --loadEngine=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine --dumpLayerInfo --dumpOptimizationProfile
+
+Executed independent load smoke:
+/usr/src/tensorrt/bin/trtexec --loadEngine=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine --device=0 --iterations=1 --warmUp=0 --duration=1

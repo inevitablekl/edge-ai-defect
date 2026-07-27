@@ -1,0 +1,8 @@
+  File: /home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine
+  Size: 8928756   	Blocks: 17440      IO Block: 4096   regular file
+Device: 10301h/66305d	Inode: 7505516     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/    orin)   Gid: ( 1000/    orin)
+Access: 2026-07-27 21:36:19.241769286 +0800
+Modify: 2026-07-27 21:36:19.229768980 +0800
+Change: 2026-07-27 21:36:19.229768980 +0800
+ Birth: 2026-07-27 21:36:19.229768980 +0800

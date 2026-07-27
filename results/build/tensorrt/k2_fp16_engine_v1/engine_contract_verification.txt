@@ -1,0 +1,25 @@
+Input binding:
+name=images
+shape=1x3x640x640
+dtype=FP32
+format=CHW
+
+Output binding:
+name=output0
+shape=1x10x8400
+dtype=FP32
+format=CHW
+
+Optimization profile:
+profile=0
+min=1x3x640x640
+opt=1x3x640x640
+max=1x3x640x640
+
+Build evidence:
+Precision=FP32+FP16
+MemoryPool=workspace:4096MiB
+SkipInference=Enabled
+BuildExitCode=0
+InspectionExitCode=0
+LoadSmokeExitCode=0

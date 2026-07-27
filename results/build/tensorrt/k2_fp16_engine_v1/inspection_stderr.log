@@ -1,0 +1,2 @@
+[07/27/2026-21:36:44] [W] * GPU compute time is unstable, with coefficient of variance = 5.39264%.
+[07/27/2026-21:36:44] [W]   If not already in use, locking GPU clock frequency or adding --useSpinWait may improve the stability.

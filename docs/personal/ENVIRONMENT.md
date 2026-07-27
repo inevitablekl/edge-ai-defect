@@ -1100,3 +1100,21 @@ plan; no new package was installed or upgraded.
   must produce the Engine, inspect it and run independent `--loadEngine` smoke
   before any production backend work。
 - D062 阶段未执行 ONNX parsing、Engine build、save/load smoke 或生产代码修改。
+
+## Stage K K2 TensorRT Engine Build and Freeze (2026-07-27)
+
+- K2 formal Engine build、inspection 和 independent load smoke 均完成；Evidence：
+  `results/build/tensorrt/k2_fp16_engine_v1`。
+- Local Engine：
+  `/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine`；
+  `8928756` bytes；SHA256
+  `6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc`。
+- Build/inspection/load smoke exit codes：`0/0/0`。Engine contract：FP32+FP16
+  mixed precision、workspace `4096 MiB`、static `1x3x640x640`、FP32 CHW I/O；
+  DLA/INT8 disabled，未发现 custom/dynamic plugin dependency。
+- Final bindings：`images` → `1x3x640x640`；`output0` → `1x10x8400`；static
+  optimization profile min/opt/max 一致。Manifest：
+  `models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`。
+- K2：`COMPLETE`；K3：`READY`。Engine 保持 local-only；未修改生产代码、CMake、
+  RuntimeConfig 或 Pipeline。one-second load smoke 的 GPU variance warning
+  仅作为 limitation 保留，不作为正式性能结论。

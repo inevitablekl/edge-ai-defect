@@ -1,0 +1,26 @@
+Build log facts:
+- Precision: FP32+FP16
+- INT8 flag: absent; Calibration: empty
+- DLACore: empty
+- Build DLA standalone loadable: Disabled
+- Allow GPU fallback for DLA: Disabled
+- Plugins: empty
+- setPluginsToSerialize: empty
+- dynamicPlugins: empty
+- ignoreParsedPluginLibs: 0
+- Loading standard plugins: observed
+
+Inspection facts:
+- DLACore: empty
+- Plugins: empty
+- setPluginsToSerialize: empty
+- dynamicPlugins: empty
+- Engine profiling verbosity: layer names only
+- Inspection exit code: 0
+
+Disposition:
+- FP16 builder mode confirmed as FP32+FP16 mixed precision.
+- INT8 disabled.
+- DLA disabled.
+- No custom/dynamic plugin dependency observed.
+- Standard TensorRT plugin loading was observed and retained as an environment/runtime fact.
