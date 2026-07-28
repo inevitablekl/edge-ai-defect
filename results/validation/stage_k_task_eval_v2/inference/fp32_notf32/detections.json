@@ -1,0 +1,6668 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_level_inference_detections",
+  "backend": "TRT FP32 noTF32",
+  "backend_key": "fp32_notf32",
+  "split": "test",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "postprocess": {
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "max_wh": 7680.0,
+    "agnostic": false,
+    "multi_label": false
+  },
+  "image_count": 180,
+  "images": [
+    {
+      "image_id": "crazing_110",
+      "image_path": "IMAGES/crazing_110.jpg",
+      "image_sha256": "7ee07aebfe8997bd5c57f958e494b9468fd788b10a73a7f390e777e7602f938d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.758780599,
+          "bbox_xyxy": [
+            130.665497,
+            25.7396469,
+            200.0,
+            159.2771
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.296604544,
+          "bbox_xyxy": [
+            7.00012207,
+            0.050508976,
+            127.60376,
+            35.7396622
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_12",
+      "image_path": "IMAGES/crazing_12.jpg",
+      "image_sha256": "13311f667aec82e20670265337866b50a4a546dd6845f3700fda088c0172afeb",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.361412734,
+          "bbox_xyxy": [
+            10.6091118,
+            0.0,
+            167.757629,
+            79.5862656
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.283016384,
+          "bbox_xyxy": [
+            57.1909332,
+            113.714714,
+            191.721573,
+            195.817383
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_145",
+      "image_path": "IMAGES/crazing_145.jpg",
+      "image_sha256": "c91b2e3ee3b1a86d955389405bb97e16922d410df54f3fbddb5cf5f4a8bdb16b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.691822886,
+          "bbox_xyxy": [
+            3.5247612,
+            6.60799503,
+            103.548203,
+            79.6695557
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.282272398,
+          "bbox_xyxy": [
+            26.4720726,
+            114.866119,
+            101.0923,
+            168.558365
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_148",
+      "image_path": "IMAGES/crazing_148.jpg",
+      "image_sha256": "0f4369b2b9aaea4e843cf4c6a169aa6fadff8fba16abe3e9a1c109a7e2ec7071",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.462996215,
+          "bbox_xyxy": [
+            1.52293205,
+            35.8577919,
+            91.3698273,
+            99.1909866
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.446970284,
+          "bbox_xyxy": [
+            164.046478,
+            53.4184456,
+            200.0,
+            106.45369
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.263271123,
+          "bbox_xyxy": [
+            0.030837059,
+            133.123154,
+            67.62883,
+            188.173965
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_154",
+      "image_path": "IMAGES/crazing_154.jpg",
+      "image_sha256": "dcda48b1fa04518744e30db7a378702fbc77baebc2db6c03e4d9c4f9ecb14565",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.823300302,
+          "bbox_xyxy": [
+            0.134801865,
+            0.0,
+            89.5098114,
+            98.015274
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.683556557,
+          "bbox_xyxy": [
+            100.695435,
+            42.1779709,
+            174.360809,
+            113.66555
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.454768538,
+          "bbox_xyxy": [
+            0.0,
+            103.131409,
+            82.5303574,
+            156.811096
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.263473719,
+          "bbox_xyxy": [
+            0.0,
+            130.901062,
+            89.8154831,
+            199.721527
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_158",
+      "image_path": "IMAGES/crazing_158.jpg",
+      "image_sha256": "525d70534373c48ced12e1bc6d8923488f5a7db80a925f98d9afbb34cff5d507",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.410480052,
+          "bbox_xyxy": [
+            50.4079895,
+            65.2475815,
+            141.673569,
+            155.364929
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_179",
+      "image_path": "IMAGES/crazing_179.jpg",
+      "image_sha256": "a796d606ae9c573d722bdec9d282c53cd543006e1d49e4a5152072fe61505d08",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.657366574,
+          "bbox_xyxy": [
+            0.302791595,
+            8.61763477,
+            107.126709,
+            74.1306229
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.635055125,
+          "bbox_xyxy": [
+            0.0,
+            88.2789001,
+            154.594452,
+            147.961807
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_183",
+      "image_path": "IMAGES/crazing_183.jpg",
+      "image_sha256": "235d4d003fcd9444e789cd5e0e1ba547049c7ce1b1e309fa6f8c839697683157",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.576489866,
+          "bbox_xyxy": [
+            60.5679169,
+            127.970886,
+            158.534302,
+            199.975861
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.394460738,
+          "bbox_xyxy": [
+            142.915283,
+            87.8414764,
+            200.0,
+            146.640762
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.333289623,
+          "bbox_xyxy": [
+            1.00619316,
+            0.478115082,
+            137.50795,
+            64.5266266
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_186",
+      "image_path": "IMAGES/crazing_186.jpg",
+      "image_sha256": "323876549bcf8a22d791d2bccd4f4e227f6338eb5aa3e810b1a57ce470a4260b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.527434826,
+          "bbox_xyxy": [
+            5.59822083,
+            137.214523,
+            192.249878,
+            200.0
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.309276253,
+          "bbox_xyxy": [
+            45.2441597,
+            167.89624,
+            193.793152,
+            199.961273
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.277694583,
+          "bbox_xyxy": [
+            0.16992569,
+            22.0983219,
+            166.834442,
+            145.388229
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_201",
+      "image_path": "IMAGES/crazing_201.jpg",
+      "image_sha256": "20ae74412c2c5e1271d975356217412b3a2f8c1c68ced06c5175028fa74566d9",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.303118944,
+          "bbox_xyxy": [
+            5.54777145,
+            80.6754913,
+            175.424713,
+            150.836578
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.290925026,
+          "bbox_xyxy": [
+            1.51655197,
+            150.791824,
+            185.048859,
+            199.96051
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_216",
+      "image_path": "IMAGES/crazing_216.jpg",
+      "image_sha256": "23d057d6150dddcf0e0a83e75d2fee86af4a52ce801e454539301431ad2d12fe",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.667845786,
+          "bbox_xyxy": [
+            1.82144165,
+            2.53526688,
+            192.352173,
+            89.0546417
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.435861617,
+          "bbox_xyxy": [
+            0.0514698029,
+            72.9165268,
+            81.4821777,
+            127.774597
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.27669099,
+          "bbox_xyxy": [
+            64.9720154,
+            25.3178692,
+            199.044052,
+            98.7595291
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_220",
+      "image_path": "IMAGES/crazing_220.jpg",
+      "image_sha256": "ee6d32c95f87d6489f177f035f4464b5c78e919b72800c33ec029d2292988c89",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.531726241,
+          "bbox_xyxy": [
+            1.13288879,
+            131.805695,
+            163.915848,
+            198.306122
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.465882063,
+          "bbox_xyxy": [
+            0.060005188,
+            134.845901,
+            80.1907501,
+            189.379272
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.362136424,
+          "bbox_xyxy": [
+            91.1565399,
+            0.441522598,
+            200.0,
+            58.2018661
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.267389119,
+          "bbox_xyxy": [
+            86.439682,
+            156.021698,
+            169.327164,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_227",
+      "image_path": "IMAGES/crazing_227.jpg",
+      "image_sha256": "67499dd21306030c383b07abf5c7a7d597313d24d8420e16a46d797fba6d1195",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.799106002,
+          "bbox_xyxy": [
+            141.667038,
+            21.1964016,
+            200.0,
+            75.6430817
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.459616721,
+          "bbox_xyxy": [
+            0.102024078,
+            2.18482971,
+            130.046265,
+            50.8936501
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.341506064,
+          "bbox_xyxy": [
+            5.44538498,
+            41.6857491,
+            198.882614,
+            187.470169
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_230",
+      "image_path": "IMAGES/crazing_230.jpg",
+      "image_sha256": "ed6f3c3c49fa25742c0b87379e9e05ca950adcc4d734a15e941b2d13aefbafc0",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.271947324,
+          "bbox_xyxy": [
+            0.90221405,
+            0.0832462311,
+            126.6082,
+            32.9677811
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.258982688,
+          "bbox_xyxy": [
+            20.4738808,
+            92.7301178,
+            193.070892,
+            136.499496
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_244",
+      "image_path": "IMAGES/crazing_244.jpg",
+      "image_sha256": "fa3d0c5d7a23b82da1533df61a39a7056a21b021f879da6426f6dc6326abd0a1",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.598248363,
+          "bbox_xyxy": [
+            25.1937866,
+            123.936295,
+            199.630615,
+            188.433472
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.399340481,
+          "bbox_xyxy": [
+            20.9109497,
+            71.1318588,
+            198.36972,
+            176.563629
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.354409933,
+          "bbox_xyxy": [
+            57.6733971,
+            0.0325775146,
+            199.656509,
+            46.0884552
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.256589413,
+          "bbox_xyxy": [
+            6.44514084,
+            7.50787735,
+            171.927948,
+            108.239594
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_246",
+      "image_path": "IMAGES/crazing_246.jpg",
+      "image_sha256": "0018b62c07b5dfd379d0563721fe46d15d72bf3bdbc1e39d7f8e081692c0266d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.398386657,
+          "bbox_xyxy": [
+            1.9918251,
+            0.0256729126,
+            196.99054,
+            26.6356754
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.394181967,
+          "bbox_xyxy": [
+            27.6309967,
+            0.425262451,
+            199.174042,
+            61.9488449
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.29000923,
+          "bbox_xyxy": [
+            2.68888474,
+            142.357422,
+            191.709473,
+            197.381378
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_26",
+      "image_path": "IMAGES/crazing_26.jpg",
+      "image_sha256": "6c24d211a06a25d7b1ab80038402f9cebd3932cdc73b348b7871fb690047f0d3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.601565838,
+          "bbox_xyxy": [
+            128.708435,
+            84.0819931,
+            200.0,
+            153.760651
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.432872564,
+          "bbox_xyxy": [
+            24.7834396,
+            0.0452041626,
+            192.414886,
+            51.5422363
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.309467375,
+          "bbox_xyxy": [
+            1.1838913,
+            156.38797,
+            150.417038,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_267",
+      "image_path": "IMAGES/crazing_267.jpg",
+      "image_sha256": "e2e8e6f90ca2b9d2135613801ef954565e81881938917b241b5c7ffa89ea02b2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.252559692,
+          "bbox_xyxy": [
+            41.3963928,
+            60.6495819,
+            188.842636,
+            115.969147
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_27",
+      "image_path": "IMAGES/crazing_27.jpg",
+      "image_sha256": "10626e2b51d15ee8d30e107d3f92b4d02017ef40188f029ebb7c64d77bace16b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.42272839,
+          "bbox_xyxy": [
+            13.7717724,
+            140.308365,
+            108.829033,
+            198.098618
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.398774892,
+          "bbox_xyxy": [
+            0.536723137,
+            7.39051819,
+            74.2526016,
+            63.7046814
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.398442835,
+          "bbox_xyxy": [
+            34.3943024,
+            75.2946548,
+            198.763809,
+            133.893051
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_271",
+      "image_path": "IMAGES/crazing_271.jpg",
+      "image_sha256": "2227d033081e4b5d83589d4dea528b0af45d94d22c2a916e1204bf00b372a6fe",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.65722841,
+          "bbox_xyxy": [
+            29.0228653,
+            123.803787,
+            199.143951,
+            178.669739
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.555206418,
+          "bbox_xyxy": [
+            92.1680832,
+            41.6881371,
+            200.0,
+            107.836441
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.47137624,
+          "bbox_xyxy": [
+            6.33821487,
+            41.1936111,
+            173.236298,
+            108.676338
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.267200619,
+          "bbox_xyxy": [
+            0.0,
+            99.390831,
+            94.364357,
+            180.89653
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_278",
+      "image_path": "IMAGES/crazing_278.jpg",
+      "image_sha256": "8aa0adc94ab37ba8bc08f828343a938e0a8e24ea459e0eb5ed93a65ab0fbabdc",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.632962465,
+          "bbox_xyxy": [
+            49.0017891,
+            110.998344,
+            196.560547,
+            186.406006
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.567420602,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            78.6390762,
+            74.9272232
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.49234271,
+          "bbox_xyxy": [
+            138.157684,
+            0.113697052,
+            199.953186,
+            102.679863
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_285",
+      "image_path": "IMAGES/crazing_285.jpg",
+      "image_sha256": "f93b867670dc0f2ac94cf98db4fa8abcaec09bd2b3a22098bc46a20cdea1c891",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.58643049,
+          "bbox_xyxy": [
+            0.0,
+            0.437312126,
+            66.6391907,
+            59.2493668
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.448989242,
+          "bbox_xyxy": [
+            142.352325,
+            40.8870506,
+            199.995911,
+            144.467163
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.436561972,
+          "bbox_xyxy": [
+            0.0555467606,
+            122.217102,
+            55.7129745,
+            185.944611
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.27163896,
+          "bbox_xyxy": [
+            79.1360855,
+            107.628441,
+            200.0,
+            162.743164
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_288",
+      "image_path": "IMAGES/crazing_288.jpg",
+      "image_sha256": "48efd269655d26e04df4dda98d72deac85963a3bee9390be7b26f81889a64bea",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.400144935,
+          "bbox_xyxy": [
+            42.7277946,
+            108.684006,
+            169.163589,
+            172.450806
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.388400823,
+          "bbox_xyxy": [
+            0.0,
+            102.712784,
+            81.0643616,
+            156.296463
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.263749808,
+          "bbox_xyxy": [
+            1.9124794,
+            22.9143715,
+            196.543304,
+            87.677269
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_300",
+      "image_path": "IMAGES/crazing_300.jpg",
+      "image_sha256": "87595c05d2a5f7792c219dfa245dce2cfc26784e165a5172fecaab73eaee288d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.687133849,
+          "bbox_xyxy": [
+            120.999954,
+            127.214294,
+            199.748108,
+            174.562347
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.538336575,
+          "bbox_xyxy": [
+            0.23317337,
+            146.276337,
+            115.256516,
+            199.968094
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.48621279,
+          "bbox_xyxy": [
+            1.54687881,
+            44.490036,
+            198.673477,
+            133.191772
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_34",
+      "image_path": "IMAGES/crazing_34.jpg",
+      "image_sha256": "fdee1c20f4c0476d35b7348d2325e4a933b8992465ed2fb409435cde08f0197e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.730823696,
+          "bbox_xyxy": [
+            176.470184,
+            2.48277664,
+            199.997482,
+            92.8424454
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.417396933,
+          "bbox_xyxy": [
+            0.0,
+            64.281601,
+            108.466728,
+            170.832687
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.286063313,
+          "bbox_xyxy": [
+            59.9872398,
+            8.53626728,
+            162.586639,
+            64.4777603
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_4",
+      "image_path": "IMAGES/crazing_4.jpg",
+      "image_sha256": "0f52f3882d3ffc77a5f20c2c4b557a6a79620090e6f8ef9a0568ed508749e436",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.528141499,
+          "bbox_xyxy": [
+            1.66286469,
+            117.011452,
+            198.518829,
+            198.604462
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.416594803,
+          "bbox_xyxy": [
+            4.69369888,
+            0.0,
+            123.713821,
+            102.518318
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_59",
+      "image_path": "IMAGES/crazing_59.jpg",
+      "image_sha256": "a00621e2838535650cc053346039c394cb920e4166eb08785c68b8cc8e65bbec",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.399151504,
+          "bbox_xyxy": [
+            18.0955219,
+            130.622498,
+            116.802734,
+            190.413589
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.327542067,
+          "bbox_xyxy": [
+            34.8463058,
+            105.440331,
+            199.477356,
+            188.579559
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.277762175,
+          "bbox_xyxy": [
+            137.629852,
+            118.761482,
+            200.0,
+            197.669067
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_84",
+      "image_path": "IMAGES/crazing_84.jpg",
+      "image_sha256": "c5669030d7526877ac547e46b9bfe8cedcc6e6e0e4f7bb481c8c52706215ae0e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.671274483,
+          "bbox_xyxy": [
+            12.0905495,
+            132.745193,
+            115.933533,
+            193.997803
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_86",
+      "image_path": "IMAGES/crazing_86.jpg",
+      "image_sha256": "bdfee0b1201604e89f9ed8953bea9f820375c70335c109fe7a434c326868f9b4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.641989887,
+          "bbox_xyxy": [
+            78.4085999,
+            1.2881279,
+            193.728241,
+            87.554863
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.415360451,
+          "bbox_xyxy": [
+            0.0399780273,
+            15.4647446,
+            82.405777,
+            79.4359436
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.348080426,
+          "bbox_xyxy": [
+            0.0,
+            108.431969,
+            148.328079,
+            178.427765
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_92",
+      "image_path": "IMAGES/crazing_92.jpg",
+      "image_sha256": "6d73bee0a96f6225aa34bef31b62743b657c1254023eeebf604d7bad83142deb",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.725971997,
+          "bbox_xyxy": [
+            30.2655792,
+            114.267235,
+            199.897888,
+            200.0
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.659929752,
+          "bbox_xyxy": [
+            0.593056679,
+            52.3839569,
+            75.4946518,
+            103.813538
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.440873533,
+          "bbox_xyxy": [
+            120.173019,
+            21.3633728,
+            199.594696,
+            128.088898
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_110",
+      "image_path": "IMAGES/inclusion_110.jpg",
+      "image_sha256": "ec3ab6724ba7ed34889aceee6de8c9776905df1ad2224ef6c104fa54c0fefbe5",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.818682194,
+          "bbox_xyxy": [
+            98.1529236,
+            0.0,
+            133.094147,
+            78.4760208
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.758555114,
+          "bbox_xyxy": [
+            129.901764,
+            0.0,
+            180.046783,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.669080079,
+          "bbox_xyxy": [
+            113.607925,
+            150.889282,
+            134.739212,
+            199.689972
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_115",
+      "image_path": "IMAGES/inclusion_115.jpg",
+      "image_sha256": "e3f6a03fb6aa11cba667ab45b03671dcd4108b183bbac71ef28e620d9864cc89",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.894479454,
+          "bbox_xyxy": [
+            105.010071,
+            75.8189392,
+            137.726517,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.776673496,
+          "bbox_xyxy": [
+            41.1379242,
+            0.198364258,
+            83.471756,
+            178.504211
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.772212029,
+          "bbox_xyxy": [
+            145.413757,
+            100.629257,
+            173.145065,
+            181.542801
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.767914832,
+          "bbox_xyxy": [
+            141.714478,
+            0.0141716003,
+            160.177429,
+            30.7164574
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.671202064,
+          "bbox_xyxy": [
+            15.7426453,
+            58.7354622,
+            38.0590363,
+            111.788559
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.529150307,
+          "bbox_xyxy": [
+            145.998749,
+            78.3574829,
+            166.412064,
+            125.14505
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_122",
+      "image_path": "IMAGES/inclusion_122.jpg",
+      "image_sha256": "be11bdbb46072c78e354a3531e4370efb39780b56bc59cbe1b776f3986832919",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.858451545,
+          "bbox_xyxy": [
+            131.590805,
+            0.0,
+            160.800552,
+            97.8397446
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.850353658,
+          "bbox_xyxy": [
+            107.297325,
+            139.49675,
+            140.257416,
+            199.998627
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.748001516,
+          "bbox_xyxy": [
+            20.8672714,
+            0.0,
+            68.7910538,
+            199.487976
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.6483109,
+          "bbox_xyxy": [
+            112.11879,
+            73.9366989,
+            134.99263,
+            112.694054
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.600699723,
+          "bbox_xyxy": [
+            162.491577,
+            0.0305891037,
+            179.840851,
+            13.4929466
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.561646104,
+          "bbox_xyxy": [
+            14.9677563,
+            164.7892,
+            33.546032,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.357830882,
+          "bbox_xyxy": [
+            31.2159195,
+            135.483368,
+            54.0659485,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_123",
+      "image_path": "IMAGES/inclusion_123.jpg",
+      "image_sha256": "e5aa3842ea4186e83d97099d5c413fa7ce27296b1cacc374976547412f0d8f10",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.894477367,
+          "bbox_xyxy": [
+            44.6524429,
+            122.946106,
+            78.8851776,
+            199.882797
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.875875294,
+          "bbox_xyxy": [
+            70.0936508,
+            0.0,
+            98.8211441,
+            81.5203857
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.769821227,
+          "bbox_xyxy": [
+            50.8506012,
+            57.3577881,
+            72.3039627,
+            91.0397339
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.390638947,
+          "bbox_xyxy": [
+            0.00289201736,
+            0.0922822952,
+            8.71081543,
+            44.8529968
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_129",
+      "image_path": "IMAGES/inclusion_129.jpg",
+      "image_sha256": "26b493e2bc04505e128c9a3d1f1b5ab4d248ffc9b50739848fa389cf07643b0b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.851459324,
+          "bbox_xyxy": [
+            41.5802002,
+            1.65182114,
+            80.9163818,
+            120.172562
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.782431901,
+          "bbox_xyxy": [
+            22.3439217,
+            144.268677,
+            40.4883118,
+            199.909393
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.766686857,
+          "bbox_xyxy": [
+            166.604034,
+            105.862465,
+            190.807983,
+            161.367874
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.602909446,
+          "bbox_xyxy": [
+            69.9927216,
+            0.0,
+            89.5856094,
+            25.2855453
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.251419127,
+          "bbox_xyxy": [
+            34.7340813,
+            0.0352072716,
+            52.0028839,
+            12.2766495
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_13",
+      "image_path": "IMAGES/inclusion_13.jpg",
+      "image_sha256": "b7a8d1df8c1325f4d62076db47c1e08e42a38a7e19e4bf79a38bc98edffb8312",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.861932218,
+          "bbox_xyxy": [
+            108.543434,
+            123.57103,
+            142.290344,
+            199.840225
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.700662017,
+          "bbox_xyxy": [
+            111.006027,
+            8.66557121,
+            144.301468,
+            114.499191
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.685435891,
+          "bbox_xyxy": [
+            65.4254761,
+            0.0,
+            92.5306854,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.678330302,
+          "bbox_xyxy": [
+            163.458862,
+            115.296364,
+            188.726959,
+            191.328491
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.624255538,
+          "bbox_xyxy": [
+            171.50856,
+            38.5753937,
+            199.902725,
+            116.058128
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.615854383,
+          "bbox_xyxy": [
+            110.934402,
+            77.4362488,
+            129.157684,
+            117.097519
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_144",
+      "image_path": "IMAGES/inclusion_144.jpg",
+      "image_sha256": "8aa78a39a516fda6f89c9ff12162e9eac95f09f2e308436b84c561ad64579f52",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.905931652,
+          "bbox_xyxy": [
+            113.765442,
+            68.0831299,
+            133.774384,
+            121.088272
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.887096524,
+          "bbox_xyxy": [
+            128.440323,
+            13.9337158,
+            142.457092,
+            40.4671097
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.872145355,
+          "bbox_xyxy": [
+            115.708847,
+            122.41996,
+            131.257141,
+            152.459366
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.747602463,
+          "bbox_xyxy": [
+            115.876999,
+            169.360016,
+            129.979858,
+            199.278076
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_183",
+      "image_path": "IMAGES/inclusion_183.jpg",
+      "image_sha256": "a757f09c4119e5429c9b17381e528a6c52a094856387ea26a7249b0dac43eef6",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.794570029,
+          "bbox_xyxy": [
+            134.130692,
+            0.135345459,
+            181.628754,
+            198.294144
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.499543071,
+          "bbox_xyxy": [
+            130.47049,
+            0.0,
+            148.527512,
+            34.8935776
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_196",
+      "image_path": "IMAGES/inclusion_196.jpg",
+      "image_sha256": "3065bc0d2a74672b529bd3862b08d598bbc2e40c08842db33df83d6c5f72d215",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.757348418,
+          "bbox_xyxy": [
+            125.17984,
+            42.9800606,
+            149.417999,
+            199.398315
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.705519855,
+          "bbox_xyxy": [
+            33.2855911,
+            59.8621368,
+            53.5008163,
+            111.688217
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.341811508,
+          "bbox_xyxy": [
+            130.013611,
+            4.39108849,
+            150.337082,
+            66.1083908
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.280539662,
+          "bbox_xyxy": [
+            164.587585,
+            43.6507797,
+            200.0,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_215",
+      "image_path": "IMAGES/inclusion_215.jpg",
+      "image_sha256": "a5fe8af5a90c4ed816914375bf77ee49b4a2840022523cbe59f15e045f3acdf3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.81299156,
+          "bbox_xyxy": [
+            75.206459,
+            0.0,
+            123.549614,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.509303689,
+          "bbox_xyxy": [
+            65.494194,
+            19.6725922,
+            79.662468,
+            58.5470581
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_218",
+      "image_path": "IMAGES/inclusion_218.jpg",
+      "image_sha256": "26a96e68851c910ba49738157d5e5ac8b5ab6c1fe776de2647f443e8e36f88d7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.804383039,
+          "bbox_xyxy": [
+            57.7168655,
+            68.9566956,
+            92.8115158,
+            147.904022
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.684430778,
+          "bbox_xyxy": [
+            111.228424,
+            70.6349945,
+            138.345703,
+            145.691162
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_220",
+      "image_path": "IMAGES/inclusion_220.jpg",
+      "image_sha256": "d84460af1a06a7ecf8761192044de1ec0723dee2143bc5dd9a1e64171b2d14f8",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.847323716,
+          "bbox_xyxy": [
+            55.1363373,
+            2.02014923,
+            99.944519,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_225",
+      "image_path": "IMAGES/inclusion_225.jpg",
+      "image_sha256": "0b3e713521a07d8074214175c96692a61e5f29e10c8d150e6095a48b2da271f9",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.657938182,
+          "bbox_xyxy": [
+            69.1358261,
+            13.4705162,
+            83.4494476,
+            65.8289642
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.616521597,
+          "bbox_xyxy": [
+            30.0777721,
+            5.60213089,
+            55.0029755,
+            199.627533
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_231",
+      "image_path": "IMAGES/inclusion_231.jpg",
+      "image_sha256": "c0be442399f4699c3923f943958dbbdddd43f5c2a667f83da79c0b0652bd79e4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.836577535,
+          "bbox_xyxy": [
+            86.6534042,
+            139.457092,
+            121.796074,
+            199.751434
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.792269707,
+          "bbox_xyxy": [
+            108.859566,
+            82.9161987,
+            126.50647,
+            130.887543
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_233",
+      "image_path": "IMAGES/inclusion_233.jpg",
+      "image_sha256": "b623a1f88d2a7437eee86af7bd73b27456056775b4394694d6ebc331fe5f02bf",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.870215893,
+          "bbox_xyxy": [
+            42.6109695,
+            66.9317474,
+            79.2503967,
+            131.675186
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.79362303,
+          "bbox_xyxy": [
+            170.958786,
+            64.4356461,
+            190.027618,
+            114.399078
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.772469163,
+          "bbox_xyxy": [
+            64.7331314,
+            11.529026,
+            82.5253906,
+            59.686615
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.578960538,
+          "bbox_xyxy": [
+            16.3220291,
+            122.041588,
+            34.0737076,
+            153.899399
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.299571842,
+          "bbox_xyxy": [
+            25.5399742,
+            179.405136,
+            47.1775017,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.262538075,
+          "bbox_xyxy": [
+            61.304657,
+            189.560516,
+            79.0273361,
+            199.987366
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.255394995,
+          "bbox_xyxy": [
+            174.325073,
+            148.189423,
+            188.808868,
+            187.235138
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_235",
+      "image_path": "IMAGES/inclusion_235.jpg",
+      "image_sha256": "25a0ae931457ddc495dacbc038fee25b864c3edd07cce19f13674f2bbe14623b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.781172812,
+          "bbox_xyxy": [
+            74.1667862,
+            93.2698441,
+            136.112946,
+            182.473236
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.517861962,
+          "bbox_xyxy": [
+            65.6511383,
+            67.9124451,
+            87.1685333,
+            111.121536
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.347994387,
+          "bbox_xyxy": [
+            55.7223053,
+            12.5544119,
+            75.0699463,
+            44.6822929
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_240",
+      "image_path": "IMAGES/inclusion_240.jpg",
+      "image_sha256": "f9f4b2365d0af5b80cc7e4ff3db9209e599884c89aa70d789618578a90244ff3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.619335473,
+          "bbox_xyxy": [
+            182.502014,
+            45.6298904,
+            199.614792,
+            84.2269211
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.603518188,
+          "bbox_xyxy": [
+            49.3481865,
+            141.642883,
+            63.1446686,
+            177.206268
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.490540922,
+          "bbox_xyxy": [
+            125.758957,
+            159.748703,
+            149.860764,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.466696799,
+          "bbox_xyxy": [
+            111.763702,
+            131.940613,
+            127.249435,
+            173.088211
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_249",
+      "image_path": "IMAGES/inclusion_249.jpg",
+      "image_sha256": "9dc3e60e59bf1db44db73f55031bc44c97dc663241b343dfb4109d15f40247a2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.662752867,
+          "bbox_xyxy": [
+            45.1540756,
+            119.696503,
+            67.2252655,
+            199.926025
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.377157658,
+          "bbox_xyxy": [
+            46.5436859,
+            0.0,
+            79.4474487,
+            47.9618683
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_251",
+      "image_path": "IMAGES/inclusion_251.jpg",
+      "image_sha256": "34ff2376988c4f420ecf434de2b2c3d98f2c23ebbda0ba87c87797f64bfa3a66",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.833422363,
+          "bbox_xyxy": [
+            115.849686,
+            117.871704,
+            138.629929,
+            199.013443
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.746842146,
+          "bbox_xyxy": [
+            114.555923,
+            52.4615097,
+            134.189865,
+            113.093582
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.259368122,
+          "bbox_xyxy": [
+            28.874855,
+            82.6182938,
+            45.5242729,
+            126.297836
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_258",
+      "image_path": "IMAGES/inclusion_258.jpg",
+      "image_sha256": "207faafef30696c821b5e605cf299f4a75d8d9f0adc8d03c3de9140c04a6da08",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.832678258,
+          "bbox_xyxy": [
+            27.449852,
+            10.8525848,
+            66.8515854,
+            179.642975
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.825628877,
+          "bbox_xyxy": [
+            130.161499,
+            0.0,
+            174.431595,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_280",
+      "image_path": "IMAGES/inclusion_280.jpg",
+      "image_sha256": "d12b66004f348638474b6cf7b299494e263963d9639cf250ac0f3fce96c6d437",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.735687912,
+          "bbox_xyxy": [
+            40.8538437,
+            1.33934021,
+            71.578064,
+            195.48587
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_284",
+      "image_path": "IMAGES/inclusion_284.jpg",
+      "image_sha256": "4bd59750b701df9dcf8b7380309ef5fcb94d896aae4891b53abfcc1942df8ca2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.780622303,
+          "bbox_xyxy": [
+            19.4686317,
+            13.7799311,
+            38.1627617,
+            73.0349808
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.730045259,
+          "bbox_xyxy": [
+            172.740402,
+            30.2999115,
+            198.593674,
+            95.7885361
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.330601811,
+          "bbox_xyxy": [
+            111.896072,
+            156.359482,
+            137.723083,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.326890349,
+          "bbox_xyxy": [
+            118.836304,
+            157.206894,
+            134.098495,
+            177.906403
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.317601115,
+          "bbox_xyxy": [
+            113.056931,
+            181.868408,
+            127.625259,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_292",
+      "image_path": "IMAGES/inclusion_292.jpg",
+      "image_sha256": "7a688ec367df776ee3b1142d281f6abed8c81ea49bea2bd3d01f9c9ebc1ab993",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.82568121,
+          "bbox_xyxy": [
+            92.7769318,
+            165.116135,
+            109.820877,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.811824679,
+          "bbox_xyxy": [
+            0.00316739082,
+            106.580063,
+            11.4664898,
+            144.733139
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.689048827,
+          "bbox_xyxy": [
+            79.9328232,
+            24.1904449,
+            98.8138199,
+            80.9842072
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.672499418,
+          "bbox_xyxy": [
+            76.1161041,
+            81.5681305,
+            91.0817871,
+            117.365097
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.671739459,
+          "bbox_xyxy": [
+            86.5709839,
+            92.4141846,
+            110.57814,
+            166.515259
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.654880106,
+          "bbox_xyxy": [
+            0.0565433502,
+            43.7350845,
+            14.2413349,
+            75.27948
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.627238631,
+          "bbox_xyxy": [
+            0.0283670425,
+            169.12915,
+            13.7896252,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.510759711,
+          "bbox_xyxy": [
+            84.2157898,
+            0.0,
+            99.3430176,
+            26.7543373
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.452991843,
+          "bbox_xyxy": [
+            183.943512,
+            75.1969986,
+            199.022552,
+            115.741577
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_43",
+      "image_path": "IMAGES/inclusion_43.jpg",
+      "image_sha256": "a8d41006cce96894094a5fa1a294fefa063840dbbfe2e7b0d9734aaff22184c2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.837929189,
+          "bbox_xyxy": [
+            149.054886,
+            46.6423035,
+            180.077362,
+            143.067627
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.814674675,
+          "bbox_xyxy": [
+            166.048965,
+            0.846879482,
+            182.330856,
+            37.1907234
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.798621953,
+          "bbox_xyxy": [
+            102.217445,
+            0.0,
+            117.989807,
+            35.6251488
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.788371086,
+          "bbox_xyxy": [
+            96.485672,
+            74.5923309,
+            126.767883,
+            152.720612
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.709908843,
+          "bbox_xyxy": [
+            34.0350266,
+            2.30079651,
+            71.3434296,
+            198.364868
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.602013409,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            20.6178093,
+            199.471008
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.303759217,
+          "bbox_xyxy": [
+            123.659042,
+            189.611847,
+            141.269211,
+            199.912384
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.284606099,
+          "bbox_xyxy": [
+            150.632507,
+            174.168732,
+            174.37085,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_46",
+      "image_path": "IMAGES/inclusion_46.jpg",
+      "image_sha256": "d23590d9155e0f3fd1460c8b5b89f1d41bdd74bbe8b2ebddf91fa94df122369a",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.732962251,
+          "bbox_xyxy": [
+            26.4760113,
+            0.0,
+            55.9210663,
+            172.16922
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.450049907,
+          "bbox_xyxy": [
+            49.1972046,
+            60.8195496,
+            100.836601,
+            199.717026
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.418024421,
+          "bbox_xyxy": [
+            122.156769,
+            102.323647,
+            135.147491,
+            130.857849
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_47",
+      "image_path": "IMAGES/inclusion_47.jpg",
+      "image_sha256": "30e0f1e631a3e102c3470971257e2713cfcb7ab8eb202c2c3ae5e13670e79334",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.752510548,
+          "bbox_xyxy": [
+            102.472542,
+            0.240058899,
+            140.395828,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.550656438,
+          "bbox_xyxy": [
+            136.019455,
+            0.42722702,
+            168.462372,
+            108.984283
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.542645097,
+          "bbox_xyxy": [
+            97.6777802,
+            0.0,
+            123.668381,
+            48.4183273
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_50",
+      "image_path": "IMAGES/inclusion_50.jpg",
+      "image_sha256": "ad278704f51eb28d6c62da130d27563dd5ec248aec8df771545e4cf11652dfb2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.76215446,
+          "bbox_xyxy": [
+            76.34375,
+            0.0,
+            118.291359,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.367336243,
+          "bbox_xyxy": [
+            125.211403,
+            0.572137833,
+            151.394775,
+            66.9537811
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_52",
+      "image_path": "IMAGES/inclusion_52.jpg",
+      "image_sha256": "25be1de5f930c94e4b146bfe20b87a9bc2fa6c8fd4b456f1f7d764fb4c1bfcd0",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.798957825,
+          "bbox_xyxy": [
+            87.7460632,
+            0.0,
+            125.310272,
+            199.540436
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_56",
+      "image_path": "IMAGES/inclusion_56.jpg",
+      "image_sha256": "d31ace34a9b85472eea0169cc2243653756cc3fc71c512dd794927274a7a6f16",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.832690358,
+          "bbox_xyxy": [
+            15.0529718,
+            0.0,
+            49.1335754,
+            199.762299
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.557674468,
+          "bbox_xyxy": [
+            53.8062363,
+            0.136737823,
+            78.7249908,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_66",
+      "image_path": "IMAGES/inclusion_66.jpg",
+      "image_sha256": "30f324e65df6f93a5b9b59cb5df7af34cc4c05412c685c58d888077606863acf",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.758091331,
+          "bbox_xyxy": [
+            74.5337677,
+            0.343799591,
+            117.583786,
+            199.566269
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.436668217,
+          "bbox_xyxy": [
+            16.115324,
+            182.747116,
+            30.759985,
+            199.990005
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_71",
+      "image_path": "IMAGES/inclusion_71.jpg",
+      "image_sha256": "7a244787ebbf3a69dd5fc5cff3eb5e176fda798149284e8e58ec4bd00d3cc64c",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.850434244,
+          "bbox_xyxy": [
+            75.6284027,
+            73.6227875,
+            114.772842,
+            155.566986
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.840053856,
+          "bbox_xyxy": [
+            113.768089,
+            58.7698364,
+            133.403427,
+            110.323654
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_92",
+      "image_path": "IMAGES/inclusion_92.jpg",
+      "image_sha256": "1d15666484061bd44fbec995ac395b12dcfd345f977dc066bf9f4cf3ef4db3c1",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.768238246,
+          "bbox_xyxy": [
+            114.030418,
+            46.7962646,
+            158.014526,
+            175.888611
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.760454714,
+          "bbox_xyxy": [
+            148.197906,
+            44.0639801,
+            165.178833,
+            81.2738876
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.692429543,
+          "bbox_xyxy": [
+            30.5204163,
+            30.6070042,
+            45.5167351,
+            61.3323212
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.619987309,
+          "bbox_xyxy": [
+            79.92202,
+            0.0,
+            95.5697937,
+            32.4191589
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_1",
+      "image_path": "IMAGES/patches_1.jpg",
+      "image_sha256": "0ea4843aa7801ce5a5e672ec8c0266d4910aa7d740955f38d087b38154d0fe67",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.869387805,
+          "bbox_xyxy": [
+            36.7556076,
+            12.1202183,
+            110.077225,
+            147.47934
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.72807008,
+          "bbox_xyxy": [
+            15.3394127,
+            157.618134,
+            60.7144737,
+            199.983246
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_139",
+      "image_path": "IMAGES/patches_139.jpg",
+      "image_sha256": "91906ca766ab2d87b9d96983d688d067d627d70cb0feb0a951833df4f7c2a61f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.885665178,
+          "bbox_xyxy": [
+            40.5005722,
+            78.8420792,
+            108.800858,
+            190.258636
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.878921628,
+          "bbox_xyxy": [
+            58.3991928,
+            8.7429285,
+            90.0613327,
+            55.0842056
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.83458513,
+          "bbox_xyxy": [
+            134.580597,
+            128.836945,
+            197.031158,
+            185.341125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.326696485,
+          "bbox_xyxy": [
+            190.359039,
+            185.079987,
+            199.995651,
+            199.947388
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_140",
+      "image_path": "IMAGES/patches_140.jpg",
+      "image_sha256": "9232201956ead5b82110289d25fe4d0964b9d9cc0d62b1c75fa72da1d5755730",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.917288482,
+          "bbox_xyxy": [
+            17.1648312,
+            116.950531,
+            66.1417313,
+            195.265045
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.911332428,
+          "bbox_xyxy": [
+            83.3155441,
+            126.589554,
+            146.022339,
+            199.523804
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.881042778,
+          "bbox_xyxy": [
+            3.3988142,
+            0.0,
+            76.3985596,
+            54.6427841
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.870280266,
+          "bbox_xyxy": [
+            151.085175,
+            3.95235062,
+            199.995346,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.793002188,
+          "bbox_xyxy": [
+            99.459343,
+            0.0,
+            156.280029,
+            51.632431
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_157",
+      "image_path": "IMAGES/patches_157.jpg",
+      "image_sha256": "302db455ade32145d76a587ba113c0a82e56311226f313c4b451410b5402c67d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.831739128,
+          "bbox_xyxy": [
+            0.0201940536,
+            0.0335216522,
+            40.1977348,
+            108.422668
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.806331754,
+          "bbox_xyxy": [
+            44.0823746,
+            0.0,
+            149.845306,
+            195.808548
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_18",
+      "image_path": "IMAGES/patches_18.jpg",
+      "image_sha256": "58b730ff89fd4558ab7dcfa5686d3c9f6da0bb6428dde3c6e941c826211ca711",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.830438018,
+          "bbox_xyxy": [
+            55.5469513,
+            167.830627,
+            94.605835,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.792550504,
+          "bbox_xyxy": [
+            123.786758,
+            46.5027695,
+            170.706573,
+            110.573639
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.718163371,
+          "bbox_xyxy": [
+            38.4126358,
+            0.0,
+            109.417038,
+            163.64978
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.323351324,
+          "bbox_xyxy": [
+            45.1630325,
+            0.0,
+            107.177513,
+            82.6835556
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_186",
+      "image_path": "IMAGES/patches_186.jpg",
+      "image_sha256": "e4be79405f21c621732e4317499f0efa703e78c84f2ff3b597031181e8c72216",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.835427225,
+          "bbox_xyxy": [
+            120.153694,
+            54.2360649,
+            181.557602,
+            157.776337
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.81832397,
+          "bbox_xyxy": [
+            32.2586136,
+            20.5359459,
+            105.932022,
+            177.0681
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.571520925,
+          "bbox_xyxy": [
+            43.7376976,
+            0.0631642342,
+            83.9542465,
+            32.6593742
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.410161734,
+          "bbox_xyxy": [
+            174.141708,
+            56.8368187,
+            199.986404,
+            155.838898
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_193",
+      "image_path": "IMAGES/patches_193.jpg",
+      "image_sha256": "9fcc65087f61af456d62d8fabea419e6eb99faf1b66f92f532a54dbd5ccc63dc",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.908863842,
+          "bbox_xyxy": [
+            64.8753967,
+            2.36664295,
+            117.809616,
+            74.8949432
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.879419744,
+          "bbox_xyxy": [
+            116.389908,
+            39.8066635,
+            171.341385,
+            71.9994049
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.852391839,
+          "bbox_xyxy": [
+            134.634171,
+            79.1152039,
+            197.290375,
+            199.97876
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.839084864,
+          "bbox_xyxy": [
+            74.0930481,
+            95.278511,
+            124.0261,
+            166.661835
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_213",
+      "image_path": "IMAGES/patches_213.jpg",
+      "image_sha256": "6a4b08214c314135518585256f952cef50c514d5137ab1244e7842cee7167c6d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.878848791,
+          "bbox_xyxy": [
+            106.652565,
+            0.0,
+            165.14183,
+            112.27034
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.815450668,
+          "bbox_xyxy": [
+            17.6774979,
+            0.105867386,
+            69.5712891,
+            61.6199951
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.694235444,
+          "bbox_xyxy": [
+            0.0,
+            153.958313,
+            23.175148,
+            199.733429
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_220",
+      "image_path": "IMAGES/patches_220.jpg",
+      "image_sha256": "40ae61cd45e6826404c5ae044df70997a18e14248d051c1e75c6c3397b6c79cc",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.843782902,
+          "bbox_xyxy": [
+            0.0236082077,
+            148.212219,
+            51.6688461,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.59846276,
+          "bbox_xyxy": [
+            5.14184952,
+            10.4102707,
+            131.017776,
+            143.34108
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.309533626,
+          "bbox_xyxy": [
+            57.3675537,
+            4.70378876,
+            195.214447,
+            199.52919
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_225",
+      "image_path": "IMAGES/patches_225.jpg",
+      "image_sha256": "3554340b5a48b23c97a194f7b7bf1776a625cc789d77a0b835ad07052b679eda",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.902470946,
+          "bbox_xyxy": [
+            76.5610046,
+            46.9464722,
+            144.99173,
+            152.16394
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.616285384,
+          "bbox_xyxy": [
+            0.123548508,
+            0.0,
+            16.3505764,
+            17.3343315
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_226",
+      "image_path": "IMAGES/patches_226.jpg",
+      "image_sha256": "7a187942009565b63b6cc73c5bdd7481261e565e1d9981f7ddc7b436077da17c",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.926292419,
+          "bbox_xyxy": [
+            122.261963,
+            31.5376663,
+            185.726089,
+            96.1005478
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.87438643,
+          "bbox_xyxy": [
+            34.0758858,
+            80.9171906,
+            78.4683228,
+            162.273743
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_231",
+      "image_path": "IMAGES/patches_231.jpg",
+      "image_sha256": "6d24d04a14ecb962be8849befa4bc9eb527ac27f711866ca297a4328c5477c93",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.892433882,
+          "bbox_xyxy": [
+            64.0891113,
+            141.86496,
+            129.014923,
+            188.006973
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.877267122,
+          "bbox_xyxy": [
+            0.124177933,
+            0.0,
+            61.3602638,
+            69.2499237
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.835876405,
+          "bbox_xyxy": [
+            0.0,
+            109.493561,
+            53.6535416,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.724597931,
+          "bbox_xyxy": [
+            69.1823273,
+            1.39724731,
+            135.388916,
+            134.536865
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.67520833,
+          "bbox_xyxy": [
+            178.780731,
+            128.076965,
+            199.978317,
+            163.165771
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.479783148,
+          "bbox_xyxy": [
+            77.2805023,
+            0.0337958336,
+            161.351196,
+            38.2692604
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_241",
+      "image_path": "IMAGES/patches_241.jpg",
+      "image_sha256": "d8ee841afe3d24b39a3f1f5656780b75ce9b1e1b6bb11cb6953a99d0cbaaffde",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.831700921,
+          "bbox_xyxy": [
+            72.2420959,
+            43.1840096,
+            123.124352,
+            183.194199
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_257",
+      "image_path": "IMAGES/patches_257.jpg",
+      "image_sha256": "0a3c01f45ef41e5d16a39722fa4f1211cfd2d2e8d9ad17ff1170e491cbc973a7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.853131115,
+          "bbox_xyxy": [
+            0.155005455,
+            82.1375885,
+            65.5705261,
+            131.649414
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.840628505,
+          "bbox_xyxy": [
+            0.0,
+            17.000351,
+            44.9409866,
+            87.4289856
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.767780185,
+          "bbox_xyxy": [
+            10.7344055,
+            130.343109,
+            53.8245201,
+            190.502487
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.763415039,
+          "bbox_xyxy": [
+            138.369461,
+            23.134346,
+            200.0,
+            143.235321
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.421891302,
+          "bbox_xyxy": [
+            167.343903,
+            178.818634,
+            199.980347,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_259",
+      "image_path": "IMAGES/patches_259.jpg",
+      "image_sha256": "19c9a24f2b5aa8b4a8e5b703aa7fb58af80c6b2f9d7d6342add68fe34c1ef3d1",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.869516373,
+          "bbox_xyxy": [
+            0.602283478,
+            103.693886,
+            55.9061813,
+            182.838715
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.694530427,
+          "bbox_xyxy": [
+            10.8117151,
+            49.4924355,
+            68.0970154,
+            107.073326
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.545215011,
+          "bbox_xyxy": [
+            75.4155655,
+            9.75180149,
+            115.680855,
+            33.6625214
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_26",
+      "image_path": "IMAGES/patches_26.jpg",
+      "image_sha256": "662afb41b7d1c5bde0b9349ce2f5d76fb5d3aee3068b84b6ee03bad8811e69d9",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.851565659,
+          "bbox_xyxy": [
+            133.168335,
+            155.201584,
+            180.379013,
+            194.687515
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.77033174,
+          "bbox_xyxy": [
+            0.0,
+            131.915359,
+            39.8323135,
+            170.725922
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.763093829,
+          "bbox_xyxy": [
+            1.12733364,
+            3.56266022,
+            61.0005798,
+            130.933594
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.626945674,
+          "bbox_xyxy": [
+            116.971512,
+            13.0462265,
+            198.132324,
+            144.762756
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.588210881,
+          "bbox_xyxy": [
+            3.16566944,
+            165.118561,
+            52.9983177,
+            199.962463
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.546795547,
+          "bbox_xyxy": [
+            60.5017433,
+            54.8632622,
+            114.758072,
+            122.083664
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_262",
+      "image_path": "IMAGES/patches_262.jpg",
+      "image_sha256": "c89368f86ab398317eb89d1b0f0619206b5d9e5ad94e172b1b7c4fe39c66b23d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.876494765,
+          "bbox_xyxy": [
+            84.2378693,
+            79.5478058,
+            149.298996,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.860008955,
+          "bbox_xyxy": [
+            0.0,
+            114.714012,
+            43.0221176,
+            184.384796
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.798129857,
+          "bbox_xyxy": [
+            13.3992615,
+            56.1065712,
+            52.2633705,
+            104.986801
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_269",
+      "image_path": "IMAGES/patches_269.jpg",
+      "image_sha256": "a92362a8674b188bbe4340c7fc47d839110a479cfd52479ce2c3e1db4556edcf",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.880580366,
+          "bbox_xyxy": [
+            1.45076275,
+            54.0139198,
+            53.5020485,
+            151.560242
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.871588051,
+          "bbox_xyxy": [
+            112.71431,
+            39.7421455,
+            157.344208,
+            162.983673
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.780610383,
+          "bbox_xyxy": [
+            118.034782,
+            173.913193,
+            152.401917,
+            199.953339
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.511772931,
+          "bbox_xyxy": [
+            160.330276,
+            88.7336578,
+            199.914581,
+            188.23645
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.493706226,
+          "bbox_xyxy": [
+            7.26653099,
+            12.3005476,
+            52.2375488,
+            51.7339897
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_289",
+      "image_path": "IMAGES/patches_289.jpg",
+      "image_sha256": "d9a2f0f14640326213f17616892c3e94d22d32ee6d4673f440cf43ab2d5fae89",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.900388479,
+          "bbox_xyxy": [
+            0.0,
+            26.3194561,
+            39.5815048,
+            89.000473
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.871968985,
+          "bbox_xyxy": [
+            51.1562157,
+            68.7005005,
+            87.0884323,
+            109.868866
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.850817204,
+          "bbox_xyxy": [
+            114.250526,
+            94.6197662,
+            194.501038,
+            181.77771
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.830432415,
+          "bbox_xyxy": [
+            147.472351,
+            19.1033096,
+            180.820435,
+            49.6168137
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.584995568,
+          "bbox_xyxy": [
+            0.0,
+            104.419327,
+            41.3484497,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_295",
+      "image_path": "IMAGES/patches_295.jpg",
+      "image_sha256": "f3daada7e1852c8bf08f769c940a832e1c0ec514bc5b08a059814b47e87c011c",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.826699793,
+          "bbox_xyxy": [
+            138.691803,
+            0.100517273,
+            200.0,
+            114.441162
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.810896933,
+          "bbox_xyxy": [
+            143.271637,
+            116.631027,
+            189.600647,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.792663276,
+          "bbox_xyxy": [
+            9.23678398,
+            0.0,
+            89.3023682,
+            115.894867
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.340709865,
+          "bbox_xyxy": [
+            178.735626,
+            146.78688,
+            195.150635,
+            168.907379
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_299",
+      "image_path": "IMAGES/patches_299.jpg",
+      "image_sha256": "249e1897dcc805e311d4ba9ef5b4d57429f0dfc2d9dbcb52fc19928813676adb",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.880123913,
+          "bbox_xyxy": [
+            88.8863373,
+            18.7717056,
+            163.926773,
+            180.997467
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.800311446,
+          "bbox_xyxy": [
+            0.00661373138,
+            0.0307250023,
+            42.2292175,
+            39.3993683
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.785958409,
+          "bbox_xyxy": [
+            0.0342464447,
+            77.5186768,
+            68.0178452,
+            199.904861
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_62",
+      "image_path": "IMAGES/patches_62.jpg",
+      "image_sha256": "32817a5ff56d28a9ae23dfb54c66af057532e185301f6a9d220f26b39b69a436",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.817841589,
+          "bbox_xyxy": [
+            93.1606674,
+            38.3769264,
+            122.276268,
+            123.889099
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_67",
+      "image_path": "IMAGES/patches_67.jpg",
+      "image_sha256": "65273259d3645fe141523228332b96bcc3b5a14a053204a4043287970f7a3b4d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.894310594,
+          "bbox_xyxy": [
+            143.478592,
+            32.1399612,
+            180.538147,
+            111.643234
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.856879354,
+          "bbox_xyxy": [
+            15.9320927,
+            74.5211639,
+            76.2460403,
+            148.711105
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.774161518,
+          "bbox_xyxy": [
+            161.611038,
+            163.185806,
+            199.622559,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_68",
+      "image_path": "IMAGES/patches_68.jpg",
+      "image_sha256": "b321a0330bef26b422cb79a39196151b783bc28760ecc1dbe3f9efcf5d51b69d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.88328886,
+          "bbox_xyxy": [
+            20.0451851,
+            32.9576492,
+            57.8205719,
+            112.182632
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.871455193,
+          "bbox_xyxy": [
+            158.782898,
+            0.107359886,
+            200.0,
+            65.0454788
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.606490552,
+          "bbox_xyxy": [
+            36.9757576,
+            163.828247,
+            75.2492218,
+            199.976624
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.397891581,
+          "bbox_xyxy": [
+            163.99736,
+            190.625015,
+            199.908279,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_79",
+      "image_path": "IMAGES/patches_79.jpg",
+      "image_sha256": "a067a12a0a6c2211bfb7a6f65a107bc5c247a47f420208d4504f14d68d456aef",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.877128482,
+          "bbox_xyxy": [
+            48.715229,
+            42.993309,
+            128.724686,
+            143.947815
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.872260213,
+          "bbox_xyxy": [
+            100.80249,
+            156.066162,
+            135.963608,
+            197.297638
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.767211795,
+          "bbox_xyxy": [
+            82.3165207,
+            0.0,
+            124.225014,
+            46.8756104
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_116",
+      "image_path": "IMAGES/pitted_surface_116.jpg",
+      "image_sha256": "65e9f60b8ed02f4891ae1b7759c57aa2295a67d5d8008aece4dfe6a925dc8c28",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.883037448,
+          "bbox_xyxy": [
+            1.47380829,
+            0.0,
+            175.463867,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.471159577,
+          "bbox_xyxy": [
+            171.693695,
+            0.553836823,
+            200.0,
+            199.997559
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_124",
+      "image_path": "IMAGES/pitted_surface_124.jpg",
+      "image_sha256": "dac1e12ff8fd41f06d5275d1244f7c5b67c98d14bc3b053da947f94cdd76ac90",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.445278406,
+          "bbox_xyxy": [
+            0.0,
+            0.328712463,
+            198.068771,
+            193.68924
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.28557229,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            89.3548203,
+            197.683487
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_134",
+      "image_path": "IMAGES/pitted_surface_134.jpg",
+      "image_sha256": "4e77b73c0c3869eb8b9a94495c6296374f79976bfc68c2c83874e19371558831",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.472197682,
+          "bbox_xyxy": [
+            13.6743546,
+            0.349082947,
+            114.699287,
+            196.720154
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_135",
+      "image_path": "IMAGES/pitted_surface_135.jpg",
+      "image_sha256": "edfbf2614088b45c122de369f0ede6d4cf513b2dbb5e0a2aedc37e912d2ca15e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.880357265,
+          "bbox_xyxy": [
+            110.682716,
+            0.0,
+            200.0,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.86540395,
+          "bbox_xyxy": [
+            0.0,
+            0.00331878662,
+            83.3566971,
+            199.324417
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_140",
+      "image_path": "IMAGES/pitted_surface_140.jpg",
+      "image_sha256": "b81cccbe01de965e89e23fee0630c23ffca236c2bd7b4a0bca2f5cb45817d1de",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.866798759,
+          "bbox_xyxy": [
+            113.363571,
+            0.220184326,
+            199.836243,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.762951434,
+          "bbox_xyxy": [
+            0.016746521,
+            0.277614594,
+            93.1660461,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_151",
+      "image_path": "IMAGES/pitted_surface_151.jpg",
+      "image_sha256": "5cb95bafcb084497ec3874ad6efba69512ea522feae5e678033b017e847b9c16",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.829111934,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            199.120178,
+            199.89006
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_199",
+      "image_path": "IMAGES/pitted_surface_199.jpg",
+      "image_sha256": "92b64539dbef7c4e515d113a114ff19b22a0d80d9c13d06d7f96df48d0b5e75f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.677245736,
+          "bbox_xyxy": [
+            0.250043869,
+            2.01808929,
+            56.6783142,
+            198.130646
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.654723287,
+          "bbox_xyxy": [
+            39.782505,
+            40.6282234,
+            168.143234,
+            199.597321
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.591871262,
+          "bbox_xyxy": [
+            164.444122,
+            2.83567429,
+            200.0,
+            198.346802
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_209",
+      "image_path": "IMAGES/pitted_surface_209.jpg",
+      "image_sha256": "76aff94fc0715efb879685a56ab14ced25a300216035f1262a0223d3a77dfe22",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.919397473,
+          "bbox_xyxy": [
+            173.12912,
+            2.14658141,
+            199.981079,
+            39.7446785
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.755950987,
+          "bbox_xyxy": [
+            8.56393814,
+            0.0,
+            198.822632,
+            199.649979
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_22",
+      "image_path": "IMAGES/pitted_surface_22.jpg",
+      "image_sha256": "7c856260062dd39b4a02f77d5387f7f29059de2cee995c2c2bb60cc9eada39ed",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.873720944,
+          "bbox_xyxy": [
+            0.0,
+            0.0566864014,
+            199.242889,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_228",
+      "image_path": "IMAGES/pitted_surface_228.jpg",
+      "image_sha256": "a10e61fcd8ebed18668bd1ff308bf7a7e51147e25d5aabe55cf37730058b94b7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.806867301,
+          "bbox_xyxy": [
+            16.9427681,
+            0.877971649,
+            198.964066,
+            199.558136
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_264",
+      "image_path": "IMAGES/pitted_surface_264.jpg",
+      "image_sha256": "b8f33836036497d5b83075b2bf5a093601ecf13c4c81d35a1f3af008dfe52dc3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.87016207,
+          "bbox_xyxy": [
+            0.114345551,
+            0.0,
+            199.808136,
+            199.069672
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_273",
+      "image_path": "IMAGES/pitted_surface_273.jpg",
+      "image_sha256": "478bc609f0ac13106fee87bd8b04b1f9c73159682ed58fff084611fa04b718c6",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.431332052,
+          "bbox_xyxy": [
+            1.27429962,
+            17.6587868,
+            198.879211,
+            198.865448
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_278",
+      "image_path": "IMAGES/pitted_surface_278.jpg",
+      "image_sha256": "a2ca53c5f4dcbc1afb5c6bd056fd7b18f83e7a9619b617b050a0ac466758d3fb",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.831317365,
+          "bbox_xyxy": [
+            64.9094467,
+            14.5494633,
+            100.887794,
+            38.0385895
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.635625243,
+          "bbox_xyxy": [
+            92.8377914,
+            0.0944900513,
+            200.0,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_279",
+      "image_path": "IMAGES/pitted_surface_279.jpg",
+      "image_sha256": "54dc6e81c383ea7f2da249324069777408235d16a3ea21471b0573b94fa3aba7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.666680515,
+          "bbox_xyxy": [
+            71.5333557,
+            0.527687073,
+            199.791092,
+            198.454102
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.452733815,
+          "bbox_xyxy": [
+            41.2416878,
+            0.0909566879,
+            199.941177,
+            73.7256546
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.424006104,
+          "bbox_xyxy": [
+            1.50167465,
+            81.3300323,
+            101.629944,
+            199.93782
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.370553106,
+          "bbox_xyxy": [
+            0.100646019,
+            3.3789444,
+            26.0554008,
+            187.210617
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_282",
+      "image_path": "IMAGES/pitted_surface_282.jpg",
+      "image_sha256": "cddef1a10e36aa1dd8c42fc5f2acd66e74c50b547ad905eb8baa47fd5800321a",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.420973003,
+          "bbox_xyxy": [
+            54.757309,
+            9.91449356,
+            199.77005,
+            198.43222
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.25935033,
+          "bbox_xyxy": [
+            0.0,
+            8.45638275,
+            94.4803543,
+            198.919342
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_294",
+      "image_path": "IMAGES/pitted_surface_294.jpg",
+      "image_sha256": "3e8d7b4980ba54f2bf86ebcc9e8d72fb3cdf2dbe4c73c058e406c05b111b04a4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.650266409,
+          "bbox_xyxy": [
+            6.0046196,
+            82.610321,
+            200.0,
+            199.852142
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_36",
+      "image_path": "IMAGES/pitted_surface_36.jpg",
+      "image_sha256": "3954a55a23832a84b6666510890149fd164489e1cecf94860d3defac8d2ef5ef",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.763187706,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            199.904556,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_39",
+      "image_path": "IMAGES/pitted_surface_39.jpg",
+      "image_sha256": "8045c0220b70504345d02c81c69845e48bac0417e3472d3703027c96965004fc",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.924670696,
+          "bbox_xyxy": [
+            0.0,
+            0.0491714478,
+            199.934998,
+            199.715195
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_45",
+      "image_path": "IMAGES/pitted_surface_45.jpg",
+      "image_sha256": "afab3997bbd828d18fb1d87eec86e513cabecd63a6ce44207e35da85c7b043a9",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.842217207,
+          "bbox_xyxy": [
+            0.64289093,
+            0.0403594971,
+            199.519775,
+            104.530869
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_53",
+      "image_path": "IMAGES/pitted_surface_53.jpg",
+      "image_sha256": "4e8dd9c0a12898861a575108b45acddfdfc342f3d346c089f9eb9d56f3c4281f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.370702893,
+          "bbox_xyxy": [
+            0.0,
+            0.0952339172,
+            193.965927,
+            199.886932
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_64",
+      "image_path": "IMAGES/pitted_surface_64.jpg",
+      "image_sha256": "37863072e74292a7743d079bff854875c9fa089a647b5eb9ca3ed889d51075e3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.84165597,
+          "bbox_xyxy": [
+            0.0,
+            0.173950195,
+            199.75386,
+            199.474258
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_83",
+      "image_path": "IMAGES/pitted_surface_83.jpg",
+      "image_sha256": "2d2b2d10955485622d89b2cab5d7d4038af5456b6f6459a56bf5c3d1766ca25f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.883334935,
+          "bbox_xyxy": [
+            101.500793,
+            0.0,
+            200.0,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.831305981,
+          "bbox_xyxy": [
+            1.26682281,
+            0.0,
+            101.630173,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_95",
+      "image_path": "IMAGES/pitted_surface_95.jpg",
+      "image_sha256": "05dc6ea787324508224df9abbd7fd16afa2cbb1c450f0a3fa2f220c1e6429c77",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.753316224,
+          "bbox_xyxy": [
+            0.333919525,
+            0.210456848,
+            200.0,
+            199.978455
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_97",
+      "image_path": "IMAGES/pitted_surface_97.jpg",
+      "image_sha256": "e98e59bf3ee6869a2f29c25a96f54c99f2aa159b1630595b3073465d26b5f807",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.759658277,
+          "bbox_xyxy": [
+            11.9919014,
+            0.192661285,
+            200.0,
+            199.91037
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.262186408,
+          "bbox_xyxy": [
+            0.0,
+            23.2519722,
+            47.5021286,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_104",
+      "image_path": "IMAGES/rolled-in_scale_104.jpg",
+      "image_sha256": "4df8a84e0a9fa2a113f60bcee006696de72b5b95ff5dc4373884e1af26a0b557",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.834697068,
+          "bbox_xyxy": [
+            52.5180626,
+            57.8717995,
+            159.695007,
+            166.020599
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.325965971,
+          "bbox_xyxy": [
+            75.5939636,
+            22.5207748,
+            154.200989,
+            59.6996346
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_107",
+      "image_path": "IMAGES/rolled-in_scale_107.jpg",
+      "image_sha256": "322f329f990d8395b37fba49f1c2576c62725b29527ab0ffda2d1e1a1b7d8b1f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.80186373,
+          "bbox_xyxy": [
+            118.75502,
+            92.2100983,
+            184.629791,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_117",
+      "image_path": "IMAGES/rolled-in_scale_117.jpg",
+      "image_sha256": "ac828a14ac0c57bd27d57af57cf3f7fbc67291e545f5abdc2740224dd6c2bb95",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.784454703,
+          "bbox_xyxy": [
+            149.69574,
+            114.53186,
+            199.995499,
+            194.610413
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.558623075,
+          "bbox_xyxy": [
+            66.8057327,
+            132.798325,
+            114.212715,
+            173.602295
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_118",
+      "image_path": "IMAGES/rolled-in_scale_118.jpg",
+      "image_sha256": "d16f1da313957faf235d8b3319b98f23d41395d05fcddf550f692492ade469e1",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.848439932,
+          "bbox_xyxy": [
+            78.1163101,
+            70.1297226,
+            134.498718,
+            124.928192
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.783182144,
+          "bbox_xyxy": [
+            77.6656952,
+            13.7944221,
+            126.15625,
+            48.1965332
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.75917393,
+          "bbox_xyxy": [
+            77.144165,
+            153.090591,
+            125.370728,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_128",
+      "image_path": "IMAGES/rolled-in_scale_128.jpg",
+      "image_sha256": "eaf635337a9759b80e213844add9683e47b306868a1c2efda06654c22c326d82",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.627237916,
+          "bbox_xyxy": [
+            99.6596527,
+            68.1947174,
+            166.694199,
+            122.598206
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_131",
+      "image_path": "IMAGES/rolled-in_scale_131.jpg",
+      "image_sha256": "248417bbf136b22ea071b88fdb1db110edda9e95d16c12bccc7c0d4e7fa4b44e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.610165536,
+          "bbox_xyxy": [
+            40.0709152,
+            33.1961632,
+            157.417114,
+            170.157288
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.403771758,
+          "bbox_xyxy": [
+            33.9661598,
+            25.8957844,
+            167.353302,
+            70.017662
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_141",
+      "image_path": "IMAGES/rolled-in_scale_141.jpg",
+      "image_sha256": "49fc9f06a417f3928df57cae40663098020c386560260e7c0eaf4860b6890409",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.71956563,
+          "bbox_xyxy": [
+            27.0431328,
+            33.2444839,
+            122.877998,
+            118.438934
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.459459215,
+          "bbox_xyxy": [
+            130.100098,
+            107.743927,
+            173.505341,
+            191.362534
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.267770588,
+          "bbox_xyxy": [
+            118.943329,
+            45.8003807,
+            190.05249,
+            195.735565
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_159",
+      "image_path": "IMAGES/rolled-in_scale_159.jpg",
+      "image_sha256": "7c6f323094a3da43bf4664e30bb84691b91ffa9bcaf88b834321062710bceffa",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.777021527,
+          "bbox_xyxy": [
+            32.1408501,
+            46.7118874,
+            79.6098633,
+            157.376404
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_176",
+      "image_path": "IMAGES/rolled-in_scale_176.jpg",
+      "image_sha256": "1615a1c38666f1af95fbc092291a00c9865a80a1f99941f8e58550ae40f915a4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.842198372,
+          "bbox_xyxy": [
+            73.9087448,
+            19.695507,
+            122.98735,
+            71.1407013
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.432475477,
+          "bbox_xyxy": [
+            110.360733,
+            74.3679962,
+            169.917007,
+            160.174774
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_178",
+      "image_path": "IMAGES/rolled-in_scale_178.jpg",
+      "image_sha256": "9c65edfe700d99926ff92b1a339fde54c8dfdda53ccb739825bd819affb8d2d8",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.790731192,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            55.9745712,
+            45.1229553
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.70899266,
+          "bbox_xyxy": [
+            8.10277939,
+            58.82481,
+            79.5375748,
+            172.06192
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.592401862,
+          "bbox_xyxy": [
+            76.5279846,
+            12.7864494,
+            150.695084,
+            50.1947441
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.482206941,
+          "bbox_xyxy": [
+            11.0362387,
+            65.1121597,
+            79.3152161,
+            114.183662
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_19",
+      "image_path": "IMAGES/rolled-in_scale_19.jpg",
+      "image_sha256": "7e9815a17916514ba512bb345b193791d62e98f98e57359edd9cc9aa129e0629",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.783035755,
+          "bbox_xyxy": [
+            0.0,
+            54.1861916,
+            46.8513947,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.618186593,
+          "bbox_xyxy": [
+            125.066666,
+            139.587341,
+            170.799866,
+            193.033844
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.611671329,
+          "bbox_xyxy": [
+            128.233917,
+            91.8268967,
+            200.0,
+            193.513458
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.473669112,
+          "bbox_xyxy": [
+            120.369606,
+            5.67322731,
+            169.118073,
+            57.1597481
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.311962098,
+          "bbox_xyxy": [
+            135.917145,
+            38.151226,
+            200.0,
+            130.832764
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_190",
+      "image_path": "IMAGES/rolled-in_scale_190.jpg",
+      "image_sha256": "497e87842f2fe281ef3dc52a27444f7219545c9c4636b5cd7dead29b886b4213",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.813917637,
+          "bbox_xyxy": [
+            103.174934,
+            121.053482,
+            187.303085,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.683486998,
+          "bbox_xyxy": [
+            0.222673416,
+            79.9138489,
+            42.4315643,
+            148.991241
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.54786247,
+          "bbox_xyxy": [
+            88.6938934,
+            0.0,
+            144.094666,
+            45.0824547
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_198",
+      "image_path": "IMAGES/rolled-in_scale_198.jpg",
+      "image_sha256": "878afdc20181822ac0dd78725612ee9b5ed4cd98ca5d5c0d19e4f261f8f780e3",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.788293958,
+          "bbox_xyxy": [
+            41.7716789,
+            124.241493,
+            140.745941,
+            199.91333
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.572823882,
+          "bbox_xyxy": [
+            57.4739075,
+            0.296373367,
+            171.577667,
+            72.5526581
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.286971241,
+          "bbox_xyxy": [
+            150.764053,
+            145.899475,
+            199.726135,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_199",
+      "image_path": "IMAGES/rolled-in_scale_199.jpg",
+      "image_sha256": "8ed028cf6ad8d6f9e0815b5d5f79f4f3b150024b4a2a590a68e7315cc6b8af1f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.794158518,
+          "bbox_xyxy": [
+            6.9753933,
+            2.8806591,
+            91.0988998,
+            85.7613449
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.700413764,
+          "bbox_xyxy": [
+            112.030907,
+            24.7451134,
+            180.976746,
+            97.5502472
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.591040909,
+          "bbox_xyxy": [
+            59.2384262,
+            87.3162689,
+            107.463806,
+            165.571884
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_203",
+      "image_path": "IMAGES/rolled-in_scale_203.jpg",
+      "image_sha256": "1318c0d9b059a08b3867d40ee1c18cd46adcac3b69d1790d4095995d311f8917",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.803914428,
+          "bbox_xyxy": [
+            87.8255615,
+            148.719543,
+            122.594284,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.734008431,
+          "bbox_xyxy": [
+            83.1939087,
+            10.3086281,
+            136.247498,
+            65.2323074
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.358969212,
+          "bbox_xyxy": [
+            0.372099876,
+            92.8931274,
+            78.3236237,
+            137.14621
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_213",
+      "image_path": "IMAGES/rolled-in_scale_213.jpg",
+      "image_sha256": "9e6c5e6a46cc51960c7c2ddfebecbf68918a82e5974525446554934059ee38a7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.741425037,
+          "bbox_xyxy": [
+            75.4467926,
+            80.2449646,
+            180.417755,
+            198.874039
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.63811326,
+          "bbox_xyxy": [
+            78.6165771,
+            0.0,
+            127.579285,
+            34.2789383
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.494436741,
+          "bbox_xyxy": [
+            20.3953972,
+            71.2548523,
+            52.4479218,
+            112.328758
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.344869941,
+          "bbox_xyxy": [
+            40.7317162,
+            123.169357,
+            82.9964371,
+            199.852722
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_216",
+      "image_path": "IMAGES/rolled-in_scale_216.jpg",
+      "image_sha256": "d8393dae73ec0046eb91dd904987ece0d95782620520b50eb85e6a94651aff02",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.695381522,
+          "bbox_xyxy": [
+            14.3865299,
+            85.438118,
+            65.1959686,
+            182.036667
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.451570958,
+          "bbox_xyxy": [
+            91.6343689,
+            74.8402481,
+            171.975739,
+            157.555328
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.365660399,
+          "bbox_xyxy": [
+            13.6490345,
+            74.5439835,
+            148.183243,
+            159.948441
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_227",
+      "image_path": "IMAGES/rolled-in_scale_227.jpg",
+      "image_sha256": "d61a9d399c997f08c9a05f3242402d0e454df4029efe2a49bd973798a6a99cad",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.455731213,
+          "bbox_xyxy": [
+            56.2317848,
+            17.4868011,
+            128.120956,
+            199.489685
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.273481101,
+          "bbox_xyxy": [
+            49.5848083,
+            105.322189,
+            176.431763,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_238",
+      "image_path": "IMAGES/rolled-in_scale_238.jpg",
+      "image_sha256": "aa83932b2073c75a818549dce83101bbaa764b2e705103289a8df4b22e01bc75",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.658413529,
+          "bbox_xyxy": [
+            56.1952591,
+            36.9984818,
+            156.584,
+            109.540474
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.512326777,
+          "bbox_xyxy": [
+            46.6985893,
+            112.10453,
+            135.604889,
+            199.873962
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_254",
+      "image_path": "IMAGES/rolled-in_scale_254.jpg",
+      "image_sha256": "0b1e990ceddfbffac2d54d03573f2fca9409d42cc81722f3ae2b6b030efc5826",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.480624765,
+          "bbox_xyxy": [
+            59.020977,
+            57.3613548,
+            118.571793,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_266",
+      "image_path": "IMAGES/rolled-in_scale_266.jpg",
+      "image_sha256": "42451c010132c65c1b01ffbbe109839662e530a711d347463921973277505ff0",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.695191205,
+          "bbox_xyxy": [
+            133.479233,
+            8.62307549,
+            199.513214,
+            92.9250488
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.515454412,
+          "bbox_xyxy": [
+            0.171337128,
+            0.187540054,
+            98.3769913,
+            91.7343445
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.265130639,
+          "bbox_xyxy": [
+            0.0,
+            114.036026,
+            27.9576302,
+            194.79129
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_273",
+      "image_path": "IMAGES/rolled-in_scale_273.jpg",
+      "image_sha256": "369d4bee8a232c19fb5ca45a2289822dcc0b1f1fd575fd7db35a9919d7d78f3d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.437521845,
+          "bbox_xyxy": [
+            0.522565842,
+            0.057964325,
+            107.080704,
+            104.078705
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.42799443,
+          "bbox_xyxy": [
+            0.607280731,
+            154.901215,
+            92.406311,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_276",
+      "image_path": "IMAGES/rolled-in_scale_276.jpg",
+      "image_sha256": "316cdf843c144524be06d3c237f8d2dc4424dca836f62a419e8346c3e17614c7",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.852141738,
+          "bbox_xyxy": [
+            0.956845284,
+            9.01814938,
+            49.3392715,
+            70.3041229
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.806358993,
+          "bbox_xyxy": [
+            70.6902924,
+            2.43510246,
+            127.136993,
+            54.0403137
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.606458843,
+          "bbox_xyxy": [
+            155.469238,
+            0.536777973,
+            200.0,
+            29.2691212
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.461375326,
+          "bbox_xyxy": [
+            59.0616798,
+            89.8957977,
+            131.425705,
+            147.238144
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_279",
+      "image_path": "IMAGES/rolled-in_scale_279.jpg",
+      "image_sha256": "7d6c2342ba3131dcf29b643c89a2f44609e9f7d5c388faa3366161ffa813bf18",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.602715909,
+          "bbox_xyxy": [
+            48.5532951,
+            46.6700325,
+            120.409012,
+            132.362946
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.55142653,
+          "bbox_xyxy": [
+            50.2921143,
+            139.351883,
+            111.426605,
+            189.129669
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_281",
+      "image_path": "IMAGES/rolled-in_scale_281.jpg",
+      "image_sha256": "036fd9a28409d589230ceb99b63fdbc5110fa4fc61cd26088dd2a2d6901ba6a4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.423177183,
+          "bbox_xyxy": [
+            89.6646729,
+            20.1984787,
+            150.028809,
+            158.954285
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.282314688,
+          "bbox_xyxy": [
+            95.02771,
+            2.31501579,
+            143.08931,
+            90.071991
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_288",
+      "image_path": "IMAGES/rolled-in_scale_288.jpg",
+      "image_sha256": "c50614815646af4455639a530c283a0634aedee702befcc6ffbc6d0270a5953a",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.56227845,
+          "bbox_xyxy": [
+            45.8304214,
+            5.36684036,
+            158.966385,
+            199.018082
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.372640252,
+          "bbox_xyxy": [
+            26.6615448,
+            135.473114,
+            148.522629,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_35",
+      "image_path": "IMAGES/rolled-in_scale_35.jpg",
+      "image_sha256": "1e49b720b81f3f59db9ffcacc1d8d7de09d7537f83ee7269834f4069bae65cdf",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.897987127,
+          "bbox_xyxy": [
+            111.212692,
+            70.9378738,
+            168.000778,
+            132.535522
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.793234229,
+          "bbox_xyxy": [
+            118.766975,
+            166.111572,
+            191.817078,
+            199.969757
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.541683853,
+          "bbox_xyxy": [
+            128.376999,
+            10.1544046,
+            178.95694,
+            58.9958153
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.429365844,
+          "bbox_xyxy": [
+            111.914864,
+            11.2954807,
+            167.209747,
+            97.9060822
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_41",
+      "image_path": "IMAGES/rolled-in_scale_41.jpg",
+      "image_sha256": "92e13acb9df5165a2f94a2360236f6a4ae6e6a24c069c0f742798d94640238ff",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.665351808,
+          "bbox_xyxy": [
+            120.896545,
+            0.0,
+            194.482864,
+            30.45158
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.472669214,
+          "bbox_xyxy": [
+            120.578384,
+            0.503787994,
+            194.04335,
+            88.5939102
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.319337666,
+          "bbox_xyxy": [
+            128.966522,
+            60.304184,
+            197.505188,
+            198.859894
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.303070009,
+          "bbox_xyxy": [
+            122.584076,
+            141.459366,
+            193.912048,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_42",
+      "image_path": "IMAGES/rolled-in_scale_42.jpg",
+      "image_sha256": "4f4b79678da419f5c651213bb13a0b1aa8cf00e138e3430d78adb4a684c7d994",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.620405316,
+          "bbox_xyxy": [
+            66.3003387,
+            0.09526968,
+            142.667694,
+            37.6702118
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.536276996,
+          "bbox_xyxy": [
+            76.996933,
+            56.2331581,
+            152.238449,
+            199.79834
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.374653101,
+          "bbox_xyxy": [
+            66.4302521,
+            0.888147354,
+            141.346375,
+            94.3869629
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_47",
+      "image_path": "IMAGES/rolled-in_scale_47.jpg",
+      "image_sha256": "0eac381091303939359a7528a4f54b5107e53d5700e2dafd9e75c4c4e014eb44",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.861101925,
+          "bbox_xyxy": [
+            56.0147552,
+            25.7360077,
+            103.63707,
+            90.9165802
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.748057127,
+          "bbox_xyxy": [
+            52.6750641,
+            101.291107,
+            91.0930176,
+            142.359619
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.73166579,
+          "bbox_xyxy": [
+            1.02430344,
+            139.527969,
+            121.714478,
+            199.948761
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_69",
+      "image_path": "IMAGES/rolled-in_scale_69.jpg",
+      "image_sha256": "7ea5f2851a73a14e51eb1a2b25298e25aad2ad01c61e92b1642a152d44c1551d",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.80858624,
+          "bbox_xyxy": [
+            48.3936691,
+            92.6584778,
+            157.005753,
+            199.96756
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_72",
+      "image_path": "IMAGES/rolled-in_scale_72.jpg",
+      "image_sha256": "56949cdeea9c339621667f8e982efe68a6926cda46fa6c22c14662ac359ec78e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.803078651,
+          "bbox_xyxy": [
+            152.686844,
+            77.2780151,
+            192.865417,
+            108.462334
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.748113513,
+          "bbox_xyxy": [
+            10.2231026,
+            1.07620239,
+            111.808243,
+            109.22789
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.563217163,
+          "bbox_xyxy": [
+            5.39422035,
+            167.14032,
+            55.9514694,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_78",
+      "image_path": "IMAGES/rolled-in_scale_78.jpg",
+      "image_sha256": "548c4196df3aae2bd2d78bb2d597d94a62c327d67ea8946aec748348206ccfca",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.71214366,
+          "bbox_xyxy": [
+            91.7401276,
+            76.5718689,
+            181.069885,
+            199.989243
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.335182488,
+          "bbox_xyxy": [
+            81.9243469,
+            8.10207367,
+            184.047318,
+            75.7078629
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_93",
+      "image_path": "IMAGES/rolled-in_scale_93.jpg",
+      "image_sha256": "99b478d675dda0f992d0e70bddd9d631028575027a56e4be9f7a8741bdd6527e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.781139016,
+          "bbox_xyxy": [
+            79.953949,
+            58.8673592,
+            166.976395,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.578093886,
+          "bbox_xyxy": [
+            109.701767,
+            0.0,
+            160.007385,
+            34.3214607
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_94",
+      "image_path": "IMAGES/rolled-in_scale_94.jpg",
+      "image_sha256": "560cd19ca05fbc5396b48e54ba90b96323f8962d24a4b7a3a52af74aaf39eac4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.854634106,
+          "bbox_xyxy": [
+            88.98172,
+            0.942869186,
+            158.477631,
+            93.7256317
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.817106307,
+          "bbox_xyxy": [
+            87.6020813,
+            84.0512238,
+            155.849182,
+            171.705841
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_106",
+      "image_path": "IMAGES/scratches_106.jpg",
+      "image_sha256": "0fef5231d26c75256c723d862474768b95d71b5c0d7335a3f3112382b7baa86e",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.849836171,
+          "bbox_xyxy": [
+            0.720863342,
+            29.0928078,
+            200.0,
+            53.8194962
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_113",
+      "image_path": "IMAGES/scratches_113.jpg",
+      "image_sha256": "e73a907d6406fb5b2872340cb49c2982b1724f71f75b66ade085c88fe736805c",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.783972979,
+          "bbox_xyxy": [
+            159.977203,
+            173.242264,
+            174.990997,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.75432235,
+          "bbox_xyxy": [
+            52.2685051,
+            0.0,
+            97.5103378,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.701202035,
+          "bbox_xyxy": [
+            50.5572853,
+            0.0,
+            66.9754105,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_115",
+      "image_path": "IMAGES/scratches_115.jpg",
+      "image_sha256": "e2128a3bddd81fdf7631df469dbe36541dd5f62a829e8c3bd19795a3b84a9ee6",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.826786697,
+          "bbox_xyxy": [
+            46.6824799,
+            0.0,
+            76.4015503,
+            199.476624
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.783320546,
+          "bbox_xyxy": [
+            27.4419212,
+            0.0,
+            42.4226151,
+            199.786713
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.314841092,
+          "bbox_xyxy": [
+            188.320389,
+            108.516373,
+            199.970627,
+            199.820084
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_121",
+      "image_path": "IMAGES/scratches_121.jpg",
+      "image_sha256": "d3ee2418b21b7982b5621d5a0967dafd0e763142210518388ead02bac8f47dab",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.848178983,
+          "bbox_xyxy": [
+            12.333312,
+            0.0,
+            42.6014252,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.801593304,
+          "bbox_xyxy": [
+            170.152618,
+            19.2875309,
+            199.852295,
+            95.7652283
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.690240085,
+          "bbox_xyxy": [
+            137.664673,
+            0.719213486,
+            164.009781,
+            148.272644
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.328240305,
+          "bbox_xyxy": [
+            118.408592,
+            0.00578284264,
+            131.204514,
+            16.6942139
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_125",
+      "image_path": "IMAGES/scratches_125.jpg",
+      "image_sha256": "855b302abb5f872b064e3161c84b9a6d4122d5e5118ab71f55a176b2fc193781",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.61421603,
+          "bbox_xyxy": [
+            21.3310051,
+            62.4762917,
+            184.592255,
+            199.006195
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.545026064,
+          "bbox_xyxy": [
+            110.686035,
+            160.413589,
+            142.354004,
+            199.972992
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.51420629,
+          "bbox_xyxy": [
+            150.175461,
+            109.455933,
+            177.105789,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_132",
+      "image_path": "IMAGES/scratches_132.jpg",
+      "image_sha256": "886e442a40f278acef38df92ca526b10ae6fdc02e6bdbb13d194e7b901b067b1",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.76372385,
+          "bbox_xyxy": [
+            102.013809,
+            0.0,
+            120.043404,
+            88.8191376
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.732939959,
+          "bbox_xyxy": [
+            0.264015198,
+            118.897362,
+            136.373886,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.695495665,
+          "bbox_xyxy": [
+            129.757446,
+            88.0276642,
+            200.0,
+            199.928253
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.552566946,
+          "bbox_xyxy": [
+            152.889526,
+            0.0,
+            200.0,
+            102.164459
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_141",
+      "image_path": "IMAGES/scratches_141.jpg",
+      "image_sha256": "7a1ad51da018c844a6268ca8e3aa2e57ee3039be9ec3e1ab7891b814a6ea29c4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.890076041,
+          "bbox_xyxy": [
+            131.441223,
+            0.0966835022,
+            177.019363,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.868236184,
+          "bbox_xyxy": [
+            18.4263592,
+            62.733532,
+            50.0544167,
+            110.421638
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.820646584,
+          "bbox_xyxy": [
+            38.1320877,
+            0.0,
+            51.6873169,
+            49.5988884
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.772122681,
+          "bbox_xyxy": [
+            63.6312027,
+            55.3888474,
+            86.524971,
+            113.124176
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.7213853,
+          "bbox_xyxy": [
+            97.6382141,
+            12.0953465,
+            110.180122,
+            47.0021667
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.6204741,
+          "bbox_xyxy": [
+            54.6707611,
+            22.2979889,
+            74.6652298,
+            56.842514
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_148",
+      "image_path": "IMAGES/scratches_148.jpg",
+      "image_sha256": "57233642aa5fc43868562990bd26d535a5f9562b03eea239cdfe1d8a511b4602",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.818694949,
+          "bbox_xyxy": [
+            150.708649,
+            0.0,
+            178.603638,
+            195.876434
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.745001614,
+          "bbox_xyxy": [
+            130.200592,
+            0.0,
+            145.115845,
+            172.719513
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.596146882,
+          "bbox_xyxy": [
+            24.4459534,
+            115.14563,
+            45.4131775,
+            139.825378
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_156",
+      "image_path": "IMAGES/scratches_156.jpg",
+      "image_sha256": "b65e484717ff033687c7b03e79e6f151f60376f2ca033e9501d84da446226fbd",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.854414403,
+          "bbox_xyxy": [
+            45.8119392,
+            0.0,
+            80.081955,
+            199.645615
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.710567892,
+          "bbox_xyxy": [
+            102.144173,
+            22.8697968,
+            117.255661,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.445184767,
+          "bbox_xyxy": [
+            183.57872,
+            99.775238,
+            196.615982,
+            199.807816
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_165",
+      "image_path": "IMAGES/scratches_165.jpg",
+      "image_sha256": "e4dd9c9a976cea57392ce1fbe49831c3c61c4bac70d5344e48a8b1d528b68890",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.800618112,
+          "bbox_xyxy": [
+            58.8860703,
+            0.0,
+            96.8158875,
+            185.951416
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.682047963,
+          "bbox_xyxy": [
+            112.83934,
+            0.11838913,
+            130.111481,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.269247919,
+          "bbox_xyxy": [
+            0.0,
+            160.055511,
+            7.04802132,
+            199.432251
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_174",
+      "image_path": "IMAGES/scratches_174.jpg",
+      "image_sha256": "e4b9101d64dd300257c823dd3dd3190b4b7763aae62dabe89276ac565db80dae",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.824824214,
+          "bbox_xyxy": [
+            19.3047352,
+            0.0,
+            37.3129196,
+            199.652481
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.741121531,
+          "bbox_xyxy": [
+            165.906647,
+            29.6395111,
+            180.809509,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.693331659,
+          "bbox_xyxy": [
+            120.980392,
+            16.628685,
+            137.696472,
+            199.867981
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.302250326,
+          "bbox_xyxy": [
+            1.81084514,
+            0.223083496,
+            14.4931307,
+            198.279846
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_18",
+      "image_path": "IMAGES/scratches_18.jpg",
+      "image_sha256": "fd74062b39027d7009e9e2c18575ee88b4bc910ccc33d5272473b116d812fae2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.669492662,
+          "bbox_xyxy": [
+            45.5070305,
+            22.2363377,
+            60.5044746,
+            111.003639
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.547411442,
+          "bbox_xyxy": [
+            38.457386,
+            119.763397,
+            60.0082855,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_209",
+      "image_path": "IMAGES/scratches_209.jpg",
+      "image_sha256": "9f7db1e44228cdaa737b8cc1788cf5a61f8687854c269210f86df8ab137c1f79",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.755746126,
+          "bbox_xyxy": [
+            51.8746758,
+            0.271530151,
+            67.8433228,
+            134.7836
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.753351748,
+          "bbox_xyxy": [
+            113.269417,
+            0.348396301,
+            143.944305,
+            145.843414
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.298171073,
+          "bbox_xyxy": [
+            166.671722,
+            43.0898285,
+            199.970367,
+            95.1225128
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_223",
+      "image_path": "IMAGES/scratches_223.jpg",
+      "image_sha256": "669bfbce9330b39ec06dedc04b6dd3190b06cabb45d7de3159f254cae49f53a4",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.801711738,
+          "bbox_xyxy": [
+            58.7870102,
+            4.41225052,
+            80.840538,
+            106.166138
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.75128907,
+          "bbox_xyxy": [
+            125.172745,
+            112.155418,
+            141.188644,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.471838534,
+          "bbox_xyxy": [
+            120.072365,
+            0.0,
+            141.264496,
+            51.9556808
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.259619355,
+          "bbox_xyxy": [
+            186.569901,
+            149.512314,
+            199.974365,
+            199.99353
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_232",
+      "image_path": "IMAGES/scratches_232.jpg",
+      "image_sha256": "5130a7a4352245c52b2301d40e92a6efb565c2f8007b67c68723af24ddc516bc",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.727747023,
+          "bbox_xyxy": [
+            33.914032,
+            64.9416275,
+            144.123154,
+            83.7224121
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.651368618,
+          "bbox_xyxy": [
+            146.719849,
+            88.3240509,
+            158.642899,
+            175.645523
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.333528847,
+          "bbox_xyxy": [
+            104.168716,
+            0.0159370899,
+            118.283386,
+            19.1760788
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_234",
+      "image_path": "IMAGES/scratches_234.jpg",
+      "image_sha256": "cf652825b3c7cbea8ebf2b258989a4a915c5798fc29406294d458edb92fec80b",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.762229323,
+          "bbox_xyxy": [
+            25.3902588,
+            65.0885391,
+            168.988434,
+            86.7492065
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.755131602,
+          "bbox_xyxy": [
+            20.2645874,
+            136.308304,
+            200.0,
+            158.824646
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_236",
+      "image_path": "IMAGES/scratches_236.jpg",
+      "image_sha256": "2ebc998f51cf32215b60f9f91d37a4c58820f33a33d0dea03bc45c34d185df0f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.707237899,
+          "bbox_xyxy": [
+            2.09598541,
+            88.9788437,
+            197.703522,
+            111.672249
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.672117233,
+          "bbox_xyxy": [
+            2.39253998,
+            118.298645,
+            126.54174,
+            132.846237
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.499325424,
+          "bbox_xyxy": [
+            153.412292,
+            45.3592987,
+            195.891541,
+            102.887573
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_240",
+      "image_path": "IMAGES/scratches_240.jpg",
+      "image_sha256": "52e15ece6022bcb42f2991a7acae1c4e6b26cac16976402aea424d356d7cb964",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.789153218,
+          "bbox_xyxy": [
+            56.6998482,
+            100.809547,
+            200.0,
+            126.026886
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.785722494,
+          "bbox_xyxy": [
+            126.742546,
+            164.991058,
+            200.0,
+            179.450668
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.728690743,
+          "bbox_xyxy": [
+            49.7920227,
+            133.430908,
+            200.0,
+            153.632019
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.460048229,
+          "bbox_xyxy": [
+            13.2585907,
+            74.8505249,
+            143.503082,
+            88.3315659
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_268",
+      "image_path": "IMAGES/scratches_268.jpg",
+      "image_sha256": "2bcfea24551cb98e0a64b81d515eda2d597b71bb5d8391a0eff4d61a3cabccf8",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.639998853,
+          "bbox_xyxy": [
+            0.0,
+            118.8713,
+            89.1562271,
+            132.252304
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.563323557,
+          "bbox_xyxy": [
+            0.0,
+            151.863525,
+            199.790497,
+            165.20433
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.525050521,
+          "bbox_xyxy": [
+            0.0,
+            148.146881,
+            86.5545807,
+            164.245514
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_278",
+      "image_path": "IMAGES/scratches_278.jpg",
+      "image_sha256": "2250c7ee89a2d4d03656a9ac3643ede3f8e2225b184472836d62c07024af5356",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.912599802,
+          "bbox_xyxy": [
+            0.0105667114,
+            8.83811951,
+            200.0,
+            34.8158569
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.703554571,
+          "bbox_xyxy": [
+            0.0,
+            61.1059914,
+            200.0,
+            77.2369537
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.587428987,
+          "bbox_xyxy": [
+            0.0494861603,
+            140.533051,
+            112.617264,
+            176.205139
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.338824779,
+          "bbox_xyxy": [
+            0.0,
+            159.866165,
+            69.8516388,
+            174.14888
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_284",
+      "image_path": "IMAGES/scratches_284.jpg",
+      "image_sha256": "7460cc96b7ca26a5118ce716a8e7f66d210d35e15e596597d8f204b021b293d2",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.813199282,
+          "bbox_xyxy": [
+            0.0,
+            100.81237,
+            121.414139,
+            123.643234
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.379481256,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            200.0,
+            8.19451523
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.357506245,
+          "bbox_xyxy": [
+            115.112167,
+            105.740143,
+            199.969238,
+            123.87529
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_287",
+      "image_path": "IMAGES/scratches_287.jpg",
+      "image_sha256": "6daf546f9bb1a4b58b9a76f4fe912418426b9a97448610edec52314f66fc140f",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.860860527,
+          "bbox_xyxy": [
+            161.075516,
+            0.0,
+            188.571472,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_40",
+      "image_path": "IMAGES/scratches_40.jpg",
+      "image_sha256": "5ff1878abdab2d030b32896486b498d1ecdf6d8f439f664bed53a8ba246de332",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.857267261,
+          "bbox_xyxy": [
+            119.900345,
+            0.0401496887,
+            145.554047,
+            199.872665
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_53",
+      "image_path": "IMAGES/scratches_53.jpg",
+      "image_sha256": "3bcac890eee84445a798a20289599d44e664300658111da743a4073900a95a41",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.831425786,
+          "bbox_xyxy": [
+            158.97525,
+            0.193138123,
+            185.96402,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_6",
+      "image_path": "IMAGES/scratches_6.jpg",
+      "image_sha256": "cb03aeb9bd78d5b28768ff9fb9b55edeedfe2617e11400a1391eea34d60ec285",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.712818563,
+          "bbox_xyxy": [
+            74.6486206,
+            0.0,
+            147.668427,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.663719594,
+          "bbox_xyxy": [
+            148.42337,
+            137.60614,
+            163.8172,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.629297972,
+          "bbox_xyxy": [
+            152.723618,
+            47.7595978,
+            164.219971,
+            119.901093
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_68",
+      "image_path": "IMAGES/scratches_68.jpg",
+      "image_sha256": "65121e6d4710b6e80a595e3b8212c8c99ae5535bc0b2dd3d1b09c966b09341dd",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.740640044,
+          "bbox_xyxy": [
+            3.28966379,
+            27.7352524,
+            29.4715977,
+            199.962952
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.639192939,
+          "bbox_xyxy": [
+            106.390228,
+            29.2256165,
+            122.489624,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_77",
+      "image_path": "IMAGES/scratches_77.jpg",
+      "image_sha256": "0f30ad864afb086b06c24e27574fb0ebe3412b58ee8173ece1d047eef34116d8",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.852802932,
+          "bbox_xyxy": [
+            168.864517,
+            0.0,
+            184.982605,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.673444211,
+          "bbox_xyxy": [
+            102.76371,
+            24.2158699,
+            115.114151,
+            199.837509
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_80",
+      "image_path": "IMAGES/scratches_80.jpg",
+      "image_sha256": "7be113457f8fc94dee9e4b7a325e6b787999ea83e39f6c7389618582e8146a98",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.76917243,
+          "bbox_xyxy": [
+            137.039581,
+            0.251655579,
+            151.324753,
+            199.917755
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_84",
+      "image_path": "IMAGES/scratches_84.jpg",
+      "image_sha256": "0e25a596a7ddcb6b78b1f608c01a9ab168748556ee87e7feb2293ce3de87cd78",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.701425672,
+          "bbox_xyxy": [
+            142.420013,
+            15.2853394,
+            154.847076,
+            199.838379
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_85",
+      "image_path": "IMAGES/scratches_85.jpg",
+      "image_sha256": "31a229ddb970db1b9da2ba0c08670ee44380d9e1ecfb0921780a5806bda96663",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.796541333,
+          "bbox_xyxy": [
+            105.387573,
+            0.51197052,
+            118.737831,
+            199.920486
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.788257182,
+          "bbox_xyxy": [
+            169.649506,
+            10.4959106,
+            181.743774,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_88",
+      "image_path": "IMAGES/scratches_88.jpg",
+      "image_sha256": "60c8756c32648ebad1dddd7df9a2d5105db9f18941ec159bf0294d760009af51",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.767677307,
+          "bbox_xyxy": [
+            170.077347,
+            0.224590302,
+            181.733185,
+            199.811874
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.704816878,
+          "bbox_xyxy": [
+            102.155151,
+            0.0,
+            116.448631,
+            199.518158
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_90",
+      "image_path": "IMAGES/scratches_90.jpg",
+      "image_sha256": "3ab8a57c251a314ecb243bd97375429ffcf365f30b79042642b0d2e7c57ec820",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.77796495,
+          "bbox_xyxy": [
+            171.061066,
+            2.51659393,
+            191.755249,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.62648046,
+          "bbox_xyxy": [
+            140.949005,
+            126.573174,
+            152.362808,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.572723031,
+          "bbox_xyxy": [
+            42.2347946,
+            128.832764,
+            74.3735123,
+            199.820847
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_92",
+      "image_path": "IMAGES/scratches_92.jpg",
+      "image_sha256": "78f0f67d7827a24cee83e9e3f8c7698f362bb37725243568d2ef547d66945704",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.809562802,
+          "bbox_xyxy": [
+            33.6907043,
+            0.629005432,
+            53.9694023,
+            199.941559
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.58269161,
+          "bbox_xyxy": [
+            172.600739,
+            167.166382,
+            192.385742,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.322784036,
+          "bbox_xyxy": [
+            162.873108,
+            128.319458,
+            190.808746,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_94",
+      "image_path": "IMAGES/scratches_94.jpg",
+      "image_sha256": "f800f9f5e2181940b19a12bd8d488d374bf2d3f17ba8aee0a3708b222c5e8996",
+      "backend": "TRT FP32 noTF32",
+      "inference_timestamp_utc": "2026-07-28T17:21:08.130+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.703713,
+          "bbox_xyxy": [
+            93.9924011,
+            1.29985809,
+            113.293976,
+            199.163986
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.565037191,
+          "bbox_xyxy": [
+            23.4023285,
+            86.9222641,
+            41.1803093,
+            199.975494
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.323961496,
+          "bbox_xyxy": [
+            66.1483002,
+            121.211426,
+            75.3316116,
+            200.0
+          ]
+        }
+      ]
+    }
+  ]
+}
