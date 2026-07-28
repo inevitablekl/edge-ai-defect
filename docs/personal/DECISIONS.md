@@ -3483,3 +3483,38 @@ following are satisfied in the applicable formal review:
 
 D063 does not make K5 pass, does not authorize TensorRT Level B/C or K6,
 and does not remove the requirement for a K5 rerun before K6.
+
+### D064 — Reopen K2 for Bounded Sensitivity-Aware TensorRT Precision Remediation
+
+状态：`Accepted`
+
+D064 reopens K2 in a bounded, numerical-precision-only remediation of the
+historical TensorRT Level B failure. The original D062 and original Engine
+remain frozen historical facts. The original Engine's K5.3 Level B `FAIL`
+remains unchanged and is not rewritten.
+
+The global TensorRT `--fp16` builder mode remains enabled. New candidates
+must disable TF32 with `--noTF32`. Only layers confirmed by actual graph
+tracing to belong to the BBox regression, DFL, or decode-sensitive path may
+be constrained to FP32. Backbone, Neck, and the classification branch remain
+unconstrained and FP16-enabled mixed precision. No guessed layer names are
+permitted.
+
+The ONNX, ModelContract, Host FP32 I/O, static batch 1, static 640 input,
+TensorRT Level B/C tolerances, Level B comparator, Level B gate, ORT control,
+Reference Bundle, TensorRtEngine, RuntimeConfig parser, and result schemas are
+unchanged. K2R may create one local-only noTF32 diagnostic Engine C0 and at
+most two sensitivity-aware formal candidates C1/C2. C1 is the terminal BBox
+sensitive subgraph policy; C2, authorized only when C1 fails, is the maximum
+policy covering the complete BBox regression branches through decode while
+still excluding Backbone, Neck, and classification. All constrained layers
+must use `precisionConstraints=obey` with exact `layerPrecisions` and required
+`layerOutputTypes` controls; no global non-BBox FP16 constraint is allowed.
+
+The smallest candidate that passes the frozen TensorRT Level B Gate at 16/16
+is selected. If both C1 and C2 fail, no Engine is selected, K5.3 remains
+`FAIL`, and K5.4 remains `NOT READY`; the FP32 scope is not expanded. TensorRT
+Level C, K6, benchmark, stability, Pipeline, GPU preprocessing/NMS, INT8,
+DLA, ONNX rewrite, model re-export, C++ Builder, Polygraphy, package changes,
+push, merge, and tag are not authorized. K5.4 remains unauthorized until a
+new selected Engine formally passes K5.3 Level B 16/16.
