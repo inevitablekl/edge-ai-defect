@@ -3518,3 +3518,41 @@ Level C, K6, benchmark, stability, Pipeline, GPU preprocessing/NMS, INT8,
 DLA, ONNX rewrite, model re-export, C++ Builder, Polygraphy, package changes,
 push, merge, and tag are not authorized. K5.4 remains unauthorized until a
 new selected Engine formally passes K5.3 Level B 16/16.
+
+### D065 — Establish Strict FP32 TensorRT Baseline and Authorize Bounded Selective-FP16 Investigation
+
+状态：`Accepted`
+
+Python ORT remains the correctness authority for this investigation. The
+Strict FP32 noTF32 TensorRT Engine is the TensorRT-side correctness baseline;
+it is not a replacement for the Python ORT Reference Bundle. The original
+FP16 Engine, TF32-enabled FP32 Engine, and the failed K2R C1/C2 results remain
+frozen historical evidence. TensorRT Level B and Level C gates and their
+unchanged tolerances are not modified.
+
+This decision authorizes a bounded investigation with global TensorRT FP16
+builder mode enabled, TF32 disabled, and `precisionConstraints=obey`. Only
+graph-traced Detect/BBox-sensitive operations may be constrained to FP32,
+including the BBox terminal path, DFL, Softmax, projection/integral,
+Slice/Sub/Concat, coordinate decode, and stride multiplication. Backbone and
+Neck must remain unconstrained; no global non-Detect FP16 constraint is
+permitted.
+
+Because K2R C1 already tested the bbox-only policy under noTF32, and C2 tested
+the complete traced BBox regression scope under noTF32, this investigation
+must not rebuild an equivalent bbox-only candidate. At most two new candidates
+are authorized: M1 (BBox/DFL/decode FP32) and M2 (the complete ONNX
+`/model.22` Detect Head FP32). Under the current legacy audit, only the new
+M2 route is eligible. M2 is the maximum allowed FP32 scope; if it fails, the
+investigation stops without expanding FP32 into Backbone or Neck.
+
+Every constrained layer requires exact layer identity, graph-ancestry evidence,
+FP32 compute precision, and the required FP32 output type. If mapping,
+inspection, or the TensorRT toolchain cannot establish those facts, the
+investigation is blocked. A candidate may enter performance precheck only
+after 16/16 Level B, 16/16 TensorRT Level C, and byte-identical repeatability
+pass. Performance precheck is non-formal: compared with Strict FP32, it
+requires paired median backend latency improvement of at least 10% and 3/3
+independent mixed runs no slower than their paired Strict FP32 runs. It does
+not authorize K6, stability, Pipeline, formal benchmarking, production
+runtime changes, manifest replacement, push, merge, or tag.
