@@ -15,7 +15,8 @@ Repository state
 ----------------
 
   branch: feature/jetson-tensorrt-fp16
-  HEAD: 622523933edad60aee6aa29f32b4b242613d0651
+  HEAD at audit: 622523933edad60aee6aa29f32b4b242613d0651
+  initial audit report commit: 1b26dcfe0fbddc4e10b24c6752088d2db68e2cee
   tracked changes: none
   untracked entries: 104, pre-existing local diagnostics/evidence retained
 
