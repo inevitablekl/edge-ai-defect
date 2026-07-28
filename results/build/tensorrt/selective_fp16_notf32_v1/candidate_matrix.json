@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_selective_candidate_matrix",
+  "route": "CASE_B_DIRECT_M2",
+  "legacy_classification": "LEGACY_CANDIDATES_ALREADY_NOTF32",
+  "candidates": [
+    {
+      "id": "C1",
+      "status": "LEGACY_FAIL_NOT_REBUILT",
+      "level_b": "1/16 PASS"
+    },
+    {
+      "id": "C2",
+      "status": "LEGACY_FAIL_NOT_REBUILT",
+      "level_b": "0/16 PASS"
+    },
+    {
+      "id": "M1",
+      "status": "NOT_BUILT_EQUIVALENT_LEGACY_POLICY",
+      "reason": "K2R C1/C2 already tested bbox-only/noTF32 route"
+    },
+    {
+      "id": "M2",
+      "status": "CORRECTNESS_FAIL",
+      "build": "PASS",
+      "inspection": "PASS_MIXED_PRECISION_CONFIRMED",
+      "level_b": {
+        "status": "FAIL",
+        "passed": 0,
+        "failed": 16,
+        "max_bbox_abs": 27.280731201171875,
+        "max_score_abs": 0.029098331928253174
+      },
+      "repeatability": {
+        "status": "PASS",
+        "byte_identical": 16
+      }
+    }
+  ],
+  "selected_candidate": null,
+  "verdict": "SELECTIVE_MIXED_CORRECTNESS_FAIL",
+  "level_c_not_executed": true,
+  "performance_precheck_not_executed": true
+}

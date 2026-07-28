@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "decision_id": "D065",
+  "decision_commit": "1fd3344f14e7f3d7a2c0b4bbdb4edfa102e10d4d",
+  "python_ort_correctness_authority": true,
+  "strict_fp32_notf32_tensorRT_baseline": {
+    "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f"
+  },
+  "frozen_assets": {
+    "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "reference_bundle_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29"
+  },
+  "legacy_route": "LEGACY_CANDIDATES_ALREADY_NOTF32",
+  "route": "CASE_B_DIRECT_M2",
+  "m1": "NOT_REBUILT_EQUIVALENT_TO_K2R_C1_C2",
+  "m2_scope": "complete /model.22 Detect Head; Backbone and Neck unconstrained",
+  "level_b_gate": {
+    "score_mae": 0.002,
+    "score_p99": 0.005,
+    "score_max_abs": 0.02,
+    "bbox_mae": 0.5,
+    "bbox_p99": 1.5,
+    "bbox_max_abs": 4.0,
+    "required_pass": "16/16"
+  },
+  "level_c_gate": "NOT_EXECUTED_IF_LEVEL_B_FAIL",
+  "performance_precheck": "NOT_EXECUTED_IF_LEVEL_B_FAIL",
+  "production_manifest_replacement": false
+}

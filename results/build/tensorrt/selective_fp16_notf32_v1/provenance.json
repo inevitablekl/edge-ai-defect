@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_selective_fp16_notf32_provenance",
+  "verdict": "SELECTIVE_MIXED_CORRECTNESS_FAIL",
+  "source_git_commit": "1fd3344f14e7f3d7a2c0b4bbdb4edfa102e10d4d",
+  "decision_commit": "1fd3344f14e7f3d7a2c0b4bbdb4edfa102e10d4d",
+  "frozen_assets": {
+    "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "reference_bundle_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+    "strict_fp32_notf32_engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f"
+  },
+  "candidate": {
+    "id": "M2",
+    "engine_sha256": "45e98ccb8f2bd4430feee8114aff9d660154ef07bd1c9e65bcb6f7f6ec493b7e",
+    "engine_manifest_sha256": "5f4dcb080a439b18688323d58368881628399fcd1552a8dbec83b107387651fd",
+    "engine_size_bytes": 12660124,
+    "runtime_config_sha256": "aa3e7ac22d1845bcb385cee10328b0ac5933c049dcb72217144fcc48ead09e2c",
+    "executable_sha256": "86df974a1b5810ea8ea9829d8ca4354f91b5b5322fbe5b021a2eeef8499bf9a4"
+  },
+  "route": {
+    "legacy_classification": "LEGACY_CANDIDATES_ALREADY_NOTF32",
+    "m1": "not rebuilt",
+    "m2": "built and inspected"
+  },
+  "gates": {
+    "level_b": "0/16 FAIL",
+    "level_c": "not executed",
+    "repeatability": "16/16 PASS",
+    "performance_precheck": "not executed"
+  },
+  "local_only_roots": [
+    "/home/orin/edge-ai-local-models/stage_k/selective_fp16_notf32_v1",
+    "/home/orin/edge-ai-local-evidence/stage_k/selective_fp16_notf32_v1"
+  ],
+  "scope_audit": {
+    "tensorRT_production_runtime_modified": false,
+    "formal_manifest_replaced": false,
+    "k6_started": false,
+    "pipeline_started": false,
+    "push_merge_tag": false
+  }
+}
