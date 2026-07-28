@@ -1,0 +1,1712 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k5_4_detection_level_comparison",
+  "matching": {
+    "algorithm": "deterministic greedy one-to-one matching",
+    "priority": "same class first, then descending IoU",
+    "cross_class_pairs_retained_for_class_mismatch_reporting": true
+  },
+  "image_count": 16,
+  "fp32_total_detection_count": 54,
+  "fp16_total_detection_count": 54,
+  "matched_detection_count": 54,
+  "class_mismatch_count": 0,
+  "class_consistent_image_count": 16,
+  "mean_iou": 0.994954507563731,
+  "minimum_iou": 0.8791732858705964,
+  "iou_below_0_5_count": 0,
+  "confidence_difference_mae": 0.0024022652962963024,
+  "per_image": [
+    {
+      "image_id": "0000_crazing_51",
+      "relative_path": "0000_crazing_51.jpg",
+      "fp32_detection_count": 0,
+      "fp16_detection_count": 0,
+      "detection_count_difference": 0,
+      "matched_detection_count": 0,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": null,
+      "minimum_iou": null,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": null,
+      "matches": []
+    },
+    {
+      "image_id": "0001_crazing_10",
+      "relative_path": "0001_crazing_10.jpg",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9982603778795169,
+      "minimum_iou": 0.9974903419117579,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.002932459500000012,
+      "matches": [
+        {
+          "fp32_class_id": 0,
+          "fp16_class_id": 0,
+          "class_match": true,
+          "iou": 0.999030413847276,
+          "center_distance": 0.05219334159663673,
+          "width_difference": 0.10737570000000574,
+          "height_difference": 0.011595999999997275,
+          "confidence_difference": 0.00010827200000002035,
+          "fp32_confidence": 0.309749722,
+          "fp16_confidence": 0.309857994,
+          "fp32_bbox_xyxy": [
+            1.6431427,
+            145.80423,
+            184.192017,
+            199.62442
+          ],
+          "fp16_bbox_xyxy": [
+            1.640625,
+            145.820312,
+            184.296875,
+            199.628906
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 0,
+          "fp16_class_id": 0,
+          "class_match": true,
+          "iou": 0.9974903419117579,
+          "center_distance": 0.10627525425212032,
+          "width_difference": 0.2682109000000139,
+          "height_difference": 0.028633000000013453,
+          "confidence_difference": 0.005756647000000004,
+          "fp32_confidence": 0.25740397,
+          "fp16_confidence": 0.251647323,
+          "fp32_bbox_xyxy": [
+            60.2842331,
+            76.1867142,
+            189.888382,
+            141.09816
+          ],
+          "fp16_bbox_xyxy": [
+            60.3125,
+            76.1914062,
+            189.648438,
+            141.074219
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0002_inclusion_18",
+      "relative_path": "0002_inclusion_18.jpg",
+      "fp32_detection_count": 12,
+      "fp16_detection_count": 12,
+      "detection_count_difference": 0,
+      "matched_detection_count": 12,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9845295239974208,
+      "minimum_iou": 0.8791732858705964,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.00342540691666667,
+      "matches": [
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9995625852768131,
+          "center_distance": 0.0018259644711680232,
+          "width_difference": 0.0006870000000276377,
+          "height_difference": 0.027129999999985444,
+          "confidence_difference": 0.0013393760000000032,
+          "fp32_confidence": 0.839490831,
+          "fp16_confidence": 0.838151455,
+          "fp32_bbox_xyxy": [
+            160.439987,
+            108.683624,
+            180.654144,
+            175.902588
+          ],
+          "fp16_bbox_xyxy": [
+            160.439453,
+            108.671875,
+            180.654297,
+            175.917969
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9959364094920746,
+          "center_distance": 0.06662398753584516,
+          "width_difference": 0.09523097000000291,
+          "height_difference": 0.052551333979991455,
+          "confidence_difference": 0.00126469100000004,
+          "fp32_confidence": 0.815726161,
+          "fp16_confidence": 0.816990852,
+          "fp32_bbox_xyxy": [
+            4.39890385,
+            0.00839233398,
+            40.2704697,
+            105.385529
+          ],
+          "fp16_bbox_xyxy": [
+            4.28710938,
+            0.0,
+            40.2539062,
+            105.429688
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9990836119244924,
+          "center_distance": 0.009076739241038764,
+          "width_difference": 0.01274200000003134,
+          "height_difference": 0.005341000000015583,
+          "confidence_difference": 0.001325964999999929,
+          "fp32_confidence": 0.772479057,
+          "fp16_confidence": 0.771153092,
+          "fp32_bbox_xyxy": [
+            155.083405,
+            167.660675,
+            178.156601,
+            200.0
+          ],
+          "fp16_bbox_xyxy": [
+            155.068359,
+            167.666016,
+            178.154297,
+            200.0
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9976302081014354,
+          "center_distance": 0.031171429768635454,
+          "width_difference": 0.020736700000014707,
+          "height_difference": 0.05999800000000732,
+          "confidence_difference": 0.005121649000000006,
+          "fp32_confidence": 0.733869851,
+          "fp16_confidence": 0.728748202,
+          "fp32_bbox_xyxy": [
+            65.9491653,
+            153.279846,
+            84.981163,
+            200.0
+          ],
+          "fp16_bbox_xyxy": [
+            65.9472656,
+            153.339844,
+            85.0,
+            200.0
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9638445873447664,
+          "center_distance": 0.252995718018779,
+          "width_difference": 0.17280599999998003,
+          "height_difference": 0.1276397999999972,
+          "confidence_difference": 0.0030553350000001034,
+          "fp32_confidence": 0.711268187,
+          "fp16_confidence": 0.708212852,
+          "fp32_bbox_xyxy": [
+            146.524902,
+            19.6951752,
+            161.399857,
+            56.0812073
+          ],
+          "fp16_bbox_xyxy": [
+            146.845703,
+            19.7265625,
+            161.547852,
+            56.2402344
+          ],
+          "fp32_index": 4,
+          "fp16_index": 4
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9948398367161327,
+          "center_distance": 0.270141051553165,
+          "width_difference": 0.05760199999998861,
+          "height_difference": 0.5379489999999976,
+          "confidence_difference": 0.0008739829999999671,
+          "fp32_confidence": 0.708278835,
+          "fp16_confidence": 0.707404852,
+          "fp32_bbox_xyxy": [
+            114.906067,
+            0.0,
+            143.290848,
+            170.712051
+          ],
+          "fp16_bbox_xyxy": [
+            114.902344,
+            0.0,
+            143.344727,
+            171.25
+          ],
+          "fp32_index": 5,
+          "fp16_index": 5
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.8791732858705964,
+          "center_distance": 0.5586654879981299,
+          "width_difference": 0.9817046000000147,
+          "height_difference": 1.5557135999999971,
+          "confidence_difference": 0.003059386999999969,
+          "fp32_confidence": 0.681205332,
+          "fp16_confidence": 0.684264719,
+          "fp32_bbox_xyxy": [
+            73.6624756,
+            49.1344261,
+            88.9068756,
+            74.928421
+          ],
+          "fp16_bbox_xyxy": [
+            74.6289062,
+            49.6191406,
+            88.8916016,
+            73.8574219
+          ],
+          "fp32_index": 6,
+          "fp16_index": 6
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9934922589368911,
+          "center_distance": 0.05748053286724315,
+          "width_difference": 0.1276206999999978,
+          "height_difference": 0.009994000000006054,
+          "confidence_difference": 0.0030447239999999987,
+          "fp32_confidence": 0.669324338,
+          "fp16_confidence": 0.666279614,
+          "fp32_bbox_xyxy": [
+            26.0391846,
+            137.404404,
+            46.1703529,
+            185.089722
+          ],
+          "fp16_bbox_xyxy": [
+            25.9179688,
+            137.402344,
+            46.1767578,
+            185.097656
+          ],
+          "fp32_index": 7,
+          "fp16_index": 7
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9975979839204485,
+          "center_distance": 0.004940269147778954,
+          "width_difference": 0.0027236999999900036,
+          "height_difference": 0.06286660000000666,
+          "confidence_difference": 0.005758047000000044,
+          "fp32_confidence": 0.616211712,
+          "fp16_confidence": 0.610453665,
+          "fp32_bbox_xyxy": [
+            68.5186844,
+            85.7655716,
+            91.841156,
+            115.281563
+          ],
+          "fp16_bbox_xyxy": [
+            68.5205078,
+            85.8007812,
+            91.8457031,
+            115.253906
+          ],
+          "fp32_index": 8,
+          "fp16_index": 8
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9975942989594002,
+          "center_distance": 0.03928062968294769,
+          "width_difference": 0.02342318999999904,
+          "height_difference": 0.0025412000000102353,
+          "confidence_difference": 0.00419896799999997,
+          "fp32_confidence": 0.404010534,
+          "fp16_confidence": 0.399811566,
+          "fp32_bbox_xyxy": [
+            9.23109531,
+            96.3455276,
+            29.0709534,
+            158.496506
+          ],
+          "fp16_bbox_xyxy": [
+            9.22851562,
+            96.3085938,
+            29.0917969,
+            158.457031
+          ],
+          "fp32_index": 9,
+          "fp16_index": 9
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9974947860579052,
+          "center_distance": 0.010565638847237782,
+          "width_difference": 0.026505000000014434,
+          "height_difference": 0.00501999999998759,
+          "confidence_difference": 0.005241543000000015,
+          "fp32_confidence": 0.305166751,
+          "fp16_confidence": 0.299925208,
+          "fp32_bbox_xyxy": [
+            133.955673,
+            102.277054,
+            145.835205,
+            142.965668
+          ],
+          "fp16_bbox_xyxy": [
+            133.959961,
+            102.285156,
+            145.812988,
+            142.96875
+          ],
+          "fp32_index": 10,
+          "fp16_index": 10
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.998104435368094,
+          "center_distance": 0.01733415319803475,
+          "width_difference": 0.012024000000010915,
+          "height_difference": 0.011708764899999835,
+          "confidence_difference": 0.006821214999999992,
+          "fp32_confidence": 0.289809108,
+          "fp16_confidence": 0.282987893,
+          "fp32_bbox_xyxy": [
+            68.3676453,
+            0.0796914101,
+            89.4396057,
+            25.980072
+          ],
+          "fp16_bbox_xyxy": [
+            68.359375,
+            0.068359375,
+            89.4433594,
+            25.9570312
+          ],
+          "fp32_index": 11,
+          "fp16_index": 11
+        }
+      ]
+    },
+    {
+      "image_id": "0003_inclusion_217",
+      "relative_path": "0003_inclusion_217.jpg",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9957235139925924,
+      "minimum_iou": 0.994995917592506,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.002004012500000041,
+      "matches": [
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9964511103926788,
+          "center_distance": 0.08773951600421886,
+          "width_difference": 0.10502209999999934,
+          "height_difference": 0.02006499999998823,
+          "confidence_difference": 0.0009054540000000832,
+          "fp32_confidence": 0.820138395,
+          "fp16_confidence": 0.821043849,
+          "fp32_bbox_xyxy": [
+            58.4736061,
+            0.0,
+            108.988785,
+            198.886185
+          ],
+          "fp16_bbox_xyxy": [
+            58.6132812,
+            0.0,
+            109.023438,
+            198.90625
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.994995917592506,
+          "center_distance": 0.01823360431072826,
+          "width_difference": 0.003235999999986916,
+          "height_difference": 0.11670879999999784,
+          "confidence_difference": 0.0031025709999999984,
+          "fp32_confidence": 0.298942268,
+          "fp16_confidence": 0.295839697,
+          "fp32_bbox_xyxy": [
+            139.100433,
+            27.3516483,
+            156.457184,
+            53.9429665
+          ],
+          "fp16_bbox_xyxy": [
+            139.09668,
+            27.3925781,
+            156.450195,
+            53.8671875
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0004_patches_156",
+      "relative_path": "0004_patches_156.jpg",
+      "fp32_detection_count": 3,
+      "fp16_detection_count": 3,
+      "detection_count_difference": 0,
+      "matched_detection_count": 3,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9990641254107423,
+      "minimum_iou": 0.9988151229859915,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.00043875000000000625,
+      "matches": [
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.999166176508727,
+          "center_distance": 0.013370166705397868,
+          "width_difference": 0.008324599999994575,
+          "height_difference": 3.820000001297785e-05,
+          "confidence_difference": 0.00027173800000002135,
+          "fp32_confidence": 0.902338922,
+          "fp16_confidence": 0.90261066,
+          "fp32_bbox_xyxy": [
+            94.9126816,
+            57.9681091,
+            128.53717,
+            89.1497879
+          ],
+          "fp16_bbox_xyxy": [
+            94.921875,
+            57.96875,
+            128.554688,
+            89.1503906
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.9992110767375083,
+          "center_distance": 0.007925603100077679,
+          "width_difference": 0.016441000000014583,
+          "height_difference": 0.025268999999994435,
+          "confidence_difference": 0.00031948100000001034,
+          "fp32_confidence": 0.892616749,
+          "fp16_confidence": 0.89293623,
+          "fp32_bbox_xyxy": [
+            93.133812,
+            104.766632,
+            128.215027,
+            183.549957
+          ],
+          "fp16_bbox_xyxy": [
+            93.125,
+            104.746094,
+            128.222656,
+            183.554688
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.9988151229859915,
+          "center_distance": 0.018215005249774055,
+          "width_difference": 0.0020449999999812007,
+          "height_difference": 0.011351999999973827,
+          "confidence_difference": 0.0007250309999999871,
+          "fp32_confidence": 0.274405092,
+          "fp16_confidence": 0.275130123,
+          "fp32_bbox_xyxy": [
+            192.055695,
+            113.561707,
+            199.973572,
+            152.77887
+          ],
+          "fp16_bbox_xyxy": [
+            192.055664,
+            113.574219,
+            199.975586,
+            152.802734
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        }
+      ]
+    },
+    {
+      "image_id": "0005_patches_211",
+      "relative_path": "0005_patches_211.jpg",
+      "fp32_detection_count": 4,
+      "fp16_detection_count": 4,
+      "detection_count_difference": 0,
+      "matched_detection_count": 4,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9972301100248262,
+      "minimum_iou": 0.9941930894307149,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0016475695000000151,
+      "matches": [
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.9941930894307149,
+          "center_distance": 0.27305280249780356,
+          "width_difference": 0.4618686999999966,
+          "height_difference": 0.1357274000000075,
+          "confidence_difference": 0.0020257240000000065,
+          "fp32_confidence": 0.70940572,
+          "fp16_confidence": 0.711431444,
+          "fp32_bbox_xyxy": [
+            77.7387238,
+            25.7931519,
+            186.716217,
+            192.180862
+          ],
+          "fp16_bbox_xyxy": [
+            78.2421875,
+            25.7421875,
+            186.757812,
+            192.265625
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.998773378327759,
+          "center_distance": 0.016018534810478584,
+          "width_difference": 0.022401819999998906,
+          "height_difference": 0.009162899999999752,
+          "confidence_difference": 0.00012314300000004774,
+          "fp32_confidence": 0.690853477,
+          "fp16_confidence": 0.69097662,
+          "fp32_bbox_xyxy": [
+            1.19555473,
+            0.0,
+            53.3468628,
+            14.3365402
+          ],
+          "fp16_bbox_xyxy": [
+            1.19140625,
+            0.0,
+            53.3203125,
+            14.3457031
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.9984215053294373,
+          "center_distance": 0.0010343031377698418,
+          "width_difference": 0.010745483199997352,
+          "height_difference": 0.030778900000001386,
+          "confidence_difference": 0.0034446120000000136,
+          "fp32_confidence": 0.615335763,
+          "fp16_confidence": 0.618780375,
+          "fp32_bbox_xyxy": [
+            0.0144267082,
+            24.8974514,
+            23.9392281,
+            52.1030006
+          ],
+          "fp16_bbox_xyxy": [
+            0.009765625,
+            24.8828125,
+            23.9453125,
+            52.1191406
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 2,
+          "fp16_class_id": 2,
+          "class_match": true,
+          "iou": 0.9975324670113934,
+          "center_distance": 0.061685637381319776,
+          "width_difference": 0.0356446000000048,
+          "height_difference": 0.05252100000001292,
+          "confidence_difference": 0.0009967989999999927,
+          "fp32_confidence": 0.443567961,
+          "fp16_confidence": 0.44456476,
+          "fp32_bbox_xyxy": [
+            57.6356506,
+            0.0,
+            108.237701,
+            198.853729
+          ],
+          "fp16_bbox_xyxy": [
+            57.5976562,
+            0.0,
+            108.164062,
+            198.90625
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        }
+      ]
+    },
+    {
+      "image_id": "0006_pitted_surface_224",
+      "relative_path": "0006_pitted_surface_224.jpg",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9985703862248068,
+      "minimum_iou": 0.9982982301712,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0006617299999999715,
+      "matches": [
+        {
+          "fp32_class_id": 3,
+          "fp16_class_id": 3,
+          "class_match": true,
+          "iou": 0.9988425422784135,
+          "center_distance": 0.08546147008611443,
+          "width_difference": 0.032912850000002436,
+          "height_difference": 0.07220499999999674,
+          "confidence_difference": 0.00035899799999994375,
+          "fp32_confidence": 0.881257594,
+          "fp16_confidence": 0.881616592,
+          "fp32_bbox_xyxy": [
+            2.04704285,
+            0.0,
+            196.467255,
+            199.759705
+          ],
+          "fp16_bbox_xyxy": [
+            1.953125,
+            0.0,
+            196.40625,
+            199.6875
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9982982301712,
+          "center_distance": 0.022273911398751237,
+          "width_difference": 0.003539999999986776,
+          "height_difference": 0.02552799999998001,
+          "confidence_difference": 0.0009644619999999993,
+          "fp32_confidence": 0.299781591,
+          "fp16_confidence": 0.300746053,
+          "fp32_bbox_xyxy": [
+            190.991806,
+            130.718506,
+            199.969955,
+            168.349228
+          ],
+          "fp16_bbox_xyxy": [
+            190.991211,
+            130.683594,
+            199.96582,
+            168.339844
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0007_pitted_surface_231",
+      "relative_path": "0007_pitted_surface_231.jpg",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9950672576788109,
+      "minimum_iou": 0.9922443740392282,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0022342649999999853,
+      "matches": [
+        {
+          "fp32_class_id": 3,
+          "fp16_class_id": 3,
+          "class_match": true,
+          "iou": 0.9978901413183935,
+          "center_distance": 0.09839536802213023,
+          "width_difference": 0.21278078800000344,
+          "height_difference": 0.014045329999987644,
+          "confidence_difference": 0.002845793999999957,
+          "fp32_confidence": 0.371944278,
+          "fp16_confidence": 0.374790072,
+          "fp32_bbox_xyxy": [
+            0.342273712,
+            1.46144867,
+            109.461304,
+            199.912994
+          ],
+          "fp16_bbox_xyxy": [
+            0.3515625,
+            1.484375,
+            109.257812,
+            199.921875
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 3,
+          "fp16_class_id": 3,
+          "class_match": true,
+          "iou": 0.9922443740392282,
+          "center_distance": 0.6155612737829932,
+          "width_difference": 1.2328796000000182,
+          "height_difference": 0.0012202300000012656,
+          "confidence_difference": 0.0016227360000000135,
+          "fp32_confidence": 0.369119167,
+          "fp16_confidence": 0.367496431,
+          "fp32_bbox_xyxy": [
+            35.6039429,
+            4.45655823,
+            195.157135,
+            199.767838
+          ],
+          "fp16_bbox_xyxy": [
+            36.8359375,
+            4.453125,
+            195.15625,
+            199.765625
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0008_rolled-in_scale_146",
+      "relative_path": "0008_rolled-in_scale_146.jpg",
+      "fp32_detection_count": 4,
+      "fp16_detection_count": 4,
+      "detection_count_difference": 0,
+      "matched_detection_count": 4,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9987497812322206,
+      "minimum_iou": 0.9982491464683914,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0032274125000000126,
+      "matches": [
+        {
+          "fp32_class_id": 4,
+          "fp16_class_id": 4,
+          "class_match": true,
+          "iou": 0.9989449821952027,
+          "center_distance": 0.01770951771505426,
+          "width_difference": 0.010528699999980518,
+          "height_difference": 0.03309432000000356,
+          "confidence_difference": 0.0021140570000000025,
+          "fp32_confidence": 0.809562445,
+          "fp16_confidence": 0.811676502,
+          "fp32_bbox_xyxy": [
+            89.6499481,
+            9.46839333,
+            137.336258,
+            73.0561752
+          ],
+          "fp16_bbox_xyxy": [
+            89.6679688,
+            9.47265625,
+            137.34375,
+            73.0273438
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 4,
+          "fp16_class_id": 4,
+          "class_match": true,
+          "iou": 0.9988745371013625,
+          "center_distance": 0.0118977726813856,
+          "width_difference": 0.03941447999999781,
+          "height_difference": 0.003190000000003579,
+          "confidence_difference": 0.0008928180000000174,
+          "fp32_confidence": 0.377515912,
+          "fp16_confidence": 0.376623094,
+          "fp32_bbox_xyxy": [
+            0.88786602,
+            117.376785,
+            45.2046242,
+            181.846252
+          ],
+          "fp16_bbox_xyxy": [
+            0.8984375,
+            117.382812,
+            45.1757812,
+            181.855469
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 4,
+          "fp16_class_id": 4,
+          "class_match": true,
+          "iou": 0.9989304591639254,
+          "center_distance": 0.039506406972191266,
+          "width_difference": 0.026039699999998334,
+          "height_difference": 0.013208340000005592,
+          "confidence_difference": 0.0029695630000000084,
+          "fp32_confidence": 0.285957456,
+          "fp16_confidence": 0.282987893,
+          "fp32_bbox_xyxy": [
+            89.7150803,
+            8.05262566,
+            198.139557,
+            73.4369278
+          ],
+          "fp16_bbox_xyxy": [
+            89.765625,
+            8.046875,
+            198.164062,
+            73.4179688
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 4,
+          "fp16_class_id": 4,
+          "class_match": true,
+          "iou": 0.9982491464683914,
+          "center_distance": 0.01833848282301941,
+          "width_difference": 0.006918999999996345,
+          "height_difference": 0.04257200000000694,
+          "confidence_difference": 0.006933212000000022,
+          "fp32_confidence": 0.269757688,
+          "fp16_confidence": 0.2766909,
+          "fp32_bbox_xyxy": [
+            108.45298,
+            128.726074,
+            141.873795,
+            187.921783
+          ],
+          "fp16_bbox_xyxy": [
+            108.466797,
+            128.710938,
+            141.894531,
+            187.949219
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        }
+      ]
+    },
+    {
+      "image_id": "0009_rolled-in_scale_262",
+      "relative_path": "0009_rolled-in_scale_262.jpg",
+      "fp32_detection_count": 1,
+      "fp16_detection_count": 1,
+      "detection_count_difference": 0,
+      "matched_detection_count": 1,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9960857580993956,
+      "minimum_iou": 0.9960857580993956,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.000609367999999999,
+      "matches": [
+        {
+          "fp32_class_id": 4,
+          "fp16_class_id": 4,
+          "class_match": true,
+          "iou": 0.9960857580993956,
+          "center_distance": 0.08370724528975303,
+          "width_difference": 0.06563940000000201,
+          "height_difference": 0.10694975194999756,
+          "confidence_difference": 0.000609367999999999,
+          "fp32_confidence": 0.269551963,
+          "fp16_confidence": 0.268942595,
+          "fp32_bbox_xyxy": [
+            10.5695915,
+            0.00564575195,
+            58.0625458,
+            103.609634
+          ],
+          "fp16_bbox_xyxy": [
+            10.6054688,
+            0.0,
+            58.1640625,
+            103.710938
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        }
+      ]
+    },
+    {
+      "image_id": "0010_scratches_126",
+      "relative_path": "0010_scratches_126.jpg",
+      "fp32_detection_count": 4,
+      "fp16_detection_count": 4,
+      "detection_count_difference": 0,
+      "matched_detection_count": 4,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9980876305637022,
+      "minimum_iou": 0.9968885160318165,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0009324775000000424,
+      "matches": [
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9974328675417096,
+          "center_distance": 0.18168382823862758,
+          "width_difference": 0.045936300000008146,
+          "height_difference": 0.358009299999992,
+          "confidence_difference": 0.0016592740000000994,
+          "fp32_confidence": 0.740329623,
+          "fp16_confidence": 0.738670349,
+          "fp32_bbox_xyxy": [
+            68.5006332,
+            11.5951157,
+            161.51532,
+            200.0
+          ],
+          "fp16_bbox_xyxy": [
+            68.5546875,
+            11.953125,
+            161.523438,
+            200.0
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.9968885160318165,
+          "center_distance": 0.010051416780676208,
+          "width_difference": 0.04401613800000348,
+          "height_difference": 0.16373120000000796,
+          "confidence_difference": 0.0002059340000000187,
+          "fp32_confidence": 0.548879564,
+          "fp16_confidence": 0.54867363,
+          "fp32_bbox_xyxy": [
+            0.878286362,
+            39.1077003,
+            101.937927,
+            100.267525
+          ],
+          "fp16_bbox_xyxy": [
+            0.8984375,
+            39.1796875,
+            101.914062,
+            100.175781
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9989336456197028,
+          "center_distance": 0.006927530529884518,
+          "width_difference": 0.02696299999996654,
+          "height_difference": 0.004577640000007932,
+          "confidence_difference": 0.0010371210000000297,
+          "fp32_confidence": 0.424329519,
+          "fp16_confidence": 0.42536664,
+          "fp32_bbox_xyxy": [
+            174.101074,
+            6.08917236,
+            199.958115,
+            200.0
+          ],
+          "fp16_bbox_xyxy": [
+            174.121094,
+            6.09375,
+            199.951172,
+            200.0
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.9990954930615801,
+          "center_distance": 0.003819018022999709,
+          "width_difference": 0.010768999999996254,
+          "height_difference": 0.007636999999999006,
+          "confidence_difference": 0.0008275810000000217,
+          "fp32_confidence": 0.295853943,
+          "fp16_confidence": 0.295026362,
+          "fp32_bbox_xyxy": [
+            38.3050995,
+            0.0,
+            55.9623528,
+            25.9060745
+          ],
+          "fp16_bbox_xyxy": [
+            38.3105469,
+            0.0,
+            55.9570312,
+            25.8984375
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        }
+      ]
+    },
+    {
+      "image_id": "0011_scratches_246",
+      "relative_path": "0011_scratches_246.jpg",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9966603615852307,
+      "minimum_iou": 0.9947867683884892,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0005686880000000394,
+      "matches": [
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.9985339547819723,
+          "center_distance": 0.027313695593073145,
+          "width_difference": 0.08008594000000357,
+          "height_difference": 0.015762999999992644,
+          "confidence_difference": 0.0009644030000000026,
+          "fp32_confidence": 0.637995183,
+          "fp16_confidence": 0.63703078,
+          "fp32_bbox_xyxy": [
+            4.54242706,
+            154.993408,
+            170.638138,
+            170.983505
+          ],
+          "fp16_bbox_xyxy": [
+            4.609375,
+            154.990234,
+            170.625,
+            170.996094
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.9947867683884892,
+          "center_distance": 0.22641516249131508,
+          "width_difference": 0.24485749999999484,
+          "height_difference": 0.030536700000013184,
+          "confidence_difference": 0.0001729730000000762,
+          "fp32_confidence": 0.568109751,
+          "fp16_confidence": 0.567936778,
+          "fp32_bbox_xyxy": [
+            15.7279205,
+            52.609272,
+            187.847778,
+            69.4488907
+          ],
+          "fp16_bbox_xyxy": [
+            15.625,
+            52.6464844,
+            187.5,
+            69.4555664
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0012_derived_319x201_crazing_10",
+      "relative_path": "0012_derived_319x201_crazing_10.bmp",
+      "fp32_detection_count": 2,
+      "fp16_detection_count": 2,
+      "detection_count_difference": 0,
+      "matched_detection_count": 2,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9979494174188985,
+      "minimum_iou": 0.997474517823773,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0015785245000000114,
+      "matches": [
+        {
+          "fp32_class_id": 0,
+          "fp16_class_id": 0,
+          "class_match": true,
+          "iou": 0.997474517823773,
+          "center_distance": 0.11740629535443256,
+          "width_difference": 0.26546909999999,
+          "height_difference": 0.09297899999998549,
+          "confidence_difference": 0.0012587900000000096,
+          "fp32_confidence": 0.500282228,
+          "fp16_confidence": 0.499023438,
+          "fp32_bbox_xyxy": [
+            59.7970619,
+            109.863579,
+            246.166626,
+            193.975388
+          ],
+          "fp16_bbox_xyxy": [
+            59.8125,
+            109.812012,
+            245.916595,
+            194.0168
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 0,
+          "fp16_class_id": 0,
+          "class_match": true,
+          "iou": 0.9984243170140241,
+          "center_distance": 0.05334289076863857,
+          "width_difference": 0.05247500000001537,
+          "height_difference": 0.11252098999999305,
+          "confidence_difference": 0.0018982590000000132,
+          "fp32_confidence": 0.463885695,
+          "fp16_confidence": 0.461987436,
+          "fp32_bbox_xyxy": [
+            165.80455,
+            7.06128407,
+            259.25177,
+            117.951538
+          ],
+          "fp16_bbox_xyxy": [
+            165.855072,
+            7.16503906,
+            259.249817,
+            117.942772
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        }
+      ]
+    },
+    {
+      "image_id": "0013_derived_201x319_inclusion_18",
+      "relative_path": "0013_derived_201x319_inclusion_18.bmp",
+      "fp32_detection_count": 8,
+      "fp16_detection_count": 8,
+      "detection_count_difference": 0,
+      "matched_detection_count": 8,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.998489051617947,
+      "minimum_iou": 0.997691889869585,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.004126232124999997,
+      "matches": [
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9978130439301128,
+          "center_distance": 0.026738488519585484,
+          "width_difference": 0.01106300000000715,
+          "height_difference": 0.016922500000006835,
+          "confidence_difference": 0.004163325000000051,
+          "fp32_confidence": 0.797269046,
+          "fp16_confidence": 0.793105721,
+          "fp32_bbox_xyxy": [
+            147.355667,
+            78.6791382,
+            162.779358,
+            114.783363
+          ],
+          "fp16_bbox_xyxy": [
+            147.358368,
+            78.6440887,
+            162.770996,
+            114.765236
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9991356801663168,
+          "center_distance": 0.01690350665541669,
+          "width_difference": 0.00917799999999147,
+          "height_difference": 0.023549000000002707,
+          "confidence_difference": 0.0006290669999999832,
+          "fp32_confidence": 0.792476654,
+          "fp16_confidence": 0.793105721,
+          "fp32_bbox_xyxy": [
+            114.39183,
+            58.5657082,
+            146.703201,
+            215.799194
+          ],
+          "fp16_bbox_xyxy": [
+            114.375832,
+            58.5664062,
+            146.696381,
+            215.823441
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9985761238735369,
+          "center_distance": 0.020460256336000033,
+          "width_difference": 0.03763101999999918,
+          "height_difference": 0.029526099999998223,
+          "confidence_difference": 0.00014334900000001483,
+          "fp32_confidence": 0.786109626,
+          "fp16_confidence": 0.785966277,
+          "fp32_bbox_xyxy": [
+            7.13779593,
+            59.9970398,
+            40.2073174,
+            162.645645
+          ],
+          "fp16_bbox_xyxy": [
+            7.13388681,
+            59.9682617,
+            40.2410393,
+            162.646393
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9981516070134903,
+          "center_distance": 0.015551961548318982,
+          "width_difference": 0.014984000000026754,
+          "height_difference": 0.04034399999997618,
+          "confidence_difference": 0.001178801000000007,
+          "fp32_confidence": 0.771350563,
+          "fp16_confidence": 0.772529364,
+          "fp32_bbox_xyxy": [
+            158.651001,
+            167.389145,
+            182.972595,
+            234.484909
+          ],
+          "fp16_bbox_xyxy": [
+            158.643311,
+            167.412689,
+            182.949921,
+            234.468109
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9990781602766519,
+          "center_distance": 0.030690236921377016,
+          "width_difference": 0.0051717999999993935,
+          "height_difference": 0.06990000000001828,
+          "confidence_difference": 0.005448102999999982,
+          "fp32_confidence": 0.720200121,
+          "fp16_confidence": 0.725648224,
+          "fp32_bbox_xyxy": [
+            10.6346464,
+            151.715225,
+            47.0179672,
+            241.270615
+          ],
+          "fp16_bbox_xyxy": [
+            10.638525,
+            151.649612,
+            47.016674,
+            241.274902
+          ],
+          "fp32_index": 4,
+          "fp16_index": 4
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.997691889869585,
+          "center_distance": 0.016112362229725067,
+          "width_difference": 0.05081930000000057,
+          "height_difference": 0.004455999999976257,
+          "confidence_difference": 0.002797543999999985,
+          "fp32_confidence": 0.694810927,
+          "fp16_confidence": 0.697608471,
+          "fp32_bbox_xyxy": [
+            67.7276382,
+            144.90947,
+            91.2825089,
+            173.541809
+          ],
+          "fp16_bbox_xyxy": [
+            67.6862564,
+            144.905121,
+            91.2919464,
+            173.541916
+          ],
+          "fp32_index": 5,
+          "fp16_index": 5
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9982444222993883,
+          "center_distance": 0.01590749435013185,
+          "width_difference": 0.020934999999980164,
+          "height_difference": 0.013152999999988424,
+          "confidence_difference": 0.007236897999999992,
+          "fp32_confidence": 0.351459205,
+          "fp16_confidence": 0.344222307,
+          "fp32_bbox_xyxy": [
+            154.931274,
+            225.691757,
+            178.033173,
+            259.24527
+          ],
+          "fp16_bbox_xyxy": [
+            154.905029,
+            225.683151,
+            178.027863,
+            259.249817
+          ],
+          "fp32_index": 6,
+          "fp16_index": 6
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.999221485514494,
+          "center_distance": 0.009171049658555412,
+          "width_difference": 0.0011520000000189157,
+          "height_difference": 0.017089999999996053,
+          "confidence_difference": 0.011412769999999961,
+          "fp32_confidence": 0.328838557,
+          "fp16_confidence": 0.317425787,
+          "fp32_bbox_xyxy": [
+            67.8215561,
+            212.114853,
+            85.7197342,
+            255.978867
+          ],
+          "fp16_bbox_xyxy": [
+            67.8186493,
+            212.131882,
+            85.7156754,
+            255.978806
+          ],
+          "fp32_index": 7,
+          "fp16_index": 7
+        }
+      ]
+    },
+    {
+      "image_id": "0014_derived_321x199_pitted_surface_224",
+      "relative_path": "0014_derived_321x199_pitted_surface_224.bmp",
+      "fp32_detection_count": 1,
+      "fp16_detection_count": 1,
+      "detection_count_difference": 0,
+      "matched_detection_count": 1,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.999721632360748,
+      "minimum_iou": 0.999721632360748,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 7.569799999995741e-05,
+      "matches": [
+        {
+          "fp32_class_id": 3,
+          "fp16_class_id": 3,
+          "class_match": true,
+          "iou": 0.999721632360748,
+          "center_distance": 0.020018309849328078,
+          "width_difference": 0.01037220000000616,
+          "height_difference": 0.009235759999995707,
+          "confidence_difference": 7.569799999995741e-05,
+          "fp32_confidence": 0.929872751,
+          "fp16_confidence": 0.929948449,
+          "fp32_bbox_xyxy": [
+            63.7476311,
+            2.33331871,
+            248.395706,
+            195.694901
+          ],
+          "fp16_bbox_xyxy": [
+            63.7611313,
+            2.31972647,
+            248.398834,
+            195.672073
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        }
+      ]
+    },
+    {
+      "image_id": "0015_derived_199x321_scratches_126",
+      "relative_path": "0015_derived_199x321_scratches_126.bmp",
+      "fp32_detection_count": 5,
+      "fp16_detection_count": 5,
+      "detection_count_difference": 0,
+      "matched_detection_count": 5,
+      "unmatched_fp32_count": 0,
+      "unmatched_fp16_count": 0,
+      "class_mismatch_count": 0,
+      "class_consistent": true,
+      "mean_iou": 0.9983088447987546,
+      "minimum_iou": 0.9972915027511803,
+      "iou_below_0_5_count": 0,
+      "confidence_difference_mae": 0.0020834145999999885,
+      "matches": [
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9972915027511803,
+          "center_distance": 0.07538458773267136,
+          "width_difference": 0.25335730000000467,
+          "height_difference": 0.05634390000000167,
+          "confidence_difference": 0.001033842000000007,
+          "fp32_confidence": 0.75377351,
+          "fp16_confidence": 0.752739668,
+          "fp32_bbox_xyxy": [
+            59.727272,
+            75.1129608,
+            165.021469,
+            257.499969
+          ],
+          "fp16_bbox_xyxy": [
+            59.5291977,
+            75.1089859,
+            165.076752,
+            257.552338
+          ],
+          "fp32_index": 0,
+          "fp16_index": 0
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9976919173594568,
+          "center_distance": 0.07567973883332693,
+          "width_difference": 0.01196675999999286,
+          "height_difference": 0.1417690000000107,
+          "confidence_difference": 0.002914250000000007,
+          "fp32_confidence": 0.60497582,
+          "fp16_confidence": 0.60206157,
+          "fp32_bbox_xyxy": [
+            2.1734848,
+            139.952194,
+            50.6720161,
+            257.552216
+          ],
+          "fp16_bbox_xyxy": [
+            2.19433594,
+            139.810547,
+            50.704834,
+            257.552338
+          ],
+          "fp32_index": 1,
+          "fp16_index": 1
+        },
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.999450641842429,
+          "center_distance": 0.007210731779625688,
+          "width_difference": 0.02964504599998463,
+          "height_difference": 0.03141019999998207,
+          "confidence_difference": 0.0005599849999999851,
+          "fp32_confidence": 0.5384233,
+          "fp16_confidence": 0.538983285,
+          "fp32_bbox_xyxy": [
+            0.959011734,
+            75.0994949,
+            180.676834,
+            156.760071
+          ],
+          "fp16_bbox_xyxy": [
+            0.940429688,
+            75.0776367,
+            180.687897,
+            156.769623
+          ],
+          "fp32_index": 2,
+          "fp16_index": 2
+        },
+        {
+          "fp32_class_id": 5,
+          "fp16_class_id": 5,
+          "class_match": true,
+          "iou": 0.9990521291590784,
+          "center_distance": 0.05699234155862543,
+          "width_difference": 0.13720066999997016,
+          "height_difference": 0.03484329999997726,
+          "confidence_difference": 0.002727627999999982,
+          "fp32_confidence": 0.447631538,
+          "fp16_confidence": 0.450359166,
+          "fp32_bbox_xyxy": [
+            1.51720822,
+            73.2243576,
+            181.629028,
+            259.676727
+          ],
+          "fp16_bbox_xyxy": [
+            1.50468755,
+            73.1967773,
+            181.753708,
+            259.68399
+          ],
+          "fp32_index": 3,
+          "fp16_index": 3
+        },
+        {
+          "fp32_class_id": 1,
+          "fp16_class_id": 1,
+          "class_match": true,
+          "iou": 0.9980580328816284,
+          "center_distance": 0.04237503069023618,
+          "width_difference": 0.01077200000000289,
+          "height_difference": 0.14962000000002718,
+          "confidence_difference": 0.0031813679999999622,
+          "fp32_confidence": 0.342132479,
+          "fp16_confidence": 0.338951111,
+          "fp32_bbox_xyxy": [
+            170.051331,
+            64.815506,
+            197.869431,
+            257.548004
+          ],
+          "fp16_bbox_xyxy": [
+            170.029694,
+            64.701561,
+            197.858566,
+            257.583679
+          ],
+          "fp32_index": 4,
+          "fp16_index": 4
+        }
+      ]
+    }
+  ]
+}

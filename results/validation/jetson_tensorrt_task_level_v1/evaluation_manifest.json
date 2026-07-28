@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k5_4_task_level_evaluation_manifest",
+  "git_commit": "b819993185e4a48c7af87b53787c08bb39194627",
+  "evaluation_scope": "independent final-detection comparison; no raw tensor equivalence claim",
+  "engines": {
+    "TRT FP32 noTF32": {
+      "engine_path": "/home/orin/edge-ai-local-models/stage_k/strict_fp32_notf32_v1/yolov8n_neudet_trt10.3_strict_fp32_notf32_b1_640.engine",
+      "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+      "manifest_path": "results/build/tensorrt/strict_fp32_notf32_investigation_v1/manifest.json",
+      "manifest_sha256": "086f8e31542f9fbdb88027d3578b23268135d848c165772681dd818c7754ff98",
+      "precision_mode": "strict FP32",
+      "fp16_enabled": false,
+      "tf32_enabled": false,
+      "int8_enabled": false,
+      "dla_enabled": false
+    },
+    "TRT FP16": {
+      "engine_path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+      "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+      "manifest_path": "models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+      "manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+      "precision_mode": "FP32+FP16 mixed precision",
+      "fp16_builder_mode": true,
+      "tf32_flag": "not recorded in original Stage K build command",
+      "int8_enabled": false,
+      "dla_enabled": false
+    }
+  },
+  "common_model_contract": {
+    "onnx": "models/onnx/yolov8n_neudet_frozen.onnx",
+    "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract": "configs/model_contracts/yolov8n_neudet_frozen.yaml",
+    "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "input": {"name": "images", "dtype": "FP32", "layout": "NCHW", "shape": [1, 3, 640, 640], "static": true},
+    "output": {"name": "output0", "dtype": "FP32", "layout": "BCN", "shape": [1, 10, 8400], "static": true}
+  },
+  "corpus": {
+    "level_b_reference_bundle": "/home/orin/edge-ai-local-evidence/stage_k/reference/stage_k_level_b_reference_v1",
+    "level_b_reference_bundle_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+    "input_manifest": "/home/orin/edge-ai-local-evidence/stage_k/reference/stage_k_level_b_reference_v1/input_manifest.json",
+    "input_manifest_sha256": "d81d6bb57346231f3ea4cd2dcf0f5285b5993b4b16953641c45f85359b9d0fbf",
+    "source_corpus": "/home/orin/edge-ai-local-evidence/stage_j/j4_corpus",
+    "source_corpus_manifest": "/home/orin/edge-ai-local-evidence/stage_j/j4_corpus/prepared_corpus_manifest.json",
+    "source_corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+    "detection_comparison_images": 16,
+    "performance_frames_each_backend": 550,
+    "performance_warmup_frames": 50,
+    "performance_measured_frames": 500,
+    "performance_corpus": "/home/orin/edge-ai-local-evidence/stage_k/task_level_v1/perf_corpus_550",
+    "performance_corpus_construction": "550 hard links in sorted order, repeating the same frozen 16 source images; source bytes unchanged"
+  },
+  "preprocessing": {
+    "implementation": "existing application Preprocessor/LetterBox",
+    "source_color": "BGR",
+    "resize": "aspect-preserving LetterBox to 640x640",
+    "interpolation": "INTER_LINEAR",
+    "padding_value": 114,
+    "padding_split": "Python-compatible round(value - 0.1) / round(value + 0.1)",
+    "tensor_color_order": "RGB",
+    "tensor_layout": "NCHW",
+    "normalization": "uint8 / 255.0",
+    "input_tensor_contract": "FP32 [1,3,640,640]"
+  },
+  "postprocessing": {
+    "conf_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "max_wh": 7680.0,
+    "agnostic": false,
+    "multi_label": false,
+    "implementation": "existing application postprocessor"
+  },
+  "runtime": {
+    "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "power_mode": "MAXN_SUPER",
+    "l4t": "R36.5.0",
+    "architecture": "aarch64",
+    "tensorrt": "10.3.0.30",
+    "cuda": "12.6.68",
+    "opencv_num_threads": 1,
+    "jetson_clocks": "not verified; command requires root"
+  },
+  "runtime_artifacts": {
+    "production_application_binary_sha256": "97b17a66c093a4db5a7a983d751513547587c609e6562e0e42c077ee1f1c8ad7",
+    "independent_profile_runner_source": "tools/validation/task_level_profile_runner.cpp",
+    "independent_profile_runner_binary_sha256": "debfb86c63abfe463505639960d871fc2e57b8b28370e7b917996bf15d2081db"
+  },
+  "raw_results": {
+    "fp32_detection_source": {"path": "/home/orin/edge-ai-local-evidence/stage_k/task_level_v1/results_fp32.json", "sha256": "a0ddb91d6b8057d5f51e6ce5a7bcddb87090c8af60380a8809f435e27160c727"},
+    "fp16_detection_source": {"path": "/home/orin/edge-ai-local-evidence/stage_k/task_level_v1/results_fp16.json", "sha256": "c4a1bfea71a537d8d787236e91d7c8668874d00fd6ee7fa291b078491f5b0c93"},
+    "fp32_profile_source": {"path": "/home/orin/edge-ai-local-evidence/stage_k/task_level_v1/profile_fp32.json", "sha256": "3fabc562f7ac1ab31d4a17b61a4cde0c2f662d495b97991c7082a805cfb6b92c"},
+    "fp16_profile_source": {"path": "/home/orin/edge-ai-local-evidence/stage_k/task_level_v1/profile_fp16.json", "sha256": "96fa8b05a543f18ab14493174f1383530d1ebc4efdb4bf6665cccaca384d6635"}
+  },
+  "independent_script_sha256": {
+    "task_level_detection_compare.py": "b9b4c616d049680eb5b54a6331b1e15398fa34a4f3cf5dbe47a761523519b561",
+    "task_level_dataset_metrics.py": "c6cdb8916d460afafad550765f9ba488194cb1787499b1382bb4084fd2b1223d",
+    "task_level_performance_analyze.py": "6157af8d3010f879203c25ac495ab2eebf628c310a5e19615bc9f7a815c7ca4c"
+  }
+}
