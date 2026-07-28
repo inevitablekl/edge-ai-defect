@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_protocol_metadata",
+  "protocol_path": "docs/personal/STAGE_K_TASK_EVALUATION_PROTOCOL.md",
+  "protocol_sha256": "b1c2db6ecfc2175beff1e14e7ff2472b75c213a7b37800acda4f3cd8ea374e97",
+  "split_generator_path": "tools/validation/generate_stage_k_task_split.py",
+  "split_generator_sha256": "8418a37ce63339e9c51bbf0e69a5b8439f63476e45a18e639cca7cb2940d590b",
+  "split_metadata_path": "results/validation/stage_k_task_eval_v2/split/split_metadata.json",
+  "split_metadata_sha256": "ad1bf88319abd7293e6a920b49780e114df9cadc383e7d3a74de45da921cf889",
+  "target_split": "test",
+  "target_image_count": 180,
+  "inference_executed": false,
+  "engines_modified": false,
+  "onnx_modified": false,
+  "runtime_modified": false,
+  "comparator_modified": false,
+  "k5_gate_modified": false
+}

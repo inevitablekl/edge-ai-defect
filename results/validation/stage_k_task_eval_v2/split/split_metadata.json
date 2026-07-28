@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_split_metadata",
+  "dataset_root": "data/raw/NEU-DET",
+  "random_seed": 42,
+  "split_ratio": [
+    0.7,
+    0.2,
+    0.1
+  ],
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "counts": {
+    "train": 1260,
+    "val": 360,
+    "test": 180
+  },
+  "bbox_counts": {
+    "train": 2916,
+    "val": 828,
+    "test": 442
+  },
+  "class_image_distributions": {
+    "train": {
+      "crazing": 204,
+      "inclusion": 261,
+      "patches": 251,
+      "pitted_surface": 218,
+      "rolled-in_scale": 208,
+      "scratches": 205
+    },
+    "val": {
+      "crazing": 66,
+      "inclusion": 77,
+      "patches": 63,
+      "pitted_surface": 59,
+      "rolled-in_scale": 57,
+      "scratches": 61
+    },
+    "test": {
+      "crazing": 30,
+      "inclusion": 44,
+      "patches": 28,
+      "pitted_surface": 24,
+      "rolled-in_scale": 35,
+      "scratches": 34
+    }
+  },
+  "class_bbox_distributions": {
+    "train": {
+      "crazing": 469,
+      "inclusion": 683,
+      "patches": 646,
+      "pitted_surface": 312,
+      "rolled-in_scale": 429,
+      "scratches": 377
+    },
+    "val": {
+      "crazing": 145,
+      "inclusion": 214,
+      "patches": 154,
+      "pitted_surface": 87,
+      "rolled-in_scale": 124,
+      "scratches": 104
+    },
+    "test": {
+      "crazing": 74,
+      "inclusion": 113,
+      "patches": 80,
+      "pitted_surface": 33,
+      "rolled-in_scale": 75,
+      "scratches": 67
+    }
+  },
+  "deduplication": {
+    "raw_bbox_count": 4189,
+    "duplicate_bbox_count_removed": 3,
+    "deduplicated_bbox_count": 4186
+  },
+  "manifest_sha256": {
+    "train": "82687d1b969ac7b9af2a759ea0c39fbf68f71161a13765f3ceb27443c67c8591",
+    "val": "d7de5f3ee47353144ac8a11706cd8cfcfe89285fe08ab01b7ee60f0a2d757ebf",
+    "test": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8"
+  },
+  "reproducibility_check": {
+    "same_seed": 42,
+    "repeat_manifest_sha256": {
+      "train": "82687d1b969ac7b9af2a759ea0c39fbf68f71161a13765f3ceb27443c67c8591",
+      "val": "d7de5f3ee47353144ac8a11706cd8cfcfe89285fe08ab01b7ee60f0a2d757ebf",
+      "test": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8"
+    },
+    "all_manifest_hashes_match": true
+  },
+  "overlap_check": {
+    "pairs": {
+      "train_vs_val": [],
+      "train_vs_test": [],
+      "val_vs_test": []
+    },
+    "no_overlap": true
+  }
+}
