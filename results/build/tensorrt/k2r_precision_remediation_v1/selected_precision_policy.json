@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k2r_selected_precision_policy",
+  "selected": false,
+  "candidate": null,
+  "reason": "C1 and C2 both failed the unchanged 16/16 TensorRT Level B gate; D064 prohibits expanding FP32 scope beyond C2.",
+  "global_mode": "--fp16",
+  "tf32": "--noTF32",
+  "constraints": "--precisionConstraints=obey",
+  "layer_policy": null
+}

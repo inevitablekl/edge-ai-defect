@@ -1,0 +1,56 @@
+K2R precision layer mapping
+===========================
+
+Frozen ONNX output trace:
+  output0 = Concat_3(Mul_2(BBox decode), Sigmoid(Concat_1(classification)))
+  output0 shape = [1,10,8400], BCN
+  channels 0..3 = BBox path; channels 4..9 = classification path.
+
+Evidence:
+  TensorRT 10.3 verbose parser log:
+  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/cli/c0_build.stdout.txt
+  BBox terminal branches and reshape/concat: lines 1827-2072
+  classification branch and concat: lines 2073-2319
+  DFL: lines 2324-2371
+  decode: lines 2436-2599
+  classification sigmoid/shared output: lines 2600-2610
+
+C1 exact layerPrecisions and layerOutputTypes (same set):
+  /model.22/cv2.0/cv2.0.2/Conv:fp32
+  /model.22/cv2.1/cv2.1.2/Conv:fp32
+  /model.22/cv2.2/cv2.2.2/Conv:fp32
+  /model.22/Reshape:fp32
+  /model.22/Reshape_1:fp32
+  /model.22/Reshape_2:fp32
+  /model.22/Concat:fp32
+  /model.22/dfl/Reshape:fp32
+  /model.22/dfl/Transpose:fp32
+  /model.22/dfl/Softmax:fp32
+  /model.22/dfl/conv/Conv:fp32
+  /model.22/dfl/Reshape_1:fp32
+  /model.22/Slice:fp32
+  /model.22/Slice_1:fp32
+  /model.22/Sub:fp32
+  /model.22/Add_1:fp32
+  /model.22/Add_2:fp32
+  /model.22/Div_1:fp32
+  /model.22/Sub_1:fp32
+  /model.22/Concat_2:fp32
+  /model.22/Mul_2:fp32
+
+C2 is authorized only after a C1 Level B FAIL. It adds all front-end
+cv2.0/cv2.1/cv2.2 branch Conv/Sigmoid/Mul nodes listed in the JSON mapping.
+No Backbone, Neck, classification, or shared Concat_3 node is constrained.
+
+TensorRT 10.3 CLI semantics observed in the frozen help:
+  precisionConstraints=obey means meet layerPrecisions/layerOutputTypes or fail.
+  layerPrecisions is comma-separated layerName:precision; no wildcard is used.
+  layerOutputTypes is comma-separated layerName:type; multi-output types use +.
+  The actual policy names contain slash and dot characters only; the complete
+  CLI value is shell-quoted as one argument. The help documents escaped
+  single-quote wrapping for input names, but no layer-name-specific quoting
+  beyond the exact grammar; no layer policy name requires such quoting.
+
+The mapping is based on actual TensorRT parser registration, input/output
+tensors and shapes, not substring guesses. The full machine-readable mapping
+is precision_layer_mapping.json.

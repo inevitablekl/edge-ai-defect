@@ -1415,3 +1415,32 @@ unchanged `0.02` limit. Formal result: `TENSORRT_LEVEL_B_FAIL`.
 
 TensorRT Level C, boundary investigation, benchmark, stability, Pipeline,
 and K6 were not executed.
+
+## Stage K K2R Sensitivity-Aware TensorRT Precision Remediation
+
+Updated 2026-07-28. D064 was accepted at commit
+`ac53fe71006445a826730d520233a00873639d3c` for a bounded numerical
+remediation. The original Engine, original K5.3 `FAIL`, ONNX, ModelContract,
+Reference Bundle, comparator, tolerances, and historical Evidence remain
+frozen.
+
+C0 disabled TF32 with `--noTF32` and produced a valid local diagnostic Engine;
+its unchanged TensorRT Level B comparison was `1/16 PASS`. This did not
+support TF32 as the dominant cause. C1 constrained the exact traced terminal
+BBox, DFL, and decode path to FP32 while retaining global `--fp16`; it built,
+loaded, and compared as `1/16 PASS`. C2 was then authorized and constrained
+the maximum D064 scope: 39 exact traced BBox front-end/DFL/decode nodes, still
+excluding Backbone, Neck, and classification. It built and loaded, but its
+Level B comparison was `0/16 PASS`.
+
+Current verdict: `K2R_COMPLETE_LEVEL_B_FAIL`. No candidate is selected. The
+tracked summary is
+`results/build/tensorrt/k2r_precision_remediation_v1/`; raw tensors, logs,
+layer dumps, and engines remain local-only. Because no candidate passed the
+unchanged 16/16 gate, no K4 regression or new formal K5.3 was run, and K5.4
+remains `NOT READY`.
+
+The D064 boundary is closed after C2. TensorRT Level C, K6, benchmark,
+stability, Pipeline, GPU preprocessing/NMS, INT8, DLA, ONNX rewrite, C++
+Builder, Polygraphy, package changes, push, merge, and tag remain unexecuted
+and unauthorized.

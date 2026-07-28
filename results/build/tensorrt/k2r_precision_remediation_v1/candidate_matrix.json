@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k2r_candidate_matrix",
+  "policy": "tensorrt_fp16",
+  "entry_count": 16,
+  "gate_limits": {
+    "score_mae": 0.002,
+    "score_p99": 0.005,
+    "score_max_abs": 0.02,
+    "bbox_mae": 0.5,
+    "bbox_p99": 1.5,
+    "bbox_max_abs": 4.0
+  },
+  "candidates": [
+    {
+      "id": "original",
+      "scope": "frozen original Engine; historical baseline",
+      "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+      "passed": 1,
+      "failed": 15,
+      "status": "FAIL",
+      "bbox": {"mae": 0.2131305621777262, "p99": 1.9310302734375, "max_abs": 23.29144287109375},
+      "score": {"mae": 1.3991094652622464e-05, "p99": 1.3113021850585938e-05, "max_abs": 0.021184921264648438}
+    },
+    {
+      "id": "C0",
+      "scope": "--noTF32 diagnostic only",
+      "engine_sha256": "db6d378710064f3ea7b16fbe02879da7a57dce9ccb73e0b1d4e564a7b7f7ae39",
+      "passed": 1,
+      "failed": 15,
+      "status": "FAIL",
+      "bbox": {"mae": 0.2131305621777262, "p99": 1.9310302734375, "max_abs": 23.29144287109375},
+      "score": {"mae": 1.3991094652622464e-05, "p99": 1.3113021850585938e-05, "max_abs": 0.021184921264648438}
+    },
+    {
+      "id": "C1",
+      "scope": "terminal BBox, DFL, decode FP32 constraints",
+      "engine_sha256": "55549f6cbd1b8deaee0357793ffb59d3d516187757159475e5281bc647e343ea",
+      "passed": 1,
+      "failed": 15,
+      "status": "FAIL",
+      "bbox": {"mae": 0.21225556387787772, "p99": 1.9418377685546884, "max_abs": 23.341888427734375},
+      "score": {"mae": 1.3991094652622464e-05, "p99": 1.3113021850585938e-05, "max_abs": 0.021184921264648438}
+    },
+    {
+      "id": "C2",
+      "scope": "C1 plus all traced BBox front-end Conv/Sigmoid/Mul nodes",
+      "engine_sha256": "d24ff2a23b6e508135f57591294c9e2ee8f7786492410d983449ae756fa47fbe",
+      "passed": 0,
+      "failed": 16,
+      "status": "FAIL",
+      "bbox": {"mae": 0.23736729725485756, "p99": 1.9828198242187502, "max_abs": 27.2808837890625},
+      "score": {"mae": 1.725615549182135e-05, "p99": 1.5648007392883665e-05, "max_abs": 0.02893689274787903}
+    }
+  ],
+  "selected_candidate": null,
+  "next_status": {"k5_3": "FAIL", "k5_4": "NOT READY"}
+}

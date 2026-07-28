@@ -3083,3 +3083,27 @@ Stage J Plan or historical Evidence.
 - K5.3：`TENSORRT_LEVEL_B_FAIL`。未修改 TensorRT tolerance、Engine、ONNX、
   ModelContract、Reference Bundle 或 ORT control；TensorRT Level C、boundary
   investigation、benchmark、stability、Pipeline 与 K6 均未执行。
+
+### 2026-07-28 - Stage K K2R Sensitivity-Aware Precision Remediation and K5.3 Re-evaluation
+
+- D064 was accepted independently at commit
+  `ac53fe71006445a826730d520233a00873639d3c`. The frozen ONNX,
+  ModelContract, Reference Bundle, TensorRT Level B comparator, tolerances,
+  and original Engine/K5.3 failure were not modified.
+- C0 `--noTF32` diagnostic built and loaded successfully but remained
+  `1/16 PASS`; therefore TF32 was not the dominant cause. C1 built with the
+  exact traced terminal BBox/DFL/decode FP32 policy and also remained
+  `1/16 PASS`.
+- C2 was authorized after the C1 failure. It built and independently loaded
+  successfully with the maximum D064 scope: 39 exact traced BBox front-end,
+  DFL, and decode nodes constrained FP32; Backbone, Neck, and classification
+  remained outside the policy. C2 Level B was `0/16 PASS`, `16/16 FAIL`.
+- K2R verdict：`K2R_COMPLETE_LEVEL_B_FAIL`。C1/C2 均未通过冻结 gate，未选择
+  Engine；K4 regression 与新正式 K5.3 不执行，K5.4：`NOT READY`。
+- Tracked summary：`results/build/tensorrt/k2r_precision_remediation_v1/`；
+  complete logs/raw tensors/engines remain local-only under
+  `/home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/`
+  and `/home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1/`。
+- No Level C/K6/benchmark/stability/Pipeline/GPU preprocessing or NMS/INT8/
+  DLA/ONNX rewrite/C++ Builder/Polygraphy/package/push/merge/tag work was
+  performed.
