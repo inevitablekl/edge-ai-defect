@@ -1,0 +1,3797 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k6_tensorrt_fp16_stability_report",
+  "verdict": "K6_STABILITY_PASS",
+  "started_at_utc": "2026-07-29T13:43:46.699+00:00",
+  "completed_at_utc": "2026-07-29T14:13:49.518+00:00",
+  "runtime_duration_seconds": 1802.818970375,
+  "target_duration_seconds": 1800.0,
+  "total_frames": 84420,
+  "success_count": 84420,
+  "failure_count": 0,
+  "runner_failure_count": 0,
+  "finite_failure_count": 0,
+  "cycle_count": 469,
+  "protocol": {
+    "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+    "split_entry_count": 180,
+    "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+    "engine_manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+    "runner_sha256": "debfb86c63abfe463505639960d871fc2e57b8b28370e7b917996bf15d2081db",
+    "engine_path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+    "engine_manifest_path": "/home/orin/edge-ai/edge-ai-defect/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+    "runner_path": "/home/orin/edge-ai-local-build/k5_correctness_v1/c54020c_release/task_level_profile_runner",
+    "batch": 1,
+    "runtime_mode": "serial",
+    "threading": "single inference process at a time; OpenCV threads=1"
+  },
+  "cycles": [
+    {
+      "cycle": 0,
+      "started_at_utc": "2026-07-29T13:43:46.699+00:00",
+      "wall_elapsed_ms": 3802.1395249998022,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 1,
+      "started_at_utc": "2026-07-29T13:43:50.521+00:00",
+      "wall_elapsed_ms": 3815.7334729999093,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 2,
+      "started_at_utc": "2026-07-29T13:43:54.357+00:00",
+      "wall_elapsed_ms": 3808.3426150001287,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 3,
+      "started_at_utc": "2026-07-29T13:43:58.187+00:00",
+      "wall_elapsed_ms": 3861.0702189998847,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 4,
+      "started_at_utc": "2026-07-29T13:44:02.069+00:00",
+      "wall_elapsed_ms": 3779.217061000054,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 5,
+      "started_at_utc": "2026-07-29T13:44:05.872+00:00",
+      "wall_elapsed_ms": 3865.353437000067,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 6,
+      "started_at_utc": "2026-07-29T13:44:09.761+00:00",
+      "wall_elapsed_ms": 3797.621618999983,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 7,
+      "started_at_utc": "2026-07-29T13:44:13.581+00:00",
+      "wall_elapsed_ms": 3846.4010749999034,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 8,
+      "started_at_utc": "2026-07-29T13:44:17.452+00:00",
+      "wall_elapsed_ms": 3818.4527000003072,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 9,
+      "started_at_utc": "2026-07-29T13:44:21.292+00:00",
+      "wall_elapsed_ms": 3791.081790000135,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 10,
+      "started_at_utc": "2026-07-29T13:44:25.107+00:00",
+      "wall_elapsed_ms": 3774.768741999651,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 11,
+      "started_at_utc": "2026-07-29T13:44:28.906+00:00",
+      "wall_elapsed_ms": 3771.20362200003,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 12,
+      "started_at_utc": "2026-07-29T13:44:32.699+00:00",
+      "wall_elapsed_ms": 3816.213188000347,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 13,
+      "started_at_utc": "2026-07-29T13:44:36.540+00:00",
+      "wall_elapsed_ms": 3808.620329000405,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 14,
+      "started_at_utc": "2026-07-29T13:44:40.370+00:00",
+      "wall_elapsed_ms": 3811.699342999873,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 15,
+      "started_at_utc": "2026-07-29T13:44:44.204+00:00",
+      "wall_elapsed_ms": 3810.837730000003,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 16,
+      "started_at_utc": "2026-07-29T13:44:48.037+00:00",
+      "wall_elapsed_ms": 3832.814608999797,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 17,
+      "started_at_utc": "2026-07-29T13:44:51.894+00:00",
+      "wall_elapsed_ms": 3811.187968000013,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 18,
+      "started_at_utc": "2026-07-29T13:44:55.727+00:00",
+      "wall_elapsed_ms": 3832.365261999712,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 19,
+      "started_at_utc": "2026-07-29T13:44:59.581+00:00",
+      "wall_elapsed_ms": 3789.3851649996577,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 20,
+      "started_at_utc": "2026-07-29T13:45:03.396+00:00",
+      "wall_elapsed_ms": 3798.0492530000447,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 21,
+      "started_at_utc": "2026-07-29T13:45:07.215+00:00",
+      "wall_elapsed_ms": 3825.162297999668,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 22,
+      "started_at_utc": "2026-07-29T13:45:11.061+00:00",
+      "wall_elapsed_ms": 3791.768895000132,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 23,
+      "started_at_utc": "2026-07-29T13:45:14.875+00:00",
+      "wall_elapsed_ms": 3836.821826999767,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 24,
+      "started_at_utc": "2026-07-29T13:45:18.734+00:00",
+      "wall_elapsed_ms": 3796.208642000238,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 25,
+      "started_at_utc": "2026-07-29T13:45:22.552+00:00",
+      "wall_elapsed_ms": 3779.523286999847,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 26,
+      "started_at_utc": "2026-07-29T13:45:26.354+00:00",
+      "wall_elapsed_ms": 3860.2705959997365,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 27,
+      "started_at_utc": "2026-07-29T13:45:30.238+00:00",
+      "wall_elapsed_ms": 3800.9055949996764,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 28,
+      "started_at_utc": "2026-07-29T13:45:34.062+00:00",
+      "wall_elapsed_ms": 3773.984357000245,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 29,
+      "started_at_utc": "2026-07-29T13:45:37.857+00:00",
+      "wall_elapsed_ms": 3795.375991000128,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 30,
+      "started_at_utc": "2026-07-29T13:45:41.673+00:00",
+      "wall_elapsed_ms": 3824.8786579997613,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 31,
+      "started_at_utc": "2026-07-29T13:45:45.521+00:00",
+      "wall_elapsed_ms": 3868.9318900001126,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 32,
+      "started_at_utc": "2026-07-29T13:45:49.412+00:00",
+      "wall_elapsed_ms": 3814.1849379999258,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 33,
+      "started_at_utc": "2026-07-29T13:45:53.250+00:00",
+      "wall_elapsed_ms": 3836.114123999778,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 34,
+      "started_at_utc": "2026-07-29T13:45:57.108+00:00",
+      "wall_elapsed_ms": 3784.797491000063,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 35,
+      "started_at_utc": "2026-07-29T13:46:00.912+00:00",
+      "wall_elapsed_ms": 3818.6212069999783,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 36,
+      "started_at_utc": "2026-07-29T13:46:04.753+00:00",
+      "wall_elapsed_ms": 3439.820956999938,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 37,
+      "started_at_utc": "2026-07-29T13:46:08.215+00:00",
+      "wall_elapsed_ms": 3880.1392899999883,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 38,
+      "started_at_utc": "2026-07-29T13:46:12.118+00:00",
+      "wall_elapsed_ms": 3799.666404999698,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 39,
+      "started_at_utc": "2026-07-29T13:46:15.940+00:00",
+      "wall_elapsed_ms": 3821.6357290002634,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 40,
+      "started_at_utc": "2026-07-29T13:46:19.787+00:00",
+      "wall_elapsed_ms": 3809.310335999726,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 41,
+      "started_at_utc": "2026-07-29T13:46:23.621+00:00",
+      "wall_elapsed_ms": 3808.0091859997083,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 42,
+      "started_at_utc": "2026-07-29T13:46:27.453+00:00",
+      "wall_elapsed_ms": 3765.4982970002493,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 43,
+      "started_at_utc": "2026-07-29T13:46:31.244+00:00",
+      "wall_elapsed_ms": 3821.090412999638,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 44,
+      "started_at_utc": "2026-07-29T13:46:35.087+00:00",
+      "wall_elapsed_ms": 3846.281234000344,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 45,
+      "started_at_utc": "2026-07-29T13:46:38.955+00:00",
+      "wall_elapsed_ms": 3813.68755099993,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 46,
+      "started_at_utc": "2026-07-29T13:46:42.791+00:00",
+      "wall_elapsed_ms": 3866.8326729998626,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 47,
+      "started_at_utc": "2026-07-29T13:46:46.677+00:00",
+      "wall_elapsed_ms": 3796.768042000167,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 48,
+      "started_at_utc": "2026-07-29T13:46:50.496+00:00",
+      "wall_elapsed_ms": 3836.933365999812,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 49,
+      "started_at_utc": "2026-07-29T13:46:54.356+00:00",
+      "wall_elapsed_ms": 3841.733261000172,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 50,
+      "started_at_utc": "2026-07-29T13:46:58.219+00:00",
+      "wall_elapsed_ms": 3802.4799509998957,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 51,
+      "started_at_utc": "2026-07-29T13:47:02.046+00:00",
+      "wall_elapsed_ms": 3804.505340000105,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 52,
+      "started_at_utc": "2026-07-29T13:47:05.874+00:00",
+      "wall_elapsed_ms": 3812.0720379997692,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 53,
+      "started_at_utc": "2026-07-29T13:47:09.710+00:00",
+      "wall_elapsed_ms": 3798.7393829998837,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 54,
+      "started_at_utc": "2026-07-29T13:47:13.533+00:00",
+      "wall_elapsed_ms": 3790.3483029999734,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 55,
+      "started_at_utc": "2026-07-29T13:47:17.343+00:00",
+      "wall_elapsed_ms": 3835.4661809999016,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 56,
+      "started_at_utc": "2026-07-29T13:47:21.203+00:00",
+      "wall_elapsed_ms": 3817.5384169999234,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 57,
+      "started_at_utc": "2026-07-29T13:47:25.044+00:00",
+      "wall_elapsed_ms": 3825.0330810001287,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 58,
+      "started_at_utc": "2026-07-29T13:47:28.892+00:00",
+      "wall_elapsed_ms": 3792.941744000018,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 59,
+      "started_at_utc": "2026-07-29T13:47:32.709+00:00",
+      "wall_elapsed_ms": 3804.8308359998373,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 60,
+      "started_at_utc": "2026-07-29T13:47:36.537+00:00",
+      "wall_elapsed_ms": 3865.61568299976,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 61,
+      "started_at_utc": "2026-07-29T13:47:40.427+00:00",
+      "wall_elapsed_ms": 3853.307764999954,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 62,
+      "started_at_utc": "2026-07-29T13:47:44.305+00:00",
+      "wall_elapsed_ms": 3860.455077000097,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 63,
+      "started_at_utc": "2026-07-29T13:47:48.190+00:00",
+      "wall_elapsed_ms": 3806.6754030000993,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 64,
+      "started_at_utc": "2026-07-29T13:47:52.022+00:00",
+      "wall_elapsed_ms": 3828.0315770002744,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 65,
+      "started_at_utc": "2026-07-29T13:47:55.872+00:00",
+      "wall_elapsed_ms": 3796.4453200002026,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 66,
+      "started_at_utc": "2026-07-29T13:47:59.691+00:00",
+      "wall_elapsed_ms": 3790.9312080000745,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 67,
+      "started_at_utc": "2026-07-29T13:48:03.504+00:00",
+      "wall_elapsed_ms": 3795.588458000111,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 68,
+      "started_at_utc": "2026-07-29T13:48:07.322+00:00",
+      "wall_elapsed_ms": 3779.2139029997998,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 69,
+      "started_at_utc": "2026-07-29T13:48:11.126+00:00",
+      "wall_elapsed_ms": 3827.416494999852,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 70,
+      "started_at_utc": "2026-07-29T13:48:14.979+00:00",
+      "wall_elapsed_ms": 3823.675111999819,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 71,
+      "started_at_utc": "2026-07-29T13:48:18.826+00:00",
+      "wall_elapsed_ms": 3849.8049129998435,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 72,
+      "started_at_utc": "2026-07-29T13:48:22.700+00:00",
+      "wall_elapsed_ms": 3877.51430399976,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 73,
+      "started_at_utc": "2026-07-29T13:48:26.600+00:00",
+      "wall_elapsed_ms": 3800.407739000093,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 74,
+      "started_at_utc": "2026-07-29T13:48:30.422+00:00",
+      "wall_elapsed_ms": 3773.2553480000206,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 75,
+      "started_at_utc": "2026-07-29T13:48:34.219+00:00",
+      "wall_elapsed_ms": 3779.8688379998566,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 76,
+      "started_at_utc": "2026-07-29T13:48:38.024+00:00",
+      "wall_elapsed_ms": 3826.336369999808,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 77,
+      "started_at_utc": "2026-07-29T13:48:41.873+00:00",
+      "wall_elapsed_ms": 3822.6473519998763,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 78,
+      "started_at_utc": "2026-07-29T13:48:45.720+00:00",
+      "wall_elapsed_ms": 3822.734976999982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 79,
+      "started_at_utc": "2026-07-29T13:48:49.567+00:00",
+      "wall_elapsed_ms": 3860.453029999917,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 80,
+      "started_at_utc": "2026-07-29T13:48:53.452+00:00",
+      "wall_elapsed_ms": 3833.299845000056,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 81,
+      "started_at_utc": "2026-07-29T13:48:57.307+00:00",
+      "wall_elapsed_ms": 3839.957788999982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 82,
+      "started_at_utc": "2026-07-29T13:49:01.172+00:00",
+      "wall_elapsed_ms": 3792.0377559998997,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 83,
+      "started_at_utc": "2026-07-29T13:49:04.988+00:00",
+      "wall_elapsed_ms": 3782.1002460000273,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 84,
+      "started_at_utc": "2026-07-29T13:49:08.793+00:00",
+      "wall_elapsed_ms": 3834.9769010001182,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 85,
+      "started_at_utc": "2026-07-29T13:49:12.650+00:00",
+      "wall_elapsed_ms": 3810.2384559997517,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 86,
+      "started_at_utc": "2026-07-29T13:49:16.485+00:00",
+      "wall_elapsed_ms": 3814.3924490000245,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 87,
+      "started_at_utc": "2026-07-29T13:49:20.325+00:00",
+      "wall_elapsed_ms": 3791.7974209999556,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 88,
+      "started_at_utc": "2026-07-29T13:49:24.141+00:00",
+      "wall_elapsed_ms": 3817.0046250002088,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 89,
+      "started_at_utc": "2026-07-29T13:49:27.981+00:00",
+      "wall_elapsed_ms": 3836.4822229996207,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 90,
+      "started_at_utc": "2026-07-29T13:49:31.841+00:00",
+      "wall_elapsed_ms": 3820.347841000057,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 91,
+      "started_at_utc": "2026-07-29T13:49:35.683+00:00",
+      "wall_elapsed_ms": 3809.0953470000386,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 92,
+      "started_at_utc": "2026-07-29T13:49:39.518+00:00",
+      "wall_elapsed_ms": 3844.2335059999095,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 93,
+      "started_at_utc": "2026-07-29T13:49:43.387+00:00",
+      "wall_elapsed_ms": 3816.0918049998145,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 94,
+      "started_at_utc": "2026-07-29T13:49:47.228+00:00",
+      "wall_elapsed_ms": 3825.403136999739,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 95,
+      "started_at_utc": "2026-07-29T13:49:51.075+00:00",
+      "wall_elapsed_ms": 3822.488409000016,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 96,
+      "started_at_utc": "2026-07-29T13:49:54.913+00:00",
+      "wall_elapsed_ms": 3860.7519209999737,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 97,
+      "started_at_utc": "2026-07-29T13:49:58.797+00:00",
+      "wall_elapsed_ms": 3752.41069599997,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 98,
+      "started_at_utc": "2026-07-29T13:50:02.572+00:00",
+      "wall_elapsed_ms": 3790.0453900001594,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 99,
+      "started_at_utc": "2026-07-29T13:50:06.387+00:00",
+      "wall_elapsed_ms": 3786.976029000016,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 100,
+      "started_at_utc": "2026-07-29T13:50:10.200+00:00",
+      "wall_elapsed_ms": 3801.1620490001405,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 101,
+      "started_at_utc": "2026-07-29T13:50:14.024+00:00",
+      "wall_elapsed_ms": 3875.421506999828,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 102,
+      "started_at_utc": "2026-07-29T13:50:17.934+00:00",
+      "wall_elapsed_ms": 3824.1204139999354,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 103,
+      "started_at_utc": "2026-07-29T13:50:21.783+00:00",
+      "wall_elapsed_ms": 3761.264203000337,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 104,
+      "started_at_utc": "2026-07-29T13:50:25.569+00:00",
+      "wall_elapsed_ms": 3809.068559000025,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 105,
+      "started_at_utc": "2026-07-29T13:50:29.403+00:00",
+      "wall_elapsed_ms": 3783.76500100012,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 106,
+      "started_at_utc": "2026-07-29T13:50:33.211+00:00",
+      "wall_elapsed_ms": 3818.3018649997393,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 107,
+      "started_at_utc": "2026-07-29T13:50:37.055+00:00",
+      "wall_elapsed_ms": 3789.8975329999303,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 108,
+      "started_at_utc": "2026-07-29T13:50:40.869+00:00",
+      "wall_elapsed_ms": 3785.5168349997257,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 109,
+      "started_at_utc": "2026-07-29T13:50:44.680+00:00",
+      "wall_elapsed_ms": 3777.737962000174,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 110,
+      "started_at_utc": "2026-07-29T13:50:48.483+00:00",
+      "wall_elapsed_ms": 3857.2636229996533,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 111,
+      "started_at_utc": "2026-07-29T13:50:52.365+00:00",
+      "wall_elapsed_ms": 3784.572733999994,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 112,
+      "started_at_utc": "2026-07-29T13:50:56.173+00:00",
+      "wall_elapsed_ms": 3791.810140999587,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 113,
+      "started_at_utc": "2026-07-29T13:50:59.991+00:00",
+      "wall_elapsed_ms": 3838.771928999904,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 114,
+      "started_at_utc": "2026-07-29T13:51:03.855+00:00",
+      "wall_elapsed_ms": 3845.264153000244,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 115,
+      "started_at_utc": "2026-07-29T13:51:07.725+00:00",
+      "wall_elapsed_ms": 3783.4134489999087,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 116,
+      "started_at_utc": "2026-07-29T13:51:11.531+00:00",
+      "wall_elapsed_ms": 3804.1514540000207,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 117,
+      "started_at_utc": "2026-07-29T13:51:15.359+00:00",
+      "wall_elapsed_ms": 3835.43802999975,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 118,
+      "started_at_utc": "2026-07-29T13:51:19.220+00:00",
+      "wall_elapsed_ms": 3831.3524339996547,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 119,
+      "started_at_utc": "2026-07-29T13:51:23.075+00:00",
+      "wall_elapsed_ms": 3801.5138149999075,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 120,
+      "started_at_utc": "2026-07-29T13:51:26.901+00:00",
+      "wall_elapsed_ms": 3876.0257700000693,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 121,
+      "started_at_utc": "2026-07-29T13:51:30.799+00:00",
+      "wall_elapsed_ms": 3810.8475920003,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 122,
+      "started_at_utc": "2026-07-29T13:51:34.633+00:00",
+      "wall_elapsed_ms": 3794.220459999906,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 123,
+      "started_at_utc": "2026-07-29T13:51:38.452+00:00",
+      "wall_elapsed_ms": 3799.308835999909,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 124,
+      "started_at_utc": "2026-07-29T13:51:42.277+00:00",
+      "wall_elapsed_ms": 3793.353890000162,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 125,
+      "started_at_utc": "2026-07-29T13:51:46.093+00:00",
+      "wall_elapsed_ms": 3822.5913940000282,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 126,
+      "started_at_utc": "2026-07-29T13:51:49.941+00:00",
+      "wall_elapsed_ms": 3800.645184000132,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 127,
+      "started_at_utc": "2026-07-29T13:51:53.763+00:00",
+      "wall_elapsed_ms": 3807.394766000016,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 128,
+      "started_at_utc": "2026-07-29T13:51:57.594+00:00",
+      "wall_elapsed_ms": 3800.256504999652,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 129,
+      "started_at_utc": "2026-07-29T13:52:01.418+00:00",
+      "wall_elapsed_ms": 3827.85453400038,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 130,
+      "started_at_utc": "2026-07-29T13:52:05.268+00:00",
+      "wall_elapsed_ms": 3862.893985000028,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 131,
+      "started_at_utc": "2026-07-29T13:52:09.156+00:00",
+      "wall_elapsed_ms": 3833.350200000041,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 132,
+      "started_at_utc": "2026-07-29T13:52:13.014+00:00",
+      "wall_elapsed_ms": 3806.8844560002617,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 133,
+      "started_at_utc": "2026-07-29T13:52:16.843+00:00",
+      "wall_elapsed_ms": 3812.3598920001314,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 134,
+      "started_at_utc": "2026-07-29T13:52:20.681+00:00",
+      "wall_elapsed_ms": 3801.9766239999626,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 135,
+      "started_at_utc": "2026-07-29T13:52:24.506+00:00",
+      "wall_elapsed_ms": 3784.6013200000925,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 136,
+      "started_at_utc": "2026-07-29T13:52:28.314+00:00",
+      "wall_elapsed_ms": 3853.6429049995604,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 137,
+      "started_at_utc": "2026-07-29T13:52:32.192+00:00",
+      "wall_elapsed_ms": 3827.0810250000977,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 138,
+      "started_at_utc": "2026-07-29T13:52:36.044+00:00",
+      "wall_elapsed_ms": 3805.506148999939,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 139,
+      "started_at_utc": "2026-07-29T13:52:39.875+00:00",
+      "wall_elapsed_ms": 3862.159283999972,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 140,
+      "started_at_utc": "2026-07-29T13:52:43.762+00:00",
+      "wall_elapsed_ms": 3794.810892999976,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 141,
+      "started_at_utc": "2026-07-29T13:52:47.579+00:00",
+      "wall_elapsed_ms": 3823.276997999983,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 142,
+      "started_at_utc": "2026-07-29T13:52:51.428+00:00",
+      "wall_elapsed_ms": 3780.7831710001665,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 143,
+      "started_at_utc": "2026-07-29T13:52:55.234+00:00",
+      "wall_elapsed_ms": 3836.219869999695,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 144,
+      "started_at_utc": "2026-07-29T13:52:59.093+00:00",
+      "wall_elapsed_ms": 3823.514995000096,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 145,
+      "started_at_utc": "2026-07-29T13:53:02.941+00:00",
+      "wall_elapsed_ms": 3797.988106000048,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 146,
+      "started_at_utc": "2026-07-29T13:53:06.764+00:00",
+      "wall_elapsed_ms": 3802.717184999892,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 147,
+      "started_at_utc": "2026-07-29T13:53:10.592+00:00",
+      "wall_elapsed_ms": 3866.951011999845,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 148,
+      "started_at_utc": "2026-07-29T13:53:14.482+00:00",
+      "wall_elapsed_ms": 3795.1410939999732,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 149,
+      "started_at_utc": "2026-07-29T13:53:18.300+00:00",
+      "wall_elapsed_ms": 3814.2614859998503,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 150,
+      "started_at_utc": "2026-07-29T13:53:22.140+00:00",
+      "wall_elapsed_ms": 3831.766066,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 151,
+      "started_at_utc": "2026-07-29T13:53:25.997+00:00",
+      "wall_elapsed_ms": 3838.2953250002174,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 152,
+      "started_at_utc": "2026-07-29T13:53:29.859+00:00",
+      "wall_elapsed_ms": 3787.544180000168,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 153,
+      "started_at_utc": "2026-07-29T13:53:33.672+00:00",
+      "wall_elapsed_ms": 3826.677294000092,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 154,
+      "started_at_utc": "2026-07-29T13:53:37.525+00:00",
+      "wall_elapsed_ms": 3765.321060000133,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 155,
+      "started_at_utc": "2026-07-29T13:53:41.313+00:00",
+      "wall_elapsed_ms": 3803.6493690001407,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 156,
+      "started_at_utc": "2026-07-29T13:53:45.139+00:00",
+      "wall_elapsed_ms": 3779.4179510001413,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 157,
+      "started_at_utc": "2026-07-29T13:53:48.943+00:00",
+      "wall_elapsed_ms": 3786.7984389999947,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 158,
+      "started_at_utc": "2026-07-29T13:53:52.755+00:00",
+      "wall_elapsed_ms": 3855.802345000029,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 159,
+      "started_at_utc": "2026-07-29T13:53:56.634+00:00",
+      "wall_elapsed_ms": 3846.7999280001095,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 160,
+      "started_at_utc": "2026-07-29T13:54:00.506+00:00",
+      "wall_elapsed_ms": 3797.0823340001516,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 161,
+      "started_at_utc": "2026-07-29T13:54:04.326+00:00",
+      "wall_elapsed_ms": 3777.715473000171,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 162,
+      "started_at_utc": "2026-07-29T13:54:08.128+00:00",
+      "wall_elapsed_ms": 3829.761332999624,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 163,
+      "started_at_utc": "2026-07-29T13:54:11.981+00:00",
+      "wall_elapsed_ms": 3862.833295999735,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 164,
+      "started_at_utc": "2026-07-29T13:54:15.869+00:00",
+      "wall_elapsed_ms": 3844.274495999798,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 165,
+      "started_at_utc": "2026-07-29T13:54:19.740+00:00",
+      "wall_elapsed_ms": 3841.0029589999795,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 166,
+      "started_at_utc": "2026-07-29T13:54:23.607+00:00",
+      "wall_elapsed_ms": 3819.2879179996453,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 167,
+      "started_at_utc": "2026-07-29T13:54:27.452+00:00",
+      "wall_elapsed_ms": 3774.304036000103,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 168,
+      "started_at_utc": "2026-07-29T13:54:31.251+00:00",
+      "wall_elapsed_ms": 3777.3753609999403,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 169,
+      "started_at_utc": "2026-07-29T13:54:35.052+00:00",
+      "wall_elapsed_ms": 3817.439773999922,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 170,
+      "started_at_utc": "2026-07-29T13:54:38.894+00:00",
+      "wall_elapsed_ms": 3816.6125980001198,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 171,
+      "started_at_utc": "2026-07-29T13:54:42.733+00:00",
+      "wall_elapsed_ms": 3806.0767479996684,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 172,
+      "started_at_utc": "2026-07-29T13:54:46.565+00:00",
+      "wall_elapsed_ms": 3848.44229600003,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 173,
+      "started_at_utc": "2026-07-29T13:54:50.436+00:00",
+      "wall_elapsed_ms": 3767.589738999959,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 174,
+      "started_at_utc": "2026-07-29T13:54:54.229+00:00",
+      "wall_elapsed_ms": 3825.0360900001397,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 175,
+      "started_at_utc": "2026-07-29T13:54:58.079+00:00",
+      "wall_elapsed_ms": 3822.2109959997397,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 176,
+      "started_at_utc": "2026-07-29T13:55:01.927+00:00",
+      "wall_elapsed_ms": 3811.6931330000625,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 177,
+      "started_at_utc": "2026-07-29T13:55:05.764+00:00",
+      "wall_elapsed_ms": 3818.0825019999247,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 178,
+      "started_at_utc": "2026-07-29T13:55:09.606+00:00",
+      "wall_elapsed_ms": 3811.6908399997556,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 179,
+      "started_at_utc": "2026-07-29T13:55:13.443+00:00",
+      "wall_elapsed_ms": 3810.151092000069,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 180,
+      "started_at_utc": "2026-07-29T13:55:17.278+00:00",
+      "wall_elapsed_ms": 3812.084091000088,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 181,
+      "started_at_utc": "2026-07-29T13:55:21.115+00:00",
+      "wall_elapsed_ms": 3803.848781000397,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 182,
+      "started_at_utc": "2026-07-29T13:55:24.942+00:00",
+      "wall_elapsed_ms": 3801.304553999671,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 183,
+      "started_at_utc": "2026-07-29T13:55:28.769+00:00",
+      "wall_elapsed_ms": 3796.803779000129,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 184,
+      "started_at_utc": "2026-07-29T13:55:32.589+00:00",
+      "wall_elapsed_ms": 3809.041657000307,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 185,
+      "started_at_utc": "2026-07-29T13:55:36.423+00:00",
+      "wall_elapsed_ms": 3794.1368800002238,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 186,
+      "started_at_utc": "2026-07-29T13:55:40.242+00:00",
+      "wall_elapsed_ms": 3791.085363000093,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 187,
+      "started_at_utc": "2026-07-29T13:55:44.056+00:00",
+      "wall_elapsed_ms": 3843.798820000302,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 188,
+      "started_at_utc": "2026-07-29T13:55:47.925+00:00",
+      "wall_elapsed_ms": 3817.455063000125,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 189,
+      "started_at_utc": "2026-07-29T13:55:51.766+00:00",
+      "wall_elapsed_ms": 3797.0704790000127,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 190,
+      "started_at_utc": "2026-07-29T13:55:55.586+00:00",
+      "wall_elapsed_ms": 3801.9235199999457,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 191,
+      "started_at_utc": "2026-07-29T13:55:59.410+00:00",
+      "wall_elapsed_ms": 3806.414311000026,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 192,
+      "started_at_utc": "2026-07-29T13:56:03.242+00:00",
+      "wall_elapsed_ms": 3821.852361999845,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 193,
+      "started_at_utc": "2026-07-29T13:56:07.089+00:00",
+      "wall_elapsed_ms": 3828.586091000034,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 194,
+      "started_at_utc": "2026-07-29T13:56:10.942+00:00",
+      "wall_elapsed_ms": 3794.9779900000067,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 195,
+      "started_at_utc": "2026-07-29T13:56:14.760+00:00",
+      "wall_elapsed_ms": 3857.661406000261,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 196,
+      "started_at_utc": "2026-07-29T13:56:18.641+00:00",
+      "wall_elapsed_ms": 3783.7840730003336,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 197,
+      "started_at_utc": "2026-07-29T13:56:22.448+00:00",
+      "wall_elapsed_ms": 3789.895979999983,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 198,
+      "started_at_utc": "2026-07-29T13:56:26.261+00:00",
+      "wall_elapsed_ms": 3804.9482599999465,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 199,
+      "started_at_utc": "2026-07-29T13:56:30.089+00:00",
+      "wall_elapsed_ms": 3799.004447000243,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 200,
+      "started_at_utc": "2026-07-29T13:56:33.914+00:00",
+      "wall_elapsed_ms": 3835.5155640001612,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 201,
+      "started_at_utc": "2026-07-29T13:56:37.774+00:00",
+      "wall_elapsed_ms": 3768.7535309996747,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 202,
+      "started_at_utc": "2026-07-29T13:56:41.566+00:00",
+      "wall_elapsed_ms": 3835.173431000385,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 203,
+      "started_at_utc": "2026-07-29T13:56:45.425+00:00",
+      "wall_elapsed_ms": 3830.4864890001227,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 204,
+      "started_at_utc": "2026-07-29T13:56:49.279+00:00",
+      "wall_elapsed_ms": 3736.858993000169,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 205,
+      "started_at_utc": "2026-07-29T13:56:53.041+00:00",
+      "wall_elapsed_ms": 3856.964914999935,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 206,
+      "started_at_utc": "2026-07-29T13:56:56.921+00:00",
+      "wall_elapsed_ms": 3793.062165000265,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 207,
+      "started_at_utc": "2026-07-29T13:57:00.741+00:00",
+      "wall_elapsed_ms": 3850.7111760000043,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 208,
+      "started_at_utc": "2026-07-29T13:57:04.617+00:00",
+      "wall_elapsed_ms": 3827.0233149996784,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 209,
+      "started_at_utc": "2026-07-29T13:57:08.468+00:00",
+      "wall_elapsed_ms": 3810.943133999899,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 210,
+      "started_at_utc": "2026-07-29T13:57:12.302+00:00",
+      "wall_elapsed_ms": 3772.399813999982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 211,
+      "started_at_utc": "2026-07-29T13:57:16.101+00:00",
+      "wall_elapsed_ms": 3808.487100000093,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 212,
+      "started_at_utc": "2026-07-29T13:57:19.936+00:00",
+      "wall_elapsed_ms": 3792.439272000138,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 213,
+      "started_at_utc": "2026-07-29T13:57:23.754+00:00",
+      "wall_elapsed_ms": 3804.2358719999356,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 214,
+      "started_at_utc": "2026-07-29T13:57:27.585+00:00",
+      "wall_elapsed_ms": 3786.56587200021,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 215,
+      "started_at_utc": "2026-07-29T13:57:31.399+00:00",
+      "wall_elapsed_ms": 3861.249845999737,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 216,
+      "started_at_utc": "2026-07-29T13:57:35.286+00:00",
+      "wall_elapsed_ms": 3813.0317720001585,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 217,
+      "started_at_utc": "2026-07-29T13:57:39.126+00:00",
+      "wall_elapsed_ms": 3791.219928999908,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 218,
+      "started_at_utc": "2026-07-29T13:57:42.944+00:00",
+      "wall_elapsed_ms": 3785.946234000221,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 219,
+      "started_at_utc": "2026-07-29T13:57:46.756+00:00",
+      "wall_elapsed_ms": 3757.2965809999914,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 220,
+      "started_at_utc": "2026-07-29T13:57:50.540+00:00",
+      "wall_elapsed_ms": 3816.99017200026,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 221,
+      "started_at_utc": "2026-07-29T13:57:54.384+00:00",
+      "wall_elapsed_ms": 3779.2827050002415,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 222,
+      "started_at_utc": "2026-07-29T13:57:58.190+00:00",
+      "wall_elapsed_ms": 3835.4806150000513,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 223,
+      "started_at_utc": "2026-07-29T13:58:02.049+00:00",
+      "wall_elapsed_ms": 3785.7874090000223,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 224,
+      "started_at_utc": "2026-07-29T13:58:05.858+00:00",
+      "wall_elapsed_ms": 3798.5641320001378,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 225,
+      "started_at_utc": "2026-07-29T13:58:09.682+00:00",
+      "wall_elapsed_ms": 3841.5775860003123,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 226,
+      "started_at_utc": "2026-07-29T13:58:13.549+00:00",
+      "wall_elapsed_ms": 3868.8664100000096,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 227,
+      "started_at_utc": "2026-07-29T13:58:17.440+00:00",
+      "wall_elapsed_ms": 3809.840724999958,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 228,
+      "started_at_utc": "2026-07-29T13:58:21.276+00:00",
+      "wall_elapsed_ms": 3774.6808399997462,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 229,
+      "started_at_utc": "2026-07-29T13:58:25.074+00:00",
+      "wall_elapsed_ms": 3866.3682739997967,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 230,
+      "started_at_utc": "2026-07-29T13:58:28.959+00:00",
+      "wall_elapsed_ms": 3795.5260430003364,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 231,
+      "started_at_utc": "2026-07-29T13:58:32.778+00:00",
+      "wall_elapsed_ms": 3777.9958839996652,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 232,
+      "started_at_utc": "2026-07-29T13:58:36.581+00:00",
+      "wall_elapsed_ms": 3830.670550999912,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 233,
+      "started_at_utc": "2026-07-29T13:58:40.437+00:00",
+      "wall_elapsed_ms": 3782.838516999618,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 234,
+      "started_at_utc": "2026-07-29T13:58:44.244+00:00",
+      "wall_elapsed_ms": 3847.7108329998373,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 235,
+      "started_at_utc": "2026-07-29T13:58:48.128+00:00",
+      "wall_elapsed_ms": 3760.0755710000158,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 236,
+      "started_at_utc": "2026-07-29T13:58:51.913+00:00",
+      "wall_elapsed_ms": 3787.455323999893,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 237,
+      "started_at_utc": "2026-07-29T13:58:55.722+00:00",
+      "wall_elapsed_ms": 3781.9405449999977,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 238,
+      "started_at_utc": "2026-07-29T13:58:59.529+00:00",
+      "wall_elapsed_ms": 3777.8026200003296,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 239,
+      "started_at_utc": "2026-07-29T13:59:03.332+00:00",
+      "wall_elapsed_ms": 3839.231387000382,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 240,
+      "started_at_utc": "2026-07-29T13:59:07.195+00:00",
+      "wall_elapsed_ms": 3802.1462359997713,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 241,
+      "started_at_utc": "2026-07-29T13:59:11.020+00:00",
+      "wall_elapsed_ms": 3835.5348070003856,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 242,
+      "started_at_utc": "2026-07-29T13:59:14.880+00:00",
+      "wall_elapsed_ms": 3859.6229330000824,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 243,
+      "started_at_utc": "2026-07-29T13:59:18.766+00:00",
+      "wall_elapsed_ms": 3892.8793560003214,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 244,
+      "started_at_utc": "2026-07-29T13:59:22.683+00:00",
+      "wall_elapsed_ms": 3807.9300780000267,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 245,
+      "started_at_utc": "2026-07-29T13:59:26.516+00:00",
+      "wall_elapsed_ms": 3783.217831999991,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 246,
+      "started_at_utc": "2026-07-29T13:59:30.324+00:00",
+      "wall_elapsed_ms": 3782.649734000188,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 247,
+      "started_at_utc": "2026-07-29T13:59:34.131+00:00",
+      "wall_elapsed_ms": 3882.1625790001235,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 248,
+      "started_at_utc": "2026-07-29T13:59:38.036+00:00",
+      "wall_elapsed_ms": 3792.2136550000687,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 249,
+      "started_at_utc": "2026-07-29T13:59:41.853+00:00",
+      "wall_elapsed_ms": 3858.3320590000767,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 250,
+      "started_at_utc": "2026-07-29T13:59:45.737+00:00",
+      "wall_elapsed_ms": 3761.6855890000807,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 251,
+      "started_at_utc": "2026-07-29T13:59:49.523+00:00",
+      "wall_elapsed_ms": 3836.0375480001494,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 252,
+      "started_at_utc": "2026-07-29T13:59:53.384+00:00",
+      "wall_elapsed_ms": 3837.208878000183,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 253,
+      "started_at_utc": "2026-07-29T13:59:57.244+00:00",
+      "wall_elapsed_ms": 3798.7058019998585,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 254,
+      "started_at_utc": "2026-07-29T14:00:01.068+00:00",
+      "wall_elapsed_ms": 3762.750424999922,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 255,
+      "started_at_utc": "2026-07-29T14:00:04.855+00:00",
+      "wall_elapsed_ms": 3789.1713409999284,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 256,
+      "started_at_utc": "2026-07-29T14:00:08.667+00:00",
+      "wall_elapsed_ms": 3840.601283000069,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 257,
+      "started_at_utc": "2026-07-29T14:00:12.532+00:00",
+      "wall_elapsed_ms": 3869.8052360000474,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 258,
+      "started_at_utc": "2026-07-29T14:00:16.425+00:00",
+      "wall_elapsed_ms": 3800.759423999807,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 259,
+      "started_at_utc": "2026-07-29T14:00:20.250+00:00",
+      "wall_elapsed_ms": 3815.6634729998586,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 260,
+      "started_at_utc": "2026-07-29T14:00:24.090+00:00",
+      "wall_elapsed_ms": 3864.9566959998083,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 261,
+      "started_at_utc": "2026-07-29T14:00:27.979+00:00",
+      "wall_elapsed_ms": 3815.0429479997,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 262,
+      "started_at_utc": "2026-07-29T14:00:31.817+00:00",
+      "wall_elapsed_ms": 3792.7416020002056,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 263,
+      "started_at_utc": "2026-07-29T14:00:35.633+00:00",
+      "wall_elapsed_ms": 3845.9834949999276,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 264,
+      "started_at_utc": "2026-07-29T14:00:39.502+00:00",
+      "wall_elapsed_ms": 3807.5978580000083,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 265,
+      "started_at_utc": "2026-07-29T14:00:43.333+00:00",
+      "wall_elapsed_ms": 3822.555960000045,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 266,
+      "started_at_utc": "2026-07-29T14:00:47.180+00:00",
+      "wall_elapsed_ms": 3796.7780300000413,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 267,
+      "started_at_utc": "2026-07-29T14:00:51.003+00:00",
+      "wall_elapsed_ms": 3805.8216310000716,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 268,
+      "started_at_utc": "2026-07-29T14:00:54.830+00:00",
+      "wall_elapsed_ms": 3833.480194999993,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 269,
+      "started_at_utc": "2026-07-29T14:00:58.689+00:00",
+      "wall_elapsed_ms": 3833.6582420001832,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 270,
+      "started_at_utc": "2026-07-29T14:01:02.548+00:00",
+      "wall_elapsed_ms": 3832.7346310002213,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 271,
+      "started_at_utc": "2026-07-29T14:01:06.406+00:00",
+      "wall_elapsed_ms": 3793.451209000068,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 272,
+      "started_at_utc": "2026-07-29T14:01:10.225+00:00",
+      "wall_elapsed_ms": 3798.626855999828,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 273,
+      "started_at_utc": "2026-07-29T14:01:14.049+00:00",
+      "wall_elapsed_ms": 3846.656623999934,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 274,
+      "started_at_utc": "2026-07-29T14:01:17.921+00:00",
+      "wall_elapsed_ms": 3814.692978000039,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 275,
+      "started_at_utc": "2026-07-29T14:01:21.759+00:00",
+      "wall_elapsed_ms": 3811.327178999818,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 276,
+      "started_at_utc": "2026-07-29T14:01:25.593+00:00",
+      "wall_elapsed_ms": 3823.079307000171,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 277,
+      "started_at_utc": "2026-07-29T14:01:29.441+00:00",
+      "wall_elapsed_ms": 3819.4763799997418,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 278,
+      "started_at_utc": "2026-07-29T14:01:33.284+00:00",
+      "wall_elapsed_ms": 3817.4158589999934,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 279,
+      "started_at_utc": "2026-07-29T14:01:37.126+00:00",
+      "wall_elapsed_ms": 3788.5247819999677,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 280,
+      "started_at_utc": "2026-07-29T14:01:40.939+00:00",
+      "wall_elapsed_ms": 3859.6149380000497,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 281,
+      "started_at_utc": "2026-07-29T14:01:44.825+00:00",
+      "wall_elapsed_ms": 3779.3966009999167,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 282,
+      "started_at_utc": "2026-07-29T14:01:48.629+00:00",
+      "wall_elapsed_ms": 3813.6362059999556,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 283,
+      "started_at_utc": "2026-07-29T14:01:52.469+00:00",
+      "wall_elapsed_ms": 3836.167135999858,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 284,
+      "started_at_utc": "2026-07-29T14:01:56.331+00:00",
+      "wall_elapsed_ms": 3794.1252350001378,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 285,
+      "started_at_utc": "2026-07-29T14:02:00.152+00:00",
+      "wall_elapsed_ms": 3839.6836269998857,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 286,
+      "started_at_utc": "2026-07-29T14:02:04.016+00:00",
+      "wall_elapsed_ms": 3818.749807999666,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 287,
+      "started_at_utc": "2026-07-29T14:02:07.860+00:00",
+      "wall_elapsed_ms": 3883.4615949999716,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 288,
+      "started_at_utc": "2026-07-29T14:02:11.769+00:00",
+      "wall_elapsed_ms": 3902.81308800013,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 289,
+      "started_at_utc": "2026-07-29T14:02:15.697+00:00",
+      "wall_elapsed_ms": 3797.000641000068,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 290,
+      "started_at_utc": "2026-07-29T14:02:19.517+00:00",
+      "wall_elapsed_ms": 3817.301642000075,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 291,
+      "started_at_utc": "2026-07-29T14:02:23.358+00:00",
+      "wall_elapsed_ms": 3817.1795789999123,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 292,
+      "started_at_utc": "2026-07-29T14:02:27.200+00:00",
+      "wall_elapsed_ms": 3787.425692999932,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 293,
+      "started_at_utc": "2026-07-29T14:02:31.010+00:00",
+      "wall_elapsed_ms": 3843.1669280003007,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 294,
+      "started_at_utc": "2026-07-29T14:02:34.876+00:00",
+      "wall_elapsed_ms": 3806.5677930003403,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 295,
+      "started_at_utc": "2026-07-29T14:02:38.706+00:00",
+      "wall_elapsed_ms": 3862.055286999748,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 296,
+      "started_at_utc": "2026-07-29T14:02:42.593+00:00",
+      "wall_elapsed_ms": 3822.4578750000546,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 297,
+      "started_at_utc": "2026-07-29T14:02:46.440+00:00",
+      "wall_elapsed_ms": 3786.7681110001286,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 298,
+      "started_at_utc": "2026-07-29T14:02:50.251+00:00",
+      "wall_elapsed_ms": 3778.089469999941,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 299,
+      "started_at_utc": "2026-07-29T14:02:54.054+00:00",
+      "wall_elapsed_ms": 3800.714687999971,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 300,
+      "started_at_utc": "2026-07-29T14:02:57.879+00:00",
+      "wall_elapsed_ms": 3807.0235349996437,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 301,
+      "started_at_utc": "2026-07-29T14:03:01.713+00:00",
+      "wall_elapsed_ms": 3805.0119399999858,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 302,
+      "started_at_utc": "2026-07-29T14:03:05.544+00:00",
+      "wall_elapsed_ms": 3800.86385300001,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 303,
+      "started_at_utc": "2026-07-29T14:03:09.371+00:00",
+      "wall_elapsed_ms": 3848.8497920002374,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 304,
+      "started_at_utc": "2026-07-29T14:03:13.244+00:00",
+      "wall_elapsed_ms": 3797.709444999782,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 305,
+      "started_at_utc": "2026-07-29T14:03:17.069+00:00",
+      "wall_elapsed_ms": 3830.079769000349,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 306,
+      "started_at_utc": "2026-07-29T14:03:20.924+00:00",
+      "wall_elapsed_ms": 3812.2390580001593,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 307,
+      "started_at_utc": "2026-07-29T14:03:24.762+00:00",
+      "wall_elapsed_ms": 3792.487610999615,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 308,
+      "started_at_utc": "2026-07-29T14:03:28.577+00:00",
+      "wall_elapsed_ms": 3820.3221500002655,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 309,
+      "started_at_utc": "2026-07-29T14:03:32.423+00:00",
+      "wall_elapsed_ms": 3837.741850999919,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 310,
+      "started_at_utc": "2026-07-29T14:03:36.286+00:00",
+      "wall_elapsed_ms": 3823.886865000077,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 311,
+      "started_at_utc": "2026-07-29T14:03:40.135+00:00",
+      "wall_elapsed_ms": 3797.8553319999264,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 312,
+      "started_at_utc": "2026-07-29T14:03:43.951+00:00",
+      "wall_elapsed_ms": 3791.346058000272,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 313,
+      "started_at_utc": "2026-07-29T14:03:47.767+00:00",
+      "wall_elapsed_ms": 3796.102665000035,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 314,
+      "started_at_utc": "2026-07-29T14:03:51.589+00:00",
+      "wall_elapsed_ms": 3831.5414660000897,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 315,
+      "started_at_utc": "2026-07-29T14:03:55.448+00:00",
+      "wall_elapsed_ms": 3794.7660429999814,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 316,
+      "started_at_utc": "2026-07-29T14:03:59.267+00:00",
+      "wall_elapsed_ms": 3816.642150000007,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 317,
+      "started_at_utc": "2026-07-29T14:04:03.110+00:00",
+      "wall_elapsed_ms": 3833.1497520002813,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 318,
+      "started_at_utc": "2026-07-29T14:04:06.968+00:00",
+      "wall_elapsed_ms": 3859.7140550000404,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 319,
+      "started_at_utc": "2026-07-29T14:04:10.854+00:00",
+      "wall_elapsed_ms": 3800.8347109998795,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 320,
+      "started_at_utc": "2026-07-29T14:04:14.680+00:00",
+      "wall_elapsed_ms": 3885.2108030000636,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 321,
+      "started_at_utc": "2026-07-29T14:04:18.592+00:00",
+      "wall_elapsed_ms": 3818.628467000053,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 322,
+      "started_at_utc": "2026-07-29T14:04:22.435+00:00",
+      "wall_elapsed_ms": 3817.7036120000594,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 323,
+      "started_at_utc": "2026-07-29T14:04:26.279+00:00",
+      "wall_elapsed_ms": 3804.4580900000255,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 324,
+      "started_at_utc": "2026-07-29T14:04:30.108+00:00",
+      "wall_elapsed_ms": 3861.3268559997778,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 325,
+      "started_at_utc": "2026-07-29T14:04:33.995+00:00",
+      "wall_elapsed_ms": 3801.4903680000316,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 326,
+      "started_at_utc": "2026-07-29T14:04:37.821+00:00",
+      "wall_elapsed_ms": 3850.6492520000393,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 327,
+      "started_at_utc": "2026-07-29T14:04:41.698+00:00",
+      "wall_elapsed_ms": 3838.4287710000535,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 328,
+      "started_at_utc": "2026-07-29T14:04:45.563+00:00",
+      "wall_elapsed_ms": 3815.8899159998327,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 329,
+      "started_at_utc": "2026-07-29T14:04:49.405+00:00",
+      "wall_elapsed_ms": 3820.598907999738,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 330,
+      "started_at_utc": "2026-07-29T14:04:53.252+00:00",
+      "wall_elapsed_ms": 3807.0401780000793,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 331,
+      "started_at_utc": "2026-07-29T14:04:57.085+00:00",
+      "wall_elapsed_ms": 3780.8309279998866,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 332,
+      "started_at_utc": "2026-07-29T14:05:00.893+00:00",
+      "wall_elapsed_ms": 3828.7003300001743,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 333,
+      "started_at_utc": "2026-07-29T14:05:04.745+00:00",
+      "wall_elapsed_ms": 3818.107224999949,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 334,
+      "started_at_utc": "2026-07-29T14:05:08.589+00:00",
+      "wall_elapsed_ms": 3797.433190999982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 335,
+      "started_at_utc": "2026-07-29T14:05:12.411+00:00",
+      "wall_elapsed_ms": 3810.3544479999982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 336,
+      "started_at_utc": "2026-07-29T14:05:16.244+00:00",
+      "wall_elapsed_ms": 3797.6061969998227,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 337,
+      "started_at_utc": "2026-07-29T14:05:20.065+00:00",
+      "wall_elapsed_ms": 3928.3914630000254,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 338,
+      "started_at_utc": "2026-07-29T14:05:24.019+00:00",
+      "wall_elapsed_ms": 3822.3430849998294,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 339,
+      "started_at_utc": "2026-07-29T14:05:27.864+00:00",
+      "wall_elapsed_ms": 3790.8438829999795,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 340,
+      "started_at_utc": "2026-07-29T14:05:31.679+00:00",
+      "wall_elapsed_ms": 3826.44411199999,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 341,
+      "started_at_utc": "2026-07-29T14:05:35.530+00:00",
+      "wall_elapsed_ms": 3819.2904730003647,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 342,
+      "started_at_utc": "2026-07-29T14:05:39.372+00:00",
+      "wall_elapsed_ms": 3886.3681709999582,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 343,
+      "started_at_utc": "2026-07-29T14:05:43.283+00:00",
+      "wall_elapsed_ms": 3810.0474319999194,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 344,
+      "started_at_utc": "2026-07-29T14:05:47.114+00:00",
+      "wall_elapsed_ms": 3808.1642769998325,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 345,
+      "started_at_utc": "2026-07-29T14:05:50.948+00:00",
+      "wall_elapsed_ms": 3824.2384489999495,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 346,
+      "started_at_utc": "2026-07-29T14:05:54.794+00:00",
+      "wall_elapsed_ms": 3849.5740159996785,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 347,
+      "started_at_utc": "2026-07-29T14:05:58.670+00:00",
+      "wall_elapsed_ms": 3877.4048199998106,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 348,
+      "started_at_utc": "2026-07-29T14:06:02.572+00:00",
+      "wall_elapsed_ms": 3820.069203999992,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 349,
+      "started_at_utc": "2026-07-29T14:06:06.417+00:00",
+      "wall_elapsed_ms": 3828.0369560002327,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 350,
+      "started_at_utc": "2026-07-29T14:06:10.271+00:00",
+      "wall_elapsed_ms": 3824.5977169999605,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 351,
+      "started_at_utc": "2026-07-29T14:06:14.121+00:00",
+      "wall_elapsed_ms": 3850.8827260002363,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 352,
+      "started_at_utc": "2026-07-29T14:06:17.996+00:00",
+      "wall_elapsed_ms": 3808.6748510004327,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 353,
+      "started_at_utc": "2026-07-29T14:06:21.828+00:00",
+      "wall_elapsed_ms": 3838.8051049996648,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 354,
+      "started_at_utc": "2026-07-29T14:06:25.694+00:00",
+      "wall_elapsed_ms": 3794.75438999998,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 355,
+      "started_at_utc": "2026-07-29T14:06:29.515+00:00",
+      "wall_elapsed_ms": 3818.9434320001965,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 356,
+      "started_at_utc": "2026-07-29T14:06:33.360+00:00",
+      "wall_elapsed_ms": 3802.7163200003997,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 357,
+      "started_at_utc": "2026-07-29T14:06:37.187+00:00",
+      "wall_elapsed_ms": 3890.176342000359,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 358,
+      "started_at_utc": "2026-07-29T14:06:41.102+00:00",
+      "wall_elapsed_ms": 3846.993963999921,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 359,
+      "started_at_utc": "2026-07-29T14:06:44.975+00:00",
+      "wall_elapsed_ms": 3871.3158760001534,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 360,
+      "started_at_utc": "2026-07-29T14:06:48.871+00:00",
+      "wall_elapsed_ms": 3828.6798399999498,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 361,
+      "started_at_utc": "2026-07-29T14:06:52.725+00:00",
+      "wall_elapsed_ms": 3807.1645780000836,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 362,
+      "started_at_utc": "2026-07-29T14:06:56.556+00:00",
+      "wall_elapsed_ms": 3841.6786570001022,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 363,
+      "started_at_utc": "2026-07-29T14:07:00.421+00:00",
+      "wall_elapsed_ms": 3882.994506000159,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 364,
+      "started_at_utc": "2026-07-29T14:07:04.327+00:00",
+      "wall_elapsed_ms": 3829.5089680000274,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 365,
+      "started_at_utc": "2026-07-29T14:07:08.180+00:00",
+      "wall_elapsed_ms": 3839.534579999963,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 366,
+      "started_at_utc": "2026-07-29T14:07:12.044+00:00",
+      "wall_elapsed_ms": 3812.276840999857,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 367,
+      "started_at_utc": "2026-07-29T14:07:15.879+00:00",
+      "wall_elapsed_ms": 3842.0396189999337,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 368,
+      "started_at_utc": "2026-07-29T14:07:19.760+00:00",
+      "wall_elapsed_ms": 3808.2401100000425,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 369,
+      "started_at_utc": "2026-07-29T14:07:23.592+00:00",
+      "wall_elapsed_ms": 3837.2947489997387,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 370,
+      "started_at_utc": "2026-07-29T14:07:27.453+00:00",
+      "wall_elapsed_ms": 3826.3282160000927,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 371,
+      "started_at_utc": "2026-07-29T14:07:31.305+00:00",
+      "wall_elapsed_ms": 3810.9759389999454,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 372,
+      "started_at_utc": "2026-07-29T14:07:35.141+00:00",
+      "wall_elapsed_ms": 3860.327209999923,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 373,
+      "started_at_utc": "2026-07-29T14:07:39.026+00:00",
+      "wall_elapsed_ms": 3816.0215389998484,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 374,
+      "started_at_utc": "2026-07-29T14:07:42.867+00:00",
+      "wall_elapsed_ms": 3845.179119000022,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 375,
+      "started_at_utc": "2026-07-29T14:07:46.738+00:00",
+      "wall_elapsed_ms": 3857.0641900000737,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 376,
+      "started_at_utc": "2026-07-29T14:07:50.623+00:00",
+      "wall_elapsed_ms": 3901.8673149998904,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 377,
+      "started_at_utc": "2026-07-29T14:07:54.547+00:00",
+      "wall_elapsed_ms": 3817.8530499999397,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 378,
+      "started_at_utc": "2026-07-29T14:07:58.388+00:00",
+      "wall_elapsed_ms": 3822.475987999951,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 379,
+      "started_at_utc": "2026-07-29T14:08:02.237+00:00",
+      "wall_elapsed_ms": 3824.3285969997487,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 380,
+      "started_at_utc": "2026-07-29T14:08:06.084+00:00",
+      "wall_elapsed_ms": 3872.718501000236,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 381,
+      "started_at_utc": "2026-07-29T14:08:09.982+00:00",
+      "wall_elapsed_ms": 3836.03273899962,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 382,
+      "started_at_utc": "2026-07-29T14:08:13.841+00:00",
+      "wall_elapsed_ms": 3797.70457099994,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 383,
+      "started_at_utc": "2026-07-29T14:08:17.662+00:00",
+      "wall_elapsed_ms": 3789.422886000011,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 384,
+      "started_at_utc": "2026-07-29T14:08:21.476+00:00",
+      "wall_elapsed_ms": 3857.3421940000117,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 385,
+      "started_at_utc": "2026-07-29T14:08:25.356+00:00",
+      "wall_elapsed_ms": 3861.568291000367,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 386,
+      "started_at_utc": "2026-07-29T14:08:29.243+00:00",
+      "wall_elapsed_ms": 3825.7354389998,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 387,
+      "started_at_utc": "2026-07-29T14:08:33.092+00:00",
+      "wall_elapsed_ms": 3823.9411670001573,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 388,
+      "started_at_utc": "2026-07-29T14:08:36.939+00:00",
+      "wall_elapsed_ms": 3845.766291000018,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 389,
+      "started_at_utc": "2026-07-29T14:08:40.808+00:00",
+      "wall_elapsed_ms": 3831.4375059999293,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 390,
+      "started_at_utc": "2026-07-29T14:08:44.665+00:00",
+      "wall_elapsed_ms": 3814.28598399998,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 391,
+      "started_at_utc": "2026-07-29T14:08:48.504+00:00",
+      "wall_elapsed_ms": 3812.521335999918,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 392,
+      "started_at_utc": "2026-07-29T14:08:52.342+00:00",
+      "wall_elapsed_ms": 3847.787251000227,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 393,
+      "started_at_utc": "2026-07-29T14:08:56.214+00:00",
+      "wall_elapsed_ms": 3822.604154000146,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 394,
+      "started_at_utc": "2026-07-29T14:09:00.061+00:00",
+      "wall_elapsed_ms": 3808.409698000105,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 395,
+      "started_at_utc": "2026-07-29T14:09:03.895+00:00",
+      "wall_elapsed_ms": 3800.223595999796,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 396,
+      "started_at_utc": "2026-07-29T14:09:07.719+00:00",
+      "wall_elapsed_ms": 3834.483653999996,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 397,
+      "started_at_utc": "2026-07-29T14:09:11.576+00:00",
+      "wall_elapsed_ms": 3853.3072909999646,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 398,
+      "started_at_utc": "2026-07-29T14:09:15.455+00:00",
+      "wall_elapsed_ms": 3804.3646199998875,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 399,
+      "started_at_utc": "2026-07-29T14:09:19.285+00:00",
+      "wall_elapsed_ms": 3795.024531999843,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 400,
+      "started_at_utc": "2026-07-29T14:09:23.104+00:00",
+      "wall_elapsed_ms": 3818.3221580002282,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 401,
+      "started_at_utc": "2026-07-29T14:09:26.945+00:00",
+      "wall_elapsed_ms": 3797.772628000075,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 402,
+      "started_at_utc": "2026-07-29T14:09:30.768+00:00",
+      "wall_elapsed_ms": 3868.6167599998953,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 403,
+      "started_at_utc": "2026-07-29T14:09:34.662+00:00",
+      "wall_elapsed_ms": 3857.4993989996074,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 404,
+      "started_at_utc": "2026-07-29T14:09:38.544+00:00",
+      "wall_elapsed_ms": 3886.7296439998427,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 405,
+      "started_at_utc": "2026-07-29T14:09:42.455+00:00",
+      "wall_elapsed_ms": 3833.711830000084,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 406,
+      "started_at_utc": "2026-07-29T14:09:46.313+00:00",
+      "wall_elapsed_ms": 3852.7974540002106,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 407,
+      "started_at_utc": "2026-07-29T14:09:50.189+00:00",
+      "wall_elapsed_ms": 3832.8383839998423,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 408,
+      "started_at_utc": "2026-07-29T14:09:54.047+00:00",
+      "wall_elapsed_ms": 3829.726918999768,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 409,
+      "started_at_utc": "2026-07-29T14:09:57.902+00:00",
+      "wall_elapsed_ms": 3852.610704000199,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 410,
+      "started_at_utc": "2026-07-29T14:10:01.780+00:00",
+      "wall_elapsed_ms": 3756.7056100001537,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 411,
+      "started_at_utc": "2026-07-29T14:10:05.559+00:00",
+      "wall_elapsed_ms": 3832.025485000031,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 412,
+      "started_at_utc": "2026-07-29T14:10:09.416+00:00",
+      "wall_elapsed_ms": 3812.875200000235,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 413,
+      "started_at_utc": "2026-07-29T14:10:13.252+00:00",
+      "wall_elapsed_ms": 3871.0319029996754,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 414,
+      "started_at_utc": "2026-07-29T14:10:17.147+00:00",
+      "wall_elapsed_ms": 3852.45324699963,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 415,
+      "started_at_utc": "2026-07-29T14:10:21.024+00:00",
+      "wall_elapsed_ms": 3899.64621099989,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 416,
+      "started_at_utc": "2026-07-29T14:10:24.948+00:00",
+      "wall_elapsed_ms": 3850.0507599997036,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 417,
+      "started_at_utc": "2026-07-29T14:10:28.820+00:00",
+      "wall_elapsed_ms": 3869.174356000258,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 418,
+      "started_at_utc": "2026-07-29T14:10:32.712+00:00",
+      "wall_elapsed_ms": 3862.6519270001154,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 419,
+      "started_at_utc": "2026-07-29T14:10:36.599+00:00",
+      "wall_elapsed_ms": 3823.9009570002054,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 420,
+      "started_at_utc": "2026-07-29T14:10:40.447+00:00",
+      "wall_elapsed_ms": 3835.6358850001016,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 421,
+      "started_at_utc": "2026-07-29T14:10:44.306+00:00",
+      "wall_elapsed_ms": 3906.20789400009,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 422,
+      "started_at_utc": "2026-07-29T14:10:48.234+00:00",
+      "wall_elapsed_ms": 3843.6284320000595,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 423,
+      "started_at_utc": "2026-07-29T14:10:52.101+00:00",
+      "wall_elapsed_ms": 3850.7628030001797,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 424,
+      "started_at_utc": "2026-07-29T14:10:55.974+00:00",
+      "wall_elapsed_ms": 3804.862250000042,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 425,
+      "started_at_utc": "2026-07-29T14:10:59.802+00:00",
+      "wall_elapsed_ms": 3836.22120300015,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 426,
+      "started_at_utc": "2026-07-29T14:11:03.661+00:00",
+      "wall_elapsed_ms": 3837.412390999816,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 427,
+      "started_at_utc": "2026-07-29T14:11:07.523+00:00",
+      "wall_elapsed_ms": 3804.337131000011,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 428,
+      "started_at_utc": "2026-07-29T14:11:11.351+00:00",
+      "wall_elapsed_ms": 3835.3645739998683,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 429,
+      "started_at_utc": "2026-07-29T14:11:15.211+00:00",
+      "wall_elapsed_ms": 3845.9641909998936,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 430,
+      "started_at_utc": "2026-07-29T14:11:19.080+00:00",
+      "wall_elapsed_ms": 3855.3231639998558,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 431,
+      "started_at_utc": "2026-07-29T14:11:22.960+00:00",
+      "wall_elapsed_ms": 3828.858891999971,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 432,
+      "started_at_utc": "2026-07-29T14:11:26.815+00:00",
+      "wall_elapsed_ms": 3780.5010959996252,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 433,
+      "started_at_utc": "2026-07-29T14:11:30.621+00:00",
+      "wall_elapsed_ms": 3823.210961999848,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 434,
+      "started_at_utc": "2026-07-29T14:11:34.470+00:00",
+      "wall_elapsed_ms": 3854.8711569997067,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 435,
+      "started_at_utc": "2026-07-29T14:11:38.351+00:00",
+      "wall_elapsed_ms": 3817.4555129999135,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 436,
+      "started_at_utc": "2026-07-29T14:11:42.194+00:00",
+      "wall_elapsed_ms": 3824.12825099982,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 437,
+      "started_at_utc": "2026-07-29T14:11:46.044+00:00",
+      "wall_elapsed_ms": 3903.242108000086,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 438,
+      "started_at_utc": "2026-07-29T14:11:49.972+00:00",
+      "wall_elapsed_ms": 3798.0798260000483,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 439,
+      "started_at_utc": "2026-07-29T14:11:53.795+00:00",
+      "wall_elapsed_ms": 3833.605947000251,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 440,
+      "started_at_utc": "2026-07-29T14:11:57.655+00:00",
+      "wall_elapsed_ms": 3858.2026130002305,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 441,
+      "started_at_utc": "2026-07-29T14:12:01.539+00:00",
+      "wall_elapsed_ms": 3820.548108999901,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 442,
+      "started_at_utc": "2026-07-29T14:12:05.385+00:00",
+      "wall_elapsed_ms": 3828.3697090000715,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 443,
+      "started_at_utc": "2026-07-29T14:12:09.239+00:00",
+      "wall_elapsed_ms": 3888.041042000168,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 444,
+      "started_at_utc": "2026-07-29T14:12:13.153+00:00",
+      "wall_elapsed_ms": 3807.248238000284,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 445,
+      "started_at_utc": "2026-07-29T14:12:16.984+00:00",
+      "wall_elapsed_ms": 3876.4578189998247,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 446,
+      "started_at_utc": "2026-07-29T14:12:20.887+00:00",
+      "wall_elapsed_ms": 3853.3706359999087,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 447,
+      "started_at_utc": "2026-07-29T14:12:24.767+00:00",
+      "wall_elapsed_ms": 3847.4257220000254,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 448,
+      "started_at_utc": "2026-07-29T14:12:28.638+00:00",
+      "wall_elapsed_ms": 3798.989927999628,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 449,
+      "started_at_utc": "2026-07-29T14:12:32.461+00:00",
+      "wall_elapsed_ms": 3827.2777560000577,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 450,
+      "started_at_utc": "2026-07-29T14:12:36.311+00:00",
+      "wall_elapsed_ms": 3832.2192440000435,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 451,
+      "started_at_utc": "2026-07-29T14:12:40.168+00:00",
+      "wall_elapsed_ms": 3829.272447999756,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 452,
+      "started_at_utc": "2026-07-29T14:12:44.022+00:00",
+      "wall_elapsed_ms": 3780.0258480001503,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 453,
+      "started_at_utc": "2026-07-29T14:12:47.828+00:00",
+      "wall_elapsed_ms": 3823.928439000156,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 454,
+      "started_at_utc": "2026-07-29T14:12:51.675+00:00",
+      "wall_elapsed_ms": 3813.3607980003035,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 455,
+      "started_at_utc": "2026-07-29T14:12:55.514+00:00",
+      "wall_elapsed_ms": 3797.498207999979,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 456,
+      "started_at_utc": "2026-07-29T14:12:59.335+00:00",
+      "wall_elapsed_ms": 3833.630073000222,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 457,
+      "started_at_utc": "2026-07-29T14:13:03.192+00:00",
+      "wall_elapsed_ms": 3806.977543999892,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 458,
+      "started_at_utc": "2026-07-29T14:13:07.023+00:00",
+      "wall_elapsed_ms": 3814.413030000196,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 459,
+      "started_at_utc": "2026-07-29T14:13:10.864+00:00",
+      "wall_elapsed_ms": 3851.905075999639,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 460,
+      "started_at_utc": "2026-07-29T14:13:14.741+00:00",
+      "wall_elapsed_ms": 3870.196673999999,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 461,
+      "started_at_utc": "2026-07-29T14:13:18.635+00:00",
+      "wall_elapsed_ms": 3822.8643120000925,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 462,
+      "started_at_utc": "2026-07-29T14:13:22.483+00:00",
+      "wall_elapsed_ms": 3892.117042999871,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 463,
+      "started_at_utc": "2026-07-29T14:13:26.399+00:00",
+      "wall_elapsed_ms": 3807.4433199999476,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 464,
+      "started_at_utc": "2026-07-29T14:13:30.231+00:00",
+      "wall_elapsed_ms": 3790.080766000301,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 465,
+      "started_at_utc": "2026-07-29T14:13:34.044+00:00",
+      "wall_elapsed_ms": 3840.9743920001347,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 466,
+      "started_at_utc": "2026-07-29T14:13:37.907+00:00",
+      "wall_elapsed_ms": 3832.555774999946,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 467,
+      "started_at_utc": "2026-07-29T14:13:41.764+00:00",
+      "wall_elapsed_ms": 3836.083158999827,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    },
+    {
+      "cycle": 468,
+      "started_at_utc": "2026-07-29T14:13:45.624+00:00",
+      "wall_elapsed_ms": 3867.370598999969,
+      "frame_count": 180,
+      "success": true,
+      "runner_returncode": 0
+    }
+  ],
+  "runner_failures": [],
+  "checks": {
+    "manifest_sha256_match": true,
+    "engine_sha256_match": true,
+    "duration_target_complete": true,
+    "duration_30_minutes_complete": true,
+    "inference_success_100_percent": true,
+    "crash_zero": true,
+    "nan_inf_zero": true,
+    "latency_no_continuous_growth": true,
+    "tegrastats_log_present": true
+  },
+  "latency_summary_file": "latency_summary.json",
+  "records_file": "inference_records.jsonl",
+  "script_sha256": "d51d0e62fe65be37a6ffbb2a18bca6bc1ab13ee22dd5645621bb17b6cdafe883"
+}
