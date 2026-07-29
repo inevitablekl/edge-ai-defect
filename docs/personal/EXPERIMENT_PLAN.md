@@ -609,7 +609,7 @@ Pipeline mode reduced latency.
 | Device | Backend       | Input Size | Runtime Mode | Queue Size | Drop Policy | FPS | Avg Total Latency ms | P95 ms | Dropped Frames |
 | ------ | ------------- | ---------: | ------------ | ---------: | ----------- | --: | -------------------: | -----: | -------------: |
 | TBD    | TensorRT FP16 |        640 | Serial       |        N/A | N/A         | TBD |                  TBD |    TBD |            TBD |
-| TBD    | TensorRT FP16 |        640 | Pipeline     |          2 | drop_oldest | TBD |                  TBD |    TBD |            TBD |
+| TBD    | TensorRT FP16 |        640 | Pipeline     |          2 | block       | TBD |                  TBD |    TBD |              0 |
 
 ---
 
@@ -1495,3 +1495,35 @@ results/validation/stage_k8/final_summary_v1/
 ```
 
 Stage P Pipeline remains downstream work and was not executed by Stage K8。
+
+## Stage P P0 Planning Freeze
+
+更新日期：`2026-07-30`
+
+Stage K is `COMPLETE`; D066 retains the raw TensorRT Level B failure while
+accepting the Original TensorRT FP16 Engine from task-level accuracy,
+stability, and formal serial performance. Stage P Execution Plan v1.2 is
+`FINAL`. P0 completes at the commit containing this changeset; P1 is
+`NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`.
+
+Stage P freezes a four-worker/three-bounded-SPSC-queue topology, one inference
+worker, maximum one concurrent `engine.run()`, TensorRT-only RuntimeConfig v4,
+Result JSON v3, block-only DirectorySource/VideoFileSource, and exact ordered
+Detection identity. RUN and CYCLE hashes use independent canonical scopes.
+
+Experiment sequence is strict:
+
+```text
+P4 exact correctness
+→ P5 capacity pilot 1/2/4 and complete formal three-pair benchmark
+→ P6 Jetson-frozen MJPG VideoFileSource validation
+→ P7 one-lifecycle >=1800 s Pipeline stability
+→ P8 closeout
+```
+
+P6 waits for both a selected/frozen P5 queue capacity and completion of the P5
+formal benchmark. The P5 classification threshold is a mean paired throughput
+ratio of 1.10×; it is not a statistical-significance claim. P7 uses
+CanonicalHashSink CYCLE scope and AGGREGATE_ONLY trace, not JsonSink. No Stage P
+measurement or formal Evidence attempt was run during P0; all Stage P values
+remain `TBD: real experiment data required`.

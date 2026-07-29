@@ -98,6 +98,11 @@
 | D037 | M5 ORT CPU Baseline 定位 | WSL2 x86_64 ONNX Runtime CPU Engineering Baseline | ACTIVE |
 | D038 | M5 Evidence、Retention 和失效 | clean committed HEAD、raw samples/summary/provenance、明确失效边界 | ACTIVE |
 | D039 | M5 NEU-DET 资产策略 | 不提交图片；跟踪 manifest/SHA/工具；本地合法 dataset root | ACTIVE |
+| D067 | Stage P baseline、scope 与 execution authority | `main@c6890d86…`、v1.2 FINAL、P0→P8 | ACTIVE |
+| D068 | Four-worker topology 与 single-inference boundary | 4 workers、3 bounded SPSC queues、最多一个 `engine.run()` | ACTIVE |
+| D069 | RuntimeConfig v4、Result JSON v3 与 compatibility | TensorRT-only v4，独立 Result v3，历史行为不变 | ACTIVE |
+| D070 | Exact correctness、timing 与 benchmark contract | RUN/CYCLE 独立域、精确 EOS/timing/window/Gate | ACTIVE |
+| D071 | Offline block-only sources 与 deferred live-stream scope | Directory/Video block-only；live/drop 延后 | ACTIVE |
 
 ---
 
@@ -3632,3 +3637,102 @@ search.
 
 可调整。若后续获得新的授权和真实证据，可重新评估部署候选；任何此类
 变化必须新增 Decision，并不得改写本 Decision 或历史 raw tensor Evidence。
+
+### D067 — Stage P baseline, scope and execution authority
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+冻结 Stage P 起点为
+`main@c6890d86e7534500cfe31c40dd73f151d77d5362`，并要求本地 main、
+`origin/main` 与 annotated tag
+`stage-k-tensorrt-fp16-complete-v1.0^{}` 相等。Stage P 的技术与实验协议权威
+为 `STAGE_P_EXECUTION_PLAN.md` v1.2 FINAL，任务边界权威为
+`STAGE_P_TASK_CARDS.md`，执行授权严格遵循 P0→P8。
+
+P0 在包含本 changeset 的 commit 完成；P1 仅在用户审查该 P0 commit 后才能
+授权。P0 不包含 production、header、CMake、tests、config schema、Engine build、
+正式 benchmark/stability 或 Evidence attempt。Stage K 已 COMPLETE；D066 的
+Original TensorRT FP16 candidate 与 raw Level B retained limitation 均不改写。
+
+### D068 — Four-worker topology and single-inference boundary
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+Stage P Pipeline 固定为 Source、Preprocess、single Inference、
+Postprocess+Sink 四个 workers 与三条 bounded SPSC queues。使用一个 TensorRT
+ExecutionContext、一个 CUDA stream、batch 1，且最大并发
+`engine.run() = 1`。组件由唯一 worker 使用，不实现可配置 worker 数、独立 Sink
+worker、thread pool、MPMC、multiple contexts 或 multiple streams。
+
+`D012 remains ACTIVE.` D068 只 supersede D012 rationale 中历史性的
+“three-thread pipeline” implementation detail；它不 supersede Serial + Pipeline
+路线。
+
+### D069 — RuntimeConfig v4, Result JSON v3 and compatibility
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+RuntimeConfig v4 是 TensorRT-only strict union：runtime 为 serial/pipeline，
+input 为 directory/video_file，Pipeline 仅允许 bounded `block`。配置 schema 与
+Result schema 独立；v4 明确映射到 Result JSON v3。Result v3 使用可选 internal
+`runtime_v3` metadata/summary carrier 承载 runtime/input/pipeline、source_frames、
+positive finite wall time 与 queue high-water marks。v1/v2/v3 config regression
+和 Result v1/v2 历史行为、字段与 bytes 不得因新默认值改变。
+
+Video 的 `max_frames` 只属于 constructor/test/experiment control，不进入
+RuntimeConfig v4；nominal FPS 不进入 production Result JSON v3。
+
+### D070 — Exact correctness, timing and benchmark contract
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+最终 Detection 按 canonical little-endian binary 精确比较。RUN scope=1 与 CYCLE
+scope=2 是相互独立的 byte streams；`RUN_AND_CYCLE` 必须维护两个 SHA，不能拼接
+成单一 digest。P4 与 P5 使用双 scope；P6 只用 RUN；P7 只用 CYCLE。Incomplete
+cycle 只记录 frame count/partial digest，不与完整 180-frame expected CYCLE SHA
+比较。
+
+`source_frames` 只统计 successful run 中 successfully returned non-EOS frames；
+final EOS probe、failed call、source-only EOS trace、cancelled/discarded item
+均不计。block-only successful run 必须
+`source_frames == processed_images`。Immediate EOS before the first accepted
+frame 是 failure；Serial/Pipeline 都只 probe 一次、不调用 `end_run`、不改变 caller
+summary、不伪造 wall time，也不生成成功的零帧 Result v3。
+
+任何 trace callback failure 均为 first error：cancel queues、join workers、不调用
+`end_run`、summary unchanged。Runner 成功后的 buffered trace write failure 使
+attempt invalid 且 sidecar 不得发布为 valid；已经 atomic committed 的 production
+JSON 不回滚，必须披露。
+
+P5 formal measured window 固定为完整 frames 100—5099，throughput 使用 frame 100
+source begin 到 frame 5099 outer Sink end；三对顺序、Type-7 percentile、paired
+ratio arithmetic mean、sample SD (n-1) 与 1.10× material classification 不变。
+D066 的 raw TensorRT Level B `FAIL — retained known limitation` 不因 Stage P
+exact scheduling identity 被改写。
+
+### D071 — Offline block-only sources and deferred live-stream scope
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+Stage P 仅支持 DirectorySource 与 VideoFileSource 的离线无损 backpressure，
+`drop_policy = block`。Video identity 固定为：
+
+```text
+video_filename = video_path.filename().generic_u8string()
+relative_path = <video_filename>/frame_<zero-padded minimum width 6 index>
+```
+
+P6 正式 asset 与 MJPG codec preflight 在 Jetson 生成/执行；WSL codec smoke 仅为
+非正式能力检查。Jetson preflight 失败为 `P6_BLOCKED_CODEC_PREFLIGHT`，不得静默
+换 codec、引入 GStreamer 或扩大范围。FPS、container frame count、FourCC、decoded
+count 与 resolution 仅进入 codec/asset sidecar，其中 FPS 是 descriptive metadata，
+不是 pacing 或 timing authority。
+
+Camera、RTSP、`drop_oldest`、`drop_newest`、live-stream policy、DeepStream、
+GStreamer 专项优化与 ROS2 runtime 延后。P6 仅在 P5 queue capacity 已 selected
+and frozen 且 P5 formal benchmark protocol complete 后授权。

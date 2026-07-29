@@ -3137,3 +3137,26 @@ Stage J Plan or historical Evidence.
   rerun，no source/Engine/ONNX/ModelContract/tolerance was changed。
 - Stage P development may start from the cleaned repository state under its
   separately authorized task boundary。
+
+## 2026-07-30T01:26:25+08:00 - Stage P P0 Planning Freeze
+
+- Baseline verified: local `main`, `origin/main`, and peeled annotated tag
+  `stage-k-tensorrt-fp16-complete-v1.0` all equal
+  `c6890d86e7534500cfe31c40dd73f151d77d5362`.
+- The local and remote Stage P branch were absent; branch
+  `feature/jetson-pipeline-runtime` was created from the exact baseline.
+- Six confirmed untracked Stage P planning-audit files were moved unchanged to
+  `/home/orin/edge-ai-local-evidence/stage_p/p0_planning_audit/20260730T011741+0800/`;
+  pre/post SHA256 identities are recorded in `STAGE_P_BASELINE_REPORT.md`.
+- Stage P Execution Plan v1.2: `FINAL`; all v1.1 sections 1—35 and the frozen
+  route are retained with execution-contract normalizations integrated.
+- P0 Planning Freeze:
+  `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`.
+- Stage K: `COMPLETE`; D066 raw TensorRT Level B limitation remains
+  `FAIL — retained known limitation`. Historical Stage J/K Evidence was not
+  modified.
+- P0 made documentation-only changes. No production/header/CMake/test/config
+  modification, Engine build, benchmark, stability run, or formal Evidence
+  attempt was performed.
+- P1 is `NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`; P1 has not started.
+- No push, merge, rebase, or tag was performed.
