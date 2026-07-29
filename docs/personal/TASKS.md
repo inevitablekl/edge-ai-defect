@@ -3122,3 +3122,18 @@ Stage J Plan or historical Evidence.
 - Final summary：`results/validation/stage_k8/final_summary_v1/`。
 - Final deployment candidate：`Original TensorRT FP16 Engine`。
 - Stage P Pipeline remains downstream scope and is not included in this task。
+
+## 2026-07-29 - Stage K Post-Finalization Repository Cleanup
+
+- Stage K cleanup：`COMPLETE`。
+- Official evidence remains at the original paths under
+  `results/validation/stage_k6/`, `stage_k7/`, `stage_k_task_eval_v2/` and
+  `stage_k8/`；K5/K6/K7/K8 Evidence content was not modified。
+- Diagnostic and superseded investigation assets were moved to
+  `results/archive/stage_k_diagnostics_v1/`；每个移动文件的原路径、新路径和
+  SHA256 记录在 `archive_manifest.json`。
+- Cleanup inventory：`results/validation/stage_k_cleanup_audit_v1/`。
+- Three confirmed Python bytecode cache files were deleted；no experiment was
+  rerun，no source/Engine/ONNX/ModelContract/tolerance was changed。
+- Stage P development may start from the cleaned repository state under its
+  separately authorized task boundary。

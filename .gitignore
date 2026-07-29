@@ -130,3 +130,20 @@ artifacts/transfer/
 /third_party/onnxruntime/1.23.2/linux-x64/
 /third_party/onnxruntime/1.23.2/linux-aarch64/include/
 /third_party/onnxruntime/1.23.2/linux-aarch64/lib/
+
+# Raw TensorRT and diagnostic tensor artifacts; formal reports/manifests remain trackable.
+*.f32le
+*.engine
+**/debug_dump/
+**/debug_tensors/
+
+# Retained local Stage K supplemental attempts; curated official summaries remain trackable.
+/results/validation/stage_k6/stability_smoke/
+/results/validation/stage_k6/stability_smoke2/
+/results/validation/stage_k6/stability_smoke3/
+/results/validation/stage_k_task_eval_v2/ground_truth_audit/
+
+# Diagnostic archive payload is retained locally; its tracked manifest is the Git index.
+/results/archive/stage_k_diagnostics_v1/**
+!/results/archive/stage_k_diagnostics_v1/
+!/results/archive/stage_k_diagnostics_v1/archive_manifest.json

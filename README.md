@@ -30,3 +30,15 @@ Stage J Plan v0.3 is FROZEN and Stage J is COMPLETE, with its accepted limitatio
 - [Training final report](docs/TRAINING_FINAL_REPORT.md)
 - [Model freeze record](docs/MODEL_FREEZE_RECORD.md)
 - [Training archive index](docs/TRAINING_ARCHIVE_INDEX.md)
+
+## Stage K Final Status
+
+Stage K is final and frozen at commit
+`d4b50739c2f5f1db9ba7b48e653618b2af9cd98a`. The final deployment candidate is
+the Original TensorRT FP16 Engine, accepted using task-level accuracy,
+stability, and performance while retaining the raw TensorRT Level B
+limitation. Post-finalization cleanup is recorded in
+`results/validation/stage_k_cleanup_audit_v1/`; diagnostic investigations are
+preserved under `results/archive/stage_k_diagnostics_v1/`. The Stage K8 final
+summary is at `results/validation/stage_k8/final_summary_v1/`. Stage P remains
+downstream development scope.

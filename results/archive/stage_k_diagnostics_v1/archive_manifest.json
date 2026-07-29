@@ -1,0 +1,658 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_diagnostics_archive_manifest",
+  "archive_id": "stage_k_diagnostics_v1",
+  "source_commit": "d4b50739c2f5f1db9ba7b48e653618b2af9cd98a",
+  "content_policy": "Files moved without content modification; SHA256 recorded after move.",
+  "moved_file_count": 108,
+  "files": [
+    {
+      "original_path": "configs/stage_k/tensorrt_fp32_baseline_v1.yaml",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/configs/stage_k/tensorrt_fp32_baseline_v1.yaml",
+      "sha256": "1ade909093f7a1a5f83e161d919cef896ca92d44f845f55741ff2e34993cae91",
+      "size_bytes": 808
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/README.txt",
+      "sha256": "36aaaad41b1ad7daa664ee473331d14104ee97e0dd44ecc3e9694ec8866a113b",
+      "size_bytes": 3523
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/debug_capability_audit_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_capability_audit_v1/README.txt",
+      "sha256": "0abccd392ad33e6a89033d8eb7d851c142a65d53eb956691a19398345cef5b38",
+      "size_bytes": 7811
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/debug_engine_diagnostic_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_engine_diagnostic_v1/README.txt",
+      "sha256": "3db921bccc6cd44d1b238b3b9b3377b07cbb53188ca5024b568ffd411be15858",
+      "size_bytes": 9517
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/debug_engine_feasibility_audit_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_engine_feasibility_audit_v1/README.txt",
+      "sha256": "e28a13896ca53d32f62ec07760b2df4831d9a513884845db2cb35e7ba2358019",
+      "size_bytes": 14177
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/debug_tool_enablement_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_tool_enablement_v1/README.txt",
+      "sha256": "36ff4c9cd6bdd05e67bf0b651a5b330cb92842a167e50b88788417e597e15870",
+      "size_bytes": 5911
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/README.txt",
+      "sha256": "70772b6b39ed85776e6a229e9b407e77ef333c0ece33d761a95857e2b5396ecb",
+      "size_bytes": 8598
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/debug_tensor_inventory.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/debug_tensor_inventory.json",
+      "sha256": "55d1aba9806f7e0be6d1d17fd99f266c0434cf627c12796350b748b01e39e7a1",
+      "size_bytes": 5577
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/intermediate_comparison.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/intermediate_comparison.json",
+      "sha256": "6f69c3dd463369f6ebab5219a5ebd0d66af1f1c706a1cb291605caa3aee94fcb",
+      "size_bytes": 13553
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/onnx_graph_node_mapping.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/onnx_graph_node_mapping.json",
+      "sha256": "3cddcec0578b50626fd51a6f92cd80a16a19dcddaafbb224958f0d6873fcf8e8",
+      "size_bytes": 3903
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_1_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_1_output_0.ort.f32le",
+      "sha256": "89f29a13e695bef3399afe034d4b528f3d89a3d46ac03a9e66bf7e938c300b14",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_2_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_2_output_0.ort.f32le",
+      "sha256": "8ba372ea9f31da9978c1d7dd5e02cf55dc2d2f0eea86ffd7bc5e9eb53dbc9deb",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Concat_2_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Concat_2_output_0.ort.f32le",
+      "sha256": "d7848eedb3e214365f5743c7beba2eca17cb168fbc0367381f00bb2da6fdad5f",
+      "size_bytes": 134400
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Div_1_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Div_1_output_0.ort.f32le",
+      "sha256": "9364cabf7bf4fb0da49232f44a3d7b20a7e272b48388dfff5512d6f5ac821004",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Mul_2_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Mul_2_output_0.ort.f32le",
+      "sha256": "03a8ee8f56c08cd82fa262453fed39e330cdf3dd0465a65586db43309426e08c",
+      "size_bytes": 134400
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sigmoid_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sigmoid_output_0.ort.f32le",
+      "sha256": "cadcf61d3f29b04dc9010ea1e80ef1e701b9044bdb92e1ccd2f191d9ee370d80",
+      "size_bytes": 201600
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_1_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_1_output_0.ort.f32le",
+      "sha256": "06bebb06c82c9cd2f0a8c02c6ca4f8a75fd4c7006e29a0f4f08a66f72ab03e0d",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_output_0.ort.f32le",
+      "sha256": "361d0dfe4e030272ebe61c22014517f668fdb67086ef569c3b1bc8890f660729",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_1_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_1_output_0.ort.f32le",
+      "sha256": "8f122091d98ca8c1dd218a8524f68bfafb58bcf2bc0ad0eaf77cd65e06af52d6",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_output_0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_output_0.ort.f32le",
+      "sha256": "21d51c0cd8dd37efc5d2eb0be968dc3617b91f6f02f588f7e1a7b7fc45bc166d",
+      "size_bytes": 67200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/ort_intermediate_metadata.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/ort_intermediate_metadata.json",
+      "sha256": "8ab4181c83b0f51f2f64e8b659f12bfb9d3f453b87b48e3c36cfc29715acc028",
+      "size_bytes": 1794
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/output0.ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/output0.ort.f32le",
+      "sha256": "f00e480dca8e5035807d790883a7d08022c31729386deee097104a7bdfb5cc60",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/repeatability_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/repeatability_report.json",
+      "sha256": "e230de936a7fd8b9e6e73e2c34b97598f14d3916e3dd268808b5054f4d893529",
+      "size_bytes": 5618
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/README.txt",
+      "sha256": "0f89b9381b1408bd8c0a5f6f0c81a8bad0d0eb260c29b61ed30829786b3d5eaf",
+      "size_bytes": 3553
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/Y_ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/Y_ort.f32le",
+      "sha256": "c924f863ae73abb2c8891dfa13db0c3f0182169565807efb422b71e55e7991da",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/case_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/case_report.json",
+      "sha256": "70453d4012550b7274b4ee67dea2bbd11a2d3cd77a241037a35e90ad3ccfea57",
+      "size_bytes": 2391
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input.f32le",
+      "sha256": "830eadd834b9305b1472dcb60b1c7fffea53b0f0e12012fc36dc9f920fd56f2a",
+      "size_bytes": 4915200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input_manifest.json",
+      "sha256": "0cc26613bab47e381b922753277917278e1441e3926aa9582d48850e39a0a240",
+      "size_bytes": 438
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stderr.txt",
+      "sha256": "a2fa8b4c8df9470d9a5b23b647255122405561834ac2ca86101236cf0bb385c9",
+      "size_bytes": 270
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_control/run_control.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_control/run_control.json",
+      "sha256": "36ab50d6680c41995846714b670c450b489c073dfef674db3dfd4a450cbaef53",
+      "size_bytes": 1287
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_runtime_record.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_runtime_record.json",
+      "sha256": "6d133e067975012886722fad9b0d24819321627f9549e1531bfbfacefcb74ff2",
+      "size_bytes": 1542
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/runner_input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/runner_input_manifest.json",
+      "sha256": "5e110997608e0ee339898ecad14b931d903b7ff79003172316dd8718076cae63",
+      "size_bytes": 674
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.txt",
+      "sha256": "3a09f4c397f25b46b3138eb34ee967ab34bcc617a201bd533ac82b938bd8f20d",
+      "size_bytes": 165
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_0.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_0.f32le",
+      "sha256": "f93e8cba0c4337af8552fd287924dc7a3f944e07c52e78b50ac1e6701b0f336f",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_manifest.json",
+      "sha256": "7e6ea5495fa9c02abd74e48771b2d215ce28c8d2cb9bee1ac93afa0cf3a3c99b",
+      "size_bytes": 1792
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/Y_ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/Y_ort.f32le",
+      "sha256": "709250b35dc8154351656b77b41526600f8632e500be931ab74b4809662447fd",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/case_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/case_report.json",
+      "sha256": "a4b402e6f9447ece36034edd36027c38432527f145f75eee5868560610a02931",
+      "size_bytes": 2543
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input.f32le",
+      "sha256": "8fe668ec31f1c3f921752b96e558ad8faae0158a597d78e86ae2808d43db1671",
+      "size_bytes": 4915200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input_manifest.json",
+      "sha256": "8aba09a54431a486d1739bf86e05b654b0cc0c960eade3bb239a116474762bf1",
+      "size_bytes": 481
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stderr.txt",
+      "sha256": "1789bd8e5080781035ebd62d907c456072f65edaa79a0402bdbf9e3a659afac3",
+      "size_bytes": 270
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_control/run_control.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_control/run_control.json",
+      "sha256": "5e9a6d75da9abcb783613e5cafdf1a1cc6d15258af6f36da598c515cd251b560",
+      "size_bytes": 1317
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_runtime_record.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_runtime_record.json",
+      "sha256": "6d133e067975012886722fad9b0d24819321627f9549e1531bfbfacefcb74ff2",
+      "size_bytes": 1542
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/runner_input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/runner_input_manifest.json",
+      "sha256": "85b02d1984baed06754d41ef2d0689116724087f70f3f76e4883877170459b1c",
+      "size_bytes": 684
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.txt",
+      "sha256": "0f3640758480a20d5bd12b064707f9a21518529d41b5c9b14308faeb3258408f",
+      "size_bytes": 175
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_0.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_0.f32le",
+      "sha256": "9763aded551a38e382fc8a0526c20d04fce640c8608782561db07d3e51b4b23f",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_manifest.json",
+      "sha256": "9881bdc97070b4ce52d05b4eafc61ba4ac300f08c3045a3631710dd48af48309",
+      "size_bytes": 1812
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/synthetic_tensor_isolation_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/synthetic_tensor_isolation_report.json",
+      "sha256": "2600af756e4dd36cf3aba8d64b6da67d74547730a50e50caa29e4160da9ecf60",
+      "size_bytes": 6288
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/Y_ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/Y_ort.f32le",
+      "sha256": "c924f863ae73abb2c8891dfa13db0c3f0182169565807efb422b71e55e7991da",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/case_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/case_report.json",
+      "sha256": "961db6a6eb824fd4a9a195b671f43b72f5c04563c5d586b42e8fed0223fa7440",
+      "size_bytes": 2420
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input.f32le",
+      "sha256": "830eadd834b9305b1472dcb60b1c7fffea53b0f0e12012fc36dc9f920fd56f2a",
+      "size_bytes": 4915200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input_manifest.json",
+      "sha256": "0cc26613bab47e381b922753277917278e1441e3926aa9582d48850e39a0a240",
+      "size_bytes": 438
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stderr.txt",
+      "sha256": "b7da93f4525a5341cd187d651290a45a485359cbcd892315094119dc4c990128",
+      "size_bytes": 270
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_control/run_control.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_control/run_control.json",
+      "sha256": "36ab50d6680c41995846714b670c450b489c073dfef674db3dfd4a450cbaef53",
+      "size_bytes": 1287
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_runtime_record.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_runtime_record.json",
+      "sha256": "6d133e067975012886722fad9b0d24819321627f9549e1531bfbfacefcb74ff2",
+      "size_bytes": 1542
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/runner_input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/runner_input_manifest.json",
+      "sha256": "5e110997608e0ee339898ecad14b931d903b7ff79003172316dd8718076cae63",
+      "size_bytes": 674
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.txt",
+      "sha256": "3a09f4c397f25b46b3138eb34ee967ab34bcc617a201bd533ac82b938bd8f20d",
+      "size_bytes": 165
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_0.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_0.f32le",
+      "sha256": "f93e8cba0c4337af8552fd287924dc7a3f944e07c52e78b50ac1e6701b0f336f",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_manifest.json",
+      "sha256": "d93d836108f2b3071f72b132619f7e73362f30b9439057301996bac0196f0196",
+      "size_bytes": 1792
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/Y_ort.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/Y_ort.f32le",
+      "sha256": "709250b35dc8154351656b77b41526600f8632e500be931ab74b4809662447fd",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/case_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/case_report.json",
+      "sha256": "a4b402e6f9447ece36034edd36027c38432527f145f75eee5868560610a02931",
+      "size_bytes": 2543
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input.f32le",
+      "sha256": "8fe668ec31f1c3f921752b96e558ad8faae0158a597d78e86ae2808d43db1671",
+      "size_bytes": 4915200
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input_manifest.json",
+      "sha256": "8aba09a54431a486d1739bf86e05b654b0cc0c960eade3bb239a116474762bf1",
+      "size_bytes": 481
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stderr.txt",
+      "sha256": "9b6176147898c4bd6497983d936d34334ea262281eb3868a95b54d5e7d8a390f",
+      "size_bytes": 270
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_control/run_control.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_control/run_control.json",
+      "sha256": "5e9a6d75da9abcb783613e5cafdf1a1cc6d15258af6f36da598c515cd251b560",
+      "size_bytes": 1317
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_runtime_record.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_runtime_record.json",
+      "sha256": "6d133e067975012886722fad9b0d24819321627f9549e1531bfbfacefcb74ff2",
+      "size_bytes": 1542
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/runner_input_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/runner_input_manifest.json",
+      "sha256": "85b02d1984baed06754d41ef2d0689116724087f70f3f76e4883877170459b1c",
+      "size_bytes": 684
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.exit_code.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.exit_code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.txt",
+      "sha256": "0f3640758480a20d5bd12b064707f9a21518529d41b5c9b14308faeb3258408f",
+      "size_bytes": 175
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_0.f32le",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_0.f32le",
+      "sha256": "9763aded551a38e382fc8a0526c20d04fce640c8608782561db07d3e51b4b23f",
+      "size_bytes": 336000
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_manifest.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_manifest.json",
+      "sha256": "d9cef73697a4eeb68422a349a4d35ee6255dfc865af6373b370cdb57dd0c0aa2",
+      "size_bytes": 1812
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/synthetic_tensor_isolation_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/synthetic_tensor_isolation_report.json",
+      "sha256": "170534c98e8d6325aa19494fde7fdeb90221601358074d47cdffbb3244d83680",
+      "size_bytes": 6317
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/tensorrt_level_b_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/tensorrt_level_b_report.json",
+      "sha256": "85e83e1be2b207b1ca01a13d95f2ea920f78d210037bf2f16d36df44332212fa",
+      "size_bytes": 13492
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/README.txt",
+      "sha256": "a9ac9f175f6ac0713ee7d60b5a15caf38361cf5093a10347b4b740e2ada6790c",
+      "size_bytes": 9343
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/help_capability_grep.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/help_capability_grep.txt",
+      "sha256": "2ea7d1b842c1024ee07432c54fcd6b174039590f0cb9317c393a430cd2c569bf",
+      "size_bytes": 8012
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stdout.txt",
+      "sha256": "70ffe2dfa2b5c0dc98a46d57ac366cb4d33e9fa2c2e2b16d47942dab862f2918",
+      "size_bytes": 13866
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stderr.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stdout.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stdout.txt",
+      "sha256": "94d3a9bab354a1edd1dd0b2abff51e02d659a3888d9fff2ecd03089269bdfb62",
+      "size_bytes": 18480
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_layer_info.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_layer_info.json",
+      "sha256": "465c82cda7b1fd3f6f9299b2b73b1b4b16ead1c44693fcac92ce630cdb6042c9",
+      "size_bytes": 10128
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_help.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_help.txt",
+      "sha256": "0979bae846a2dd2efb5c50e4a054796bddb11bfd9e6257ed267c5f1f6d892677",
+      "size_bytes": 26257
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/README.txt",
+      "sha256": "1fa843b4e3769a12ce0a47dba87a48e3ec49db34a0345729c2ea884d58948ac8",
+      "size_bytes": 4498
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/level_b_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/level_b_report.json",
+      "sha256": "ec7a874e2eea224535d6ec1a207ebb2b52dd5f1086b5b464d9e3437afae7d092",
+      "size_bytes": 13514
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_1.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_1.json",
+      "sha256": "fd381d093ec9271d5287c7e760e2a1354d9117be2dfd16c8ce38d593dbc40c91",
+      "size_bytes": 11135
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_2.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_2.json",
+      "sha256": "a4351de9030a26d073e644b716ea9d19e87d694be4105c67a5151cb49ec1988c",
+      "size_bytes": 11135
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/repeatability_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/repeatability_report.json",
+      "sha256": "536cc9a6c3e8931d1ffdcb0d227339e345586de43a832e2f484a388047e629de",
+      "size_bytes": 21739
+    },
+    {
+      "original_path": "results/validation/jetson_tensorrt_strict_fp32_notf32/synthetic_tensor_isolation_report.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/synthetic_tensor_isolation_report.json",
+      "sha256": "b9700fe889777abe7498a9cbcd7bc922d23a53f709852bd9f00ad1c9f552f278",
+      "size_bytes": 6448
+    },
+    {
+      "original_path": "results/validation/stage_k_task_eval_v1/dataset_audit.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/dataset_audit.json",
+      "sha256": "32bae76b5c1977b708efe4c46f4c72527f377eed4162a7a7d0e609082e85afa0",
+      "size_bytes": 2013
+    },
+    {
+      "original_path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/README.txt",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/README.txt",
+      "sha256": "2bafc1db9445787f3153105dcf6135d6f34906e3f26e5ea7ca53bbc1844c4156",
+      "size_bytes": 2183
+    },
+    {
+      "original_path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/candidate_dataset_inventory.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/candidate_dataset_inventory.json",
+      "sha256": "f759b813d5dfd019a09dab52e9b78ea2003c2e216109a826f3a58bb7e700fb9b",
+      "size_bytes": 6350
+    },
+    {
+      "original_path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/ground_truth_audit.json",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/ground_truth_audit.json",
+      "sha256": "04e8d59def4664d7483828a5d35d633af54286e9af4df24f1af2cc5f9a413bbd",
+      "size_bytes": 8092
+    },
+    {
+      "original_path": "tools/diagnostic/onnx_head_output_view.py",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/onnx_head_output_view.py",
+      "sha256": "bfe8bdbc593e15df5a30fbf6584b19e93cdca3aca09a0cc216d6c2cdf679135f",
+      "size_bytes": 7080
+    },
+    {
+      "original_path": "tools/diagnostic/onnxruntime_intermediate_runner.cpp",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/onnxruntime_intermediate_runner.cpp",
+      "sha256": "4ca0759a1346b573e688ae91049d360dbc082507683ccd96b7f36f1558835fce",
+      "size_bytes": 5990
+    },
+    {
+      "original_path": "tools/diagnostic/tensorrt_debug_engine_builder.cpp",
+      "archive_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/tensorrt_debug_engine_builder.cpp",
+      "sha256": "2792f91e8f6c348895156dd1c5bd904f0f99ffb1e45300223c79749d55d5eebe",
+      "size_bytes": 18362
+    }
+  ]
+}
