@@ -1,0 +1,14 @@
+TRTEXEC=/usr/src/tensorrt/bin/trtexec
+ONNX=models/onnx/yolov8n_neudet_frozen.onnx
+ENGINE=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine
+BUILD_LOG=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.build.log
+
+"$TRTEXEC" \
+  --onnx="$ONNX" \
+  --fp16 \
+  --memPoolSize=workspace:4096M \
+  --inputIOFormats=fp32:chw \
+  --outputIOFormats=fp32:chw \
+  --saveEngine="$ENGINE" \
+  --skipInference \
+  > "$BUILD_LOG" 2>&1

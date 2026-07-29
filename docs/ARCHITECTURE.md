@@ -734,3 +734,11 @@ belong to Stage J:
 
 J4 is a correctness-validation phase, not a new architecture-development
 phase.
+
+## Current Backend Lifecycle
+
+- Stage J ORT serial baseline: `COMPLETE`.
+- Stage K TensorRT serial backend: `PLANNED/FROZEN` by the Stage K v1.1 FINAL
+  plan; TensorRtEngine is not implemented.
+- Stage P Pipeline: future required downstream scope and unauthorized before
+  Stage K closeout.

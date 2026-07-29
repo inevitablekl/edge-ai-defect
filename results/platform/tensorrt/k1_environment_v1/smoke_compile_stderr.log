@@ -1,0 +1,18 @@
+/usr/bin/ld: warning: libnvdla_compiler.so, needed by /usr/lib/aarch64-linux-gnu/libnvinfer.so, not found (try using -rpath or -rpath-link)
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::createWisdom()'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::ISoftMaxLayer::setAxis(int)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::destroyWisdom(nvdla::IWisdom*)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::INetwork::addTranspose(nvdla::ITensor*, nvdla::Dims4)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::INetwork::addSlice(nvdla::ITensor*, nvdla::Weights, nvdla::Weights, nvdla::Weights, nvdla::Weights, nvdla::SliceLayerMode)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IProfile::setCanGenerateLayerwiseStats(bool)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IProfile::setUseSoftMaxOptz(bool)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IProfile::setCanCompressStructuredSparseWeights(bool)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IConcatenationLayer::setAxis(int)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IPoolingLayer::setPoolingPaddingInclusionType(nvdla::PoolingPaddingInclusionType)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::INetwork::addResize(nvdla::ITensor*, nvdla::ResizeMode, nvdla::Weights)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::INetwork::addReshape(nvdla::ITensor*, nvdla::Dims4)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::destroyNetwork(nvdla::INetwork*)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::INetwork::addReduce(nvdla::ITensor*, nvdla::PoolingType, nvdla::Weights)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::IProfile::setCanGenerateDetailedLayerwiseStats(bool)'
+/usr/bin/ld: /usr/lib/aarch64-linux-gnu/libnvinfer.so: undefined reference to `nvdla::createNetwork()'
+collect2: error: ld returned 1 exit status

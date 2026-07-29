@@ -1,0 +1,1 @@
+TMP_DIR=/tmp/edge-ai-k1-r2-trt-smoke.VzrPgi

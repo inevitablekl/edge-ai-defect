@@ -1,0 +1,78 @@
+LIBNVINFER=/lib/aarch64-linux-gnu/libnvinfer.so.10
+/usr/lib/aarch64-linux-gnu/libnvinfer.so.10.3.0
+
+Dynamic section at offset 0xcdb20f0 contains 38 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000003 (PLTGOT)             0xcdeffe8
+ 0x0000000000000002 (PLTRELSZ)           16248 (bytes)
+ 0x0000000000000017 (JMPREL)             0x5f8620
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000007 (RELA)               0x9f60
+ 0x0000000000000008 (RELASZ)             6219456 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffff9 (RELACOUNT)          251839
+ 0x000000006ffffef6 (TLSDESC_PLT)        0x5fefd0
+ 0x000000006ffffef7 (TLSDESC_GOT)        0xcdce678
+ 0x0000000000000006 (SYMTAB)             0x260
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000005 (STRTAB)             0x4b08
+ 0x000000000000000a (STRSZ)              19254 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x9640
+ 0x0000000000000001 (NEEDED)             Shared library: [libnvdla_compiler.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcudla.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-aarch64.so.1]
+ 0x000000000000000e (SONAME)             Library soname: [libnvinfer.so.10]
+ 0x000000000000000c (INIT)               0x5fc598
+ 0x000000000000000d (FINI)               0x65df7e8
+ 0x0000000000000019 (INIT_ARRAY)         0xc2a0940
+ 0x000000000000001b (INIT_ARRAYSZ)       17576 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0xc2a4de8
+ 0x000000000000001c (FINI_ARRAYSZ)       16 (bytes)
+ 0x0000000000000010 (SYMBOLIC)           0x0
+ 0x000000000000001e (FLAGS)              SYMBOLIC
+ 0x000000006ffffffb (FLAGS_1)            Flags: NODUMP
+ 0x000000006ffffff0 (VERSYM)             0x96a4
+ 0x000000006ffffffc (VERDEF)             0x9cb4
+ 0x000000006ffffffd (VERDEFNUM)          1
+ 0x000000006ffffffe (VERNEED)            0x9cd0
+ 0x000000006fffffff (VERNEEDNUM)         6
+ 0x0000000000000000 (NULL)               0x0
+=== ldd ===
+	linux-vdso.so.1 (0x0000ffffae0a9000)
+	libnvdla_compiler.so => not found
+	libcudla.so.1 => /usr/local/cuda/targets/aarch64-linux/lib/libcudla.so.1 (0x0000ffff9fd90000)
+	libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffff9fb60000)
+	libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffff9fac0000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff9fa90000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffff9f8e0000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffae070000)
+	libnvcudla.so => /lib/aarch64-linux-gnu/libnvcudla.so (0x0000ffff9f8b0000)
+	libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x0000ffff9f890000)
+	libcuda.so => /lib/aarch64-linux-gnu/libcuda.so (0x0000ffff9d020000)
+	libnvdla_runtime.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so (0x0000ffff9c9c0000)
+	librt.so.1 => /lib/aarch64-linux-gnu/librt.so.1 (0x0000ffff9c9a0000)
+	libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x0000ffff9c980000)
+	libnvrm_gpu.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_gpu.so (0x0000ffff9c900000)
+	libnvrm_mem.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_mem.so (0x0000ffff9c8e0000)
+	libnvrm_host1x.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_host1x.so (0x0000ffff9c8b0000)
+	libnvsocsys.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsocsys.so (0x0000ffff9c890000)
+	libnvos.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvos.so (0x0000ffff9c860000)
+	libnvtegrahv.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvtegrahv.so (0x0000ffff9c840000)
+	libnvrm_sync.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_sync.so (0x0000ffff9c820000)
+	libnvsciipc.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsciipc.so (0x0000ffff9c7e0000)
+	libnvrm_chip.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_chip.so (0x0000ffff9c7c0000)
+	libnvinfer_vc_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so.10
+	libnvinfer_vc_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so
+	libnvinfer_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so.10
+	libnvinfer_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so
+	libnvinfer_lean.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so.10
+	libnvinfer_lean.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so
+	libnvinfer_dispatch.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so.10
+	libnvinfer_dispatch.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so
+	libnvinfer.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so.10
+	libnvinfer.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so
+	libnvdla_runtime.so (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so

@@ -1,0 +1,49 @@
+K1-R3 DIAGNOSTIC CONCLUSION
+
+Verdict:
+K1 BLOCKED
+D062 NOT_AUTHORIZED
+
+Required marker:
+CACHE_MISSING_LIBNV_DLA_COMPILER
+
+Observed facts:
+- /etc/ld.so.conf includes /etc/ld.so.conf.d/*.conf.
+- /etc/ld.so.conf.d/nvidia-tegra.conf exists and contains:
+  /usr/lib/aarch64-linux-gnu/nvidia
+- /etc/ld.so.cache exists, but ldconfig -p has no libnvdla_compiler.so entry.
+- ldconfig -p does contain libnvdla_runtime.so and libnvinfer entries.
+- /lib/ld-linux-aarch64.so.1 --list libnvinfer.so.10 fails with exit code 127:
+  libnvdla_compiler.so: cannot open shared object file.
+- The installed compiler library itself can be listed successfully by the
+  loader and its dependencies resolve.
+- libnvinfer DT_NEEDED includes libnvdla_compiler.so and its SONAME is
+  libnvinfer.so.10.
+- libnvdla_compiler.so has SONAME libnvdla_compiler.so.
+- No RPATH or RUNPATH anomaly was observed in either inspected ELF.
+- Package ownership is nvidia-l4t-dla-compiler.
+- Directory and file permissions are readable/executable as expected.
+- /etc/ld.so.cache modification time is 2026-07-23 23:33:02 +0800, before the
+  package installation recorded at 2026-07-27 20:54:22 +0800.
+
+Root-cause classification:
+DYNAMIC_LINKER_CONFIGURATION_ERROR
+
+Taxonomy rationale:
+The NVIDIA loader configuration exists, and the cache file exists, but the
+cache is missing the installed library entry and the loader cannot resolve the
+DT_NEEDED name. This is Category B under the supplied A/B/C taxonomy. The
+more specific observed subcause is a stale or incomplete ld.so cache entry.
+It is not Category A because the NVIDIA path is present in configuration. It
+is not Category C because the cache is not correct and the ELF SONAME/needed
+name pair is consistent.
+
+Recommended remediation (NOT EXECUTED):
+Refresh the dynamic linker cache through the approved system administration
+procedure, then rerun ldconfig -p, ld-linux --list, libnvinfer ldd, and the
+host-only smoke. This stage performed no remediation.
+
+Explicit non-actions:
+No system file modification, sudo ldconfig, loader configuration change,
+symlink creation, LD_LIBRARY_PATH/PATH change, package operation, Engine build,
+D062, or K2 was performed.

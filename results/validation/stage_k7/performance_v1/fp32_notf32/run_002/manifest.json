@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k7_performance_run",
+  "backend": {
+    "key": "fp32_notf32",
+    "label": "Strict FP32 TensorRT noTF32",
+    "engine_path": "/home/orin/edge-ai-local-models/stage_k/strict_fp32_notf32_v1/yolov8n_neudet_trt10.3_strict_fp32_notf32_b1_640.engine",
+    "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+    "engine_size_bytes": 18882468,
+    "manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/build/tensorrt/strict_fp32_notf32_investigation_v1/manifest.json",
+    "manifest_sha256": "086f8e31542f9fbdb88027d3578b23268135d848c165772681dd818c7754ff98",
+    "tensorrt_version": "10.3.0.30",
+    "cuda_version": "12.6.68",
+    "l4t_version": "R36.5.0",
+    "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "precision_mode": null
+  },
+  "run_id": "run_002",
+  "started_at_utc": "2026-07-29T14:40:06.828+00:00",
+  "completed_at_utc": "2026-07-29T14:41:46.392+00:00",
+  "command": [
+    "/home/orin/edge-ai-local-build/stage_k7_performance_v1/stage_k7_trt_benchmark",
+    "--engine",
+    "/home/orin/edge-ai-local-models/stage_k/strict_fp32_notf32_v1/yolov8n_neudet_trt10.3_strict_fp32_notf32_b1_640.engine",
+    "--input-dir",
+    "/tmp/stage_k7_input_j6zn8qil",
+    "--output-csv",
+    "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k7/performance_v1/fp32_notf32/run_002/latency_samples.csv",
+    "--warmup",
+    "100",
+    "--iterations",
+    "5000"
+  ],
+  "returncode": 0,
+  "subprocess_wall_elapsed_ms": 99564.42816600065,
+  "warmup_iterations": 100,
+  "measured_iterations": 5000,
+  "input_image_count": 180,
+  "latency_summary": {
+    "inference": {
+      "count": 5000,
+      "mean_ms": 13.3766598748,
+      "median_ms": 13.3357475,
+      "std_ms": 0.17697963528048624,
+      "p50_ms": 13.3357475,
+      "p95_ms": 13.5443971,
+      "p99_ms": 14.70694907,
+      "min_ms": 13.136889,
+      "max_ms": 14.978124,
+      "fps": 74.75707757837802
+    },
+    "e2e": {
+      "count": 5000,
+      "mean_ms": 19.2683091016,
+      "median_ms": 19.112507,
+      "std_ms": 0.46047671391883266,
+      "p50_ms": 19.112507,
+      "p95_ms": 19.90473055,
+      "p99_ms": 21.082292520000003,
+      "min_ms": 16.341035,
+      "max_ms": 21.634493,
+      "fps": 51.8986899539079
+    },
+    "preprocess": {
+      "count": 5000,
+      "mean_ms": 4.4868021378,
+      "median_ms": 4.339815,
+      "std_ms": 0.38469600000658755,
+      "p50_ms": 4.339815,
+      "p95_ms": 5.0184716,
+      "p99_ms": 5.14539728,
+      "min_ms": 2.266728,
+      "max_ms": 6.886171,
+      "fps": 222.87588560576174
+    },
+    "h2d": {
+      "count": 5000,
+      "mean_ms": 0.9865231882,
+      "median_ms": 0.982093,
+      "std_ms": 0.032571852385966334,
+      "p50_ms": 0.982093,
+      "p95_ms": 1.034671,
+      "p99_ms": 1.05976227,
+      "min_ms": 0.706048,
+      "max_ms": 1.243417,
+      "fps": 1013.6609174129902
+    },
+    "postprocess": {
+      "count": 5000,
+      "mean_ms": 0.41760673379999996,
+      "median_ms": 0.413123,
+      "std_ms": 0.05245137930156401,
+      "p50_ms": 0.413123,
+      "p95_ms": 0.508279,
+      "p99_ms": 0.5397107600000001,
+      "min_ms": 0.15636,
+      "max_ms": 0.602811,
+      "fps": 2394.5974024425564
+    },
+    "detection_count": 13948,
+    "warmup_count": 100,
+    "measured_count": 5000
+  },
+  "tegrastats": {
+    "path": "tegrastats.log",
+    "sample_interval_ms": 1000,
+    "line_count": 98
+  },
+  "timing_definitions": {
+    "inference": "host timestamp immediately before enqueueV3 through D2H cudaStreamSynchronize completion; H2D is excluded",
+    "e2e": "host timestamp before preprocess through postprocess completion; image decode and result serialization are excluded"
+  }
+}

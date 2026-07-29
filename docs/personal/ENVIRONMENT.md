@@ -53,13 +53,18 @@ Not available
 
 ## 3. 当前环境总览
 
-当前状态：`M0–M5 CLOSED`；Stage J Plan v0.3：`FROZEN`；D041–D048：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`COMPLETE_WITH_ACCEPTED_J4_2_LIMITATION`；J4.1：`COMPLETE`；J4.2：`COMPLETE_WITH_ACCEPTED_CROSS_ARCH_NUMERICAL_LIMITATION`；J4.3：`COMPLETE`；J4.4：`PASS_WITH_ACCEPTED_J4_2_LIMITATION`；implementation branch：`feature/jetson-onnxruntime`；current HEAD：`ee2ff2546736c8349d0e34cffe547f1f68690cb6`。Stage T 和 Stage P 尚未开始。下一授权任务：`J5.1 Benchmark Python Reference Preparation`。
+当前状态：Stage J `COMPLETE`；Stage K Execution Plan `FINAL`；K0 Planning
+Freeze `COMPLETE`；K1 Platform Acceptance `PASS`；D062 `ACCEPTED`；K2/K3/K4
+`COMPLETE`；K5 Correctness Tooling Foundation implementation slice
+`COMPLETE`，但 K5 formal correctness campaign 尚未执行；Stage P Pipeline
+`NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`。本文件只记录已知平台事实和阶段
+状态；TensorRT Engine 保持 local-only，不作为 Git artifact。
 
 | 环境 | 用途 | 当前状态 |
 |---|---|---|
 | Local Development PC | 代码开发、Python / C++ ONNX Runtime 验证 | M1 core contracts/CPU preprocessing 已完成；WSL2 GPU 当前不可访问 |
 | Cloud Training Platform | YOLOv8n 训练、验证、ONNX export | 已知 GPU |
-| Edge Deployment Platform | Stage J Jetson CPU baseline；后续 Stage T TensorRT FP16 | J1–J4 verified; J4.2 accepted under D048; J5.1 entry preparation |
+| Edge Deployment Platform | Stage J Jetson CPU baseline；Stage K TensorRT FP16 serial/correctness tooling | J1–J4 verified; K1 PASS; D062 accepted; K2–K4 complete; K5 tooling slice complete |
 
 ---
 
@@ -1005,3 +1010,135 @@ The final J3 environment and validation facts are:
   `m5_level_c_common.py`=`aef39cf5b9ae8b9d60edef5fc8f4bb1a77045619547cb9f4d8f5490ae3b894ab`；
   `prepare_m5_corpus.py`=`3c55e5fb86b4a888b91e72d60470c1b272a94f41747f9c958e747e22c5735b5f`。
 - No Jetson benchmark；no performance result；no TensorRT、CUDA、Pipeline 或 telemetry。
+
+## Stage K K0 Environment Boundary
+
+The Stage K planned/verified target remains Jetson Orin Nano Super Developer
+Kit, aarch64, L4T R36.5 / JetPack 6.2.2, with the Stage J observed CPU-only ORT
+facts retained. These facts do not constitute K1 acceptance.
+
+K1 has not executed. No K1 smoke, trtexec help result, TensorRT Engine, CUDA or
+TensorRT compile/link result is recorded here. TensorRT and CUDA values remain
+limited to previously recorded Stage J platform facts and the frozen Stage K
+plan; no new package was installed or upgraded.
+
+## Stage K K1 Platform Acceptance Attempt (2026-07-27)
+
+- Verified on branch `feature/jetson-tensorrt-fp16`, starting commit
+  `865b3c0060a7c6ae5aea05b9f52bf79c4c344c59`；Evidence：
+  `results/platform/tensorrt/k1_environment_v1`。
+- Platform facts：NVIDIA Jetson Orin Nano Engineering Reference Developer Kit
+  Super，`aarch64`，Ubuntu `22.04.5`，L4T `R36.5.0`，nvpmodel
+  `MAXN_SUPER`；non-interactive sudo unavailable，未改变 power/clock 状态。
+- CUDA facts：`/usr/local/cuda -> /usr/local/cuda-12.6`，
+  `cuda_runtime_api.h` 与 `libcudart.so` 存在，CUDA package/runtime path
+  `12.6.68`；`nvcc` 不在 PATH，但 `/usr/local/cuda/bin/nvcc` 可运行。
+- TensorRT facts：`NvInfer.h`、`NvInferRuntime.h`、`NvInferPlugin.h` 和
+  `libnvinfer.so.10.3.0` 存在，package/runtime `10.3.0.30`；
+  `libnvinfer.so` 的 `libnvdla_compiler.so` 依赖在本机缺失。
+- `trtexec`：`/usr/src/tensorrt/bin/trtexec`，TensorRT `v100300`，help 可用；
+  `tegrastats` 基本采样可用。
+- K1 host-only g++ smoke 因缺失 `libnvdla_compiler.so` 在链接阶段阻塞，
+  因而 K1 未通过；该事实不覆盖或修改 Stage J 历史记录。JetPack `6.2.2`
+  作为 L4T `R36.5` 目标合同记录，但 `nvidia-jetpack` meta-package 未安装。
+
+## Stage K K1-R2 Package Repair Re-attempt (2026-07-27)
+
+- Exact package installed after the authorized manual retry：
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252`，architecture `arm64`。
+  `nvidia-l4t-core=36.5.0-20260115194252` and TensorRT
+  `10.3.0.30-1+cuda12.5` were preserved；`dpkg --audit` was empty。
+- Installed library：
+  `/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so`；AArch64 ELF；SONAME
+  `libnvdla_compiler.so`；SHA256
+  `c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec`。
+- TensorRT runtime link verification remains blocked：`libnvinfer.so.10`
+  has DT_NEEDED `libnvdla_compiler.so`, but `ldd` reports it as `not found`.
+  No manual `ldconfig`, loader configuration change, symlink, or copied library
+  was used.
+- Host-only smoke source SHA256 matches K1 v1：
+  `8b0fe4859262ad00ace06b47639d14e3a79504bb8bff40337797b929f95b04cb`。
+  Ordinary g++ compilation succeeded, but binary `ldd` and runtime loading
+  failed on the unresolved DLA compiler dependency; CUDA device/stream and
+  TensorRT Runtime creation were not accepted.
+- K1-R2 Evidence：`results/platform/tensorrt/k1_environment_v2`。This does
+  not claim Stage K uses DLA as an execution device; the package was installed
+  only to satisfy the TensorRT runtime dependency chain. K1 remains `BLOCKED`；
+  D062 and K2 remain unauthorized.
+
+## Stage K K1-R4 Dynamic Linker Cache Refresh (2026-07-27)
+
+- User-confirmed standard `sudo ldconfig` refreshed the loader cache; no
+  loader configuration file was changed. `ldconfig -p` now resolves
+  `libnvdla_compiler.so` to `/usr/lib/aarch64-linux-gnu/nvidia/`.
+- `libnvinfer.so.10` and the smoke binary have no unresolved dependencies.
+  Smoke source SHA remains
+  `8b0fe4859262ad00ace06b47639d14e3a79504bb8bff40337797b929f95b04cb`；CUDA
+  Runtime/Driver, one Orin device, stream lifecycle and TensorRT Runtime
+  lifecycle all passed.
+- `trtexec --help` and `ldd` passed. `trtexec --version` printed TensorRT
+  `v100300` but returned `1` because no model was supplied; this is classified
+  as a `non-blocking CLI behavior limitation` and the raw failure is retained.
+  Independent TensorRT Runtime validation supersedes this command exit status
+  for K1 platform acceptance.
+- K1-R4 Evidence：`results/platform/tensorrt/k1_environment_v4`。K1 is now
+  `PASS`；D062 is `READY` but remains unexecuted/unaccepted；K2 remains
+  unauthorized。
+
+## Stage K D062 Exact TensorRT Engine Build Contract (2026-07-27)
+
+- D062 contract Evidence：`results/platform/tensorrt/d062_contract_v1`；状态：
+  `D062 ACCEPTED`；K2：`READY`。
+- Environment：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，L4T `R36.5.0`，CUDA `12.6.68`，TensorRT `10.3.0.30`；trtexec：
+  `/usr/src/tensorrt/bin/trtexec`，`v100300`。
+- Frozen build contract uses FP16 builder mode with mixed precision、static
+  batch 1、`[1,3,640,640]`、FP32 CHW input/output and
+  `--memPoolSize=workspace:4096M`。TensorRT 10.3 help contains no
+  `--workspace`；dynamic shape flags are intentionally omitted。
+- Engine is local-only under `/home/orin/edge-ai-local-models/stage_k/`；K2
+  must produce the Engine, inspect it and run independent `--loadEngine` smoke
+  before any production backend work。
+- D062 阶段未执行 ONNX parsing、Engine build、save/load smoke 或生产代码修改。
+
+## Stage K K2 TensorRT Engine Build and Freeze (2026-07-27)
+
+- K2 formal Engine build、inspection 和 independent load smoke 均完成；Evidence：
+  `results/build/tensorrt/k2_fp16_engine_v1`。
+- Local Engine：
+  `/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine`；
+  `8928756` bytes；SHA256
+  `6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc`。
+- Build/inspection/load smoke exit codes：`0/0/0`。Engine contract：FP32+FP16
+  mixed precision、workspace `4096 MiB`、static `1x3x640x640`、FP32 CHW I/O；
+  DLA/INT8 disabled，未发现 custom/dynamic plugin dependency。
+- Final bindings：`images` → `1x3x640x640`；`output0` → `1x10x8400`；static
+  optimization profile min/opt/max 一致。Manifest：
+  `models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`。
+- K2：`COMPLETE`；K3：`READY`。Engine 保持 local-only；未修改生产代码、CMake、
+  RuntimeConfig 或 Pipeline。one-second load smoke 的 GPU variance warning
+  仅作为 limitation 保留，不作为正式性能结论。
+
+## Stage K K3 Build and Schema Foundation (2026-07-27)
+
+- K3 使用同一 Jetson/aarch64 environment；CMake option
+  `EDGE_AI_ENABLE_TENSORRT` 默认 `OFF`。OFF build 不依赖 CUDA/TensorRT；ON
+  configure 检查 `cuda_runtime_api.h`、versioned `libcudart.so`、`NvInfer.h`
+  和 `libnvinfer.so`。
+- K3 仅建立 TensorRT build/schema foundation：RuntimeConfig v3、Engine Manifest
+  parser、Result JSON v2 metadata branch 和 backend factory skeleton。TensorRT
+  factory 仍返回 `NOT_IMPLEMENTED`，推理实现保留到 K4。
+- 本阶段未执行 TensorRT inference、CUDA stream/buffer allocation、engine load、
+  benchmark、Pipeline 或生产 TensorRT backend。
+
+## Stage K K4 TensorRtEngine Implementation (2026-07-27)
+
+- ON build 在真实 Jetson TensorRT 10.x 环境成功构建并运行
+  `TensorRtEngine`；OFF build 保持无 CUDA/TensorRT 依赖并使用明确 disabled stub。
+- K4 使用单个 TensorRT Runtime、ICudaEngine、IExecutionContext、CUDA stream 和
+  持久化 device buffers；每帧只进行 HostTensor↔device copy、named tensor address
+  binding、`enqueueV3` 和同步。
+- K4 smoke 使用冻结 Engine Manifest，验证 Engine/ONNX/ModelContract SHA、静态
+  tensor contract、FP32 I/O、有限输出和连续两次 inference。未进行性能或广泛
+  correctness campaign。
+- 当前状态：K4 `COMPLETE`；K5 `READY`。

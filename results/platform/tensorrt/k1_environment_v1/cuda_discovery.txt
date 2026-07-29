@@ -1,0 +1,21 @@
+$ command -v nvcc || true
+$ readlink -f /usr/local/cuda || true
+/usr/local/cuda-12.6
+$ ls -ld /usr/local/cuda /usr/local/cuda-* 2>&1 || true
+lrwxrwxrwx  1 root root   22 Jul 21 11:48 /usr/local/cuda -> /etc/alternatives/cuda
+lrwxrwxrwx  1 root root   25 Jul 21 11:48 /usr/local/cuda-12 -> /etc/alternatives/cuda-12
+drwxr-xr-x 12 root root 4096 Jul 21 11:48 /usr/local/cuda-12.6
+$ /usr/local/cuda/bin/nvcc --version 2>&1 || true
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Wed_Aug_14_10:14:07_PDT_2024
+Cuda compilation tools, release 12.6, V12.6.68
+Build cuda_12.6.r12.6/compiler.34714021_0
+$ find /usr/local/cuda* /usr/include /usr/lib /lib -name cuda_runtime_api.h -o -name 'libcudart.so*' 2>/dev/null
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so.12
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so.12.6.68
+/usr/local/cuda-12.6/targets/aarch64-linux/include/cuda_runtime_api.h
+$ ldconfig -p | grep -E 'libcudart\\.so' || true
+	libcudart.so.12 (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.12
+	libcudart.so (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so

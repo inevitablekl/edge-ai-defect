@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "active_attempt": "attempt_002",
+  "attempts": [
+    {
+      "attempt_id": "attempt_001",
+      "status": "INVALIDATED_BY_TOOLING_CHANGE",
+      "reason": "raw runner did not accept canonical input_tensor_sha256, then emitted a non-canonical basename input identity",
+      "implementation_commits": ["dcb10a55909b78928fef95fa825c51514ec0e512", "c54020c18c98dbee408131f6642680f44d3ab433"],
+      "local_path": "/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/attempt_001/"
+    },
+    {
+      "attempt_id": "attempt_002",
+      "status": "K5_FAILED",
+      "reason": "ORT_CONTROL_FAIL",
+      "implementation_commit": "ca8393556689b738ac8991530f5eabb11696d560",
+      "local_path": "/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/attempt_002/"
+    }
+  ]
+}

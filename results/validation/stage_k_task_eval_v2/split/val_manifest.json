@@ -1,0 +1,3670 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_split_manifest",
+  "split": "val",
+  "dataset_root": "data/raw/NEU-DET",
+  "split_ratio": [
+    0.7,
+    0.2,
+    0.1
+  ],
+  "random_seed": 42,
+  "ordering": "sorted XML paths then random.Random(seed).shuffle",
+  "duplicate_bbox_policy": "remove exact duplicate YOLO rows before splitting",
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "deduplication": {
+    "raw_bbox_count": 4189,
+    "duplicate_bbox_count_removed": 3,
+    "deduplicated_bbox_count": 4186
+  },
+  "entry_count": 360,
+  "bbox_count": 828,
+  "class_image_distribution": {
+    "crazing": 66,
+    "inclusion": 77,
+    "patches": 63,
+    "pitted_surface": 59,
+    "rolled-in_scale": 57,
+    "scratches": 61
+  },
+  "class_bbox_distribution": {
+    "crazing": 145,
+    "inclusion": 214,
+    "patches": 154,
+    "pitted_surface": 87,
+    "rolled-in_scale": 124,
+    "scratches": 104
+  },
+  "entries": [
+    {
+      "image_path": "IMAGES/pitted_surface_231.jpg",
+      "image_sha256": "0bfa310238545597ac7a48495a85ae1a945d2f6f8e4fa470d1bce5f4648c931c",
+      "annotation_path": "ANNOTATIONS/pitted_surface_231.xml",
+      "annotation_sha256": "54a2597ac1bb459cf05ba2f9530e509a4e5317d3f6cd17211d6cf97d81cc809e",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_136.jpg",
+      "image_sha256": "3098125d30d183bf4dad699ee6cb042ed94c1f3fb40d5b8835fe622c2f453d1a",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_136.xml",
+      "annotation_sha256": "cb778301918d8bb5b5e5e7713297a0a6d1a71ea8d69f09fc38b69065a61ccd9c",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_93.jpg",
+      "image_sha256": "1a7d1dbbb35ef9f8e44672cac1cf2018b00f61fd7547c3bd0283c7336fc7d9f7",
+      "annotation_path": "ANNOTATIONS/patches_93.xml",
+      "annotation_sha256": "1841ee2e95e29601fdbb7581d480cf1dacdf6f5fa34c7c2b2987545a862e17f0",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_46.jpg",
+      "image_sha256": "d1092df4031029a5d838948b39f1d08e01a8448ce8f6aa1a47489e9936c71768",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_46.xml",
+      "annotation_sha256": "9b922e546c68c177cb71f794b963d64d9f36501b16ef3376e5ef6f9838b4e613",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_196.jpg",
+      "image_sha256": "6c8ff326e64496001a154cb0f4ffdaae45d077fc86624ded60ace3b00a943ceb",
+      "annotation_path": "ANNOTATIONS/patches_196.xml",
+      "annotation_sha256": "f061cc51067b664f50211072c01a319fa78fc969f7ee30c1117393e8995db478",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_9.jpg",
+      "image_sha256": "48158c47d557ab7b499a34dbc2ba4955754a2235db290c5cc3c4a1266111494a",
+      "annotation_path": "ANNOTATIONS/patches_9.xml",
+      "annotation_sha256": "8853ccdd852b27dc5a24d3322f03715730f8d138919d0e83217268a20b30bae3",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_221.jpg",
+      "image_sha256": "e65d748792cd1010f663588aec6437acad9a26c92a30ea263b67febed363b27b",
+      "annotation_path": "ANNOTATIONS/scratches_221.xml",
+      "annotation_sha256": "b8d8495a9aa8acb039c2d369d4371e78348b7bc219ab422289865cbf9d2fd8f6",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_3.jpg",
+      "image_sha256": "155778cd3e7c82e81ea80a956a015f4eb3d0d09828fca6956eb8883edc39d123",
+      "annotation_path": "ANNOTATIONS/crazing_3.xml",
+      "annotation_sha256": "ac9167c62b85b2c1266e21611d6fb62a023cd89096ea82246c2c61784b0ac769",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_17.jpg",
+      "image_sha256": "c811854bc098b5524d3de6c31c21ccbb2dfde665309317a8d92cc59137263e0e",
+      "annotation_path": "ANNOTATIONS/crazing_17.xml",
+      "annotation_sha256": "4d1472a016ccba6b0ee0638ce5ca216706600a61c228349b9d6afd46220f1632",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_267.jpg",
+      "image_sha256": "f94df50a93a2344276102c078efd1ed8e027d257d7be3913e123ea54a2c3b6b2",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_267.xml",
+      "annotation_sha256": "de66f20130bd328f4bf5a7b56866698bace8b205d8002864f809af1dc44c71ec",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_9.jpg",
+      "image_sha256": "7555653ee061b383d285a6cd376e667aedac34ea732476d391fd8092e60ca8e7",
+      "annotation_path": "ANNOTATIONS/pitted_surface_9.xml",
+      "annotation_sha256": "51b49ebd50c65f4e369399a0d8d65f96587389917b44006582b831c44b0587db",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_194.jpg",
+      "image_sha256": "d665bb3dd97b6c0b86930a6d78ac060d5acf91e74ffed2c7d06a3d28d6c0625c",
+      "annotation_path": "ANNOTATIONS/scratches_194.xml",
+      "annotation_sha256": "1f12c210bec7370d065a17e4d8dad6f0f5c0250f1d83fe64ea866f08758da97f",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_27.jpg",
+      "image_sha256": "f0162be4de935f4064486990a524a4b7b8a816bc0a39f8fff3ee58034546e9e0",
+      "annotation_path": "ANNOTATIONS/scratches_27.xml",
+      "annotation_sha256": "6587bec639252d689d4067bcd18810894a52262b21270097c60c26801a53237f",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_247.jpg",
+      "image_sha256": "4f0eadd40ba77606ab30299d77f301d20899892f0770fd46abd2005e72aab867",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_247.xml",
+      "annotation_sha256": "1a67d0607bf5eff99dd90a62db82de0eef83a9facff2a681c85c96c4b494cce4",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_15.jpg",
+      "image_sha256": "466fc481bd3e6d378058b4aa9a4a4612e27da31a6a1844fe9d863e85ab47a5e8",
+      "annotation_path": "ANNOTATIONS/crazing_15.xml",
+      "annotation_sha256": "d26a91fff48a7385d2281b1acc34753b911fd77c3d1839e935578804391c2e1e",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_17.jpg",
+      "image_sha256": "5321e25088da9adf11b3455da3a3435ab7a81a5302c46fdb987f6521e65f4f07",
+      "annotation_path": "ANNOTATIONS/patches_17.xml",
+      "annotation_sha256": "6ec12b5bdf14a548b85b99a729e6be1b71a72ec6cee85a7ad88ae9591406994a",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_87.jpg",
+      "image_sha256": "0d578ed6ce0ca32f08ab71678389ee38ef8f3da4f1dcc9db287f9388c2eb7a39",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_87.xml",
+      "annotation_sha256": "c965b96d4362baf52a0e365c277898d6ff4f74aea899749b7591611e8fecdb6b",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_296.jpg",
+      "image_sha256": "b80f700f2871cde38bff5a8f0c5adee3731e86116b3e4b1e2eadcfaa1966dd3f",
+      "annotation_path": "ANNOTATIONS/patches_296.xml",
+      "annotation_sha256": "78b51843b51c4914cb9fd4b0c6f9f2f952a3a577aa7c26ac979477031c5e486f",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_260.jpg",
+      "image_sha256": "9262b8fb9e7e920cf7caab7316f34e95b114dbeb2e05f526fd9bab6e69beb376",
+      "annotation_path": "ANNOTATIONS/scratches_260.xml",
+      "annotation_sha256": "ee7baa9b4801cd4ff5e9d5854659d075e64dea020b7494288d1c0be83a628f06",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_206.jpg",
+      "image_sha256": "8a610809a1ab93c4ccf80fad3c868d5edafa6fb7ff01d97b1026c3b969401614",
+      "annotation_path": "ANNOTATIONS/patches_206.xml",
+      "annotation_sha256": "440f775179aeeec38bba536ef518ae289eef7d2fa2dae93bcc9ea7a93c8c5be6",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/inclusion_73.jpg",
+      "image_sha256": "3d0b1faa0d49f2eca6d707d0ded89df614aef91c15a8bf301ec0ee6824a312b2",
+      "annotation_path": "ANNOTATIONS/inclusion_73.xml",
+      "annotation_sha256": "63cbb987acf14e723bff628b55e907db89b80692fc303e6a6b7481dbdd83e263",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_31.jpg",
+      "image_sha256": "20a6c5b8dcb9df14f4753eb767e2472b5b26668a30947342fb0571c3338ff665",
+      "annotation_path": "ANNOTATIONS/scratches_31.xml",
+      "annotation_sha256": "23e868294046881cd5acf4bdd598d1378b360a93cad0d8bf7dda91593a1fffd4",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_89.jpg",
+      "image_sha256": "2384449a35b02b37ab9678138e8c631214475d595867dfa6c1fa4c83ac5f36b1",
+      "annotation_path": "ANNOTATIONS/scratches_89.xml",
+      "annotation_sha256": "a5b509232b382fe66331d7c6e1c9c2a58a7b6fe6c4cf9f7a4114c232cce35f3c",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_164.jpg",
+      "image_sha256": "87c1b46a01c796c71030ee72ca51ae732fb2e4e8a39117e483e5b42fa55a9b8e",
+      "annotation_path": "ANNOTATIONS/patches_164.xml",
+      "annotation_sha256": "f15fe52839004a6874709ca736d305e44762dfbe294002b93dcfd74525f85e5f",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_294.jpg",
+      "image_sha256": "28260a8973c0988bbb15e731191937f8aa06ff8f76b9f637cdd87a3573bae8bb",
+      "annotation_path": "ANNOTATIONS/patches_294.xml",
+      "annotation_sha256": "94fc5610c19619f1ab8442965c3e43ef244c98b7ad755a130ffaaeb50cc51aba",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_185.jpg",
+      "image_sha256": "044e6041678c98a6ea41fdb7da1eadd75fd29ced0c8f538b43a663d42910f10b",
+      "annotation_path": "ANNOTATIONS/inclusion_185.xml",
+      "annotation_sha256": "02710e3997621452c68f32f49ea5d0a28629bcf098c6530e0c4d3e8a69c782cd",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_142.jpg",
+      "image_sha256": "9dcca212ac2d94a88e9a5ad3131ffd21ce83d27a5942af15890c0fabcb8c7d1a",
+      "annotation_path": "ANNOTATIONS/crazing_142.xml",
+      "annotation_sha256": "30bef3d345a8dc25ae467e4f4ef58485baf40114fce6f9e89f2937fda98137cc",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_24.jpg",
+      "image_sha256": "bee1ef7420c6f45fdc2a6e20d96a6ab30a8c22e158c7113d251c31cab436d336",
+      "annotation_path": "ANNOTATIONS/inclusion_24.xml",
+      "annotation_sha256": "a1e19c62b642617cfc2cd2ed37ceef093e0942a8a1b7d35a4e118af8cd05a475",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 6
+    },
+    {
+      "image_path": "IMAGES/scratches_3.jpg",
+      "image_sha256": "f2e1cb55c6aff957fc5cb7b32703e675fbaf2d9c4ef6c6151e10ab25f48ce78c",
+      "annotation_path": "ANNOTATIONS/scratches_3.xml",
+      "annotation_sha256": "f0d4a04ac9f824ee5188952a12732f05744d17d791900e7e133fdae849fe6b04",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_121.jpg",
+      "image_sha256": "efbaee1c2678ff433374df25f385927a5b106c8ba3ad9e675e3ca7948e9eafab",
+      "annotation_path": "ANNOTATIONS/patches_121.xml",
+      "annotation_sha256": "907c214e446f7b86883ae9768c991647397fd17b7e6d3dc57a7d28bfb2e60b73",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_203.jpg",
+      "image_sha256": "0d40be789f7cffcdf9914b712b1b4c157f80d2c44a58679dcba1cfb09ba0fc3e",
+      "annotation_path": "ANNOTATIONS/patches_203.xml",
+      "annotation_sha256": "0f489cfd39ee3f3fdedf727489eed7cda06c314aa27a600b8c39424ef4751d63",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_137.jpg",
+      "image_sha256": "db701df4413c5913f0f67f7374ffe50b52931b46afe0cf9a276df742983e44b6",
+      "annotation_path": "ANNOTATIONS/pitted_surface_137.xml",
+      "annotation_sha256": "6a91729471c9f0b8f3859f275724ddc7c5c10f8a7eb03afd19d4839120985d7d",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_197.jpg",
+      "image_sha256": "38d33f3610b6897a49b7f2277689fc1a92619f25d621c31808decb08848ff2f1",
+      "annotation_path": "ANNOTATIONS/inclusion_197.xml",
+      "annotation_sha256": "fd59ade27ee1f988ad9b85c2fc61f42af7f9b421fd17c32886116909996fc98a",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_239.jpg",
+      "image_sha256": "321b16bf72aa45ae7ff393757ed1b4b608e1a71be81ad34bbd92af46bc8e059a",
+      "annotation_path": "ANNOTATIONS/inclusion_239.xml",
+      "annotation_sha256": "b465fb3586a37c9046a1842fee6c25016c8317a1e0510e03a3f36ce23edcf3fd",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_156.jpg",
+      "image_sha256": "8493666f951523858b3ef610f12f89c58a882e8044b618fe0685611e12824229",
+      "annotation_path": "ANNOTATIONS/pitted_surface_156.xml",
+      "annotation_sha256": "37658289c6fefd4e34407b8c199e27ff04aa566a863a995cf7bb91e242bd91df",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_170.jpg",
+      "image_sha256": "ec427bca7b07023ad943e750070bf9caccc054ccd313bc4875d0727816f1ed43",
+      "annotation_path": "ANNOTATIONS/crazing_170.xml",
+      "annotation_sha256": "7c0abd0d094d0ddb4d0a040f352d6b3b774f1f5d28bc74bcb35600a7f802e82f",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_264.jpg",
+      "image_sha256": "87bd41d2156623b33e07da6540a4b26df2f36d2469b3d935d33489f2198edd61",
+      "annotation_path": "ANNOTATIONS/patches_264.xml",
+      "annotation_sha256": "7b7bd8e637c6c50773038ee9fe0c9432bb6b017e8f88becbb4c5b7b2cc2f0977",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_299.jpg",
+      "image_sha256": "37cb5a5f9ffcf7226ac5a1963823da5b918c26750897d1926c9bc90b0eb7ec67",
+      "annotation_path": "ANNOTATIONS/crazing_299.xml",
+      "annotation_sha256": "b86ba1f7b2f9129ee5d4d2ecb04bf52a02a2f0e77258e8a88625c69579f972c6",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/scratches_63.jpg",
+      "image_sha256": "cddf7573256ad9017ac18d1bfa81e49ae87d0cda40a01ff63d6be0b1ae720348",
+      "annotation_path": "ANNOTATIONS/scratches_63.xml",
+      "annotation_sha256": "f1f969d5fcec85c0136db71d2366e9ec0cd3a58f775dc27bf230055c915b2dfb",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_207.jpg",
+      "image_sha256": "1e50f6f095de57d44e34ef02be64e45e1dbc539f7c747a1eec13e19d598c3ce6",
+      "annotation_path": "ANNOTATIONS/scratches_207.xml",
+      "annotation_sha256": "6f37e38134abeac1b1f9cf51c179cf160d47825074fb1495903216d9841bf716",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_287.jpg",
+      "image_sha256": "aa4a04bfc65ad081a4165644e442ef1ce050501215dd1b83219ff2481b1a23e9",
+      "annotation_path": "ANNOTATIONS/inclusion_287.xml",
+      "annotation_sha256": "87a48e8c3acd6e967f55d90587f65163d7ed70178680b7b7d8727be15d12896c",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 8
+    },
+    {
+      "image_path": "IMAGES/patches_48.jpg",
+      "image_sha256": "0d04cbafb4f85f684c20c7c2121d29b89f259d1e90c7c35acc6178e86dc41833",
+      "annotation_path": "ANNOTATIONS/patches_48.xml",
+      "annotation_sha256": "91f92108dbead5de94d6c231cb21eab54d0eb260abaf5e2512258a835693d2a7",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_171.jpg",
+      "image_sha256": "e741626eb4750d162a040183755e1403e1ba9af7bc1e93a3f528ba4be929cd11",
+      "annotation_path": "ANNOTATIONS/patches_171.xml",
+      "annotation_sha256": "39686eb220c8f5f4fd2b764bfcdca107596a0a9827d029a74dc9df193d34f6af",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/inclusion_16.jpg",
+      "image_sha256": "1ff85f67c5d902bf00a37895e4ea86ca2a49bb1c452fa9fc44d0431f154a3940",
+      "annotation_path": "ANNOTATIONS/inclusion_16.xml",
+      "annotation_sha256": "768806b9bf670d7a745fd8683dad85f2c4df6a6850cd9ab83abd85be2756f349",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_144.jpg",
+      "image_sha256": "e4a2071037607429d8d859c4b0f3b81141e5e6a450d33831f4a83d5fb240e66b",
+      "annotation_path": "ANNOTATIONS/crazing_144.xml",
+      "annotation_sha256": "81e578f92ccc648cdb530952724d8b41f8d8e1389373297b06beb52aae062387",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_49.jpg",
+      "image_sha256": "813fd3fe142c2c6a82a3c4d9f0752f7ea0a12e3c051fbc5c6e47417d3d097a1f",
+      "annotation_path": "ANNOTATIONS/patches_49.xml",
+      "annotation_sha256": "f323233752ed35b36723ea9b3052c53e91706ec3d646374c7536eef2a88fc1cd",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_155.jpg",
+      "image_sha256": "c5858265ba4571fe22ec933cb3e43d91742f98e57d39a2a7c36734b1a140ff5e",
+      "annotation_path": "ANNOTATIONS/inclusion_155.xml",
+      "annotation_sha256": "f86576a95de8d5b2c92815a1dbf870ddee9c40bf2a643f9412944172c56382c1",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_128.jpg",
+      "image_sha256": "679ef3b3bbd5634a8083ec6e29530980d52bf139d98e2cea973f9ebe714272d8",
+      "annotation_path": "ANNOTATIONS/inclusion_128.xml",
+      "annotation_sha256": "e8154e1dbeb126b8079b146fc91b4db0d5e7e3abb7b342d5a6cbb780d96ff546",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_71.jpg",
+      "image_sha256": "358892669ce9249d65eaaf16ef33c84d31f7c32e355f4acf23033b3b15c995fe",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_71.xml",
+      "annotation_sha256": "11c5d2f53853c25a2c1466de4facc283ce2336b7aaeb20c4f3fe987110085e36",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_113.jpg",
+      "image_sha256": "a2659ec4b2525f131436db9793d8771c00580577ad002d410e106600f42fa1b4",
+      "annotation_path": "ANNOTATIONS/inclusion_113.xml",
+      "annotation_sha256": "238416f2d4f236e41ff7e06262be090ad10e5757d450aba35b4cb99ec438193d",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 6
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_163.jpg",
+      "image_sha256": "95284a96beecc14dc4413d90c77440d775d99b565143cbe78db461e2a9f44cd2",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_163.xml",
+      "annotation_sha256": "5715e80e7dbf7a6cd115225bab88d884a38d3c04d936c59087e0185da34754bf",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_7.jpg",
+      "image_sha256": "d46891437253f761072ae7a4c72b2db01a5ed9f59d97f25052fd74e8ea0765ca",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_7.xml",
+      "annotation_sha256": "8e29abad821838001f07a88f6873fc733ac419f6320d1e57d132228a942cf381",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_50.jpg",
+      "image_sha256": "046697383b1e45b1e6545bd84896610cdf9788643a11a525bd4e66809bf1f150",
+      "annotation_path": "ANNOTATIONS/pitted_surface_50.xml",
+      "annotation_sha256": "7af89a0f21861cb1b5ccf6be509dc8e14b7ad95245b8082843e928b8221730b9",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_210.jpg",
+      "image_sha256": "8e0b0c93ba4d6f0e07b76908399ffc17791bad48b0cbb01721fc3f7e6df311c0",
+      "annotation_path": "ANNOTATIONS/patches_210.xml",
+      "annotation_sha256": "e4c24a541040dd5f74c1207bfc27bc3a597aa215a8d95442672f74bcc33870f1",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_289.jpg",
+      "image_sha256": "e8a4eb437e3586cdedf11bbca2fc2698cfbfeabcb8df251c80696b9b7780318c",
+      "annotation_path": "ANNOTATIONS/crazing_289.xml",
+      "annotation_sha256": "6fa34fbf6e9d1654a5a3be8a4c44c94581420c630416c0cf825b25ee23306dfb",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_80.jpg",
+      "image_sha256": "2f5dbc8dcaf15f87094aa7fad865b2d423616c9fe27489d0e8652aacb2794eb7",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_80.xml",
+      "annotation_sha256": "6f721e7bff800fc3f4c675a1cb9909b7bcfeb0dfdd4421d3d84e91d701956d6f",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_216.jpg",
+      "image_sha256": "8e5dd324e45046e19a7db5111b54ff15510161f288f6b996d15bf2eb28b00e73",
+      "annotation_path": "ANNOTATIONS/inclusion_216.xml",
+      "annotation_sha256": "1483f36540ed9c15d439d47e09df02730f35f896956cd6341c73b78879a9684a",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_218.jpg",
+      "image_sha256": "bdc8d32308a3eaaa7153b16c4ebd6e56ad346377708fedd172da28de464dbee8",
+      "annotation_path": "ANNOTATIONS/patches_218.xml",
+      "annotation_sha256": "328b6189d170850a7f517578306f819ae66fe084d81aef309dfb39559810f865",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_296.jpg",
+      "image_sha256": "c7b3c5e309632173863586042983ce86c7fe5813d24e1f23d00803ee66436692",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_296.xml",
+      "annotation_sha256": "cc20e6963ca11d6a2fb8753ae97dbde25f1700b469380ab38f69ff8336c0be65",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_230.jpg",
+      "image_sha256": "f9875ed804f7a3595505650f60bd511262c904e4ddbdbd9aa4a27450c9237e39",
+      "annotation_path": "ANNOTATIONS/patches_230.xml",
+      "annotation_sha256": "c0436e5d3063ff9918c66866092621c752f78eee4eecb09409cb753dfed4c788",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/patches_127.jpg",
+      "image_sha256": "e9adce592ef3d885eb5eec4da6264b5008f12540aa5268d407100104c6a6d695",
+      "annotation_path": "ANNOTATIONS/patches_127.xml",
+      "annotation_sha256": "e257f93e4d5d2f153333ca4bc40f69484e3efa13009e0b1c1712bac76a450d01",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_176.jpg",
+      "image_sha256": "20e375fe90ecf726ed1d482c0db90f7aaf7b166f595a65b7a592cc38a401216c",
+      "annotation_path": "ANNOTATIONS/crazing_176.xml",
+      "annotation_sha256": "76264458fc4ac1f5010e0d3a9f7884f6a976e651f85fe170cb1a2cdb6f99406e",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_64.jpg",
+      "image_sha256": "41f29f1de1be87c832619d28a4e30515b2efec24b9b29560efe1957b01ac49a3",
+      "annotation_path": "ANNOTATIONS/crazing_64.xml",
+      "annotation_sha256": "e0dccd396eaf70007a329bcc885465822ac275505e381ee141ddba8e86456d53",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_81.jpg",
+      "image_sha256": "166d260252071650251d0a7ae8ba380fc33005e882799871fe60074b61da1e30",
+      "annotation_path": "ANNOTATIONS/patches_81.xml",
+      "annotation_sha256": "bf7f25b2a237dace6f540492cdae3bf14ae737c41ef15abb16724b2db8c5e7f8",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/inclusion_101.jpg",
+      "image_sha256": "314b71b87c87fe49edd16b947d7161546fdbacc2655c7695da041a31c7026d7a",
+      "annotation_path": "ANNOTATIONS/inclusion_101.xml",
+      "annotation_sha256": "f3c1d009912f3d745928ad31f953862652b48f2583cd4fca71a82c170211e027",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_37.jpg",
+      "image_sha256": "eefa9cf6b94908b295f83a246db887ae02e8a97ccfdead52031be615d29f6e50",
+      "annotation_path": "ANNOTATIONS/pitted_surface_37.xml",
+      "annotation_sha256": "d43397d302058ba447cc0a9644fd9550a4fb467edee40de0c201a0cf76972a6c",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_92.jpg",
+      "image_sha256": "d95d8a48879ce38151beb5e001ced0e53864715b1f70857f627fa31a2fa414c2",
+      "annotation_path": "ANNOTATIONS/pitted_surface_92.xml",
+      "annotation_sha256": "cb23846a249504cbffad1c3c8bc491a904bc7b2bad0f973f7bf1f898c3110be1",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_262.jpg",
+      "image_sha256": "67cab4d93752e5def8a7d34b72504c1ecacadc673f252d4d719b716aeda0c083",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_262.xml",
+      "annotation_sha256": "bd7c6ac8fc7f3299604224bddb4da6f8ce34d1127ac498b512805da7c7898391",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_165.jpg",
+      "image_sha256": "840c450bc6c1a69bdb48e59abc822db5f23e2cd8997b7b0695d49d6117a95b1b",
+      "annotation_path": "ANNOTATIONS/crazing_165.xml",
+      "annotation_sha256": "f231584232459993ace5a1e199c79f1ed770b651c7244b145539f1f65836d1a8",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_295.jpg",
+      "image_sha256": "1a2471cd8d2434a2eb72aa2713ba06554da095ff8bef6da28b4c33b4d819fd3b",
+      "annotation_path": "ANNOTATIONS/pitted_surface_295.xml",
+      "annotation_sha256": "e047ecf1db5f923e194e19047906c63e84a830568fdc02b19f84baf80bb616c4",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_103.jpg",
+      "image_sha256": "2dcc3bb7d8c5ac7f3ef0821f9d4bd3a35a7964be1628a80a534ba0bf4646f3fc",
+      "annotation_path": "ANNOTATIONS/inclusion_103.xml",
+      "annotation_sha256": "29c07102ae89f751c8f59497d3fa25845cef30f7719e3271ff7a9a39dcfc3ee8",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_199.jpg",
+      "image_sha256": "7bff3a2dd68537dd23af6a344a81a48e62f1a04c3595b6245d7a0b1d531a7be9",
+      "annotation_path": "ANNOTATIONS/scratches_199.xml",
+      "annotation_sha256": "ea57b018eaa0fa7272781510b62810f81df1d8eea2752697cd9349e945f88a16",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_176.jpg",
+      "image_sha256": "dcc7df64482b4f01ac887f0130709c862955a87d5b2f0793fdecd8d902f6e583",
+      "annotation_path": "ANNOTATIONS/scratches_176.xml",
+      "annotation_sha256": "73e044d97225c276f33a1a10e5e14f2b50bde087b4d929a62cf3ff8712b36a44",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_275.jpg",
+      "image_sha256": "3599208515192dac0d6b119f5985a5cf5a1855d3b89b2b38e0ed61ad46f92bf8",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_275.xml",
+      "annotation_sha256": "c33da95b9dc964eb9b00ca6763e924a2db4ba0e5c90a70f2be7ac0cf6e37cd0e",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_52.jpg",
+      "image_sha256": "bbe51811b92b40d7c34e1c05de5ee74285e2dd605fa971e0c21b3aa74957a8ad",
+      "annotation_path": "ANNOTATIONS/pitted_surface_52.xml",
+      "annotation_sha256": "a6c57e18f6adcfac4f5cff00887b0d5d7953c0584dea0dab2f79e655d891da94",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_77.jpg",
+      "image_sha256": "916ccd6be14fd6c8677038281576b6ac0910f5a71f5db3b860e44e06d5edcdb6",
+      "annotation_path": "ANNOTATIONS/patches_77.xml",
+      "annotation_sha256": "18eca94e0278201786572d57bbf3db7aad6cbfa616a467d40f04980e8758e38c",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_35.jpg",
+      "image_sha256": "e77933cb6d561b6fd5873d433367d4a504c6f53a6ed13576d516f3f9274b5c65",
+      "annotation_path": "ANNOTATIONS/pitted_surface_35.xml",
+      "annotation_sha256": "8b1c00c9c9734048f40082f7874c7edc8b074a3c94ea25290236a132d43b3b2e",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_102.jpg",
+      "image_sha256": "04cb6afe5cb2b4026f4546a742fb8d19840269e963a684d30c7ab54e576800e4",
+      "annotation_path": "ANNOTATIONS/pitted_surface_102.xml",
+      "annotation_sha256": "00a88f60db5c1939bdea24b29eed95c684efae8b4d6126687acfcdb7f9396016",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/scratches_183.jpg",
+      "image_sha256": "592a97fc92cce801cba5ac473017a1b5d2cfd436a33a47696dac75d35d868925",
+      "annotation_path": "ANNOTATIONS/scratches_183.xml",
+      "annotation_sha256": "d0c915d090e10275c931fc8f470e14e53c3ae69ee49d22d5ac382986f67bb79d",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_41.jpg",
+      "image_sha256": "28612ab5241da32535d450c8f68a632551f8c26e391e8766e592a288ebd3507e",
+      "annotation_path": "ANNOTATIONS/inclusion_41.xml",
+      "annotation_sha256": "f7bbc8a12661c701689402c2ffac252fa97124e8fa0843dd0a88ae53fc0a0e1d",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_193.jpg",
+      "image_sha256": "f298f309e6f2c25904b3a066256cc028d60daf59d11c42baedf85a0a24366036",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_193.xml",
+      "annotation_sha256": "581a3c60cd8c261483280b10f61f83bdaab80ea2b08c6b103daf51a0c51c3e65",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_7.jpg",
+      "image_sha256": "cc919de8775d5528872dc90d26ef796a64e73bfc04310d1a993455ce7a3a9f39",
+      "annotation_path": "ANNOTATIONS/crazing_7.xml",
+      "annotation_sha256": "155d4ae020bd3d5dea1c5c5e59521d377ae3e40a4569670f275ef6e45e21e68e",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_174.jpg",
+      "image_sha256": "58a7540a7be07aebcd8a5a96f9f58bc4322141ab414487160c8b78127093fecf",
+      "annotation_path": "ANNOTATIONS/patches_174.xml",
+      "annotation_sha256": "f2554184cbc39d0c9bd7e4f3ebf9f7d67c850beffb56b96b883f37990dd627ca",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_105.jpg",
+      "image_sha256": "1163a4f6e0a9f9fc950748e1abe52b6c6fc6d8253d13fb36af3c90e78aaee884",
+      "annotation_path": "ANNOTATIONS/crazing_105.xml",
+      "annotation_sha256": "2624131b864683744330921383e2539ed97c54fda48c091a639a94f8c6bd1a72",
+      "class_list": [
+        "crazing",
+        "inclusion"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_180.jpg",
+      "image_sha256": "7b42c2cfe2071328ae4f5c33fedc31ff5aa5a81600ea3c165a8eb223548886ae",
+      "annotation_path": "ANNOTATIONS/crazing_180.xml",
+      "annotation_sha256": "66e57496000818c07a89b840acfdcffc85aab0c5b80262f4d22be4c094fac7de",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/inclusion_69.jpg",
+      "image_sha256": "8ec63b200162284c686649b438a7db5b47b89b092ea52e5bf7e65c733ebe961b",
+      "annotation_path": "ANNOTATIONS/inclusion_69.xml",
+      "annotation_sha256": "68d4e2759590941769b66853b1e64fc7144fd55263656cca7d96f2702aeb0d14",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_101.jpg",
+      "image_sha256": "8cf6422094af770e264d9b25b74dd6e599f6b051f5fb45b8bf8070f4d0a42d34",
+      "annotation_path": "ANNOTATIONS/scratches_101.xml",
+      "annotation_sha256": "fcaf915d58cf8c0dc9a6005545355e069fa33e0dde93e8c2d9f1cf506929fccd",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_189.jpg",
+      "image_sha256": "ed60e7a1a857970c205dd4a58c5290c96cd1fe723559b7928615c869c684d7d8",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_189.xml",
+      "annotation_sha256": "c44a184d1e8016409cdf85870dbdd85da27946f25d90afd7c1fed007d901b6d1",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_54.jpg",
+      "image_sha256": "f5d65ef7d240395e5a5d421abe66da227dd4047891a81c276acf1cc7ab34a0bb",
+      "annotation_path": "ANNOTATIONS/scratches_54.xml",
+      "annotation_sha256": "f4d02205ae4cf8ff492ee694d764b24e797e914b44077181ce97104c4d48681e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_193.jpg",
+      "image_sha256": "ad8b326145b04c0e36e738451b010691094b1213792a64d911c093f3a3310c17",
+      "annotation_path": "ANNOTATIONS/crazing_193.xml",
+      "annotation_sha256": "63786c4a46ebc721641994f164ef324a2b5089814f4c61fcc1b22f438941ed79",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_215.jpg",
+      "image_sha256": "b5856bc3695fba2b9ace3caced3b1c783930b3c24380e8fea8ab079895f75c46",
+      "annotation_path": "ANNOTATIONS/scratches_215.xml",
+      "annotation_sha256": "f3de6397a768ceaefe7d7847d4e15714e8bac5e7bfbdf47e2dd12e92ad12690e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_178.jpg",
+      "image_sha256": "e4bcb2a80023991c71e22dd292b0b159ace79d9bd3f19532085f85fcd47629be",
+      "annotation_path": "ANNOTATIONS/scratches_178.xml",
+      "annotation_sha256": "1325f00c2a194712f34877e0ebd4fc3f11abc7ff39dc6bcbb96cbd104924279e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_220.jpg",
+      "image_sha256": "fed492c4346a483756fffa78f1f97d92410b94afef6d20b470026dc21bd00f56",
+      "annotation_path": "ANNOTATIONS/pitted_surface_220.xml",
+      "annotation_sha256": "7ea555a66d972c0a0e3ac9506708b3bd2a19e7ed5286051167ffd0610ec41fa1",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_45.jpg",
+      "image_sha256": "162307be7f8060a0f4b83762ebd23cb7e73e2b80659226f598b0ce899568723e",
+      "annotation_path": "ANNOTATIONS/inclusion_45.xml",
+      "annotation_sha256": "571161ecdb44ee1e19d6ea1a34708b9b57a0b4fa5edd1f6d7f2f560503206eb8",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 7
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_188.jpg",
+      "image_sha256": "b932fa02ad9f1824c83627a391050a89f711a73d1dfddd59cf8c35066fe2eece",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_188.xml",
+      "annotation_sha256": "f2e50016eb9c10cc6edb5d2c1873f9a65d8026f28721658bb19442b767d6299c",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_203.jpg",
+      "image_sha256": "b840d901af6bf20738486500037931a6c0e8b331f0a8022bf3fa846570aa116c",
+      "annotation_path": "ANNOTATIONS/inclusion_203.xml",
+      "annotation_sha256": "15aa40ed05afd627b195b3e444b76bdc9da7d2309c24a1543f89922dce5a1644",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_191.jpg",
+      "image_sha256": "389fa2692a890ace1610695cf8046dd9886bdcac29fa485c072e26fecf58599f",
+      "annotation_path": "ANNOTATIONS/patches_191.xml",
+      "annotation_sha256": "87276ba224fd9a81df5759db66610cbf75798858ef65da0ccdc1b9671ca2d573",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_217.jpg",
+      "image_sha256": "e40821c51a341286572663cbba1159e7efe8a7cd729c763a5c439d851e6a9c77",
+      "annotation_path": "ANNOTATIONS/inclusion_217.xml",
+      "annotation_sha256": "82052876ee72274e7f0b3665c42a153f898759ead2e79e7534e4e6ee73f1d347",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_133.jpg",
+      "image_sha256": "f66ffd8a184bc11ec947078c3c206fac71b1118683deb5e8b3731811a0ae2ec3",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_133.xml",
+      "annotation_sha256": "86c6c1587efe3c072a1932117bc60fee9d01ed3c9e502b0f685bde9b5dc7f724",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_79.jpg",
+      "image_sha256": "215300cb10dfde212df06fe9d7588842b2f13d8e9cf1a1857ac4bc46a6480fde",
+      "annotation_path": "ANNOTATIONS/inclusion_79.xml",
+      "annotation_sha256": "cf112d9d4a22fbd96e7db89851e2a57a86de586f0401528aca1b091a56c862e3",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_60.jpg",
+      "image_sha256": "36abe20b2d92bf520ef3a2929ac42f12d220317b05d7ec43b6cb43dae5ec5370",
+      "annotation_path": "ANNOTATIONS/inclusion_60.xml",
+      "annotation_sha256": "fb34d082ef4cb1833d15d41fe8120203500e12448f1e75d52b81772f14e63daf",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/scratches_59.jpg",
+      "image_sha256": "5681e8705d15961faea00d3225aacbf31eea774faebf4a0b7df6e5903a107c94",
+      "annotation_path": "ANNOTATIONS/scratches_59.xml",
+      "annotation_sha256": "c5c6d8bd2b50beb91fbb20f988e842ab86b7d817ea7d3d7fa7f2476c4d6b4a7e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_214.jpg",
+      "image_sha256": "ff6cd63f155b15695324ac6f4c9bc5ca1b9ddc7561c38eef5816bd9b1584ceae",
+      "annotation_path": "ANNOTATIONS/scratches_214.xml",
+      "annotation_sha256": "311764f35140d054e460e294a0bfc2d5eefa189317c41e2ed5fa3fb5eaa0f5bf",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_297.jpg",
+      "image_sha256": "f747b0d994279d4e000f854793f762f3592becb5909afb704d512b9e74f2dbd4",
+      "annotation_path": "ANNOTATIONS/crazing_297.xml",
+      "annotation_sha256": "90f89d58c03ed3221dbf3e03a3ddbe33cee5aec3b7c0ad5ac2950088efd3e15f",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_41.jpg",
+      "image_sha256": "53b23674f9756ffbee2d8e24d622ab80c797f9380b881734a62d8f8383bd1f49",
+      "annotation_path": "ANNOTATIONS/crazing_41.xml",
+      "annotation_sha256": "71615d547989f5d661ab9d999fb15829ff8ae5749193ce8db78801e82b06e5db",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_48.jpg",
+      "image_sha256": "b4bd572594231c39df923fd9a81ae1cbfaa975054c2af4000ef1d7a3ceb21e8a",
+      "annotation_path": "ANNOTATIONS/scratches_48.xml",
+      "annotation_sha256": "a0848a0a62362ecbebeb521ae38be0eed7128d62c899674fd613e0cec268249d",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_77.jpg",
+      "image_sha256": "055ee2a21ea7f1edb8034df061a2a9867048640c4f3993e46c28bb92dba6a9a4",
+      "annotation_path": "ANNOTATIONS/crazing_77.xml",
+      "annotation_sha256": "260d0617b212821f368a5a8c76cf2a18182bc6cbf6cbea28f6bc16cfb1d745c4",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_290.jpg",
+      "image_sha256": "adcb1bb45c8e9a837bde4b39b3979eabf08a2ad921bb2b660b3d61a17c6c8800",
+      "annotation_path": "ANNOTATIONS/crazing_290.xml",
+      "annotation_sha256": "1b7b9aff853f18291fdf10823286c98598ac531b771954e8ed75df02311ae7f8",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_241.jpg",
+      "image_sha256": "3ae0c8e0b0ddab539bcb0ab86e04909543015fbbd4b0bf5eb12232e2274dea2b",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_241.xml",
+      "annotation_sha256": "89a1a963a5b697d7805ef2c1236c339b0c541722775277334a088ea0e6245a13",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_110.jpg",
+      "image_sha256": "030250f554661a749b7e832fc5b6a3fc336e94b7e25d5da9ce87ecd50c3b106f",
+      "annotation_path": "ANNOTATIONS/patches_110.xml",
+      "annotation_sha256": "d1510860655891513666b1f404b08743b8e0676a7d34a6139c4da71cc7f96933",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_40.jpg",
+      "image_sha256": "90f777c4cf0471e5832ed22f5bd79bfef6be9dcef7f26f5655af2e7b4df91e71",
+      "annotation_path": "ANNOTATIONS/pitted_surface_40.xml",
+      "annotation_sha256": "55ae4f7768e5ccea5a97759a3f334c9a2bb69c56e5de7f7e3380709826a4d2be",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_25.jpg",
+      "image_sha256": "4e60ed53dc7e487306e513f4cd47b37b838d61f83ce0b530dc6bf9b3e514ff8c",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_25.xml",
+      "annotation_sha256": "eb8d43c2fe8cab7cd879ffec1f837265cd29014e92a18b5c9ff77657a5a516a9",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_113.jpg",
+      "image_sha256": "d3b215c4e9bdac856fce33b9c59029583439010135c26d9e75adc24744594d32",
+      "annotation_path": "ANNOTATIONS/crazing_113.xml",
+      "annotation_sha256": "d515735cf23cdd8ecba978927d4beec8d7f3c05af9ac079dc60756c5feacc881",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_216.jpg",
+      "image_sha256": "eae4d2bcdc8207089e3462975687c8ecd02a33a66e73a4b1b007b7c7b400d3fe",
+      "annotation_path": "ANNOTATIONS/scratches_216.xml",
+      "annotation_sha256": "8807a229692c4bf0739e0755ec35f5bccf4081c9875dc7a58f3f119c3ce9c4b2",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_224.jpg",
+      "image_sha256": "efa3e16557e7141f5ee3f4e7a3ad096a37ac1f2d25e7e0cb335c908d475e09ef",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_224.xml",
+      "annotation_sha256": "922978d06ad82fa71cc51d740f46def06d0a3b5e0d93d3f90e87d2c61fa5590d",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_146.jpg",
+      "image_sha256": "4b76ee7c33602b95115a2acec07b4cd74cab87eeb2cdc2a602534646cbed047b",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_146.xml",
+      "annotation_sha256": "85896360325225a8ef13fc6d0a2ddc1fabacc2325d3e53cc0346417b645b14aa",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_116.jpg",
+      "image_sha256": "14e65853add379636cb1daceda84748089b203bbc6b9af4bca8ec5e6860a5853",
+      "annotation_path": "ANNOTATIONS/patches_116.xml",
+      "annotation_sha256": "e8835e5968bc269ab1a16b70e24b3ff4ca34bedffab4d8618b623ff3e6949480",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_290.jpg",
+      "image_sha256": "a6eccecb7af92cb4b6a938125998e324391eadcb34122279cbfad15af17e347b",
+      "annotation_path": "ANNOTATIONS/pitted_surface_290.xml",
+      "annotation_sha256": "e174528064cc48d4740574d65b8f6fd52fc10153060932e834ab5e1bfebf6700",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_142.jpg",
+      "image_sha256": "36aa104a77f3477c7d6e0ec5b9cde40ed9d43dd1afd363718eef4a2f8e272005",
+      "annotation_path": "ANNOTATIONS/scratches_142.xml",
+      "annotation_sha256": "0108acb82eb2925ba9fb7bcf0f13920a1214a114f6b9f307d761194d9d3e50d9",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_200.jpg",
+      "image_sha256": "ac4ef4dd50e6d0e479e259103e4d7c9dbef146c7106986d38007baeeb3fa28e2",
+      "annotation_path": "ANNOTATIONS/scratches_200.xml",
+      "annotation_sha256": "19e79714a57fc1378480885e67a2f45542377a276edc844127502c06122845d2",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_84.jpg",
+      "image_sha256": "99d400c5192164cf65246de5d2c91e54e6a5312655288503487946d573efa0a0",
+      "annotation_path": "ANNOTATIONS/inclusion_84.xml",
+      "annotation_sha256": "7397f14ec0ee1772ac6b26444759de006484e3fb36af3fe9c65e7c4f153e07cf",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 6
+    },
+    {
+      "image_path": "IMAGES/patches_24.jpg",
+      "image_sha256": "896839c104be92dd6dcd7d1ba13dabca2e2592f3d486e67398e6a536bbaab2a0",
+      "annotation_path": "ANNOTATIONS/patches_24.xml",
+      "annotation_sha256": "3c33c9c518d874a994801b189d47e11da9d04eaec3ceb3ee299fc02a62651770",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_28.jpg",
+      "image_sha256": "38bc145c261f094ce9af5c51a8126645b75584f768fc1d6ecfce63f4bf6aad04",
+      "annotation_path": "ANNOTATIONS/inclusion_28.xml",
+      "annotation_sha256": "897d47a982c30aaa43a45cb1cf4f96e7b0fc1bc6dbc4664f771ac01c376f77fa",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 9
+    },
+    {
+      "image_path": "IMAGES/scratches_62.jpg",
+      "image_sha256": "836b98d7c217f5e61b9bc2e5c0adb7f59db0a2df31943d783581e712b82fb48a",
+      "annotation_path": "ANNOTATIONS/scratches_62.xml",
+      "annotation_sha256": "7c12a120610cce55bb13099af9e13ee248f3f03d515399bfc825c4779769abdc",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_201.jpg",
+      "image_sha256": "3096d28045ca41280028e716d6c64c9d65a70f3c171a98686f4772c99c7620a6",
+      "annotation_path": "ANNOTATIONS/patches_201.xml",
+      "annotation_sha256": "6c665b5d0bb56dea26c03a1a7cc346354ee4331883ef6d9bf81c2d116ca06845",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_73.jpg",
+      "image_sha256": "01da434c490153c66593c10ec70ab8a776a68d6468c7a28894fe09a5a81b50e7",
+      "annotation_path": "ANNOTATIONS/crazing_73.xml",
+      "annotation_sha256": "31a8b7d0186c214d28b627b10586fa81401bcf5b331cd5cc56d8235c8bcce61a",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_283.jpg",
+      "image_sha256": "9a2e4decb7af0132277f426b3adf4beb46f4e9b12567f5a06cc8106714280192",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_283.xml",
+      "annotation_sha256": "6f53c8d31441f9957f89b37a518986455cfd33cf32789d12bc21660db23143d1",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_221.jpg",
+      "image_sha256": "6a2224a64ceffa893be6b282bca163a986567529f9ce5d52b949bc4fa2bab382",
+      "annotation_path": "ANNOTATIONS/pitted_surface_221.xml",
+      "annotation_sha256": "86bc6389f87d5fad1fffc9b8d6426398f066796bc886dc58de3a5344c090b4a6",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_221.jpg",
+      "image_sha256": "20f3b47345589e838fa0c942b95fd8f75ece7b1be6909acb3c4cd58edfbc368e",
+      "annotation_path": "ANNOTATIONS/inclusion_221.xml",
+      "annotation_sha256": "4a7da98b2b064e56198c9b63f756caeb395c7f578fb12ee2ff78f3e9be616ad9",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_280.jpg",
+      "image_sha256": "a3d0169e01ee1ef9879e52fe2a9c3b9ff3ccce4efbaeb7b55d42e0385e751ca2",
+      "annotation_path": "ANNOTATIONS/pitted_surface_280.xml",
+      "annotation_sha256": "190a871d9125437e09f77d5fbbad7add4030dd97a2598c09875554f7429a807a",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_234.jpg",
+      "image_sha256": "3beefc152c0661038c722d0ffb4e2242ca6180a7bb88d196b3683287d92a2efc",
+      "annotation_path": "ANNOTATIONS/crazing_234.xml",
+      "annotation_sha256": "b7c8c731b96b4fb022afacc07bfe168b5ff959fc7f4ed08df729e254ee6db462",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_283.jpg",
+      "image_sha256": "09ec881115d4ea3652342ea63a1bb225cfaf4c9624ed13838208b1477f611ded",
+      "annotation_path": "ANNOTATIONS/crazing_283.xml",
+      "annotation_sha256": "804fec349351df9bfefe26ca442d57b5b547b7ecd4c12afbf615967149e7a806",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_57.jpg",
+      "image_sha256": "59c28c2a5bb33b78236ba5035ab7e7e37acbe98c9f1d8bea9f9635aaa68cf2c1",
+      "annotation_path": "ANNOTATIONS/pitted_surface_57.xml",
+      "annotation_sha256": "7a93de826b6fb413b760b27b78cafb357df31d0867ff0cc6e68aca17815f9184",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_164.jpg",
+      "image_sha256": "a315c102243ce4955cc39fa268ec8876b5fadffcedefaf76b710c776a89044ef",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_164.xml",
+      "annotation_sha256": "9dd9a0ab3ef05a47ad45381288177381e30d9a30f220eeff78f949decafab647",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_133.jpg",
+      "image_sha256": "8d13fd79bbee3c0bce2ad1a50c361e50c172f7e59dfe26eeb5f41b25b096fb20",
+      "annotation_path": "ANNOTATIONS/pitted_surface_133.xml",
+      "annotation_sha256": "6e145fa8c6c87670810e11be3fe8303131989856e40528853109914f8f77e199",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_116.jpg",
+      "image_sha256": "941e6bd4be28f83dc5892c69fbca178867d385d6088d0310c942ebdefb9f8b59",
+      "annotation_path": "ANNOTATIONS/crazing_116.xml",
+      "annotation_sha256": "6375ea3393f83038b7050b0c4f7ea3fbd0fe440ff422b1527e6a398d22dbaa7f",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_232.jpg",
+      "image_sha256": "783748168663bbb816334df63cdc72f8802944e4ad3dd318bcc74ca9b8829ab2",
+      "annotation_path": "ANNOTATIONS/crazing_232.xml",
+      "annotation_sha256": "4f975d6b0d9289e827a1a1c81458b7eb3b36c966ed4582818c1b945dcf82deaf",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_289.jpg",
+      "image_sha256": "01cad42cc83646dbaee6842d9651e90dbd82fb02439766351fceaa1a133f142c",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_289.xml",
+      "annotation_sha256": "0e8406123903d1af830a70c01d45189a48aa54ed545d0c2b9874bcce90e592e7",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_131.jpg",
+      "image_sha256": "0a83aa10ba7b994ff4f43e7a2253b1085ff9837f7879136edd37886a6cf16f23",
+      "annotation_path": "ANNOTATIONS/pitted_surface_131.xml",
+      "annotation_sha256": "24ea5a6d885d574753f9fb697e21f2e2d43596e87035b956bcc05b83ebe1d533",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_111.jpg",
+      "image_sha256": "e928a260968ef82b0767cbb1d3e3115ace8935854db15d712e4b3c49c0c48aec",
+      "annotation_path": "ANNOTATIONS/patches_111.xml",
+      "annotation_sha256": "d2cd88810f16b96ba4ded5938505e89c5821452f418ea6a4e3981b2949dc1338",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_208.jpg",
+      "image_sha256": "9b48f38d6793c1be07470511f8dad09506c006bb491212c74da5d52e9ab3a06c",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_208.xml",
+      "annotation_sha256": "1cdc595fd6660dcf3ef48ef81d3661244d5a5ff35dfe4f429bee83ee9d573503",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_145.jpg",
+      "image_sha256": "b5767351bb25860ccd2ff1de030a77c19d5f1fd721a7a01dbb289cba1f744d41",
+      "annotation_path": "ANNOTATIONS/scratches_145.xml",
+      "annotation_sha256": "bc26fbe48a8e3ed2737a990643d430f67a508fd22e545b0a60f70ab033ed3ca5",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_70.jpg",
+      "image_sha256": "2c4a6204c48c5a072726320d3cefbf94a8667580a52b88800bc72997a4b4b653",
+      "annotation_path": "ANNOTATIONS/crazing_70.xml",
+      "annotation_sha256": "1b0effea4244a99f55c05ae76cd639677b99811f2804f6936fff469ab7edaa96",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_25.jpg",
+      "image_sha256": "a396520aa648baf7345a7d1b88325650ff2dae4df1fc4d9e19bee4c714be8c82",
+      "annotation_path": "ANNOTATIONS/scratches_25.xml",
+      "annotation_sha256": "cc26c77374593ba683c488a8adee8ae1a7e154472cae0fe45b4c1f637dff47c4",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_60.jpg",
+      "image_sha256": "0b080d23a13460c53c5eed5a92109aa9f98f2418ba7e84b7b305ea68597e7530",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_60.xml",
+      "annotation_sha256": "09e47276f37a4e693c3a61541353ea4e96639954964baca77898496e270a4d02",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_269.jpg",
+      "image_sha256": "4b1084c0834d5b10be64fedf6e6b61cbc8673b8a8f8d420eadd6c116fcdf463a",
+      "annotation_path": "ANNOTATIONS/inclusion_269.xml",
+      "annotation_sha256": "9536101fce02fb9385ae85e1bf239459fe16f2dec73af2223dbff1cb0716a10b",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_138.jpg",
+      "image_sha256": "74330d6f6ea62facd45209ab8ae61bc1d41b87dd69a03e810ff7991757048231",
+      "annotation_path": "ANNOTATIONS/patches_138.xml",
+      "annotation_sha256": "1d41f837db443d3aa49bc28bd77e12fad4dcc1cd797cb132540b41044f1b196f",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_253.jpg",
+      "image_sha256": "d4b2444e9d47f22c7d9ea71b3f729f5c78b9c7c982d9a3139c80df73357585b3",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_253.xml",
+      "annotation_sha256": "30daf8ac61163fe31e642024642eff088a5eaa618a815c48c7f39304c5746fd7",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_205.jpg",
+      "image_sha256": "e5b195d4dae57206a538f2213c1cb94a6bcb5ddd66790b39ae03391eaf8f8fbc",
+      "annotation_path": "ANNOTATIONS/inclusion_205.xml",
+      "annotation_sha256": "26bda2149acf5f76ea6cee21b91ae3d4084e2080423ce5c91237f0e875f36a4e",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_4.jpg",
+      "image_sha256": "abbc7412b645883c3266b64f5cf04870aa6969031641f02788122aa7539f65d6",
+      "annotation_path": "ANNOTATIONS/inclusion_4.xml",
+      "annotation_sha256": "df2dec2660f3548a72881b3502ff574e6a63e50471751892461450488892fdea",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_141.jpg",
+      "image_sha256": "9c6d455aee8bb4dd474750ba5e8b862e978e82bad024de6b2b5849cd3b4883b1",
+      "annotation_path": "ANNOTATIONS/patches_141.xml",
+      "annotation_sha256": "cff2dd3a43f5e49d62fd224fc0644d7b882c7bdfa421b5e062eeff9ba5de7b99",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_252.jpg",
+      "image_sha256": "71d965945231aa19dc245ecd53709cc421583984d1660edb5ab29a37ed06ed62",
+      "annotation_path": "ANNOTATIONS/pitted_surface_252.xml",
+      "annotation_sha256": "0a9543e9fcf06fb85f6b7249ae57b479acf9dcd38a5ba99d25b1f5af75a08ebd",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_60.jpg",
+      "image_sha256": "cd6d2ba79d8acdea1aeb393182016fbee35d55dc142efac01c1706ef791bca8a",
+      "annotation_path": "ANNOTATIONS/pitted_surface_60.xml",
+      "annotation_sha256": "942f37827b87fc4f808a29e94d22af260b4efd5d30864d559315c9822d2044dd",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_237.jpg",
+      "image_sha256": "a0e5c95ef7df58b2b2e7869ea7b2a710038e3860b9fbf7cfe1eb168e7579119f",
+      "annotation_path": "ANNOTATIONS/scratches_237.xml",
+      "annotation_sha256": "31747d5f1755474fd8b9d292071a19e14e6f03085b65cff37942a3cf393ac8c8",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_230.jpg",
+      "image_sha256": "55a5388a166206a123baa7398212f06a762fc25d9e815fe65c1eff160c01295e",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_230.xml",
+      "annotation_sha256": "59ad03a2dbe3baa15e2443a32ca1b81f2cb51a9f246da5e179dc2571a3753d1e",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_61.jpg",
+      "image_sha256": "04fbf0f1dc088c1187e0c79ebec84cc1722cf47b27f2f1f6ae072e81c106e6b2",
+      "annotation_path": "ANNOTATIONS/patches_61.xml",
+      "annotation_sha256": "3934a8e389be836a49c54f3bd2d0b5b3fd58aa71d1f77b2b74e75ee18324df5c",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_25.jpg",
+      "image_sha256": "0357ebe4e802a34427d3a5c1c2ccd7c3674f690bf8fce4dd0d622d79a29ca1d8",
+      "annotation_path": "ANNOTATIONS/crazing_25.xml",
+      "annotation_sha256": "7fdb1c6157f19727abdfed3381648f5b80099f0bfe538239b6afe07047040b07",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_160.jpg",
+      "image_sha256": "51a522f0eae177ce5c5db504f5c8fbba5ad7bdc8ed9d9c22b40ab0793490410f",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_160.xml",
+      "annotation_sha256": "3e0d86144e337d4706e69cd7248ce81c40942a9684786bb1c3fb29b757456cc0",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_172.jpg",
+      "image_sha256": "3374f8f27498b03a8a815a28d4e63a5a745549f6baa38a6ad93c489ee664f492",
+      "annotation_path": "ANNOTATIONS/crazing_172.xml",
+      "annotation_sha256": "2d220a4d52fdd4920c5fac101dd9df1d9ac70234eaea7541f3e5b8d783a9bd7c",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_114.jpg",
+      "image_sha256": "ee015e8ee7dd90a4436050ba07d4559c082ec6b1fae8f246c919f2895bb8efb4",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_114.xml",
+      "annotation_sha256": "5882c7b1b43e183bbb1d5a254670c0e5926c0bc63b6d9a75cf7c3d51cef4abb8",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_86.jpg",
+      "image_sha256": "25b7e6faf68ee791958c5c8caa63bfc4c667ec18b4d42c88fadfae6bfc8e1692",
+      "annotation_path": "ANNOTATIONS/pitted_surface_86.xml",
+      "annotation_sha256": "0ae5024888486496f2764f2ebbc602a66a68dfbf64fbbe000a1ca0de5e1fabde",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_283.jpg",
+      "image_sha256": "20ab6fc6330d683b417404eb49dbc8b6932dcd159a9037c69cd130c12d75ee04",
+      "annotation_path": "ANNOTATIONS/inclusion_283.xml",
+      "annotation_sha256": "8829d31d9d634f7fe4b2cf34ae262281a07337ce9ad725829c7ef9135d84bf2c",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_69.jpg",
+      "image_sha256": "411dcbfc1f8252da5c9395b2036d6b90ce71fdf54b577380b1f30466945a467c",
+      "annotation_path": "ANNOTATIONS/pitted_surface_69.xml",
+      "annotation_sha256": "998b5bba3b62aa41fb4a797a5c88d0b922b49bc554d9e04e1335b544061b28e9",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_5.jpg",
+      "image_sha256": "efcdf6413c7265a1492cf9e9de37ae8b260061b60b06a0212dc9c9b840cb4ab2",
+      "annotation_path": "ANNOTATIONS/crazing_5.xml",
+      "annotation_sha256": "9e1b080202059d2d3d8c4bdbc60a5a3b15db258c6eeebc384c2c40e5d74607f0",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_32.jpg",
+      "image_sha256": "f1cc2da29bceb16f3845896cbfb025a48bbf86e14b38773042a8f3355cbf9ee0",
+      "annotation_path": "ANNOTATIONS/patches_32.xml",
+      "annotation_sha256": "245e442b89893514c3ba403014591b866b71723452ba077a2cc42d46fdf580a3",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_262.jpg",
+      "image_sha256": "a7ce7f9929c6a524442a6e6373580912b8d0193b0609c965553898606052fdff",
+      "annotation_path": "ANNOTATIONS/inclusion_262.xml",
+      "annotation_sha256": "d0a0c0f869b243d74360f6e04676bdabaa5928fbbd5157b978ffd6aaa8b02f61",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_263.jpg",
+      "image_sha256": "2b95ea4b3d84b2808e6f2fccfe6e531ac1c047d6decefb202b33ac27b6efb244",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_263.xml",
+      "annotation_sha256": "26e971b9fdb4a89f39d5a0455e2c4393a816c8915132d4d39fd59af4beb56ea5",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_224.jpg",
+      "image_sha256": "420d84308e801c4d24c125c8b2b0b15f53fa7dc7a1c0e51e129a25b428224e37",
+      "annotation_path": "ANNOTATIONS/crazing_224.xml",
+      "annotation_sha256": "41990fdb3db803f447a23e0097459d33f3fc1ff4ef7c49331e39af7edb5b2f42",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_115.jpg",
+      "image_sha256": "401ee72f6268de2c892ac3bc4649a2ecc0c50cce27f4c9702c93349b795812fd",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_115.xml",
+      "annotation_sha256": "4c1f0bcfa1a58d11c65476e4a82da8e8f30dcd10d9c97a3a470d885057af0c50",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_225.jpg",
+      "image_sha256": "cf6c9fb4f506098d208ad0e77fd60da60eebb7f483eae9a5a56876157f39a428",
+      "annotation_path": "ANNOTATIONS/crazing_225.xml",
+      "annotation_sha256": "d4eedfd619d4ecb72106cb4acfc5d64e5bf37c299f5d01072277f408a7a21443",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_171.jpg",
+      "image_sha256": "abdc50d7591e7dcdb26660803594aa3dcf81c48fbf52b5b8f46a3c2250e2f276",
+      "annotation_path": "ANNOTATIONS/inclusion_171.xml",
+      "annotation_sha256": "282f0aca2a3c0b05f9215f0846be652b0d5dda088169aa9de80d6f699d7074fb",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_247.jpg",
+      "image_sha256": "8f41f3d185b0de0fe9197e70631c7fa148180067ddd8d95e87ca1aa2ecd1807f",
+      "annotation_path": "ANNOTATIONS/crazing_247.xml",
+      "annotation_sha256": "38b2bfce18bb4cf9c8057ded38c62b47a359c136077e8d3957c0c9fe4914686b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_225.jpg",
+      "image_sha256": "23be66132f661ba432b06ba402734cbe12d05d5eca0bebed90b99d9f15cec92f",
+      "annotation_path": "ANNOTATIONS/pitted_surface_225.xml",
+      "annotation_sha256": "0ebf8a0ef4de06b38bb9bbd5c2eb221794311cec6411b3d3abc54dffea205bab",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_203.jpg",
+      "image_sha256": "b8cc3d4cf816a1f02b5844c5f7344667db80947581b57f86e3a3363734620fd4",
+      "annotation_path": "ANNOTATIONS/crazing_203.xml",
+      "annotation_sha256": "c8af5bb65625d5ec722f165548683e1967c2dd5c003221fef12a71c1538ed408",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_119.jpg",
+      "image_sha256": "f4562ead6fe00c0051cee44830c0c654dbb48b9f198e24d1baf26429aa814256",
+      "annotation_path": "ANNOTATIONS/inclusion_119.xml",
+      "annotation_sha256": "dd08f0cd8c498aed2647d0ae7473167db2004892c550653be9efc6c8670a4fe2",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_268.jpg",
+      "image_sha256": "62c8106f8afe8a3e0a3f6ab5245d6384f6f5f216333f1e73e0b5068b43833a7b",
+      "annotation_path": "ANNOTATIONS/pitted_surface_268.xml",
+      "annotation_sha256": "998514b98a87962d10125b6c89e5a90ce6febac214a21e584005a5921dddadf5",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_215.jpg",
+      "image_sha256": "43a0b26cea6a82a9d71121ffd0e736f6357fa9cbcc7aefb7ad35f5fe0e373342",
+      "annotation_path": "ANNOTATIONS/pitted_surface_215.xml",
+      "annotation_sha256": "e151394ad8d1672db201345959ec44ba388b62b6e1f2db8decd9eb9e6f02f6c9",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_168.jpg",
+      "image_sha256": "08a5244832af8b28d9246cfe2287d465c133b0f187322da442348bb1f3d1d3d7",
+      "annotation_path": "ANNOTATIONS/pitted_surface_168.xml",
+      "annotation_sha256": "2f090345b068859d454e09dba72ad7e86a08296b4382d44616792120b26e1b26",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_96.jpg",
+      "image_sha256": "ff293ea52301d6628bc0141a0632b70e6f2f4cbd9d05b0299d70a5b0d5e5cce0",
+      "annotation_path": "ANNOTATIONS/pitted_surface_96.xml",
+      "annotation_sha256": "42a904301022a57addcd81e19d89dccbd4dd20654c9b629ca64590658f6eba71",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_191.jpg",
+      "image_sha256": "69a87d220c2665f465cc70fcfb4ffc703e15181df1d5e916f425958d7fa78bfc",
+      "annotation_path": "ANNOTATIONS/crazing_191.xml",
+      "annotation_sha256": "07e1daaa5073b11b4d9c56a852a79359cb5c6f929fe123a9ceb65e7b2a369825",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_204.jpg",
+      "image_sha256": "b2f9e0689212c067d3dd36923e753371114697911d9e5533dd51f2a775ddef0d",
+      "annotation_path": "ANNOTATIONS/crazing_204.xml",
+      "annotation_sha256": "36edbfa71a5d50e379d5630fe893143196b09124f0f1241d9b1c7793d9c2f699",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_137.jpg",
+      "image_sha256": "82fb6d832a93ab370a235ad1da788e4c00e869995829f368f4d58225d416b365",
+      "annotation_path": "ANNOTATIONS/patches_137.xml",
+      "annotation_sha256": "c25541767bdc579fd173d39be8ab0fbb130119bd6bb635b9c934f3f881706b05",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_265.jpg",
+      "image_sha256": "d47e69763a49d5d5a927a191715710198c5ecb75673ee835d645b8bd71d25e92",
+      "annotation_path": "ANNOTATIONS/scratches_265.xml",
+      "annotation_sha256": "2553401b0bf44655fdc45c0de1443cea767fef9cfcfcdc004816f41d42c93a0c",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_289.jpg",
+      "image_sha256": "657ff0c9728739c62c7b120e78cfe091740c7f466dd984467e8cb02f70e4b02e",
+      "annotation_path": "ANNOTATIONS/pitted_surface_289.xml",
+      "annotation_sha256": "1d4bddca9038d2ba4a1c4f31162f80197077d1da8e26cb4b69a009b37b330844",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_87.jpg",
+      "image_sha256": "0ccace87e701d4a71a88a4d2e4c9a81108689423739381751b8288b59856f4ca",
+      "annotation_path": "ANNOTATIONS/pitted_surface_87.xml",
+      "annotation_sha256": "f937cd456f42b549edbbdb12cd297ecf2b8eaead2bcd4c1d026ab51e0931e007",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_206.jpg",
+      "image_sha256": "40bbb613dd990d44eb4cf2f8c0b9620ae47d556c041b7555baa52d4d94480d46",
+      "annotation_path": "ANNOTATIONS/crazing_206.xml",
+      "annotation_sha256": "bfcadbd5b7b45383e4feb6663304e14ed7f21dc37341f2eed1412352155d0782",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_23.jpg",
+      "image_sha256": "0488dd21d5ea64366bf55529ed2cf05ede3b19821d82c6903f3a1bfc863792df",
+      "annotation_path": "ANNOTATIONS/inclusion_23.xml",
+      "annotation_sha256": "40a7852a3db926285a2016b9d18a4c54e14fc7eb736164933b977b699520a590",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/patches_105.jpg",
+      "image_sha256": "4d2de82731b86cdbc7a66f2a9bfb01074bb4cb65e47bccf06b66470d53857071",
+      "annotation_path": "ANNOTATIONS/patches_105.xml",
+      "annotation_sha256": "05eafff1fdc2aa894a359ede9c6552dfe535a5a75dba4d9f8b77eb8ae71aaaa0",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_179.jpg",
+      "image_sha256": "d2332e2fe067d2143cd44ea60dd023bf5311a74617b761eaa197096cbe0479b3",
+      "annotation_path": "ANNOTATIONS/inclusion_179.xml",
+      "annotation_sha256": "fda4b54fb6c6819ba7f2742cc32265692f9670c61c12256f6bd4a8d30cb2d354",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_114.jpg",
+      "image_sha256": "c91a9bd5ce5a0afad4c1d879dfec669d1aa5252477921d115bd16c2aff034efa",
+      "annotation_path": "ANNOTATIONS/inclusion_114.xml",
+      "annotation_sha256": "873d02c0d5caaa7d713030b07c964b1107820138d137209500388b0d7e0f0c9e",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 6
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_186.jpg",
+      "image_sha256": "a1b72ce8de5c400c85f76234f2178ae517d660d1a9292681217983bc9b709311",
+      "annotation_path": "ANNOTATIONS/pitted_surface_186.xml",
+      "annotation_sha256": "2e62feca0237230b85a40fc4bef2b821b0ff5a486b5ecccc2cf29c7e9ee2fa9c",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_239.jpg",
+      "image_sha256": "ae5544f50fc8b02c72a3f70865a2268045aae78f996c05c4c4935c522e934563",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_239.xml",
+      "annotation_sha256": "f3aca680c53d08ff137b0367acfcbbdd7166e75f43d345541a125213e8a7b56d",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_43.jpg",
+      "image_sha256": "d13a0906ba9e34d170ca9d2309b7e713664b1da1c814a7aad16513f6a9ab9f60",
+      "annotation_path": "ANNOTATIONS/pitted_surface_43.xml",
+      "annotation_sha256": "1328ba5c2db00dda2b099383a36c1608690b5ac5138b9e4652d78af8d876bafa",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_32.jpg",
+      "image_sha256": "0b234244c6ade925e1f08de73700d0682ea31fb8f25c3245ebf8b7b18604fd16",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_32.xml",
+      "annotation_sha256": "b5b69b12a714b50519f539a5c280659abb81f994c25968eb58fed9d1ba304a06",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_184.jpg",
+      "image_sha256": "bf371d07f5158ca1d5229a8a3ac00192fe4db73d17f4f2d84e9656aad97438ac",
+      "annotation_path": "ANNOTATIONS/scratches_184.xml",
+      "annotation_sha256": "23b9cac49aff1040799b995054713111aab9c98b68276f0982bf0dc28b7329a3",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_85.jpg",
+      "image_sha256": "c4fae55bfccaab43a3abf47d43f6fbc70c564c90430ec5e9754621082b43429a",
+      "annotation_path": "ANNOTATIONS/inclusion_85.xml",
+      "annotation_sha256": "32a876481055180eeeb1c9227add78ed830b2128a2fe333d920d19a68cf3e293",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 6
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_127.jpg",
+      "image_sha256": "f3e3485b985b6fc1bb6dd33232cd7140f25afc90fc8d3e3ac83d81571d847520",
+      "annotation_path": "ANNOTATIONS/pitted_surface_127.xml",
+      "annotation_sha256": "7c850e75b26c9e9a722d0e253fabfa7fa4b7873733207a7d99edd3fa0140b590",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_48.jpg",
+      "image_sha256": "2dc77674ad9a14b32fcad2c9405d8d2d92fdd8b3ff7b98ada46a6f1558cd80db",
+      "annotation_path": "ANNOTATIONS/inclusion_48.xml",
+      "annotation_sha256": "8b8bc6c9a8490a7ec8d34de89609b3ceef0e48615d562df0d51d7389706b0456",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_279.jpg",
+      "image_sha256": "d2bf11e2a6293675454996b47c2247a4a6dfe992fa9e6890900f47ebbbadbfaa",
+      "annotation_path": "ANNOTATIONS/patches_279.xml",
+      "annotation_sha256": "6980ee439877991a866eb35d1d0355b11809fe833410ffe527feb0b58c5ba880",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_102.jpg",
+      "image_sha256": "b4e276eb131f61b44084d0c06640b00cbaecbffb48d3a8f3120d7aaa5cc84a53",
+      "annotation_path": "ANNOTATIONS/crazing_102.xml",
+      "annotation_sha256": "df6ebb30f19fe37a2871e51a43ba09da568008ada2514824d9a7d3b256f5aa7a",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_258.jpg",
+      "image_sha256": "c84926f3e184c145c36499809377afbfed5f87bebd5ff9d22dbba28291690ffe",
+      "annotation_path": "ANNOTATIONS/patches_258.xml",
+      "annotation_sha256": "ad89b4d5650daf06db02657e1bb62a3ace66dbfddbe7cb15aed6dd877ec9e524",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_132.jpg",
+      "image_sha256": "a999cd13bff0c4a30a879391da70c8f0a39894ae18ce905e3df58a28ae99468a",
+      "annotation_path": "ANNOTATIONS/inclusion_132.xml",
+      "annotation_sha256": "22646fa1fb239ec7b76cb23f5cd99f4e588501704a2973d9faeee0a8f7fe9797",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_126.jpg",
+      "image_sha256": "fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3",
+      "annotation_path": "ANNOTATIONS/scratches_126.xml",
+      "annotation_sha256": "aafa78bc19f34140ccd21d6da42e83528934425aa4098e04fc12df350abe80e2",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_259.jpg",
+      "image_sha256": "3d9f70b84f17226fb5791ebfccef99ca7bd17c6a1e340f972ab21cedd5de2663",
+      "annotation_path": "ANNOTATIONS/scratches_259.xml",
+      "annotation_sha256": "5f16215e26872d5cc9037a7ff30e3f15cebb3956d0b188710c0a74ae78dd305a",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_222.jpg",
+      "image_sha256": "d589f433204f5f9bc298a210a9473a5c87eee136d15b493dfb61e185f389fd7d",
+      "annotation_path": "ANNOTATIONS/inclusion_222.xml",
+      "annotation_sha256": "1be1670d849dcd24d4dd00119b44b8ef97027bb6b038fccfeb8af5beeb7aca88",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_176.jpg",
+      "image_sha256": "8346be4d7aabc46d0886101c531a608c8a5b2873ba89b95648b59f6c91d20ec5",
+      "annotation_path": "ANNOTATIONS/pitted_surface_176.xml",
+      "annotation_sha256": "4394223f6cd757a4e9b7b967f2366803c772c652c0620315db49948464112e26",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_117.jpg",
+      "image_sha256": "533ef411f0252d313a85b6f7b4057f036268cac900581bba1784588136a7716e",
+      "annotation_path": "ANNOTATIONS/scratches_117.xml",
+      "annotation_sha256": "11c609ac9a40f8e88614b3ec81550c2db1ac3e9a8e772a55b4483a2c5003efb8",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_38.jpg",
+      "image_sha256": "850630a905233629d96e499f95cc288025add64fa216273b81fa0894ca4f4997",
+      "annotation_path": "ANNOTATIONS/patches_38.xml",
+      "annotation_sha256": "d30e8cf1c2d35e45c4188d99f09a49acc528e795a861511472d62d49b5bf60d7",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_135.jpg",
+      "image_sha256": "96a0fd79d5c8d6eab03b09e2331e258b931fd1b4523668b5b49f8ab69075ce67",
+      "annotation_path": "ANNOTATIONS/inclusion_135.xml",
+      "annotation_sha256": "bd34951312fb62e5844f5d13eaf8e7d8ab96d666014118e19cec3e142f2bf8e1",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_265.jpg",
+      "image_sha256": "d1b022534e4ec2c3c12fc86ed3120a39510845ebd12212d8a31abfc56ede086c",
+      "annotation_path": "ANNOTATIONS/inclusion_265.xml",
+      "annotation_sha256": "fa334cebeccbdec17d3327306f49317491c41190e1842f0cf4ba96a3cd0fc851",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/scratches_82.jpg",
+      "image_sha256": "6d38da963a2d6b10870b423a6761769a8e4e6235e4538522cacf503e5ce1c0e5",
+      "annotation_path": "ANNOTATIONS/scratches_82.xml",
+      "annotation_sha256": "8906bbc203b044cdf40718f2ede951499e2e226e7b979ad5865c36032c8237b0",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_126.jpg",
+      "image_sha256": "16db7a20320de7c04fd4d40701bee6caca636d7d436bc642075d07b38dd43f29",
+      "annotation_path": "ANNOTATIONS/crazing_126.xml",
+      "annotation_sha256": "d853d6893404d76c6b39bcf47695dd0262abddd55f3add65004bd4d892aaf38e",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_286.jpg",
+      "image_sha256": "8fa8faa63ff20acafbada36cfdba2d71202c7148af01e0c9e39b060b92c3d219",
+      "annotation_path": "ANNOTATIONS/pitted_surface_286.xml",
+      "annotation_sha256": "00a34b3622525f897975565bd2252fdedcb2f1946a8e7ed468ded83efe37cd0e",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_220.jpg",
+      "image_sha256": "00901619c63fcffca7cbc105e0c946b296aa86b5d1070a5f8cf3fcd042a5a584",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_220.xml",
+      "annotation_sha256": "6a9e705b976dccc11d7dac30c2fe3d445c12525015edebbf24c453dbc5e73ea5",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_192.jpg",
+      "image_sha256": "695a2adff6f47c44e7d0b46efe27b39e935006e261eb773d634f9e3bc2d69b77",
+      "annotation_path": "ANNOTATIONS/crazing_192.xml",
+      "annotation_sha256": "01c87fc6095b783c844e4fd29488eb584ced2a7046e99084b94fe322a876a182",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_28.jpg",
+      "image_sha256": "933e2ddde52372191f1c211d8750a719f656ce6f8c82a0b381e57a7945b02341",
+      "annotation_path": "ANNOTATIONS/crazing_28.xml",
+      "annotation_sha256": "286cfe9143b4d6fd0514d0b56bc39a4cca24d8672fb38bab82e94a24071b4bcb",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_33.jpg",
+      "image_sha256": "af99bdfab330b77986583aaa86da06f6ddfa291d2a365e6ac09e24b3ae17e321",
+      "annotation_path": "ANNOTATIONS/pitted_surface_33.xml",
+      "annotation_sha256": "a49826e6fa7052aeaa82681374cc185c257d383e3de2b447fc4a1e6246dafcd9",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_105.jpg",
+      "image_sha256": "dff0501d7a09a474271930b63e051e3a15613ab10d169c39d6c0453de23b3a59",
+      "annotation_path": "ANNOTATIONS/pitted_surface_105.xml",
+      "annotation_sha256": "ed000bb222b23924da9af632d2846982560258ba1681d5be6ec2f49a0252561f",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_238.jpg",
+      "image_sha256": "8eee0652524255e28c455d460e04389c38c6e8ad8ef6bcf60f6e9ca1110aabf2",
+      "annotation_path": "ANNOTATIONS/crazing_238.xml",
+      "annotation_sha256": "f0ff628aa9ff82daee110dc6a1ab571d397ab9d60bb9c850cf1533d0241f01e5",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_29.jpg",
+      "image_sha256": "818b2deae9ccf07d41c876d0b7372ca892a9813d331aedfa3e6e34ef693d6ba8",
+      "annotation_path": "ANNOTATIONS/inclusion_29.xml",
+      "annotation_sha256": "facca9f3a267732ee0cbd5872a22b39a75fd351fbb7092efb742f41d7eea82bc",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_141.jpg",
+      "image_sha256": "d2ac0749d95210cdfddadfd8a28dae8a6b9ac7d1520daa2c9367b9a27648441d",
+      "annotation_path": "ANNOTATIONS/pitted_surface_141.xml",
+      "annotation_sha256": "2ee7321e74d44cd89d32a547a1490080199cdc7aa6051eff2ea6f99fd8f32e2e",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_119.jpg",
+      "image_sha256": "2686f354cee5cbdbde6d4421577055f26a60eb8c1d853f7841dd12cb41d49b33",
+      "annotation_path": "ANNOTATIONS/scratches_119.xml",
+      "annotation_sha256": "ca39c338c150f2a96da14b5546e25ba4182559fe95fdb83ae1e292bc76b2bc50",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_167.jpg",
+      "image_sha256": "5010d4ddf544bbf92f607d8d52659978e1d4c9aab299a222304ce8a5807c3fa1",
+      "annotation_path": "ANNOTATIONS/inclusion_167.xml",
+      "annotation_sha256": "af60823d753713d345c8f1b16cea4fef735ff84777c30ef3df3793e83e80c84a",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_222.jpg",
+      "image_sha256": "bae054099edcb65dd3b0e71dcd271349a9670fbfddf07742dbc2a439ac3ce9f7",
+      "annotation_path": "ANNOTATIONS/scratches_222.xml",
+      "annotation_sha256": "6c1b966b9d544ef28d801143d247b2789ba60ea5c26dce6628076eb0c8bd6635",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/crazing_88.jpg",
+      "image_sha256": "9519c11fd80a47c30c9b46f2820a57a967d0cf74d9db0b2b06345c7af3194751",
+      "annotation_path": "ANNOTATIONS/crazing_88.xml",
+      "annotation_sha256": "ef93c90bcf12a55e574668a5b45d448b1713e7984be5c671078eab7f722b8fff",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_115.jpg",
+      "image_sha256": "f1bc1a620c2c46140f68b20fd1d74d1d6f16f0317f9c052ead9c4291550bed3e",
+      "annotation_path": "ANNOTATIONS/pitted_surface_115.xml",
+      "annotation_sha256": "d5301ff406e54fd582b097e9f33080f49164e9756ba9f89d67b81e9e4a115e1a",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_43.jpg",
+      "image_sha256": "c1b2e9040a2251c020966264cc8a5cb7ce311df6294f21e1db8b09c96b360ca4",
+      "annotation_path": "ANNOTATIONS/scratches_43.xml",
+      "annotation_sha256": "b976ae685bb0b1d80158af2052548947226933f7003bc69bd80fce3a85411f45",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_107.jpg",
+      "image_sha256": "de6826749f3a7b68e11a2395976c1bf9d818ac21c9920bd160138fd81f711ba6",
+      "annotation_path": "ANNOTATIONS/scratches_107.xml",
+      "annotation_sha256": "8be9b36253656e507a9d05afbd294eb4751348549eee46bfcb45d862fb9644ab",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_182.jpg",
+      "image_sha256": "63a2bac652e184372820aa13360ec1595ac8e4ea3ae9242f75ddac79f395c582",
+      "annotation_path": "ANNOTATIONS/inclusion_182.xml",
+      "annotation_sha256": "aa6c3a9c43a9b5561025c277984b53e444dd10da5d88e462510bd6166bc8e76d",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/inclusion_288.jpg",
+      "image_sha256": "6d738aa8d938af3847e17d260b5626e85152a55572dd2d2bfa3774e7e8a1a5a9",
+      "annotation_path": "ANNOTATIONS/inclusion_288.xml",
+      "annotation_sha256": "f6de576cc4df0ac0f5b58b779bb8b0f517852cf630277620c792648e0b201fad",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_30.jpg",
+      "image_sha256": "81aff6312a4ceae245855ced6e56719e7e8e3d0911345317d2bb9f8ebbb9847e",
+      "annotation_path": "ANNOTATIONS/crazing_30.xml",
+      "annotation_sha256": "e17bc941490ac4a1eda9468f58ff3811d2d884352db0cb80e7844cf9b5df042b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_184.jpg",
+      "image_sha256": "b08da27dbdb393b157c42e014b712358edfcc210a17b78e8b993ed0e6186f1fd",
+      "annotation_path": "ANNOTATIONS/patches_184.xml",
+      "annotation_sha256": "4d3bc73537aab264a35ecf084974be72787e3196e5500c041b50ba1eeb04dc9f",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 7
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_91.jpg",
+      "image_sha256": "526c022b8fa6b7e38ee9421af07405f5a94f4063d7af095ebcbd5c74b9e021f9",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_91.xml",
+      "annotation_sha256": "71dca3e18498f0979babf78f7433e35049ea7da7fa0779f810d8632d146dd614",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_300.jpg",
+      "image_sha256": "c97e4426198ad6989ddf6c2cf1449e6231b1a6d05cc75443398c4ccc77c51d08",
+      "annotation_path": "ANNOTATIONS/patches_300.xml",
+      "annotation_sha256": "f1f5a1af73f1ef4ded729e13e812ea7e426fb4f40707df599b207c10b990ebd8",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_210.jpg",
+      "image_sha256": "0eb758928ba3664ebce598e52f122e973ac1f7e8de648bb20c3f54c30e35d2b0",
+      "annotation_path": "ANNOTATIONS/crazing_210.xml",
+      "annotation_sha256": "dbb4c803229182b71ad096379ea523734e012c86ee4c91df592231112fba3633",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_280.jpg",
+      "image_sha256": "f67462e22e7e025d07a09854282b519ad30a5bd802d79ae3c4fb17c609fdb570",
+      "annotation_path": "ANNOTATIONS/crazing_280.xml",
+      "annotation_sha256": "354fb9ccf033aa3834a214dd2fedb83e04318e3bcc791259846cff6aa40a7022",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_21.jpg",
+      "image_sha256": "d8c183596170f6fa7db62baaf886d1e9d7c39fc32f1ac814c65ac34e75d4f60a",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_21.xml",
+      "annotation_sha256": "3446165f4ac383743eb80ec7032eeab4bf26d2340cd5200bbb64f371d68cc9a8",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_223.jpg",
+      "image_sha256": "60206e7c54b2a2699f5913fd63591368550b8f2a3f9590bf42597afe5dc68a81",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_223.xml",
+      "annotation_sha256": "13bab31d85398cb52d8526ea87156be28c0955b7b8ef935992422c5d65032da9",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_260.jpg",
+      "image_sha256": "5dcc40fa363fbce80e11f1d785d71514e0c8bd80512d8078eacee3459ff5d435",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_260.xml",
+      "annotation_sha256": "592608bbea16d8b15bd78b945f2bce73a2e62c1b24a599bb2c42ab0e52541b7a",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_199.jpg",
+      "image_sha256": "045dd7295bb1c32e3d180ab5092618fd4015852c747a667a67c5b53048c0fd2a",
+      "annotation_path": "ANNOTATIONS/crazing_199.xml",
+      "annotation_sha256": "aeba3c6f64ae4195f0d5df630c71976da1bfdce45ab5abf1c2d08747232a997e",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_276.jpg",
+      "image_sha256": "5425066031254b9a916291955733134e6aa6f0af5d7d59686de98d165226fe3e",
+      "annotation_path": "ANNOTATIONS/scratches_276.xml",
+      "annotation_sha256": "8a82b1ab8ee62c4d2c472229a02bcfd44fc1c4ec143675eb538f4d223bcedcc1",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_15.jpg",
+      "image_sha256": "53e7260d78101d4313f81b01e063e47dd3cc8974062ae4bfe8f9966d9136668b",
+      "annotation_path": "ANNOTATIONS/pitted_surface_15.xml",
+      "annotation_sha256": "e70a163f6d06c198d7b20037526a8b6ba288fde3a112f5dc85e8ad560d0ef83c",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_46.jpg",
+      "image_sha256": "2bc773158b38f9b4dea792a10311f8ba9eb81222454f6a347e500c8d7b3ebb9d",
+      "annotation_path": "ANNOTATIONS/patches_46.xml",
+      "annotation_sha256": "5b3e1fa54cf81b94c83ef867309b9f3516d5f0397fe8a515c234f9a695348144",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_7.jpg",
+      "image_sha256": "45b4388e53fc01bd3c4a19b6febf047e0741c9ff5b592014978666c73df072ee",
+      "annotation_path": "ANNOTATIONS/patches_7.xml",
+      "annotation_sha256": "e58e264678ad87fc5d46b1e6ffcb83b3e25509558bcb209f06a8dee6bb2c3911",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_211.jpg",
+      "image_sha256": "f988631bac3b31eac7be7a1f56e118d14d3327989ce4b454370761c5c8700305",
+      "annotation_path": "ANNOTATIONS/patches_211.xml",
+      "annotation_sha256": "973dc35a2f44ec5c4c29784cc2d3f50a5cacbba144788aed916ce94cd547ce7b",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/patches_83.jpg",
+      "image_sha256": "bff8b23555a6654dd5a240992aee08df5e9b3fe8c688fefa37cf17bc9c2b6a3f",
+      "annotation_path": "ANNOTATIONS/patches_83.xml",
+      "annotation_sha256": "1dd4d2567a79abe3c6befcd39c3cecdaaa68332ce3a636e03e4c847e46ca43e4",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_233.jpg",
+      "image_sha256": "f56a6df98a0f17232ea9c223bf874d124549d95d50550cd403f83f4a689ad59f",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_233.xml",
+      "annotation_sha256": "025aeed7b3b35f4faba7a1d22f00a69a89f3ba58ed9b95bcff3d4b62157a1ecb",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_52.jpg",
+      "image_sha256": "dd38b433da3cdc86d90aa14b5394c82ce3441eaa1e1bba8d304b088d929b5c15",
+      "annotation_path": "ANNOTATIONS/scratches_52.xml",
+      "annotation_sha256": "71c8ef4dd43f8e448410d20f348821aed7794538a5340e545c1bf4042c6fb85f",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_273.jpg",
+      "image_sha256": "b67c916c81548576bf226c07c29c081f2fe0a73d2c2b37be5b762bffdb605810",
+      "annotation_path": "ANNOTATIONS/crazing_273.xml",
+      "annotation_sha256": "84f5a8472e2ebf0f061a240c7adb75f557c8df9aed5c505add7608c8489cf2c4",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_18.jpg",
+      "image_sha256": "c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b",
+      "annotation_path": "ANNOTATIONS/inclusion_18.xml",
+      "annotation_sha256": "5866810ce03e4b8c00d3e5cd6aa7adfd1d8e599f670873c7fea813ebdde182bb",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 9
+    },
+    {
+      "image_path": "IMAGES/patches_39.jpg",
+      "image_sha256": "7147f20f064932b1608dc0e061836d9432882204b4b8ec8a122932dd30175800",
+      "annotation_path": "ANNOTATIONS/patches_39.xml",
+      "annotation_sha256": "7a12810ef3ad19beb0a6c2a90d1f6e39a60720987229e82052937933ed36a305",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_110.jpg",
+      "image_sha256": "92c615abaa1585c8fd675ea9b9b1320f89c797d53b652fea2b3ca26a55eb74e0",
+      "annotation_path": "ANNOTATIONS/scratches_110.xml",
+      "annotation_sha256": "befda09278b25380d211d29c4db33d5a8bd1a1c5fb60e934882b2f63064954c1",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_277.jpg",
+      "image_sha256": "ccb16c05fb1c4e6bacd347363e37a7abdbde9d19542f3f25366631ec0380ee36",
+      "annotation_path": "ANNOTATIONS/inclusion_277.xml",
+      "annotation_sha256": "4aa58782e6b848288e166ac1813ce5a36f91c1dccfe8c057b361dc5747ee38ef",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_160.jpg",
+      "image_sha256": "b9d02dcd7624fa4acc749cd90926411fa3e96d578c7c979ff5f4241df835bb0a",
+      "annotation_path": "ANNOTATIONS/pitted_surface_160.xml",
+      "annotation_sha256": "47b9107e9c512eaa3a54e56cede374ba9d55954cd24b28b72cce9ab70aaced17",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_81.jpg",
+      "image_sha256": "5e66e37c6b75cf9dda04dca89743e43d082d6836931654abedfab076dd01adea",
+      "annotation_path": "ANNOTATIONS/pitted_surface_81.xml",
+      "annotation_sha256": "90be66519db58464b796d49904c9c690bbca7978762374afe0b94dd760ce8182",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_71.jpg",
+      "image_sha256": "58e9aec52c45805cab6805931fdeb0c2a07612157dd7085b298be65db55eb093",
+      "annotation_path": "ANNOTATIONS/pitted_surface_71.xml",
+      "annotation_sha256": "76c76be5fba20c4f4bae7b446f8948a5224b4cd5721a22de80a82ed4c263471a",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_82.jpg",
+      "image_sha256": "c9d46a65f395ae014460082797b42eb4288856a948b3a2b55e733360035ff926",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_82.xml",
+      "annotation_sha256": "00ad9837f3e6f6efa024d5bb224209422e0c745d05ff44bb5f71e1e00e5342cd",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_72.jpg",
+      "image_sha256": "8477e24640fb56d2644a2460b57c3e653e259d8eb768d87d7342983389c5d4fb",
+      "annotation_path": "ANNOTATIONS/crazing_72.xml",
+      "annotation_sha256": "bf3beb865649dde0a9e5110228dbe7fd9fcd10b28b3df438ac14339d3b21a07d",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_152.jpg",
+      "image_sha256": "7d92c3048cb2e54beff63e3a11a6d124578a6f27dbadb697e3d7c871c824eb69",
+      "annotation_path": "ANNOTATIONS/scratches_152.xml",
+      "annotation_sha256": "e084c27e1cf2da10d7dad886b7723ef84c9667f5f936ab8cdba2ea6003f7674e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_223.jpg",
+      "image_sha256": "a3491c40b1182bfa8e0584efefc0a4513814dd8169f79fb054ca3e77818c8f25",
+      "annotation_path": "ANNOTATIONS/inclusion_223.xml",
+      "annotation_sha256": "4ad0cb8e6cf00503a134f37dc4dfc600fb024ec69b397dbf8849e649a14eb4ec",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_184.jpg",
+      "image_sha256": "a6764f42e7608e539fd3b60c663b8f3bfc7d863fde46b2f41cc1c3dedd92c724",
+      "annotation_path": "ANNOTATIONS/pitted_surface_184.xml",
+      "annotation_sha256": "b1d11884c91307d757e5e4f4323374801e3a6035d74155aa6a97d97be18a29e7",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_252.jpg",
+      "image_sha256": "532b5e2791530183ec310caa1755eb9f56db6f3d498cb61350b601e3dc74ac54",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_252.xml",
+      "annotation_sha256": "2ed46ad9d47e968089b72afbfa41fe871159d39a63adf70fa03959202c4bd6e6",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_72.jpg",
+      "image_sha256": "39da29b48daf4aa2dd6a38bcbf744bf6981004eba96c2494f2e91f73d331807b",
+      "annotation_path": "ANNOTATIONS/inclusion_72.xml",
+      "annotation_sha256": "412760f8bc1a2a56c7e8b422e7aa68de2705050df6157766f9c4d04642f00163",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_268.jpg",
+      "image_sha256": "a84b3716b2f7effc2243206de8dafa6874fd19f56b451773aef371c76e6f3a28",
+      "annotation_path": "ANNOTATIONS/inclusion_268.xml",
+      "annotation_sha256": "2607258a789ec9f5a28e2ef17912c61ae6dabd0099d297c71e09eca429865213",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_236.jpg",
+      "image_sha256": "4fe9242908c05da1e83d2d4c5aaa4ed0834e793e2f3de534a44da67fdb610617",
+      "annotation_path": "ANNOTATIONS/pitted_surface_236.xml",
+      "annotation_sha256": "e748d3278ae48553f2c3cfc7ca68faaa66230aedbcfea2c711edae54df9ab8f0",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/scratches_129.jpg",
+      "image_sha256": "def28753fbc0d5050de6136e3c68e55b804577ba81f0dc0b64064fa5f5c2f591",
+      "annotation_path": "ANNOTATIONS/scratches_129.xml",
+      "annotation_sha256": "11d988240eed97c048872be887d5f8a1d87fd5f3ed4de78a96f0513aab913fe5",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_168.jpg",
+      "image_sha256": "11551ae1e03110fd3c21ff836b7da31727ac9c53d146735e61854d12850484ba",
+      "annotation_path": "ANNOTATIONS/patches_168.xml",
+      "annotation_sha256": "df57731b4a789f94b265d8c18508f17b5018551a229cb39bcfcb5b4d5dce56ee",
+      "class_list": [
+        "inclusion",
+        "patches"
+      ],
+      "bbox_count": 7
+    },
+    {
+      "image_path": "IMAGES/crazing_157.jpg",
+      "image_sha256": "c50b115700ed6408936e788e261d4243480380e3793a2fd0d25c2a91419a2b23",
+      "annotation_path": "ANNOTATIONS/crazing_157.xml",
+      "annotation_sha256": "6230d9ed8f67d357b58ebfd8ebc005138cc33d99d34b17b7a4c688d51b416fff",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_223.jpg",
+      "image_sha256": "62753656212be7a89c7a882a18e589bf51effc711f9b01bb15fdbeb67a5f80fd",
+      "annotation_path": "ANNOTATIONS/crazing_223.xml",
+      "annotation_sha256": "ddb9b6e68f811e5ec6068a3e4617238655a51e6a22773c5ae609fa7ab95da892",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_250.jpg",
+      "image_sha256": "5ef5d6fccd6032f3ca4d2026eb0b98199436f7e280b58e95b5b1a5fff4f2288a",
+      "annotation_path": "ANNOTATIONS/inclusion_250.xml",
+      "annotation_sha256": "0fc976e89c6e16b81f9aaefa2d1dcaa94a5937a1051908d4c9a46782dc4777db",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_207.jpg",
+      "image_sha256": "27f77016ee364560e53e2c3083bd9f47d9d205340714efbe57462bd8365c252b",
+      "annotation_path": "ANNOTATIONS/crazing_207.xml",
+      "annotation_sha256": "06d98646c2417bb54c8a61fcb16b82cd9e4fd7501e74e3942d78a7622ce7131b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_182.jpg",
+      "image_sha256": "faa9bd41e5b3cd827d48df20a5263cc278a6a7b7ef781935a9ffc7fac50bc6d4",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_182.xml",
+      "annotation_sha256": "3d8c5977da007b99d8a500fed91be4ddda035751fb861de5812f280b0c44f2b7",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_53.jpg",
+      "image_sha256": "f6d5a18d343c82237fa93d690ed3fbb67c6ffe6ebb6264e45f01c5d90a1f2fd3",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_53.xml",
+      "annotation_sha256": "3a467c370722fecf52a88960d53ee0e93bb3a5833dcca77ce42656bee26f8b49",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_23.jpg",
+      "image_sha256": "a395ac78920129571f89635111d30b50ad88b593fe44856d586c7c4adf8f24e5",
+      "annotation_path": "ANNOTATIONS/crazing_23.xml",
+      "annotation_sha256": "beb650a89dda82a9791606fcb6a8bf2077780baf8ad752263c2e03a9bfb0bd77",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_111.jpg",
+      "image_sha256": "28e8357c2731740ea42757c69d52e9308119cda379da601a8fbd63bb83b68962",
+      "annotation_path": "ANNOTATIONS/crazing_111.xml",
+      "annotation_sha256": "2d843d3b18ef065df31292d46410e961f59b418496a1f7e9362027e3295ae4a8",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_70.jpg",
+      "image_sha256": "5e36d31d04d2f41d47ade42df79f55cc74d4a8c32e40c9316a1a0f08ffc50768",
+      "annotation_path": "ANNOTATIONS/scratches_70.xml",
+      "annotation_sha256": "f7bcf4c3c4e1d1fd76a3316d8adf738bb41d76037109e2b057efc45b3f87d258",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_103.jpg",
+      "image_sha256": "d7dea4bf779ad8441b89cd7d2f76871c91843dc409ff818c3dd5baa554e05d8b",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_103.xml",
+      "annotation_sha256": "621e6cb62e0803ff0a2fde6395ae23f01ae445d842376090675bea0486b8525e",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_253.jpg",
+      "image_sha256": "78720df6afaf5d771b71cabdb7009856de535560351867d55380e69ab8cf5749",
+      "annotation_path": "ANNOTATIONS/inclusion_253.xml",
+      "annotation_sha256": "3f047496f13a7f9d9f4f97cfd6707bc4f2fcd9a269539007d14852214f456ddc",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_4.jpg",
+      "image_sha256": "d74f4eb848d694be8a3988fc327053dbea7dd0f0b2cbfc0fa48fc0a8a024b909",
+      "annotation_path": "ANNOTATIONS/pitted_surface_4.xml",
+      "annotation_sha256": "ba1f6c690b0c68998254af3e4502de09d0b04af43f1edb983557841a8d364730",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_102.jpg",
+      "image_sha256": "473ee8c670a34f306161b59bb73e96980bc77e9e163f7d198b49162cdf400f80",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_102.xml",
+      "annotation_sha256": "fe5c87d036d61408641b220d42b22a00b3d109fc2af2d225c9a1d8b74d92bc6c",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/crazing_138.jpg",
+      "image_sha256": "b30b127032406ef0d87df5e1c227ec9b37074254ae9dede42dda31a94ebf8565",
+      "annotation_path": "ANNOTATIONS/crazing_138.xml",
+      "annotation_sha256": "3fbd6b1b0262b2596ea9bf53475f1a16e96d7c8876305ea387548e25ffb899ee",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_182.jpg",
+      "image_sha256": "4495fb8e282aa3a7dd211f72aaadf61b96e79ee9190d2d951630410decccc39f",
+      "annotation_path": "ANNOTATIONS/patches_182.xml",
+      "annotation_sha256": "30d9e6ff353110a299143ba6137c0c7373784b4159c17b7f3f4c1266a07daccd",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_217.jpg",
+      "image_sha256": "dd0e2f8a2c6901cc540c53aa7194af40fa2e8ed38a0825608e1b56c846fcf01e",
+      "annotation_path": "ANNOTATIONS/crazing_217.xml",
+      "annotation_sha256": "67831d1448376c142a8436a8233746a636f67594d49adf27bfc242799f8c66b9",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_243.jpg",
+      "image_sha256": "bc912fa169b782795d9cca21f50b8e9c991147d964fed06a146cf6a07e056a4b",
+      "annotation_path": "ANNOTATIONS/inclusion_243.xml",
+      "annotation_sha256": "4fa097ce0e8a702f63bf0956626a4f38fbc59cf8594bd13ee9f4a8a1ac20b1cb",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/inclusion_286.jpg",
+      "image_sha256": "62525a1b2cae83b20f3a4b8c05ed577086492454adf18609e7fae5668551b87a",
+      "annotation_path": "ANNOTATIONS/inclusion_286.xml",
+      "annotation_sha256": "5965c4bb835c7739ca53c8d8081a7c281dda96c90f8d1a529a85978391b1b2d6",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_51.jpg",
+      "image_sha256": "185daa31428cf2467d48f9f57ff582575d07a796cd26d77f3e05537bae681503",
+      "annotation_path": "ANNOTATIONS/crazing_51.xml",
+      "annotation_sha256": "8c88e5f287de52b60b8b60088112303c5cdf543a9d21f19b0fb54ed7225e69b3",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_120.jpg",
+      "image_sha256": "297ec1a0a369123845e17c413587e5ca71563008ceb91c5355162f3b9d7c5938",
+      "annotation_path": "ANNOTATIONS/pitted_surface_120.xml",
+      "annotation_sha256": "a5e76f474868d811f7b01124664d21833e775d3b7a572715e4d8e816e24fe369",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_242.jpg",
+      "image_sha256": "dc6698c721ce47ee32e523bda7d745ebe5f956adcdd3668f4333b2dc68678d54",
+      "annotation_path": "ANNOTATIONS/pitted_surface_242.xml",
+      "annotation_sha256": "7d7ce95d0e7642177284493dc40d9e3d3f151a9c8733d143bc1ec031dd74fbc2",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_97.jpg",
+      "image_sha256": "9c08845910fa4492a657eaacb89a80890fd83010e79c94223dc38a6f4d6534b4",
+      "annotation_path": "ANNOTATIONS/patches_97.xml",
+      "annotation_sha256": "156edf4f52eaaf13a8aa780302212ec22bbebd6fc21d10a9b2b990e7329e9a12",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_247.jpg",
+      "image_sha256": "855c94193ef337063103964b1a6be05681eb08db3892b778fd43e1da58c1da0e",
+      "annotation_path": "ANNOTATIONS/patches_247.xml",
+      "annotation_sha256": "3e724b85614c36ff4bf612cb5da6e61cd25778cc41dfd9d82a55f9c958f01def",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_74.jpg",
+      "image_sha256": "7c1919325465e8a762552e839a93c141ca6d44777136e663676fbb3644fc6eaa",
+      "annotation_path": "ANNOTATIONS/scratches_74.xml",
+      "annotation_sha256": "4555d1b0499d009c9112666b52d89a69af6b0b5b40c481006df9234c18f469bb",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_257.jpg",
+      "image_sha256": "9365fe96679d4a92779b3c016afdeed83d9fe56655efffe2def0723b38da34da",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_257.xml",
+      "annotation_sha256": "c9f4a39f0e6e727ab83f56e6096e108ebc23f5f32feb5653a5161c48b41029c5",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_47.jpg",
+      "image_sha256": "ab7f194af65ec63adeed6df943a63393c334f88246170651321e6626629b40a0",
+      "annotation_path": "ANNOTATIONS/scratches_47.xml",
+      "annotation_sha256": "68acef85ac3d6c007297ad2b492d28162873f166042da4085d0032e448247d7c",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_133.jpg",
+      "image_sha256": "b2da2199a39655b0a56bbb4aef03f0b1e26ae8a6fd699399c3017899e546f68f",
+      "annotation_path": "ANNOTATIONS/patches_133.xml",
+      "annotation_sha256": "d08bc59207bec643ed949f23c2e3a631617c3b2c5a4b1224a5748c86f94d1566",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_63.jpg",
+      "image_sha256": "b60cc3734adb110230a6ad57527ba2956ffb5ff1465f358a11b69a780a4c1d28",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_63.xml",
+      "annotation_sha256": "4c09d5207b59e27710d5f3a17a59a32e664ce683f0c1d77d823e6da087fecbd8",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_2.jpg",
+      "image_sha256": "92befa6113c232f8fa98365a9e491fea7ce06e64bca4ba70ba78655dd1a2a864",
+      "annotation_path": "ANNOTATIONS/inclusion_2.xml",
+      "annotation_sha256": "cc3682ad935c1bb6caee6e2a743712d462f0130a9252c0c36912358e50632eba",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_290.jpg",
+      "image_sha256": "74e7dc7f885b5880c6f09c38d27d8ec7f2c64891bf68320970edbd14ad703717",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_290.xml",
+      "annotation_sha256": "3b5b83b8e71eb4ce2d4c7491ab896512c96ec27085874869f2950563d22dcdcd",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_45.jpg",
+      "image_sha256": "62c747044d5744d1b985f4123983f57e8ac130cb66ffd4cd415d2873094c8672",
+      "annotation_path": "ANNOTATIONS/scratches_45.xml",
+      "annotation_sha256": "5a65ee179597930b11e69303bb7533ed99bf7fcd9fb752dccf786cec89ee8a35",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_140.jpg",
+      "image_sha256": "8c5e73aa15ca7cb47c092e58f8a3996e8648aac5c37c58dc1c3971fec8629d7b",
+      "annotation_path": "ANNOTATIONS/scratches_140.xml",
+      "annotation_sha256": "b188de1530611e89f7918a0b81d6a6ad203746f835a45d7a9f08d3326eda371a",
+      "class_list": [
+        "inclusion",
+        "scratches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/scratches_182.jpg",
+      "image_sha256": "5f6815063bd34c710c7565555d0c5325770145618e22e0bf89d579411d3d59d1",
+      "annotation_path": "ANNOTATIONS/scratches_182.xml",
+      "annotation_sha256": "152d5ac242918a9b177fe8fef0ff7b4af600118599bc08071e1114e440484fbc",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_219.jpg",
+      "image_sha256": "50cf3517b529e47d4c1dd74921d6ec9bd7c6530e0afdaf70ccd05c29b90a5f49",
+      "annotation_path": "ANNOTATIONS/inclusion_219.xml",
+      "annotation_sha256": "8f8174be4edfbe64a3b2a352df037c2fbe819bc64f294943bf03a7c484ee73bb",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_69.jpg",
+      "image_sha256": "cb53b10f2f667f4e050dabad2aafb14e1cb930abc6618f4ec52cfca6fb615901",
+      "annotation_path": "ANNOTATIONS/patches_69.xml",
+      "annotation_sha256": "4f6354dafe47b38f7af351919adb554b28983eaaa83e671e3bd320842e481bc8",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_137.jpg",
+      "image_sha256": "72bd6673de3e9f7d8df1d69a024c04f714c19bb2ac8b45a0589d9b13244fce75",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_137.xml",
+      "annotation_sha256": "36113d0ccd3b3bcd68fd8aae6efb9bd42c2531b6c3e53a41b997c3d58dcb38e3",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_261.jpg",
+      "image_sha256": "7882542d6bcef5c0a38b177bbd84c527fff9aa3fe289c71a7f7c16195212b984",
+      "annotation_path": "ANNOTATIONS/pitted_surface_261.xml",
+      "annotation_sha256": "59caec5fb308c0c75d0157c121a186f2228e6c0f56e822ad992dc1ae2e9a08f9",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_246.jpg",
+      "image_sha256": "06811a835826c47ad78e91e90cb758f6334f348d21765375b2ce9146be1309b4",
+      "annotation_path": "ANNOTATIONS/scratches_246.xml",
+      "annotation_sha256": "6b6c84f6bf26914b4074359d372e1b4a1b1115055bf83472f2c336ef91eac7f7",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_133.jpg",
+      "image_sha256": "5304fe6f94b65fa9ee8871e9b3f6d7cc279de4c3dc4802f8e314a0df60139d86",
+      "annotation_path": "ANNOTATIONS/inclusion_133.xml",
+      "annotation_sha256": "0ae320f994d0faa53709aad752dcb8dff80a102683f110c8cdbbaaeca5847be8",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_31.jpg",
+      "image_sha256": "6be554255e6859c5e1dbd4c07fefe00e6e304362da5246dbdafd99341fe0086a",
+      "annotation_path": "ANNOTATIONS/pitted_surface_31.xml",
+      "annotation_sha256": "23ec11d060215ff3601879333212618ecb65a9f44814d8c4fb0136f161c77610",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_165.jpg",
+      "image_sha256": "33c41793939b2240f338bfd9bb83eb691d1b63b90326f48a4304fb44e0af7783",
+      "annotation_path": "ANNOTATIONS/pitted_surface_165.xml",
+      "annotation_sha256": "b8b5aca589dc7721c5fd4144f2ead9062eff19687b8a8c150c6aba7f0069c304",
+      "class_list": [
+        "patches",
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_235.jpg",
+      "image_sha256": "167b7a8f8c23757c1ae2fd6966055d444eca638520cfb6f302b7d7abb76abac3",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_235.xml",
+      "annotation_sha256": "6417f890433c6b878354ad949711af2bcb3144655acfe90af9b0e19fa110c083",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_65.jpg",
+      "image_sha256": "a35f3d67bd8f90728ff701ab77e49073085bc8ad2fa3ba4bf7ef8599140f1a08",
+      "annotation_path": "ANNOTATIONS/crazing_65.xml",
+      "annotation_sha256": "62a16327d79bab0587aa02935f0f045c6439deb0ea03fd7de7f3a271c5b2fb7b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_60.jpg",
+      "image_sha256": "564d10bccbc68f4c7e1983493469c7adb25dc89ab37456c748c3e70acf232f57",
+      "annotation_path": "ANNOTATIONS/crazing_60.xml",
+      "annotation_sha256": "85515550d79d8d1118ee830a561ef5c9c685771623ded3eaa1b5840cd48019cd",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_160.jpg",
+      "image_sha256": "cb0e882ebb77e62531cfa0a8e69f9d9fc97d7c51bd9b96e89ae1ca1a90daefb7",
+      "annotation_path": "ANNOTATIONS/scratches_160.xml",
+      "annotation_sha256": "f68d3c3e85dc3e878295246218912b53f29e0403d3afd600664d28a9b308bcf3",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_270.jpg",
+      "image_sha256": "4d4074af862f2a649838d3e4ea4503d74de1a05b3d242eeb3eff323f9b2e1ebd",
+      "annotation_path": "ANNOTATIONS/pitted_surface_270.xml",
+      "annotation_sha256": "b70e06c142d6d5afe0e2a92f2a62970e1e53f11686128e46aedb46ad9ccf84a7",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_150.jpg",
+      "image_sha256": "83242feddda09c84dd7648adf3b58ae9a02eafed278933423ac749f786345abc",
+      "annotation_path": "ANNOTATIONS/scratches_150.xml",
+      "annotation_sha256": "90fbafd51b12ab611555a4b7b970775bbb009de0370e80eeacb32a5d71a4e355",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/crazing_226.jpg",
+      "image_sha256": "cf59e7a9b758c9af450503774af88a65ce22546907fe59a73ca5533e96c70a75",
+      "annotation_path": "ANNOTATIONS/crazing_226.xml",
+      "annotation_sha256": "5e487a711d58561e7c1af02d402341ff3960b7b9f05e49d4558beb82c5413255",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_185.jpg",
+      "image_sha256": "cbbd9e956886c5ea30e94d7f4cf26c81790b440839b7aa3f8fe08aa9cc6944ea",
+      "annotation_path": "ANNOTATIONS/pitted_surface_185.xml",
+      "annotation_sha256": "5991014f86771f2f8b5a6850520efb0a62fe699b47e5aa6f95fad328a6b3c3ec",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_98.jpg",
+      "image_sha256": "c479d54d2c3b9850439534392e991f0bb70a8d44a8be33a97932722c9f26b072",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_98.xml",
+      "annotation_sha256": "7d25638804d5750ad1ae4ae81fbfa5a3d7f651d90924188a8d3f4613960a6538",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_257.jpg",
+      "image_sha256": "f4e5cf14e8e352b89da12ed84a98de3d5b7e7e402694d64ecaed9acb7efe9454",
+      "annotation_path": "ANNOTATIONS/crazing_257.xml",
+      "annotation_sha256": "bc4482cd87fe99028f8cfb0ab64f5bfee84dedfb66d435677e2862f53f848eeb",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_50.jpg",
+      "image_sha256": "758368569146183dac0848ccc2193f160ee9599a28c9976ceee557058971d178",
+      "annotation_path": "ANNOTATIONS/scratches_50.xml",
+      "annotation_sha256": "f62637bd29233ec765ad788865bbcd1e105ae12272f4940d95dbb45dc4c1d6d8",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_255.jpg",
+      "image_sha256": "cbce8cec9fcd71dd78f91976544b9544af1c346172efa4c335959f3ff6fd68b6",
+      "annotation_path": "ANNOTATIONS/scratches_255.xml",
+      "annotation_sha256": "c7807b325e857735f536f06f8bc5afd40b83ba1b8c8964ea3b3817ae3406039e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_273.jpg",
+      "image_sha256": "e913ec752513deb8cbe6d87432e9314b2a5d41aef881c909180a8f6fc353d1ce",
+      "annotation_path": "ANNOTATIONS/inclusion_273.xml",
+      "annotation_sha256": "20f6b715268e4f262b6dec01bdf539739896a7740d4a26e2471b3545673ed94e",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_205.jpg",
+      "image_sha256": "893f11bee876f47786e05acecf0acd3007e78908329bdf3eaae7203b13d3dc7b",
+      "annotation_path": "ANNOTATIONS/crazing_205.xml",
+      "annotation_sha256": "dc7a7e16c993626505e62b616b66fff62d67eacef17c648df572cac7cd71449b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_270.jpg",
+      "image_sha256": "3c3e1d109a401b6cb4abeaa4da07bf3d621794041c8b02e80768282614f5073a",
+      "annotation_path": "ANNOTATIONS/inclusion_270.xml",
+      "annotation_sha256": "396aed91df772faf381e3dbcaa98554434825d6482d288690ec00268b089ff51",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/patches_125.jpg",
+      "image_sha256": "9701bd8d49cae20363e0c31f68985ea237b9eb02cdad5e1c5d599802e7d102e3",
+      "annotation_path": "ANNOTATIONS/patches_125.xml",
+      "annotation_sha256": "2d5c752626562a17f5d34097f5d7127aef95313d00879c70a6ff62c287780302",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_228.jpg",
+      "image_sha256": "a9d5c1daaaeb00a1819b3b9ef87bc8f5fbaabb37e3e2e1320ac344ba61b606ca",
+      "annotation_path": "ANNOTATIONS/patches_228.xml",
+      "annotation_sha256": "e814a80540bb735ae829ff07bf444cef6665fe2f78019c3828030674b810981b",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_35.jpg",
+      "image_sha256": "744ed04f33da9d31c23f0c1b1d97157c96e39fb5e8b38a5f98f97473b86baff9",
+      "annotation_path": "ANNOTATIONS/crazing_35.xml",
+      "annotation_sha256": "ee4c3803d3ed609bbfd3d3d344fd163accb40a52fc9444a2238f88104620daac",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/crazing_134.jpg",
+      "image_sha256": "35fa0a639b596f8fb7be7e69b10bd3369913d7a3ccab83a5871da2ab32709747",
+      "annotation_path": "ANNOTATIONS/crazing_134.xml",
+      "annotation_sha256": "8bd941e99506a1fdbb59ef23979d5ab96858efe1adae576cd440c08f24042729",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_19.jpg",
+      "image_sha256": "7ed12bdb7a30a918bdbf14b37b5a5dedaeabbe9e6f6a5b6c63aff9fdcf33ffd9",
+      "annotation_path": "ANNOTATIONS/pitted_surface_19.xml",
+      "annotation_sha256": "ab7ad7f16297534fa4f5f5d686fcb1089e77239c5d9ac667f62c75f6dd60500f",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/patches_156.jpg",
+      "image_sha256": "9961f0ffde85a40516f54262b3fa74eb35cee24fc87a54d4fe8f07b7e7fb2ec2",
+      "annotation_path": "ANNOTATIONS/patches_156.xml",
+      "annotation_sha256": "11131fd450b7bb51980289e43a170b1a00e799337639119832e7f2b500fcf326",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_122.jpg",
+      "image_sha256": "9360b0f69b9b4fb85e32baccd39b38158144d9c03eb72e6dbe8770b4d63934ac",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_122.xml",
+      "annotation_sha256": "03a5cf13e42d71b08a9a7499bb188dc393ddeb1fc7873871a960dc9e23fe263e",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_10.jpg",
+      "image_sha256": "522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c",
+      "annotation_path": "ANNOTATIONS/crazing_10.xml",
+      "annotation_sha256": "25f594078d10e108a180a9b71b0c60d104a8c8a3a0a4e1517ac3dbf61c18060b",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_267.jpg",
+      "image_sha256": "f09776c48b5920adfb3dc441e4cb2fc446b35fc45da3e39f71c2d6a625215788",
+      "annotation_path": "ANNOTATIONS/pitted_surface_267.xml",
+      "annotation_sha256": "c186cdc725d276a0e9d421d66be645019eba021490cc58cff635044d988fa291",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_283.jpg",
+      "image_sha256": "a7848a058d4eb08b6f4faaf3dd44c0a956650205748301236b17426d57097aa6",
+      "annotation_path": "ANNOTATIONS/pitted_surface_283.xml",
+      "annotation_sha256": "4150d29f45d22c2163f4a45a8c0985b93da913955359943bd7795fc46b912f68",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_126.jpg",
+      "image_sha256": "8d4fd5282bca4cdcf7ba5996fa44924a89742990cbdbf7dfdc5056344dbfb2c1",
+      "annotation_path": "ANNOTATIONS/inclusion_126.xml",
+      "annotation_sha256": "d48b4a13adf8a6bfd6caf6f5cb6cd6e922de56c31a34181ae5f6b34d55722c8a",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/scratches_154.jpg",
+      "image_sha256": "3e96489cf25f15a08c3dcebbec97afabdfb58468847e51a70d880a35a104b72c",
+      "annotation_path": "ANNOTATIONS/scratches_154.xml",
+      "annotation_sha256": "eb025f9cf6f2c2afb1ddbc753f936def753bb0e9effd9666eaa96c90e07ef263",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_248.jpg",
+      "image_sha256": "3d2c26ea976d8fffbf4c12713fa5ae9739cdb86702ec99a293fa22e932a32abe",
+      "annotation_path": "ANNOTATIONS/patches_248.xml",
+      "annotation_sha256": "a871a1bbd3ddcc811e854d0b17e8a6081db10ee466466a566decf2858f63e74b",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/scratches_227.jpg",
+      "image_sha256": "907a347e448f18b9d2f3f7ada8a8b21367ac374e9a7e9d6830f5fa6ce9225120",
+      "annotation_path": "ANNOTATIONS/scratches_227.xml",
+      "annotation_sha256": "83f6023975d4d286ea162750079ec6f69a32f95351fb4cfb8342d915814f58de",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_76.jpg",
+      "image_sha256": "80608058e915f920b897fa32d1c3a2ab583f3fd21acd5742f77cfb2c413c8058",
+      "annotation_path": "ANNOTATIONS/scratches_76.xml",
+      "annotation_sha256": "f539b59e62ed829ae001bb2142caee00afb6c085cb5361f787b2b26a071181c3",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_28.jpg",
+      "image_sha256": "b573375056053983d38edd2061ee73fd7de209f1010c1ed07eb8046480b4348a",
+      "annotation_path": "ANNOTATIONS/scratches_28.xml",
+      "annotation_sha256": "ca6b10f72313bb3925b388f296a0d056b41ab82a9401f0ba40e22a60e47f258f",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_193.jpg",
+      "image_sha256": "d201e7c39a88ced01e99e541d0f6ba4c7c24ccd5091a8c86973187459146fe88",
+      "annotation_path": "ANNOTATIONS/scratches_193.xml",
+      "annotation_sha256": "459af1c829e1d17e8d4d9d8cfbc379a412c30ac4f1dd63f3de63f46ef6849ae4",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_197.jpg",
+      "image_sha256": "377bc7dd25075830dffae3e80088ad088eb10e9e9ab6f341faf4b999752cf907",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_197.xml",
+      "annotation_sha256": "bc5c256433a6b1165b6d263f0d3badffc1eca06d573fe3188aa529d56c6ff6f1",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/patches_109.jpg",
+      "image_sha256": "425fde38df51d513d0aa0b4c5a1587fefb270a876aee1e8d8d3da37b3ad71a70",
+      "annotation_path": "ANNOTATIONS/patches_109.xml",
+      "annotation_sha256": "0f329a9743b72f1039f8688a14f6ddf7b6878a3fb88b7cf4697259fb5258927a",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_171.jpg",
+      "image_sha256": "5e6491de8526738699178356d17dee421c8cc19b86843634255cc817a8bdea20",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_171.xml",
+      "annotation_sha256": "125841e175cd8dffdfdc7617859a4848c6fa08e8bc2dba195130c74b0dd113a2",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_295.jpg",
+      "image_sha256": "baf96b62005b06f8f3e14fd87e5b9748b52f0f8e1598c26d10cff50692bfc6b6",
+      "annotation_path": "ANNOTATIONS/crazing_295.xml",
+      "annotation_sha256": "b6bcd1e021bf969012dab5ea7f53d7c90e8195456cba4bb35af0e5dce693c281",
+      "class_list": [
+        "crazing"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_224.jpg",
+      "image_sha256": "419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80",
+      "annotation_path": "ANNOTATIONS/pitted_surface_224.xml",
+      "annotation_sha256": "7ead6da1695b03ba070943edf6919c6f7e9525ecee47c50a084ca9969352188a",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_158.jpg",
+      "image_sha256": "1708c782c65037a4e1002c179ec593782fcd4f0b086a5cac0ffd573ef58dc7a4",
+      "annotation_path": "ANNOTATIONS/inclusion_158.xml",
+      "annotation_sha256": "42bf4e3035232e1a333c95d719cd95784ac755f70da0959c5d5ce4d1ded9d435",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_153.jpg",
+      "image_sha256": "edfda57ed4467e635baeff00654d9774bd2e94483c0e1a28c59b5f7f34240807",
+      "annotation_path": "ANNOTATIONS/scratches_153.xml",
+      "annotation_sha256": "3937d9fd01b125bec2dd8610292e3024d39ba1406804c6afa17835bae6205904",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_211.jpg",
+      "image_sha256": "29083485e5fe4dc1a540e30697534e268f7b646ea41e3397207dda5a48ea8b57",
+      "annotation_path": "ANNOTATIONS/pitted_surface_211.xml",
+      "annotation_sha256": "85c11824abf0484dd75e3a37c00a835b75eab5beefc44c3265c6649b24c3b6be",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/inclusion_44.jpg",
+      "image_sha256": "b9fed34b03b2f459b7f11b7957585fa6624326bfb7284d5ab284a0234cc33172",
+      "annotation_path": "ANNOTATIONS/inclusion_44.xml",
+      "annotation_sha256": "14081ad929ead034c78d1811d30e37ab4abf3c03a410d80ffd3dc806169376d8",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_75.jpg",
+      "image_sha256": "4d49093a4f5f411b11fd54f191d68ba35d2b09b110127df5bc7f33353028ab8b",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_75.xml",
+      "annotation_sha256": "52ff2f7fc02cafe98eabdf3decc17fec7fed8030c90e60aea7ae180f883dc211",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_8.jpg",
+      "image_sha256": "fda0e799f5fc7d3d3550f9f44bdfa9efa8d43c068461d77f8d61386cad16d89e",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_8.xml",
+      "annotation_sha256": "e609cd3ea13bfc509189a4b6856b473cbde871d4eab3e9d2f7572552cf4f3947",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/crazing_104.jpg",
+      "image_sha256": "1b60cd12649d9a695a693be42c29b1b3837fe81788b923a37546f6505b4e221c",
+      "annotation_path": "ANNOTATIONS/crazing_104.xml",
+      "annotation_sha256": "59820bc73ce1c5659b03c1ef6b7acb8871e63a6668b6f8b551f991260aa02375",
+      "class_list": [
+        "crazing",
+        "patches"
+      ],
+      "bbox_count": 4
+    },
+    {
+      "image_path": "IMAGES/pitted_surface_125.jpg",
+      "image_sha256": "a55b9e4172cde4c6441feb878a394c202b269bda1e9f4a7a61b41da7ac4fe85d",
+      "annotation_path": "ANNOTATIONS/pitted_surface_125.xml",
+      "annotation_sha256": "3f8e7902fde24db859dc5cb458cca72a9919a36f2feb1f1202cc873981476c4b",
+      "class_list": [
+        "pitted_surface"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/inclusion_12.jpg",
+      "image_sha256": "399c512883d199635f6233e27e7a7a3d5bed3eb7aab15083dc5bf9f265d2baa6",
+      "annotation_path": "ANNOTATIONS/inclusion_12.xml",
+      "annotation_sha256": "6aa686442e4906d9d8fabd3684e66f4bed84bc1d645a2624d8a09c2abb5f6c6d",
+      "class_list": [
+        "inclusion"
+      ],
+      "bbox_count": 5
+    },
+    {
+      "image_path": "IMAGES/patches_90.jpg",
+      "image_sha256": "65704f810f46a2dd58e1ff24c78f75e2c46678266e1f76b927da7a340f24eff8",
+      "annotation_path": "ANNOTATIONS/patches_90.xml",
+      "annotation_sha256": "048706ff492bbeb7cfd43d678406b9a9ef1c3ece0718b58e32a94c92dd152f97",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/patches_10.jpg",
+      "image_sha256": "0bce06415796cabe1187dd00329893d46ea1f71f07f5c795b16a4629ce71249c",
+      "annotation_path": "ANNOTATIONS/patches_10.xml",
+      "annotation_sha256": "b8ec91ae065cddc73942adbf13597029efddefc4a9319ee2f61e6d0c53403289",
+      "class_list": [
+        "patches"
+      ],
+      "bbox_count": 2
+    },
+    {
+      "image_path": "IMAGES/scratches_98.jpg",
+      "image_sha256": "38d29272c69d03f3dae4da3fa497ba33bcb3f19caf3fdcb65d5773bbced0f585",
+      "annotation_path": "ANNOTATIONS/scratches_98.xml",
+      "annotation_sha256": "776913c50e35f555e40563d7d234c93843b3837441e8f2e73ef9c218008d04a9",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/scratches_60.jpg",
+      "image_sha256": "0c8af0a11fea79c84b240ccaf15d1d958f67f1259ab66b6633e12c86e05c54df",
+      "annotation_path": "ANNOTATIONS/scratches_60.xml",
+      "annotation_sha256": "bc1026a68dce9471a502b814bc0b9024a232f0a3ccdb8b6a4e9d86877209847e",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 1
+    },
+    {
+      "image_path": "IMAGES/rolled-in_scale_20.jpg",
+      "image_sha256": "410585853745afbb7ef092bb290f3d5c971d455c02f00080868e302d113837f2",
+      "annotation_path": "ANNOTATIONS/rolled-in_scale_20.xml",
+      "annotation_sha256": "843b1ed5d1ace037fd025ba315576211d6c1f34b44facf1a1ce3457ea079e411",
+      "class_list": [
+        "rolled-in_scale"
+      ],
+      "bbox_count": 3
+    },
+    {
+      "image_path": "IMAGES/scratches_166.jpg",
+      "image_sha256": "bda65326f1b3d151f35170e2f1ba61bffc1ee388bc601b55837211071db12d4e",
+      "annotation_path": "ANNOTATIONS/scratches_166.xml",
+      "annotation_sha256": "0a6bc06a8c653ea316fa3459f20ea6de3ffb7fb1ab1a8990f356b709e7375a72",
+      "class_list": [
+        "scratches"
+      ],
+      "bbox_count": 4
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+nvidia-l4t-core:
+  Installed: 36.5.0-20260115194252
+  Candidate: 36.5.0-20260115194252
+  Version table:
+ *** 36.5.0-20260115194252 600
+        600 https://repo.download.nvidia.com/jetson/t234 r36.5/main arm64 Packages
+        100 /var/lib/dpkg/status
+nvidia-l4t-dla-compiler:
+  Installed: (none)
+  Candidate: 36.5.0-20260115194252
+  Version table:
+     36.5.0-20260115194252 600
+        600 https://repo.download.nvidia.com/jetson/common r36.5/main arm64 Packages
+libnvinfer10:
+  Installed: 10.3.0.30-1+cuda12.5
+  Candidate: 10.3.0.30-1+cuda12.5
+  Version table:
+ *** 10.3.0.30-1+cuda12.5 600
+        600 https://repo.download.nvidia.com/jetson/common r36.5/main arm64 Packages
+        100 /var/lib/dpkg/status
+     10.3.0.26-1+cuda12.5 500
+        500 file:/var/nv-tensorrt-local-tegra-repo-ubuntu2204-10.3.0-cuda-12.5  Packages
+libnvinfer-dev:
+  Installed: 10.3.0.30-1+cuda12.5
+  Candidate: 10.3.0.30-1+cuda12.5
+  Version table:
+ *** 10.3.0.30-1+cuda12.5 600
+        600 https://repo.download.nvidia.com/jetson/common r36.5/main arm64 Packages
+        100 /var/lib/dpkg/status
+     10.3.0.26-1+cuda12.5 500
+        500 file:/var/nv-tensorrt-local-tegra-repo-ubuntu2204-10.3.0-cuda-12.5  Packages

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "attempt_id": "k5_correctness_v3",
+  "status": "TENSORRT_LEVEL_B_FAIL",
+  "source_commit": "38aac68b1e603bc10de290a6ee65c7164c5437c8",
+  "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+  "reference_bundle_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+  "application_sha256": "97b17a66c093a4db5a7a983d751513547587c609e6562e0e42c077ee1f1c8ad7",
+  "comparator_sha256": "6a718ed4284f04144e85d419656860dff18317e65a6127d31b2fde9e819b6a7e",
+  "tolerance_policy": "tensorrt_fp16 frozen Stage K Level B",
+  "raw_output_manifest_sha256": "4643716f6215a808b7d0f643f0d0bb95bcbbaaea19dc84cd39c29c5476f7cad6",
+  "formal_comparison": "16 tensors; 1 PASS, 15 FAIL",
+  "failure_reason": "TensorRT Level B bbox max_abs and selected score max_abs/type7_p99 values exceeded frozen limits.",
+  "downstream": {
+    "tensorrt_level_c": "NOT_EXECUTED",
+    "boundary_investigation": "NOT_EXECUTED",
+    "benchmark": "NOT_EXECUTED",
+    "stability": "NOT_EXECUTED",
+    "k6": "NOT_EXECUTED"
+  }
+}

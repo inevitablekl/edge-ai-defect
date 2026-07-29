@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k2r_build_verification",
+  "trtexec_version": "TensorRT v100300",
+  "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "candidates": {
+    "C0": {"build_exit": 0, "inspection_exit": 0, "load_smoke_exit": 0, "engine_size_bytes": 9013908, "engine_sha256": "db6d378710064f3ea7b16fbe02879da7a57dce9ccb73e0b1d4e564a7b7f7ae39", "layer_info_sha256": "b8b9e579f8ffc3421dd09a1e2b53b4eb6161ca552a194399c2c8c433cba279ea", "scope_check": "diagnostic noTF32"},
+    "C1": {"build_exit": 0, "inspection_exit": 0, "load_smoke_exit": 0, "engine_size_bytes": 9042220, "engine_sha256": "55549f6cbd1b8deaee0357793ffb59d3d516187757159475e5281bc647e343ea", "layer_info_sha256": "0d67830ea355af820c6d06b94560b6564cee28657546fce165dbd7a04c99e294", "scope_check": "21 exact traced layers; fused DFL/decode entries recorded"},
+    "C2": {"build_exit": 0, "inspection_exit": 0, "load_smoke_exit": 0, "engine_size_bytes": 10873124, "engine_sha256": "d24ff2a23b6e508135f57591294c9e2ee8f7786492410d983449ae756fa47fbe", "layer_info_sha256": "3ee75e86bbb541027d5a0ded47d73763fa2a4ccf92b67441a79096fed84619d3", "scope_check": "39 exact traced layers; Slice/Slice_1 fused or elided in dump; classification FP16-enabled and unconstrained"}
+  },
+  "checks": {
+    "static_batch_1_640": true,
+    "host_fp32_io": true,
+    "output_shape": [1, 10, 8400],
+    "int8": false,
+    "dla": false,
+    "custom_plugin": false,
+    "c2_policy_accepted_by_trt": true
+  }
+}

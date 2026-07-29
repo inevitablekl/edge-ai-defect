@@ -1,0 +1,2 @@
+sudo apt-get install --no-install-recommends \
+  nvidia-l4t-dla-compiler=36.5.0-20260115194252

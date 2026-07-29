@@ -1,0 +1,13 @@
+Codex install attempt (not authenticated):
+sudo apt-get install --no-install-recommends nvidia-l4t-dla-compiler=36.5.0-20260115194252
+exit_code=1; stderr=sudo: a password is required
+
+Manual authorized install confirmation from /var/log/apt/history.log:
+Start-Date: 2026-07-27  20:54:22
+Commandline: apt-get install --no-install-recommends nvidia-l4t-dla-compiler=36.5.0-20260115194252
+Requested-By: orin (1000)
+Install: nvidia-l4t-dla-compiler:arm64 (36.5.0-20260115194252)
+End-Date: 2026-07-27  20:54:22
+
+Post-install dpkg observation:
+nvidia-l4t-dla-compiler	36.5.0-20260115194252	arm64	installed

@@ -1,0 +1,32 @@
+LIBNVINFER=/lib/aarch64-linux-gnu/libnvinfer.so.10
+ 0x0000000000000001 (NEEDED)             Shared library: [libnvdla_compiler.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libcudla.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-aarch64.so.1]
+=== ldd ===
+	linux-vdso.so.1 (0x0000ffffa4315000)
+	libnvdla_compiler.so => not found
+	libcudla.so.1 => /usr/local/cuda/targets/aarch64-linux/lib/libcudla.so.1 (0x0000ffff96000000)
+	libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffff95dd0000)
+	libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffff95d30000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff95d00000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffff95b50000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffa42dc000)
+	libnvcudla.so => /lib/aarch64-linux-gnu/libnvcudla.so (0x0000ffff95b20000)
+	libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x0000ffff95b00000)
+	libcuda.so => /lib/aarch64-linux-gnu/libcuda.so (0x0000ffff93290000)
+	libnvdla_runtime.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so (0x0000ffff92c30000)
+	librt.so.1 => /lib/aarch64-linux-gnu/librt.so.1 (0x0000ffff92c10000)
+	libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x0000ffff92bf0000)
+	libnvrm_gpu.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_gpu.so (0x0000ffff92b70000)
+	libnvrm_mem.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_mem.so (0x0000ffff92b50000)
+	libnvrm_host1x.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_host1x.so (0x0000ffff92b20000)
+	libnvsocsys.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsocsys.so (0x0000ffff92b00000)
+	libnvos.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvos.so (0x0000ffff92ad0000)
+	libnvtegrahv.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvtegrahv.so (0x0000ffff92ab0000)
+	libnvrm_sync.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_sync.so (0x0000ffff92a90000)
+	libnvsciipc.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvsciipc.so (0x0000ffff92a50000)
+	libnvrm_chip.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvrm_chip.so (0x0000ffff92a30000)

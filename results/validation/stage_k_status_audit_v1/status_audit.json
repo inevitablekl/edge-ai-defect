@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_execution_status_audit",
+  "audit_scope": "read-only repository/evidence audit before large-scale dataset evaluation",
+  "repository": {
+    "branch": "feature/jetson-tensorrt-fp16",
+    "head_at_audit": "622523933edad60aee6aa29f32b4b242613d0651",
+    "audit_report_initial_commit": "1b26dcfe0fbddc4e10b24c6752088d2db68e2cee",
+    "tracked_worktree_changes": false,
+    "untracked_worktree_entries": 104,
+    "untracked_entries_disposition": "pre-existing diagnostics and local evidence retained; not modified or staged by this audit"
+  },
+  "document_sources": [
+    "docs/personal/STAGE_K_EXECUTION_PLAN.md",
+    "docs/personal/STAGE_K_TASK_CARDS.md",
+    "docs/personal/TASKS.md",
+    "docs/personal/EXPERIMENT_PLAN.md",
+    "docs/personal/DECISIONS.md",
+    "README.md"
+  ],
+  "planned_vs_actual": [
+    {"stage": "K0", "original_goal": "Planning Freeze", "actual_result": "K0 freeze completed at the freeze commit; Stage K plan v1.1 and task cards were frozen.", "status": "COMPLETE"},
+    {"stage": "K1", "original_goal": "Platform Acceptance", "actual_result": "Initial linker/package attempts were blocked; after the recorded package/cache repair and disposition review, platform runtime, CUDA lifecycle, TensorRT runtime and trtexec help semantics were accepted.", "status": "PASS_WITH_RETAINED_ATTEMPT_HISTORY"},
+    {"stage": "K2", "original_goal": "Engine Build", "actual_result": "Original FP16-enabled mixed-precision Engine built, inspected, load-smoked and manifested. Later K2R precision remediation candidates C0/C1/C2 all failed the frozen raw Level B gate; no replacement candidate was selected.", "status": "COMPLETE_HISTORICAL_ENGINE; K2R_FAILED"},
+    {"stage": "K3", "original_goal": "Config/Foundation", "actual_result": "Optional TensorRT build target, RuntimeConfig v3, manifest parser, Result metadata v2 minimum branch and factory foundation implemented and tested.", "status": "COMPLETE"},
+    {"stage": "K4", "original_goal": "TensorRT Backend", "actual_result": "Synchronous TensorRtEngine lifecycle implemented with persistent resources, one stream, exact I/O/manifest/contract checks and focused Jetson validation.", "status": "COMPLETE"},
+    {"stage": "K5.1", "original_goal": "Reference Bundle", "actual_result": "Frozen Python ORT Level B reference bundle created and verified: 16/16 inputs and 16/16 reference outputs.", "status": "COMPLETE"},
+    {"stage": "K5.2", "original_goal": "ORT Control", "actual_result": "Strict ORT cross-architecture Level B gate failed; D063 accepted the inherited Jetson/x86 numerical limitation path. ORT Level C semantic comparison passed under unchanged semantic tolerances.", "status": "INHERITED_CROSS_ARCH_LIMITATION; STRICT_GATE_FAIL"},
+    {"stage": "K5.3", "original_goal": "TensorRT Raw Correctness", "actual_result": "Original FP16 TensorRT raw Level B failed: 1/16 PASS, 15/16 FAIL, bbox max_abs 23.29144287109375. K2R C0/C1/C2 also failed. Strict FP32 noTF32 diagnostic control passed 16/16, but is not the FP16 deployment candidate.", "status": "FAIL"},
+    {"stage": "K5.4", "original_goal": "TensorRT Level C / task-level correctness boundary", "actual_result": "Independent task-level comparison completed on the frozen 16-image corpus: 54/54 matches, 0 class mismatches, mean IoU 0.994954508, E2E speed ratio 1.227345x. Real NEU-DET boxes were unavailable, so Precision/Recall/mAP are TBD. This is supplemental evidence, not an official K5 gate closure.", "status": "SUPPLEMENTAL_INCOMPLETE"},
+    {"stage": "K6", "original_goal": "Application Integration", "actual_result": "Formal K6 application/semantic/telemetry preflight was not executed. Existing application runs used for K5.4 evidence do not close K6.", "status": "NOT_READY"},
+    {"stage": "K7", "original_goal": "Formal Benchmark", "actual_result": "Not executed. The K5.4 550-frame profile is explicitly non-formal task-level evidence and is not a K7 benchmark.", "status": "NOT_STARTED"},
+    {"stage": "K8", "original_goal": "Stability", "actual_result": "Not executed.", "status": "NOT_STARTED"}
+  ],
+  "failed_experiments": [
+    {"id": "K5-ORT-strict", "result": "ORT_CONTROL_FAIL; inherited cross-architecture numerical limitation accepted by D063"},
+    {"id": "K5.3-original-FP16", "result": "TENSORRT_LEVEL_B_FAIL; 1/16 pass; bbox max_abs 23.29144287109375"},
+    {"id": "K2R-C0", "result": "noTF32 diagnostic remained 1/16 pass"},
+    {"id": "K2R-C1", "result": "bbox/DFL/decode FP32 selective candidate remained 1/16 pass"},
+    {"id": "K2R-C2", "result": "maximum bounded BBox scope remained 0/16 pass"},
+    {"id": "M2", "result": "Detect Head FP32 island remained 0/16 pass; bbox max_abs 27.280731201171875"},
+    {"id": "M3", "result": "raw Level B 16/16 pass only after all Backbone/Neck/Detect constraints; inspection found zero actual FP16 tactics, so M3_DEGENERATED_TO_FP32 and selective recovery not established"}
+  ],
+  "accepted_decisions": [
+    "D055: Stage K is the formal TensorRT serial backend stage; Stage P is downstream.",
+    "D056: direct TensorRT C++ Runtime API; no TensorRT EP or fallback.",
+    "D057: offline FP16-enabled mixed-precision Engine with FP32 host I/O, static batch 1 and 640 shape.",
+    "D058: synchronous HostTensor backend, one ordered CUDA stream and persistent resources.",
+    "D059: RuntimeConfig v3 and Result metadata v2 boundaries.",
+    "D060: Python ORT Reference authority, raw Level B and semantic Level C numerical policy.",
+    "D061: formal benchmark/stability protocol and downstream Stage P boundary.",
+    "D062: exact original TensorRT build contract.",
+    "D063: inherited ORT cross-architecture numerical limitation disposition.",
+    "D064: bounded K2R precision remediation; Backbone/Neck expansion prohibited under that decision.",
+    "D065: bounded selective-FP16 investigation with M2 as the maximum authorized FP32 scope under the then-current audit; later M3 is therefore exploratory evidence requiring governance reconciliation."
+  ],
+  "pending_experiments": [
+    "Supply/locate the real NEU-DET validation bounding-box annotations.",
+    "Run independently authorized full validation-set inference through the frozen FP32 reference and FP16 deployment engines.",
+    "Compute real Precision, Recall, mAP50 and mAP50-95 with unchanged preprocessing/postprocessing.",
+    "Decide whether task-level evidence can be admitted as a separate acceptance dimension while retaining raw Level B failure history.",
+    "Only after an approved flow and K6 authorization: formal K6 preflight, K7 benchmark, then K8 stability."
+  ],
+  "experimental_reality": {
+    "strict_fp32_notf32": {"level_b": "PASS", "bbox_max_abs": 0.011474609375, "interpretation": "TensorRT-side FP32/noTF32 diagnostic correctness control; not a production replacement decision"},
+    "fp16_task_level": {"matched": "54/54", "class_mismatch": 0, "mean_iou": 0.994954507563731, "e2e_speed_ratio_fp32_div_fp16": 1.2273450498432514, "dataset_metrics": "TBD_REAL_ANNOTATIONS_REQUIRED"},
+    "raw_vs_task_level_interpretation": "The evidence invalidates the assumption that raw TensorRT Level B failure alone proves final detection-task failure. It does not invalidate raw Level B as a numerical correctness gate or permit silently changing that gate."
+  },
+  "plan_analysis": {
+    "classification": "B",
+    "classification_text": "Need additional Task-level validation stage",
+    "reason": "The frozen plan treats raw K5 correctness as the prerequisite for downstream execution, while the independent 16-image task-level evidence shows stable final detections despite raw FP16 drift. Accuracy on the real validation set is still unmeasured, so a bounded task-level validation stage is required before any acceptance or integration decision.",
+    "recommended_flow": [
+      "K5 raw correctness investigation (retain raw gate and failures)",
+      "temporary task-level validation addendum using real NEU-DET annotations",
+      "governance review and final plan update after measured dataset results",
+      "K6 application integration only after its formal prerequisites are satisfied",
+      "K7 formal benchmark",
+      "K8 stability"
+    ]
+  },
+  "next_action": {
+    "choice": "OPTION_C",
+    "text": "Create temporary execution addendum, run dataset evaluation, then freeze final plan update.",
+    "reason": "The official plan and task cards are frozen and must not be silently rewritten. OPTION_A would run a large evaluation against an unresolved governance boundary; OPTION_B would change the frozen plan before the missing accuracy evidence exists. A temporary, explicitly bounded addendum permits the dataset measurement while preserving the historical raw K5 gate, followed by a final plan update based on real results."
+  },
+  "non_actions_verified": [
+    "No official Stage K plan/task card/decision document modified.",
+    "No full dataset inference run.",
+    "No formal benchmark run.",
+    "No stability run.",
+    "No engine rebuild, ONNX change, tolerance change, K5/K6/K7 gate change or production runtime change.",
+    "No Stage P entry, push, merge or tag."
+  ]
+}

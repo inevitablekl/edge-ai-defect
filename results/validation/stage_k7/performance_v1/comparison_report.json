@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k7_comparison_report",
+  "verdict": "K7_PERFORMANCE_COMPLETE",
+  "reference": "fp32_notf32",
+  "candidate": "fp16_original",
+  "engine_identities": {
+    "fp32_notf32": {
+      "key": "fp32_notf32",
+      "label": "Strict FP32 TensorRT noTF32",
+      "engine_path": "/home/orin/edge-ai-local-models/stage_k/strict_fp32_notf32_v1/yolov8n_neudet_trt10.3_strict_fp32_notf32_b1_640.engine",
+      "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+      "engine_size_bytes": 18882468,
+      "manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/build/tensorrt/strict_fp32_notf32_investigation_v1/manifest.json",
+      "manifest_sha256": "086f8e31542f9fbdb88027d3578b23268135d848c165772681dd818c7754ff98",
+      "tensorrt_version": "10.3.0.30",
+      "cuda_version": "12.6.68",
+      "l4t_version": "R36.5.0",
+      "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+      "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+      "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+      "precision_mode": null
+    },
+    "fp16_original": {
+      "key": "fp16_original",
+      "label": "Original TensorRT FP16",
+      "engine_path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+      "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+      "engine_size_bytes": 8928756,
+      "manifest_path": "/home/orin/edge-ai/edge-ai-defect/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+      "manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+      "tensorrt_version": "10.3.0.30",
+      "cuda_version": "12.6.68",
+      "l4t_version": "R36.5.0",
+      "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+      "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+      "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+      "precision_mode": "FP32+FP16 mixed precision"
+    }
+  },
+  "statistics": {
+    "fp32_notf32": {
+      "inference": {
+        "count": 15000,
+        "mean_ms": 12.914213304266667,
+        "median_ms": 13.308193,
+        "std_ms": 0.5221529935053322,
+        "p50_ms": 13.308193,
+        "p95_ms": 13.52478435,
+        "p99_ms": 13.617300799999999,
+        "min_ms": 11.058429,
+        "max_ms": 15.00485,
+        "fps": 77.43406248908825
+      },
+      "e2e": {
+        "count": 15000,
+        "mean_ms": 18.813332995866666,
+        "median_ms": 18.894972,
+        "std_ms": 0.6560823426183211,
+        "p50_ms": 18.894972,
+        "p95_ms": 19.80869545,
+        "p99_ms": 20.15906382,
+        "min_ms": 14.339733,
+        "max_ms": 24.7457,
+        "fps": 53.15379259059
+      },
+      "preprocess": {
+        "count": 15000,
+        "mean_ms": 4.497633135333333,
+        "median_ms": 4.340263500000001,
+        "std_ms": 0.39684353986728366,
+        "p50_ms": 4.340263500000001,
+        "p95_ms": 5.0185961,
+        "p99_ms": 5.1382195500000005,
+        "min_ms": 2.266728,
+        "max_ms": 10.819339,
+        "fps": 222.33916593686047
+      },
+      "h2d": {
+        "count": 15000,
+        "mean_ms": 0.9840861965333334,
+        "median_ms": 0.979884,
+        "std_ms": 0.037675668114049966,
+        "p50_ms": 0.979884,
+        "p95_ms": 1.0396969999999999,
+        "p99_ms": 1.062001,
+        "min_ms": 0.603036,
+        "max_ms": 1.400928,
+        "fps": 1016.1711479367626
+      },
+      "postprocess": {
+        "count": 15000,
+        "mean_ms": 0.4167210712666667,
+        "median_ms": 0.411987,
+        "std_ms": 0.05233784072160334,
+        "p50_ms": 0.411987,
+        "p95_ms": 0.508023,
+        "p99_ms": 0.5414979600000001,
+        "min_ms": 0.151527,
+        "max_ms": 0.721601,
+        "fps": 2399.6866704157696
+      },
+      "run_count": 3,
+      "valid_run_count": 3,
+      "measured_count": 15000,
+      "warmup_count": 300,
+      "detection_count": 41844,
+      "raw_tensor_correctness": "not measured by K7; task-level K5 accepted and K6 stability pass are inherited"
+    },
+    "fp16_original": {
+      "inference": {
+        "count": 15000,
+        "mean_ms": 11.164943610733335,
+        "median_ms": 11.153356500000001,
+        "std_ms": 0.064320483430618,
+        "p50_ms": 11.153356500000001,
+        "p95_ms": 11.3354941,
+        "p99_ms": 11.39878899,
+        "min_ms": 11.038909,
+        "max_ms": 12.283692,
+        "fps": 89.56605916385081
+      },
+      "e2e": {
+        "count": 15000,
+        "mean_ms": 17.065201818133335,
+        "median_ms": 16.976453,
+        "std_ms": 0.3728536158341174,
+        "p50_ms": 16.976453,
+        "p95_ms": 17.7227864,
+        "p99_ms": 17.89398778,
+        "min_ms": 14.680263,
+        "max_ms": 22.056437,
+        "fps": 58.598779590019774
+      },
+      "preprocess": {
+        "count": 15000,
+        "mean_ms": 4.415255606266667,
+        "median_ms": 4.3355204999999994,
+        "std_ms": 0.34497122756930154,
+        "p50_ms": 4.3355204999999994,
+        "p95_ms": 5.01931395,
+        "p99_ms": 5.06687337,
+        "min_ms": 2.380541,
+        "max_ms": 7.409776,
+        "fps": 226.4874537684021
+      },
+      "h2d": {
+        "count": 15000,
+        "mean_ms": 1.0622683338666667,
+        "median_ms": 1.049398,
+        "std_ms": 0.05990526444709068,
+        "p50_ms": 1.049398,
+        "p95_ms": 1.1342518,
+        "p99_ms": 1.17222603,
+        "min_ms": 0.820285,
+        "max_ms": 6.363676,
+        "fps": 941.3817282493874
+      },
+      "postprocess": {
+        "count": 15000,
+        "mean_ms": 0.4220059708,
+        "median_ms": 0.41667,
+        "std_ms": 0.04884005072584535,
+        "p50_ms": 0.41667,
+        "p95_ms": 0.5107480999999999,
+        "p99_ms": 0.54476269,
+        "min_ms": 0.16112,
+        "max_ms": 0.664927,
+        "fps": 2369.634718921849
+      },
+      "run_count": 3,
+      "valid_run_count": 3,
+      "measured_count": 15000,
+      "warmup_count": 300,
+      "detection_count": 41763,
+      "raw_tensor_correctness": "not measured by K7; task-level K5 accepted and K6 stability pass are inherited"
+    }
+  },
+  "speedup": {
+    "inference": 1.1566751928645376,
+    "inference_latency_reduction_percent": 13.545305875932822,
+    "e2e": 1.1024383535784372,
+    "e2e_latency_reduction_percent": 9.291980204238136
+  },
+  "accuracy_context": {
+    "k5": "TASK_LEVEL_FP16_ACCEPTED",
+    "k6": "K6_STABILITY_PASS",
+    "raw_tensor_correctness": "K7 does not claim bitwise raw-tensor equivalence; raw tensor correctness remains a limitation recorded by prior validation."
+  },
+  "limitations": [
+    "No Engine, ONNX, ModelContract, production runtime, or K5 gate was modified.",
+    "M3 selective and Debug Engine were not used.",
+    "Resource metrics are retained as raw 1-second tegrastats logs; fields absent from tegrastats remain unavailable."
+  ]
+}

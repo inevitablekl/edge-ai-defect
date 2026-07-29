@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "bundle_id": "stage_k_level_b_reference_v1",
+  "source_git_commit": "c9586c219178eeec17864c8c2cf75a1d5bc90101",
+  "source_branch": "feature/jetson-tensorrt-fp16",
+  "corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+  "model_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "generator_script_sha256": "ddfffdb71e5fb0276c3fff4a16701ad18e9a93ca783793e9a56eefd988e9f8e7",
+  "creation_timestamp": "2026-07-27T15:04:26Z",
+  "entry_count": 16,
+  "artifact_kind": "stage_k_level_b_reference_generation_report",
+  "status": "COMPLETE",
+  "corpus": {
+    "path": "/home/ros2/j4.3_level_c_v1_restore",
+    "entry_count": 16,
+    "jpg_count": 12,
+    "bmp_count": 4,
+    "manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+    "ordering_verified": true,
+    "source_sha_verified": true,
+    "dimensions_verified": true
+  },
+  "input_tensor_count": 16,
+  "input_tensor_total_bytes": 78643200,
+  "raw_output_count": 16,
+  "raw_output_total_bytes": 5376000,
+  "contract_verification": {
+    "input_finite": "16/16",
+    "output_finite": "16/16",
+    "input_shape": "16/16",
+    "output_shape": "16/16",
+    "input_sha256": "16/16",
+    "output_sha256": "16/16"
+  },
+  "session_contract": {
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization_level": "ORT_ENABLE_ALL",
+    "intra_op_num_threads": 1,
+    "inter_op_num_threads": 1,
+    "providers": [
+      "CPUExecutionProvider"
+    ],
+    "session_count": 1
+  },
+  "preprocessing": {
+    "new_shape": [
+      640,
+      640
+    ],
+    "auto": false,
+    "scale_fill": false,
+    "scaleup": true,
+    "center": true,
+    "stride": 32,
+    "padding_value": 114,
+    "interpolation": "INTER_LINEAR",
+    "padding_rounding": [
+      "round(dw/2 - 0.1)",
+      "round(dw/2 + 0.1)",
+      "round(dh/2 - 0.1)",
+      "round(dh/2 + 0.1)"
+    ],
+    "implementation": "tools/validation/m5_level_c_common.py::preprocess"
+  }
+}

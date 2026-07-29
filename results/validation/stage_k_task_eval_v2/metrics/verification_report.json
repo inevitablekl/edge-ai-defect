@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_verification_report",
+  "verdict": "PASS",
+  "frozen_identity": {
+    "test_manifest_sha256": {
+      "expected": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+      "actual": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8"
+    },
+    "dataset_source_tree_sha256": {
+      "expected": "5e0f688fb5400406533e7c8d0406bfd29d2674011a657210de18740fe161b283",
+      "actual": "5e0f688fb5400406533e7c8d0406bfd29d2674011a657210de18740fe161b283"
+    },
+    "engine_sha256": {
+      "TRT FP32 noTF32": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+      "TRT FP16 Original Stage K": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+      "TRT M3 diagnostic control": "83e7100b01b9bb0c04dd4c41e52d6d5f61ee61d07cef82dffee173a1c692266b"
+    },
+    "engine_manifest_sha256": {
+      "TRT FP32 noTF32": "86549f894802afab06221e32bab46e89d69e97eb8059befa8771d2728b2ee1a5",
+      "TRT FP16 Original Stage K": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+      "TRT M3 diagnostic control": "16f5f8bb68f95c564fc5f21b8809302bd226e0ce6a9fdd138038b659cbe7e11a5"
+    }
+  },
+  "ground_truth": {
+    "conversion_verdict": "GROUND_TRUTH_CONVERSION_PASS",
+    "image_count": 180,
+    "bbox_count": 442,
+    "cross_split_overlap": false,
+    "source_mutation": false,
+    "pseudo_labels": false
+  },
+  "inference": {
+    "fp32_notf32": {
+      "success_count": 180,
+      "failure_count": 0,
+      "detections_sha256": "41ac880c8c86e03da14410a6823b126eb523e86e9e3bd679830808ec25396a3b",
+      "latency_sha256": "968bffc9d531619960bd6e8a0d1e9aa9e996f3c5e1014e7f1f1924046dda757c",
+      "schema_and_finite_values": true
+    },
+    "fp16_original": {
+      "success_count": 180,
+      "failure_count": 0,
+      "detections_sha256": "2e15380f3d4e4d9517bdcc6557477394d51b798a58dc7b5e070b70e6be29ba5a",
+      "latency_sha256": "791262e7f06d36ccaf84adc4ff2684206906e2b8249f88f4522650fc8f880c9b",
+      "schema_and_finite_values": true
+    },
+    "fp16_selective": {
+      "success_count": 180,
+      "failure_count": 0,
+      "detections_sha256": "c411833d9cc1bfe69ef9b58371363a25338aaa4403ae1cbca61f693ca0e58a10",
+      "latency_sha256": "179c1b62900eb8c921f57d74763075967ef4b8a5651480f6a5b5d68cb8943207",
+      "schema_and_finite_values": true
+    }
+  },
+  "metrics": {
+    "backend_count": 3,
+    "gt_count_all_backends": {
+      "TRT FP32 noTF32": 442,
+      "TRT FP16 Original Stage K": 442,
+      "TRT M3 diagnostic control": 442
+    },
+    "finite_values": true
+  },
+  "decision": {
+    "accuracy_gate_pass": true,
+    "classwise_risk": [],
+    "verdict": "TASK_LEVEL_FP16_ACCEPTED",
+    "timing_verdict": "ORIGINAL_FP16_TASK_TIMING_FASTER"
+  },
+  "scope_audit": {
+    "engine_modified": false,
+    "onnx_modified": false,
+    "model_contract_modified": false,
+    "production_runtime_modified": false,
+    "k5_gate_modified": false,
+    "tolerance_modified": false,
+    "k6_k7_k8_entered": false
+  }
+}

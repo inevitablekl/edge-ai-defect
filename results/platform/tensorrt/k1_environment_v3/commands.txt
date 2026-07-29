@@ -1,0 +1,19 @@
+cd /home/orin/edge-ai/edge-ai-defect
+git branch --show-current
+git rev-parse HEAD
+git status --short --branch
+mkdir -p results/platform/tensorrt/k1_environment_v3
+cat /etc/ld.so.conf
+find /etc/ld.so.conf.d -maxdepth 1 -type f -name '*.conf' -print -exec sh -c 'echo ==== "$1"; cat "$1"' sh {} \;
+ldconfig -p | grep -E 'libnvdla|libnvinfer|libcudart'
+/lib/ld-linux-aarch64.so.1 --list /lib/aarch64-linux-gnu/libnvinfer.so.10
+/lib/ld-linux-aarch64.so.1 --list /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+readelf -d /lib/aarch64-linux-gnu/libnvinfer.so.10
+readelf -d /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+dpkg -L nvidia-l4t-dla-compiler
+dpkg -S /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+ls -ld /usr/lib/aarch64-linux-gnu /usr/lib/aarch64-linux-gnu/nvidia
+ls -l /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+stat /etc/ld.so.cache
+
+No remediation command was executed.

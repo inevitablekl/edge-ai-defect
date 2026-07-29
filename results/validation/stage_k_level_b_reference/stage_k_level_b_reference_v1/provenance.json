@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "bundle_id": "stage_k_level_b_reference_v1",
+  "source_git_commit": "c9586c219178eeec17864c8c2cf75a1d5bc90101",
+  "source_branch": "feature/jetson-tensorrt-fp16",
+  "corpus_manifest_sha256": "687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd",
+  "model_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "generator_script_sha256": "ddfffdb71e5fb0276c3fff4a16701ad18e9a93ca783793e9a56eefd988e9f8e7",
+  "creation_timestamp": "2026-07-27T15:04:26Z",
+  "entry_count": 16,
+  "artifact_kind": "stage_k_level_b_reference_provenance",
+  "source_corpus_manifest_path": "results/validation/jetson_ort_level_c/j4_3_level_c_v2/corpus_manifest.json",
+  "model_path": "models/onnx/yolov8n_neudet_frozen.onnx",
+  "model_contract_path": "configs/model_contracts/yolov8n_neudet_frozen.yaml",
+  "reference": "python_onnxruntime_explicit_cpu_raw_output",
+  "preprocess_contract_identity": "frozen_m5_level_c_common.preprocess_letterbox_bgr_rgb_nchw_float32_v1",
+  "no_contract_changes": true,
+  "tensor_files": [
+    {
+      "image_id": "0000_crazing_51",
+      "input_sha256": "2e353f448b488a8f49593b34fc93cac95454badfce9cecbc9c4738e8a8037939",
+      "output_sha256": "fdaddfae5294b20c5ae097a370231ddee53017f7e37806681edb256f0e75dba7"
+    },
+    {
+      "image_id": "0001_crazing_10",
+      "input_sha256": "ff9b298de4d107d4d10c666f2172a2092736a1353ff426dc4b2f761c78e5704f",
+      "output_sha256": "c6e91f9ff043813fd489c66467fbd47880e74774166983bfd7bc7726aa801d88"
+    },
+    {
+      "image_id": "0002_inclusion_18",
+      "input_sha256": "22cb5aaf45388065cba28e375393aea0d723fbf7bd411c162fb1e6cbaba993aa",
+      "output_sha256": "4c90a9846ff412b6d6d0ae94b783e0d69740959e3905576f8343497f0b97d620"
+    },
+    {
+      "image_id": "0003_inclusion_217",
+      "input_sha256": "43fe48e56c790981789898cab9c3655051d7a68f02925dfa817feac3a351d71d",
+      "output_sha256": "dfaa7fbe6019c90e6af4bb5b5f8ecf651f5d3fd6a316d8e0ffb7600f22e14190"
+    },
+    {
+      "image_id": "0004_patches_156",
+      "input_sha256": "e14279b92252310635e1e79a95ff200b6827b101b7816205d4e3747716609cc8",
+      "output_sha256": "8694e5f0d52427f36582c6fa936bb8d2b804dd14304ea47cd3eb9b3bf736d0eb"
+    },
+    {
+      "image_id": "0005_patches_211",
+      "input_sha256": "46e31407bbc2d06c213c2f61cadd0a04b2ac1b31aff4715900ff8ba3bdab5617",
+      "output_sha256": "bb12d14ae3877dbb1099cfd856cbe93ad52f666495dfd84ff1b076f863eb114e"
+    },
+    {
+      "image_id": "0006_pitted_surface_224",
+      "input_sha256": "6d7c023047bac9eade5559a28af61135a326502b5e43f1786e76c990700312a9",
+      "output_sha256": "5a4a6478ea972f4ee13297019bbc73991d67afcdd57da6d3ab26f1af7ddb52e8"
+    },
+    {
+      "image_id": "0007_pitted_surface_231",
+      "input_sha256": "9ee5a4057a41e10dc32fc0c9eefced88976451379cabe113c1e0a7dc5199b9ed",
+      "output_sha256": "09257d183114635c8535988df254f5fe8297d4b3c103c5ba775bd5a063326c4e"
+    },
+    {
+      "image_id": "0008_rolled-in_scale_146",
+      "input_sha256": "674e60c977617334fa9a6aac3fc4328108369538abb8fcf68a343477218690a7",
+      "output_sha256": "1d5867a24c5fb472fb4827d64ee4c967d831f1393bb1a7432e1915b557731dbc"
+    },
+    {
+      "image_id": "0009_rolled-in_scale_262",
+      "input_sha256": "0d4be35f8478bb83d3ad2e2f89960d1c1515124c586e7876bf7c909139cc340b",
+      "output_sha256": "a3f536800239070036c59bfede36c7e2c0e6d99d161c00dcd6a71ae448897b0a"
+    },
+    {
+      "image_id": "0010_scratches_126",
+      "input_sha256": "bd43863afea010db8a31f5fa09d7769d4dba75b16405622e64545e2783251897",
+      "output_sha256": "ba24841833146d242635c948be3beb7f4afaa480a13ee1f9935dcc268105d7d5"
+    },
+    {
+      "image_id": "0011_scratches_246",
+      "input_sha256": "2c9ba0912196d3ed60c7ec436e64a3a9a796ec8b1eebe37f780165f0ca9aa9c3",
+      "output_sha256": "7b4057f2d0b9bd951a6b5a1d9eee10cde11ae9dfe46e7d0b7f9198287f874988"
+    },
+    {
+      "image_id": "0012_derived_319x201_crazing_10",
+      "input_sha256": "9b844f1d2f797f49b692457027bc35484794aff3e6ba05081ef922c41a0ee066",
+      "output_sha256": "a2025c28a08d4ef66e68efeb755fa139939c37a275104b430676f643bf1baddc"
+    },
+    {
+      "image_id": "0013_derived_201x319_inclusion_18",
+      "input_sha256": "1c46622fe0f41f070dd960cf175b2c8afcf843f4b2adc0d6023d0f2a48a307ee",
+      "output_sha256": "9372227670a221eb8d29c8595db1e379c09313431c2c60041434cf81eb0f78fd"
+    },
+    {
+      "image_id": "0014_derived_321x199_pitted_surface_224",
+      "input_sha256": "d6d53f09f3ed2cf6adcbebc72ac74aa386bc8b6dba70b805efccecbc36e6dde7",
+      "output_sha256": "4a49c7ba60f1ea0d1fbb5919838261cb59a501493c182ab5c330ef1d372309da"
+    },
+    {
+      "image_id": "0015_derived_199x321_scratches_126",
+      "input_sha256": "8db43cf3b33291e2c7077ecf6b57c1b21efb226d3d2d73178a2a63a9bad218a4",
+      "output_sha256": "785258dcff188260b4ec9efc550d4a6cb91587caf173233d28a79d3123bf9270"
+    }
+  ]
+}

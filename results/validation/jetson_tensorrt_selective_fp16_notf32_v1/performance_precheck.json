@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_performance_precheck",
+  "status": "NOT_EXECUTED_GATED_BY_LEVEL_B",
+  "reason": "M2 Level B was 0/16 PASS; performance precheck was not authorized.",
+  "measured_data": "Not measured yet"
+}

@@ -1,0 +1,20 @@
+git branch --show-current
+git rev-parse HEAD
+git status --short --branch
+mkdir -p results/platform/tensorrt/k1_environment_v4
+sudo ldconfig  # completed manually by user; not executed again by Codex
+ldconfig -p | grep -E 'libnvdla|libnvinfer|libcudart'
+ldd /lib/aarch64-linux-gnu/libnvinfer.so.10
+cp results/platform/tensorrt/k1_environment_v2/k1_runtime_smoke.cpp results/platform/tensorrt/k1_environment_v4/k1_runtime_smoke.cpp
+sha256sum results/platform/tensorrt/k1_environment_v2/k1_runtime_smoke.cpp results/platform/tensorrt/k1_environment_v4/k1_runtime_smoke.cpp
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -I/usr/local/cuda-12.6/targets/aarch64-linux/include -I/usr/include/aarch64-linux-gnu results/platform/tensorrt/k1_environment_v4/k1_runtime_smoke.cpp -o "$TMP_DIR/k1_runtime_smoke" -L/usr/lib/aarch64-linux-gnu -L/usr/local/cuda-12.6/targets/aarch64-linux/lib -lnvinfer -lcudart -ldl -pthread
+file "$TMP_DIR/k1_runtime_smoke"
+sha256sum "$TMP_DIR/k1_runtime_smoke"
+ldd "$TMP_DIR/k1_runtime_smoke"
+"$TMP_DIR/k1_runtime_smoke"
+/usr/src/tensorrt/bin/trtexec --help
+/usr/src/tensorrt/bin/trtexec --version
+ldd /usr/src/tensorrt/bin/trtexec
+timeout 5s tegrastats --interval 1000
+
+No additional sudo command was executed. No --onnx, --saveEngine, or --loadEngine command was executed.

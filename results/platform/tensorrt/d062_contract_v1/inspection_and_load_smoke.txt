@@ -1,0 +1,29 @@
+# Post-K2 inspection contract (not executed in D062)
+
+ENGINE=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine
+INSPECTION_LOG=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.inspection.log
+LOAD_SMOKE_LOG=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.load_smoke.log
+
+Inspection command after K2 build:
+
+/usr/src/tensorrt/bin/trtexec \
+  --loadEngine="$ENGINE" \
+  --dumpLayerInfo \
+  --dumpOptimizationProfile \
+  > "$INSPECTION_LOG" 2>&1
+
+Independent load-engine smoke after inspection:
+
+/usr/src/tensorrt/bin/trtexec \
+  --loadEngine="$ENGINE" \
+  --device=0 \
+  --iterations=1 \
+  --warmUp=0 \
+  --duration=1 \
+  > "$LOAD_SMOKE_LOG" 2>&1
+
+Acceptance checks for K2: load success, no unresolved dependency, exact
+static shape/batch, FP32 host I/O, FP16 builder metadata, no INT8/DLA,
+expected tensor names/shapes/dtypes, finite output, and exit code 0.
+
+These commands were recorded only. No Engine exists or was loaded in D062.

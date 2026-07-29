@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_level_inference_summary",
+  "split_manifest": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/test_manifest.json",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "expected_image_count": 180,
+  "backends": {
+    "fp16_original": {
+      "backend": "TRT FP16 Original Stage K",
+      "backend_key": "fp16_original",
+      "image_count": 180,
+      "success_count": 180,
+      "failure_count": 0,
+      "inference_mean_ms": 12.542224588888889,
+      "e2e_mean_ms": 18.843641388888894,
+      "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+      "engine_manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+      "tensorrt_version": "10.3.0.30"
+    }
+  },
+  "validation": {
+    "output_schema_identical": true,
+    "nan_inf_validation": "PASS",
+    "backend_artifacts": {
+      "fp16_original": {
+        "detections_sha256": "2e15380f3d4e4d9517bdcc6557477394d51b798a58dc7b5e070b70e6be29ba5a",
+        "latency_sha256": "791262e7f06d36ccaf84adc4ff2684206906e2b8249f88f4522650fc8f880c9b",
+        "inference_manifest_sha256": "a146969a52fa5d3fd8b8c6671a023ec42e4fb21a120861293c54f1100ed863ff",
+        "success_count": 180,
+        "failure_count": 0,
+        "inference_mean_ms": 12.542224588888889,
+        "e2e_mean_ms": 18.843641388888894
+      }
+    }
+  },
+  "ready_for_task_metric_evaluation": true
+}

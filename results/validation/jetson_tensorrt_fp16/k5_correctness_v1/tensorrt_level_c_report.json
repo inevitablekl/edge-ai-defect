@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "status": "NOT_EXECUTED",
+  "reason": "Stopped after ORT_CONTROL_FAIL.",
+  "processed_images": 0,
+  "matched": 0,
+  "unmatched": 0,
+  "boundary_case_count": 0,
+  "targeted_investigation": "NOT_TRIGGERED"
+}

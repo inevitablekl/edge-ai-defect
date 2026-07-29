@@ -1,0 +1,26 @@
+/usr/include/aarch64-linux-gnu/NvInferRuntime.h
+/usr/include/aarch64-linux-gnu/NvInfer.h
+/usr/include/aarch64-linux-gnu/NvInferPlugin.h
+/usr/lib/aarch64-linux-gnu/libnvinfer.so.10
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so
+/usr/lib/aarch64-linux-gnu/libnvinfer.so.10.3.0
+/usr/lib/aarch64-linux-gnu/libnvinfer.so
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so.10
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so.10.3.0
+libnvinfer-dev	10.3.0.30-1+cuda12.5	arm64	installed
+libnvinfer-plugin10	10.3.0.30-1+cuda12.5	arm64	installed
+libnvinfer10	10.3.0.30-1+cuda12.5	arm64	installed
+libnvonnxparsers10	10.3.0.30-1+cuda12.5	arm64	installed
+	libnvinfer_vc_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so.10
+	libnvinfer_vc_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so
+	libnvinfer_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so.10
+	libnvinfer_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so
+	libnvinfer_lean.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so.10
+	libnvinfer_lean.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so
+	libnvinfer_dispatch.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so.10
+	libnvinfer_dispatch.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so
+	libnvinfer.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so.10
+	libnvinfer.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so
+	libnvdla_runtime.so (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_runtime.so
+	libcudart.so.12 (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.12
+	libcudart.so (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so

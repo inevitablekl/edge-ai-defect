@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_three_engine_comparison",
+  "roles": {
+    "correctness_authority": "real NEU-DET test split Pascal VOC ground truth",
+    "baseline": "TRT strict FP32 noTF32",
+    "optimization_candidate": "TRT Original Stage K FP16",
+    "diagnostic_control": "TRT M3 selective; actual FP16 tactic count 0; M3_DEGENERATED_TO_FP32"
+  },
+  "metrics": {
+    "TRT FP32 noTF32": {
+      "precision": 0.6314741035856574,
+      "recall": 0.7171945701357466,
+      "mAP50": 0.6548580620236248,
+      "mAP50_95": 0.3590859664482561,
+      "tp": 317,
+      "fp": 185,
+      "fn": 125,
+      "prediction_count": 502,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6314741035856574,
+        "recall": 0.7171945701357466,
+        "tp": 317,
+        "fp": 185,
+        "fn": 125,
+        "prediction_count": 502,
+        "gt_count": 442,
+        "matched_iou_count": 317
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "TRT FP16 Original Stage K": {
+      "precision": 0.6347305389221557,
+      "recall": 0.7194570135746606,
+      "mAP50": 0.6560241687065433,
+      "mAP50_95": 0.35954952098725673,
+      "tp": 318,
+      "fp": 183,
+      "fn": 124,
+      "prediction_count": 501,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6347305389221557,
+        "recall": 0.7194570135746606,
+        "tp": 318,
+        "fp": 183,
+        "fn": 124,
+        "prediction_count": 501,
+        "gt_count": 442,
+        "matched_iou_count": 318
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "TRT M3 diagnostic control": {
+      "precision": 0.6314741035856574,
+      "recall": 0.7171945701357466,
+      "mAP50": 0.6548580620236248,
+      "mAP50_95": 0.3590859664482561,
+      "tp": 317,
+      "fp": 185,
+      "fn": 125,
+      "prediction_count": 502,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6314741035856574,
+        "recall": 0.7171945701357466,
+        "tp": 317,
+        "fp": 185,
+        "fn": 125,
+        "prediction_count": 502,
+        "gt_count": 442,
+        "matched_iou_count": 317
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    }
+  },
+  "timing": {
+    "TRT FP32 noTF32": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 19.923535383333345,
+        "median_ms": 18.1647095,
+        "p95_ms": 25.034766,
+        "min_ms": 15.521818,
+        "max_ms": 67.488507
+      },
+      "e2e": {
+        "mean_ms": 26.215932905555544,
+        "median_ms": 24.891137,
+        "p95_ms": 32.03811295,
+        "min_ms": 19.002694,
+        "max_ms": 78.201091
+      }
+    },
+    "TRT FP16 Original Stage K": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 12.542224588888889,
+        "median_ms": 12.3679495,
+        "p95_ms": 12.4606453,
+        "min_ms": 12.002726,
+        "max_ms": 44.536399
+      },
+      "e2e": {
+        "mean_ms": 18.843641388888894,
+        "median_ms": 18.58069,
+        "p95_ms": 19.44730065,
+        "min_ms": 15.741446,
+        "max_ms": 75.819097
+      }
+    },
+    "TRT M3 diagnostic control": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 20.111881088888886,
+        "median_ms": 18.048969,
+        "p95_ms": 25.0221726,
+        "min_ms": 15.991967,
+        "max_ms": 67.410601
+      },
+      "e2e": {
+        "mean_ms": 26.53010720555556,
+        "median_ms": 24.8655565,
+        "p95_ms": 31.93282525,
+        "min_ms": 21.781238,
+        "max_ms": 78.50882
+      }
+    }
+  },
+  "m3_vs_fp32_metrics_identical": true,
+  "m3_fp16_speedup_not_claimed": true,
+  "original_fp16_vs_fp32_accuracy_deltas": {
+    "precision_delta_original_minus_fp32": 0.003256435336498331,
+    "recall_delta_original_minus_fp32": 0.002262443438914019,
+    "mAP50_delta_original_minus_fp32": 0.0011661066829184996,
+    "mAP50_95_delta_original_minus_fp32": 0.0004635545390006546,
+    "precision_drop_fp32_minus_original": -0.003256435336498331,
+    "recall_drop_fp32_minus_original": -0.002262443438914019,
+    "mAP50_drop_fp32_minus_original": -0.0011661066829184996,
+    "mAP50_95_drop_fp32_minus_original": -0.0004635545390006546
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "status": "NOT_EXECUTED",
+  "reason": "ORT_CONTROL_FAIL; TensorRT Level B formal comparison is not authorized by the frozen K5 sequence.",
+  "formal_tensor_count": 0,
+  "passed_count": 0,
+  "failed_count": 0,
+  "raw_outputs": "retained local-only but excluded from formal comparison"
+}

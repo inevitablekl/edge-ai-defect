@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_level_c_report",
+  "status": "NOT_EXECUTED_GATED_BY_LEVEL_B",
+  "reason": "M2 Level B was 0/16 PASS; TensorRT Level C was not authorized by the task contract.",
+  "measured_data": "Not measured yet"
+}

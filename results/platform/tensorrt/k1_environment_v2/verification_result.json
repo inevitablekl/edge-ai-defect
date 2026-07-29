@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "stage": "K1",
+  "task": "K1-R2",
+  "disposition": "K1_BLOCKED",
+  "checks": [
+    {"check_id":"pre_package_gate","description":"Core version and exact candidate package gate","mandatory":true,"status":"PASS","observed":"nvidia-l4t-core 36.5.0-20260115194252; candidate nvidia-l4t-dla-compiler 36.5.0-20260115194252 arm64","expected":"Exact matching candidate and unchanged core","evidence_file":"pre_install_apt_policy.txt"},
+    {"check_id":"apt_simulation","description":"Exact package installation simulation","mandatory":true,"status":"PASS","observed":"0 upgraded, 1 newly installed, 0 to remove; only nvidia-l4t-dla-compiler","expected":"0 upgraded, 1 newly installed, 0 to remove","evidence_file":"pre_install_simulation.txt"},
+    {"check_id":"package_installed","description":"Authorized package installed at exact version","mandatory":true,"status":"PASS","observed":"nvidia-l4t-dla-compiler 36.5.0-20260115194252 arm64 installed","expected":"Exact authorized package/version/architecture installed","evidence_file":"manual_install_confirmation.txt"},
+    {"check_id":"package_integrity","description":"Package audit and package-version preservation","mandatory":true,"status":"PASS","observed":"dpkg audit empty; core and TensorRT versions unchanged","expected":"No audit errors and no unauthorized package changes","evidence_file":"post_install_package_state.txt"},
+    {"check_id":"nvdla_file","description":"Installed libnvdla compiler ELF and SONAME","mandatory":true,"status":"PASS","observed":"AArch64 ELF; SONAME libnvdla_compiler.so; SHA256 c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec","expected":"Real AArch64 library with compatible SONAME","evidence_file":"nvdla_discovery.txt"},
+    {"check_id":"dynamic_linker_resolution","description":"Dynamic linker resolves libnvdla_compiler.so","mandatory":true,"status":"FAIL","observed":"ldconfig cache omits compiler entry; ldd reports libnvdla_compiler.so => not found","expected":"Resolved library and no not found dependency","evidence_file":"dynamic_linker_resolution.txt"},
+    {"check_id":"libnvinfer_dependencies","description":"libnvinfer dependency closure","mandatory":true,"status":"FAIL","observed":"DT_NEEDED includes libnvdla_compiler.so; ldd reports not found","expected":"No unresolved dependencies","evidence_file":"libnvinfer_dependencies.txt"},
+    {"check_id":"smoke_compile","description":"Ordinary g++ host-only smoke compile/link","mandatory":true,"status":"PASS","observed":"exit code 0","expected":"exit code 0","evidence_file":"smoke_compile_exit_code.txt"},
+    {"check_id":"smoke_binary_ldd","description":"Smoke binary dependency closure","mandatory":true,"status":"FAIL","observed":"libnvdla_compiler.so => not found","expected":"No not found dependency","evidence_file":"smoke_ldd.log"},
+    {"check_id":"smoke_run","description":"CUDA/TensorRT host-only runtime smoke","mandatory":true,"status":"FAIL","observed":"exit code 127; loader could not open libnvdla_compiler.so","expected":"CUDA device/stream and TensorRT Runtime lifecycle with exit code 0","evidence_file":"smoke_run_stderr.log"},
+    {"check_id":"cuda_discovery","description":"CUDA headers, runtime library and nvcc discovery","mandatory":true,"status":"PASS","observed":"CUDA 12.6.68; cuda_runtime_api.h and libcudart.so present","expected":"CUDA discovery succeeds","evidence_file":"cuda_discovery.txt"},
+    {"check_id":"trtexec_version","description":"trtexec version command","mandatory":true,"status":"FAIL","observed":"TensorRT v100300 printed, exit code 1 because model is missing","expected":"Exit code 0","evidence_file":"trtexec_version.txt"},
+    {"check_id":"trtexec_help","description":"trtexec help semantics","mandatory":true,"status":"PASS","observed":"exit code 0; help includes model/build/inference/system options","expected":"Exit code 0","evidence_file":"trtexec_help.txt"},
+    {"check_id":"trtexec_ldd","description":"trtexec dependency closure","mandatory":true,"status":"PASS","observed":"ldd exit code 0 and no not found entries","expected":"No not found dependency","evidence_file":"trtexec_ldd.log"},
+    {"check_id":"tegrastats","description":"Bounded telemetry sample","mandatory":true,"status":"PASS","observed":"5-second sample contains RAM, CPU, GPU, temperature and power rails; timeout exit 124 expected","expected":"Basic telemetry fields present","evidence_file":"tegrastats_sample.log"},
+    {"check_id":"no_engine_build","description":"No Engine build or ONNX parsing","mandatory":true,"status":"PASS","observed":"No --onnx, --saveEngine, --loadEngine or build command executed","expected":"No Engine build","evidence_file":"commands.txt"}
+  ]
+}

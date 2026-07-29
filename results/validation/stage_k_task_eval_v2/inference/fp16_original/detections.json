@@ -1,0 +1,6658 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_level_inference_detections",
+  "backend": "TRT FP16 Original Stage K",
+  "backend_key": "fp16_original",
+  "split": "test",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "postprocess": {
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "max_wh": 7680.0,
+    "agnostic": false,
+    "multi_label": false
+  },
+  "image_count": 180,
+  "images": [
+    {
+      "image_id": "crazing_110",
+      "image_path": "IMAGES/crazing_110.jpg",
+      "image_sha256": "7ee07aebfe8997bd5c57f958e494b9468fd788b10a73a7f390e777e7602f938d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.756356001,
+          "bbox_xyxy": [
+            130.664062,
+            25.78125,
+            200.0,
+            159.257812
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.297470152,
+          "bbox_xyxy": [
+            7.03125,
+            0.05859375,
+            127.539062,
+            35.7421875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_12",
+      "image_path": "IMAGES/crazing_12.jpg",
+      "image_sha256": "13311f667aec82e20670265337866b50a4a546dd6845f3700fda088c0172afeb",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.361165106,
+          "bbox_xyxy": [
+            10.46875,
+            0.0,
+            167.851562,
+            79.609375
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.280616432,
+          "bbox_xyxy": [
+            57.2265625,
+            113.789062,
+            191.757812,
+            195.976562
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_145",
+      "image_path": "IMAGES/crazing_145.jpg",
+      "image_sha256": "c91b2e3ee3b1a86d955389405bb97e16922d410df54f3fbddb5cf5f4a8bdb16b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.68930614,
+          "bbox_xyxy": [
+            3.4765625,
+            6.66015625,
+            103.574219,
+            79.6679688
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.286168754,
+          "bbox_xyxy": [
+            26.4648438,
+            114.863281,
+            101.113281,
+            168.535156
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_148",
+      "image_path": "IMAGES/crazing_148.jpg",
+      "image_sha256": "0f4369b2b9aaea4e843cf4c6a169aa6fadff8fba16abe3e9a1c109a7e2ec7071",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.462958425,
+          "bbox_xyxy": [
+            1.5234375,
+            35.8398438,
+            91.3671875,
+            99.1796875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.450359166,
+          "bbox_xyxy": [
+            164.042969,
+            53.4375,
+            200.0,
+            106.464844
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.261329651,
+          "bbox_xyxy": [
+            0.0390625,
+            133.125,
+            67.6953125,
+            188.222656
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_154",
+      "image_path": "IMAGES/crazing_154.jpg",
+      "image_sha256": "dcda48b1fa04518744e30db7a378702fbc77baebc2db6c03e4d9c4f9ecb14565",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.822188318,
+          "bbox_xyxy": [
+            0.15625,
+            0.0,
+            89.5703125,
+            97.96875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.682574213,
+          "bbox_xyxy": [
+            100.703125,
+            42.1875,
+            174.335938,
+            113.671875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.456167638,
+          "bbox_xyxy": [
+            0.0,
+            103.125,
+            82.4609375,
+            156.757812
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.264357626,
+          "bbox_xyxy": [
+            0.0,
+            130.878906,
+            89.84375,
+            199.726562
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_158",
+      "image_path": "IMAGES/crazing_158.jpg",
+      "image_sha256": "525d70534373c48ced12e1bc6d8923488f5a7db80a925f98d9afbb34cff5d507",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.409220815,
+          "bbox_xyxy": [
+            50.3515625,
+            65.2539062,
+            141.640625,
+            155.195312
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_179",
+      "image_path": "IMAGES/crazing_179.jpg",
+      "image_sha256": "a796d606ae9c573d722bdec9d282c53cd543006e1d49e4a5152072fe61505d08",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.656659067,
+          "bbox_xyxy": [
+            0.2734375,
+            8.6328125,
+            107.148438,
+            74.1210938
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.629775703,
+          "bbox_xyxy": [
+            0.0,
+            88.28125,
+            154.765625,
+            147.988281
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_183",
+      "image_path": "IMAGES/crazing_183.jpg",
+      "image_sha256": "235d4d003fcd9444e789cd5e0e1ba547049c7ce1b1e309fa6f8c839697683157",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.57463336,
+          "bbox_xyxy": [
+            60.4296875,
+            127.96875,
+            158.515625,
+            199.980469
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.39420104,
+          "bbox_xyxy": [
+            142.929688,
+            87.8710938,
+            200.0,
+            146.621094
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.329392314,
+          "bbox_xyxy": [
+            0.9765625,
+            0.48828125,
+            137.421875,
+            64.5117188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_186",
+      "image_path": "IMAGES/crazing_186.jpg",
+      "image_sha256": "323876549bcf8a22d791d2bccd4f4e227f6338eb5aa3e810b1a57ce470a4260b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.524394751,
+          "bbox_xyxy": [
+            5.703125,
+            137.226562,
+            192.109375,
+            200.0
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.31404981,
+          "bbox_xyxy": [
+            45.4296875,
+            167.910156,
+            193.632812,
+            199.975586
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.2766909,
+          "bbox_xyxy": [
+            0.15625,
+            22.265625,
+            167.148438,
+            145.546875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_201",
+      "image_path": "IMAGES/crazing_201.jpg",
+      "image_sha256": "20ae74412c2c5e1271d975356217412b3a2f8c1c68ced06c5175028fa74566d9",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.307357907,
+          "bbox_xyxy": [
+            5.625,
+            80.8984375,
+            175.585938,
+            150.917969
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.29017514,
+          "bbox_xyxy": [
+            1.5625,
+            150.78125,
+            185.3125,
+            199.980469
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_216",
+      "image_path": "IMAGES/crazing_216.jpg",
+      "image_sha256": "23d057d6150dddcf0e0a83e75d2fee86af4a52ce801e454539301431ad2d12fe",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.667147458,
+          "bbox_xyxy": [
+            1.796875,
+            2.578125,
+            192.5,
+            89.1015625
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.436862141,
+          "bbox_xyxy": [
+            0.078125,
+            72.9492188,
+            81.5234375,
+            127.832031
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.27747333,
+          "bbox_xyxy": [
+            65.15625,
+            25.2929688,
+            199.023438,
+            98.7109375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_220",
+      "image_path": "IMAGES/crazing_220.jpg",
+      "image_sha256": "ee6d32c95f87d6489f177f035f4464b5c78e919b72800c33ec029d2292988c89",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.53120935,
+          "bbox_xyxy": [
+            1.09375,
+            131.894531,
+            163.90625,
+            198.320312
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.466845393,
+          "bbox_xyxy": [
+            0.078125,
+            134.902344,
+            80.1953125,
+            189.453125
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.364777207,
+          "bbox_xyxy": [
+            91.171875,
+            0.46875,
+            200.0,
+            58.2421875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.266643643,
+          "bbox_xyxy": [
+            86.4453125,
+            155.9375,
+            169.394531,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_227",
+      "image_path": "IMAGES/crazing_227.jpg",
+      "image_sha256": "67499dd21306030c383b07abf5c7a7d597313d24d8420e16a46d797fba6d1195",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.800692201,
+          "bbox_xyxy": [
+            141.640625,
+            21.171875,
+            200.0,
+            75.625
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.461016715,
+          "bbox_xyxy": [
+            0.15625,
+            2.24609375,
+            130.117188,
+            50.8789062
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.338076532,
+          "bbox_xyxy": [
+            5.46875,
+            41.71875,
+            198.828125,
+            187.65625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_230",
+      "image_path": "IMAGES/crazing_230.jpg",
+      "image_sha256": "ed6f3c3c49fa25742c0b87379e9e05ca950adcc4d734a15e941b2d13aefbafc0",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.271251768,
+          "bbox_xyxy": [
+            0.8984375,
+            0.087890625,
+            126.640625,
+            32.96875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.259073734,
+          "bbox_xyxy": [
+            20.78125,
+            92.8417969,
+            193.046875,
+            136.523438
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_244",
+      "image_path": "IMAGES/crazing_244.jpg",
+      "image_sha256": "fa3d0c5d7a23b82da1533df61a39a7056a21b021f879da6426f6dc6326abd0a1",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.596433342,
+          "bbox_xyxy": [
+            25.15625,
+            123.925781,
+            199.609375,
+            188.398438
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.39793843,
+          "bbox_xyxy": [
+            21.171875,
+            71.6015625,
+            198.4375,
+            176.523438
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.353987068,
+          "bbox_xyxy": [
+            57.578125,
+            0.048828125,
+            199.648438,
+            46.09375
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.257577002,
+          "bbox_xyxy": [
+            6.40625,
+            7.5390625,
+            172.03125,
+            108.203125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_246",
+      "image_path": "IMAGES/crazing_246.jpg",
+      "image_sha256": "0018b62c07b5dfd379d0563721fe46d15d72bf3bdbc1e39d7f8e081692c0266d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.396068275,
+          "bbox_xyxy": [
+            1.953125,
+            0.01953125,
+            196.953125,
+            26.640625
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.39513427,
+          "bbox_xyxy": [
+            27.421875,
+            0.4296875,
+            199.21875,
+            61.9335938
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.292595148,
+          "bbox_xyxy": [
+            2.734375,
+            142.363281,
+            191.71875,
+            197.441406
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_26",
+      "image_path": "IMAGES/crazing_26.jpg",
+      "image_sha256": "6c24d211a06a25d7b1ab80038402f9cebd3932cdc73b348b7871fb690047f0d3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.607663155,
+          "bbox_xyxy": [
+            128.671875,
+            84.1015625,
+            200.0,
+            153.828125
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.432063222,
+          "bbox_xyxy": [
+            24.7265625,
+            0.05859375,
+            192.5,
+            51.5039062
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.31069386,
+          "bbox_xyxy": [
+            1.1328125,
+            156.386719,
+            150.742188,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_267",
+      "image_path": "IMAGES/crazing_267.jpg",
+      "image_sha256": "e2e8e6f90ca2b9d2135613801ef954565e81881938917b241b5c7ffa89ea02b2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.250179231,
+          "bbox_xyxy": [
+            41.328125,
+            60.6445312,
+            188.945312,
+            115.957031
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_27",
+      "image_path": "IMAGES/crazing_27.jpg",
+      "image_sha256": "10626e2b51d15ee8d30e107d3f92b4d02017ef40188f029ebb7c64d77bace16b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.415847361,
+          "bbox_xyxy": [
+            13.7890625,
+            140.3125,
+            108.828125,
+            198.144531
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.400749236,
+          "bbox_xyxy": [
+            34.4140625,
+            75.2929688,
+            198.671875,
+            133.867188
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.39420104,
+          "bbox_xyxy": [
+            0.5078125,
+            7.3828125,
+            74.2578125,
+            63.6914062
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_271",
+      "image_path": "IMAGES/crazing_271.jpg",
+      "image_sha256": "2227d033081e4b5d83589d4dea528b0af45d94d22c2a916e1204bf00b372a6fe",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.657539248,
+          "bbox_xyxy": [
+            29.296875,
+            123.808594,
+            199.140625,
+            178.671875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.55832684,
+          "bbox_xyxy": [
+            92.1875,
+            41.6796875,
+            200.0,
+            107.8125
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.471709937,
+          "bbox_xyxy": [
+            6.328125,
+            41.1914062,
+            173.28125,
+            108.652344
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.264357626,
+          "bbox_xyxy": [
+            0.0,
+            99.375,
+            94.4140625,
+            180.9375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_278",
+      "image_path": "IMAGES/crazing_278.jpg",
+      "image_sha256": "8aa0adc94ab37ba8bc08f828343a938e0a8e24ea459e0eb5ed93a65ab0fbabdc",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.629775703,
+          "bbox_xyxy": [
+            48.90625,
+            111.054688,
+            196.601562,
+            186.445312
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.567936778,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            78.6523438,
+            74.9414062
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.49609381,
+          "bbox_xyxy": [
+            138.144531,
+            0.078125,
+            199.941406,
+            102.65625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_285",
+      "image_path": "IMAGES/crazing_285.jpg",
+      "image_sha256": "f93b867670dc0f2ac94cf98db4fa8abcaec09bd2b3a22098bc46a20cdea1c891",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.586996377,
+          "bbox_xyxy": [
+            0.0,
+            0.44921875,
+            66.640625,
+            59.296875
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.447460115,
+          "bbox_xyxy": [
+            142.382812,
+            40.8984375,
+            200.0,
+            144.414062
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.436862141,
+          "bbox_xyxy": [
+            0.078125,
+            122.226562,
+            55.7421875,
+            185.976562
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.272799075,
+          "bbox_xyxy": [
+            79.140625,
+            107.617188,
+            200.0,
+            162.734375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_288",
+      "image_path": "IMAGES/crazing_288.jpg",
+      "image_sha256": "48efd269655d26e04df4dda98d72deac85963a3bee9390be7b26f81889a64bea",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.399811566,
+          "bbox_xyxy": [
+            42.5390625,
+            108.945312,
+            169.21875,
+            172.441406
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.39420104,
+          "bbox_xyxy": [
+            0.0,
+            102.714844,
+            81.0546875,
+            156.308594
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.264357626,
+          "bbox_xyxy": [
+            1.953125,
+            23.1445312,
+            196.484375,
+            87.6757812
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_300",
+      "image_path": "IMAGES/crazing_300.jpg",
+      "image_sha256": "87595c05d2a5f7792c219dfa245dce2cfc26784e165a5172fecaab73eaee288d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.691810012,
+          "bbox_xyxy": [
+            121.054688,
+            127.207031,
+            199.726562,
+            174.550781
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.542863131,
+          "bbox_xyxy": [
+            0.234375,
+            146.269531,
+            115.3125,
+            199.980469
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.4873074,
+          "bbox_xyxy": [
+            1.5625,
+            44.6484375,
+            198.75,
+            133.203125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_34",
+      "image_path": "IMAGES/crazing_34.jpg",
+      "image_sha256": "fdee1c20f4c0476d35b7348d2325e4a933b8992465ed2fb409435cde08f0197e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.730290115,
+          "bbox_xyxy": [
+            176.484375,
+            2.5,
+            199.995117,
+            92.7929688
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.421551794,
+          "bbox_xyxy": [
+            0.0,
+            64.296875,
+            108.867188,
+            170.820312
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.283781111,
+          "bbox_xyxy": [
+            59.9609375,
+            8.53515625,
+            162.578125,
+            64.453125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_4",
+      "image_path": "IMAGES/crazing_4.jpg",
+      "image_sha256": "0f52f3882d3ffc77a5f20c2c4b557a6a79620090e6f8ef9a0568ed508749e436",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.528290093,
+          "bbox_xyxy": [
+            1.640625,
+            117.011719,
+            198.59375,
+            198.632812
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.418696731,
+          "bbox_xyxy": [
+            4.6875,
+            0.0,
+            123.710938,
+            102.539062
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_59",
+      "image_path": "IMAGES/crazing_59.jpg",
+      "image_sha256": "a00621e2838535650cc053346039c394cb920e4166eb08785c68b8cc8e65bbec",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.39887464,
+          "bbox_xyxy": [
+            18.046875,
+            130.605469,
+            116.757812,
+            190.449219
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.320821762,
+          "bbox_xyxy": [
+            34.6875,
+            105.429688,
+            199.453125,
+            188.515625
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.280616432,
+          "bbox_xyxy": [
+            137.617188,
+            118.789062,
+            200.0,
+            197.753906
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_84",
+      "image_path": "IMAGES/crazing_84.jpg",
+      "image_sha256": "c5669030d7526877ac547e46b9bfe8cedcc6e6e0e4f7bb481c8c52706215ae0e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.669744313,
+          "bbox_xyxy": [
+            12.265625,
+            132.695312,
+            115.976562,
+            194.0625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_86",
+      "image_path": "IMAGES/crazing_86.jpg",
+      "image_sha256": "bdfee0b1201604e89f9ed8953bea9f820375c70335c109fe7a434c326868f9b4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.646012902,
+          "bbox_xyxy": [
+            78.5546875,
+            1.3671875,
+            193.75,
+            87.578125
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.415847361,
+          "bbox_xyxy": [
+            0.01953125,
+            15.46875,
+            82.4609375,
+            79.4140625
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.347758859,
+          "bbox_xyxy": [
+            0.0,
+            108.398438,
+            148.28125,
+            178.496094
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "crazing_92",
+      "image_path": "IMAGES/crazing_92.jpg",
+      "image_sha256": "6d73bee0a96f6225aa34bef31b62743b657c1254023eeebf604d7bad83142deb",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 0,
+          "confidence": 0.72642529,
+          "bbox_xyxy": [
+            29.765625,
+            114.296875,
+            199.84375,
+            200.0
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.660173178,
+          "bbox_xyxy": [
+            0.60546875,
+            52.3242188,
+            75.46875,
+            103.808594
+          ]
+        },
+        {
+          "class_id": 0,
+          "confidence": 0.435901314,
+          "bbox_xyxy": [
+            120.429688,
+            20.0,
+            199.570312,
+            129.21875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_110",
+      "image_path": "IMAGES/inclusion_110.jpg",
+      "image_sha256": "ec3ab6724ba7ed34889aceee6de8c9776905df1ad2224ef6c104fa54c0fefbe5",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.819893718,
+          "bbox_xyxy": [
+            98.1738281,
+            0.0,
+            133.085938,
+            78.515625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.76064837,
+          "bbox_xyxy": [
+            129.882812,
+            0.0,
+            180.039062,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.673191011,
+          "bbox_xyxy": [
+            113.603516,
+            150.888672,
+            134.731445,
+            199.707031
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_115",
+      "image_path": "IMAGES/inclusion_115.jpg",
+      "image_sha256": "e3f6a03fb6aa11cba667ab45b03671dcd4108b183bbac71ef28e620d9864cc89",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.895524502,
+          "bbox_xyxy": [
+            105.004883,
+            75.859375,
+            137.714844,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.777300358,
+          "bbox_xyxy": [
+            145.419922,
+            96.8359375,
+            173.144531,
+            181.5625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.775264621,
+          "bbox_xyxy": [
+            41.09375,
+            0.15625,
+            83.4960938,
+            178.90625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.768383384,
+          "bbox_xyxy": [
+            141.71875,
+            0.009765625,
+            160.200195,
+            30.7128906
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.673191011,
+          "bbox_xyxy": [
+            15.7177734,
+            58.7109375,
+            38.0664062,
+            111.835938
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.520496368,
+          "bbox_xyxy": [
+            145.976562,
+            78.3300781,
+            166.386719,
+            125.175781
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_122",
+      "image_path": "IMAGES/inclusion_122.jpg",
+      "image_sha256": "be11bdbb46072c78e354a3531e4370efb39780b56bc59cbe1b776f3986832919",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.859660864,
+          "bbox_xyxy": [
+            131.582031,
+            0.0,
+            160.820312,
+            97.8515625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.850963831,
+          "bbox_xyxy": [
+            107.304688,
+            139.453125,
+            140.239258,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.74761647,
+          "bbox_xyxy": [
+            20.859375,
+            0.0,
+            68.7890625,
+            199.453125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.645119071,
+          "bbox_xyxy": [
+            112.119141,
+            73.9453125,
+            134.990234,
+            112.617188
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.598312378,
+          "bbox_xyxy": [
+            162.485352,
+            0.0341796875,
+            179.84375,
+            13.4765625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.556399524,
+          "bbox_xyxy": [
+            14.9560547,
+            164.794922,
+            33.5546875,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.356671602,
+          "bbox_xyxy": [
+            31.2109375,
+            135.46875,
+            54.0625,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_123",
+      "image_path": "IMAGES/inclusion_123.jpg",
+      "image_sha256": "e5aa3842ea4186e83d97099d5c413fa7ce27296b1cacc374976547412f0d8f10",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.894052327,
+          "bbox_xyxy": [
+            44.6679688,
+            122.96875,
+            78.8671875,
+            199.882812
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.876636684,
+          "bbox_xyxy": [
+            70.0683594,
+            0.0,
+            98.8183594,
+            81.5625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.769771099,
+          "bbox_xyxy": [
+            50.8496094,
+            57.3632812,
+            72.3242188,
+            91.0449219
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.39047569,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            8.87207031,
+            44.3164062
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_129",
+      "image_path": "IMAGES/inclusion_129.jpg",
+      "image_sha256": "26b493e2bc04505e128c9a3d1f1b5ab4d248ffc9b50739848fa389cf07643b0b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.850963831,
+          "bbox_xyxy": [
+            41.5625,
+            1.640625,
+            80.9375,
+            120.15625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.783326149,
+          "bbox_xyxy": [
+            22.3291016,
+            144.21875,
+            40.4980469,
+            199.902344
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.766989946,
+          "bbox_xyxy": [
+            166.611328,
+            105.9375,
+            190.805664,
+            161.386719
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.599250793,
+          "bbox_xyxy": [
+            70.0097656,
+            0.0,
+            89.5800781,
+            25.2539062
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_13",
+      "image_path": "IMAGES/inclusion_13.jpg",
+      "image_sha256": "b7a8d1df8c1325f4d62076db47c1e08e42a38a7e19e4bf79a38bc98edffb8312",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.862465143,
+          "bbox_xyxy": [
+            108.535156,
+            123.574219,
+            142.275391,
+            199.84375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.702529848,
+          "bbox_xyxy": [
+            110.996094,
+            8.4375,
+            144.272461,
+            114.511719
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.687630653,
+          "bbox_xyxy": [
+            65.4443359,
+            0.0,
+            92.5195312,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.683420062,
+          "bbox_xyxy": [
+            163.476562,
+            115.136719,
+            188.691406,
+            191.367188
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.627952278,
+          "bbox_xyxy": [
+            171.513672,
+            38.59375,
+            199.873047,
+            116.015625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.614162683,
+          "bbox_xyxy": [
+            110.942383,
+            77.4609375,
+            129.140625,
+            117.099609
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_144",
+      "image_path": "IMAGES/inclusion_144.jpg",
+      "image_sha256": "8aa78a39a516fda6f89c9ff12162e9eac95f09f2e308436b84c561ad64579f52",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.905656934,
+          "bbox_xyxy": [
+            113.789062,
+            68.1054688,
+            133.779297,
+            121.074219
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.8875916,
+          "bbox_xyxy": [
+            128.427734,
+            13.9355469,
+            142.460938,
+            40.4833984
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.872784495,
+          "bbox_xyxy": [
+            115.698242,
+            122.421875,
+            131.25,
+            152.438965
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.748352647,
+          "bbox_xyxy": [
+            115.90332,
+            169.375,
+            129.995117,
+            199.257812
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_183",
+      "image_path": "IMAGES/inclusion_183.jpg",
+      "image_sha256": "a757f09c4119e5429c9b17381e528a6c52a094856387ea26a7249b0dac43eef6",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.79502207,
+          "bbox_xyxy": [
+            134.121094,
+            0.15625,
+            181.601562,
+            198.359375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.5,
+          "bbox_xyxy": [
+            130.463867,
+            0.0,
+            148.535156,
+            34.8828125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_196",
+      "image_path": "IMAGES/inclusion_196.jpg",
+      "image_sha256": "3065bc0d2a74672b529bd3862b08d598bbc2e40c08842db33df83d6c5f72d215",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.757075012,
+          "bbox_xyxy": [
+            125.19043,
+            42.96875,
+            149.414062,
+            199.453125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.701712728,
+          "bbox_xyxy": [
+            33.3154297,
+            59.8828125,
+            53.5058594,
+            111.621094
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.343340933,
+          "bbox_xyxy": [
+            130.029297,
+            4.39453125,
+            150.322266,
+            65.9375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.285371542,
+          "bbox_xyxy": [
+            164.589844,
+            43.75,
+            200.0,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_215",
+      "image_path": "IMAGES/inclusion_215.jpg",
+      "image_sha256": "a5fe8af5a90c4ed816914375bf77ee49b4a2840022523cbe59f15e045f3acdf3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.812272906,
+          "bbox_xyxy": [
+            75.2539062,
+            0.0,
+            123.554688,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.50683552,
+          "bbox_xyxy": [
+            65.4931641,
+            19.7070312,
+            79.6679688,
+            58.5351562
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_218",
+      "image_path": "IMAGES/inclusion_218.jpg",
+      "image_sha256": "26a96e68851c910ba49738157d5e5ac8b5ab6c1fe776de2647f443e8e36f88d7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.803174138,
+          "bbox_xyxy": [
+            57.7246094,
+            69.0429688,
+            92.8417969,
+            147.851562
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.683420062,
+          "bbox_xyxy": [
+            111.210938,
+            70.6640625,
+            138.349609,
+            145.742188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_220",
+      "image_path": "IMAGES/inclusion_220.jpg",
+      "image_sha256": "d84460af1a06a7ecf8761192044de1ec0723dee2143bc5dd9a1e64171b2d14f8",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.847968996,
+          "bbox_xyxy": [
+            55.15625,
+            2.03125,
+            99.9609375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_225",
+      "image_path": "IMAGES/inclusion_225.jpg",
+      "image_sha256": "0b3e713521a07d8074214175c96692a61e5f29e10c8d150e6095a48b2da271f9",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.666279614,
+          "bbox_xyxy": [
+            69.1210938,
+            13.5351562,
+            83.4570312,
+            65.859375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.616012275,
+          "bbox_xyxy": [
+            30.065918,
+            5.625,
+            54.9609375,
+            199.6875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_231",
+      "image_path": "IMAGES/inclusion_231.jpg",
+      "image_sha256": "c0be442399f4699c3923f943958dbbdddd43f5c2a667f83da79c0b0652bd79e4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.838151455,
+          "bbox_xyxy": [
+            86.6699219,
+            139.511719,
+            121.757812,
+            199.726562
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.793745995,
+          "bbox_xyxy": [
+            108.859863,
+            82.9101562,
+            126.513672,
+            130.859375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_233",
+      "image_path": "IMAGES/inclusion_233.jpg",
+      "image_sha256": "b623a1f88d2a7437eee86af7bd73b27456056775b4394694d6ebc331fe5f02bf",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.87059927,
+          "bbox_xyxy": [
+            42.5976562,
+            66.9335938,
+            79.2285156,
+            131.71875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.793745995,
+          "bbox_xyxy": [
+            170.986328,
+            64.4140625,
+            190.009766,
+            114.414062
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.773899913,
+          "bbox_xyxy": [
+            64.7363281,
+            11.5234375,
+            82.5195312,
+            59.6679688
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.577495277,
+          "bbox_xyxy": [
+            16.3476562,
+            122.060547,
+            34.0722656,
+            153.90625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.299925208,
+          "bbox_xyxy": [
+            25.5175781,
+            179.428711,
+            47.1728516,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.262840748,
+          "bbox_xyxy": [
+            61.328125,
+            189.570312,
+            79.0087891,
+            199.986572
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.253860176,
+          "bbox_xyxy": [
+            174.335938,
+            148.154297,
+            188.774414,
+            187.304688
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_235",
+      "image_path": "IMAGES/inclusion_235.jpg",
+      "image_sha256": "25a0ae931457ddc495dacbc038fee25b864c3edd07cce19f13674f2bbe14623b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.779993176,
+          "bbox_xyxy": [
+            74.21875,
+            93.359375,
+            136.113281,
+            182.460938
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.517570972,
+          "bbox_xyxy": [
+            65.6591797,
+            67.9882812,
+            87.1582031,
+            111.113281
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.35042119,
+          "bbox_xyxy": [
+            55.7324219,
+            12.578125,
+            75.0488281,
+            44.6679688
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_240",
+      "image_path": "IMAGES/inclusion_240.jpg",
+      "image_sha256": "f9f4b2365d0af5b80cc7e4ff3db9209e599884c89aa70d789618578a90244ff3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.621540964,
+          "bbox_xyxy": [
+            182.507324,
+            45.6054688,
+            199.609375,
+            84.1894531
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.602997005,
+          "bbox_xyxy": [
+            49.3652344,
+            141.640625,
+            63.1347656,
+            177.216797
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.491211772,
+          "bbox_xyxy": [
+            125.751953,
+            159.765625,
+            149.853516,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.462958425,
+          "bbox_xyxy": [
+            111.787109,
+            131.972656,
+            127.246094,
+            173.095703
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_249",
+      "image_path": "IMAGES/inclusion_249.jpg",
+      "image_sha256": "9dc3e60e59bf1db44db73f55031bc44c97dc663241b343dfb4109d15f40247a2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.660173178,
+          "bbox_xyxy": [
+            45.15625,
+            119.6875,
+            67.2460938,
+            199.921875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.372960865,
+          "bbox_xyxy": [
+            46.5332031,
+            0.009765625,
+            79.4628906,
+            48.359375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_251",
+      "image_path": "IMAGES/inclusion_251.jpg",
+      "image_sha256": "34ff2376988c4f420ecf434de2b2c3d98f2c23ebbda0ba87c87797f64bfa3a66",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.833865881,
+          "bbox_xyxy": [
+            115.869141,
+            117.890625,
+            138.603516,
+            198.984375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.742422998,
+          "bbox_xyxy": [
+            114.570312,
+            52.5976562,
+            134.150391,
+            113.066406
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_258",
+      "image_path": "IMAGES/inclusion_258.jpg",
+      "image_sha256": "207faafef30696c821b5e605cf299f4a75d8d9f0adc8d03c3de9140c04a6da08",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.833865881,
+          "bbox_xyxy": [
+            27.4804688,
+            10.625,
+            66.875,
+            179.765625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.827268958,
+          "bbox_xyxy": [
+            130.234375,
+            0.0,
+            174.404297,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_280",
+      "image_path": "IMAGES/inclusion_280.jpg",
+      "image_sha256": "d12b66004f348638474b6cf7b299494e263963d9639cf250ac0f3fce96c6d437",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.734881818,
+          "bbox_xyxy": [
+            40.859375,
+            1.40625,
+            71.5576172,
+            195.625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_284",
+      "image_path": "IMAGES/inclusion_284.jpg",
+      "image_sha256": "4bd59750b701df9dcf8b7380309ef5fcb94d896aae4891b53abfcc1942df8ca2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.777975738,
+          "bbox_xyxy": [
+            19.4628906,
+            13.7890625,
+            38.1542969,
+            73.0664062
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.730290115,
+          "bbox_xyxy": [
+            172.734375,
+            30.3320312,
+            198.583984,
+            95.7617188
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.331120193,
+          "bbox_xyxy": [
+            118.867188,
+            157.226562,
+            134.091797,
+            177.890625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.325950086,
+          "bbox_xyxy": [
+            113.071289,
+            181.894531,
+            127.631836,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.319970906,
+          "bbox_xyxy": [
+            111.933594,
+            156.386719,
+            137.695312,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_292",
+      "image_path": "IMAGES/inclusion_292.jpg",
+      "image_sha256": "7a688ec367df776ee3b1142d281f6abed8c81ea49bea2bd3d01f9c9ebc1ab993",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.826149702,
+          "bbox_xyxy": [
+            92.7783203,
+            165.097656,
+            109.814453,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.811078727,
+          "bbox_xyxy": [
+            0.0,
+            106.601562,
+            11.472168,
+            144.726562
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.680029094,
+          "bbox_xyxy": [
+            79.9365234,
+            24.1796875,
+            98.8085938,
+            80.9960938
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.674907625,
+          "bbox_xyxy": [
+            76.1035156,
+            81.5625,
+            91.0839844,
+            117.363281
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.674049914,
+          "bbox_xyxy": [
+            86.7724609,
+            92.4609375,
+            110.605469,
+            166.523438
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.654011667,
+          "bbox_xyxy": [
+            0.0537109375,
+            43.75,
+            14.2480469,
+            75.2832031
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.628864467,
+          "bbox_xyxy": [
+            0.0146484375,
+            169.150391,
+            13.7841797,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.507811904,
+          "bbox_xyxy": [
+            84.21875,
+            0.0,
+            99.3164062,
+            26.7480469
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.446494579,
+          "bbox_xyxy": [
+            183.945312,
+            75.1757812,
+            199.023438,
+            115.722656
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_43",
+      "image_path": "IMAGES/inclusion_43.jpg",
+      "image_sha256": "a8d41006cce96894094a5fa1a294fefa063840dbbfe2e7b0d9734aaff22184c2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.837088466,
+          "bbox_xyxy": [
+            149.072266,
+            46.7578125,
+            180.019531,
+            143.085938
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.815820098,
+          "bbox_xyxy": [
+            166.054688,
+            0.87890625,
+            182.329102,
+            37.1875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.79881531,
+          "bbox_xyxy": [
+            102.226562,
+            0.0,
+            117.988281,
+            35.6152344
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.788582921,
+          "bbox_xyxy": [
+            96.5039062,
+            74.5703125,
+            126.806641,
+            152.8125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.711431444,
+          "bbox_xyxy": [
+            33.9453125,
+            2.265625,
+            71.3476562,
+            198.4375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.60206157,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            20.6201172,
+            199.453125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.299105585,
+          "bbox_xyxy": [
+            123.642578,
+            189.594727,
+            141.289062,
+            199.912109
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.278257072,
+          "bbox_xyxy": [
+            150.615234,
+            174.228516,
+            174.360352,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_46",
+      "image_path": "IMAGES/inclusion_46.jpg",
+      "image_sha256": "d23590d9155e0f3fd1460c8b5b89f1d41bdd74bbe8b2ebddf91fa94df122369a",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.734119773,
+          "bbox_xyxy": [
+            26.5332031,
+            0.0,
+            55.8984375,
+            172.5
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.455198705,
+          "bbox_xyxy": [
+            49.1796875,
+            61.171875,
+            100.761719,
+            199.765625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.431105018,
+          "bbox_xyxy": [
+            122.177734,
+            102.255859,
+            135.129395,
+            130.820312
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_47",
+      "image_path": "IMAGES/inclusion_47.jpg",
+      "image_sha256": "30e0f1e631a3e102c3470971257e2713cfcb7ab8eb202c2c3ae5e13670e79334",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.752739668,
+          "bbox_xyxy": [
+            102.480469,
+            0.3125,
+            140.380859,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.55832684,
+          "bbox_xyxy": [
+            135.976562,
+            0.4296875,
+            168.466797,
+            109.003906
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.544801295,
+          "bbox_xyxy": [
+            97.7050781,
+            0.0,
+            123.652344,
+            48.3203125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_50",
+      "image_path": "IMAGES/inclusion_50.jpg",
+      "image_sha256": "ad278704f51eb28d6c62da130d27563dd5ec248aec8df771545e4cf11652dfb2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.762775123,
+          "bbox_xyxy": [
+            76.3671875,
+            0.0,
+            118.261719,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.353987068,
+          "bbox_xyxy": [
+            125.224609,
+            0.5859375,
+            151.376953,
+            66.9335938
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_52",
+      "image_path": "IMAGES/inclusion_52.jpg",
+      "image_sha256": "25be1de5f930c94e4b146bfe20b87a9bc2fa6c8fd4b456f1f7d764fb4c1bfcd0",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.79944241,
+          "bbox_xyxy": [
+            87.7246094,
+            0.0,
+            125.3125,
+            199.609375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_56",
+      "image_path": "IMAGES/inclusion_56.jpg",
+      "image_sha256": "d31ace34a9b85472eea0169cc2243653756cc3fc71c512dd794927274a7a6f16",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.831689417,
+          "bbox_xyxy": [
+            15.0439453,
+            0.0,
+            49.1210938,
+            199.765625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.551573932,
+          "bbox_xyxy": [
+            53.828125,
+            0.15625,
+            78.7011719,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_66",
+      "image_path": "IMAGES/inclusion_66.jpg",
+      "image_sha256": "30f324e65df6f93a5b9b59cb5df7af34cc4c05412c685c58d888077606863acf",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.759223342,
+          "bbox_xyxy": [
+            74.5117188,
+            0.234375,
+            117.578125,
+            199.53125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.435901314,
+          "bbox_xyxy": [
+            16.1132812,
+            182.773438,
+            30.7519531,
+            199.990234
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_71",
+      "image_path": "IMAGES/inclusion_71.jpg",
+      "image_sha256": "7a244787ebbf3a69dd5fc5cff3eb5e176fda798149284e8e58ec4bd00d3cc64c",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.850963831,
+          "bbox_xyxy": [
+            75.6835938,
+            73.6328125,
+            114.780273,
+            155.546875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.840260506,
+          "bbox_xyxy": [
+            113.759766,
+            58.75,
+            133.408203,
+            110.322266
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "inclusion_92",
+      "image_path": "IMAGES/inclusion_92.jpg",
+      "image_sha256": "1d15666484061bd44fbec995ac395b12dcfd345f977dc066bf9f4cf3ef4db3c1",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.768383384,
+          "bbox_xyxy": [
+            114.042969,
+            46.796875,
+            157.998047,
+            175.9375
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.761358738,
+          "bbox_xyxy": [
+            148.193359,
+            44.1015625,
+            165.166016,
+            81.2646484
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.685108066,
+          "bbox_xyxy": [
+            30.5224609,
+            30.6152344,
+            45.5029297,
+            61.3183594
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.60486573,
+          "bbox_xyxy": [
+            79.9121094,
+            0.0,
+            95.5688477,
+            32.4316406
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_1",
+      "image_path": "IMAGES/patches_1.jpg",
+      "image_sha256": "0ea4843aa7801ce5a5e672ec8c0266d4910aa7d740955f38d087b38154d0fe67",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.86927259,
+          "bbox_xyxy": [
+            36.7382812,
+            12.109375,
+            110.078125,
+            147.5
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.731057405,
+          "bbox_xyxy": [
+            15.3125,
+            157.597656,
+            60.7421875,
+            199.990234
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_139",
+      "image_path": "IMAGES/patches_139.jpg",
+      "image_sha256": "91906ca766ab2d87b9d96983d688d067d627d70cb0feb0a951833df4f7c2a61f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.886809826,
+          "bbox_xyxy": [
+            40.5078125,
+            78.828125,
+            108.828125,
+            190.273438
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.87831521,
+          "bbox_xyxy": [
+            58.3984375,
+            8.75,
+            90.0585938,
+            55.0878906
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.834945738,
+          "bbox_xyxy": [
+            134.570312,
+            128.867188,
+            196.972656,
+            185.400391
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.325950086,
+          "bbox_xyxy": [
+            190.356445,
+            185.073242,
+            199.992676,
+            199.946289
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_140",
+      "image_path": "IMAGES/patches_140.jpg",
+      "image_sha256": "9232201956ead5b82110289d25fe4d0964b9d9cc0d62b1c75fa72da1d5755730",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.917601228,
+          "bbox_xyxy": [
+            17.1679688,
+            116.992188,
+            66.1523438,
+            195.253906
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.912121058,
+          "bbox_xyxy": [
+            83.3007812,
+            126.5625,
+            146.015625,
+            199.521484
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.882022917,
+          "bbox_xyxy": [
+            3.2421875,
+            0.0,
+            75.0976562,
+            54.6289062
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.870158315,
+          "bbox_xyxy": [
+            151.074219,
+            3.984375,
+            199.990234,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.792464018,
+          "bbox_xyxy": [
+            99.4726562,
+            0.0,
+            156.25,
+            51.6601562
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_157",
+      "image_path": "IMAGES/patches_157.jpg",
+      "image_sha256": "302db455ade32145d76a587ba113c0a82e56311226f313c4b451410b5402c67d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.831689417,
+          "bbox_xyxy": [
+            0.029296875,
+            0.0390625,
+            40.2148438,
+            108.4375
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.805020213,
+          "bbox_xyxy": [
+            44.0625,
+            0.0,
+            149.84375,
+            195.78125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_18",
+      "image_path": "IMAGES/patches_18.jpg",
+      "image_sha256": "58b730ff89fd4558ab7dcfa5686d3c9f6da0bb6428dde3c6e941c826211ca711",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.83114177,
+          "bbox_xyxy": [
+            55.5273438,
+            167.939453,
+            94.5898438,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.792464018,
+          "bbox_xyxy": [
+            123.75,
+            46.4941406,
+            170.800781,
+            110.664062
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.716218889,
+          "bbox_xyxy": [
+            38.4765625,
+            0.0,
+            109.453125,
+            163.789062
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.315735281,
+          "bbox_xyxy": [
+            45.1660156,
+            0.0,
+            107.1875,
+            82.7929688
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_186",
+      "image_path": "IMAGES/patches_186.jpg",
+      "image_sha256": "e4be79405f21c621732e4317499f0efa703e78c84f2ff3b597031181e8c72216",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.836019933,
+          "bbox_xyxy": [
+            120.175781,
+            54.21875,
+            181.5625,
+            157.8125
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.815820098,
+          "bbox_xyxy": [
+            32.265625,
+            20.5078125,
+            105.957031,
+            177.265625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.570809841,
+          "bbox_xyxy": [
+            43.75,
+            0.05859375,
+            83.9453125,
+            32.6757812
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.41395092,
+          "bbox_xyxy": [
+            174.160156,
+            56.875,
+            199.980469,
+            155.859375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_193",
+      "image_path": "IMAGES/patches_193.jpg",
+      "image_sha256": "9fcc65087f61af456d62d8fabea419e6eb99faf1b66f92f532a54dbd5ccc63dc",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.908938408,
+          "bbox_xyxy": [
+            64.8828125,
+            2.3828125,
+            117.792969,
+            74.8925781
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.87956059,
+          "bbox_xyxy": [
+            116.367188,
+            39.7949219,
+            171.337891,
+            72.0214844
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.852446914,
+          "bbox_xyxy": [
+            133.789062,
+            78.1640625,
+            196.464844,
+            199.726562
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.839208782,
+          "bbox_xyxy": [
+            74.0820312,
+            95.2734375,
+            124.033203,
+            166.679688
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_213",
+      "image_path": "IMAGES/patches_213.jpg",
+      "image_sha256": "6a4b08214c314135518585256f952cef50c514d5137ab1244e7842cee7167c6d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.878731608,
+          "bbox_xyxy": [
+            106.679688,
+            0.0,
+            165.136719,
+            112.265625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.814643562,
+          "bbox_xyxy": [
+            17.7929688,
+            0.078125,
+            69.5507812,
+            61.6308594
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.692642093,
+          "bbox_xyxy": [
+            0.0,
+            153.945312,
+            23.1835938,
+            199.765625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_220",
+      "image_path": "IMAGES/patches_220.jpg",
+      "image_sha256": "40ae61cd45e6826404c5ae044df70997a18e14248d051c1e75c6c3397b6c79cc",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.842347026,
+          "bbox_xyxy": [
+            0.01953125,
+            148.222656,
+            51.6601562,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.600188434,
+          "bbox_xyxy": [
+            5.15625,
+            10.4296875,
+            130.859375,
+            143.359375
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.31069386,
+          "bbox_xyxy": [
+            57.578125,
+            4.765625,
+            195.273438,
+            199.53125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_225",
+      "image_path": "IMAGES/patches_225.jpg",
+      "image_sha256": "3554340b5a48b23c97a194f7b7bf1776a625cc789d77a0b835ad07052b679eda",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.902267218,
+          "bbox_xyxy": [
+            76.5625,
+            46.953125,
+            144.980469,
+            152.148438
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.61693579,
+          "bbox_xyxy": [
+            0.122070312,
+            0.0,
+            16.3476562,
+            17.3339844
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_226",
+      "image_path": "IMAGES/patches_226.jpg",
+      "image_sha256": "7a187942009565b63b6cc73c5bdd7481261e565e1d9981f7ddc7b436077da17c",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.926035166,
+          "bbox_xyxy": [
+            122.265625,
+            31.5429688,
+            185.722656,
+            96.1132812
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.874509513,
+          "bbox_xyxy": [
+            34.1015625,
+            80.9570312,
+            78.4765625,
+            162.265625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_231",
+      "image_path": "IMAGES/patches_231.jpg",
+      "image_sha256": "6d24d04a14ecb962be8849befa4bc9eb527ac27f711866ca297a4328c5477c93",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.892186403,
+          "bbox_xyxy": [
+            64.1015625,
+            141.865234,
+            129.023438,
+            188.027344
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.877058268,
+          "bbox_xyxy": [
+            0.15625,
+            0.0,
+            61.3867188,
+            69.296875
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.836554885,
+          "bbox_xyxy": [
+            0.0,
+            109.492188,
+            53.7109375,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.724090159,
+          "bbox_xyxy": [
+            69.140625,
+            1.40625,
+            135.3125,
+            134.570312
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.674049914,
+          "bbox_xyxy": [
+            178.764648,
+            128.076172,
+            199.980469,
+            163.173828
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.480478615,
+          "bbox_xyxy": [
+            77.265625,
+            0.0415039062,
+            161.347656,
+            38.3007812
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_241",
+      "image_path": "IMAGES/patches_241.jpg",
+      "image_sha256": "d8ee841afe3d24b39a3f1f5656780b75ce9b1e1b6bb11cb6953a99d0cbaaffde",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.830042243,
+          "bbox_xyxy": [
+            72.2460938,
+            43.203125,
+            123.144531,
+            183.242188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_257",
+      "image_path": "IMAGES/patches_257.jpg",
+      "image_sha256": "0a3c01f45ef41e5d16a39722fa4f1211cfd2d2e8d9ad17ff1170e491cbc973a7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.854399025,
+          "bbox_xyxy": [
+            0.13671875,
+            82.1289062,
+            65.5859375,
+            131.689453
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.840784192,
+          "bbox_xyxy": [
+            0.0,
+            17.0117188,
+            44.9414062,
+            87.4609375
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.76768744,
+          "bbox_xyxy": [
+            10.7226562,
+            130.351562,
+            53.8378906,
+            190.488281
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.764185786,
+          "bbox_xyxy": [
+            138.378906,
+            23.359375,
+            200.0,
+            143.28125
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.42345801,
+          "bbox_xyxy": [
+            167.363281,
+            178.828125,
+            199.980469,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_259",
+      "image_path": "IMAGES/patches_259.jpg",
+      "image_sha256": "19c9a24f2b5aa8b4a8e5b703aa7fb58af80c6b2f9d7d6342add68fe34c1ef3d1",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.86927259,
+          "bbox_xyxy": [
+            0.625,
+            103.671875,
+            55.9179688,
+            182.890625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.695130944,
+          "bbox_xyxy": [
+            10.8203125,
+            49.5117188,
+            68.0859375,
+            107.089844
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.544801295,
+          "bbox_xyxy": [
+            75.4101562,
+            9.75585938,
+            115.703125,
+            33.6621094
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_26",
+      "image_path": "IMAGES/patches_26.jpg",
+      "image_sha256": "662afb41b7d1c5bde0b9349ce2f5d76fb5d3aee3068b84b6ee03bad8811e69d9",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.850963831,
+          "bbox_xyxy": [
+            133.144531,
+            155.214844,
+            180.371094,
+            194.697266
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.771842003,
+          "bbox_xyxy": [
+            0.0,
+            131.933594,
+            39.8242188,
+            170.732422
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.771153092,
+          "bbox_xyxy": [
+            1.1328125,
+            3.5546875,
+            61.015625,
+            130.9375
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.627039135,
+          "bbox_xyxy": [
+            116.855469,
+            13.125,
+            198.125,
+            144.765625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.588889003,
+          "bbox_xyxy": [
+            3.14453125,
+            165.117188,
+            53.0078125,
+            199.960938
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.54576993,
+          "bbox_xyxy": [
+            60.4882812,
+            54.8828125,
+            114.804688,
+            122.148438
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_262",
+      "image_path": "IMAGES/patches_262.jpg",
+      "image_sha256": "c89368f86ab398317eb89d1b0f0619206b5d9e5ad94e172b1b7c4fe39c66b23d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.876213849,
+          "bbox_xyxy": [
+            84.2382812,
+            79.5703125,
+            149.296875,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.860131502,
+          "bbox_xyxy": [
+            0.0,
+            114.726562,
+            43.046875,
+            184.384766
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.797556758,
+          "bbox_xyxy": [
+            13.3789062,
+            56.09375,
+            52.2460938,
+            104.990234
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_269",
+      "image_path": "IMAGES/patches_269.jpg",
+      "image_sha256": "a92362a8674b188bbe4340c7fc47d839110a479cfd52479ce2c3e1db4556edcf",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.881209135,
+          "bbox_xyxy": [
+            1.40625,
+            54.0234375,
+            53.4960938,
+            151.5625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.871914268,
+          "bbox_xyxy": [
+            112.734375,
+            39.7265625,
+            157.373047,
+            162.96875
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.778649688,
+          "bbox_xyxy": [
+            118.017578,
+            173.920898,
+            152.412109,
+            199.960938
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.517570972,
+          "bbox_xyxy": [
+            160.283203,
+            88.59375,
+            199.921875,
+            188.28125
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.492188096,
+          "bbox_xyxy": [
+            7.265625,
+            12.3046875,
+            52.3046875,
+            51.7675781
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_289",
+      "image_path": "IMAGES/patches_289.jpg",
+      "image_sha256": "d9a2f0f14640326213f17616892c3e94d22d32ee6d4673f440cf43ab2d5fae89",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.900182486,
+          "bbox_xyxy": [
+            0.0,
+            26.328125,
+            39.5703125,
+            89.0136719
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.872350097,
+          "bbox_xyxy": [
+            51.1621094,
+            68.671875,
+            87.0800781,
+            109.882812
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.850468218,
+          "bbox_xyxy": [
+            114.257812,
+            94.609375,
+            194.511719,
+            181.777344
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.83114177,
+          "bbox_xyxy": [
+            147.480469,
+            19.1015625,
+            180.839844,
+            49.6386719
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.585101187,
+          "bbox_xyxy": [
+            0.00244140625,
+            104.414062,
+            41.3671875,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_295",
+      "image_path": "IMAGES/patches_295.jpg",
+      "image_sha256": "f3daada7e1852c8bf08f769c940a832e1c0ec514bc5b08a059814b47e87c011c",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.827268958,
+          "bbox_xyxy": [
+            138.671875,
+            0.1171875,
+            200.0,
+            114.453125
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.809878707,
+          "bbox_xyxy": [
+            143.261719,
+            116.640625,
+            189.628906,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.792464018,
+          "bbox_xyxy": [
+            9.23828125,
+            0.0,
+            89.3359375,
+            115.898438
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.343340933,
+          "bbox_xyxy": [
+            178.730469,
+            146.777344,
+            195.161133,
+            168.90625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_299",
+      "image_path": "IMAGES/patches_299.jpg",
+      "image_sha256": "249e1897dcc805e311d4ba9ef5b4d57429f0dfc2d9dbcb52fc19928813676adb",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.87956059,
+          "bbox_xyxy": [
+            88.90625,
+            18.828125,
+            163.984375,
+            181.015625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.800068021,
+          "bbox_xyxy": [
+            0.0390625,
+            0.029296875,
+            42.2070312,
+            39.4140625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.785966277,
+          "bbox_xyxy": [
+            0.029296875,
+            77.5,
+            68.0078125,
+            199.882812
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_62",
+      "image_path": "IMAGES/patches_62.jpg",
+      "image_sha256": "32817a5ff56d28a9ae23dfb54c66af057532e185301f6a9d220f26b39b69a436",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.819316566,
+          "bbox_xyxy": [
+            93.1640625,
+            38.3398438,
+            122.255859,
+            123.90625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_67",
+      "image_path": "IMAGES/patches_67.jpg",
+      "image_sha256": "65273259d3645fe141523228332b96bcc3b5a14a053204a4043287970f7a3b4d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.895158172,
+          "bbox_xyxy": [
+            143.476562,
+            32.1484375,
+            180.546875,
+            111.640625
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.856330514,
+          "bbox_xyxy": [
+            15.9375,
+            74.4921875,
+            76.2695312,
+            148.691406
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.774582982,
+          "bbox_xyxy": [
+            161.582031,
+            163.164062,
+            199.628906,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_68",
+      "image_path": "IMAGES/patches_68.jpg",
+      "image_sha256": "b321a0330bef26b422cb79a39196151b783bc28760ecc1dbe3f9efcf5d51b69d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.883636832,
+          "bbox_xyxy": [
+            20.078125,
+            32.96875,
+            57.8320312,
+            112.1875
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.871914268,
+          "bbox_xyxy": [
+            158.789062,
+            0.078125,
+            200.0,
+            65.0585938
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.60579896,
+          "bbox_xyxy": [
+            36.1132812,
+            163.984375,
+            75.390625,
+            200.0
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.39887464,
+          "bbox_xyxy": [
+            163.984375,
+            190.629883,
+            199.912109,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "patches_79",
+      "image_path": "IMAGES/patches_79.jpg",
+      "image_sha256": "a067a12a0a6c2211bfb7a6f65a107bc5c247a47f420208d4504f14d68d456aef",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.877897501,
+          "bbox_xyxy": [
+            48.1445312,
+            42.9296875,
+            129.570312,
+            144.472656
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.872350097,
+          "bbox_xyxy": [
+            100.800781,
+            156.113281,
+            135.957031,
+            197.294922
+          ]
+        },
+        {
+          "class_id": 2,
+          "confidence": 0.768383384,
+          "bbox_xyxy": [
+            82.3046875,
+            0.0,
+            124.21875,
+            46.8945312
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_116",
+      "image_path": "IMAGES/pitted_surface_116.jpg",
+      "image_sha256": "65e9f60b8ed02f4891ae1b7759c57aa2295a67d5d8008aece4dfe6a925dc8c28",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.882428169,
+          "bbox_xyxy": [
+            1.484375,
+            0.0,
+            175.46875,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.471709937,
+          "bbox_xyxy": [
+            171.835938,
+            0.625,
+            200.0,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_124",
+      "image_path": "IMAGES/pitted_surface_124.jpg",
+      "image_sha256": "dac1e12ff8fd41f06d5275d1244f7c5b67c98d14bc3b053da947f94cdd76ac90",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.45423007,
+          "bbox_xyxy": [
+            0.0,
+            0.234375,
+            198.203125,
+            193.90625
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.279828608,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            89.4140625,
+            197.578125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_134",
+      "image_path": "IMAGES/pitted_surface_134.jpg",
+      "image_sha256": "4e77b73c0c3869eb8b9a94495c6296374f79976bfc68c2c83874e19371558831",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.475605249,
+          "bbox_xyxy": [
+            14.3359375,
+            0.390625,
+            114.765625,
+            196.5625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_135",
+      "image_path": "IMAGES/pitted_surface_135.jpg",
+      "image_sha256": "edfbf2614088b45c122de369f0ede6d4cf513b2dbb5e0a2aedc37e912d2ca15e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.880800486,
+          "bbox_xyxy": [
+            110.703125,
+            0.0,
+            200.0,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.865222991,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            82.9882812,
+            199.375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_140",
+      "image_path": "IMAGES/pitted_surface_140.jpg",
+      "image_sha256": "b81cccbe01de965e89e23fee0630c23ffca236c2bd7b4a0bca2f5cb45817d1de",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.867934346,
+          "bbox_xyxy": [
+            113.359375,
+            0.3125,
+            199.84375,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.762067616,
+          "bbox_xyxy": [
+            0.0,
+            0.3125,
+            93.203125,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_151",
+      "image_path": "IMAGES/pitted_surface_151.jpg",
+      "image_sha256": "5cb95bafcb084497ec3874ad6efba69512ea522feae5e678033b017e847b9c16",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.831689417,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            199.140625,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_199",
+      "image_path": "IMAGES/pitted_surface_199.jpg",
+      "image_sha256": "92b64539dbef7c4e515d113a114ff19b22a0d80d9c13d06d7f96df48d0b5e75f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.681727111,
+          "bbox_xyxy": [
+            0.2734375,
+            2.03125,
+            56.6796875,
+            198.125
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.651354194,
+          "bbox_xyxy": [
+            39.8828125,
+            40.3515625,
+            168.046875,
+            199.609375
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.600188434,
+          "bbox_xyxy": [
+            164.453125,
+            2.890625,
+            200.0,
+            198.359375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_209",
+      "image_path": "IMAGES/pitted_surface_209.jpg",
+      "image_sha256": "76aff94fc0715efb879685a56ab14ced25a300216035f1262a0223d3a77dfe22",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.919646025,
+          "bbox_xyxy": [
+            173.125,
+            2.1484375,
+            199.990234,
+            39.7558594
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.752012074,
+          "bbox_xyxy": [
+            8.515625,
+            0.0,
+            198.828125,
+            199.609375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_22",
+      "image_path": "IMAGES/pitted_surface_22.jpg",
+      "image_sha256": "7c856260062dd39b4a02f77d5387f7f29059de2cee995c2c2bb60cc9eada39ed",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.873217702,
+          "bbox_xyxy": [
+            0.0,
+            0.078125,
+            199.140625,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_228",
+      "image_path": "IMAGES/pitted_surface_228.jpg",
+      "image_sha256": "a10e61fcd8ebed18668bd1ff308bf7a7e51147e25d5aabe55cf37730058b94b7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.806243658,
+          "bbox_xyxy": [
+            16.875,
+            0.78125,
+            198.828125,
+            199.609375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_264",
+      "image_path": "IMAGES/pitted_surface_264.jpg",
+      "image_sha256": "b8f33836036497d5b83075b2bf5a093601ecf13c4c81d35a1f3af008dfe52dc3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.867934346,
+          "bbox_xyxy": [
+            0.15625,
+            0.0,
+            199.84375,
+            199.140625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_273",
+      "image_path": "IMAGES/pitted_surface_273.jpg",
+      "image_sha256": "478bc609f0ac13106fee87bd8b04b1f9c73159682ed58fff084611fa04b718c6",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.429190159,
+          "bbox_xyxy": [
+            1.328125,
+            16.875,
+            198.984375,
+            198.828125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_278",
+      "image_path": "IMAGES/pitted_surface_278.jpg",
+      "image_sha256": "a2ca53c5f4dcbc1afb5c6bd056fd7b18f83e7a9619b617b050a0ac466758d3fb",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 2,
+          "confidence": 0.839735329,
+          "bbox_xyxy": [
+            64.921875,
+            14.5898438,
+            100.908203,
+            38.0517578
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.633410931,
+          "bbox_xyxy": [
+            92.890625,
+            0.078125,
+            200.0,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_279",
+      "image_path": "IMAGES/pitted_surface_279.jpg",
+      "image_sha256": "54dc6e81c383ea7f2da249324069777408235d16a3ea21471b0573b94fa3aba7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.666279614,
+          "bbox_xyxy": [
+            71.5234375,
+            0.46875,
+            199.765625,
+            198.4375
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.456167638,
+          "bbox_xyxy": [
+            41.3671875,
+            0.09765625,
+            199.921875,
+            73.7890625
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.42536664,
+          "bbox_xyxy": [
+            1.5234375,
+            81.3671875,
+            101.640625,
+            199.921875
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.370224297,
+          "bbox_xyxy": [
+            0.119628906,
+            3.4375,
+            26.0351562,
+            186.640625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_282",
+      "image_path": "IMAGES/pitted_surface_282.jpg",
+      "image_sha256": "cddef1a10e36aa1dd8c42fc5f2acd66e74c50b547ad905eb8baa47fd5800321a",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.428233504,
+          "bbox_xyxy": [
+            55.0,
+            10.234375,
+            199.804688,
+            198.4375
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.266643643,
+          "bbox_xyxy": [
+            0.0,
+            8.359375,
+            94.21875,
+            199.0625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_294",
+      "image_path": "IMAGES/pitted_surface_294.jpg",
+      "image_sha256": "3e8d7b4980ba54f2bf86ebcc9e8d72fb3cdf2dbe4c73c058e406c05b111b04a4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.652241111,
+          "bbox_xyxy": [
+            6.015625,
+            82.734375,
+            200.0,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_36",
+      "image_path": "IMAGES/pitted_surface_36.jpg",
+      "image_sha256": "3954a55a23832a84b6666510890149fd164489e1cecf94860d3defac8d2ef5ef",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.758508682,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            199.84375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_39",
+      "image_path": "IMAGES/pitted_surface_39.jpg",
+      "image_sha256": "8045c0220b70504345d02c81c69845e48bac0417e3472d3703027c96965004fc",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.925230086,
+          "bbox_xyxy": [
+            0.0,
+            0.078125,
+            199.921875,
+            199.6875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_45",
+      "image_path": "IMAGES/pitted_surface_45.jpg",
+      "image_sha256": "afab3997bbd828d18fb1d87eec86e513cabecd63a6ce44207e35da85c7b043a9",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.838151455,
+          "bbox_xyxy": [
+            0.625,
+            0.0390625,
+            199.53125,
+            104.492188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_53",
+      "image_path": "IMAGES/pitted_surface_53.jpg",
+      "image_sha256": "4e8dd9c0a12898861a575108b45acddfdfc342f3d346c089f9eb9d56f3c4281f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.372960865,
+          "bbox_xyxy": [
+            0.0,
+            0.078125,
+            194.0625,
+            199.921875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_64",
+      "image_path": "IMAGES/pitted_surface_64.jpg",
+      "image_sha256": "37863072e74292a7743d079bff854875c9fa089a647b5eb9ca3ed889d51075e3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.842865109,
+          "bbox_xyxy": [
+            0.0,
+            0.15625,
+            199.765625,
+            199.453125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_83",
+      "image_path": "IMAGES/pitted_surface_83.jpg",
+      "image_sha256": "2d2b2d10955485622d89b2cab5d7d4038af5456b6f6459a56bf5c3d1766ca25f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.884037495,
+          "bbox_xyxy": [
+            101.484375,
+            0.0,
+            200.0,
+            200.0
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.83278048,
+          "bbox_xyxy": [
+            1.3671875,
+            0.0,
+            101.601562,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_95",
+      "image_path": "IMAGES/pitted_surface_95.jpg",
+      "image_sha256": "05dc6ea787324508224df9abbd7fd16afa2cbb1c450f0a3fa2f220c1e6429c77",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.75128305,
+          "bbox_xyxy": [
+            0.0,
+            0.3125,
+            199.453125,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "pitted_surface_97",
+      "image_path": "IMAGES/pitted_surface_97.jpg",
+      "image_sha256": "e98e59bf3ee6869a2f29c25a96f54c99f2aa159b1630595b3073465d26b5f807",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 3,
+          "confidence": 0.759936571,
+          "bbox_xyxy": [
+            12.109375,
+            0.15625,
+            200.0,
+            199.921875
+          ]
+        },
+        {
+          "class_id": 3,
+          "confidence": 0.262084484,
+          "bbox_xyxy": [
+            0.0,
+            23.203125,
+            47.4609375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_104",
+      "image_path": "IMAGES/rolled-in_scale_104.jpg",
+      "image_sha256": "4df8a84e0a9fa2a113f60bcee006696de72b5b95ff5dc4373884e1af26a0b557",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.836019933,
+          "bbox_xyxy": [
+            52.578125,
+            57.8515625,
+            159.648438,
+            165.898438
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.319121271,
+          "bbox_xyxy": [
+            75.6835938,
+            22.5195312,
+            154.179688,
+            59.7265625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_107",
+      "image_path": "IMAGES/rolled-in_scale_107.jpg",
+      "image_sha256": "322f329f990d8395b37fba49f1c2576c62725b29527ab0ffda2d1e1a1b7d8b1f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.801314831,
+          "bbox_xyxy": [
+            118.769531,
+            92.1875,
+            184.609375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_117",
+      "image_path": "IMAGES/rolled-in_scale_117.jpg",
+      "image_sha256": "ac828a14ac0c57bd27d57af57cf3f7fbc67291e545f5abdc2740224dd6c2bb95",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.784649134,
+          "bbox_xyxy": [
+            149.6875,
+            114.511719,
+            200.0,
+            194.609375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.552539885,
+          "bbox_xyxy": [
+            66.796875,
+            132.851562,
+            114.179688,
+            173.574219
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_118",
+      "image_path": "IMAGES/rolled-in_scale_118.jpg",
+      "image_sha256": "d16f1da313957faf235d8b3319b98f23d41395d05fcddf550f692492ade469e1",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.850468218,
+          "bbox_xyxy": [
+            78.0859375,
+            70.15625,
+            134.453125,
+            124.921875
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.780662656,
+          "bbox_xyxy": [
+            77.4804688,
+            12.4023438,
+            127.128906,
+            48.9453125
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.76064837,
+          "bbox_xyxy": [
+            77.1679688,
+            153.066406,
+            125.351562,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_128",
+      "image_path": "IMAGES/rolled-in_scale_128.jpg",
+      "image_sha256": "eaf635337a9759b80e213844add9683e47b306868a1c2efda06654c22c326d82",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.627039135,
+          "bbox_xyxy": [
+            99.7070312,
+            68.203125,
+            166.71875,
+            122.597656
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_131",
+      "image_path": "IMAGES/rolled-in_scale_131.jpg",
+      "image_sha256": "248417bbf136b22ea071b88fdb1db110edda9e95d16c12bccc7c0d4e7fa4b44e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.60579896,
+          "bbox_xyxy": [
+            40.078125,
+            33.203125,
+            157.421875,
+            170.15625
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.405448616,
+          "bbox_xyxy": [
+            34.0625,
+            25.9179688,
+            167.304688,
+            70.0097656
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_141",
+      "image_path": "IMAGES/rolled-in_scale_141.jpg",
+      "image_sha256": "49fc9f06a417f3928df57cae40663098020c386560260e7c0eaf4860b6890409",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.718594432,
+          "bbox_xyxy": [
+            26.953125,
+            33.2421875,
+            122.929688,
+            118.242188
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.457136869,
+          "bbox_xyxy": [
+            130.117188,
+            107.8125,
+            173.457031,
+            191.328125
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.272024751,
+          "bbox_xyxy": [
+            119.433594,
+            45.8984375,
+            189.648438,
+            195.742188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_159",
+      "image_path": "IMAGES/rolled-in_scale_159.jpg",
+      "image_sha256": "7c6f323094a3da43bf4664e30bb84691b91ffa9bcaf88b834321062710bceffa",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.775264621,
+          "bbox_xyxy": [
+            32.1484375,
+            46.6796875,
+            79.5898438,
+            157.34375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_176",
+      "image_path": "IMAGES/rolled-in_scale_176.jpg",
+      "image_sha256": "1615a1c38666f1af95fbc092291a00c9865a80a1f99941f8e58550ae40f915a4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.843381882,
+          "bbox_xyxy": [
+            73.8867188,
+            19.6289062,
+            122.96875,
+            71.1132812
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.435901314,
+          "bbox_xyxy": [
+            110.332031,
+            74.3554688,
+            169.921875,
+            160.15625
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_178",
+      "image_path": "IMAGES/rolled-in_scale_178.jpg",
+      "image_sha256": "9c65edfe700d99926ff92b1a339fde54c8dfdda53ccb739825bd819affb8d2d8",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.790530086,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            56.015625,
+            45.1367188
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.711431444,
+          "bbox_xyxy": [
+            8.14453125,
+            58.828125,
+            79.5117188,
+            172.070312
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.597373247,
+          "bbox_xyxy": [
+            76.5234375,
+            12.7734375,
+            150.683594,
+            50.1660156
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.481453747,
+          "bbox_xyxy": [
+            11.0351562,
+            65.0976562,
+            79.296875,
+            114.21875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_19",
+      "image_path": "IMAGES/rolled-in_scale_19.jpg",
+      "image_sha256": "7e9815a17916514ba512bb345b193791d62e98f98e57359edd9cc9aa129e0629",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.782662511,
+          "bbox_xyxy": [
+            0.0,
+            54.21875,
+            46.8359375,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.623376906,
+          "bbox_xyxy": [
+            125.058594,
+            139.609375,
+            170.830078,
+            193.085938
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.606731474,
+          "bbox_xyxy": [
+            128.242188,
+            91.796875,
+            200.0,
+            193.59375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.477554142,
+          "bbox_xyxy": [
+            120.46875,
+            5.6640625,
+            169.101562,
+            57.1679688
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.319121271,
+          "bbox_xyxy": [
+            135.878906,
+            38.1445312,
+            200.0,
+            130.820312
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_190",
+      "image_path": "IMAGES/rolled-in_scale_190.jpg",
+      "image_sha256": "497e87842f2fe281ef3dc52a27444f7219545c9c4636b5cd7dead29b886b4213",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.815820098,
+          "bbox_xyxy": [
+            103.183594,
+            121.054688,
+            187.265625,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.682574213,
+          "bbox_xyxy": [
+            0.21484375,
+            79.921875,
+            42.4414062,
+            148.984375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.546738029,
+          "bbox_xyxy": [
+            88.8476562,
+            0.0,
+            144.052734,
+            45.0488281
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_198",
+      "image_path": "IMAGES/rolled-in_scale_198.jpg",
+      "image_sha256": "878afdc20181822ac0dd78725612ee9b5ed4cd98ca5d5c0d19e4f261f8f780e3",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.789882421,
+          "bbox_xyxy": [
+            41.796875,
+            124.21875,
+            140.703125,
+            199.902344
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.572722673,
+          "bbox_xyxy": [
+            57.5,
+            0.29296875,
+            171.5625,
+            72.5195312
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.291787118,
+          "bbox_xyxy": [
+            150.800781,
+            145.917969,
+            199.716797,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_199",
+      "image_path": "IMAGES/rolled-in_scale_199.jpg",
+      "image_sha256": "8ed028cf6ad8d6f9e0815b5d5f79f4f3b150024b4a2a590a68e7315cc6b8af1f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.79502207,
+          "bbox_xyxy": [
+            6.953125,
+            2.890625,
+            91.0546875,
+            85.7226562
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.700894415,
+          "bbox_xyxy": [
+            112.03125,
+            24.765625,
+            180.957031,
+            97.578125
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.595492721,
+          "bbox_xyxy": [
+            59.2382812,
+            87.265625,
+            107.480469,
+            165.546875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_203",
+      "image_path": "IMAGES/rolled-in_scale_203.jpg",
+      "image_sha256": "1318c0d9b059a08b3867d40ee1c18cd46adcac3b69d1790d4095995d311f8917",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.803790927,
+          "bbox_xyxy": [
+            87.8515625,
+            148.691406,
+            122.592773,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.735642374,
+          "bbox_xyxy": [
+            83.203125,
+            10.3320312,
+            136.230469,
+            65.234375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.357568383,
+          "bbox_xyxy": [
+            0.390625,
+            92.9101562,
+            78.2421875,
+            137.158203
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_213",
+      "image_path": "IMAGES/rolled-in_scale_213.jpg",
+      "image_sha256": "9e6c5e6a46cc51960c7c2ddfebecbf68918a82e5974525446554934059ee38a7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.740926266,
+          "bbox_xyxy": [
+            75.390625,
+            80.2734375,
+            180.429688,
+            198.867188
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.641533911,
+          "bbox_xyxy": [
+            78.6132812,
+            0.0,
+            127.578125,
+            34.2773438
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.504882693,
+          "bbox_xyxy": [
+            20.390625,
+            71.25,
+            52.4511719,
+            112.304688
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.344222307,
+          "bbox_xyxy": [
+            40.7226562,
+            123.164062,
+            83.0078125,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_216",
+      "image_path": "IMAGES/rolled-in_scale_216.jpg",
+      "image_sha256": "d8393dae73ec0046eb91dd904987ece0d95782620520b50eb85e6a94651aff02",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.697608471,
+          "bbox_xyxy": [
+            14.4140625,
+            85.4296875,
+            65.1757812,
+            182.070312
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.45132637,
+          "bbox_xyxy": [
+            91.71875,
+            74.84375,
+            172.03125,
+            157.539062
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.358466089,
+          "bbox_xyxy": [
+            13.671875,
+            74.5703125,
+            148.125,
+            159.941406
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_227",
+      "image_path": "IMAGES/rolled-in_scale_227.jpg",
+      "image_sha256": "d61a9d399c997f08c9a05f3242402d0e454df4029efe2a49bd973798a6a99cad",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.45423007,
+          "bbox_xyxy": [
+            56.25,
+            17.65625,
+            128.027344,
+            199.453125
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.274351776,
+          "bbox_xyxy": [
+            49.609375,
+            105.46875,
+            176.523438,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_238",
+      "image_path": "IMAGES/rolled-in_scale_238.jpg",
+      "image_sha256": "aa83932b2073c75a818549dce83101bbaa764b2e705103289a8df4b22e01bc75",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.659296334,
+          "bbox_xyxy": [
+            56.2109375,
+            36.9921875,
+            156.601562,
+            109.492188
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.514644206,
+          "bbox_xyxy": [
+            46.6992188,
+            112.109375,
+            135.585938,
+            199.882812
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_254",
+      "image_path": "IMAGES/rolled-in_scale_254.jpg",
+      "image_sha256": "0b1e990ceddfbffac2d54d03573f2fca9409d42cc81722f3ae2b6b030efc5826",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.484380066,
+          "bbox_xyxy": [
+            58.9453125,
+            57.3828125,
+            118.535156,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_266",
+      "image_path": "IMAGES/rolled-in_scale_266.jpg",
+      "image_sha256": "42451c010132c65c1b01ffbbe109839662e530a711d347463921973277505ff0",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.694302559,
+          "bbox_xyxy": [
+            133.515625,
+            8.7109375,
+            199.492188,
+            92.9296875
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.514644206,
+          "bbox_xyxy": [
+            0.15625,
+            0.1953125,
+            98.3203125,
+            91.71875
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.26740855,
+          "bbox_xyxy": [
+            0.0,
+            114.042969,
+            27.9785156,
+            194.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_273",
+      "image_path": "IMAGES/rolled-in_scale_273.jpg",
+      "image_sha256": "369d4bee8a232c19fb5ca45a2289822dcc0b1f1fd575fd7db35a9919d7d78f3d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.446494579,
+          "bbox_xyxy": [
+            0.5078125,
+            0.0390625,
+            107.070312,
+            104.023438
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.426321745,
+          "bbox_xyxy": [
+            0.5859375,
+            154.921875,
+            92.3046875,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_276",
+      "image_path": "IMAGES/rolled-in_scale_276.jpg",
+      "image_sha256": "316cdf843c144524be06d3c237f8d2dc4424dca836f62a419e8346c3e17614c7",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.852446914,
+          "bbox_xyxy": [
+            0.95703125,
+            9.0234375,
+            49.3359375,
+            70.3125
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.805020213,
+          "bbox_xyxy": [
+            70.703125,
+            2.421875,
+            127.109375,
+            54.0380859
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.602997005,
+          "bbox_xyxy": [
+            155.488281,
+            0.546875,
+            200.0,
+            29.2871094
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.455198705,
+          "bbox_xyxy": [
+            59.0625,
+            89.8632812,
+            131.367188,
+            147.246094
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_279",
+      "image_path": "IMAGES/rolled-in_scale_279.jpg",
+      "image_sha256": "7d6c2342ba3131dcf29b643c89a2f44609e9f7d5c388faa3366161ffa813bf18",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.607663155,
+          "bbox_xyxy": [
+            48.59375,
+            46.6796875,
+            120.390625,
+            132.421875
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.553505421,
+          "bbox_xyxy": [
+            50.3320312,
+            139.335938,
+            111.386719,
+            189.121094
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_281",
+      "image_path": "IMAGES/rolled-in_scale_281.jpg",
+      "image_sha256": "036fd9a28409d589230ceb99b63fdbc5110fa4fc61cd26088dd2a2d6901ba6a4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.422504723,
+          "bbox_xyxy": [
+            89.6875,
+            20.234375,
+            150.0,
+            158.984375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.289371163,
+          "bbox_xyxy": [
+            95.0195312,
+            2.34375,
+            143.085938,
+            90.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_288",
+      "image_path": "IMAGES/rolled-in_scale_288.jpg",
+      "image_sha256": "c50614815646af4455639a530c283a0634aedee702befcc6ffbc6d0270a5953a",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.559289932,
+          "bbox_xyxy": [
+            45.859375,
+            5.390625,
+            158.945312,
+            198.984375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.376623094,
+          "bbox_xyxy": [
+            26.6796875,
+            135.410156,
+            148.515625,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_35",
+      "image_path": "IMAGES/rolled-in_scale_35.jpg",
+      "image_sha256": "1e49b720b81f3f59db9ffcacc1d8d7de09d7537f83ee7269834f4069bae65cdf",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.897338867,
+          "bbox_xyxy": [
+            111.269531,
+            70.9375,
+            167.988281,
+            132.529297
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.793105721,
+          "bbox_xyxy": [
+            118.867188,
+            166.113281,
+            191.796875,
+            199.98291
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.540923834,
+          "bbox_xyxy": [
+            128.398438,
+            10.15625,
+            178.945312,
+            58.9648438
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.43014732,
+          "bbox_xyxy": [
+            111.914062,
+            11.2890625,
+            167.128906,
+            98.046875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_41",
+      "image_path": "IMAGES/rolled-in_scale_41.jpg",
+      "image_sha256": "92e13acb9df5165a2f94a2360236f6a4ae6e6a24c069c0f742798d94640238ff",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.666279614,
+          "bbox_xyxy": [
+            120.9375,
+            0.0,
+            194.453125,
+            30.4394531
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.473657191,
+          "bbox_xyxy": [
+            120.625,
+            0.5078125,
+            193.984375,
+            88.59375
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.317425787,
+          "bbox_xyxy": [
+            129.003906,
+            60.3125,
+            197.5,
+            198.867188
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.305697441,
+          "bbox_xyxy": [
+            122.8125,
+            141.445312,
+            194.199219,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_42",
+      "image_path": "IMAGES/rolled-in_scale_42.jpg",
+      "image_sha256": "4f4b79678da419f5c651213bb13a0b1aa8cf00e138e3430d78adb4a684c7d994",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.616012275,
+          "bbox_xyxy": [
+            66.3671875,
+            0.1171875,
+            142.695312,
+            37.6464844
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.53120935,
+          "bbox_xyxy": [
+            77.0507812,
+            56.2109375,
+            152.226562,
+            199.804688
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.375706106,
+          "bbox_xyxy": [
+            66.4648438,
+            0.8984375,
+            141.347656,
+            94.3945312
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.256085962,
+          "bbox_xyxy": [
+            71.7578125,
+            148.828125,
+            158.320312,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_47",
+      "image_path": "IMAGES/rolled-in_scale_47.jpg",
+      "image_sha256": "0eac381091303939359a7528a4f54b5107e53d5700e2dafd9e75c4c4e014eb44",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.861068845,
+          "bbox_xyxy": [
+            56.09375,
+            25.7421875,
+            103.632812,
+            90.9179688
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.746878862,
+          "bbox_xyxy": [
+            52.7050781,
+            101.289062,
+            91.0839844,
+            142.275391
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.725648224,
+          "bbox_xyxy": [
+            0.9765625,
+            139.511719,
+            121.679688,
+            199.941406
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_69",
+      "image_path": "IMAGES/rolled-in_scale_69.jpg",
+      "image_sha256": "7ea5f2851a73a14e51eb1a2b25298e25aad2ad01c61e92b1642a152d44c1551d",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.807461202,
+          "bbox_xyxy": [
+            48.4375,
+            92.734375,
+            156.992188,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_72",
+      "image_path": "IMAGES/rolled-in_scale_72.jpg",
+      "image_sha256": "56949cdeea9c339621667f8e982efe68a6926cda46fa6c22c14662ac359ec78e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.802555799,
+          "bbox_xyxy": [
+            152.724609,
+            77.2851562,
+            192.851562,
+            108.427734
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.74761647,
+          "bbox_xyxy": [
+            10.234375,
+            1.09375,
+            111.777344,
+            109.21875
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.562176526,
+          "bbox_xyxy": [
+            5.41015625,
+            167.128906,
+            55.9570312,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_78",
+      "image_path": "IMAGES/rolled-in_scale_78.jpg",
+      "image_sha256": "548c4196df3aae2bd2d78bb2d597d94a62c327d67ea8946aec748348206ccfca",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.713032663,
+          "bbox_xyxy": [
+            91.8359375,
+            76.6015625,
+            181.054688,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.333720386,
+          "bbox_xyxy": [
+            81.953125,
+            8.125,
+            184.0625,
+            75.859375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_93",
+      "image_path": "IMAGES/rolled-in_scale_93.jpg",
+      "image_sha256": "99b478d675dda0f992d0e70bddd9d631028575027a56e4be9f7a8741bdd6527e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.781997323,
+          "bbox_xyxy": [
+            80.0,
+            58.8671875,
+            166.953125,
+            200.0
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.572722673,
+          "bbox_xyxy": [
+            109.707031,
+            0.0,
+            160.039062,
+            34.4238281
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "rolled-in_scale_94",
+      "image_path": "IMAGES/rolled-in_scale_94.jpg",
+      "image_sha256": "560cd19ca05fbc5396b48e54ba90b96323f8962d24a4b7a3a52af74aaf39eac4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 4,
+          "confidence": 0.853425503,
+          "bbox_xyxy": [
+            89.0039062,
+            0.9765625,
+            158.457031,
+            93.75
+          ]
+        },
+        {
+          "class_id": 4,
+          "confidence": 0.818737984,
+          "bbox_xyxy": [
+            87.6171875,
+            84.0234375,
+            155.800781,
+            171.367188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_106",
+      "image_path": "IMAGES/scratches_106.jpg",
+      "image_sha256": "0fef5231d26c75256c723d862474768b95d71b5c0d7335a3f3112382b7baa86e",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.850468218,
+          "bbox_xyxy": [
+            0.859375,
+            29.0966797,
+            200.0,
+            53.8085938
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_113",
+      "image_path": "IMAGES/scratches_113.jpg",
+      "image_sha256": "e73a907d6406fb5b2872340cb49c2982b1724f71f75b66ade085c88fe736805c",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 1,
+          "confidence": 0.781997323,
+          "bbox_xyxy": [
+            159.975586,
+            173.24707,
+            175.004883,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.752739668,
+          "bbox_xyxy": [
+            52.34375,
+            0.0,
+            97.5,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.704160333,
+          "bbox_xyxy": [
+            50.5737305,
+            0.0,
+            66.9628906,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_115",
+      "image_path": "IMAGES/scratches_115.jpg",
+      "image_sha256": "e2128a3bddd81fdf7631df469dbe36541dd5f62a829e8c3bd19795a3b84a9ee6",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.826149702,
+          "bbox_xyxy": [
+            46.6894531,
+            0.0,
+            76.40625,
+            199.453125
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.783988357,
+          "bbox_xyxy": [
+            27.4462891,
+            0.0,
+            42.4365234,
+            199.765625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.313208938,
+          "bbox_xyxy": [
+            188.330078,
+            108.417969,
+            199.968262,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_121",
+      "image_path": "IMAGES/scratches_121.jpg",
+      "image_sha256": "d3ee2418b21b7982b5621d5a0967dafd0e763142210518388ead02bac8f47dab",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.848471642,
+          "bbox_xyxy": [
+            12.3339844,
+            0.0,
+            42.5976562,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.801314831,
+          "bbox_xyxy": [
+            170.175781,
+            19.296875,
+            199.84375,
+            95.78125
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.690142035,
+          "bbox_xyxy": [
+            137.680664,
+            0.78125,
+            164.003906,
+            148.28125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.326808989,
+          "bbox_xyxy": [
+            118.415527,
+            0.0146484375,
+            131.186523,
+            16.6894531
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_125",
+      "image_path": "IMAGES/scratches_125.jpg",
+      "image_sha256": "855b302abb5f872b064e3161c84b9a6d4122d5e5118ab71f55a176b2fc193781",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.615087867,
+          "bbox_xyxy": [
+            21.40625,
+            62.5390625,
+            184.53125,
+            199.0625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.544801295,
+          "bbox_xyxy": [
+            110.722656,
+            160.488281,
+            142.314453,
+            199.970703
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.511716664,
+          "bbox_xyxy": [
+            150.107422,
+            109.53125,
+            177.109375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_132",
+      "image_path": "IMAGES/scratches_132.jpg",
+      "image_sha256": "886e442a40f278acef38df92ca526b10ae6fdc02e6bdbb13d194e7b901b067b1",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.762067616,
+          "bbox_xyxy": [
+            101.992188,
+            0.0,
+            120.063477,
+            88.828125
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.73259145,
+          "bbox_xyxy": [
+            0.2734375,
+            118.867188,
+            136.328125,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.695958018,
+          "bbox_xyxy": [
+            129.765625,
+            88.046875,
+            200.0,
+            199.921875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.553505421,
+          "bbox_xyxy": [
+            153.125,
+            0.0,
+            200.0,
+            102.1875
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_141",
+      "image_path": "IMAGES/scratches_141.jpg",
+      "image_sha256": "7a1ad51da018c844a6268ca8e3aa2e57ee3039be9ec3e1ab7891b814a6ea29c4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.889909625,
+          "bbox_xyxy": [
+            131.435547,
+            0.078125,
+            177.011719,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.86927259,
+          "bbox_xyxy": [
+            18.4375,
+            62.734375,
+            50.0585938,
+            110.410156
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.821616769,
+          "bbox_xyxy": [
+            38.1298828,
+            0.0,
+            51.6894531,
+            49.5898438
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.771153092,
+          "bbox_xyxy": [
+            63.6376953,
+            55.4101562,
+            86.5234375,
+            113.125
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.716218889,
+          "bbox_xyxy": [
+            97.6391602,
+            12.0898438,
+            110.170898,
+            47.0117188
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.614162683,
+          "bbox_xyxy": [
+            54.6679688,
+            22.3046875,
+            74.6582031,
+            56.8359375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_148",
+      "image_path": "IMAGES/scratches_148.jpg",
+      "image_sha256": "57233642aa5fc43868562990bd26d535a5f9562b03eea239cdfe1d8a511b4602",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.816990852,
+          "bbox_xyxy": [
+            150.712891,
+            0.0,
+            178.603516,
+            195.703125
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.744657397,
+          "bbox_xyxy": [
+            130.20752,
+            0.0,
+            145.126953,
+            172.421875
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.595492721,
+          "bbox_xyxy": [
+            24.4433594,
+            115.195312,
+            45.4296875,
+            139.814453
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_156",
+      "image_path": "IMAGES/scratches_156.jpg",
+      "image_sha256": "b65e484717ff033687c7b03e79e6f151f60376f2ca033e9501d84da446226fbd",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.854399025,
+          "bbox_xyxy": [
+            45.8203125,
+            0.0,
+            80.0878906,
+            199.609375
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.709019542,
+          "bbox_xyxy": [
+            102.141113,
+            22.1875,
+            117.265625,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.442636609,
+          "bbox_xyxy": [
+            183.555908,
+            99.765625,
+            196.630859,
+            199.804688
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_165",
+      "image_path": "IMAGES/scratches_165.jpg",
+      "image_sha256": "e4dd9c9a976cea57392ce1fbe49831c3c61c4bac70d5344e48a8b1d528b68890",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.801314831,
+          "bbox_xyxy": [
+            58.8867188,
+            0.0,
+            96.796875,
+            185.625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.680878758,
+          "bbox_xyxy": [
+            112.832031,
+            0.15625,
+            130.112305,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.270480156,
+          "bbox_xyxy": [
+            0.0,
+            160.126953,
+            7.04589844,
+            199.433594
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_174",
+      "image_path": "IMAGES/scratches_174.jpg",
+      "image_sha256": "e4b9101d64dd300257c823dd3dd3190b4b7763aae62dabe89276ac565db80dae",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.825024962,
+          "bbox_xyxy": [
+            19.3164062,
+            0.0,
+            37.3242188,
+            199.609375
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.740926266,
+          "bbox_xyxy": [
+            165.917969,
+            29.53125,
+            180.844727,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.693472981,
+          "bbox_xyxy": [
+            120.976562,
+            16.640625,
+            137.695312,
+            199.84375
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.30321613,
+          "bbox_xyxy": [
+            1.79931641,
+            0.15625,
+            14.4873047,
+            198.359375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_18",
+      "image_path": "IMAGES/scratches_18.jpg",
+      "image_sha256": "fd74062b39027d7009e9e2c18575ee88b4bc910ccc33d5272473b116d812fae2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.668879807,
+          "bbox_xyxy": [
+            45.4980469,
+            22.2265625,
+            60.5078125,
+            111.015625
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.553505421,
+          "bbox_xyxy": [
+            37.8125,
+            119.765625,
+            59.84375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_209",
+      "image_path": "IMAGES/scratches_209.jpg",
+      "image_sha256": "9f7db1e44228cdaa737b8cc1788cf5a61f8687854c269210f86df8ab137c1f79",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.755635619,
+          "bbox_xyxy": [
+            51.8774414,
+            0.3125,
+            67.8417969,
+            134.765625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.752739668,
+          "bbox_xyxy": [
+            113.251953,
+            0.3515625,
+            143.984375,
+            145.820312
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.295026362,
+          "bbox_xyxy": [
+            166.699219,
+            43.0664062,
+            199.970703,
+            95.1367188
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_223",
+      "image_path": "IMAGES/scratches_223.jpg",
+      "image_sha256": "669bfbce9330b39ec06dedc04b6dd3190b06cabb45d7de3159f254cae49f53a4",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.802555799,
+          "bbox_xyxy": [
+            58.7744141,
+            4.375,
+            80.8300781,
+            106.152344
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.75128305,
+          "bbox_xyxy": [
+            125.214844,
+            112.148438,
+            141.196289,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.474631131,
+          "bbox_xyxy": [
+            120.078125,
+            0.0,
+            141.279297,
+            51.9140625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.258324653,
+          "bbox_xyxy": [
+            186.5625,
+            149.53125,
+            199.959717,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_232",
+      "image_path": "IMAGES/scratches_232.jpg",
+      "image_sha256": "5130a7a4352245c52b2301d40e92a6efb565c2f8007b67c68723af24ddc516bc",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.727200925,
+          "bbox_xyxy": [
+            33.90625,
+            64.9609375,
+            144.160156,
+            83.7255859
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.651354194,
+          "bbox_xyxy": [
+            146.738281,
+            88.28125,
+            158.637695,
+            175.644531
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.332852542,
+          "bbox_xyxy": [
+            104.18457,
+            0.0146484375,
+            118.271484,
+            19.1601562
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_234",
+      "image_path": "IMAGES/scratches_234.jpg",
+      "image_sha256": "cf652825b3c7cbea8ebf2b258989a4a915c5798fc29406294d458edb92fec80b",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.762067616,
+          "bbox_xyxy": [
+            25.3515625,
+            65.078125,
+            168.632812,
+            86.7382812
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.752739668,
+          "bbox_xyxy": [
+            20.234375,
+            136.279297,
+            200.0,
+            158.828125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_236",
+      "image_path": "IMAGES/scratches_236.jpg",
+      "image_sha256": "2ebc998f51cf32215b60f9f91d37a4c58820f33a33d0dea03bc45c34d185df0f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.70659548,
+          "bbox_xyxy": [
+            2.1875,
+            88.9892578,
+            197.890625,
+            111.660156
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.671469927,
+          "bbox_xyxy": [
+            2.5,
+            118.286133,
+            126.523438,
+            132.851562
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.490235507,
+          "bbox_xyxy": [
+            153.417969,
+            45.4980469,
+            195.820312,
+            102.773438
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_240",
+      "image_path": "IMAGES/scratches_240.jpg",
+      "image_sha256": "52e15ece6022bcb42f2991a7acae1c4e6b26cac16976402aea424d356d7cb964",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.788582921,
+          "bbox_xyxy": [
+            56.6796875,
+            100.822754,
+            200.0,
+            126.015625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.786622643,
+          "bbox_xyxy": [
+            126.71875,
+            164.995117,
+            200.0,
+            179.462891
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.729519844,
+          "bbox_xyxy": [
+            49.84375,
+            133.447266,
+            200.0,
+            153.613281
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.459076196,
+          "bbox_xyxy": [
+            13.2421875,
+            74.8535156,
+            143.28125,
+            88.3251953
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_268",
+      "image_path": "IMAGES/scratches_268.jpg",
+      "image_sha256": "2bcfea24551cb98e0a64b81d515eda2d597b71bb5d8391a0eff4d61a3cabccf8",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.641533911,
+          "bbox_xyxy": [
+            0.0,
+            118.891602,
+            89.140625,
+            132.260742
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.562176526,
+          "bbox_xyxy": [
+            0.0,
+            151.879883,
+            199.84375,
+            165.185547
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.524394751,
+          "bbox_xyxy": [
+            0.0,
+            148.154297,
+            86.6015625,
+            164.228516
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_278",
+      "image_path": "IMAGES/scratches_278.jpg",
+      "image_sha256": "2250c7ee89a2d4d03656a9ac3643ede3f8e2225b184472836d62c07024af5356",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.912121058,
+          "bbox_xyxy": [
+            0.0,
+            8.80859375,
+            200.0,
+            34.8242188
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.704973638,
+          "bbox_xyxy": [
+            0.0,
+            61.1108398,
+            200.0,
+            77.2167969
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.587943017,
+          "bbox_xyxy": [
+            0.0390625,
+            140.566406,
+            112.65625,
+            176.191406
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.339826822,
+          "bbox_xyxy": [
+            0.0,
+            159.868164,
+            69.2773438,
+            174.145508
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_284",
+      "image_path": "IMAGES/scratches_284.jpg",
+      "image_sha256": "7460cc96b7ca26a5118ce716a8e7f66d210d35e15e596597d8f204b021b293d2",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.812867761,
+          "bbox_xyxy": [
+            0.0,
+            100.830078,
+            121.40625,
+            123.632812
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.378459036,
+          "bbox_xyxy": [
+            0.0,
+            0.0,
+            200.0,
+            8.19580078
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.352202207,
+          "bbox_xyxy": [
+            114.921875,
+            105.771484,
+            200.0,
+            123.87207
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_287",
+      "image_path": "IMAGES/scratches_287.jpg",
+      "image_sha256": "6daf546f9bb1a4b58b9a76f4fe912418426b9a97448610edec52314f66fc140f",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.862001002,
+          "bbox_xyxy": [
+            161.103516,
+            0.0,
+            188.574219,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_40",
+      "image_path": "IMAGES/scratches_40.jpg",
+      "image_sha256": "5ff1878abdab2d030b32896486b498d1ecdf6d8f439f664bed53a8ba246de332",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.85728848,
+          "bbox_xyxy": [
+            119.912109,
+            0.078125,
+            145.507812,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_53",
+      "image_path": "IMAGES/scratches_53.jpg",
+      "image_sha256": "3bcac890eee84445a798a20289599d44e664300658111da743a4073900a95a41",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.831689417,
+          "bbox_xyxy": [
+            158.876953,
+            0.234375,
+            185.9375,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_6",
+      "image_path": "IMAGES/scratches_6.jpg",
+      "image_sha256": "cb03aeb9bd78d5b28768ff9fb9b55edeedfe2617e11400a1391eea34d60ec285",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.712232709,
+          "bbox_xyxy": [
+            74.7265625,
+            0.0,
+            147.65625,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.663669288,
+          "bbox_xyxy": [
+            148.979492,
+            138.476562,
+            163.999023,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.627952278,
+          "bbox_xyxy": [
+            152.724609,
+            47.7734375,
+            164.194336,
+            119.863281
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_68",
+      "image_path": "IMAGES/scratches_68.jpg",
+      "image_sha256": "65121e6d4710b6e80a595e3b8212c8c99ae5535bc0b2dd3d1b09c966b09341dd",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.740175724,
+          "bbox_xyxy": [
+            3.3203125,
+            27.421875,
+            29.4628906,
+            199.960938
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.635222793,
+          "bbox_xyxy": [
+            106.401367,
+            28.984375,
+            122.446289,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_77",
+      "image_path": "IMAGES/scratches_77.jpg",
+      "image_sha256": "0f30ad864afb086b06c24e27574fb0ebe3412b58ee8173ece1d047eef34116d8",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.853425503,
+          "bbox_xyxy": [
+            168.87207,
+            0.0,
+            184.980469,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.669744313,
+          "bbox_xyxy": [
+            102.774658,
+            24.296875,
+            115.097656,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_80",
+      "image_path": "IMAGES/scratches_80.jpg",
+      "image_sha256": "7be113457f8fc94dee9e4b7a325e6b787999ea83e39f6c7389618582e8146a98",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.768383384,
+          "bbox_xyxy": [
+            137.036133,
+            0.234375,
+            151.323242,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_84",
+      "image_path": "IMAGES/scratches_84.jpg",
+      "image_sha256": "0e25a596a7ddcb6b78b1f608c01a9ab168748556ee87e7feb2293ce3de87cd78",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.701712728,
+          "bbox_xyxy": [
+            142.424316,
+            15.3125,
+            154.853516,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_85",
+      "image_path": "IMAGES/scratches_85.jpg",
+      "image_sha256": "31a229ddb970db1b9da2ba0c08670ee44380d9e1ecfb0921780a5806bda96663",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.796925306,
+          "bbox_xyxy": [
+            105.380859,
+            0.390625,
+            118.769531,
+            199.84375
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.787930965,
+          "bbox_xyxy": [
+            169.65332,
+            10.625,
+            181.757812,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_88",
+      "image_path": "IMAGES/scratches_88.jpg",
+      "image_sha256": "60c8756c32648ebad1dddd7df9a2d5105db9f18941ec159bf0294d760009af51",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.769078016,
+          "bbox_xyxy": [
+            170.068359,
+            0.15625,
+            181.713867,
+            199.84375
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.702529848,
+          "bbox_xyxy": [
+            102.167969,
+            0.0,
+            116.445312,
+            199.53125
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_90",
+      "image_path": "IMAGES/scratches_90.jpg",
+      "image_sha256": "3ab8a57c251a314ecb243bd97375429ffcf365f30b79042642b0d2e7c57ec820",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.778649688,
+          "bbox_xyxy": [
+            171.064453,
+            2.34375,
+            191.757812,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.622458935,
+          "bbox_xyxy": [
+            140.983887,
+            126.445312,
+            152.353516,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.57463336,
+          "bbox_xyxy": [
+            42.1875,
+            128.847656,
+            74.3603516,
+            199.84375
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_92",
+      "image_path": "IMAGES/scratches_92.jpg",
+      "image_sha256": "78f0f67d7827a24cee83e9e3f8c7698f362bb37725243568d2ef547d66945704",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.809878707,
+          "bbox_xyxy": [
+            33.7011719,
+            0.625,
+            53.9794922,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.581303239,
+          "bbox_xyxy": [
+            172.602539,
+            167.1875,
+            192.392578,
+            200.0
+          ]
+        },
+        {
+          "class_id": 1,
+          "confidence": 0.312369347,
+          "bbox_xyxy": [
+            162.910156,
+            128.457031,
+            190.966797,
+            200.0
+          ]
+        }
+      ]
+    },
+    {
+      "image_id": "scratches_94",
+      "image_path": "IMAGES/scratches_94.jpg",
+      "image_sha256": "f800f9f5e2181940b19a12bd8d488d374bf2d3f17ba8aee0a3708b222c5e8996",
+      "backend": "TRT FP16 Original Stage K",
+      "inference_timestamp_utc": "2026-07-29T13:22:46.969+00:00",
+      "detections": [
+        {
+          "class_id": 5,
+          "confidence": 0.701712728,
+          "bbox_xyxy": [
+            93.9941406,
+            1.09375,
+            113.271484,
+            199.140625
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.565059006,
+          "bbox_xyxy": [
+            23.4082031,
+            86.796875,
+            41.1962891,
+            200.0
+          ]
+        },
+        {
+          "class_id": 5,
+          "confidence": 0.324235737,
+          "bbox_xyxy": [
+            66.1425781,
+            121.054688,
+            75.3442383,
+            200.0
+          ]
+        }
+      ]
+    }
+  ]
+}

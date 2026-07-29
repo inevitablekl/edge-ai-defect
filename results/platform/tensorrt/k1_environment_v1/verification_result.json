@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "stage": "K1",
+  "attempt_id": "k1_environment_v1",
+  "final_disposition": "K1_BLOCKED",
+  "checks": [
+    {"check_id": "GIT-001", "description": "Required branch and K0 starting commit", "mandatory": true, "status": "PASS", "observed": "feature/jetson-tensorrt-fp16 at 865b3c0060a7c6ae5aea05b9f52bf79c4c344c59; local main and origin feature match", "expected": "Frozen K0 baseline", "evidence_file": "commands.txt"},
+    {"check_id": "PLATFORM-001", "description": "Jetson device model and architecture", "mandatory": true, "status": "PASS", "observed": "Jetson Orin Nano Engineering Reference Developer Kit Super, aarch64", "expected": "Jetson Orin Nano Super, aarch64", "evidence_file": "environment_snapshot.txt"},
+    {"check_id": "PLATFORM-002", "description": "Jetson Linux and power mode", "mandatory": true, "status": "PASS", "observed": "L4T R36.5.0; nvpmodel reports MAXN_SUPER", "expected": "L4T R36.5; MAXN_SUPER", "evidence_file": "environment_snapshot.txt"},
+    {"check_id": "CUDA-001", "description": "CUDA platform path and runtime headers/library", "mandatory": true, "status": "PASS", "observed": "/usr/local/cuda resolves to /usr/local/cuda-12.6; cuda_runtime_api.h and libcudart.so are present", "expected": "CUDA 12.6 platform path and usable runtime artifacts", "evidence_file": "cuda_discovery.txt"},
+    {"check_id": "TRT-001", "description": "TensorRT headers, libraries, and package", "mandatory": true, "status": "BLOCKED", "observed": "NvInfer.h/NvInferRuntime.h and libnvinfer 10.3.0.30 are present, but ordinary g++ link fails because libnvinfer.so requires missing libnvdla_compiler.so", "expected": "Headers and libnvinfer usable by ordinary g++", "evidence_file": "tensorrt_discovery.txt; smoke_compile_stderr.log; smoke_ldd.log"},
+    {"check_id": "TRT-002", "description": "TensorRT Runtime creation", "mandatory": true, "status": "NOT_EXECUTED_BLOCKED", "observed": "Smoke executable was not produced after link failure", "expected": "createInferRuntime returns non-null and cleanup succeeds", "evidence_file": "smoke_compile_stderr.log"},
+    {"check_id": "TRTEXEC-001", "description": "trtexec discovery, version, and help", "mandatory": true, "status": "PASS", "observed": "/usr/src/tensorrt/bin/trtexec; TensorRT v100300; help exit code 0", "expected": "Executable matching TensorRT 10.3 with usable help", "evidence_file": "trtexec_version.txt; trtexec_help.txt"},
+    {"check_id": "TELEMETRY-001", "description": "Basic tegrastats sampling", "mandatory": true, "status": "PASS", "observed": "5-second sample includes RAM, CPU utilization/frequency, GR3D utilization, temperatures, and power rails", "expected": "Basic telemetry sample available", "evidence_file": "tegrastats_sample.log"},
+    {"check_id": "SMOKE-001", "description": "Ordinary g++ host-only CUDA + TensorRT smoke", "mandatory": true, "status": "BLOCKED", "observed": "g++ exit code 1 at link stage; no binary, ldd, or run phase", "expected": "Compile/link/run exit code 0 with CUDA and TensorRT mandatory operations passing", "evidence_file": "smoke_compile_command.txt; smoke_compile_stdout.log; smoke_compile_stderr.log; smoke_ldd.log"},
+    {"check_id": "SCOPE-001", "description": "No package/configuration/production-code changes and no K2", "mandatory": true, "status": "PASS", "observed": "Only K1 Evidence files are staged for this attempt; no install, system config, Engine build, D062, K2, push, merge, tag, or Stage P action", "expected": "K1 scope respected", "evidence_file": "README.md; commands.txt"}
+  ]
+}

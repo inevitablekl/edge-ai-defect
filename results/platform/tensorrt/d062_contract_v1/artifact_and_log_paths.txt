@@ -1,0 +1,19 @@
+Local artifact root:
+/home/orin/edge-ai-local-models/stage_k/
+
+Engine:
+/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine
+
+Build log:
+/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.build.log
+
+Inspection log:
+/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.inspection.log
+
+Load-engine smoke log:
+/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.load_smoke.log
+
+Tracked manifest after K2 verification:
+models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json
+
+The Engine itself is local-only and must not be committed.

@@ -2807,3 +2807,333 @@ Stage J Plan or historical Evidence.
 - Final report：`docs/personal/STAGE_J_FINAL_REPORT.md`。
 - Stage K：`READY_FOR_PLANNING`。
 - Stage T：`NOT_STARTED`；进入 planning review，尚未授权实现或执行。
+
+### 2026-07-27T20:05:25+08:00 - Stage K K0 Planning Freeze
+
+- Stage J 起点 commit/tag：`e49f28dd60a49493538d1fd65e5e8fd81676e277` /
+  `stage-j-complete-v1.0`；Stage J 当前状态：`COMPLETE`。
+- Stage K Execution Plan v1.1 FINAL 已正式冻结；K0 Planning Freeze：
+  `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`。
+- 已追加 D055–D061；D062 必须等待 K1 PASS 后再冻结。
+- fresh K0 inventory：Model Smoke OFF=`34`、ON=`42`；Stage J frozen
+  inventory：OFF=`31`、ON=`39`。
+- K1 尚未执行；当前尚无 TensorRT Engine 和 TensorRT backend。
+- backend-neutral raw tensor harness 是 K5 的 `planned_requirement`，不是
+  K0 实现。
+- Stage P Pipeline 是必需下游范围，但当前未授权：
+  `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`。
+
+### 2026-07-27T20:29:04+08:00 - Stage K K1 Platform Acceptance Attempt
+
+- Branch：`feature/jetson-tensorrt-fp16`；starting commit：
+  `865b3c0060a7c6ae5aea05b9f52bf79c4c344c59`。
+- K1 Evidence：`results/platform/tensorrt/k1_environment_v1`。
+- Observed platform：Jetson Orin Nano Engineering Reference Developer Kit Super，
+  `aarch64`，L4T `R36.5.0`，`MAXN_SUPER`；CUDA path
+  `/usr/local/cuda -> /usr/local/cuda-12.6`，CUDA package/runtime path `12.6.68`。
+- TensorRT headers/runtime package：`10.3.0.30-1+cuda12.5`；`NvInferPlugin.h`
+  与 `libnvinfer_plugin.so` 可用，仅记录，未初始化 plugin。
+- `trtexec`：`/usr/src/tensorrt/bin/trtexec`；输出 TensorRT `v100300`，
+  `--help` 返回 `0`。
+- `tegrastats`：`/usr/bin/tegrastats`；5 秒采样记录 RAM、CPU、GPU、温度和电源
+  rail；EMC 字段在本样本中不可用，作为 optional limitation 记录。
+- host-only `g++` smoke：`BLOCKED`；`libnvinfer.so` 的必需依赖
+  `libnvdla_compiler.so` 在系统路径和 dpkg 数据库中均未发现，故链接失败，
+  未产生可执行文件，未进入 CUDA/TensorRT Runtime 调用。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。未安装/升级软件，
+  未修改系统配置、电源模式、jetson_clocks 或生产代码。
+
+### 2026-07-27T20:57:30+08:00 - Stage K K1-R2 Package Repair and Platform Re-attempt
+
+- Starting branch：`feature/jetson-tensorrt-fp16`；starting commit：
+  `56e0c3d2991c1f541e5611460d440fc1cfbaadbe`；previous blocked Evidence：
+  `results/platform/tensorrt/k1_environment_v1`。
+- K1-R1 classification：`C_ABSENT_MATCHING_PACKAGE_AVAILABLE`。安装前 gate
+  重新确认 `nvidia-l4t-core=36.5.0-20260115194252`，candidate 为精确版本
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252`、`arm64`；APT simulation
+  仅新增该一个包，无升级、删除或降级。
+- 用户随后手动执行了唯一授权的精确安装命令；APT history 与 dpkg 均确认
+  `nvidia-l4t-dla-compiler=36.5.0-20260115194252:arm64` 已安装。Codex
+  未认证的首次安装尝试 exit code `1` 原样保留在 v2 Evidence，未覆盖。
+- `libnvdla_compiler.so` 已存在且为 AArch64 ELF，SONAME 为
+  `libnvdla_compiler.so`，SHA256：
+  `c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec`；但
+  `ldconfig -p`/`ldd libnvinfer.so.10` 仍显示 `libnvdla_compiler.so => not found`。
+  按授权未运行手工 `ldconfig`、未修改 loader 配置、未建 symlink。
+- 普通 `g++` smoke 编译 exit code `0`；smoke binary `ldd` 仍有
+  `libnvdla_compiler.so => not found`，运行 exit code `127`，未完成 CUDA
+  device/stream 或 TensorRT Runtime lifecycle。
+- CUDA 12.6.68、TensorRT 10.3.0.30、`trtexec --help` 和 tegrastats 基本
+  采样已记录；`trtexec --version` 因无 model 返回 `1`，未执行 ONNX 或 Engine。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
+  `results/platform/tensorrt/k1_environment_v2`。未修改生产代码或 Stage K
+  计划/Decision 文档。
+
+### 2026-07-27T21:12:55+08:00 - Stage K K1-R4 Dynamic Linker Cache Refresh
+
+- K1-R3 Evidence 已提交：`48f63918235ffac7e77aa5de4ba3383ebd758a8e`；R4 实际
+  起点为该 commit，原 R4 请求 HEAD `44d6ac385a3a2e61ac658346d653c00baa7f125e`
+  保留在 ancestry 中。
+- 用户手动完成唯一授权系统维护动作 `sudo ldconfig`；Codex 未再次执行 sudo。
+  cache 现包含 `/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so`，
+  `ldd libnvinfer.so.10` 和 smoke binary 均无 `not found`。
+- K1 host-only smoke source SHA 与 v2 一致；普通 g++ 编译成功，CUDA Runtime/
+  Driver、device count/properties、stream create/destroy、TensorRT Runtime
+  create/cleanup 全部 `PASS`。
+- `trtexec --help` exit `0`、`ldd` clean；`trtexec --version` 输出 TensorRT
+  `v100300` 但因无 model exit `1`，因此按 mandatory version/help gate 保持失败。
+  tegrastats 基本字段采样成功。
+- K1：`BLOCKED`；D062：`NOT_AUTHORIZED`；K2 仍未授权。Evidence：
+  `results/platform/tensorrt/k1_environment_v4`。
+
+### 2026-07-27T21:20:00+08:00 - Stage K K1 Disposition Review
+
+- 保留 K1-R4 原始 `trtexec --version` failure Evidence：命令输出 TensorRT
+  `v100300`，并报告 `Model missing or format not recognized`，exit code `1`。
+- Review 结论：该结果是 `non-blocking CLI behavior limitation`，不是
+  mandatory platform runtime failure。冻结 Task Card 的 required check 是
+  `trtexec help semantics`；`--help` exit `0`，且独立 host-only smoke 已验证
+  TensorRT Runtime 版本、创建/清理和 CUDA lifecycle。
+- TensorRT Runtime validation supersedes the `trtexec --version` command exit
+  status for K1 platform acceptance。
+- K1：`PASS`；D062：`READY`；D062 尚未执行或接受；K2 仍未授权。
+
+### 2026-07-27T21:22:31+08:00 - Stage K D062 Exact TensorRT Engine Build Contract
+
+- D062 已基于 K1 PASS 的真实 Jetson 环境和 TensorRT 10.3 `trtexec --help`
+  语义完成冻结；Evidence：`results/platform/tensorrt/d062_contract_v1`。
+- 冻结 `trtexec`：`/usr/src/tensorrt/bin/trtexec`；TensorRT `10.3.0.30`；
+  CUDA `12.6.68`；L4T `R36.5.0`。
+- 冻结合同：frozen ONNX、FP16 builder mode、mixed precision、static batch 1、
+  input `[1,3,640,640]`、FP32 CHW I/O、
+  `--memPoolSize=workspace:4096M`、`--saveEngine` 和 `--skipInference`。
+  TensorRT 10.3 未提供 `--workspace`，不采用 TensorRT 8.x 参数。
+- Engine 和 build/inspection/load-smoke logs 使用
+  `/home/orin/edge-ai-local-models/stage_k/` 本地路径；Engine 不提交 Git；
+  K2 后跟踪 manifest。
+- 未执行 `--onnx`、`--saveEngine`、`--loadEngine`、Engine build、D062 smoke、
+  生产代码或 CMake 修改。
+- D062：`ACCEPTED`；K2：`READY`；正式 Engine build 仍必须等待 K2 独立授权。
+
+### 2026-07-27T21:37:03+08:00 - Stage K K2 TensorRT Engine Build and Freeze
+
+- K2 使用 D062 唯一冻结 build command 成功生成正式 Engine；Evidence：
+  `results/build/tensorrt/k2_fp16_engine_v1`。
+- Engine：`/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine`；
+  size `8928756` bytes；SHA256：
+  `6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc`。
+- ONNX parser/build exit `0`；build log 显示 `Precision: FP32+FP16`、workspace
+  `4096 MiB`、FP32 CHW I/O、INT8 disabled、DLA disabled；无 custom/dynamic
+  plugin dependency。
+- Inspection exit `0`：`images=1x3x640x640`、`output0=1x10x8400`、static
+  profile min/opt/max 相同。Independent load smoke exit `0`，Engine deserialize、
+  binding creation 和 execution 均通过。
+- Manifest：`models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`；
+  Engine 保持 local-only，不提交 Git。K2：`COMPLETE`；K3：`READY`。
+- smoke 的 one-second GPU variance warning 已保留；不将该 smoke 作为正式性能
+  benchmark 或 speedup 结论。
+
+### 2026-07-27T22:00:00+08:00 - Stage K K3 Build and Schema Foundation
+
+- K3 起点确认：branch `feature/jetson-tensorrt-fp16`、HEAD
+  `bb537ea5dda43373882ea2622a8d9c8e67fca303`、worktree clean。
+- 新增 `EDGE_AI_ENABLE_TENSORRT`，默认 `OFF`；OFF 构建不引入 CUDA/TensorRT，
+  ON 构建检查 CUDA Runtime/TensorRT headers and libraries，并生成仅含
+  foundation stub 的 `edge_ai_backend_trt`，未启用 CUDA language 或 `.cu`。
+- RuntimeConfig v3 只接受 `tensorrt_fp16`、engine/manifest/device 字段；保持
+  v1/v2 parser 行为，unknown/duplicate/missing fields fail-fast，无环境变量覆盖。
+- 新增 TensorRT Engine Manifest parser（SHA256 与 input/output tensor identity
+  校验）、Result JSON v2 最小 metadata branch，以及 `create_inference_engine()`。
+  TensorRT factory dispatch 在 K3 明确返回 `NOT_IMPLEMENTED`。
+- OFF build、ON TensorRT foundation target、K3 专项 config/manifest/factory tests
+  和既有 C++ CTest 均通过；四项历史 Python CTest 因当前 `/usr/bin/python3.10`
+  缺少 `cv2` 而失败，不属于 K3 代码失败。
+- K3：`COMPLETE`；K4：`READY`。未执行 TensorRT inference、engine load、CUDA
+  stream/buffer、benchmark、pipeline 或生产 TensorRT backend。
+
+### 2026-07-27T22:30:00+08:00 - Stage K K4 TensorRtEngine Implementation
+
+- K4 实现真实 TensorRT 10.x backend；OFF 配置使用无 CUDA stub，ON 配置构建
+  `edge_ai_backend_trt` 并链接 CUDA Runtime/TensorRT。
+- 初始化严格执行 RuntimeConfig/Manifest/hash/ModelContract 校验，随后创建
+  TensorRT Runtime、Engine、单个 ExecutionContext、单个 CUDA stream 和持久化
+  input/output device buffers；Tensor 名称、静态 shape、FP32 dtype 和 device
+  location 均验证。
+- `run()` 仅使用 HostTensor、`cudaMemcpyAsync`、`setTensorAddress()`、
+  `enqueueV3()`、`cudaStreamSynchronize()` 和 output copy；无 binding index、
+  `enqueueV2`、每帧 CUDA allocation、dynamic batch 或 multi-stream。
+- Jetson 真实 Engine 单元/集成测试通过：null output、empty/invalid input、engine
+  hash、contract hash、ModelContract/tensor mismatch、output unchanged、两次连续
+  inference、finite output 和 exact output shape 均覆盖。
+- ON 全量构建与 K4 smoke、OFF 构建与 ORT/K3 regression 均通过。K4：`COMPLETE`；
+  K5：`READY`。未执行 benchmark、correctness campaign、Pipeline 或 GPU
+  preprocessing/NMS。
+
+### 2026-07-27T22:45:51+08:00 - Stage K K5 Correctness Tooling Foundation
+
+- 起点确认：branch `feature/jetson-tensorrt-fp16`、HEAD
+  `710fd517e673906fb9d506e7e4f85d38618e9a1a`、worktree clean。
+- 新增 backend-neutral `stage_k_raw_tensor_runner`：通过 RuntimeConfig v2/v3、
+  ModelContractLoader、`create_inference_engine()` 和 `IInferenceEngine::run()`
+  处理 frozen FP32 NCHW input raw tensor，输出 atomic FP32 BCN raw tensor 与
+  output manifest；不执行 preprocessing/postprocessing，不实现 fallback。
+- 新增 `stage_k_level_b_compare.py`：strict JSON、逐 tensor identity/contract/
+  finite/SHA 校验，ORT strict/cross-architecture 与 TensorRT FP16 policy，
+  Hyndman–Fan Type 7 P99，以及 ORT output SHA repeatability check。新增 synthetic
+  focused tests，不依赖 OpenCV；新增 raw runner subprocess tests 覆盖 malformed/
+  missing/SHA/size/shape/non-finite/config/overwrite/order/output contract 和 failure
+  atomicity。
+- fresh OFF configure/build、OFF Stage K CTest、fresh ON configure/build、ON
+  Stage K CTest 与既有 K4 TensorRT test 通过。完整 OFF CTest 的四项历史 Python
+  测试因当前 `/usr/bin/python3.10` 缺少 `cv2` 失败，未安装依赖且不归因于本轮代码。
+- checkerboard 单 tensor ORT v2 与 TensorRT v3 tooling smoke 均生成合法 output
+  manifest；ORT repeatability SHA 比较通过。ORT/TensorRT comparator 产生真实
+  metrics，但 checkerboard TensorRT policy 因 bbox `max_abs` 超过 4.0 而 FAIL；
+  该结果标记为 `NON_FORMAL_TOOLING_SMOKE_ONLY`，不构成 K5 PASS 或正式 Evidence。
+- 本轮未执行 Level C、boundary disposition、K6、benchmark、stability、Pipeline、
+  GPU preprocessing/NMS 或正式 16-image correctness campaign。
+
+### 2026-07-27T23:05:41+08:00 - Stage K K5.1 Python ORT Reference Bundle
+
+- 执行环境：WSL2 x86_64；Python 3.10.12；ONNX Runtime 1.23.2；OpenCV
+  4.10.0；NumPy 1.26.4；实际 ORT provider 为 `CPUExecutionProvider`。
+- Reference Bundle ID：`stage_k_level_b_reference_v1`；冻结 J4.3 v2 corpus
+  manifest SHA256：`687682f37d1affbe8813a9e7287b42dc28a9a8b9ea8d67f8b85175960f3e2dcd`；
+  source commit：`c9586c219178eeec17864c8c2cf75a1d5bc90101`。
+- Generator：`tools/validation/generate_stage_k_level_b_reference.py`，SHA256：
+  `ddfffdb71e5fb0276c3fff4a16701ad18e9a93ca783793e9a56eefd988e9f8e7`。
+  16/16 input tensor 和 16/16 Python ORT raw output 已生成并通过合同、SHA
+  与独立 regeneration byte-identical 检查。
+- Canonical archive：
+  `/home/ros2/edge-ai-local-evidence/stage_k/reference/stage_k_level_b_reference_v1.tar.gz`；
+  SHA256：`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`；
+  size：`13072955` bytes。
+- Jetson transfer：`JETSON_TRANSFER_PENDING`；当前 WSL 没有明确 SSH target，
+  未猜测 IP、用户名或认证方式。K5.1：`COMPLETE`；K5.2 尚未执行。
+
+### 2026-07-27T23:49:10+08:00 - Stage K K5.2–K5.6 Correctness Campaign
+
+- K5.1 reference asset accepted: archive SHA256
+  `fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`,
+  size `13072955` bytes; bundle manifest, ONNX, ModelContract, input manifest,
+  reference output manifest, 16/16 inputs and 16/16 outputs passed verification.
+- K5.2 Level C comparator and focused tests were implemented. Source commits:
+  `dcb10a55909b78928fef95fa825c51514ec0e512`,
+  `c54020c18c98dbee408131f6642680f44d3ab433`, and
+  `ca8393556689b738ac8991530f5eabb11696d560`; the final fresh Release build
+  passed the focused 12/12 CTest set.
+- Formal attempt 001 was retained and invalidated by two discovered raw-runner
+  contract/identity defects. Attempt 002 is the current formal attempt after
+  the fixes; raw artifacts remain local-only.
+- ORT Level B repeatability passed: 16/16 outputs were byte-identical across
+  two runs. Strict comparison passed 0/16. Cross-architecture comparison
+  passed 4/16; worst overall MAE was `2.0134166237853822e-05`, exceeding the
+  `1e-5` limit, while the other reported maxima remained within their limits.
+  Disposition: `ORT_CONTROL_FAIL`.
+- The K5 gate therefore stopped before formal ORT Level C, TensorRT Level B,
+  TensorRT Level C, and boundary investigation. K5 status: `FAILED` / formal
+  result `K5 FAIL`; K6 is `NOT READY`. No benchmark, stability, Pipeline,
+  GPU preprocessing/NMS, INT8, DLA, dynamic-shape, ROS2, camera, or DeepStream
+  work was executed.
+- Evidence: local attempt data is under
+  `/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
+  the small tracked summary is under
+  `results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.
+
+### 2026-07-28 - Stage K D063 Decision Review and K5 Disposition
+
+- K5 current live status：`FAILED_BY_GATE_REVIEW_PENDING_D063`；formal K5
+  campaign remains failed by `ORT_CONTROL_FAIL`。
+- D063：`ADDED`。The decision review records the diagnostic verdict
+  `DIAGNOSIS_B` (`Architecture/kernel numerical drift dominant`) as the
+  inherited D048 cross-architecture ORT limitation.
+- Diagnostic evidence confirms input identity, Reference Bundle integrity,
+  Jetson ORT determinism, and no material influence from CPU arena, memory
+  pattern, or tested thread configurations. Drift remains bbox-dominated;
+  score channels remain stable。
+- D063 updates only the ORT control disposition path. It does not change
+  TensorRT tolerances, the Reference Bundle, ONNX, or ModelContract. K5
+  rerun is required before K6；TensorRT Level B/C and K6 remain unexecuted。
+
+### 2026-07-28 - Stage K K5.2 ORT Control Re-evaluation after D063
+
+- New immutable Evidence：`results/validation/jetson_tensorrt_fp16/k5_correctness_v2/`；旧
+  `k5_correctness_v1` failure Evidence unchanged。
+- ORT Level B：16/16 inference `PASS`；strict Gate remains `FAIL` under the
+  unchanged thresholds；Jetson repeatability `16/16 byte-identical`。
+- D063 inherited evaluation：input identity、exact output shape、finite output、
+  bbox-dominated numerical pattern、bounded score channels and no anomalous
+  single-point failure all satisfy the disposition conditions。
+- ORT Level C：原始 Stage J strict semantic comparison `16/16 PASS`；confidence
+  and bbox tolerances unchanged。
+- Current ORT Control disposition：`INHERITED_CROSS_ARCH_LIMITATION`。这不是
+  TensorRT correctness closeout；TensorRT Level B/C、benchmark、stability、
+  Pipeline 与 K6 均未执行。
+
+### 2026-07-28 - Stage K K5.3 TensorRT Level B Correctness Evaluation
+
+- New immutable Evidence：`results/validation/jetson_tensorrt_fp16/k5_correctness_v3/`。
+  Frozen Engine SHA、ONNX SHA、ModelContract SHA 与 Reference Bundle SHA
+  均完成身份核对，未重新 build Engine。
+- TensorRT raw output：16/16 inference `PASS`；shape exact `[1,10,8400]`；
+  finite output 16/16。
+- Frozen `tensorrt_fp16` Level B comparator：`1/16 PASS`、`15/16 FAIL`。
+  最大 bbox `max_abs=23.29144287109375` 超过 `4.0`；最大 score
+  `max_abs=0.021184921264648438` 超过 `0.02`。
+- K5.3：`TENSORRT_LEVEL_B_FAIL`。未修改 TensorRT tolerance、Engine、ONNX、
+  ModelContract、Reference Bundle 或 ORT control；TensorRT Level C、boundary
+  investigation、benchmark、stability、Pipeline 与 K6 均未执行。
+
+### 2026-07-28 - Stage K K2R Sensitivity-Aware Precision Remediation and K5.3 Re-evaluation
+
+- D064 was accepted independently at commit
+  `ac53fe71006445a826730d520233a00873639d3c`. The frozen ONNX,
+  ModelContract, Reference Bundle, TensorRT Level B comparator, tolerances,
+  and original Engine/K5.3 failure were not modified.
+- C0 `--noTF32` diagnostic built and loaded successfully but remained
+  `1/16 PASS`; therefore TF32 was not the dominant cause. C1 built with the
+  exact traced terminal BBox/DFL/decode FP32 policy and also remained
+  `1/16 PASS`.
+- C2 was authorized after the C1 failure. It built and independently loaded
+  successfully with the maximum D064 scope: 39 exact traced BBox front-end,
+  DFL, and decode nodes constrained FP32; Backbone, Neck, and classification
+  remained outside the policy. C2 Level B was `0/16 PASS`, `16/16 FAIL`.
+- K2R verdict：`K2R_COMPLETE_LEVEL_B_FAIL`。C1/C2 均未通过冻结 gate，未选择
+  Engine；K4 regression 与新正式 K5.3 不执行，K5.4：`NOT READY`。
+- Tracked summary：`results/build/tensorrt/k2r_precision_remediation_v1/`；
+  complete logs/raw tensors/engines remain local-only under
+  `/home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/`
+  and `/home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1/`。
+- No Level C/K6/benchmark/stability/Pipeline/GPU preprocessing or NMS/INT8/
+  DLA/ONNX rewrite/C++ Builder/Polygraphy/package/push/merge/tag work was
+  performed.
+
+## 2026-07-29 - Stage K Final Status and K8 Finalization
+
+- Stage K：`COMPLETE`。
+- K5：`COMPLETE`，最终 task-level verdict：`TASK_LEVEL_FP16_ACCEPTED`。
+- K6：`COMPLETE`，最终 stability verdict：`K6_STABILITY_PASS`。
+- K7：`COMPLETE`，最终 performance verdict：`K7_PERFORMANCE_COMPLETE`。
+- K8 finalization work item：`IN_PROGRESS` during this status update；本轮只做
+  evidence consolidation、D066 decision freeze 和 documentation update。
+- K8 不执行新 benchmark、新 accuracy experiment 或新 precision search；不
+  修改 Engine、ONNX、ModelContract、Runtime、Comparator tolerance、已有
+  benchmark result 或已有 Evidence。
+- Final summary：`results/validation/stage_k8/final_summary_v1/`。
+- Final deployment candidate：`Original TensorRT FP16 Engine`。
+- Stage P Pipeline remains downstream scope and is not included in this task。
+
+## 2026-07-29 - Stage K Post-Finalization Repository Cleanup
+
+- Stage K cleanup：`COMPLETE`。
+- Official evidence remains at the original paths under
+  `results/validation/stage_k6/`, `stage_k7/`, `stage_k_task_eval_v2/` and
+  `stage_k8/`；K5/K6/K7/K8 Evidence content was not modified。
+- Diagnostic and superseded investigation assets were moved to
+  `results/archive/stage_k_diagnostics_v1/`；每个移动文件的原路径、新路径和
+  SHA256 记录在 `archive_manifest.json`。
+- Cleanup inventory：`results/validation/stage_k_cleanup_audit_v1/`。
+- Three confirmed Python bytecode cache files were deleted；no experiment was
+  rerun，no source/Engine/ONNX/ModelContract/tolerance was changed。
+- Stage P development may start from the cleaned repository state under its
+  separately authorized task boundary。

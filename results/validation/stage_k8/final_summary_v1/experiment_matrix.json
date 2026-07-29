@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k8_experiment_matrix",
+  "matrix_id": "final_summary_v1",
+  "stage_k_status": "COMPLETE",
+  "entries": [
+    {
+      "stage": "K0-K4",
+      "scope": "planning, platform, Engine, schema, and TensorRT backend foundation",
+      "status": "COMPLETE",
+      "result": "Original TensorRT FP16 Engine and serial backend frozen for validation",
+      "new_experiment_in_k8": false
+    },
+    {
+      "stage": "K5",
+      "scope": "task-level accuracy validation",
+      "status": "COMPLETE",
+      "result": "TASK_LEVEL_FP16_ACCEPTED",
+      "accuracy": {
+        "strict_fp32": {
+          "precision": 0.631474,
+          "recall": 0.717195,
+          "map50": 0.654858,
+          "map50_95": 0.359086
+        },
+        "original_fp16": {
+          "precision": 0.634731,
+          "recall": 0.719457,
+          "map50": 0.656024,
+          "map50_95": 0.359550
+        }
+      },
+      "raw_tensor_level_b": "FAIL",
+      "raw_tensor_failure_reason": "bbox-dominated raw tensor numerical deviation",
+      "evidence": "results/validation/stage_k_task_eval_v2/metrics/"
+    },
+    {
+      "stage": "K6",
+      "scope": "continuous serial stability",
+      "status": "COMPLETE",
+      "result": "K6_STABILITY_PASS",
+      "frames": 84420,
+      "duration_seconds": 1802.819,
+      "success_rate": 1.0,
+      "evidence": "results/validation/stage_k6/stability_v1/"
+    },
+    {
+      "stage": "K7",
+      "scope": "formal serial performance benchmark",
+      "status": "COMPLETE",
+      "result": "K7_PERFORMANCE_COMPLETE",
+      "reference": {
+        "label": "Strict FP32",
+        "inference_mean_ms": 12.914213,
+        "e2e_mean_ms": 18.813333
+      },
+      "candidate": {
+        "label": "Original TensorRT FP16",
+        "inference_mean_ms": 11.164944,
+        "e2e_mean_ms": 17.065202
+      },
+      "speedup": {
+        "inference": 1.156675,
+        "e2e": 1.102438
+      },
+      "evidence": "results/validation/stage_k7/performance_v1/"
+    },
+    {
+      "stage": "K8",
+      "scope": "finalization and evidence consolidation",
+      "status": "COMPLETE",
+      "result": "D066 decision freeze; no new experiment",
+      "final_candidate": "Original TensorRT FP16 Engine",
+      "evidence": "results/validation/stage_k8/final_summary_v1/"
+    }
+  ],
+  "decision_rule": "Accept FP16 using task accuracy, stability, and performance; retain raw tensor Level B limitation.",
+  "known_downstream_scope": "Stage P Pipeline optimization remains downstream work and was not executed by K8."
+}

@@ -1,0 +1,15 @@
+/usr/local/cuda-12.6
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Wed_Aug_14_10:14:07_PDT_2024
+Cuda compilation tools, release 12.6, V12.6.68
+Build cuda_12.6.r12.6/compiler.34714021_0
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so.12
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so
+/usr/local/cuda-12.6/targets/aarch64-linux/lib/libcudart.so.12.6.68
+/usr/local/cuda-12.6/targets/aarch64-linux/include/cuda_runtime_api.h
+	libcudart.so.12 (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so.12
+	libcudart.so (libc6,AArch64) => /usr/local/cuda/targets/aarch64-linux/lib/libcudart.so
+	libcuda.so.1 (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libcuda.so.1
+	libcuda.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libcuda.so
+	libcuda.so (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/nvidia/libcuda.so

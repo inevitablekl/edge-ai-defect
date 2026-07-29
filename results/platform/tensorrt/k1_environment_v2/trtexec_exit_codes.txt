@@ -1,0 +1,3 @@
+trtexec_version_rc=1
+trtexec_help_rc=0
+trtexec_ldd_rc=0

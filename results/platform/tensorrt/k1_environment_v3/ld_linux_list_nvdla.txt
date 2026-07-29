@@ -1,0 +1,7 @@
+	linux-vdso.so.1 (0x0000ffff7fe26000)
+	libnvos.so => /usr/lib/aarch64-linux-gnu/nvidia/libnvos.so (0x0000ffff7f5b0000)
+	libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffff7f380000)
+	libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffff7f2e0000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffff7f130000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffff7fded000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffff7f100000)

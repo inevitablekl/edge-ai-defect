@@ -3261,3 +3261,374 @@ production inference algorithm change.
 5. Stage K Planning：`READY_FOR_PLANNING`，允许开始下一阶段规划审查。
    Stage T remains `NOT_STARTED` and `NOT_AUTHORIZED` for implementation or
    execution until separate next-stage planning and governance authorization。
+
+### D055 - Resolve Stage K and Historical Stage T Naming
+
+状态：`Accepted`
+
+D055 refines and freezes the formal execution naming after D054.
+D054 remains an unchanged historical planning fact and is not
+rewritten.
+
+Stage K is the formal TensorRT serial backend stage.
+Historical Stage T remains a non-executed placeholder.
+Stage J closure, accepted limitations and final Evidence remain
+historical facts.
+Stage K does not reopen superseded Stage J draft gates.
+Stage P remains the formal required downstream Pipeline stage.
+
+### D056 - Use Direct TensorRT C++ Runtime API
+
+状态：`Accepted`
+
+TensorRT candidate backend uses the direct TensorRT C++ Runtime API.
+ONNX Runtime TensorRT EP, provider fallback and ORT GPU rebuild
+are excluded.
+
+### D057 - Freeze Offline FP16-Enabled Engine Build
+
+状态：`Accepted`
+
+The Engine is built offline with trtexec.
+FP16 builder mode is enabled.
+The Engine is mixed precision; all-layer FP16 is not claimed.
+Host I/O remains FP32.
+Batch=1 and static 640×640 shape are frozen.
+An explicit memory-pool limit and exact command must be frozen
+by D062 after K1 and before formal K2 execution.
+
+### D058 - Preserve Synchronous HostTensor Backend Boundary
+
+状态：`Accepted`
+
+TensorRtEngine implements IInferenceEngine.
+The public API remains synchronous HostTensor input/output.
+inference_ms is backend host-roundtrip latency.
+Execution uses one CUDA stream with ordered H2D, enqueueV3,
+D2H and synchronization.
+Persistent CUDA device buffers are required. Per-frame CUDA
+allocation and per-frame stream or ExecutionContext creation are
+prohibited. Caller-owned output remains an owned HostTensor, so
+the Decision does not claim zero host allocation.
+CUDA preprocessing, pinned-buffer optimization, GPU NMS,
+multi-stream and Pipeline are excluded from Stage K.
+
+### D059 - Introduce RuntimeConfig v3 and Result Metadata v2
+
+状态：`Accepted`
+
+RuntimeConfig v3 accepts only tensorrt_fp16.
+v1/v2 behavior remains unchanged.
+v3 runtime requires Engine, Engine Manifest and ModelContract.
+The actual source ONNX file is not a runtime dependency.
+TensorRT support is optional through CMake.
+ORT Result JSON schema v1 remains unchanged.
+TensorRT Result JSON schema v2 is a minimal metadata extension
+of the existing v1 image, detection, postprocess, timing and
+summary body semantics.
+The existing candidate_index field remains for compatibility and
+diagnostic candidate identity, but it is not a normal matching
+criterion or sufficient boundary evidence by itself.
+The implementation reuses the existing sink and detection
+serialization path and does not introduce a schema registry or
+parallel sink framework.
+RuntimeConfig and Result JSON schema versions are independent
+version namespaces.
+
+### D060 - Freeze Correctness Authority and Numerical Policy
+
+状态：`Accepted`
+
+Python ORT explicit Reference remains authoritative.
+C++ ORT is the same-commit regression control.
+TensorRT is the candidate backend.
+C++ ORT Level C retains the Stage J strict detection tolerances.
+C++ ORT Level B first evaluates the Stage J strict raw-output Gate.
+When that strict Gate is not met solely because of the already
+accepted WSL-to-Jetson cross-architecture numerical behavior,
+a D048-derived per-tensor Gate may close the control with an
+explicit inherited cross-architecture limitation. The Jetson C++
+ORT output must be repeatable and its per-tensor canonical SHA
+must be recorded.
+Level B uses 16 frozen image-derived tensors and per-tensor MAE,
+Type-7 P99 where applicable, and max-absolute-error metrics.
+The derivative Reference Bundle is generated in the existing
+validated WSL Python ORT environment and transferred to Jetson
+with SHA verification.
+Level C uses original-image coordinates and deterministic maximum
+matching.
+Threshold-boundary variation requires exact candidate identity
+and raw-output evidence. A targeted diagnostic record is generated
+only when an actual mismatch or boundary case occurs.
+A full all-candidate postprocess provenance or replay framework
+is not a Stage K requirement.
+
+### D061 - Freeze Benchmark, Stability, Evidence and Downstream Scope
+
+状态：`Accepted`
+
+Formal comparison reruns ORT k5 and TensorRT from the same source
+commit and the same executable SHA.
+The backends use separately frozen configuration files and
+configuration SHA values. Shared RuntimeConfig fields are verified
+semantically equivalent. Timing-stage equivalence is verified
+through the common Stage K profile runner, executable and trace
+schema rather than configuration SHA equality.
+Five independent runs per backend, 60 warmup and 500 measured
+frames are sufficient. Run-level statistics and paired speedups
+are primary; pooled frames are descriptive only.
+TensorRT receives one 30-minute stability run using the inherited
+Stage J J6 stability and telemetry semantics.
+K0–K9 are logical gates and do not require separate full evidence
+packages, separate commits or separate implementation cycles.
+Stage P Pipeline optimization remains required downstream project
+scope, but is outside Stage K and is not authorized before Stage K
+closeout.
+Evidence remains research-grade and does not claim industrial
+certification. Only formal or decision-relevant failures require
+retention.
+
+### D062 - Freeze Exact TensorRT Engine Build Contract
+
+状态：`Accepted`
+
+D062 freezes the offline TensorRT Engine build contract after K1 PASS on the
+real Jetson environment. No formal Engine was built while accepting this
+Decision.
+
+Environment identity:
+
+- Jetson Orin Nano Engineering Reference Developer Kit Super, `aarch64`
+- L4T `R36.5.0`
+- CUDA `12.6.68`
+- TensorRT `10.3.0.30`
+- trtexec `/usr/src/tensorrt/bin/trtexec`, TensorRT `v100300`
+- Frozen ONNX SHA256:
+  `c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944`
+- Frozen ModelContract SHA256:
+  `9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190`
+
+Exact build contract:
+
+```text
+/usr/src/tensorrt/bin/trtexec \
+  --onnx=models/onnx/yolov8n_neudet_frozen.onnx \
+  --fp16 \
+  --memPoolSize=workspace:4096M \
+  --inputIOFormats=fp32:chw \
+  --outputIOFormats=fp32:chw \
+  --saveEngine=/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine \
+  --skipInference
+```
+
+The frozen model contract is static batch 1, input `[1,3,640,640]`, output
+`[1,10,8400]`, with FP32 host I/O. `--minShapes`, `--optShapes`, and
+`--maxShapes` are intentionally omitted because dynamic profiles are disabled.
+TensorRT 10.3 help exposes `--memPoolSize=poolspec` and does not expose the
+TensorRT 8.x `--workspace` option. The selected `workspace:4096M` is an
+explicit reproducibility ceiling, not a measured optimum claim. FP16 enables
+mixed-precision builder selection; it does not claim all-layer FP16.
+
+Engine artifacts remain local-only under
+`/home/orin/edge-ai-local-models/stage_k/`. K2 will create and verify the
+Engine, build log, inspection log and independent load-engine smoke log.
+The tracked manifest is
+`models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json`.
+
+D062 Evidence:
+`results/platform/tensorrt/d062_contract_v1`.
+K2 is `READY`; formal Engine build remains separately authorized only by K2.
+
+### D063 - Accept Stage K ORT Cross-Architecture Numerical Limitation
+
+状态：`Accepted`
+
+Stage K K5 exposed numerical drift between WSL `x86_64` Python ONNX
+Runtime 1.23.2 and Jetson `aarch64` C++ ONNX Runtime 1.23.2. The formal
+K5 result remains `K5_FAILED` / `ORT_CONTROL_FAIL`; this Decision records
+the reviewed disposition path and does not rewrite that historical failure.
+
+新增诊断证据保存在
+`/home/orin/edge-ai-local-evidence/stage_k/diagnostics/ort_cross_arch_drift_diagnostic_v1/diagnostic_attempt_001/diagnostic_report.json`.
+The diagnostic verdict is `DIAGNOSIS_B` — architecture/kernel numerical
+drift dominant. The frozen Reference Bundle was verified with SHA256
+`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`;
+all 16/16 input tensor identities were verified. Jetson C++ ORT output was
+deterministic and 16/16 repeatability checks were byte-identical. CPU arena
+off, memory pattern off, and thread configurations `1/1`, `2/1`, and `4/1`
+showed no material runtime-configuration influence; only the `4/1` case
+showed a minor change. The remaining drift is bbox-dominated, while score
+channels remain stable at approximately `2.9e-8` MAE.
+
+Decision:
+
+- The observed behavior is the D048-inherited cross-architecture numerical
+  limitation class.
+- Stage K accepts this limitation as a known boundary of the ORT baseline
+  control, subject to the closure conditions below.
+- D063 does not modify TensorRT Level B tolerance, TensorRT Level C
+  tolerance, the Reference Bundle, ONNX, or ModelContract.
+
+ORT Level B may use the disposition
+`ORT_CONTROL_PASS_WITH_INHERITED_CROSS_ARCH_LIMITATION` only when all of the
+following are satisfied in the applicable formal review:
+
+- input identity `PASS`;
+- output shape `PASS`;
+- finite `PASS`;
+- Jetson repeatability `PASS`;
+- score deviation bounded;
+- bbox deviation within the accepted numerical envelope; and
+- no semantic regression.
+
+D063 does not make K5 pass, does not authorize TensorRT Level B/C or K6,
+and does not remove the requirement for a K5 rerun before K6.
+
+### D064 — Reopen K2 for Bounded Sensitivity-Aware TensorRT Precision Remediation
+
+状态：`Accepted`
+
+D064 reopens K2 in a bounded, numerical-precision-only remediation of the
+historical TensorRT Level B failure. The original D062 and original Engine
+remain frozen historical facts. The original Engine's K5.3 Level B `FAIL`
+remains unchanged and is not rewritten.
+
+The global TensorRT `--fp16` builder mode remains enabled. New candidates
+must disable TF32 with `--noTF32`. Only layers confirmed by actual graph
+tracing to belong to the BBox regression, DFL, or decode-sensitive path may
+be constrained to FP32. Backbone, Neck, and the classification branch remain
+unconstrained and FP16-enabled mixed precision. No guessed layer names are
+permitted.
+
+The ONNX, ModelContract, Host FP32 I/O, static batch 1, static 640 input,
+TensorRT Level B/C tolerances, Level B comparator, Level B gate, ORT control,
+Reference Bundle, TensorRtEngine, RuntimeConfig parser, and result schemas are
+unchanged. K2R may create one local-only noTF32 diagnostic Engine C0 and at
+most two sensitivity-aware formal candidates C1/C2. C1 is the terminal BBox
+sensitive subgraph policy; C2, authorized only when C1 fails, is the maximum
+policy covering the complete BBox regression branches through decode while
+still excluding Backbone, Neck, and classification. All constrained layers
+must use `precisionConstraints=obey` with exact `layerPrecisions` and required
+`layerOutputTypes` controls; no global non-BBox FP16 constraint is allowed.
+
+The smallest candidate that passes the frozen TensorRT Level B Gate at 16/16
+is selected. If both C1 and C2 fail, no Engine is selected, K5.3 remains
+`FAIL`, and K5.4 remains `NOT READY`; the FP32 scope is not expanded. TensorRT
+Level C, K6, benchmark, stability, Pipeline, GPU preprocessing/NMS, INT8,
+DLA, ONNX rewrite, model re-export, C++ Builder, Polygraphy, package changes,
+push, merge, and tag are not authorized. K5.4 remains unauthorized until a
+new selected Engine formally passes K5.3 Level B 16/16.
+
+### D065 — Establish Strict FP32 TensorRT Baseline and Authorize Bounded Selective-FP16 Investigation
+
+状态：`Accepted`
+
+Python ORT remains the correctness authority for this investigation. The
+Strict FP32 noTF32 TensorRT Engine is the TensorRT-side correctness baseline;
+it is not a replacement for the Python ORT Reference Bundle. The original
+FP16 Engine, TF32-enabled FP32 Engine, and the failed K2R C1/C2 results remain
+frozen historical evidence. TensorRT Level B and Level C gates and their
+unchanged tolerances are not modified.
+
+This decision authorizes a bounded investigation with global TensorRT FP16
+builder mode enabled, TF32 disabled, and `precisionConstraints=obey`. Only
+graph-traced Detect/BBox-sensitive operations may be constrained to FP32,
+including the BBox terminal path, DFL, Softmax, projection/integral,
+Slice/Sub/Concat, coordinate decode, and stride multiplication. Backbone and
+Neck must remain unconstrained; no global non-Detect FP16 constraint is
+permitted.
+
+Because K2R C1 already tested the bbox-only policy under noTF32, and C2 tested
+the complete traced BBox regression scope under noTF32, this investigation
+must not rebuild an equivalent bbox-only candidate. At most two new candidates
+are authorized: M1 (BBox/DFL/decode FP32) and M2 (the complete ONNX
+`/model.22` Detect Head FP32). Under the current legacy audit, only the new
+M2 route is eligible. M2 is the maximum allowed FP32 scope; if it fails, the
+investigation stops without expanding FP32 into Backbone or Neck.
+
+Every constrained layer requires exact layer identity, graph-ancestry evidence,
+FP32 compute precision, and the required FP32 output type. If mapping,
+inspection, or the TensorRT toolchain cannot establish those facts, the
+investigation is blocked. A candidate may enter performance precheck only
+after 16/16 Level B, 16/16 TensorRT Level C, and byte-identical repeatability
+pass. Performance precheck is non-formal: compared with Strict FP32, it
+requires paired median backend latency improvement of at least 10% and 3/3
+independent mixed runs no slower than their paired Strict FP32 runs. It does
+not authorize K6, stability, Pipeline, formal benchmarking, production
+runtime changes, manifest replacement, push, merge, or tag.
+
+### D066 - Accept TensorRT FP16 Deployment Candidate Based on Task-Level Validation
+
+时间：
+
+```text
+2026-07-29
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+主题：
+
+Accept TensorRT FP16 deployment candidate based on task-level validation。
+
+背景：
+
+TensorRT FP16 raw tensor does not satisfy strict numerical equality. The
+frozen TensorRT FP16 Level B result is `FAIL`, with the retained failure
+characterized as bbox-dominated raw tensor numerical deviation. This raw
+tensor limitation is not removed or rewritten by the Stage K8 summary.
+
+决策：
+
+Accept the Original TensorRT FP16 Engine as the final Stage K serial
+deployment candidate based on the combined evidence of:
+
+- task accuracy;
+- continuous stability; and
+- formal serial performance.
+
+The acceptance criterion is task-level deployment behavior, not bitwise raw
+tensor equality. The frozen task-level verdict is
+`TASK_LEVEL_FP16_ACCEPTED`; the inherited stability verdict is
+`K6_STABILITY_PASS`; and the formal benchmark verdict is
+`K7_PERFORMANCE_COMPLETE`.
+
+限制：
+
+The raw tensor Level B limitation remains documented and remains part of the
+final deployment evidence. This Decision does not claim strict raw-tensor
+equality, industrial certification, universal TensorRT superiority, or
+Pipeline completion.
+
+影响范围：
+
+- freezes the Original TensorRT FP16 Engine as the Stage K deployment
+  candidate;
+- establishes task accuracy, stability, and performance as the acceptance
+  basis for this candidate;
+- preserves the raw Level B failure as a known numerical boundary; and
+- closes Stage K documentation and evidence consolidation without changing
+  Engine, ONNX, ModelContract, runtime implementation, comparator tolerance,
+  benchmark results, or existing Evidence.
+
+备选方案：
+
+- reject the FP16 candidate because raw tensors are not bitwise equal;
+- select the Strict FP32 reference as the deployment candidate; or
+- continue precision search.
+
+选择理由：
+
+The existing task-level accuracy, stability, and formal K7 performance
+evidence support the Original TensorRT FP16 candidate. K8 is a consolidation
+and freeze activity, so it does not generate new evidence or reopen precision
+search.
+
+后续是否可调整：
+
+可调整。若后续获得新的授权和真实证据，可重新评估部署候选；任何此类
+变化必须新增 Decision，并不得改写本 Decision 或历史 raw tensor Evidence。

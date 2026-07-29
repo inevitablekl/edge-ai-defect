@@ -1,0 +1,113 @@
+$ find /usr/include /usr/local/include /usr/src /usr/lib /lib -name NvInfer.h -o -name NvInferRuntime.h -o -name NvInferPlugin.h -o -name 'libnvinfer.so*' -o -name 'libnvinfer_plugin.so*' 2>/dev/null
+/usr/include/aarch64-linux-gnu/NvInferRuntime.h
+/usr/include/aarch64-linux-gnu/NvInfer.h
+/usr/include/aarch64-linux-gnu/NvInferPlugin.h
+/usr/lib/aarch64-linux-gnu/libnvinfer.so.10
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so
+/usr/lib/aarch64-linux-gnu/libnvinfer.so.10.3.0
+/usr/lib/aarch64-linux-gnu/libnvinfer.so
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so.10
+/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so.10.3.0
+$ ldconfig -p | grep -E 'libnvinfer|libnvinfer_plugin|libnvonnxparser' || true
+	libnvonnxparser.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvonnxparser.so.10
+	libnvonnxparser.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvonnxparser.so
+	libnvinfer_vc_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so.10
+	libnvinfer_vc_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_vc_plugin.so
+	libnvinfer_plugin.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so.10
+	libnvinfer_plugin.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_plugin.so
+	libnvinfer_lean.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so.10
+	libnvinfer_lean.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_lean.so
+	libnvinfer_dispatch.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so.10
+	libnvinfer_dispatch.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer_dispatch.so
+	libnvinfer.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so.10
+	libnvinfer.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so
+$ dpkg-query -W 'libnvinfer*' 'tensorrt*' 'libnvonnxparsers*' 'libcudnn*' 'cuda-*' 2>&1 || true
+cuda-12-6	12.6.11-1
+cuda-cccl-12-6	12.6.37-1
+cuda-command-line-tools-12-6	12.6.11-1
+cuda-compiler-12-6	12.6.11-1
+cuda-crt-12-6	12.6.68-1
+cuda-cub-12-6
+cuda-cudart-11-2
+cuda-cudart-12-6	12.6.68-1
+cuda-cudart-cross-aarch64-12-0
+cuda-cudart-cross-aarch64-12-1
+cuda-cudart-cross-aarch64-12-2
+cuda-cudart-cross-aarch64-12-3
+cuda-cudart-cross-aarch64-12-4
+cuda-cudart-cross-aarch64-12-5
+cuda-cudart-cross-aarch64-12-6
+cuda-cudart-cross-aarch64-12-7
+cuda-cudart-cross-aarch64-12-8
+cuda-cudart-cross-aarch64-12-9
+cuda-cudart-dev-12-6	12.6.68-1
+cuda-cuobjdump-12-6	12.6.68-1
+cuda-cupti-12-6	12.6.68-1
+cuda-cupti-dev-12-6	12.6.68-1
+cuda-cuxxfilt-12-6	12.6.68-1
+cuda-documentation-12-6	12.6.68-1
+cuda-driver-dev-12-6	12.6.68-1
+cuda-gdb-12-6	12.6.68-1
+cuda-libraries-12-6	12.6.11-1
+cuda-libraries-dev-12-6	12.6.11-1
+cuda-nsight-compute-12-6	12.6.11-1
+cuda-nvcc-12-0
+cuda-nvcc-12-1
+cuda-nvcc-12-2
+cuda-nvcc-12-3
+cuda-nvcc-12-4
+cuda-nvcc-12-5
+cuda-nvcc-12-6	12.6.68-1
+cuda-nvcc-12-7
+cuda-nvcc-12-8
+cuda-nvcc-12-9
+cuda-nvdisasm-12-6	12.6.68-1
+cuda-nvml-dev-12-6	12.6.68-1
+cuda-nvprof-12-6
+cuda-nvprune-12-6	12.6.68-1
+cuda-nvrtc-12-6	12.6.68-1
+cuda-nvrtc-dev-12-6	12.6.68-1
+cuda-nvtx-12-6	12.6.68-1
+cuda-nvvm-12-6	12.6.68-1
+cuda-profiler-api-12-6	12.6.68-1
+cuda-runtime-12-6	12.6.11-1
+cuda-sanitizer-12-6	12.6.68-1
+cuda-tegra-repo-ubuntu2204-12-6-local	12.6.3-1
+cuda-thrust-12-6
+cuda-toolkit-12-6	12.6.11-1
+cuda-toolkit-12-6-config-common	12.6.68-1
+cuda-toolkit-12-config-common	12.6.68-1
+cuda-toolkit-config-common	12.6.68-1
+cuda-tools-12-6	12.6.11-1
+cuda-visual-tools-12-6	12.6.11-1
+libcudnn9
+libcudnn9-cuda-12	9.3.0.75-1
+libcudnn9-dev
+libcudnn9-dev-cuda-12	9.3.0.75-1
+libcudnn9-samples	9.3.0.75-1
+libcudnn9-static
+libcudnn9-static-cuda-12	9.3.0.75-1
+libnvinfer-bin	10.3.0.30-1+cuda12.5
+libnvinfer-dev	10.3.0.30-1+cuda12.5
+libnvinfer-dev-cross-aarch64
+libnvinfer-dispatch-dev	10.3.0.30-1+cuda12.5
+libnvinfer-dispatch-dev-cross-aarch64
+libnvinfer-dispatch10	10.3.0.30-1+cuda12.5
+libnvinfer-doc
+libnvinfer-headers-dev	10.3.0.30-1+cuda12.5
+libnvinfer-headers-plugin-dev	10.3.0.30-1+cuda12.5
+libnvinfer-lean-dev	10.3.0.30-1+cuda12.5
+libnvinfer-lean-dev-cross-aarch64
+libnvinfer-lean10	10.3.0.30-1+cuda12.5
+libnvinfer-plugin-dev	10.3.0.30-1+cuda12.5
+libnvinfer-plugin-dev-cross-aarch64
+libnvinfer-plugin10	10.3.0.30-1+cuda12.5
+libnvinfer-samples	10.3.0.30-1+cuda12.5
+libnvinfer-vc-plugin-dev	10.3.0.30-1+cuda12.5
+libnvinfer-vc-plugin-dev-cross-aarch64
+libnvinfer-vc-plugin10	10.3.0.30-1+cuda12.5
+libnvinfer10	10.3.0.30-1+cuda12.5
+libnvonnxparsers-dev	10.3.0.30-1+cuda12.5
+libnvonnxparsers-dev-cross-aarch64
+libnvonnxparsers10	10.3.0.30-1+cuda12.5
+tensorrt	10.3.0.30-1+cuda12.5

@@ -1,0 +1,47 @@
+actual_path=/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+resolved_path=/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+-rw-r--r-- 1 root root 8159168 Jan 16  2026 /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+/usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=a92764c29122ac5d301bb3e8a8dbb937e986c5cc, stripped
+  File: /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+  Size: 8159168   	Blocks: 15936      IO Block: 4096   regular file
+Device: 10301h/66305d	Inode: 12208733    Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-07-27 20:55:49.794158873 +0800
+Modify: 2026-01-16 11:42:52.000000000 +0800
+Change: 2026-07-27 20:54:22.647721606 +0800
+ Birth: 2026-07-27 20:54:22.599720251 +0800
+c21986bed8d48a5ef11928aa54a500cd14a997d1d0bed99edf4d161d1c778bec  /usr/lib/aarch64-linux-gnu/nvidia/libnvdla_compiler.so
+
+Dynamic section at offset 0x7c38a0 contains 30 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libnvos.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-aarch64.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x000000000000000e (SONAME)             Library soname: [libnvdla_compiler.so]
+ 0x0000000000000010 (SYMBOLIC)           0x0
+ 0x0000000000000019 (INIT_ARRAY)         0x7ae868
+ 0x000000000000001b (INIT_ARRAYSZ)       944 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x7aec18
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x0000000000000004 (HASH)               0x1f0
+ 0x000000006ffffef5 (GNU_HASH)           0x10b8
+ 0x0000000000000005 (STRTAB)             0x3190
+ 0x0000000000000006 (SYMTAB)             0x1390
+ 0x000000000000000a (STRSZ)              10765 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x7d5fe8
+ 0x0000000000000002 (PLTRELSZ)           5472 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0x5b828
+ 0x0000000000000007 (RELA)               0x5fb0
+ 0x0000000000000008 (RELASZ)             350328 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffffe (VERNEED)            0x5e20
+ 0x000000006fffffff (VERNEEDNUM)         5
+ 0x000000006ffffff0 (VERSYM)             0x5b9e
+ 0x000000006ffffff9 (RELACOUNT)          12438
+ 0x0000000000000000 (NULL)               0x0

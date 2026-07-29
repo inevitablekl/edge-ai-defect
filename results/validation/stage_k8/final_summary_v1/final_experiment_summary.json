@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k8_final_experiment_summary",
+  "summary_id": "final_summary_v1",
+  "date": "2026-07-29",
+  "stage": "K8",
+  "stage_k_final_status": "COMPLETE",
+  "k8_scope": "evidence consolidation, decision freeze, and documentation update only",
+  "new_experiments": false,
+  "final_deployment_candidate": "Original TensorRT FP16 Engine",
+  "deployment_pipeline": [
+    "PyTorch",
+    "ONNX",
+    "ONNX Runtime baseline",
+    "TensorRT FP32 reference",
+    "TensorRT FP16 optimization",
+    "Task validation",
+    "Stability",
+    "Performance"
+  ],
+  "accuracy": {
+    "evaluation_scope": "frozen Stage K task-level evaluation",
+    "strict_fp32": {
+      "precision": 0.631474,
+      "recall": 0.717195,
+      "map50": 0.654858,
+      "map50_95": 0.359086
+    },
+    "original_fp16": {
+      "precision": 0.634731,
+      "recall": 0.719457,
+      "map50": 0.656024,
+      "map50_95": 0.359550
+    },
+    "task_level_verdict": "TASK_LEVEL_FP16_ACCEPTED"
+  },
+  "raw_correctness": {
+    "backend": "TensorRT FP16",
+    "level": "B",
+    "verdict": "FAIL",
+    "reason": "bbox-dominated raw tensor numerical deviation",
+    "failure_retained": true,
+    "bitwise_raw_tensor_equality_claimed": false
+  },
+  "task_level_conclusion": {
+    "verdict": "TASK_LEVEL_FP16_ACCEPTED",
+    "acceptance_basis": [
+      "task accuracy",
+      "stability",
+      "performance"
+    ],
+    "not_based_on": "bitwise raw tensor equality"
+  },
+  "stability": {
+    "source_stage": "K6",
+    "verdict": "K6_STABILITY_PASS",
+    "frames": 84420,
+    "duration_seconds": 1802.819,
+    "success_count": 84420,
+    "success_rate": 1.0
+  },
+  "performance": {
+    "source_stage": "K7",
+    "verdict": "K7_PERFORMANCE_COMPLETE",
+    "reference": "Strict FP32",
+    "candidate": "Original TensorRT FP16",
+    "strict_fp32": {
+      "inference_mean_ms": 12.914213,
+      "e2e_mean_ms": 18.813333
+    },
+    "original_fp16": {
+      "inference_mean_ms": 11.164944,
+      "e2e_mean_ms": 17.065202
+    },
+    "speedup": {
+      "inference": 1.156675,
+      "e2e": 1.102438
+    }
+  },
+  "decision_freeze": {
+    "decision_id": "D066",
+    "title": "Accept TensorRT FP16 deployment candidate based on task-level validation",
+    "raw_limitation_remains_documented": true
+  },
+  "prohibited_changes_confirmed": [
+    "Engine",
+    "ONNX",
+    "ModelContract",
+    "runtime implementation",
+    "Comparator tolerance",
+    "benchmark results",
+    "existing Evidence"
+  ],
+  "evidence_sources": [
+    "results/validation/stage_k_task_eval_v2/metrics/",
+    "results/validation/stage_k6/stability_v1/",
+    "results/validation/stage_k7/performance_v1/"
+  ]
+}

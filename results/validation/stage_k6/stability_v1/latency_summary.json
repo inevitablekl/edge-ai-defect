@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k6_latency_summary",
+  "total_frames": 84420,
+  "inference": {
+    "count": 84420,
+    "mean_ms": 12.460576596019902,
+    "median_ms": 12.356233,
+    "p95_ms": 12.5562915,
+    "max_ms": 36.005325
+  },
+  "e2e": {
+    "count": 84420,
+    "mean_ms": 18.481182256562427,
+    "median_ms": 18.4565195,
+    "p95_ms": 19.3508555,
+    "max_ms": 47.411158
+  },
+  "inference_growth": {
+    "field": "inference_latency_ms",
+    "window_count": 10,
+    "window_means_ms": [
+      12.448920598081024,
+      12.463275680525943,
+      12.461950753139067,
+      12.46322187360815,
+      12.455122154821133,
+      12.464117801113481,
+      12.459434216654822,
+      12.464001223762141,
+      12.461678719023928,
+      12.46404293946932
+    ],
+    "first_window_mean_ms": 12.448920598081024,
+    "last_window_mean_ms": 12.46404293946932,
+    "strictly_increasing_all_windows": false,
+    "continuous_growth_detected": false
+  },
+  "e2e_growth": {
+    "field": "e2e_latency_ms",
+    "window_count": 10,
+    "window_means_ms": [
+      18.450928814854297,
+      18.509108470623076,
+      18.477892133380713,
+      18.467071002606016,
+      18.453925940416962,
+      18.489358960199002,
+      18.483792394456287,
+      18.480150792584695,
+      18.51265646564795,
+      18.486937590855245
+    ],
+    "first_window_mean_ms": 18.450928814854297,
+    "last_window_mean_ms": 18.486937590855245,
+    "strictly_increasing_all_windows": false,
+    "continuous_growth_detected": false
+  }
+}

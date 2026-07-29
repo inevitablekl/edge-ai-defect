@@ -1,0 +1,15 @@
+git branch --show-current
+git rev-parse HEAD
+git status --short --branch
+date --iso-8601=seconds; uname -a; uname -m; cat /etc/os-release; cat /etc/nv_tegra_release; cat /proc/device-tree/model 2>/dev/null | tr -d '\0' || true; readlink -f /usr/local/cuda; /usr/local/cuda/bin/nvcc --version 2>&1 || true
+dpkg-query -W -f='${binary:Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n' nvidia-l4t-core libnvinfer10 libnvinfer-dev libnvinfer-plugin10 libnvonnxparsers10
+/usr/src/tensorrt/bin/trtexec --help
+/usr/src/tensorrt/bin/trtexec --version
+ldd /usr/src/tensorrt/bin/trtexec
+command -v /usr/src/tensorrt/bin/trtexec; readlink -f /usr/src/tensorrt/bin/trtexec; file /usr/src/tensorrt/bin/trtexec; sha256sum /usr/src/tensorrt/bin/trtexec
+sha256sum models/onnx/yolov8n_neudet_frozen.onnx
+
+Recorded but NOT executed:
+/usr/src/tensorrt/bin/trtexec --onnx=... --fp16 --memPoolSize=workspace:4096M --inputIOFormats=fp32:chw --outputIOFormats=fp32:chw --saveEngine=... --skipInference
+/usr/src/tensorrt/bin/trtexec --loadEngine=... --dumpLayerInfo --dumpOptimizationProfile
+/usr/src/tensorrt/bin/trtexec --loadEngine=... --device=0 --iterations=1 --warmUp=0 --duration=1

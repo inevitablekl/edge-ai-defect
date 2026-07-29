@@ -1,0 +1,69 @@
+1-&&&& RUNNING TensorRT.trtexec [TensorRT v100300] # /usr/src/tensorrt/bin/trtexec --help
+2-=== Model Options ===
+3:  --onnx=<file>               ONNX model
+4-
+5-=== Build Options ===
+6:  --minShapes=spec                   Build with dynamic shapes using a profile with the min shapes provided
+7:  --optShapes=spec                   Build with dynamic shapes using a profile with the opt shapes provided
+8:  --maxShapes=spec                   Build with dynamic shapes using a profile with the max shapes provided
+9:  --minShapesCalib=spec              Calibrate with dynamic shapes using a profile with the min shapes provided
+10:  --optShapesCalib=spec              Calibrate with dynamic shapes using a profile with the opt shapes provided
+11:  --maxShapesCalib=spec              Calibrate with dynamic shapes using a profile with the max shapes provided
+12-                                     Note: All three of min, opt and max shapes must be supplied.
+13-                                           However, if only opt shapes is supplied then it will be expanded so
+--
+21-                                     Multiple input shapes can be provided via comma-separated key-value pairs, and each input name can
+22-                                     contain at most one wildcard ('*') character.
+23:  --inputIOFormats=spec              Type and format of each of the input tensors (default = all inputs in fp32:chw)
+24:                                     See --outputIOFormats help for the grammar of type and format list.
+25-                                     Note: If this option is specified, please set comma-separated types and formats for all
+26-                                           inputs following the same order as network inputs ID (even if only one input
+27-                                           needs specifying IO format) or set the type and format once for broadcasting.
+28:  --outputIOFormats=spec             Type and format of each of the output tensors (default = all outputs in fp32:chw)
+29-                                     Note: If this option is specified, please set comma-separated types and formats for all
+30-                                           outputs following the same order as network outputs ID (even if only one output
+--
+35-                                               fmt   ::= ("chw"|"chw2"|"chw4"|"hwc8"|"chw16"|"chw32"|"dhwc8"|
+36-                                                          "cdhw32"|"hwc"|"dla_linear"|"dla_hwc4")["+"fmt]
+37:  --memPoolSize=poolspec             Specify the size constraints of the designated memory pool(s)
+38-                                     Supports the following base-2 suffixes: B (Bytes), G (Gibibytes), K (Kibibytes), M (Mebibytes).
+39-                                     If none of suffixes is appended, the defualt unit is in MiB.
+--
+77-                                                     Please use <polygraphy surgeon prune> to rewrite the weights.
+78-  --noTF32                           Disable tf32 precision (default is to enable tf32, in addition to fp32)
+79:  --fp16                             Enable fp16 precision, in addition to fp32 (default = disabled)
+80-  --bf16                             Enable bf16 precision, in addition to fp32 (default = disabled)
+81-  --int8                             Enable int8 precision, in addition to fp32 (default = disabled)
+--
+116-                                     automatically (default = disabled)
+117-  --buildDLAStandalone               Enable build DLA standalone loadable which can be loaded by cuDLA, when this option is enabled, 
+118:                                     --allowGPUFallback is disallowed and --skipInference is enabled by default. Additionally, 
+119:                                     specifying --inputIOFormats and --outputIOFormats restricts I/O data type and memory layout
+120-                                     (default = disabled)
+121-  --allowGPUFallback                 When DLA is enabled, allow GPU fallback for unsupported layers (default = disabled)
+122-  --consistency                      Perform consistency checking on safety certified engine
+123-  --restricted                       Enable safety scope checking with kSAFETY_SCOPE build flag
+124:  --saveEngine=<file>                Save the serialized engine
+125:  --loadEngine=<file>                Load a serialized engine
+126-  --getPlanVersionOnly               Print TensorRT version when loaded plan was created. Works without deserialization of the plan.
+127:                                     Use together with --loadEngine. Supported only for engines created with 8.6 and forward.
+128-  --tacticSources=tactics            Specify the tactics to be used by adding (+) or removing (-) tactics from the default 
+129-                                     tactic sources (default = all available tactics).
+--
+152-                                         ampere+ = compatible with Ampere and newer GPUs
+153-  --runtimePlatform=platform         Set the target platform for runtime execution. (default = SameAsBuild)
+154:                                     When this option is enabled, --skipInference is enabled by default.
+155-                                   RuntimePlatfrom: platform ::= "SameAsBuild" | "WindowsAMD64"
+156-                                         SameAsBuild = no requirement for cross-platform compatibility.
+--
+171-  --profile                          Build with dynamic shapes using a profile with the min/max/opt shapes provided. Can be specified
+172-                                         multiple times to create multiple profiles with contiguous index.
+173:                                     (ex: --profile=0 --minShapes=<spec> --optShapes=<spec> --maxShapes=<spec> --profile=1 ...)
+174-  --calibProfile                     Select the optimization profile to calibrate by index. (default = 0)
+175-  --allowWeightStreaming             Enable a weight streaming engine. Must be specified with --stronglyTyped. TensorRT will disable
+--
+208-  --timeRefit                 Time the amount of time it takes to refit the engine before inference.
+209-  --separateProfileRun        Do not attach the profiler in the benchmark run; if profiling is enabled, a second profile run will be executed (default = disabled)
+210:  --skipInference             Exit after the engine has been built and skip inference perf measurement (default = disabled)
+211-  --persistentCacheRatio      Set the persistentCacheLimit in ratio, 0.5 represent half of max persistent L2 size (default = 0)
+212-  --useProfile                Set the optimization profile for the inference context (default = 0 ).

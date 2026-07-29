@@ -1,0 +1,2073 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_selective_precision_layer_mapping",
+  "source_onnx": "models/onnx/yolov8n_neudet_frozen.onnx",
+  "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "graph_scope": "/model.22 Detect Head",
+  "onnx_model22_node_count": 90,
+  "constant_node_count_excluded_from_constraints": 18,
+  "shape_control_node_count_excluded_from_constraints": 2,
+  "constrained_node_count": 70,
+  "legacy_C2_node_count": 30,
+  "route_decision": "CASE_B_DIRECT_M2",
+  "mapping_status": "PASS_WITH_EXPLICIT_FUSED_OR_ELIDED_NODES",
+  "blocked_nodes": [],
+  "global_builder_mode": "--fp16",
+  "tf32_mode": "--noTF32",
+  "precision_constraints": "obey",
+  "layer_precision_spec": "/model.22/cv2.0/cv2.0.0/conv/Conv:fp32,/model.22/cv2.0/cv2.0.0/act/Sigmoid:fp32,/model.22/cv2.0/cv2.0.0/act/Mul:fp32,/model.22/cv2.0/cv2.0.1/conv/Conv:fp32,/model.22/cv2.0/cv2.0.1/act/Sigmoid:fp32,/model.22/cv2.0/cv2.0.1/act/Mul:fp32,/model.22/cv2.0/cv2.0.2/Conv:fp32,/model.22/Reshape:fp32,/model.22/cv2.1/cv2.1.0/conv/Conv:fp32,/model.22/cv2.1/cv2.1.0/act/Sigmoid:fp32,/model.22/cv2.1/cv2.1.0/act/Mul:fp32,/model.22/cv2.1/cv2.1.1/conv/Conv:fp32,/model.22/cv2.1/cv2.1.1/act/Sigmoid:fp32,/model.22/cv2.1/cv2.1.1/act/Mul:fp32,/model.22/cv2.1/cv2.1.2/Conv:fp32,/model.22/Reshape_1:fp32,/model.22/cv2.2/cv2.2.0/conv/Conv:fp32,/model.22/cv2.2/cv2.2.0/act/Sigmoid:fp32,/model.22/cv2.2/cv2.2.0/act/Mul:fp32,/model.22/cv2.2/cv2.2.1/conv/Conv:fp32,/model.22/cv2.2/cv2.2.1/act/Sigmoid:fp32,/model.22/cv2.2/cv2.2.1/act/Mul:fp32,/model.22/cv2.2/cv2.2.2/Conv:fp32,/model.22/Reshape_2:fp32,/model.22/Concat:fp32,/model.22/cv3.0/cv3.0.0/conv/Conv:fp32,/model.22/cv3.0/cv3.0.0/act/Sigmoid:fp32,/model.22/cv3.0/cv3.0.0/act/Mul:fp32,/model.22/cv3.0/cv3.0.1/conv/Conv:fp32,/model.22/cv3.0/cv3.0.1/act/Sigmoid:fp32,/model.22/cv3.0/cv3.0.1/act/Mul:fp32,/model.22/cv3.0/cv3.0.2/Conv:fp32,/model.22/Reshape_3:fp32,/model.22/cv3.1/cv3.1.0/conv/Conv:fp32,/model.22/cv3.1/cv3.1.0/act/Sigmoid:fp32,/model.22/cv3.1/cv3.1.0/act/Mul:fp32,/model.22/cv3.1/cv3.1.1/conv/Conv:fp32,/model.22/cv3.1/cv3.1.1/act/Sigmoid:fp32,/model.22/cv3.1/cv3.1.1/act/Mul:fp32,/model.22/cv3.1/cv3.1.2/Conv:fp32,/model.22/Reshape_4:fp32,/model.22/cv3.2/cv3.2.0/conv/Conv:fp32,/model.22/cv3.2/cv3.2.0/act/Sigmoid:fp32,/model.22/cv3.2/cv3.2.0/act/Mul:fp32,/model.22/cv3.2/cv3.2.1/conv/Conv:fp32,/model.22/cv3.2/cv3.2.1/act/Sigmoid:fp32,/model.22/cv3.2/cv3.2.1/act/Mul:fp32,/model.22/cv3.2/cv3.2.2/Conv:fp32,/model.22/Reshape_5:fp32,/model.22/Concat_1:fp32,/model.22/dfl/Reshape:fp32,/model.22/dfl/Transpose:fp32,/model.22/dfl/Softmax:fp32,/model.22/dfl/conv/Conv:fp32,/model.22/dfl/Reshape_1:fp32,/model.22/Add:fp32,/model.22/Div:fp32,/model.22/Mul:fp32,/model.22/Slice:fp32,/model.22/Mul_1:fp32,/model.22/Slice_1:fp32,/model.22/Sub:fp32,/model.22/Add_1:fp32,/model.22/Add_2:fp32,/model.22/Div_1:fp32,/model.22/Sub_1:fp32,/model.22/Concat_2:fp32,/model.22/Mul_2:fp32,/model.22/Sigmoid:fp32,/model.22/Concat_3:fp32",
+  "layer_output_type_spec": "/model.22/cv2.0/cv2.0.0/conv/Conv:fp32,/model.22/cv2.0/cv2.0.0/act/Sigmoid:fp32,/model.22/cv2.0/cv2.0.0/act/Mul:fp32,/model.22/cv2.0/cv2.0.1/conv/Conv:fp32,/model.22/cv2.0/cv2.0.1/act/Sigmoid:fp32,/model.22/cv2.0/cv2.0.1/act/Mul:fp32,/model.22/cv2.0/cv2.0.2/Conv:fp32,/model.22/Reshape:fp32,/model.22/cv2.1/cv2.1.0/conv/Conv:fp32,/model.22/cv2.1/cv2.1.0/act/Sigmoid:fp32,/model.22/cv2.1/cv2.1.0/act/Mul:fp32,/model.22/cv2.1/cv2.1.1/conv/Conv:fp32,/model.22/cv2.1/cv2.1.1/act/Sigmoid:fp32,/model.22/cv2.1/cv2.1.1/act/Mul:fp32,/model.22/cv2.1/cv2.1.2/Conv:fp32,/model.22/Reshape_1:fp32,/model.22/cv2.2/cv2.2.0/conv/Conv:fp32,/model.22/cv2.2/cv2.2.0/act/Sigmoid:fp32,/model.22/cv2.2/cv2.2.0/act/Mul:fp32,/model.22/cv2.2/cv2.2.1/conv/Conv:fp32,/model.22/cv2.2/cv2.2.1/act/Sigmoid:fp32,/model.22/cv2.2/cv2.2.1/act/Mul:fp32,/model.22/cv2.2/cv2.2.2/Conv:fp32,/model.22/Reshape_2:fp32,/model.22/Concat:fp32,/model.22/cv3.0/cv3.0.0/conv/Conv:fp32,/model.22/cv3.0/cv3.0.0/act/Sigmoid:fp32,/model.22/cv3.0/cv3.0.0/act/Mul:fp32,/model.22/cv3.0/cv3.0.1/conv/Conv:fp32,/model.22/cv3.0/cv3.0.1/act/Sigmoid:fp32,/model.22/cv3.0/cv3.0.1/act/Mul:fp32,/model.22/cv3.0/cv3.0.2/Conv:fp32,/model.22/Reshape_3:fp32,/model.22/cv3.1/cv3.1.0/conv/Conv:fp32,/model.22/cv3.1/cv3.1.0/act/Sigmoid:fp32,/model.22/cv3.1/cv3.1.0/act/Mul:fp32,/model.22/cv3.1/cv3.1.1/conv/Conv:fp32,/model.22/cv3.1/cv3.1.1/act/Sigmoid:fp32,/model.22/cv3.1/cv3.1.1/act/Mul:fp32,/model.22/cv3.1/cv3.1.2/Conv:fp32,/model.22/Reshape_4:fp32,/model.22/cv3.2/cv3.2.0/conv/Conv:fp32,/model.22/cv3.2/cv3.2.0/act/Sigmoid:fp32,/model.22/cv3.2/cv3.2.0/act/Mul:fp32,/model.22/cv3.2/cv3.2.1/conv/Conv:fp32,/model.22/cv3.2/cv3.2.1/act/Sigmoid:fp32,/model.22/cv3.2/cv3.2.1/act/Mul:fp32,/model.22/cv3.2/cv3.2.2/Conv:fp32,/model.22/Reshape_5:fp32,/model.22/Concat_1:fp32,/model.22/dfl/Reshape:fp32,/model.22/dfl/Transpose:fp32,/model.22/dfl/Softmax:fp32,/model.22/dfl/conv/Conv:fp32,/model.22/dfl/Reshape_1:fp32,/model.22/Add:fp32,/model.22/Div:fp32,/model.22/Mul:fp32,/model.22/Slice:fp32,/model.22/Mul_1:fp32,/model.22/Slice_1:fp32,/model.22/Sub:fp32,/model.22/Add_1:fp32,/model.22/Add_2:fp32,/model.22/Div_1:fp32,/model.22/Sub_1:fp32,/model.22/Concat_2:fp32,/model.22/Mul_2:fp32,/model.22/Sigmoid:fp32,/model.22/Concat_3:fp32",
+  "nodes": [
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.0/conv/Conv || /model.22/cv3.0/cv3.0.0/conv/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.15/cv2/act/Mul_output_0",
+          "initializer:model.22.cv2.0.0.conv.weight",
+          "initializer:model.22.cv2.0.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.0/cv2.0.0/act/Sigmoid), PWN(/model.22/cv2.0/cv2.0.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.0/cv2.0.0/act/Sigmoid), PWN(/model.22/cv2.0/cv2.0.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.0/conv/Conv",
+          "/model.22/cv2.0/cv2.0.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.1/conv/Conv + PWN(PWN(/model.22/cv2.0/cv2.0.1/act/Sigmoid), PWN(/model.22/cv2.0/cv2.0.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.0/act/Mul",
+          "initializer:model.22.cv2.0.1.conv.weight",
+          "initializer:model.22.cv2.0.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.1/conv/Conv + PWN(PWN(/model.22/cv2.0/cv2.0.1/act/Sigmoid), PWN(/model.22/cv2.0/cv2.0.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.1/conv/Conv + PWN(PWN(/model.22/cv2.0/cv2.0.1/act/Sigmoid), PWN(/model.22/cv2.0/cv2.0.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.1/conv/Conv",
+          "/model.22/cv2.0/cv2.0.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.0/cv2.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.0/cv2.0.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.0/cv2.0.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.2/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.1/act/Mul",
+          "initializer:model.22.cv2.0.2.weight",
+          "initializer:model.22.cv2.0.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape",
+        "/model.22/Reshape_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.0/cv2.0.2/Conv",
+          "/model.22/Constant"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape]",
+          "[ONNX Layer: /model.22/Reshape]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.0/conv/Conv || /model.22/cv3.1/cv3.1.0/conv/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.18/cv2/act/Mul_output_0",
+          "initializer:model.22.cv2.1.0.conv.weight",
+          "initializer:model.22.cv2.1.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.1/cv2.1.0/act/Sigmoid), PWN(/model.22/cv2.1/cv2.1.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.1/cv2.1.0/act/Sigmoid), PWN(/model.22/cv2.1/cv2.1.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.0/conv/Conv",
+          "/model.22/cv2.1/cv2.1.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.1/conv/Conv + PWN(PWN(/model.22/cv2.1/cv2.1.1/act/Sigmoid), PWN(/model.22/cv2.1/cv2.1.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.0/act/Mul",
+          "initializer:model.22.cv2.1.1.conv.weight",
+          "initializer:model.22.cv2.1.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.1/conv/Conv + PWN(PWN(/model.22/cv2.1/cv2.1.1/act/Sigmoid), PWN(/model.22/cv2.1/cv2.1.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.1/conv/Conv + PWN(PWN(/model.22/cv2.1/cv2.1.1/act/Sigmoid), PWN(/model.22/cv2.1/cv2.1.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.1/conv/Conv",
+          "/model.22/cv2.1/cv2.1.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.1/cv2.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.1/cv2.1.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.1/cv2.1.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.2/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.1/act/Mul",
+          "initializer:model.22.cv2.1.2.weight",
+          "initializer:model.22.cv2.1.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape_1",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape_1",
+        "/model.22/Reshape_1_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.1/cv2.1.2/Conv",
+          "/model.22/Constant_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape_1]",
+          "[ONNX Layer: /model.22/Reshape_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.0/conv/Conv || /model.22/cv3.2/cv3.2.0/conv/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.21/cv2/act/Mul_output_0",
+          "initializer:model.22.cv2.2.0.conv.weight",
+          "initializer:model.22.cv2.2.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.2/cv2.2.0/act/Sigmoid), PWN(/model.22/cv2.2/cv2.2.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv2.2/cv2.2.0/act/Sigmoid), PWN(/model.22/cv2.2/cv2.2.0/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.0/conv/Conv",
+          "/model.22/cv2.2/cv2.2.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.1/conv/Conv + PWN(PWN(/model.22/cv2.2/cv2.2.1/act/Sigmoid), PWN(/model.22/cv2.2/cv2.2.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.0/act/Mul",
+          "initializer:model.22.cv2.2.1.conv.weight",
+          "initializer:model.22.cv2.2.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.1/conv/Conv + PWN(PWN(/model.22/cv2.2/cv2.2.1/act/Sigmoid), PWN(/model.22/cv2.2/cv2.2.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.1/conv/Conv + PWN(PWN(/model.22/cv2.2/cv2.2.1/act/Sigmoid), PWN(/model.22/cv2.2/cv2.2.1/act/Mul))"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.1/conv/Conv",
+          "/model.22/cv2.2/cv2.2.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv2.2/cv2.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv2.2/cv2.2.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv2.2/cv2.2.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.2/Conv"
+      ],
+      "semantic_role": "bbox_regression_branch",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.1/act/Mul",
+          "initializer:model.22.cv2.2.2.weight",
+          "initializer:model.22.cv2.2.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape_2",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_2_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape_2",
+        "/model.22/Reshape_2_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv2.2/cv2.2.2/Conv",
+          "/model.22/Constant_2"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape_2]",
+          "[ONNX Layer: /model.22/Reshape_2]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Concat",
+      "onnx_op_type": "Concat",
+      "onnx_output_tensor": [
+        "/model.22/Concat_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Concat"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Reshape",
+          "/model.22/Reshape_1",
+          "/model.22/Reshape_2"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.0/cv2.0.0/conv/Conv || /model.22/cv3.0/cv3.0.0/conv/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.15/cv2/act/Mul_output_0",
+          "initializer:model.22.cv3.0.0.conv.weight",
+          "initializer:model.22.cv3.0.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.0/cv2.0.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.0/cv3.0.0/act/Sigmoid), PWN(/model.22/cv3.0/cv3.0.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.0/cv3.0.0/act/Sigmoid), PWN(/model.22/cv3.0/cv3.0.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.0/conv/Conv",
+          "/model.22/cv3.0/cv3.0.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.0/cv3.0.1/conv/Conv + PWN(PWN(/model.22/cv3.0/cv3.0.1/act/Sigmoid), PWN(/model.22/cv3.0/cv3.0.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.0/act/Mul",
+          "initializer:model.22.cv3.0.1.conv.weight",
+          "initializer:model.22.cv3.0.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.0/cv3.0.1/conv/Conv + PWN(PWN(/model.22/cv3.0/cv3.0.1/act/Sigmoid), PWN(/model.22/cv3.0/cv3.0.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.0/cv3.0.1/conv/Conv + PWN(PWN(/model.22/cv3.0/cv3.0.1/act/Sigmoid), PWN(/model.22/cv3.0/cv3.0.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.1/conv/Conv",
+          "/model.22/cv3.0/cv3.0.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.0/cv3.0.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.0/cv3.0.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.0/cv3.0.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.0/cv3.0.2/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.1/act/Mul",
+          "initializer:model.22.cv3.0.2.weight",
+          "initializer:model.22.cv3.0.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.0/cv3.0.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape_3",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_3_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape_3",
+        "/model.22/Reshape_3_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.0/cv3.0.2/Conv",
+          "/model.22/Constant_3"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape_3]",
+          "[ONNX Layer: /model.22/Reshape_3]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.1/cv2.1.0/conv/Conv || /model.22/cv3.1/cv3.1.0/conv/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.18/cv2/act/Mul_output_0",
+          "initializer:model.22.cv3.1.0.conv.weight",
+          "initializer:model.22.cv3.1.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.1/cv2.1.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.1/cv3.1.0/act/Sigmoid), PWN(/model.22/cv3.1/cv3.1.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.1/cv3.1.0/act/Sigmoid), PWN(/model.22/cv3.1/cv3.1.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.0/conv/Conv",
+          "/model.22/cv3.1/cv3.1.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.1/cv3.1.1/conv/Conv + PWN(PWN(/model.22/cv3.1/cv3.1.1/act/Sigmoid), PWN(/model.22/cv3.1/cv3.1.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.0/act/Mul",
+          "initializer:model.22.cv3.1.1.conv.weight",
+          "initializer:model.22.cv3.1.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.1/cv3.1.1/conv/Conv + PWN(PWN(/model.22/cv3.1/cv3.1.1/act/Sigmoid), PWN(/model.22/cv3.1/cv3.1.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.1/cv3.1.1/conv/Conv + PWN(PWN(/model.22/cv3.1/cv3.1.1/act/Sigmoid), PWN(/model.22/cv3.1/cv3.1.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.1/conv/Conv",
+          "/model.22/cv3.1/cv3.1.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.1/cv3.1.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.1/cv3.1.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.1/cv3.1.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.1/cv3.1.2/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.1/act/Mul",
+          "initializer:model.22.cv3.1.2.weight",
+          "initializer:model.22.cv3.1.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.1/cv3.1.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape_4",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_4_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape_4",
+        "/model.22/Reshape_4_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.1/cv3.1.2/Conv",
+          "/model.22/Constant_4"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape_4]",
+          "[ONNX Layer: /model.22/Reshape_4]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.0/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.0/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv2.2/cv2.2.0/conv/Conv || /model.22/cv3.2/cv3.2.0/conv/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "external:/model.21/cv2/act/Mul_output_0",
+          "initializer:model.22.cv3.2.0.conv.weight",
+          "initializer:model.22.cv3.2.0.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv2.2/cv2.2.0/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.0/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.0/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.0/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.2/cv3.2.0/act/Sigmoid), PWN(/model.22/cv3.2/cv3.2.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.0/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.0/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.0/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/cv3.2/cv3.2.0/act/Sigmoid), PWN(/model.22/cv3.2/cv3.2.0/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.0/conv/Conv",
+          "/model.22/cv3.2/cv3.2.0/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.0/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.0/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.1/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.1/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.2/cv3.2.1/conv/Conv + PWN(PWN(/model.22/cv3.2/cv3.2.1/act/Sigmoid), PWN(/model.22/cv3.2/cv3.2.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.0/act/Mul",
+          "initializer:model.22.cv3.2.1.conv.weight",
+          "initializer:model.22.cv3.2.1.conv.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.1/act/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.1/act/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.2/cv3.2.1/conv/Conv + PWN(PWN(/model.22/cv3.2/cv3.2.1/act/Sigmoid), PWN(/model.22/cv3.2/cv3.2.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.1/conv/Conv"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.1/act/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.1/act/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.2/cv3.2.1/conv/Conv + PWN(PWN(/model.22/cv3.2/cv3.2.1/act/Sigmoid), PWN(/model.22/cv3.2/cv3.2.1/act/Mul))"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.1/conv/Conv",
+          "/model.22/cv3.2/cv3.2.1/act/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.1/conv/Conv]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Sigmoid]\u001e[ONNX Layer: /model.22/cv3.2/cv3.2.1/act/Mul]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/cv3.2/cv3.2.2/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/cv3.2/cv3.2.2/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/cv3.2/cv3.2.2/Conv"
+      ],
+      "semantic_role": "classification_branch",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.1/act/Mul",
+          "initializer:model.22.cv3.2.2.weight",
+          "initializer:model.22.cv3.2.2.bias"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/cv3.2/cv3.2.2/Conv]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Reshape_5",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/Reshape_5_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Reshape_5",
+        "/model.22/Reshape_5_copy_output"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/cv3.2/cv3.2.2/Conv",
+          "/model.22/Constant_5"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Reshape_5]",
+          "[ONNX Layer: /model.22/Reshape_5]"
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Concat_1",
+      "onnx_op_type": "Concat",
+      "onnx_output_tensor": [
+        "/model.22/Concat_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Concat_1"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Reshape_3",
+          "/model.22/Reshape_4",
+          "/model.22/Reshape_5"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/dfl/Reshape",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/dfl/Reshape_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/dfl/Reshape + /model.22/dfl/Transpose"
+      ],
+      "semantic_role": "dfl",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Concat",
+          "/model.22/dfl/Constant"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/dfl/Reshape]\u001e[ONNX Layer: /model.22/dfl/Transpose]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/dfl/Transpose",
+      "onnx_op_type": "Transpose",
+      "onnx_output_tensor": [
+        "/model.22/dfl/Transpose_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/dfl/Reshape + /model.22/dfl/Transpose"
+      ],
+      "semantic_role": "dfl",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/Reshape"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/dfl/Reshape]\u001e[ONNX Layer: /model.22/dfl/Transpose]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/dfl/Softmax",
+      "onnx_op_type": "Softmax",
+      "onnx_output_tensor": [
+        "/model.22/dfl/Softmax_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/dfl/Softmax"
+      ],
+      "semantic_role": "dfl",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/Transpose"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/dfl/Softmax]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/dfl/conv/Conv",
+      "onnx_op_type": "Conv",
+      "onnx_output_tensor": [
+        "/model.22/dfl/conv/Conv_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/dfl/conv/Conv"
+      ],
+      "semantic_role": "dfl",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/Softmax",
+          "initializer:model.22.dfl.conv.weight"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/dfl/conv/Conv]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/dfl/Reshape_1",
+      "onnx_op_type": "Reshape",
+      "onnx_output_tensor": [
+        "/model.22/dfl/Reshape_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/dfl/Reshape_1"
+      ],
+      "semantic_role": "dfl",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/conv/Conv",
+          "/model.22/dfl/Constant_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/dfl/Reshape_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Add",
+      "onnx_op_type": "Add",
+      "onnx_output_tensor": [
+        "/model.22/Add_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Add"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Gather",
+          "/model.22/Constant_8"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Div",
+      "onnx_op_type": "Div",
+      "onnx_output_tensor": [
+        "/model.22/Div_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Div"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Add",
+          "/model.22/Constant_9"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Mul",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/Mul_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Mul"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Div",
+          "/model.22/Constant_10"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Slice",
+      "onnx_op_type": "Slice",
+      "onnx_output_tensor": [
+        "/model.22/Slice_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Slice"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/Reshape_1",
+          "/model.22/Constant_7",
+          "/model.22/Mul",
+          "/model.22/Constant_6"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Mul_1",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/Mul_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Mul_1"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": false,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Div",
+          "/model.22/Constant_11"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": false
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Slice_1",
+      "onnx_op_type": "Slice",
+      "onnx_output_tensor": [
+        "/model.22/Slice_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Slice_1"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/dfl/Reshape_1",
+          "/model.22/Mul",
+          "/model.22/Mul_1",
+          "/model.22/Constant_6"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    },
+    {
+      "onnx_node_name": "/model.22/Sub",
+      "onnx_op_type": "Sub",
+      "onnx_output_tensor": [
+        "/model.22/Sub_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(/model.22/Sub)"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Constant_12",
+          "/model.22/Slice"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Sub]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Add_1",
+      "onnx_op_type": "Add",
+      "onnx_output_tensor": [
+        "/model.22/Add_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(/model.22/Add_1)"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Constant_13",
+          "/model.22/Slice_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Add_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Add_2",
+      "onnx_op_type": "Add",
+      "onnx_output_tensor": [
+        "/model.22/Add_2_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/Add_2), PWN(/model.22/Constant_14_output_0 + ONNXTRT_Broadcast, PWN(/model.22/Div_1)))"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Sub",
+          "/model.22/Add_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Add_2]\u001e[ONNX Layer: /model.22/Div_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Div_1",
+      "onnx_op_type": "Div",
+      "onnx_output_tensor": [
+        "/model.22/Div_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(PWN(/model.22/Add_2), PWN(/model.22/Constant_14_output_0 + ONNXTRT_Broadcast, PWN(/model.22/Div_1)))"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Add_2",
+          "/model.22/Constant_14"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Add_2]\u001e[ONNX Layer: /model.22/Div_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Sub_1",
+      "onnx_op_type": "Sub",
+      "onnx_output_tensor": [
+        "/model.22/Sub_1_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(/model.22/Sub_1)"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Add_1",
+          "/model.22/Sub"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Sub_1]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Concat_2",
+      "onnx_op_type": "Concat",
+      "onnx_output_tensor": [
+        "/model.22/Concat_2_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Div_1_output_0 copy"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Div_1",
+          "/model.22/Sub_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Concat_2]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Mul_2",
+      "onnx_op_type": "Mul",
+      "onnx_output_tensor": [
+        "/model.22/Mul_2_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(/model.22/Mul_2)"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Concat_2",
+          "/model.22/Constant_15"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Mul_2]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Sigmoid",
+      "onnx_op_type": "Sigmoid",
+      "onnx_output_tensor": [
+        "/model.22/Sigmoid_output_0"
+      ],
+      "tensorrt_network_layer_names": [
+        "PWN(/model.22/Sigmoid)"
+      ],
+      "semantic_role": "coordinate_decode",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Concat_1"
+        ],
+        "trt_layer_metadata_matches": [
+          "[ONNX Layer: /model.22/Sigmoid]"
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "high",
+      "mapping_mode": "detailed_metadata"
+    },
+    {
+      "onnx_node_name": "/model.22/Concat_3",
+      "onnx_op_type": "Concat",
+      "onnx_output_tensor": [
+        "output0"
+      ],
+      "tensorrt_network_layer_names": [
+        "/model.22/Concat_3"
+      ],
+      "semantic_role": "final_output_assembly",
+      "candidate_M1_membership": true,
+      "candidate_M2_membership": true,
+      "requested_compute_precision": "fp32",
+      "requested_output_type": "fp32",
+      "mapping_evidence": {
+        "onnx_source_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "graph_scope": "/model.22",
+        "graph_ancestry_inputs": [
+          "/model.22/Mul_2",
+          "/model.22/Sigmoid"
+        ],
+        "trt_layer_metadata_matches": [
+          ""
+        ],
+        "legacy_C2_equivalent_node": true
+      },
+      "mapping_confidence": "medium",
+      "mapping_mode": "parser_identity_fused_or_elided"
+    }
+  ]
+}

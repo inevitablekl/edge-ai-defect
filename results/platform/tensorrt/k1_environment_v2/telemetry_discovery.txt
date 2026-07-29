@@ -1,0 +1,7 @@
+/usr/bin/tegrastats
+-rwxr-xr-x 1 root root   80520 Jan 16  2026 /usr/bin/tegrastats
+-rwxr-xr-x 1 root root 1695696 Sep 15  2024 /usr/src/tensorrt/bin/trtexec
+TRT_VERSION_RC=1
+TRT_HELP_RC=0
+TRT_LDD_RC=0
+TEGRATESTATS_RC=124

@@ -1,0 +1,8 @@
+  File: /etc/ld.so.cache
+  Size: 123720    	Blocks: 248        IO Block: 4096   regular file
+Device: 10301h/66305d	Inode: 4852605     Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-07-27 21:11:36.727021598 +0800
+Modify: 2026-07-27 21:11:35.798997978 +0800
+Change: 2026-07-27 21:11:35.802998080 +0800
+ Birth: 2026-07-27 21:11:35.798997978 +0800

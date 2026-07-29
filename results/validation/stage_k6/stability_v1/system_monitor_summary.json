@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k6_tegrastats_summary",
+  "sampling_interval_ms": 1000,
+  "sample_count": 1791,
+  "log_path": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k6/stability_v1/tegrastats.log",
+  "first_sample": "07-29-2026 21:43:47 RAM 1746/7607MB (lfb 5x4MB) SWAP 0/3804MB (cached 0MB) CPU [11%@1036,70%@1036,11%@1036,10%@1036,14%@729,11%@729] GR3D_FREQ 61% cpu@48.437C soc2@48.062C soc0@48.437C gpu@48.937C tj@48.937C soc1@48.5C VDD_IN 6685mW/6685mW VDD_CPU_GPU_CV 1628mW/1628mW VDD_SOC 1709mW/1709mW",
+  "last_sample": "07-29-2026 22:13:49 RAM 2752/7607MB (lfb 5x4MB) SWAP 0/3804MB (cached 0MB) CPU [13%@1728,6%@1728,16%@1728,20%@1728,7%@729,63%@729] GR3D_FREQ 65% cpu@54.312C soc2@53.625C soc0@53.875C gpu@54.625C tj@54.625C soc1@54.062C VDD_IN 6849mW/6711mW VDD_CPU_GPU_CV 1625mW/1610mW VDD_SOC 1750mW/1716mW",
+  "ram_used_mb": {
+    "sample_count": 1791,
+    "unit": "MB",
+    "min": 1664.0,
+    "mean": 2401.850921273032,
+    "max": 2768.0
+  },
+  "ram_total_mb": {
+    "sample_count": 1791,
+    "unit": "MB",
+    "min": 7607.0,
+    "mean": 7607.0,
+    "max": 7607.0
+  },
+  "gr3d_frequency_percent": {
+    "sample_count": 1791,
+    "unit": "%",
+    "min": 0.0,
+    "mean": 54.38079285315466,
+    "max": 78.0
+  },
+  "temperature_tj_c": {
+    "sample_count": 1791,
+    "unit": "C",
+    "min": 48.906,
+    "mean": 54.032615298715804,
+    "max": 55.375
+  },
+  "temperature_gpu_c": {
+    "sample_count": 1791,
+    "unit": "C",
+    "min": 48.906,
+    "mean": 53.98633389168063,
+    "max": 55.093
+  },
+  "vdd_in_mw": {
+    "sample_count": 1791,
+    "unit": "mW",
+    "min": 6115.0,
+    "mean": 6710.967057509771,
+    "max": 8331.0
+  }
+}

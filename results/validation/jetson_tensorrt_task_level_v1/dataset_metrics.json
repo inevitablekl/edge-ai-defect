@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k5_4_dataset_metrics",
+  "label_format": "YOLO normalized class cx cy width height",
+  "status": "TBD_REAL_ANNOTATIONS_REQUIRED",
+  "reason": "NEU-DET validation bounding-box annotations were not available in the frozen/local corpus",
+  "precision": "TBD: real experiment data required",
+  "recall": "TBD: real experiment data required",
+  "mAP50": "TBD: real experiment data required",
+  "mAP50_95": "TBD: real experiment data required",
+  "backends": {
+    "TRT FP32 noTF32": null,
+    "TRT FP16": null
+  }
+}

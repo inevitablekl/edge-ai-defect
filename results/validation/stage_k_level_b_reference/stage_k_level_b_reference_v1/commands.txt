@@ -1,0 +1,6 @@
+./.venv/bin/python tools/validation/generate_stage_k_level_b_reference.py \
+  --corpus-dir <J4.3_V2_PREPARED_CORPUS> \
+  --output-dir <stage_k_level_b_reference_v1> \
+  --run-id stage_k_level_b_reference_v1
+
+# Frozen preprocessing: m5_level_c_common.preprocess; one CPU-only ORT session; no NMS/postprocess.

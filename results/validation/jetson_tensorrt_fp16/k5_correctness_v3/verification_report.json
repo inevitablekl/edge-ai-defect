@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "k5_tensorrt_level_b_verification",
+  "attempt_id": "k5_correctness_v3",
+  "status": "TENSORRT_LEVEL_B_FAIL",
+  "source_commit": "38aac68b1e603bc10de290a6ee65c7164c5437c8",
+  "platform": {
+    "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "architecture": "aarch64"
+  },
+  "application_sha256": "97b17a66c093a4db5a7a983d751513547587c609e6562e0e42c077ee1f1c8ad7",
+  "raw_tensor_runner_sha256": "35d9ebbd9352e9688a6c4b331d7c895dca9479cbae17c317d9e41451e593f6ad",
+  "comparator": {
+    "path": "tools/validation/stage_k_level_b_compare.py",
+    "sha256": "6a718ed4284f04144e85d419656860dff18317e65a6127d31b2fde9e819b6a7e",
+    "policy": "tensorrt_fp16"
+  },
+  "runtime": {
+    "tensorrt": "10.3.0.30",
+    "cuda": "12.6.68",
+    "tensorrt_library_sha256": "197e30eccd8dfaeb61f6eec568154ba72a78d66e58d9d897025f8cbf60f4dfc2",
+    "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc"
+  },
+  "engine": {
+    "path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+    "sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+    "manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63"
+  },
+  "reference": {
+    "bundle_id": "stage_k_level_b_reference_v1",
+    "archive_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+    "input_manifest_sha256": "d81d6bb57346231f3ea4cd2dcf0f5285b5993b4b16953641c45f85359b9d0fbf",
+    "onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190"
+  },
+  "raw_output": {
+    "status": "SUCCESS",
+    "entry_count": 16,
+    "success_count": 16,
+    "failure_count": 0,
+    "manifest_sha256": "4643716f6215a808b7d0f643f0d0bb95bcbbaaea19dc84cd39c29c5476f7cad6"
+  },
+  "tolerances": {
+    "version": "frozen Stage K TensorRT Level B policy",
+    "score": {
+      "mae": 0.002,
+      "type7_p99": 0.005,
+      "max_abs": 0.02
+    },
+    "bbox": {
+      "mae": 0.5,
+      "type7_p99": 1.5,
+      "max_abs": 4.0
+    }
+  },
+  "metrics": {
+    "overall": {
+      "mae": 0.08525302849461636,
+      "type7_p99": 1.2522680664062449,
+      "max_abs": 23.29144287109375
+    },
+    "bbox": {
+      "mae": 0.2131305621777262,
+      "type7_p99": 1.9310302734375,
+      "max_abs": 23.29144287109375
+    },
+    "score": {
+      "mae": 1.3991094652622464e-05,
+      "type7_p99": 1.3113021850585938e-05,
+      "max_abs": 0.021184921264648438
+    }
+  },
+  "gate": {
+    "passed_tensors": 1,
+    "total_tensors": 16,
+    "failed_tensors": [
+      "0000_crazing_51",
+      "0001_crazing_10",
+      "0002_inclusion_18",
+      "0003_inclusion_217",
+      "0004_patches_156",
+      "0005_patches_211",
+      "0006_pitted_surface_224",
+      "0007_pitted_surface_231",
+      "0008_rolled-in_scale_146",
+      "0009_rolled-in_scale_262",
+      "0011_scratches_246",
+      "0012_derived_319x201_crazing_10",
+      "0013_derived_201x319_inclusion_18",
+      "0014_derived_321x199_pitted_surface_224",
+      "0015_derived_199x321_scratches_126"
+    ]
+  },
+  "scope": {
+    "tensorrt_level_c": "NOT_EXECUTED",
+    "boundary_investigation": "NOT_EXECUTED",
+    "benchmark": "NOT_EXECUTED",
+    "stability": "NOT_EXECUTED",
+    "k6": "NOT_EXECUTED"
+  }
+}

@@ -407,26 +407,32 @@ The following items must not be invented by AI agents:
 
 When finalized, these items should be recorded in `docs/personal/DECISIONS.md` and `docs/personal/ENVIRONMENT.md` when they describe the runtime environment.
 
-### 13.1 Stage J Planning Status
+### 13.1 Stage K Planning Status
 
-Current status contract: `M0–M5 CLOSED`; `Stage J Plan v0.3 FROZEN`; `D041–D047 Accepted`; `J0–J3 COMPLETE`; `J3 COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`; `J4 NOT_STARTED`; `J4.1 READY`; Stage T and Stage P have not started.
+Current status contract: `M0–M5 CLOSED`; Stage J `COMPLETE`; Stage K
+Execution Plan `FINAL`; K0 Planning Freeze
+`COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`; K1 Platform Acceptance
+`READY_AFTER_K0_FREEZE_COMMIT`.
 
-M0–M5 are completed and closed. The project is currently at Stage J `J4 Entry`:
+The current Stage K implementation boundary is: TensorRT Engine Build
+`NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`; Stage K production
+implementation `NOT_AUTHORIZED_BEFORE_K3`; Stage P Pipeline is required
+downstream scope and `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`.
 
-- Stage J Plan v0.3 is frozen and committed at `docs/personal/STAGE_J_EXECUTION_PLAN.md`;
-- Decision D041 is `Accepted`;
-- J0 Planning Freeze is complete after the final main closeout commit;
-- the Stage J implementation branch is `feature/jetson-onnxruntime`;
-- Stage J production baseline and J1–J3 validation are complete; no J4 task has been executed.
-- The frozen inventory contains Model Smoke OFF `31`, ON `39`, and 45 frozen Stage J task cards; the next executable task is J4.1 — Level A correctness.
+Stage K K0 documentation freeze is complete at the commit containing this
+changeset. K1 may be executed only by a later explicit task. Agents must not
+enter K2 or K3 early, implement Pipeline, push, merge or tag. No K1, trtexec,
+Engine build, CUDA/TensorRT smoke or production C++ modification is authorized
+by K0.
 
-The verified WSL/M5 environment facts are GCC/G++ `11.4.0`, C++17, CMake `3.22.1` with minimum `3.16`, OpenCV C++ `4.5.4`, and ONNX Runtime C++ `1.23.2`. These are current verified WSL/M5 environment facts, not Jetson observed facts.
-
-The verified Stage J target is Jetson Orin Nano Super Developer Kit 8GB, 256GB NVMe root filesystem, JetPack 6.2.2 / Jetson Linux L4T 36.5, Ubuntu 22.04-based, aarch64, ONNX Runtime 1.23.2 native source build, CPUExecutionProvider only, FP32, Serial, MAXN_SUPER and active fan.
-
-Authority is explicitly split: `docs/personal/STAGE_J_EXECUTION_PLAN.md` is the frozen technical/experimental protocol authority; `docs/personal/STAGE_J_TASK_CARDS.md` is the frozen task-boundary and dependency authority; `docs/personal/TASKS.md` is the current execution-status authority; current HEAD production source and tests are the implementation-fact authority. D041 and subsequent accepted Decisions govern decisions. AGENTS.md remains the highest-priority global Agent rule; descriptive README/ENVIRONMENT/EXPERIMENT_PLAN status text cannot override the frozen protocol or current source facts.
-
-The active milestone is Stage J J4. Only Jetson ONNX Runtime CPU Level A/B/C correctness work and its corresponding Evidence are currently allowed. Agents must not implement Stage T TensorRT, Stage P Pipeline, ROS2, camera, Qt, INT8, CUDA EP, GPU preprocessing/NMS, or other premature optimization. Production changes are allowed only when authorized by a specific Task Card or Decision. The frozen Plan and accepted Decisions take priority over summary documents, and the latest live-status section at the end of `docs/personal/TASKS.md` determines real-time status. TensorRT FP16 and Pipeline remain later Stage T and Stage P work.
+Authority is explicitly split: `docs/personal/STAGE_K_EXECUTION_PLAN.md` is
+the frozen Stage K technical/experimental protocol authority;
+`docs/personal/STAGE_K_TASK_CARDS.md` is the frozen Stage K task-boundary
+authority; `docs/personal/TASKS.md` is the current execution-status
+authority; current HEAD production source and tests are the implementation-fact
+authority. Accepted Decisions govern decisions, and historical Stage J
+documents remain unchanged unless a later task explicitly authorizes a focused
+status correction.
 
 ---
 

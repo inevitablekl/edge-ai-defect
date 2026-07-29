@@ -1,0 +1,1997 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_cleanup_inventory",
+  "audit_id": "stage_k_cleanup_audit_v1",
+  "audit_date": "2026-07-29",
+  "source_commit": "d4b50739c2f5f1db9ba7b48e653618b2af9cd98a",
+  "experiment_execution": "none; repository cleanup only",
+  "initial_git_status": "Untracked Stage K diagnostic assets, smoke assets, and task-evaluation audit assets were present; existing tracked files were unchanged.",
+  "counts": {
+    "keep_official_files_audited": 121,
+    "archive_diagnostic_files": 108,
+    "removed_temporary_files": 3
+  },
+  "keep_official": [
+    {
+      "path": "results/validation/stage_k6/stability_smoke/commands.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 543,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke/environment.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 6155,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke/inference_records.jsonl",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 83370,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke/latency_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 642,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke/system_monitor_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1000,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2075,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/commands.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 544,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/environment.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 6155,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/inference_records.jsonl",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 83370,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/latency_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 724,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/runner_failures.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 213,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/sha256sums.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 857,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/stability_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2334,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/system_monitor_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1001,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke2/verification_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 812,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2076,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/commands.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 543,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/environment.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 6155,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/inference_records.jsonl",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 145536,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/latency_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1509,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/sha256sums.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 770,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/stability_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2295,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/system_monitor_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1662,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2008,
+      "git_status": "ignored_or_not_reported",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_smoke3/verification_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 807,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2085,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/commands.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 538,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/environment.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 6155,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/inference_records.jsonl",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 34458386,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/latency_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1511,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/sha256sums.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 770,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/stability_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 101444,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/system_monitor_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1681,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 513228,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k6/stability_v1/verification_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 845,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k6"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2475,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/comparison_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 7019,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/environment.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 5977,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/benchmark_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 12724,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1699746,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 17942,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_001/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454451,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_001/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3903,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_001/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_001/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_001/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 24829,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_002/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454451,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_002/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3950,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_002/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_002/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_002/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 24503,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_003/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454451,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_003/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3878,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_003/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_003/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/run_003/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 24821,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp16_original/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 74243,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/benchmark_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 12662,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1669147,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 18048,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_001/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454452,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_001/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3950,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_001/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_001/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_001/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 27530,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_002/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454451,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_002/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3917,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_002/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_002/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_002/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 28084,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_003/latency_samples.csv",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 454451,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_003/manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3945,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_003/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_003/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 48,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/run_003/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 26973,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/fp32_notf32/tegrastats.log",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 82677,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/prepared_input_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 40173,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k7/performance_v1/protocol.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3285,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k7"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1996,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth/ground_truth_conversion_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1276,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth/ground_truth_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 65442,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth/test_ground_truth.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 260967,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth_audit/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2124,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth_audit/dataset_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 613150,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/ground_truth_audit/ground_truth_audit.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 39631,
+      "git_status": "untracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2085,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 779,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/detections.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 165097,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/inference_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2694,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/latency.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 91638,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/runner.stderr.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 149,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/runner.stdout.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_selective/detections.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 165614,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_selective/inference_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2794,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_selective/latency.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 90933,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp32_notf32/detections.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 164529,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp32_notf32/inference_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2722,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp32_notf32/latency.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 89832,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/inference_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2484,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/inference/inference_summary_fp16_original.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1513,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 5231,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/backend_metrics.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2337,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/classwise_metrics.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 5672,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/evaluation_contract.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3023,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/evaluator_provenance.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2388,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/fp32_vs_original_fp16.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 589907,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/ground_truth_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 660,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/sha256sums.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 896,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/three_engine_comparison.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 4504,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/timing_comparison.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 1842,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/metrics/verification_report.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3044,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/protocol/protocol_metadata.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 841,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/split/split_metadata.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2472,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/split/test_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 69727,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/split/train_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 481373,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v2/split/val_manifest.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 138127,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k_task_eval_v2"
+    },
+    {
+      "path": "results/validation/stage_k8/final_summary_v1/README.txt",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 3999,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k8"
+    },
+    {
+      "path": "results/validation/stage_k8/final_summary_v1/experiment_matrix.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2547,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k8"
+    },
+    {
+      "path": "results/validation/stage_k8/final_summary_v1/final_experiment_summary.json",
+      "category": "KEEP_OFFICIAL",
+      "type": "file",
+      "size_bytes": 2661,
+      "git_status": "tracked",
+      "experiment": "results/validation/stage_k8"
+    }
+  ],
+  "archive_diagnostic": [
+    {
+      "path": "configs/stage_k/tensorrt_fp32_baseline_v1.yaml",
+      "new_path": "results/archive/stage_k_diagnostics_v1/configs/stage_k/tensorrt_fp32_baseline_v1.yaml",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 808,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "Stage K diagnostic tooling/config"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 3523,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/debug_capability_audit_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_capability_audit_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 7811,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/debug_engine_diagnostic_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_engine_diagnostic_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 9517,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/debug_engine_feasibility_audit_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_engine_feasibility_audit_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 14177,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/debug_tool_enablement_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/debug_tool_enablement_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 5911,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 8598,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/debug_tensor_inventory.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/debug_tensor_inventory.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 5577,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/intermediate_comparison.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/intermediate_comparison.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 13553,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/onnx_graph_node_mapping.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/onnx_graph_node_mapping.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 3903,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_1_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_1_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_2_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Add_2_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Concat_2_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Concat_2_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 134400,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Div_1_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Div_1_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Mul_2_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Mul_2_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 134400,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sigmoid_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sigmoid_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 201600,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_1_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_1_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Slice_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_1_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_1_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_output_0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/_model_22_Sub_output_0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 67200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/ort_intermediate_metadata.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/ort_intermediate_metadata.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1794,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/output0.ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/detection_head_intermediate_audit_v1/ort_outputs/output0.ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/repeatability_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/repeatability_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 5618,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 3553,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/Y_ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/Y_ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/case_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/case_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2391,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 4915200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 438,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 270,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_control/run_control.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_control/run_control.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1287,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_runtime_record.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/ort_runtime_record.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1542,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/runner_input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/runner_input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 674,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 165,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_0.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_0.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/ones/trt_raw/output_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1792,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/Y_ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/Y_ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/case_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/case_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2543,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 4915200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 481,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 270,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_control/run_control.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_control/run_control.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1317,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_runtime_record.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/ort_runtime_record.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1542,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/runner_input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/runner_input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 684,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 175,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_0.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_0.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/random_seed_42/trt_raw/output_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1812,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/synthetic_tensor_isolation_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1/synthetic_tensor_isolation_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 6288,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/Y_ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/Y_ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/case_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/case_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2420,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 4915200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 438,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 270,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_control/run_control.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_control/run_control.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1287,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_runtime_record.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/ort_runtime_record.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1542,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/runner_input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/runner_input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 674,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 165,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_0.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_0.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/ones/trt_raw/output_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1792,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/Y_ort.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/Y_ort.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/case_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/case_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2543,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 4915200,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 481,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 270,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_control/run_control.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_control/run_control.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1317,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_runtime_record.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/ort_runtime_record.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1542,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/runner_input_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/runner_input_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 684,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.exit_code.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.exit_code.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 175,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_0.f32le",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_0.f32le",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 336000,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_manifest.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/random_seed_42/trt_raw/output_manifest.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 1812,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/synthetic_tensor_isolation_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/synthetic_tensor_isolation_v1_initial/synthetic_tensor_isolation_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 6317,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/tensorrt_level_b_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/tensorrt_level_b_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 13492,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 9343,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/help_capability_grep.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/help_capability_grep.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 8012,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_detailed_attempt.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 13866,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stderr.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stderr.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 0,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stdout.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_inspection.stdout.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 18480,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_layer_info.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_fp16_layer_info.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 10128,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_help.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_fp32/trtexec_diagnostic_v1/trtexec_help.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 26257,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_fp32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 4498,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/level_b_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/level_b_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 13514,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_1.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_1.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 11135,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_2.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/raw_output_manifest_run_2.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 11135,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/repeatability_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/repeatability_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 21739,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/jetson_tensorrt_strict_fp32_notf32/synthetic_tensor_isolation_report.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/jetson_tensorrt_strict_fp32_notf32/synthetic_tensor_isolation_report.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 6448,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "jetson_tensorrt_strict_fp32_notf32"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v1/dataset_audit.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/dataset_audit.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2013,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "stage_k_task_eval_v1"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/README.txt",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/README.txt",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 2183,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "stage_k_task_eval_v1"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/candidate_dataset_inventory.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/candidate_dataset_inventory.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 6350,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "stage_k_task_eval_v1"
+    },
+    {
+      "path": "results/validation/stage_k_task_eval_v1/ground_truth_audit/ground_truth_audit.json",
+      "new_path": "results/archive/stage_k_diagnostics_v1/results/validation/stage_k_task_eval_v1/ground_truth_audit/ground_truth_audit.json",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 8092,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "stage_k_task_eval_v1"
+    },
+    {
+      "path": "tools/diagnostic/onnx_head_output_view.py",
+      "new_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/onnx_head_output_view.py",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 7080,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "Stage K diagnostic tooling/config"
+    },
+    {
+      "path": "tools/diagnostic/onnxruntime_intermediate_runner.cpp",
+      "new_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/onnxruntime_intermediate_runner.cpp",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 5990,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "Stage K diagnostic tooling/config"
+    },
+    {
+      "path": "tools/diagnostic/tensorrt_debug_engine_builder.cpp",
+      "new_path": "results/archive/stage_k_diagnostics_v1/tools/diagnostic/tensorrt_debug_engine_builder.cpp",
+      "category": "ARCHIVE_DIAGNOSTIC",
+      "type": "file",
+      "size_bytes": 18362,
+      "git_status": "untracked_before_cleanup",
+      "experiment": "Stage K diagnostic tooling/config"
+    }
+  ],
+  "remove_temporary": [
+    {
+      "path": "tools/diagnostic/__pycache__/m3_precision_mapping.cpython-310.pyc",
+      "category": "REMOVE_TEMPORARY",
+      "type": "cache",
+      "git_status": "ignored_before_cleanup",
+      "experiment": "Python bytecode cache"
+    },
+    {
+      "path": "tools/diagnostic/__pycache__/onnx_head_output_view.cpython-310.pyc",
+      "category": "REMOVE_TEMPORARY",
+      "type": "cache",
+      "git_status": "ignored_before_cleanup",
+      "experiment": "Python bytecode cache"
+    },
+    {
+      "path": "tools/diagnostic/__pycache__/selective_precision_mapping.cpython-310.pyc",
+      "category": "REMOVE_TEMPORARY",
+      "type": "cache",
+      "git_status": "ignored_before_cleanup",
+      "experiment": "Python bytecode cache"
+    }
+  ],
+  "notes": [
+    "Formal K5/K6/K7/K8 Evidence content was not modified.",
+    "The complete results/validation/stage_k6, stage_k7, stage_k_task_eval_v2, and stage_k8 trees remain at their original paths.",
+    "The old stage_k_task_eval_v1 and TensorRT FP32 diagnostic/control assets were preserved under the archive directory.",
+    "No Engine, ONNX, ModelContract, source implementation, or tolerance was changed."
+  ],
+  "verification": {
+    "status": "PASS",
+    "stage_k6_sha256sums": "PASS",
+    "stage_k7_manifest_hashes": "PASS",
+    "stage_k8_final_summary_sha256": {
+      "README.txt": "0adbbb67d99eb10f856b6628928e7d43596eedae57a793067b57b2d8ab71e93d",
+      "final_experiment_summary.json": "01cdc83dcbc2b7ac4d8f58e967e2c881ca7a463b34837df76e524e8a50a6e42e",
+      "experiment_matrix.json": "5ba9b1929cf1dbfb4826586c338cda5183bdda60890c999bfdebb283343ac6e6"
+    }
+  }
+}

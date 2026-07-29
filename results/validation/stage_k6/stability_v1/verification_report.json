@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k6_verification_report",
+  "verdict": "K6_STABILITY_PASS",
+  "checks": {
+    "manifest_sha256_match": true,
+    "engine_sha256_match": true,
+    "duration_target_complete": true,
+    "duration_30_minutes_complete": true,
+    "inference_success_100_percent": true,
+    "crash_zero": true,
+    "nan_inf_zero": true,
+    "latency_no_continuous_growth": true,
+    "tegrastats_log_present": true
+  },
+  "total_frames": 84420,
+  "success_count": 84420,
+  "failure_count": 0,
+  "runtime_duration_seconds": 1802.818970375,
+  "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+  "engine_manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8"
+}

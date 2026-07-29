@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_level_inference_summary",
+  "split_manifest": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/test_manifest.json",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "expected_image_count": 180,
+  "backends": {
+    "fp32_notf32": {
+      "backend": "TRT FP32 noTF32",
+      "backend_key": "fp32_notf32",
+      "image_count": 180,
+      "success_count": 180,
+      "failure_count": 0,
+      "inference_mean_ms": 19.923535383333345,
+      "e2e_mean_ms": 26.215932905555544,
+      "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+      "engine_manifest_sha256": "86549f894802afab06221e32bab46e89d69e97eb8059befa8771d2728b2ee1a5",
+      "tensorrt_version": "10.3.0.30"
+    },
+    "fp16_selective": {
+      "backend": "TRT FP16 selective M3",
+      "backend_key": "fp16_selective",
+      "image_count": 180,
+      "success_count": 180,
+      "failure_count": 0,
+      "inference_mean_ms": 20.111881088888886,
+      "e2e_mean_ms": 26.53010720555556,
+      "engine_sha256": "83e7100b01b9bb0c04dd4c41e52d6d5f61ee61d07cef82dffee173a1c692266b",
+      "engine_manifest_sha256": "16f5f8bb68f95c564fc5f21b8809302bd226e0ce6a9fdd138038b659cbe7e11a",
+      "tensorrt_version": "10.3.0.30"
+    }
+  },
+  "validation": {
+    "output_schema_identical": true,
+    "nan_inf_validation": "PASS",
+    "backend_artifacts": {
+      "fp32_notf32": {
+        "detections_sha256": "41ac880c8c86e03da14410a6823b126eb523e86e9e3bd679830808ec25396a3b",
+        "latency_sha256": "968bffc9d531619960bd6e8a0d1e9aa9e996f3c5e1014e7f1f1924046dda757c",
+        "inference_manifest_sha256": "45e6acdcceceeafc1a61c228789d0a0af222d38dd8474b640f5a807df2fe763e",
+        "success_count": 180,
+        "failure_count": 0,
+        "inference_mean_ms": 19.923535383333345,
+        "e2e_mean_ms": 26.215932905555544
+      },
+      "fp16_selective": {
+        "detections_sha256": "c411833d9cc1bfe69ef9b58371363a25338aaa4403ae1cbca61f693ca0e58a10",
+        "latency_sha256": "179c1b62900eb8c921f57d74763075967ef4b8a5651480f6a5b5d68cb8943207",
+        "inference_manifest_sha256": "0aa57301a7266c40ecf1cdf4d49ee9a0a1a7a8da587e5182ab68194fd09255df",
+        "success_count": 180,
+        "failure_count": 0,
+        "inference_mean_ms": 20.111881088888886,
+        "e2e_mean_ms": 26.53010720555556
+      }
+    }
+  },
+  "ready_for_task_metric_evaluation": true
+}

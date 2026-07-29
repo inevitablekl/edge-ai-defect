@@ -137,7 +137,9 @@ Status: J1–J3 verified
 
 ### 4.4 Stage J 研究定位与边界
 
-当前状态合同：`M0–M5 CLOSED`；Stage J protocol：`FROZEN`；D041–D047：`Accepted`；J0–J3：`COMPLETE`；J3：`COMPLETE_WITH_ACCEPTED_THIRD_PARTY_LIMITATION`；J4：`NOT_STARTED`；J4.1：`READY`；implementation branch：`feature/jetson-onnxruntime`。Stage T 和 Stage P 尚未开始。
+本段保留 Stage J 的历史实验边界快照；当前 live status 以文档末尾的
+Stage K K0 状态节为准。Stage J 已 `COMPLETE`，Stage K K0 已冻结，K1 是
+下一授权步骤；Stage P 仍为下游范围且在 Stage K closeout 前未授权。
 
 Stage J 的正式定位是 **Jetson Orin Nano Super ONNX Runtime CPU Baselines**，目标包括：
 
@@ -1327,3 +1329,169 @@ and the original J8 Deep Evidence Gate is not replaced by the lightweight audit.
 
 Stage K is `READY_FOR_PLANNING`. Stage T is `NOT_STARTED` and remains subject
 to separate next-stage planning and governance authorization。
+
+## Stage K K0 Current Live Status
+
+Stage J is `COMPLETE`. Stage K Execution Plan is `FINAL`. K0 Planning Freeze
+is `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`; K1 Platform Acceptance
+is `READY_AFTER_K0_FREEZE_COMMIT`.
+
+The Stage K backend comparison controls only backend substitution:
+
+same device
+same executable
+same corpus
+same preprocessing
+same postprocessing
+serial runtime
+backend substitution only
+
+TensorRT Engine Build remains
+`NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`. Stage K production
+implementation remains `NOT_AUTHORIZED_BEFORE_K3`; Stage P remains required
+downstream scope and is not authorized before Stage K closeout.
+
+## Stage K K5 Correctness Campaign Live Status
+
+Updated 2026-07-27. The accepted K5.1 reference bundle is
+`stage_k_level_b_reference_v1` (archive SHA256
+`fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29`,
+13,072,955 bytes), with 16/16 inputs and 16/16 reference outputs verified.
+
+The final K5 implementation is at commit
+`ca8393556689b738ac8991530f5eabb11696d560`; its fresh Release build passed
+the focused 12/12 CTest set. Formal attempt 001 is retained but invalidated
+because two raw-runner contract/identity defects were found. Attempt 002 is
+the current formal attempt.
+
+ORT Level B repeatability passed 16/16 byte-identical outputs. The strict
+comparison passed 0/16 and the cross-architecture comparison passed 4/16;
+the worst overall MAE was `2.0134166237853822e-05` against the `1e-5` limit.
+This is `ORT_CONTROL_FAIL`, so the K5 gate stopped before ORT Level C,
+TensorRT Level B/C, and boundary investigation. Formal status is `K5 FAIL`;
+live disposition is `FAILED_BY_GATE_REVIEW_PENDING_D063`; D063 is `ADDED`;
+K6 is `NOT READY`. No benchmark, stability, Pipeline, GPU preprocessing/NMS,
+INT8, DLA, dynamic-shape, ROS2, camera, or DeepStream work was executed.
+
+The D063 diagnostic review classified the observed drift as an inherited
+cross-architecture ORT numerical limitation (`DIAGNOSIS_B`). This updates
+only the ORT control disposition path; K5 remains failed and a K5 rerun is
+required before K6.
+
+Local evidence is under
+`/home/orin/edge-ai-local-evidence/stage_k/correctness/k5_correctness_v1/`;
+tracked summary evidence is under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v1/`.
+
+## Stage K K5.2 ORT Control Re-evaluation after D063
+
+Updated 2026-07-28. New immutable Evidence is tracked under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v2/`; the prior
+`k5_correctness_v1` failure Evidence remains unchanged.
+
+The strict ORT Level B Gate remains failed with its unchanged thresholds.
+The D063 inherited evaluation passed: input identity, exact output shape,
+finite output, and 16/16 Jetson repeatability passed; drift remains
+bbox-dominated and score channels remain bounded. Original strict ORT Level C
+semantic comparison passed 16/16 under the unchanged confidence `1e-4` and
+bbox-coordinate `0.01` limits.
+
+Current ORT Control disposition is
+`INHERITED_CROSS_ARCH_LIMITATION`. This is not a full TensorRT correctness
+closeout: TensorRT Level B/C, benchmark, stability, Pipeline, and K6 remain
+unexecuted.
+
+## Stage K K5.3 TensorRT Level B Correctness
+
+Updated 2026-07-28. New immutable Evidence is tracked under
+`results/validation/jetson_tensorrt_fp16/k5_correctness_v3/`.
+
+The frozen TensorRT Engine produced 16/16 raw FP32 BCN outputs with exact
+shape `[1,10,8400]` and finite values. The frozen `tensorrt_fp16` Level B
+policy comparison passed 1/16 tensors and failed 15/16. The maximum bbox
+absolute error was `23.29144287109375`, exceeding the unchanged `4.0` limit;
+the maximum score absolute error was `0.021184921264648438`, exceeding the
+unchanged `0.02` limit. Formal result: `TENSORRT_LEVEL_B_FAIL`.
+
+TensorRT Level C, boundary investigation, benchmark, stability, Pipeline,
+and K6 were not executed.
+
+## Stage K K2R Sensitivity-Aware TensorRT Precision Remediation
+
+Updated 2026-07-28. D064 was accepted at commit
+`ac53fe71006445a826730d520233a00873639d3c` for a bounded numerical
+remediation. The original Engine, original K5.3 `FAIL`, ONNX, ModelContract,
+Reference Bundle, comparator, tolerances, and historical Evidence remain
+frozen.
+
+C0 disabled TF32 with `--noTF32` and produced a valid local diagnostic Engine;
+its unchanged TensorRT Level B comparison was `1/16 PASS`. This did not
+support TF32 as the dominant cause. C1 constrained the exact traced terminal
+BBox, DFL, and decode path to FP32 while retaining global `--fp16`; it built,
+loaded, and compared as `1/16 PASS`. C2 was then authorized and constrained
+the maximum D064 scope: 39 exact traced BBox front-end/DFL/decode nodes, still
+excluding Backbone, Neck, and classification. It built and loaded, but its
+Level B comparison was `0/16 PASS`.
+
+Current verdict: `K2R_COMPLETE_LEVEL_B_FAIL`. No candidate is selected. The
+tracked summary is
+`results/build/tensorrt/k2r_precision_remediation_v1/`; raw tensors, logs,
+layer dumps, and engines remain local-only. Because no candidate passed the
+unchanged 16/16 gate, no K4 regression or new formal K5.3 was run, and K5.4
+remains `NOT READY`.
+
+The D064 boundary is closed after C2. TensorRT Level C, K6, benchmark,
+stability, Pipeline, GPU preprocessing/NMS, INT8, DLA, ONNX rewrite, C++
+Builder, Polygraphy, package changes, push, merge, and tag remain unexecuted
+and unauthorized.
+
+## Stage K Final Status — K8 Finalization and Evidence Consolidation v1
+
+更新日期：`2026-07-29`
+
+Stage K final status：`K0-K8 completed`。
+
+最终部署候选：`Original TensorRT FP16 Engine`。
+
+最终 pipeline：
+
+```text
+PyTorch
+↓
+ONNX
+↓
+ORT baseline
+↓
+TensorRT FP32 reference
+↓
+TensorRT FP16 optimization
+↓
+Task validation
+↓
+Stability
+↓
+Performance
+```
+
+K8 只完成 evidence consolidation、decision freeze 和 documentation update，
+不进行新 benchmark、新 accuracy experiment 或新 precision search，也不修改
+Engine、ONNX、ModelContract、Runtime、Comparator tolerance、benchmark result
+或已有 Evidence。
+
+Stage K final evidence summary：
+
+- K5 task-level validation：`TASK_LEVEL_FP16_ACCEPTED`；
+- K6 stability：`K6_STABILITY_PASS`，84420 frames，1802.819 s，100% success；
+- K7 formal performance：`K7_PERFORMANCE_COMPLETE`；
+- TensorRT FP16 raw Level B：`FAIL`，原因是 bbox-dominated raw tensor
+  numerical deviation，failure retained；
+- decision：`D066`，基于 task accuracy、stability 和 performance 接受 FP16，
+  不以 bitwise raw tensor equality 作为接受条件。
+
+最终汇总目录：
+
+```text
+results/validation/stage_k8/final_summary_v1/
+```
+
+Stage P Pipeline remains downstream work and was not executed by Stage K8。

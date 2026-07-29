@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "k5_ort_control_reevaluation_verification",
+  "attempt_id": "k5_correctness_v2",
+  "source_commit": "838e2bfbfc84cb378ea629f9ff316828ed86fe09",
+  "application_sha256": "97b17a66c093a4db5a7a983d751513547587c609e6562e0e42c077ee1f1c8ad7",
+  "stage_k_raw_tensor_runner_sha256": "35d9ebbd9352e9688a6c4b331d7c895dca9479cbae17c317d9e41451e593f6ad",
+  "onnxruntime_library_sha256": "6eb17924b41234997354dd006b997ef079a10ddbe5fe082ae6373b6581b36740",
+  "reference_bundle_sha256": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+  "input_manifest_sha256": "d81d6bb57346231f3ea4cd2dcf0f5285b5993b4b16953641c45f85359b9d0fbf",
+  "runtime_config_sha256": "8822d2ef783533511785de7c8799309c09ea1a72f9463ae5fa1da56b8fd943df",
+  "ort_level_b": {
+    "inference": "16/16 PASS",
+    "strict": "FAIL (0/16)",
+    "inherited_cross_architecture": "PASS_WITH_INHERITED_LIMITATION",
+    "repeatability": "16/16 byte-identical"
+  },
+  "ort_level_c": {
+    "status": "PASS",
+    "images": "16/16",
+    "confidence_max_abs": 2.65265835569517e-06,
+    "bbox_max_coordinate_abs": 0.0003051264160163214
+  },
+  "final_ort_control_disposition": "INHERITED_CROSS_ARCH_LIMITATION",
+  "downstream": {
+    "tensorrt_level_b": "NOT_EXECUTED",
+    "tensorrt_level_c": "NOT_EXECUTED",
+    "k6": "NOT_EXECUTED",
+    "benchmark": "NOT_EXECUTED",
+    "stability": "NOT_EXECUTED"
+  }
+}

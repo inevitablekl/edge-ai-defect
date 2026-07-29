@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task": "D062",
+  "disposition": "D062_ACCEPTED",
+  "next_gate": "K2_READY",
+  "checks": [
+    {"check_id":"environment_identity","description":"Jetson/L4T/CUDA/TensorRT identity","mandatory":true,"status":"PASS","observed":"Jetson Orin Nano Super; aarch64; L4T R36.5.0; CUDA 12.6.68; TensorRT 10.3.0.30","expected":"Real K1-passed environment","evidence_file":"environment_identity.txt"},
+    {"check_id":"trtexec_identity","description":"trtexec path, binary and version","mandatory":true,"status":"PASS_WITH_DOCUMENTED_LIMITATION","observed":"/usr/src/tensorrt/bin/trtexec; TensorRT v100300; --version exit 1 with no model","expected":"Actual identity recorded; limitation retained","evidence_file":"trtexec_identity.txt"},
+    {"check_id":"help_semantics","description":"Required TensorRT 10.3 option semantics","mandatory":true,"status":"PASS","observed":"onnx/save/load/fp16/memPoolSize/shapes/I-O/skipInference semantics captured","expected":"Every contract option supported by observed help","evidence_file":"parameter_semantics.md"},
+    {"check_id":"memory_pool_name","description":"TensorRT 10.3 memory-pool option","mandatory":true,"status":"PASS","observed":"--memPoolSize=poolspec; workspace pool; base-2 M suffix","expected":"No TensorRT 8.x --workspace syntax","evidence_file":"parameter_semantics.md"},
+    {"check_id":"static_model_contract","description":"Frozen ONNX/ModelContract shape and dtype","mandatory":true,"status":"PASS","observed":"batch 1; input [1,3,640,640]; output [1,10,8400]; FP32 host I/O","expected":"Frozen ModelContract identity","evidence_file":"README.md"},
+    {"check_id":"build_template","description":"Exact offline build command template","mandatory":true,"status":"PASS","observed":"FP16, memPoolSize workspace:4096M, explicit FP32 I/O, saveEngine, skipInference","expected":"Reproducible command recorded without execution","evidence_file":"frozen_build_command.txt"},
+    {"check_id":"artifact_paths","description":"Engine/log/manifest path rules","mandatory":true,"status":"PASS","observed":"Local Engine root and deterministic artifact names recorded","expected":"Engine local-only; manifest tracked after K2","evidence_file":"artifact_and_log_paths.txt"},
+    {"check_id":"inspection_contract","description":"Post-build inspection and independent load smoke","mandatory":true,"status":"PASS","observed":"loadEngine inspection and runtime smoke commands recorded","expected":"Build and smoke separated","evidence_file":"inspection_and_load_smoke.txt"},
+    {"check_id":"no_forbidden_action","description":"No formal Engine/K2/production action","mandatory":true,"status":"PASS","observed":"Only read-only queries and documentation executed","expected":"D062 investigation only","evidence_file":"non_actions.txt"}
+  ]
+}

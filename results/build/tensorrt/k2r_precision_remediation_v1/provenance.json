@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k2r_provenance",
+  "verdict": "K2R_COMPLETE_LEVEL_B_FAIL",
+  "branch": "feature/jetson-tensorrt-fp16",
+  "starting_head": "38ad4282ca1fe23725eb61ec59891bb5249a65b4",
+  "d064_commit": "ac53fe71006445a826730d520233a00873639d3c",
+  "ending_head_before_evidence_commit": "ac53fe71006445a826730d520233a00873639d3c",
+  "environment": {"architecture": "aarch64", "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super", "tensorrt": "10.3.0", "cuda": "12.6.68", "l4t": "R36.5.0"},
+  "frozen_assets": {
+    "onnx": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "model_contract": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "reference_bundle": "fed5755ce630d0902449f3052fcbb915592245583df19bf924ec867d1c1e1e29",
+    "original_engine": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc"
+  },
+  "local_only_roots": ["/home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1", "/home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1"],
+  "formal_level_b": {"reference": "stage_k_level_b_reference_v1", "comparator": "tools/validation/stage_k_level_b_compare.py", "policy": "tensorrt_fp16", "candidates": ["C1", "C2"], "selected": null},
+  "not_executed": ["K4 regression for a selected remediation engine", "new formal K5.3", "Level C", "K5.4", "K6", "benchmark", "stability", "Pipeline", "GPU preprocessing/NMS", "INT8", "DLA", "ONNX rewrite", "C++ Builder", "Polygraphy"]
+}

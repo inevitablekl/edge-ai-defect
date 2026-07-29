@@ -1,7 +1,8 @@
 #include "edge_ai_defect/application/application_runner.hpp"
 
-#include "edge_ai_defect/backend_ort/onnx_runtime_engine.hpp"
+#include "edge_ai_defect/inference/inference_engine_factory.hpp"
 #include "edge_ai_defect/model/model_contract_loader.hpp"
+#include "edge_ai_defect/model/tensorrt_engine_manifest.hpp"
 #include "edge_ai_defect/postprocess/postprocessor.hpp"
 #include "edge_ai_defect/preprocess/preprocessor.hpp"
 #include "edge_ai_defect/runtime/composite_sink.hpp"
@@ -21,13 +22,25 @@ namespace {
 
 runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
                                    const model::ModelContract& contract,
-                                   const RunOptions& options) {
+                                   const RunOptions& options,
+                                   const model::TensorRtEngineManifest* manifest) {
     runtime::RunMetadata metadata;
-    metadata.schema_version = 1U;
+    const bool tensorrt = config.backend_type == "tensorrt_fp16";
+    metadata.schema_version = tensorrt ? 2U : 1U;
     metadata.backend_type = config.backend_type;
-    metadata.model_filename = config.model_path.filename().string();
-    metadata.model_sha256 = contract.expected_onnx_sha256;
+    metadata.model_filename = tensorrt
+                                  ? config.tensorrt.engine_path.filename().string()
+                                  : config.model_path.filename().string();
+    metadata.model_sha256 = tensorrt && manifest != nullptr
+                                ? manifest->engine_sha256
+                                : contract.expected_onnx_sha256;
     metadata.contract_filename = config.model_contract_path.filename().string();
+    if (tensorrt && manifest != nullptr) {
+        metadata.artifact_kind = "tensorrt_engine";
+        metadata.source_onnx_sha256 = manifest->source_onnx_sha256;
+        metadata.engine_manifest_filename =
+            config.tensorrt.engine_manifest_path.filename().string();
+    }
     metadata.class_names = contract.class_names;
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled =
@@ -54,6 +67,14 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
         return {status, false};
     }
 
+    std::unique_ptr<model::TensorRtEngineManifest> manifest;
+    if (config.backend_type == "tensorrt_fp16") {
+        manifest = std::make_unique<model::TensorRtEngineManifest>();
+        status = model::TensorRtEngineManifestLoader::load(
+            config.tensorrt.engine_manifest_path, &contract, manifest.get());
+        if (!status.ok()) return {status, false};
+    }
+
     std::unique_ptr<runtime::DirectorySource> source;
     status = runtime::DirectorySource::create(config.input_directory, &source);
     if (!status.ok()) {
@@ -61,12 +82,8 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     }
 
     preprocess::Preprocessor preprocessor;
-    backend_ort::OnnxRuntimeEngine engine;
-    if (config.schema_version == 2U) {
-        status = engine.initialize(config, contract, config.model_path);
-    } else {
-        status = engine.initialize(contract, config.model_path);
-    }
+    std::unique_ptr<inference::IInferenceEngine> engine;
+    status = inference::create_inference_engine(config, contract, &engine);
     if (!status.ok()) {
         return {status, false};
     }
@@ -93,11 +110,12 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
         return {status, false};
     }
 
-    const runtime::RunMetadata metadata = make_metadata(config, contract, options);
+    const runtime::RunMetadata metadata = make_metadata(
+        config, contract, options, manifest.get());
     runtime::SerialRunner runner(*source,
                                  preprocessor,
                                  contract.input.tensor_info,
-                                 engine,
+                                 *engine,
                                  postprocessor,
                                  *sink,
                                  options.trace_observer);

@@ -1,0 +1,22 @@
+# Tracked summary files
+# =====================
+218af4bb191424e2c4859b52fadf0d8b37b07975f58d5d21987f863fff04263f  README.txt
+fdc062991a9ea0bdd16f62bbd31f9ee37c4e3f952b5ddef3cb9cb4df8aa91528  d064_contract.json
+4b49929491a202486bfc1ae6f9b7f35c96802f66ec35e11224e94c59e5c6942a  candidate_matrix.json
+558f4528bd972fc8df51264bcc0fcbaad62170dfcac1e43eadf5b4b713bd0459  selected_precision_policy.json
+6c59c945a439c9a01d14ce6c482de961e16c64a6f90247a98192381fb3e05ded  build_verification_report.json
+f77cbcf7cb8d304763fb73f06106a631e65fd01b06bab1f2feb925146cdec492  precision_layer_mapping.json
+612bdb03b1f657d30a6f0c1d456f570cc6baaa59d1885f8b54b3d326aa1e3a0e  precision_layer_mapping.txt
+fccfafdd5825b4173ecacc455202b1e0b963410a7aa771692c537cb74ad838fc  provenance.json
+# Local-only evidence summaries
+# =============================
+574543bf7d55b932121c09a3b61ee87d2fc33c42b602263600c45ecd7770a3b7  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/c0_level_b/c0_level_b_report.json
+5c5b7095765e5fe3a61e6315493d4adc23fb216b01c5353d3fd0fcd755882996  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/c1_terminal_bbox_fp32/level_b_report.json
+42879915f3ef4577338ad41e1d3b641a4f905166133483abfdbe54f3e5c982d9  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/c2_full_bbox_fp32/level_b_report.json
+3ee75e86bbb541027d5a0ded47d73763fa2a4ccf92b67441a79096fed84619d3  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/c2_full_bbox_fp32/layer_info.json
+3ea06ac77bb8af15760693fa1d6495b429ef29ba72a3c5de139e3021a2f2d2ff  /home/orin/edge-ai-local-evidence/stage_k/build/k2r_precision_remediation_v1/c2_full_bbox_fp32/configs/c2_engine.manifest.json
+# Local-only candidate engines
+# ============================
+db6d378710064f3ea7b16fbe02879da7a57dce9ccb73e0b1d4e564a7b7f7ae39  /home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1/c0_notf32_diag/yolov8n_neudet_trt10.3_fp16_notf32_diag_b1_640.engine
+55549f6cbd1b8deaee0357793ffb59d3d516187757159475e5281bc647e343ea  /home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1/c1_terminal_bbox_fp32/yolov8n_neudet_trt10.3_fp16_boxfp32_c1_b1_640.engine
+d24ff2a23b6e508135f57591294c9e2ee8f7786492410d983449ae756fa47fbe  /home/orin/edge-ai-local-models/stage_k/k2r_precision_remediation_v1/c2_full_bbox_fp32/yolov8n_neudet_trt10.3_fp16_boxfp32_c2_b1_640.engine

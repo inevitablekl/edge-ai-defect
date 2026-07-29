@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_level_inference_manifest",
+  "backend": "TRT FP16 Original Stage K",
+  "backend_key": "fp16_original",
+  "precision_configuration": "original Stage K FP32+FP16 mixed precision",
+  "engine_path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+  "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+  "engine_manifest_path": "/home/orin/edge-ai/edge-ai-defect/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+  "engine_manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+  "engine_id": "yolov8n_neudet_trt10.3_fp16_b1_640",
+  "tensorrt_version": "10.3.0.30",
+  "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "dataset_split": "test",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "image_count": 180,
+  "success_count": 180,
+  "failure_count": 0,
+  "runner": "/home/orin/edge-ai-local-build/k5_correctness_v1/c54020c_release/task_level_profile_runner",
+  "runner_sha256": "debfb86c63abfe463505639960d871fc2e57b8b28370e7b917996bf15d2081db",
+  "command": [
+    "/home/orin/edge-ai-local-build/k5_correctness_v1/c54020c_release/task_level_profile_runner",
+    "--config",
+    "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k_task_eval_v2/inference/fp16_original/_runtime.yaml"
+  ],
+  "started_at_utc": "2026-07-29T13:22:46.969+00:00",
+  "completed_at_utc": "2026-07-29T13:22:51.168+00:00",
+  "subprocess_wall_elapsed_ms": 4198.636647000058,
+  "preprocessing": {
+    "implementation": "existing application Preprocessor/LetterBox",
+    "source_color": "BGR",
+    "resize": "aspect-preserving LetterBox to 640x640",
+    "interpolation": "INTER_LINEAR",
+    "padding_value": 114,
+    "tensor_color_order": "RGB",
+    "tensor_layout": "NCHW",
+    "normalization": "uint8 / 255.0"
+  },
+  "postprocess": {
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "max_wh": 7680.0,
+    "agnostic": false,
+    "multi_label": false
+  },
+  "artifacts": {
+    "detections": "detections.json",
+    "latency": "latency.json",
+    "runner_stdout": "runner.stdout.txt",
+    "runner_stderr": "runner.stderr.txt"
+  },
+  "limitations": [
+    "The existing independent runner exposes per-image monotonic stage durations but not per-image wall-clock timestamps; inference_timestamp_utc is the backend batch start marker.",
+    "No ground-truth metrics are computed in this phase."
+  ]
+}
