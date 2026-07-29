@@ -3160,3 +3160,20 @@ Stage J Plan or historical Evidence.
   attempt was performed.
 - P1 is `NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`; P1 has not started.
 - No push, merge, rebase, or tag was performed.
+
+## 2026-07-30 - Stage P P1 Contract Implementation
+
+- P1 contract implementation completed on `feature/jetson-pipeline-runtime`.
+- Added RuntimeConfig v4 strict TensorRT-only unions for serial/pipeline and
+  directory/video-file input; v1-v3 parsing paths remain unchanged.
+- Added Result JSON v3 runtime/summary carriers, derived processed/dropped/
+  throughput fields, queue high-water marks, and optional queue residence
+  timing while preserving v1/v2 serialization paths.
+- Added packet contracts, LE canonical RUN/CYCLE serializer with finite float
+  validation and domain separation, and ConcurrentFrameTraceRecorder with
+  buffered/aggregate modes and source-only EOS exclusion semantics.
+- Added focused runtime config, Result v3, canonical hash, and overlapping
+  trace tests. WSL backend-neutral build used `EDGE_AI_ENABLE_TENSORRT=OFF`;
+  no Jetson experiment or Stage P Evidence was generated.
+- P2/P3 work (queues, worker threads, PipelineRunner, and video source
+  implementation) was not started. Pending P1 gate review.

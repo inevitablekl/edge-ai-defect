@@ -55,6 +55,16 @@ runtime::RunMetadata tensorrt_metadata() {
     return value;
 }
 
+runtime::RunMetadata result_v3_metadata(bool pipeline = true) {
+    runtime::RunMetadata value = tensorrt_metadata();
+    value.schema_version = 3;
+    value.runtime_v3 = runtime::RuntimeMetadataV3{
+        pipeline ? "pipeline" : "serial", "directory",
+        pipeline ? std::optional<runtime::PipelineMetadataV3>(runtime::PipelineMetadataV3{2, "block"})
+                 : std::nullopt};
+    return value;
+}
+
 runtime::FrameResult frame(std::size_t index = 0, bool timing_enabled = false) {
     runtime::FrameResult value;
     value.sequence_index = index;
@@ -189,6 +199,24 @@ void test_json(TestContext& context, const fs::path& root) {
                        tensorrt_text.find("\"source_onnx_sha256\"") != std::string::npos &&
                        tensorrt_text.find("\"engine_manifest_filename\"") != std::string::npos,
                    "json TensorRT metadata", "v2 metadata is incomplete");
+
+    const fs::path v3_target = root / "result_v3.json";
+    std::unique_ptr<runtime::JsonSink> v3_output;
+    context.expect(runtime::JsonSink::create(v3_target, false, &v3_output).ok(),
+                   "json v3 create", "must succeed");
+    runtime::RunSummary v3_summary{1, 2};
+    v3_summary.runtime_v3 = runtime::RunSummaryV3{3, 12.5,
+        runtime::PipelineSummaryV3{{1, 2, 1}}};
+    context.expect(v3_output->begin_run(result_v3_metadata()).ok() &&
+                       v3_output->write_frame(frame()).ok() &&
+                       v3_output->end_run(v3_summary).ok(),
+                   "json v3 end", "must serialize v3");
+    const std::string v3_text = read_text(v3_target);
+    context.expect(v3_text.find("\"schema_version\": 3") != std::string::npos &&
+                       v3_text.find("\"processed_frames\": 1") != std::string::npos &&
+                       v3_text.find("\"dropped_frames\": 2") != std::string::npos &&
+                       v3_text.find("\"queue_high_water_marks\"") != std::string::npos,
+                   "json v3 fields", "required v3 fields missing");
 
     std::unique_ptr<runtime::JsonSink> existing;
     context.expect(!runtime::JsonSink::create(target, false, &existing).ok(),

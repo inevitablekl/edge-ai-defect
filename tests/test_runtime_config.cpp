@@ -136,6 +136,44 @@ postprocess:
 )yaml";
 }
 
+std::string valid_yaml_v4(const std::string& mode = "pipeline") {
+    return "schema_version: 4\nbackend:\n  type: tensorrt_fp16\n"
+           "tensorrt:\n  engine_path: engine.plan\n  engine_manifest_path: engine.json\n  device_id: 0\n"
+           "model:\n  contract_path: contract.yaml\nruntime:\n  mode: " + mode +
+           "\n  opencv_num_threads: 1\n" +
+           (mode == "pipeline" ? "  pipeline:\n    queue_capacity: 2\n    drop_policy: block\n" : "") +
+           "input:\n  type: directory\n  directory: images\noutput:\n  json_path: result.json\n  console: false\n  overwrite: false\n"
+           "postprocess:\n  conf_threshold: 0.25\n  iou_threshold: 0.45\n  max_nms: 30000\n  max_det: 300\n  max_wh: 7680\n  agnostic: false\ntiming:\n  enabled: true\n";
+}
+
+bool write_text_file(const std::filesystem::path& path, const std::string& content);
+std::string replace_once(std::string source,
+                         const std::string& original,
+                         const std::string& replacement);
+
+void test_v4_strict_union(TestContext& context, const Options& options) {
+    const auto path = options.temp_dir / "runtime_v4.yaml";
+    context.expect(write_text_file(path, valid_yaml_v4()), "v4 valid", "write failed");
+    runtime::RuntimeConfig config;
+    auto status = runtime::RuntimeConfigLoader::load(path, &config);
+    context.expect(status.ok(), "v4 valid", status.message());
+    if (status.ok()) {
+        context.expect(config.schema_version == 4 && config.runtime_mode == "pipeline" &&
+                       config.pipeline.queue_capacity == 2 && config.pipeline.drop_policy == "block",
+                       "v4 pipeline fields", "fields mismatch");
+    }
+    const auto expect_bad = [&](const std::string& name, const std::string& yaml, const std::string& fragment) {
+        const auto bad = options.temp_dir / (name + ".yaml");
+        write_text_file(bad, yaml);
+        context.expect(!runtime::RuntimeConfigLoader::load(bad, &config).ok(), name, fragment);
+    };
+    expect_bad("v4_serial_pipeline", replace_once(valid_yaml_v4(), "mode: pipeline", "mode: serial"), "pipeline forbidden");
+    expect_bad("v4_bad_backend", replace_once(valid_yaml_v4(), "tensorrt_fp16", "onnxruntime_cpu"), "backend");
+    expect_bad("v4_bad_drop", replace_once(valid_yaml_v4(), "drop_policy: block", "drop_policy: drop"), "drop");
+    expect_bad("v4_unknown", valid_yaml_v4() + "unknown: true\n", "unknown");
+    expect_bad("v4_missing_video_union", replace_once(valid_yaml_v4(), "  directory: images", "  video_path: input.avi"), "directory");
+}
+
 std::string replace_once(std::string source,
                          const std::string& original,
                          const std::string& replacement) {
@@ -739,6 +777,7 @@ int main(int argc, char* argv[]) {
     TestContext context;
     test_valid_config_and_paths(context, options);
     test_v2_config_and_isolation(context, options);
+    test_v4_strict_union(context, options);
     test_ort_options_record(context);
     test_opencv_thread_policy(context);
     test_portable_control(context, options);

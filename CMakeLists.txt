@@ -237,6 +237,7 @@ target_link_libraries(edge_ai_postprocess
 add_library(edge_ai_runtime STATIC
     src/cli.cpp
     src/composite_sink.cpp
+    src/canonical_detection_hash.cpp
     src/console_sink.cpp
     src/directory_source.cpp
     src/frame_trace.cpp
@@ -696,6 +697,20 @@ if(BUILD_TESTING)
         PROPERTIES
             LABELS "m4;runtime;contract"
     )
+
+    add_executable(test_concurrent_frame_trace
+        tests/test_concurrent_frame_trace.cpp
+    )
+    target_link_libraries(test_concurrent_frame_trace PRIVATE edge_ai_runtime)
+    add_test(NAME concurrent_frame_trace COMMAND test_concurrent_frame_trace)
+    set_tests_properties(concurrent_frame_trace PROPERTIES LABELS "stage-p;runtime;trace")
+
+    add_executable(test_canonical_detection_hash
+        tests/test_canonical_detection_hash.cpp
+    )
+    target_link_libraries(test_canonical_detection_hash PRIVATE edge_ai_runtime)
+    add_test(NAME canonical_detection_hash COMMAND test_canonical_detection_hash)
+    set_tests_properties(canonical_detection_hash PROPERTIES LABELS "stage-p;runtime;canonical")
 
     add_executable(test_directory_source
         tests/test_directory_source.cpp

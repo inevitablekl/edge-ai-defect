@@ -44,7 +44,14 @@ bool finite_timing(const FrameTimings& timing) {
            std::isfinite(timing.inference_ms) && timing.inference_ms >= 0.0 &&
            std::isfinite(timing.postprocess_ms) && timing.postprocess_ms >= 0.0 &&
            std::isfinite(timing.pre_sink_total_ms) &&
-               timing.pre_sink_total_ms >= 0.0;
+               timing.pre_sink_total_ms >= 0.0 &&
+           (!timing.pipeline_queue.has_value() ||
+            (std::isfinite(timing.pipeline_queue->source_to_preprocess_wait_ms) &&
+             timing.pipeline_queue->source_to_preprocess_wait_ms >= 0.0 &&
+             std::isfinite(timing.pipeline_queue->preprocess_to_inference_wait_ms) &&
+             timing.pipeline_queue->preprocess_to_inference_wait_ms >= 0.0 &&
+             std::isfinite(timing.pipeline_queue->inference_to_postprocess_wait_ms) &&
+             timing.pipeline_queue->inference_to_postprocess_wait_ms >= 0.0));
 }
 
 void write_float(std::ostream& output, float value) {
@@ -75,7 +82,19 @@ void write_timing(std::ostream& output, const FrameTimings& timing,
     output << indent << "  \"preprocess\": "; write_double(output, timing.preprocess_ms); output << ",\n";
     output << indent << "  \"inference\": "; write_double(output, timing.inference_ms); output << ",\n";
     output << indent << "  \"postprocess\": "; write_double(output, timing.postprocess_ms); output << ",\n";
-    output << indent << "  \"pre_sink_total\": "; write_double(output, timing.pre_sink_total_ms); output << "\n";
+    output << indent << "  \"pre_sink_total\": "; write_double(output, timing.pre_sink_total_ms);
+    if (timing.pipeline_queue.has_value()) {
+        output << ",\n" << indent << "  \"queue_residence\": {\n"
+               << indent << "    \"source_to_preprocess\": ";
+        write_double(output, timing.pipeline_queue->source_to_preprocess_wait_ms);
+        output << ",\n" << indent << "    \"preprocess_to_inference\": ";
+        write_double(output, timing.pipeline_queue->preprocess_to_inference_wait_ms);
+        output << ",\n" << indent << "    \"inference_to_postprocess\": ";
+        write_double(output, timing.pipeline_queue->inference_to_postprocess_wait_ms);
+        output << "\n" << indent << "  }\n";
+    } else {
+        output << "\n";
+    }
     output << indent << "}";
 }
 
@@ -84,11 +103,13 @@ void write_timing(std::ostream& output, const FrameTimings& timing,
 core::Status validate_metadata(const RunMetadata& metadata) {
     const bool trt_v2 = metadata.schema_version == 2U &&
                         metadata.backend_type == "tensorrt_fp16";
-    if (metadata.schema_version != 1U && !trt_v2) {
+    const bool trt_v3 = metadata.schema_version == 3U &&
+                        metadata.backend_type == "tensorrt_fp16";
+    if (metadata.schema_version != 1U && !trt_v2 && !trt_v3) {
         return Status::failure(ErrorCode::kSchemaViolation,
                                "RunMetadata schema_version must be 1 or TensorRT v2");
     }
-    if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2) {
+    if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2 && !trt_v3) {
         return Status::failure(ErrorCode::kSchemaViolation,
                                "RunMetadata backend_type is unsupported");
     }
@@ -100,11 +121,25 @@ core::Status validate_metadata(const RunMetadata& metadata) {
         return Status::failure(ErrorCode::kInvalidArgument,
                                "RunMetadata model_sha256 must be lowercase SHA256");
     }
-    if (trt_v2 && (metadata.artifact_kind != "tensorrt_engine" ||
+    if ((trt_v2 || trt_v3) && (metadata.artifact_kind != "tensorrt_engine" ||
                    !is_lowercase_sha256(metadata.source_onnx_sha256) ||
                    !is_filename(metadata.engine_manifest_filename))) {
         return Status::failure(ErrorCode::kSchemaViolation,
                                "TensorRT metadata is incomplete or invalid");
+    }
+    if (metadata.schema_version == 3U) {
+        if (!metadata.runtime_v3.has_value())
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v3 requires runtime metadata");
+        const auto& runtime = *metadata.runtime_v3;
+        if ((runtime.runtime_mode != "serial" && runtime.runtime_mode != "pipeline") ||
+            (runtime.input_type != "directory" && runtime.input_type != "video_file"))
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v3 runtime metadata is invalid");
+        if ((runtime.runtime_mode == "pipeline") != runtime.pipeline.has_value())
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v3 pipeline metadata mismatch");
+        if (runtime.pipeline.has_value() &&
+            (runtime.pipeline->queue_capacity == 0U || runtime.pipeline->queue_capacity > 16U ||
+             runtime.pipeline->drop_policy != "block"))
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v3 pipeline metadata is invalid");
     }
     if (metadata.class_names.empty()) {
         return Status::failure(ErrorCode::kInvalidArgument,
@@ -165,6 +200,19 @@ core::Status validate_frame(const FrameResult& frame,
         return Status::failure(ErrorCode::kInvalidArgument,
                                "FrameResult timing values must be finite and non-negative");
     }
+    if (metadata.schema_version < 3U && frame.timings.has_value() &&
+        frame.timings->pipeline_queue.has_value())
+        return Status::failure(ErrorCode::kSchemaViolation, "pipeline queue timing requires Result v3");
+    if (metadata.schema_version == 3U && metadata.runtime_v3.has_value() &&
+        metadata.runtime_v3->runtime_mode == "pipeline" && metadata.timing_enabled &&
+        (!frame.timings.has_value() || !frame.timings->pipeline_queue.has_value()))
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v3 pipeline timing requires queue residence");
+    if (metadata.schema_version == 3U && metadata.runtime_v3.has_value() &&
+        metadata.runtime_v3->runtime_mode == "serial" && frame.timings.has_value() &&
+        frame.timings->pipeline_queue.has_value())
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v3 serial timing forbids queue residence");
     return Status::success();
 }
 
@@ -175,6 +223,13 @@ core::Status validate_summary(const RunSummary& summary,
         summary.total_detections != received_detections) {
         return Status::failure(ErrorCode::kInvalidArgument,
                                "RunSummary counts do not match received frames");
+    }
+    if (summary.runtime_v3.has_value()) {
+        const auto& value = *summary.runtime_v3;
+        if (value.source_frames < summary.processed_images)
+            return Status::failure(ErrorCode::kInvalidArgument, "source_frames precedes processed_images");
+        if (!std::isfinite(value.run_processing_wall_ms) || value.run_processing_wall_ms <= 0.0)
+            return Status::failure(ErrorCode::kInvalidArgument, "run processing wall time must be finite and positive");
     }
     return Status::success();
 }
@@ -211,6 +266,7 @@ std::string serialize_run(const RunMetadata& metadata,
     std::ostringstream output;
     output.imbue(std::locale::classic());
     const bool trt_v2 = metadata.schema_version == 2U;
+    const bool result_v3 = metadata.schema_version == 3U;
     output << "{\n"
            << "  \"schema_version\": " << metadata.schema_version << ",\n"
            << "  \"backend\": {\n"
@@ -233,8 +289,20 @@ std::string serialize_run(const RunMetadata& metadata,
                << (index + 1U == metadata.class_names.size() ? "\n" : ",\n");
     }
     output << "    ]\n"
-           << "  },\n"
-           << "  \"postprocess\": {\n"
+           << "  },\n";
+    if (result_v3) {
+        output << "  \"runtime\": {\n"
+               << "    \"mode\": \"" << json_escape(metadata.runtime_v3->runtime_mode) << "\",\n"
+               << "    \"input_type\": \"" << json_escape(metadata.runtime_v3->input_type) << "\"";
+        if (metadata.runtime_v3->pipeline.has_value()) {
+            output << ",\n    \"pipeline\": {\n"
+                   << "      \"queue_capacity\": " << metadata.runtime_v3->pipeline->queue_capacity << ",\n"
+                   << "      \"drop_policy\": \"" << json_escape(metadata.runtime_v3->pipeline->drop_policy) << "\"\n"
+                   << "    }";
+        }
+        output << "\n  },\n";
+    }
+    output << "  \"postprocess\": {\n"
            << "    \"confidence_threshold\": "; write_float(output, metadata.postprocess_config.confidence_threshold); output << ",\n";
     output << "    \"iou_threshold\": "; write_float(output, metadata.postprocess_config.iou_threshold); output << ",\n";
     output << "    \"max_nms\": " << metadata.postprocess_config.max_nms << ",\n"
@@ -267,10 +335,33 @@ std::string serialize_run(const RunMetadata& metadata,
         output << "    }" << (index + 1U == frames.size() ? "\n" : ",\n");
     }
     output << "  ],\n"
-           << "  \"summary\": {\n"
-           << "    \"processed_images\": " << summary.processed_images << ",\n"
-           << "    \"total_detections\": " << summary.total_detections << "\n"
-           << "  }\n"
+           << "  \"summary\": {\n";
+    if (result_v3) {
+        const auto& value = *summary.runtime_v3;
+        const double throughput = static_cast<double>(summary.processed_images) /
+                                  (value.run_processing_wall_ms / 1000.0);
+        output << "    \"processed_frames\": " << summary.processed_images << ",\n"
+               << "    \"total_detections\": " << summary.total_detections << ",\n"
+               << "    \"source_frames\": " << value.source_frames << ",\n"
+               << "    \"dropped_frames\": " << (value.source_frames - summary.processed_images) << ",\n"
+               << "    \"run_processing_wall_ms\": ";
+        write_double(output, value.run_processing_wall_ms);
+        output << ",\n    \"run_processing_throughput_fps\": ";
+        write_double(output, throughput);
+        if (value.pipeline.has_value()) {
+            output << ",\n    \"queue_high_water_marks\": {\n"
+                   << "      \"source_to_preprocess\": " << value.pipeline->queue_high_water_marks[0] << ",\n"
+                   << "      \"preprocess_to_inference\": " << value.pipeline->queue_high_water_marks[1] << ",\n"
+                   << "      \"inference_to_postprocess\": " << value.pipeline->queue_high_water_marks[2] << "\n"
+                   << "    }\n";
+        } else {
+            output << "\n";
+        }
+    } else {
+        output << "    \"processed_images\": " << summary.processed_images << ",\n"
+               << "    \"total_detections\": " << summary.total_detections << "\n";
+    }
+    output << "  }\n"
            << "}\n";
     return output.str();
 }

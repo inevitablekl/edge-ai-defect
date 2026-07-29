@@ -134,6 +134,20 @@ core::Status JsonSink::end_run(const RunSummary& summary) {
     if (!summary_status.ok()) {
         return summary_status;
     }
+    if (metadata_.schema_version == 3U && !summary.runtime_v3.has_value()) {
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v3 requires runtime summary metadata");
+    }
+    if (metadata_.schema_version < 3U && summary.runtime_v3.has_value()) {
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v1/v2 forbid runtime summary metadata");
+    }
+    if (metadata_.schema_version == 3U && metadata_.runtime_v3.has_value() &&
+        ((metadata_.runtime_v3->runtime_mode == "pipeline") !=
+         (summary.runtime_v3.has_value() && summary.runtime_v3->pipeline.has_value()))) {
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v3 runtime and summary pipeline metadata mismatch");
+    }
 
     std::string serialized;
     try {

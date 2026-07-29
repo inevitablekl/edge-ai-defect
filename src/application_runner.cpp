@@ -26,7 +26,7 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
                                    const model::TensorRtEngineManifest* manifest) {
     runtime::RunMetadata metadata;
     const bool tensorrt = config.backend_type == "tensorrt_fp16";
-    metadata.schema_version = tensorrt ? 2U : 1U;
+    metadata.schema_version = config.schema_version == 4U ? 3U : (tensorrt ? 2U : 1U);
     metadata.backend_type = config.backend_type;
     metadata.model_filename = tensorrt
                                   ? config.tensorrt.engine_path.filename().string()
@@ -45,10 +45,45 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled =
         options.timing_enabled_override.value_or(config.timing_enabled);
+    if (config.schema_version == 4U) {
+        metadata.runtime_v3 = runtime::RuntimeMetadataV3{
+            config.runtime_mode,
+            config.input_type,
+            config.runtime_mode == "pipeline"
+                ? std::optional<runtime::PipelineMetadataV3>(runtime::PipelineMetadataV3{
+                      config.pipeline.queue_capacity, config.pipeline.drop_policy})
+                : std::nullopt};
+    }
     return metadata;
 }
 
 }  // namespace
+
+RunResult run_with_components(const runtime::RuntimeConfig& config,
+                              runtime::ImageSource& source,
+                              runtime::IResultSink& sink,
+                              const RunOptions& options) {
+    model::ModelContract contract;
+    core::Status status = model::ModelContractLoader::load(config.model_contract_path, &contract);
+    if (!status.ok()) return {status, false};
+    std::unique_ptr<model::TensorRtEngineManifest> manifest;
+    if (config.backend_type == "tensorrt_fp16") {
+        manifest = std::make_unique<model::TensorRtEngineManifest>();
+        status = model::TensorRtEngineManifestLoader::load(
+            config.tensorrt.engine_manifest_path, &contract, manifest.get());
+        if (!status.ok()) return {status, false};
+    }
+    std::unique_ptr<inference::IInferenceEngine> engine;
+    status = inference::create_inference_engine(config, contract, &engine);
+    if (!status.ok()) return {status, false};
+    preprocess::Preprocessor preprocessor;
+    postprocess::PostProcessor postprocessor(config.postprocess_config);
+    const runtime::RunMetadata metadata = make_metadata(config, contract, options, manifest.get());
+    runtime::SerialRunner runner(source, preprocessor, contract.input.tensor_info,
+                                 *engine, postprocessor, sink, options.trace_observer);
+    runtime::RunSummary summary;
+    return {runner.run(metadata, &summary), true};
+}
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> opencv_policy_record;

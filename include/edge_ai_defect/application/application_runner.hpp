@@ -6,6 +6,11 @@
 
 #include <optional>
 
+namespace edge_ai_defect::runtime {
+class ImageSource;
+class IResultSink;
+}
+
 namespace edge_ai_defect::application {
 
 struct RunOptions {
@@ -20,6 +25,14 @@ struct RunResult {
 
 [[nodiscard]] RunResult run(
     const runtime::RuntimeConfig& config,
+    const RunOptions& options = {});
+
+// Minimal internal composition seam shared by future serial and pipeline
+// runners. It deliberately owns no registry, thread pool, or worker threads.
+[[nodiscard]] RunResult run_with_components(
+    const runtime::RuntimeConfig& config,
+    runtime::ImageSource& source,
+    runtime::IResultSink& sink,
     const RunOptions& options = {});
 
 }  // namespace edge_ai_defect::application
