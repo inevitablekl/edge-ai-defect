@@ -1,0 +1,146 @@
+{
+  "captured_at_utc": "2026-07-29T14:38:29.579+00:00",
+  "host": {
+    "uname": {
+      "system": "Linux",
+      "node": "ubuntu",
+      "release": "5.15.185-tegra",
+      "version": "#1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026",
+      "machine": "aarch64",
+      "processor": "aarch64"
+    },
+    "architecture": "aarch64",
+    "cpu_count": 6,
+    "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "l4t_release": "# R36 (release), REVISION: 5.0, GCID: 43688277, BOARD: generic, EABI: aarch64, DATE: Fri Jan 16 03:50:45 UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia"
+  },
+  "jetson": {
+    "nvpmodel": {
+      "command": [
+        "nvpmodel",
+        "-q"
+      ],
+      "returncode": 0,
+      "output": "NV Power Mode: MAXN_SUPER\n2\n",
+      "elapsed_ms": 3.777771000386565
+    },
+    "gpu_power_mode": "NV Power Mode: MAXN_SUPER\n2",
+    "nvpmodel_service_state": {
+      "command": [
+        "systemctl",
+        "is-active",
+        "nvpmodel.service"
+      ],
+      "returncode": 3,
+      "output": "inactive\n",
+      "elapsed_ms": 6.911319999744592
+    },
+    "jetson_clocks": {
+      "command": [
+        "jetson_clocks",
+        "--show"
+      ],
+      "returncode": 1,
+      "output": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user\n",
+      "elapsed_ms": 16.190011000617233
+    },
+    "jetson_clocks_state": "unavailable_without_root"
+  },
+  "software": {
+    "l4t_release_command": {
+      "command": [
+        "bash",
+        "-lc",
+        "cat /etc/nv_tegra_release"
+      ],
+      "returncode": 0,
+      "output": "# R36 (release), REVISION: 5.0, GCID: 43688277, BOARD: generic, EABI: aarch64, DATE: Fri Jan 16 03:50:45 UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia\n",
+      "elapsed_ms": 9.593650000169873
+    },
+    "cuda": {
+      "command": [
+        "bash",
+        "-lc",
+        "command -v nvcc && nvcc --version"
+      ],
+      "returncode": 1,
+      "output": "",
+      "elapsed_ms": 7.214885999928811
+    },
+    "tensorrt_library": {
+      "command": [
+        "bash",
+        "-lc",
+        "ldconfig -p | grep libnvinfer.so | head -5"
+      ],
+      "returncode": 0,
+      "output": "\tlibnvinfer.so.10 (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so.10\n\tlibnvinfer.so (libc6,AArch64) => /lib/aarch64-linux-gnu/libnvinfer.so\n",
+      "elapsed_ms": 11.366210000232968
+    },
+    "packages": {
+      "command": [
+        "dpkg-query",
+        "-W",
+        "-f=${Package} ${Version}\\n",
+        "nvidia-l4t-core",
+        "nvidia-l4t-cuda",
+        "nvidia-l4t-tools"
+      ],
+      "returncode": 0,
+      "output": "nvidia-l4t-core 36.5.0-20260115194252\nnvidia-l4t-cuda 36.5.0-20260115194252\nnvidia-l4t-tools 36.5.0-20260115194252\n",
+      "elapsed_ms": 35.54573299970798
+    },
+    "engine_manifest_identities": {
+      "fp32_notf32": {
+        "key": "fp32_notf32",
+        "label": "Strict FP32 TensorRT noTF32",
+        "engine_path": "/home/orin/edge-ai-local-models/stage_k/strict_fp32_notf32_v1/yolov8n_neudet_trt10.3_strict_fp32_notf32_b1_640.engine",
+        "engine_sha256": "aaa37030ca1d24838e75ad6fd1a16bdeb74072d87302c1b2cef62faa3856d74f",
+        "engine_size_bytes": 18882468,
+        "manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/build/tensorrt/strict_fp32_notf32_investigation_v1/manifest.json",
+        "manifest_sha256": "086f8e31542f9fbdb88027d3578b23268135d848c165772681dd818c7754ff98",
+        "tensorrt_version": "10.3.0.30",
+        "cuda_version": "12.6.68",
+        "l4t_version": "R36.5.0",
+        "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+        "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+        "precision_mode": null
+      },
+      "fp16_original": {
+        "key": "fp16_original",
+        "label": "Original TensorRT FP16",
+        "engine_path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+        "engine_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+        "engine_size_bytes": 8928756,
+        "manifest_path": "/home/orin/edge-ai/edge-ai-defect/models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+        "manifest_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+        "tensorrt_version": "10.3.0.30",
+        "cuda_version": "12.6.68",
+        "l4t_version": "R36.5.0",
+        "jetson_model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+        "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+        "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+        "precision_mode": "FP32+FP16 mixed precision"
+      }
+    }
+  },
+  "cpu_governor": {
+    "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor": "schedutil",
+    "/sys/devices/system/cpu/cpu1/cpufreq/scaling_governor": "schedutil",
+    "/sys/devices/system/cpu/cpu2/cpufreq/scaling_governor": "schedutil",
+    "/sys/devices/system/cpu/cpu3/cpufreq/scaling_governor": "schedutil",
+    "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor": "schedutil",
+    "/sys/devices/system/cpu/cpu5/cpufreq/scaling_governor": "schedutil"
+  },
+  "gpu_frequency_state": {
+    "governor": "nvhost_podgov",
+    "cur_freq": "306000000",
+    "min_freq": "306000000",
+    "max_freq": "1020000000"
+  },
+  "runner": {
+    "path": "/home/orin/edge-ai-local-build/stage_k7_performance_v1/stage_k7_trt_benchmark",
+    "sha256": "f7e0ab509ac6c1143e396ec6c5d3937b00be0a2b47bba51ab61b9eb963784780"
+  }
+}
