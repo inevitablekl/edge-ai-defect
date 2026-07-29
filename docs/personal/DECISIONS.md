@@ -3556,3 +3556,79 @@ requires paired median backend latency improvement of at least 10% and 3/3
 independent mixed runs no slower than their paired Strict FP32 runs. It does
 not authorize K6, stability, Pipeline, formal benchmarking, production
 runtime changes, manifest replacement, push, merge, or tag.
+
+### D066 - Accept TensorRT FP16 Deployment Candidate Based on Task-Level Validation
+
+时间：
+
+```text
+2026-07-29
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+主题：
+
+Accept TensorRT FP16 deployment candidate based on task-level validation。
+
+背景：
+
+TensorRT FP16 raw tensor does not satisfy strict numerical equality. The
+frozen TensorRT FP16 Level B result is `FAIL`, with the retained failure
+characterized as bbox-dominated raw tensor numerical deviation. This raw
+tensor limitation is not removed or rewritten by the Stage K8 summary.
+
+决策：
+
+Accept the Original TensorRT FP16 Engine as the final Stage K serial
+deployment candidate based on the combined evidence of:
+
+- task accuracy;
+- continuous stability; and
+- formal serial performance.
+
+The acceptance criterion is task-level deployment behavior, not bitwise raw
+tensor equality. The frozen task-level verdict is
+`TASK_LEVEL_FP16_ACCEPTED`; the inherited stability verdict is
+`K6_STABILITY_PASS`; and the formal benchmark verdict is
+`K7_PERFORMANCE_COMPLETE`.
+
+限制：
+
+The raw tensor Level B limitation remains documented and remains part of the
+final deployment evidence. This Decision does not claim strict raw-tensor
+equality, industrial certification, universal TensorRT superiority, or
+Pipeline completion.
+
+影响范围：
+
+- freezes the Original TensorRT FP16 Engine as the Stage K deployment
+  candidate;
+- establishes task accuracy, stability, and performance as the acceptance
+  basis for this candidate;
+- preserves the raw Level B failure as a known numerical boundary; and
+- closes Stage K documentation and evidence consolidation without changing
+  Engine, ONNX, ModelContract, runtime implementation, comparator tolerance,
+  benchmark results, or existing Evidence.
+
+备选方案：
+
+- reject the FP16 candidate because raw tensors are not bitwise equal;
+- select the Strict FP32 reference as the deployment candidate; or
+- continue precision search.
+
+选择理由：
+
+The existing task-level accuracy, stability, and formal K7 performance
+evidence support the Original TensorRT FP16 candidate. K8 is a consolidation
+and freeze activity, so it does not generate new evidence or reopen precision
+search.
+
+后续是否可调整：
+
+可调整。若后续获得新的授权和真实证据，可重新评估部署候选；任何此类
+变化必须新增 Decision，并不得改写本 Decision 或历史 raw tensor Evidence。

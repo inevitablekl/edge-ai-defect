@@ -1444,3 +1444,54 @@ The D064 boundary is closed after C2. TensorRT Level C, K6, benchmark,
 stability, Pipeline, GPU preprocessing/NMS, INT8, DLA, ONNX rewrite, C++
 Builder, Polygraphy, package changes, push, merge, and tag remain unexecuted
 and unauthorized.
+
+## Stage K Final Status — K8 Finalization and Evidence Consolidation v1
+
+更新日期：`2026-07-29`
+
+Stage K final status：`K0-K8 completed`。
+
+最终部署候选：`Original TensorRT FP16 Engine`。
+
+最终 pipeline：
+
+```text
+PyTorch
+↓
+ONNX
+↓
+ORT baseline
+↓
+TensorRT FP32 reference
+↓
+TensorRT FP16 optimization
+↓
+Task validation
+↓
+Stability
+↓
+Performance
+```
+
+K8 只完成 evidence consolidation、decision freeze 和 documentation update，
+不进行新 benchmark、新 accuracy experiment 或新 precision search，也不修改
+Engine、ONNX、ModelContract、Runtime、Comparator tolerance、benchmark result
+或已有 Evidence。
+
+Stage K final evidence summary：
+
+- K5 task-level validation：`TASK_LEVEL_FP16_ACCEPTED`；
+- K6 stability：`K6_STABILITY_PASS`，84420 frames，1802.819 s，100% success；
+- K7 formal performance：`K7_PERFORMANCE_COMPLETE`；
+- TensorRT FP16 raw Level B：`FAIL`，原因是 bbox-dominated raw tensor
+  numerical deviation，failure retained；
+- decision：`D066`，基于 task accuracy、stability 和 performance 接受 FP16，
+  不以 bitwise raw tensor equality 作为接受条件。
+
+最终汇总目录：
+
+```text
+results/validation/stage_k8/final_summary_v1/
+```
+
+Stage P Pipeline remains downstream work and was not executed by Stage K8。

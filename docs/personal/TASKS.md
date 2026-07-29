@@ -3107,3 +3107,18 @@ Stage J Plan or historical Evidence.
 - No Level C/K6/benchmark/stability/Pipeline/GPU preprocessing or NMS/INT8/
   DLA/ONNX rewrite/C++ Builder/Polygraphy/package/push/merge/tag work was
   performed.
+
+## 2026-07-29 - Stage K Final Status and K8 Finalization
+
+- Stage K：`COMPLETE`。
+- K5：`COMPLETE`，最终 task-level verdict：`TASK_LEVEL_FP16_ACCEPTED`。
+- K6：`COMPLETE`，最终 stability verdict：`K6_STABILITY_PASS`。
+- K7：`COMPLETE`，最终 performance verdict：`K7_PERFORMANCE_COMPLETE`。
+- K8 finalization work item：`IN_PROGRESS` during this status update；本轮只做
+  evidence consolidation、D066 decision freeze 和 documentation update。
+- K8 不执行新 benchmark、新 accuracy experiment 或新 precision search；不
+  修改 Engine、ONNX、ModelContract、Runtime、Comparator tolerance、已有
+  benchmark result 或已有 Evidence。
+- Final summary：`results/validation/stage_k8/final_summary_v1/`。
+- Final deployment candidate：`Original TensorRT FP16 Engine`。
+- Stage P Pipeline remains downstream scope and is not included in this task。
