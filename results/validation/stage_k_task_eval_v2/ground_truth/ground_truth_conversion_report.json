@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_ground_truth_conversion_report",
+  "verdict": "GROUND_TRUTH_CONVERSION_PASS",
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "image_count": 180,
+  "image_records_complete": true,
+  "images_with_zero_objects": 0,
+  "raw_bbox_count": 442,
+  "duplicate_bbox_count_removed": 0,
+  "deduplicated_bbox_count": 442,
+  "class_bbox_distribution": {
+    "crazing": 74,
+    "inclusion": 113,
+    "patches": 80,
+    "pitted_surface": 33,
+    "rolled-in_scale": 75,
+    "scratches": 67
+  },
+  "class_mapping": {
+    "crazing": 0,
+    "inclusion": 1,
+    "patches": 2,
+    "pitted_surface": 3,
+    "rolled-in_scale": 4,
+    "scratches": 5
+  },
+  "cross_split_overlap": false,
+  "source_tree_verification": {
+    "manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_k_task_eval_v2/ground_truth_audit/dataset_manifest.json",
+    "manifest_sha256": "b656bcf12122e6fc20622e0bcbdac92e02aa3d8e10e482d98a74129b8fd70815",
+    "entry_count": 3600,
+    "source_tree_sha256": "5e0f688fb5400406533e7c8d0406bfd29d2674011a657210de18740fe161b283",
+    "all_entries_verified": true
+  },
+  "source_xml_and_images_modified": false,
+  "pseudo_labels_generated": false
+}

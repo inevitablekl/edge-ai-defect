@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_backend_metrics",
+  "ground_truth_sha256": "c874bacb25a8bc6d43c6c147d69440c5fc479b2604cebcd021b9d77e350e9314",
+  "backends": {
+    "TRT FP32 noTF32": {
+      "precision": 0.6314741035856574,
+      "recall": 0.7171945701357466,
+      "mAP50": 0.6548580620236248,
+      "mAP50_95": 0.3590859664482561,
+      "tp": 317,
+      "fp": 185,
+      "fn": 125,
+      "prediction_count": 502,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6314741035856574,
+        "recall": 0.7171945701357466,
+        "tp": 317,
+        "fp": 185,
+        "fn": 125,
+        "prediction_count": 502,
+        "gt_count": 442,
+        "matched_iou_count": 317
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "TRT FP16 Original Stage K": {
+      "precision": 0.6347305389221557,
+      "recall": 0.7194570135746606,
+      "mAP50": 0.6560241687065433,
+      "mAP50_95": 0.35954952098725673,
+      "tp": 318,
+      "fp": 183,
+      "fn": 124,
+      "prediction_count": 501,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6347305389221557,
+        "recall": 0.7194570135746606,
+        "tp": 318,
+        "fp": 183,
+        "fn": 124,
+        "prediction_count": 501,
+        "gt_count": 442,
+        "matched_iou_count": 318
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "TRT M3 diagnostic control": {
+      "precision": 0.6314741035856574,
+      "recall": 0.7171945701357466,
+      "mAP50": 0.6548580620236248,
+      "mAP50_95": 0.3590859664482561,
+      "tp": 317,
+      "fp": 185,
+      "fn": 125,
+      "prediction_count": 502,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6314741035856574,
+        "recall": 0.7171945701357466,
+        "tp": 317,
+        "fp": 185,
+        "fn": 125,
+        "prediction_count": 502,
+        "gt_count": 442,
+        "matched_iou_count": 317
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    }
+  }
+}

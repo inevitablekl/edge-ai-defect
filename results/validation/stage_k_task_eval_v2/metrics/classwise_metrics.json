@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_classwise_metrics",
+  "ground_truth_sha256": "c874bacb25a8bc6d43c6c147d69440c5fc479b2604cebcd021b9d77e350e9314",
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "backends": {
+    "TRT FP32 noTF32": {
+      "crazing": {
+        "AP50": 0.1758817369661192,
+        "AP50_95": 0.07431432329781328,
+        "precision": 0.30864197530864196,
+        "recall": 0.33783783783783783,
+        "tp": 25,
+        "fp": 56,
+        "fn": 49,
+        "prediction_count": 81,
+        "gt_count": 74
+      },
+      "inclusion": {
+        "AP50": 0.6217393619964494,
+        "AP50_95": 0.33437851900589893,
+        "precision": 0.5925925925925926,
+        "recall": 0.7079646017699115,
+        "tp": 80,
+        "fp": 55,
+        "fn": 33,
+        "prediction_count": 135,
+        "gt_count": 113
+      },
+      "patches": {
+        "AP50": 0.8592609250747307,
+        "AP50_95": 0.5018133498726585,
+        "precision": 0.8068181818181818,
+        "recall": 0.8875,
+        "tp": 71,
+        "fp": 17,
+        "fn": 9,
+        "prediction_count": 88,
+        "gt_count": 80
+      },
+      "pitted_surface": {
+        "AP50": 0.8040153655308007,
+        "AP50_95": 0.5045936756913723,
+        "precision": 0.7777777777777778,
+        "recall": 0.8484848484848485,
+        "tp": 28,
+        "fp": 8,
+        "fn": 5,
+        "prediction_count": 36,
+        "gt_count": 33
+      },
+      "rolled-in_scale": {
+        "AP50": 0.5501688689727398,
+        "AP50_95": 0.2529461345399395,
+        "precision": 0.5730337078651685,
+        "recall": 0.68,
+        "tp": 51,
+        "fp": 38,
+        "fn": 24,
+        "prediction_count": 89,
+        "gt_count": 75
+      },
+      "scratches": {
+        "AP50": 0.9180821136009099,
+        "AP50_95": 0.48646979628185394,
+        "precision": 0.8493150684931506,
+        "recall": 0.9253731343283582,
+        "tp": 62,
+        "fp": 11,
+        "fn": 5,
+        "prediction_count": 73,
+        "gt_count": 67
+      }
+    },
+    "TRT FP16 Original Stage K": {
+      "crazing": {
+        "AP50": 0.17598431536553635,
+        "AP50_95": 0.07402497034314262,
+        "precision": 0.30864197530864196,
+        "recall": 0.33783783783783783,
+        "tp": 25,
+        "fp": 56,
+        "fn": 49,
+        "prediction_count": 81,
+        "gt_count": 74
+      },
+      "inclusion": {
+        "AP50": 0.6287050524968979,
+        "AP50_95": 0.33455590899883336,
+        "precision": 0.6090225563909775,
+        "recall": 0.7168141592920354,
+        "tp": 81,
+        "fp": 52,
+        "fn": 32,
+        "prediction_count": 133,
+        "gt_count": 113
+      },
+      "patches": {
+        "AP50": 0.8576807069328729,
+        "AP50_95": 0.5003955299389944,
+        "precision": 0.8068181818181818,
+        "recall": 0.8875,
+        "tp": 71,
+        "fp": 17,
+        "fn": 9,
+        "prediction_count": 88,
+        "gt_count": 80
+      },
+      "pitted_surface": {
+        "AP50": 0.8056396734991224,
+        "AP50_95": 0.5071839496419781,
+        "precision": 0.7777777777777778,
+        "recall": 0.8484848484848485,
+        "tp": 28,
+        "fp": 8,
+        "fn": 5,
+        "prediction_count": 36,
+        "gt_count": 33
+      },
+      "rolled-in_scale": {
+        "AP50": 0.5500531503439209,
+        "AP50_95": 0.2549132763543163,
+        "precision": 0.5666666666666667,
+        "recall": 0.68,
+        "tp": 51,
+        "fp": 39,
+        "fn": 24,
+        "prediction_count": 90,
+        "gt_count": 75
+      },
+      "scratches": {
+        "AP50": 0.9180821136009099,
+        "AP50_95": 0.48622349064627546,
+        "precision": 0.8493150684931506,
+        "recall": 0.9253731343283582,
+        "tp": 62,
+        "fp": 11,
+        "fn": 5,
+        "prediction_count": 73,
+        "gt_count": 67
+      }
+    },
+    "TRT M3 diagnostic control": {
+      "crazing": {
+        "AP50": 0.1758817369661192,
+        "AP50_95": 0.07431432329781328,
+        "precision": 0.30864197530864196,
+        "recall": 0.33783783783783783,
+        "tp": 25,
+        "fp": 56,
+        "fn": 49,
+        "prediction_count": 81,
+        "gt_count": 74
+      },
+      "inclusion": {
+        "AP50": 0.6217393619964494,
+        "AP50_95": 0.33437851900589893,
+        "precision": 0.5925925925925926,
+        "recall": 0.7079646017699115,
+        "tp": 80,
+        "fp": 55,
+        "fn": 33,
+        "prediction_count": 135,
+        "gt_count": 113
+      },
+      "patches": {
+        "AP50": 0.8592609250747307,
+        "AP50_95": 0.5018133498726585,
+        "precision": 0.8068181818181818,
+        "recall": 0.8875,
+        "tp": 71,
+        "fp": 17,
+        "fn": 9,
+        "prediction_count": 88,
+        "gt_count": 80
+      },
+      "pitted_surface": {
+        "AP50": 0.8040153655308007,
+        "AP50_95": 0.5045936756913723,
+        "precision": 0.7777777777777778,
+        "recall": 0.8484848484848485,
+        "tp": 28,
+        "fp": 8,
+        "fn": 5,
+        "prediction_count": 36,
+        "gt_count": 33
+      },
+      "rolled-in_scale": {
+        "AP50": 0.5501688689727398,
+        "AP50_95": 0.2529461345399395,
+        "precision": 0.5730337078651685,
+        "recall": 0.68,
+        "tp": 51,
+        "fp": 38,
+        "fn": 24,
+        "prediction_count": 89,
+        "gt_count": 75
+      },
+      "scratches": {
+        "AP50": 0.9180821136009099,
+        "AP50_95": 0.48646979628185394,
+        "precision": 0.8493150684931506,
+        "recall": 0.9253731343283582,
+        "tp": 62,
+        "fp": 11,
+        "fn": 5,
+        "prediction_count": 73,
+        "gt_count": 67
+      }
+    }
+  }
+}

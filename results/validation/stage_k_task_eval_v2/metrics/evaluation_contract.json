@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_evaluation_contract",
+  "status": "FROZEN_BEFORE_METRICS",
+  "scope": "180-image NEU-DET test split; final detections only",
+  "test_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "dataset_source_tree_sha256": "5e0f688fb5400406533e7c8d0406bfd29d2674011a657210de18740fe161b283",
+  "roles": {
+    "correctness_authority": "real NEU-DET test split Pascal VOC ground truth",
+    "baseline": "TRT strict FP32 noTF32",
+    "optimization_candidate": "TRT Original Stage K FP16",
+    "diagnostic_control": "TRT M3 selective; actual FP16 tactic count 0; M3_DEGENERATED_TO_FP32"
+  },
+  "class_names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "acceptance": {
+    "percentage_point_interpretation": "absolute metric delta 0.01",
+    "mAP50_max_drop": 0.01,
+    "mAP50_95_max_drop": 0.01,
+    "recall_max_drop": 0.01,
+    "required_inference_success_count": 180,
+    "nan_inf_required": true,
+    "classwise_metrics_are_risk_report_only": true,
+    "accepted_verdict": "TASK_LEVEL_FP16_ACCEPTED",
+    "accepted_with_classwise_risk_verdict": "TASK_LEVEL_FP16_ACCEPTED_WITH_CLASSWISE_RISK",
+    "rejected_verdict": "TASK_LEVEL_FP16_NOT_ACCEPTABLE",
+    "blocked_verdict": "TASK_LEVEL_EVALUATION_BLOCKED"
+  },
+  "classwise_risk_report": {
+    "descriptive_trigger": "any Original FP16 class AP50 or recall absolute drop greater than 0.10 versus FP32",
+    "is_additional_gate": false
+  },
+  "evaluator": {
+    "kind": "project-local evaluator",
+    "confidence": "use detections after frozen confidence threshold 0.25; sort descending confidence",
+    "matching": "class-aware one-to-one matching; highest IoU eligible ground truth per prediction",
+    "iou_thresholds": "0.50 through 0.95 inclusive, step 0.05",
+    "ap_method": "101-point interpolated precision envelope",
+    "integration": "mean precision envelope at recall points 0.00 through 1.00",
+    "max_det": 300,
+    "iou_coordinate_semantics": "exclusive width/height: max(0, x2-x1) and max(0, y2-y1)",
+    "candidate_order": "not used as a matching priority; deterministic geometry/class tie-break only"
+  },
+  "timing": {
+    "kind": "task-evaluation descriptive timing",
+    "formal_benchmark": false,
+    "faster_rule": "ORIGINAL_FP16_TASK_TIMING_FASTER only if Original FP16 mean inference and mean E2E are both lower than FP32 under this same protocol",
+    "inconclusive_rule": "otherwise ORIGINAL_FP16_TASK_TIMING_NOT_FASTER or ORIGINAL_FP16_TASK_TIMING_INCONCLUSIVE is reported; M3 timing is not used"
+  },
+  "frozen_inputs": {
+    "preprocessing": "existing application Preprocessor/LetterBox",
+    "postprocessing": "confidence 0.25, IoU 0.45, max_nms 30000, max_det 300, max_wh 7680, agnostic false, multi_label false",
+    "source_data_mutation": false,
+    "engine_mutation": false,
+    "onnx_mutation": false,
+    "runtime_mutation": false,
+    "k5_gate_mutation": false
+  }
+}

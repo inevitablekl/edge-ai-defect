@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_evaluator_provenance",
+  "evaluator_kind": "project-local evaluator",
+  "evaluator_path": "/home/orin/edge-ai/edge-ai-defect/tools/validation/evaluate_stage_k_task_metrics.py",
+  "evaluator_sha256": "9489b9ff51d2b8c66292532902340d766132b24c6a780d63af6057078811cdc4",
+  "ground_truth_path": "results/validation/stage_k_task_eval_v2/ground_truth/test_ground_truth.json",
+  "ground_truth_sha256": "c874bacb25a8bc6d43c6c147d69440c5fc479b2604cebcd021b9d77e350e9314",
+  "contract_path": "results/validation/stage_k_task_eval_v2/metrics/evaluation_contract.json",
+  "contract_sha256": "8f9eb3abd486de0d9c2e07e9360e3ae71c8ad21769c6ff758e9b25e86077e691",
+  "prediction_artifacts": {
+    "TRT FP32 noTF32": {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp32_notf32/detections.json",
+      "sha256": "41ac880c8c86e03da14410a6823b126eb523e86e9e3bd679830808ec25396a3b",
+      "backend": "TRT FP32 noTF32"
+    },
+    "TRT FP16 Original Stage K": {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_original/detections.json",
+      "sha256": "2e15380f3d4e4d9517bdcc6557477394d51b798a58dc7b5e070b70e6be29ba5a",
+      "backend": "TRT FP16 Original Stage K"
+    },
+    "TRT M3 diagnostic control": {
+      "path": "results/validation/stage_k_task_eval_v2/inference/fp16_selective/detections.json",
+      "sha256": "c411833d9cc1bfe69ef9b58371363a25338aaa4403ae1cbca61f693ca0e58a10",
+      "backend": "TRT FP16 selective M3"
+    }
+  },
+  "ap_calculation": {
+    "method": "101-point interpolated precision envelope",
+    "recall_points": 101,
+    "integration": "mean of maximum precision at recall >= each recall point"
+  },
+  "matching": {
+    "class_aware": true,
+    "one_to_one": true,
+    "priority": "highest IoU eligible ground truth after confidence sorting",
+    "confidence_sort": "descending confidence; deterministic image/class/geometry tie-break"
+  },
+  "iou": {
+    "thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ],
+    "coordinate_semantics": "exclusive width/height"
+  },
+  "max_det": 300,
+  "confidence_handling": "detections are already filtered by frozen confidence threshold 0.25; no additional filtering",
+  "ultralytics_equivalence": "not claimed; this is project-local evaluator output"
+}

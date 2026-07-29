@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage_k_task_eval_v2_timing_comparison",
+  "timing_kind": "task-evaluation descriptive timing",
+  "formal_k7_benchmark": false,
+  "split_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "backends": {
+    "TRT FP32 noTF32": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 19.923535383333345,
+        "median_ms": 18.1647095,
+        "p95_ms": 25.034766,
+        "min_ms": 15.521818,
+        "max_ms": 67.488507
+      },
+      "e2e": {
+        "mean_ms": 26.215932905555544,
+        "median_ms": 24.891137,
+        "p95_ms": 32.03811295,
+        "min_ms": 19.002694,
+        "max_ms": 78.201091
+      }
+    },
+    "TRT FP16 Original Stage K": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 12.542224588888889,
+        "median_ms": 12.3679495,
+        "p95_ms": 12.4606453,
+        "min_ms": 12.002726,
+        "max_ms": 44.536399
+      },
+      "e2e": {
+        "mean_ms": 18.843641388888894,
+        "median_ms": 18.58069,
+        "p95_ms": 19.44730065,
+        "min_ms": 15.741446,
+        "max_ms": 75.819097
+      }
+    },
+    "TRT M3 diagnostic control": {
+      "image_count": 180,
+      "inference": {
+        "mean_ms": 20.111881088888886,
+        "median_ms": 18.048969,
+        "p95_ms": 25.0221726,
+        "min_ms": 15.991967,
+        "max_ms": 67.410601
+      },
+      "e2e": {
+        "mean_ms": 26.53010720555556,
+        "median_ms": 24.8655565,
+        "p95_ms": 31.93282525,
+        "min_ms": 21.781238,
+        "max_ms": 78.50882
+      }
+    }
+  },
+  "mean_speedup_fp32_div_original_fp16": {
+    "inference": 1.5885168729145174,
+    "e2e": 1.3912349722922293
+  },
+  "original_fp16_task_timing_verdict": "ORIGINAL_FP16_TASK_TIMING_FASTER",
+  "m3_speedup_claim": "NOT_COMPUTED_M3_IS_DIAGNOSTIC_ONLY"
+}

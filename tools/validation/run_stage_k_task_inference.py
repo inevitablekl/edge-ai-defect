@@ -83,6 +83,16 @@ BACKENDS = {
             "requested FP32"
         ),
     },
+    "fp16_original": {
+        "label": "TRT FP16 Original Stage K",
+        "engine_path": Path(
+            "/home/orin/edge-ai-local-models/stage_k/"
+            "yolov8n_neudet_trt10.3_fp16_b1_640.engine"
+        ),
+        "manifest_path": REPO_ROOT
+        / "models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+        "precision": "original Stage K FP32+FP16 mixed precision",
+    },
 }
 
 
@@ -400,6 +410,28 @@ def run_backend(
         ],
     }
     json_dump(backend_dir / "inference_manifest.json", inference_manifest)
+    backend_readme = f"""Stage K task-level inference — {identity['label']}
+============================================================
+
+  split: test
+  image count: 180
+  success: 180/180
+  failure: 0
+  TensorRT version: {identity['tensorrt_version']}
+  engine SHA256: {identity['engine_sha256']}
+  engine manifest SHA256: {identity['manifest_sha256']}
+  split manifest SHA256: {split_sha256}
+
+Latency summary (descriptive task-evaluation timing)
+-----------------------------------------------------
+
+  mean inference ms: {latency_artifact['summary_ms']['inference_mean']:.6f}
+  mean E2E ms:       {latency_artifact['summary_ms']['e2e_mean']:.6f}
+
+Artifacts: detections.json, latency.json, inference_manifest.json
+No task-level metrics are calculated by the inference runner.
+"""
+    (backend_dir / "README.txt").write_text(backend_readme)
     raw_result.unlink()
     config_path.unlink()
     return {
@@ -445,6 +477,38 @@ def validate_pair(output_dir: Path) -> dict[str, Any]:
         "output_schema_identical": True,
         "nan_inf_validation": "PASS",
         "backend_artifacts": artifacts,
+    }
+
+
+def validate_single_backend(output_dir: Path, key: str) -> dict[str, Any]:
+    backend_dir = output_dir / key
+    detections = json.loads((backend_dir / "detections.json").read_text())
+    latency = json.loads((backend_dir / "latency.json").read_text())
+    manifest = json.loads((backend_dir / "inference_manifest.json").read_text())
+    if detections["image_count"] != 180 or latency["image_count"] != 180:
+        raise RuntimeError(f"{key} artifact count validation failed")
+    if manifest["success_count"] != 180 or manifest["failure_count"] != 0:
+        raise RuntimeError(f"{key} success-count validation failed")
+    if [item["image_id"] for item in detections["images"]] != [
+        item["image_id"] for item in latency["images"]
+    ]:
+        raise RuntimeError(f"{key} detection/latency identity mismatch")
+    return {
+        "output_schema_identical": True,
+        "nan_inf_validation": "PASS",
+        "backend_artifacts": {
+            key: {
+                "detections_sha256": sha256_file(backend_dir / "detections.json"),
+                "latency_sha256": sha256_file(backend_dir / "latency.json"),
+                "inference_manifest_sha256": sha256_file(
+                    backend_dir / "inference_manifest.json"
+                ),
+                "success_count": manifest["success_count"],
+                "failure_count": manifest["failure_count"],
+                "inference_mean_ms": latency["summary_ms"]["inference_mean"],
+                "e2e_mean_ms": latency["summary_ms"]["e2e_mean"],
+            }
+        },
     }
 
 
@@ -522,6 +586,12 @@ def main() -> int:
     parser.add_argument("--test-manifest", type=Path, default=DEFAULT_SPLIT_MANIFEST)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--runner", type=Path, default=DEFAULT_RUNNER)
+    parser.add_argument(
+        "--backend",
+        choices=["all", *BACKENDS.keys()],
+        default="all",
+        help="run all frozen backends, or only one selected backend",
+    )
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
@@ -532,17 +602,18 @@ def main() -> int:
         raise SystemExit(f"task-level runner is unavailable or not executable: {runner}")
     if not MODEL_CONTRACT.is_file():
         raise SystemExit(f"ModelContract is unavailable: {MODEL_CONTRACT}")
-    if output_dir.exists() and any(output_dir.iterdir()) and not args.overwrite:
-        raise SystemExit(
-            f"output directory is non-empty: {output_dir}; use --overwrite only "
-            "after resolving the exact existing target"
-        )
-    if args.overwrite and output_dir.exists():
-        for child in output_dir.iterdir():
-            if child.is_dir() and not child.is_symlink():
-                shutil.rmtree(child)
-            else:
-                child.unlink()
+    selected_keys = tuple(BACKENDS) if args.backend == "all" else (args.backend,)
+    selected_dirs = [output_dir / key for key in selected_keys]
+    for selected_dir in selected_dirs:
+        if selected_dir.exists() and any(selected_dir.iterdir()) and not args.overwrite:
+            raise SystemExit(
+                f"selected output directory is non-empty: {selected_dir}; "
+                "use --overwrite only after resolving the exact existing target"
+            )
+    if args.overwrite:
+        for selected_dir in selected_dirs:
+            if selected_dir.exists():
+                shutil.rmtree(selected_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     manifest, split_sha256 = load_split(split_manifest_path)
@@ -556,7 +627,7 @@ def main() -> int:
         temp_root = Path(temp_root_text)
         input_dirs = {}
         entries_by_filename = None
-        for key in BACKENDS:
+        for key in selected_keys:
             input_dirs[key] = temp_root / key / "inputs"
             current = prepare_input_dir(input_dirs[key], dataset_root, entries)
             if entries_by_filename is None:
@@ -564,7 +635,7 @@ def main() -> int:
             elif set(current) != set(entries_by_filename):
                 raise RuntimeError("backend temporary input sets differ")
         assert entries_by_filename is not None
-        for key in BACKENDS:
+        for key in selected_keys:
             summaries[key] = run_backend(
                 key,
                 identities[key],
@@ -575,7 +646,11 @@ def main() -> int:
                 runner,
             )
 
-    pair = validate_pair(output_dir)
+    pair = (
+        validate_pair(output_dir)
+        if len(selected_keys) == len(BACKENDS)
+        else validate_single_backend(output_dir, selected_keys[0])
+    )
     summary = {
         "schema_version": 1,
         "artifact_kind": "stage_k_task_level_inference_summary",
@@ -589,8 +664,14 @@ def main() -> int:
             for item in summaries.values()
         ) and pair["output_schema_identical"] and pair["nan_inf_validation"] == "PASS",
     }
-    json_dump(output_dir / "inference_summary.json", summary)
-    write_readme(output_dir, split_sha256, summaries, pair)
+    summary_name = (
+        "inference_summary.json"
+        if len(selected_keys) == len(BACKENDS)
+        else f"inference_summary_{selected_keys[0]}.json"
+    )
+    json_dump(output_dir / summary_name, summary)
+    if len(selected_keys) == len(BACKENDS):
+        write_readme(output_dir, split_sha256, summaries, pair)
     print(json.dumps(summary, indent=2))
     return 0
 
