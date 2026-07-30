@@ -1,0 +1,6 @@
+thermal_throttle_status=unavailable
+thermal_interface_limitation=inherited_from_P5
+throttling_detected=false_not_asserted
+temperature_observation_source=/sys/class/thermal and tegrastats
+process_tj_observed_range_c=48.125..74.312
+tegrastats_tj_observed_range_c=48.375..74.406

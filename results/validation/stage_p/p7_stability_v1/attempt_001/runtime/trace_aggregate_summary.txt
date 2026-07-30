@@ -1,0 +1,5 @@
+source count=410692 total_ns=410569554673 min_ns=1184 max_ns=6343293
+preprocess count=410691 total_ns=1340673278375 min_ns=2133909 max_ns=22186683
+inference count=410691 total_ns=1791252277771 min_ns=4189098 max_ns=35672590
+postprocess count=410691 total_ns=115964175573 min_ns=143140 max_ns=2670883
+sink count=410691 total_ns=1760595264 min_ns=800 max_ns=1284000

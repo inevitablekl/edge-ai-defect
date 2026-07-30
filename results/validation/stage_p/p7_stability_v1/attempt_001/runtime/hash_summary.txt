@@ -1,0 +1,8 @@
+total_frames=410691
+complete_cycles=2281
+partial_cycle_frames=111
+partial_cycle_sha256=94dc5e99aa190a6b8df6e09f099384cee8a72b9239dbe8d6bd48fbcaa5442bfc
+first_path=IMAGES/scratches_284.jpg
+last_path=IMAGES/rolled-in_scale_159.jpg
+total_detections=1143091
+summary_processed_images=410691
