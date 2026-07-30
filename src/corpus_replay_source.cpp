@@ -36,11 +36,18 @@ core::Status CorpusReplaySource::create(const std::filesystem::path& image_root,
         std::vector<Entry> entries;
         entries.reserve(entries_node.size());
         for (std::size_t index = 0; index < entries_node.size(); ++index) {
-            const YAML::Node filename = entries_node[index]["prepared_filename"];
-            if (!filename || !filename.IsScalar()) {
-                return Status::failure(ErrorCode::kSchemaViolation, "CorpusReplaySource entry lacks prepared_filename");
+            const YAML::Node image_path = entries_node[index]["image_path"];
+            if (!image_path || !image_path.IsScalar()) {
+                return Status::failure(ErrorCode::kSchemaViolation, "CorpusReplaySource entry lacks image_path");
             }
-            entries.push_back({filename.as<std::string>()});
+            const std::filesystem::path relative = image_path.as<std::string>();
+            if (relative.empty() || relative.is_absolute() ||
+                relative.lexically_normal() != relative) {
+                return Status::failure(
+                    ErrorCode::kSchemaViolation,
+                    "CorpusReplaySource image_path must be a relative normalized path");
+            }
+            entries.push_back({relative});
         }
         std::error_code error;
         if (!std::filesystem::is_directory(image_root, error) || error) {

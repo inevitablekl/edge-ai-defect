@@ -3257,3 +3257,16 @@ Stage J Plan or historical Evidence.
   与最小 sidecar。
 - `--max-frames` 仅用于 1–2 帧 smoke，默认不截断 replay；未执行正式 180 帧
   P4 correctness，未进入 P5。
+
+## 2026-07-30 - Stage P P4 CorpusReplaySource Contract Remediation
+
+- 根据 P4 Manifest Contract Investigation，修复 `CorpusReplaySource`：读取
+  Stage K frozen manifest 的 `entries[].image_path`，保留 manifest 定义的相对
+  `relative_path`，拒绝绝对或非规范化路径；未修改 frozen manifest、corpus、SHA、
+  Preprocessor、PostProcessor、Pipeline topology、Hash serializer 或 RuntimeConfig。
+- 更新 Stage P focused test，覆盖 180-entry manifest、image_path 解析、相对路径、
+  sequence/cycle/frame 映射、缺失字段、绝对路径失败、确定性顺序和重复读取一致性。
+- Jetson TensorRT ON build、focused test、Serial/Pipeline 两帧 smoke 的结果记录在
+  `results/validation/stage_p/p4_correctness_v1/attempt_007/`；正式 P4 correctness
+  未执行。
+- 本轮仅创建本地 commit，未 push、merge、rebase 或 tag。
