@@ -80,18 +80,36 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
     preprocess::Preprocessor preprocessor;
     postprocess::PostProcessor postprocessor(config.postprocess_config);
     const runtime::RunMetadata metadata = make_metadata(config, contract, options, manifest.get());
+    runtime::RunSummary summary;
+    return run_with_components(config, source, sink, metadata, preprocessor,
+                               contract.input.tensor_info, *engine, postprocessor,
+                               &summary, options);
+}
+
+RunResult run_with_components(const runtime::RuntimeConfig& config,
+                              runtime::ImageSource& source,
+                              runtime::IResultSink& sink,
+                              const runtime::RunMetadata& metadata,
+                              preprocess::Preprocessor& preprocessor,
+                              const core::TensorInfo& model_input_info,
+                              inference::IInferenceEngine& engine,
+                              postprocess::PostProcessor& postprocessor,
+                              runtime::RunSummary* summary,
+                              const RunOptions& options) {
+    if (summary == nullptr) {
+        return {core::Status::failure(core::ErrorCode::kInvalidArgument,
+                                      "run summary must not be null"), false};
+    }
     if (config.schema_version == 4U && config.runtime_mode == "pipeline") {
-        runtime::PipelineRunner runner(source, preprocessor, contract.input.tensor_info,
-                                       *engine, postprocessor, sink,
+        runtime::PipelineRunner runner(source, preprocessor, model_input_info,
+                                       engine, postprocessor, sink,
                                        config.pipeline.queue_capacity,
                                        options.trace_observer);
-        runtime::RunSummary summary;
-        return {runner.run(metadata, &summary), true};
+        return {runner.run(metadata, summary), true};
     }
-    runtime::SerialRunner runner(source, preprocessor, contract.input.tensor_info,
-                                 *engine, postprocessor, sink, options.trace_observer);
-    runtime::RunSummary summary;
-    return {runner.run(metadata, &summary), true};
+    runtime::SerialRunner runner(source, preprocessor, model_input_info,
+                                 engine, postprocessor, sink, options.trace_observer);
+    return {runner.run(metadata, summary), true};
 }
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {

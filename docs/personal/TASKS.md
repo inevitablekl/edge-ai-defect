@@ -3245,3 +3245,15 @@ Stage J Plan or historical Evidence.
   `42/44 PASS`，两个失败均为既有环境/资产限制：Jetson-only formal test 和
   缺失/不匹配 TensorRT engine artifact。未执行 Jetson、TensorRT ON、benchmark、
   stability 或 VideoFileSource formal validation。
+
+## 2026-07-30 - Stage P P4 Execution Entry Remediation
+
+- P4 correctness 入口补齐：新增 Stage P 专用 `stage_p_experiment_runner`
+  executable，支持 RuntimeConfig v4 的 Serial 与 Pipeline 两种模式，并复用
+  现有 `SerialRunner` / 四 worker `PipelineRunner`。
+- 入口显式接线 CorpusReplaySource、Preprocessor、TensorRT engine factory、
+  PostProcessor、CanonicalHashSink、TimedJsonSink 与
+  ConcurrentFrameTraceRecorder；输出 Result JSON v3、RUN/CYCLE hash、trace
+  与最小 sidecar。
+- `--max-frames` 仅用于 1–2 帧 smoke，默认不截断 replay；未执行正式 180 帧
+  P4 correctness，未进入 P5。

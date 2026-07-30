@@ -2,6 +2,7 @@
 
 #include "edge_ai_defect/runtime/composite_sink.hpp"
 #include "edge_ai_defect/runtime/pipeline_runner.hpp"
+#include "edge_ai_defect/runtime/serial_runner.hpp"
 
 #include <memory>
 #include <utility>
@@ -30,11 +31,17 @@ core::Status StagePExperimentRunner::run(
     std::uint32_t queue_capacity, RunSummary* summary,
     IFrameTraceObserver* trace_observer) {
     std::vector<std::unique_ptr<IResultSink>> sinks;
-    sinks.push_back(std::make_unique<SinkForwarder>(hash_sink));
     sinks.push_back(std::make_unique<SinkForwarder>(timed_json_sink));
+    sinks.push_back(std::make_unique<SinkForwarder>(hash_sink));
     std::unique_ptr<CompositeSink> composite;
     core::Status status = CompositeSink::create(std::move(sinks), &composite);
     if (!status.ok()) return status;
+    if (metadata.runtime_v3.has_value() &&
+        metadata.runtime_v3->runtime_mode == "serial") {
+        SerialRunner runner(source, preprocessor, model_input_info, engine,
+                            postprocessor, *composite, trace_observer);
+        return runner.run(metadata, summary);
+    }
     PipelineRunner runner(source, preprocessor, model_input_info, engine,
                           postprocessor, *composite, queue_capacity, trace_observer);
     return runner.run(metadata, summary);

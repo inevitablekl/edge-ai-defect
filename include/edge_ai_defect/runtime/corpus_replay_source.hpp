@@ -15,7 +15,8 @@ public:
         const std::filesystem::path& image_root,
         const std::filesystem::path& manifest_path,
         std::size_t cycles,
-        std::unique_ptr<CorpusReplaySource>* output);
+        std::unique_ptr<CorpusReplaySource>* output,
+        std::size_t max_frames = 0);
 
     [[nodiscard]] core::Status next(std::optional<ImageItem>* output) override;
     [[nodiscard]] std::size_t cycle_id() const noexcept { return last_cycle_id_; }
@@ -25,10 +26,11 @@ public:
 private:
     struct Entry { std::filesystem::path filename; };
     CorpusReplaySource(std::filesystem::path root, std::vector<Entry> entries,
-                       std::size_t cycles);
+                       std::size_t cycles, std::size_t max_frames);
     std::filesystem::path root_;
     std::vector<Entry> entries_;
     std::size_t cycles_ = 0;
+    std::size_t max_frames_ = 0;
     std::size_t cursor_ = 0;
     std::size_t last_cycle_id_ = 0;
     std::size_t last_frame_index_ = 0;

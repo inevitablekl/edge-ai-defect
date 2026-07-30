@@ -328,6 +328,23 @@ set_target_properties(stage_k_raw_tensor_runner
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_p_experiment_runner
+    tools/validation/stage_p_experiment_runner.cpp
+)
+target_link_libraries(stage_p_experiment_runner
+    PRIVATE
+        edge_ai_application
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        edge_ai_backend_trt
+)
+set_target_properties(stage_p_experiment_runner
+    PROPERTIES
+        BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
@@ -365,6 +382,15 @@ if(BUILD_TESTING)
     set_tests_properties(stage_k_raw_tensor_runner_help
         PROPERTIES
             LABELS "stage-k;k5;raw-tensor;validation"
+    )
+
+    add_test(
+        NAME stage_p_experiment_runner_help
+        COMMAND stage_p_experiment_runner --help
+    )
+    set_tests_properties(stage_p_experiment_runner_help
+        PROPERTIES
+            LABELS "stage-p;runtime;experiment;entry"
     )
 
     add_test(

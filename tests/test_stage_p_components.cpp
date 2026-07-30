@@ -42,6 +42,15 @@ void components() {
     }
     require(source->next(&item).ok() && !item.has_value(), "replay EOS");
 
+    std::unique_ptr<runtime::CorpusReplaySource> smoke_source;
+    require(runtime::CorpusReplaySource::create(root, manifest, 1, &smoke_source, 2).ok(),
+            "replay smoke create");
+    for (std::size_t i = 0; i < 2; ++i) {
+        require(smoke_source->next(&item).ok() && item->sequence_index == i,
+                "replay smoke sequence");
+    }
+    require(smoke_source->next(&item).ok() && !item.has_value(), "replay smoke EOS");
+
     runtime::CanonicalHashSink hash;
     runtime::RunMetadata metadata;
     runtime::RunSummary summary;

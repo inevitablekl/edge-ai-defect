@@ -3,6 +3,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <yaml-cpp/yaml.h>
 
+#include <algorithm>
 #include <system_error>
 
 namespace edge_ai_defect::runtime {
@@ -13,13 +14,16 @@ using core::Status;
 
 CorpusReplaySource::CorpusReplaySource(std::filesystem::path root,
                                        std::vector<Entry> entries,
-                                       std::size_t cycles)
-    : root_(std::move(root)), entries_(std::move(entries)), cycles_(cycles) {}
+                                       std::size_t cycles,
+                                       std::size_t max_frames)
+    : root_(std::move(root)), entries_(std::move(entries)), cycles_(cycles),
+      max_frames_(max_frames) {}
 
 core::Status CorpusReplaySource::create(const std::filesystem::path& image_root,
                                         const std::filesystem::path& manifest_path,
                                         std::size_t cycles,
-                                        std::unique_ptr<CorpusReplaySource>* output) {
+                                        std::unique_ptr<CorpusReplaySource>* output,
+                                        std::size_t max_frames) {
     if (output == nullptr || image_root.empty() || manifest_path.empty() || cycles == 0) {
         return Status::failure(ErrorCode::kInvalidArgument, "CorpusReplaySource arguments are invalid");
     }
@@ -43,7 +47,8 @@ core::Status CorpusReplaySource::create(const std::filesystem::path& image_root,
             return Status::failure(ErrorCode::kIoError, "CorpusReplaySource image root is not a directory");
         }
         std::unique_ptr<CorpusReplaySource> candidate(new CorpusReplaySource(
-            std::filesystem::absolute(image_root), std::move(entries), cycles));
+            std::filesystem::absolute(image_root), std::move(entries), cycles,
+            max_frames));
         *output = std::move(candidate);
         return Status::success();
     } catch (const YAML::Exception& exception) {
@@ -53,7 +58,11 @@ core::Status CorpusReplaySource::create(const std::filesystem::path& image_root,
 
 core::Status CorpusReplaySource::next(std::optional<ImageItem>* output) {
     if (output == nullptr) return Status::failure(ErrorCode::kInvalidArgument, "CorpusReplaySource output is null");
-    if (cursor_ == entries_.size() * cycles_) { *output = std::nullopt; return Status::success(); }
+    const std::size_t total_frames = entries_.size() * cycles_;
+    const std::size_t frame_limit = max_frames_ == 0
+                                        ? total_frames
+                                        : std::min(total_frames, max_frames_);
+    if (cursor_ == frame_limit) { *output = std::nullopt; return Status::success(); }
     const std::size_t frame = cursor_ % entries_.size();
     const std::size_t cycle = cursor_ / entries_.size();
     const std::filesystem::path relative = entries_[frame].filename;
