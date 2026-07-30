@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CTest)
+find_package(Threads REQUIRED)
 
 option(
     EDGE_AI_ENABLE_TENSORRT
@@ -704,6 +705,13 @@ if(BUILD_TESTING)
     target_link_libraries(test_concurrent_frame_trace PRIVATE edge_ai_runtime)
     add_test(NAME concurrent_frame_trace COMMAND test_concurrent_frame_trace)
     set_tests_properties(concurrent_frame_trace PROPERTIES LABELS "stage-p;runtime;trace")
+
+    add_executable(test_bounded_queue tests/test_bounded_queue.cpp)
+    target_include_directories(test_bounded_queue PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_bounded_queue PRIVATE Threads::Threads)
+    add_test(NAME bounded_queue COMMAND test_bounded_queue)
+    set_tests_properties(bounded_queue PROPERTIES LABELS "stage-p;runtime;queue")
 
     add_executable(test_canonical_detection_hash
         tests/test_canonical_detection_hash.cpp

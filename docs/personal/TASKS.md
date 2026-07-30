@@ -3217,3 +3217,15 @@ Stage J Plan or historical Evidence.
   - 定向 CTest 6/6 PASS；完整 CTest 39/41 PASS（2 pre-existing failures: `stage_j_ort_cpu_formal_unit` Jetson-specific, `k3_foundation` TensorRT-specific）。
 - **提交**：`fix(stage-p): close P1 contract gate gaps`（不 amend 原 P1 commit）。
 - **禁止事项确认**：未开始 P2；未修改 BoundedQueue, PipelineRunner, worker threads, VideoFileSource；未 push/merge/rebase/tag。
+
+## 2026-07-30 - Stage P P2 Bounded Queue Primitive
+
+- P2 开始记录：实现 bounded SPSC `BoundedQueue` 与独立的
+  `FirstErrorCancellation` primitive；本轮仅修改 runtime queue 头文件、queue
+  测试、必要的 CMake Threads 注册和本任务记录。
+- 队列合同：`OPEN`、`CLOSED`、`CANCELLED`；支持容量阻塞、FIFO、正常 close
+  drain/EOS，以及 cancel 优先、清空 pending item、唤醒所有等待线程。
+- 队列由自身在 item 获得容量并入队时记录 enqueue timestamp；提供 residence
+  与 push-block 聚合统计，并保证 high-water mark 不超过 capacity。
+- P3 禁止进入：未实现 PipelineRunner、worker、source、sink、实验或
+  TensorRT/Jetson 运行。
