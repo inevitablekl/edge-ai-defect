@@ -36,9 +36,10 @@ std::string replace_once(std::string source, const std::string& from,
 
 runtime::RuntimeConfig config_for(const std::filesystem::path& engine,
                                   const std::filesystem::path& manifest,
-                                  const std::filesystem::path& contract) {
+                                  const std::filesystem::path& contract,
+                                  std::uint32_t schema_version = 3) {
     runtime::RuntimeConfig config;
-    config.schema_version = 3;
+    config.schema_version = schema_version;
     config.backend_type = "tensorrt_fp16";
     config.tensorrt.engine_path = engine;
     config.tensorrt.engine_manifest_path = manifest;
@@ -85,8 +86,45 @@ int main(int argc, char* argv[]) {
     const core::HostTensor input = valid_input(contract);
     const core::HostTensor sentinel{contract.output.tensor_info, {7.0F, 8.0F, 9.0F}};
 
+    const auto v4_config = config_for(engine_path, manifest_path, contract_path, 4);
+    auto invalid_backend_config = v4_config;
+    invalid_backend_config.backend_type = "onnxruntime_cpu";
+    backend::TensorRtEngine invalid_backend_engine;
+    if (invalid_backend_engine.initialize(invalid_backend_config, contract).ok()) {
+        std::cerr << "v4 non-TensorRT backend must fail\n";
+        return 1;
+    }
+    auto missing_engine_config = v4_config;
+    missing_engine_config.tensorrt.engine_path.clear();
+    backend::TensorRtEngine missing_engine;
+    if (missing_engine.initialize(missing_engine_config, contract).ok()) {
+        std::cerr << "v4 missing engine_path must fail\n";
+        return 1;
+    }
+    auto missing_manifest_config = v4_config;
+    missing_manifest_config.tensorrt.engine_manifest_path.clear();
+    backend::TensorRtEngine missing_manifest;
+    if (missing_manifest.initialize(missing_manifest_config, contract).ok()) {
+        std::cerr << "v4 missing engine_manifest_path must fail\n";
+        return 1;
+    }
+    auto missing_contract_config = v4_config;
+    missing_contract_config.model_contract_path.clear();
+    backend::TensorRtEngine missing_contract;
+    if (missing_contract.initialize(missing_contract_config, contract).ok()) {
+        std::cerr << "v4 missing contract_path must fail\n";
+        return 1;
+    }
+
+    backend::TensorRtEngine legacy_engine;
+    status = legacy_engine.initialize(config_for(engine_path, manifest_path, contract_path, 3), contract);
+    if (!status.ok()) {
+        std::cerr << "v3 initialization failed: " << status.message() << '\n';
+        return 1;
+    }
+
     backend::TensorRtEngine engine;
-    status = engine.initialize(config_for(engine_path, manifest_path, contract_path), contract);
+    status = engine.initialize(v4_config, contract);
     if (!status.ok()) {
         std::cerr << "valid initialization failed: " << status.message() << '\n';
         return 1;

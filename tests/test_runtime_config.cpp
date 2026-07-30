@@ -222,6 +222,8 @@ void test_v4_strict_union(TestContext& context, const Options& options) {
                replace_once(valid_yaml_v4(), "drop_policy: block", "drop_policy: drop_oldest"), "drop_policy");
     expect_bad("v4_missing_directory",
                replace_once(valid_yaml_v4(), "  directory: images\n", ""), "input.directory");
+    expect_bad("v4_missing_device_id",
+               replace_once(valid_yaml_v4(), "  device_id: 0\n", ""), "tensorrt.device_id");
     expect_bad("v4_missing_video_path",
                replace_once(valid_yaml_v4("pipeline", "video_file"), "  video_path: input.avi\n", ""), "input.video_path");
     expect_bad("v4_unknown_runtime_field",
