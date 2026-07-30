@@ -12,6 +12,7 @@
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 #include "edge_ai_defect/runtime/stage_p_experiment_runner.hpp"
 #include "edge_ai_defect/runtime/timed_json_sink.hpp"
+#include "edge_ai_defect/runtime/video_file_source.hpp"
 
 #include <openssl/evp.h>
 
@@ -67,7 +68,7 @@ private:
 
 void print_usage(std::ostream& output) {
     output << "Usage: stage_p_experiment_runner --config PATH"
-              " --corpus-manifest PATH --run-id ID --trace PATH"
+              " [--corpus-manifest PATH] --run-id ID --trace PATH"
               " --sidecar PATH --hashes PATH [--cycles N] [--max-frames N]\n"
               "Stage P experiment-only RuntimeConfig v4 runner.\n";
 }
@@ -123,11 +124,11 @@ Status parse_arguments(int argc, char** argv, Arguments* output) {
             return Status::failure(ErrorCode::kInvalidArgument, "unknown option: " + option);
         }
     }
-    if (arguments.config.empty() || arguments.corpus_manifest.empty() ||
-        arguments.run_id.empty() || arguments.trace.empty() ||
+    if (arguments.config.empty() || arguments.run_id.empty() ||
+        arguments.trace.empty() ||
         arguments.sidecar.empty() || arguments.hashes.empty()) {
         return Status::failure(ErrorCode::kInvalidArgument,
-                               "config, corpus manifest, run id, trace, sidecar, and hashes are required");
+                               "config, run id, trace, sidecar, and hashes are required");
     }
     *output = std::move(arguments);
     return Status::success();
@@ -210,8 +211,9 @@ Status write_sidecar(const fs::path& path, const Arguments& arguments,
                      const std::string& engine_sha256,
                      const std::string& manifest_sha256,
                      const std::string& contract_sha256,
-                     const std::string& corpus_manifest_sha256,
-                     const RuntimeConfig& config) {
+                     const std::string& input_sha256,
+                     const RuntimeConfig& config,
+                     const edge_ai_defect::runtime::VideoFileMetadata* video_metadata) {
     std::ofstream output(path);
     if (!output) return Status::failure(ErrorCode::kIoError, "cannot write sidecar: " + path.string());
     output << "{\n"
@@ -222,8 +224,20 @@ Status write_sidecar(const fs::path& path, const Arguments& arguments,
            << "  \"engine_sha256\": \"" << engine_sha256 << "\",\n"
            << "  \"manifest_sha256\": \"" << manifest_sha256 << "\",\n"
            << "  \"contract_sha256\": \"" << contract_sha256 << "\",\n"
-           << "  \"corpus_manifest_sha256\": \"" << corpus_manifest_sha256 << "\"\n"
-           << "}\n";
+           << "  \"input_sha256\": \"" << input_sha256 << "\",\n"
+           << "  \"input_kind\": \"" << config.input_type << "\"";
+    if (video_metadata != nullptr) {
+        output << ",\n"
+               << "  \"video_width\": " << video_metadata->width << ",\n"
+               << "  \"video_height\": " << video_metadata->height << ",\n"
+               << "  \"video_nominal_fps\": " << video_metadata->nominal_fps << ",\n"
+               << "  \"video_decoded_frame_count\": "
+               << video_metadata->decoded_frame_count;
+    } else {
+        output << ",\n"
+               << "  \"corpus_manifest_sha256\": \"" << input_sha256 << "\"";
+    }
+    output << "\n}\n";
     if (!output) return Status::failure(ErrorCode::kIoError, "cannot finalize sidecar: " + path.string());
     return Status::success();
 }
@@ -260,6 +274,10 @@ int main(int argc, char** argv) {
                      " backend.type tensorrt_fp16 and runtime.mode serial or pipeline\n";
         return 3;
     }
+    if (config.input_type == "directory" && arguments.corpus_manifest.empty()) {
+        std::cerr << "corpus replay: --corpus-manifest is required for directory input\n";
+        return 2;
+    }
 
     ModelContract contract;
     status = edge_ai_defect::model::ModelContractLoader::load(config.model_contract_path, &contract);
@@ -281,13 +299,33 @@ int main(int argc, char** argv) {
         return 3;
     }
 
-    std::unique_ptr<edge_ai_defect::runtime::CorpusReplaySource> source;
-    status = edge_ai_defect::runtime::CorpusReplaySource::create(
-        config.input_directory, arguments.corpus_manifest, arguments.cycles, &source,
-        arguments.max_frames);
-    if (!status.ok()) {
-        std::cerr << "corpus replay: " << status.message() << '\n';
-        return 3;
+    std::unique_ptr<edge_ai_defect::runtime::ImageSource> source;
+    edge_ai_defect::runtime::VideoFileSource* video_source = nullptr;
+    if (config.input_type == "video_file") {
+        std::unique_ptr<edge_ai_defect::runtime::VideoFileSource> candidate;
+        status = edge_ai_defect::runtime::VideoFileSource::create(
+            config.input_video_path, &candidate,
+            arguments.max_frames == 0
+                ? std::nullopt
+                : std::optional<std::size_t>(arguments.max_frames));
+        if (status.ok()) {
+            video_source = candidate.get();
+            source = std::move(candidate);
+        }
+        if (!status.ok()) {
+            std::cerr << "video source: " << status.message() << '\n';
+            return 3;
+        }
+    } else {
+        std::unique_ptr<edge_ai_defect::runtime::CorpusReplaySource> candidate;
+        status = edge_ai_defect::runtime::CorpusReplaySource::create(
+            config.input_directory, arguments.corpus_manifest, arguments.cycles,
+            &candidate, arguments.max_frames);
+        if (status.ok()) source = std::move(candidate);
+        if (!status.ok()) {
+            std::cerr << "corpus replay: " << status.message() << '\n';
+            return 3;
+        }
     }
     std::unique_ptr<edge_ai_defect::runtime::JsonSink> json_sink;
     status = edge_ai_defect::runtime::JsonSink::create(
@@ -367,16 +405,19 @@ int main(int argc, char** argv) {
         return 4;
     }
     std::string config_sha256, executable_sha256, engine_sha256, manifest_sha256;
-    std::string contract_sha256, corpus_manifest_sha256;
+    std::string contract_sha256, input_sha256;
+    const fs::path input_identity = config.input_type == "video_file"
+                                        ? config.input_video_path
+                                        : arguments.corpus_manifest;
     const std::array<std::pair<const fs::path*, const char*>, 6> files = {{
         {&arguments.config, "config"}, {&executable, "executable"},
         {&config.tensorrt.engine_path, "engine"},
         {&config.tensorrt.engine_manifest_path, "manifest"},
         {&config.model_contract_path, "contract"},
-        {&arguments.corpus_manifest, "corpus manifest"}}};
+        {&input_identity, "input"}}};
     std::array<std::string*, 6> hashes = {{
         &config_sha256, &executable_sha256, &engine_sha256,
-        &manifest_sha256, &contract_sha256, &corpus_manifest_sha256}};
+        &manifest_sha256, &contract_sha256, &input_sha256}};
     for (std::size_t index = 0; index < files.size(); ++index) {
         status = hash_named_file(*files[index].first, files[index].second, hashes[index]);
         if (!status.ok()) {
@@ -386,7 +427,8 @@ int main(int argc, char** argv) {
     }
     status = write_sidecar(arguments.sidecar, arguments, config_sha256, executable_sha256,
                            engine_sha256, manifest_sha256, contract_sha256,
-                           corpus_manifest_sha256, config);
+                           input_sha256, config,
+                           video_source == nullptr ? nullptr : &video_source->metadata());
     if (!status.ok()) {
         std::cerr << status.message() << '\n';
         return 4;

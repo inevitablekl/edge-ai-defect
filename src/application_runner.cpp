@@ -12,6 +12,7 @@
 #include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
 #include "edge_ai_defect/runtime/pipeline_runner.hpp"
 #include "edge_ai_defect/runtime/serial_runner.hpp"
+#include "edge_ai_defect/runtime/video_file_source.hpp"
 
 #include <iostream>
 #include <memory>
@@ -137,11 +138,23 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
         if (!status.ok()) return {status, false};
     }
 
-    std::unique_ptr<runtime::DirectorySource> source;
-    status = runtime::DirectorySource::create(config.input_directory, &source);
-    if (!status.ok()) {
-        return {status, false};
+    std::unique_ptr<runtime::ImageSource> source;
+    if (config.input_type == "directory") {
+        std::unique_ptr<runtime::DirectorySource> directory_source;
+        status = runtime::DirectorySource::create(config.input_directory,
+                                                   &directory_source);
+        if (status.ok()) source = std::move(directory_source);
+    } else if (config.input_type == "video_file") {
+        std::unique_ptr<runtime::VideoFileSource> video_source;
+        status = runtime::VideoFileSource::create(config.input_video_path,
+                                                  &video_source);
+        if (status.ok()) source = std::move(video_source);
+    } else {
+        status = core::Status::failure(
+            core::ErrorCode::kSchemaViolation,
+            "unsupported input.type: " + config.input_type);
     }
+    if (!status.ok()) return {status, false};
 
     preprocess::Preprocessor preprocessor;
     std::unique_ptr<inference::IInferenceEngine> engine;

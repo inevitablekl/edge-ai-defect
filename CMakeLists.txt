@@ -20,7 +20,7 @@ option(
 )
 
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
-find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs)
+find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 find_package(OpenSSL REQUIRED)
 
 option(
@@ -254,6 +254,7 @@ add_library(edge_ai_runtime STATIC
     src/tensorrt_engine_manifest.cpp
     src/timed_json_sink.cpp
     src/serial_runner.cpp
+    src/video_file_source.cpp
 )
 target_include_directories(edge_ai_runtime
     PUBLIC
@@ -265,6 +266,7 @@ target_link_libraries(edge_ai_runtime
         Threads::Threads
     PRIVATE
         opencv_imgcodecs
+        opencv_videoio
         yaml-cpp
         OpenSSL::Crypto
 )
@@ -786,6 +788,28 @@ if(BUILD_TESTING)
     set_tests_properties(directory_source
         PROPERTIES
             LABELS "m4;runtime;source"
+    )
+
+    add_executable(test_video_file_source
+        tests/test_video_file_source.cpp
+    )
+    target_link_libraries(test_video_file_source
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_video_file_source
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME video_file_source
+        COMMAND test_video_file_source
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/video_file_source"
+    )
+    set_tests_properties(video_file_source
+        PROPERTIES
+            LABELS "stage-p;runtime;source;video"
     )
 
     add_executable(test_result_sinks

@@ -24,7 +24,7 @@ private:
 }  // namespace
 
 core::Status StagePExperimentRunner::run(
-    CorpusReplaySource& source, preprocess::Preprocessor& preprocessor,
+    ImageSource& source, preprocess::Preprocessor& preprocessor,
     const core::TensorInfo& model_input_info, inference::IInferenceEngine& engine,
     postprocess::PostProcessor& postprocessor, CanonicalHashSink& hash_sink,
     TimedJsonSink& timed_json_sink, const RunMetadata& metadata,
