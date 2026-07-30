@@ -239,15 +239,20 @@ add_library(edge_ai_runtime STATIC
     src/cli.cpp
     src/composite_sink.cpp
     src/canonical_detection_hash.cpp
+    src/canonical_hash_sink.cpp
     src/console_sink.cpp
+    src/corpus_replay_source.cpp
     src/directory_source.cpp
     src/frame_trace.cpp
     src/json_sink.cpp
     src/opencv_thread_policy.cpp
+    src/pipeline_runner.cpp
     src/portable_control.cpp
     src/result_sink.cpp
     src/runtime_config.cpp
+    src/stage_p_experiment_runner.cpp
     src/tensorrt_engine_manifest.cpp
+    src/timed_json_sink.cpp
     src/serial_runner.cpp
 )
 target_include_directories(edge_ai_runtime
@@ -257,6 +262,7 @@ target_include_directories(edge_ai_runtime
 target_link_libraries(edge_ai_runtime
     PUBLIC
         edge_ai_postprocess
+        Threads::Threads
     PRIVATE
         opencv_imgcodecs
         yaml-cpp
@@ -719,6 +725,20 @@ if(BUILD_TESTING)
     target_link_libraries(test_canonical_detection_hash PRIVATE edge_ai_runtime)
     add_test(NAME canonical_detection_hash COMMAND test_canonical_detection_hash)
     set_tests_properties(canonical_detection_hash PROPERTIES LABELS "stage-p;runtime;canonical")
+
+    add_executable(test_pipeline_runner tests/test_pipeline_runner.cpp)
+    target_include_directories(test_pipeline_runner PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_pipeline_runner PRIVATE edge_ai_runtime)
+    add_test(NAME pipeline_runner COMMAND test_pipeline_runner)
+    set_tests_properties(pipeline_runner PROPERTIES LABELS "stage-p;runtime;pipeline")
+
+    add_executable(test_stage_p_components tests/test_stage_p_components.cpp)
+    target_include_directories(test_stage_p_components PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_stage_p_components PRIVATE edge_ai_runtime)
+    add_test(NAME stage_p_components COMMAND test_stage_p_components)
+    set_tests_properties(stage_p_components PROPERTIES LABELS "stage-p;runtime;experiment")
 
     add_executable(test_directory_source
         tests/test_directory_source.cpp

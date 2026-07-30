@@ -10,6 +10,7 @@
 #include "edge_ai_defect/runtime/directory_source.hpp"
 #include "edge_ai_defect/runtime/json_sink.hpp"
 #include "edge_ai_defect/runtime/opencv_thread_policy.hpp"
+#include "edge_ai_defect/runtime/pipeline_runner.hpp"
 #include "edge_ai_defect/runtime/serial_runner.hpp"
 
 #include <iostream>
@@ -79,6 +80,14 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
     preprocess::Preprocessor preprocessor;
     postprocess::PostProcessor postprocessor(config.postprocess_config);
     const runtime::RunMetadata metadata = make_metadata(config, contract, options, manifest.get());
+    if (config.schema_version == 4U && config.runtime_mode == "pipeline") {
+        runtime::PipelineRunner runner(source, preprocessor, contract.input.tensor_info,
+                                       *engine, postprocessor, sink,
+                                       config.pipeline.queue_capacity,
+                                       options.trace_observer);
+        runtime::RunSummary summary;
+        return {runner.run(metadata, &summary), true};
+    }
     runtime::SerialRunner runner(source, preprocessor, contract.input.tensor_info,
                                  *engine, postprocessor, sink, options.trace_observer);
     runtime::RunSummary summary;
@@ -147,13 +156,17 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
 
     const runtime::RunMetadata metadata = make_metadata(
         config, contract, options, manifest.get());
-    runtime::SerialRunner runner(*source,
-                                 preprocessor,
-                                 contract.input.tensor_info,
-                                 *engine,
-                                 postprocessor,
-                                 *sink,
-                                 options.trace_observer);
+    if (config.schema_version == 4U && config.runtime_mode == "pipeline") {
+        runtime::PipelineRunner runner(*source, preprocessor,
+                                       contract.input.tensor_info, *engine,
+                                       postprocessor, *sink,
+                                       config.pipeline.queue_capacity,
+                                       options.trace_observer);
+        runtime::RunSummary summary;
+        return {runner.run(metadata, &summary), true};
+    }
+    runtime::SerialRunner runner(*source, preprocessor, contract.input.tensor_info,
+                                 *engine, postprocessor, *sink, options.trace_observer);
     runtime::RunSummary summary;
     return {runner.run(metadata, &summary), true};
 }

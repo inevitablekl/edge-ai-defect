@@ -3229,3 +3229,19 @@ Stage J Plan or historical Evidence.
   与 push-block 聚合统计，并保证 high-water mark 不超过 capacity。
 - P3 禁止进入：未实现 PipelineRunner、worker、source、sink、实验或
   TensorRT/Jetson 运行。
+
+## 2026-07-30 - Stage P P3 Pipeline Integration
+
+- P3 开始记录：在 P2 commit `86f74968` 基础上实现固定四 worker / 三 bounded
+  SPSC queue PipelineRunner，并通过现有 `run_with_components` seam dispatch
+  v4 pipeline；旧 SerialRunner 行为保持不变。
+- Pipeline lifecycle：normal EOS 按 Q1→Q2→Q3 drain/close；first error 只保留
+  一次，cancel 所有 queues，join 所有已启动 workers；失败不调用 `end_run`
+  且 caller summary 保持不变。Inference 只由单一 worker 调用。
+- 新增 experiment-only components：180-entry `CorpusReplaySource`、
+  `CanonicalHashSink` 的独立 RUN/CYCLE hashes、`TimedJsonSink` end-run timing、
+  以及显式组件注入的 `StagePExperimentRunner`；未加入 production CLI registry。
+- WSL backend-neutral focused tests `3/3 PASS`；full build PASS；full ctest
+  `42/44 PASS`，两个失败均为既有环境/资产限制：Jetson-only formal test 和
+  缺失/不匹配 TensorRT engine artifact。未执行 Jetson、TensorRT ON、benchmark、
+  stability 或 VideoFileSource formal validation。
