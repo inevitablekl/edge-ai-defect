@@ -108,6 +108,13 @@ core::Status ConcurrentFrameTraceRecorder::on_stage_begin(
     std::lock_guard<std::mutex> lock(mutex_);
     const Key key{cycle_id, stage};
     if (active_.find(key) != active_.end()) return trace_error("duplicate active interval");
+    // Reject duplicate completed interval: check if records already contain this (cycle_id, stage)
+    if (mode_ == ConcurrentTraceMode::kBufferedRecords) {
+        for (const FrameTraceRecord& record : records_) {
+            if (record.cycle_id == cycle_id && record.stage == stage)
+                return trace_error("duplicate completed interval");
+        }
+    }
     active_.emplace(key, timestamp_ns);
     return Status::success();
 }

@@ -107,7 +107,7 @@ core::Status validate_metadata(const RunMetadata& metadata) {
                         metadata.backend_type == "tensorrt_fp16";
     if (metadata.schema_version != 1U && !trt_v2 && !trt_v3) {
         return Status::failure(ErrorCode::kSchemaViolation,
-                               "RunMetadata schema_version must be 1 or TensorRT v2");
+                               "RunMetadata schema_version must be 1, TensorRT v2, or Result v3");
     }
     if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2 && !trt_v3) {
         return Status::failure(ErrorCode::kSchemaViolation,
@@ -217,6 +217,7 @@ core::Status validate_frame(const FrameResult& frame,
 }
 
 core::Status validate_summary(const RunSummary& summary,
+                              const RunMetadata& metadata,
                               std::size_t received_frames,
                               std::size_t received_detections) {
     if (summary.processed_images != received_frames ||
@@ -224,12 +225,61 @@ core::Status validate_summary(const RunSummary& summary,
         return Status::failure(ErrorCode::kInvalidArgument,
                                "RunSummary counts do not match received frames");
     }
-    if (summary.runtime_v3.has_value()) {
+    // Schema v1/v2: runtime_v3 must be absent
+    if (metadata.schema_version < 3U && summary.runtime_v3.has_value()) {
+        return Status::failure(ErrorCode::kSchemaViolation,
+                               "Result v1/v2 forbid runtime summary metadata");
+    }
+    // Schema v3: runtime_v3 is required
+    if (metadata.schema_version == 3U) {
+        if (!summary.runtime_v3.has_value()) {
+            return Status::failure(ErrorCode::kSchemaViolation,
+                                   "Result v3 requires runtime summary metadata");
+        }
         const auto& value = *summary.runtime_v3;
-        if (value.source_frames < summary.processed_images)
-            return Status::failure(ErrorCode::kInvalidArgument, "source_frames precedes processed_images");
-        if (!std::isfinite(value.run_processing_wall_ms) || value.run_processing_wall_ms <= 0.0)
-            return Status::failure(ErrorCode::kInvalidArgument, "run processing wall time must be finite and positive");
+        // Block-only: source_frames == processed_images, dropped == 0
+        if (value.source_frames != summary.processed_images) {
+            return Status::failure(ErrorCode::kInvalidArgument,
+                                   "Result v3 block-only: source_frames must equal processed_images");
+        }
+        if (value.source_frames < summary.processed_images) {
+            return Status::failure(ErrorCode::kInvalidArgument,
+                                   "source_frames must not be less than processed_images");
+        }
+        if (!std::isfinite(value.run_processing_wall_ms) || value.run_processing_wall_ms <= 0.0) {
+            return Status::failure(ErrorCode::kInvalidArgument,
+                                   "run processing wall time must be finite and positive");
+        }
+        // Throughput must be finite
+        const double throughput = static_cast<double>(summary.processed_images) /
+                                  (value.run_processing_wall_ms / 1000.0);
+        if (!std::isfinite(throughput)) {
+            return Status::failure(ErrorCode::kInvalidArgument,
+                                   "derived throughput must be finite");
+        }
+        // Mode matching
+        if (!metadata.runtime_v3.has_value()) {
+            return Status::failure(ErrorCode::kSchemaViolation,
+                                   "Result v3 summary validation requires metadata runtime_v3");
+        }
+        const auto& rt_meta = *metadata.runtime_v3;
+        if ((rt_meta.runtime_mode == "pipeline") != value.pipeline.has_value()) {
+            return Status::failure(ErrorCode::kSchemaViolation,
+                                   "Result v3 runtime mode and summary pipeline mismatch");
+        }
+        if (value.pipeline.has_value() && rt_meta.pipeline.has_value()) {
+            // queue_high_water_mark <= queue_capacity
+            for (std::size_t i = 0; i < 3; ++i) {
+                if (value.pipeline->queue_high_water_marks[i] > rt_meta.pipeline->queue_capacity) {
+                    return Status::failure(ErrorCode::kSchemaViolation,
+                                           "queue high water mark exceeds capacity");
+                }
+            }
+        }
+        if (rt_meta.runtime_mode == "serial" && value.pipeline.has_value()) {
+            return Status::failure(ErrorCode::kSchemaViolation,
+                                   "serial summary must not carry pipeline metadata");
+        }
     }
     return Status::success();
 }
@@ -265,7 +315,8 @@ std::string serialize_run(const RunMetadata& metadata,
                           const RunSummary& summary) {
     std::ostringstream output;
     output.imbue(std::locale::classic());
-    const bool trt_v2 = metadata.schema_version == 2U;
+    const bool tensorrt_result =
+        metadata.schema_version == 2U || metadata.schema_version == 3U;
     const bool result_v3 = metadata.schema_version == 3U;
     output << "{\n"
            << "  \"schema_version\": " << metadata.schema_version << ",\n"
@@ -273,12 +324,12 @@ std::string serialize_run(const RunMetadata& metadata,
            << "    \"type\": \"" << json_escape(metadata.backend_type) << "\"\n"
            << "  },\n"
            << "  \"model\": {\n";
-    if (trt_v2) {
+    if (tensorrt_result) {
         output << "    \"artifact_kind\": \"" << json_escape(metadata.artifact_kind) << "\",\n";
     }
     output << "    \"filename\": \"" << json_escape(metadata.model_filename) << "\",\n"
            << "    \"sha256\": \"" << json_escape(metadata.model_sha256) << "\",\n";
-    if (trt_v2) {
+    if (tensorrt_result) {
         output << "    \"source_onnx_sha256\": \"" << json_escape(metadata.source_onnx_sha256) << "\",\n"
                << "    \"engine_manifest_filename\": \"" << json_escape(metadata.engine_manifest_filename) << "\",\n";
     }

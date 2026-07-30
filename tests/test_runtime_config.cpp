@@ -136,13 +136,21 @@ postprocess:
 )yaml";
 }
 
-std::string valid_yaml_v4(const std::string& mode = "pipeline") {
+std::string valid_yaml_v4(const std::string& mode = "pipeline",
+                            const std::string& input_type = "directory") {
+    std::string input_section;
+    if (input_type == "directory") {
+        input_section = "input:\n  type: directory\n  directory: images\n";
+    } else {
+        input_section = "input:\n  type: video_file\n  video_path: input.avi\n";
+    }
     return "schema_version: 4\nbackend:\n  type: tensorrt_fp16\n"
            "tensorrt:\n  engine_path: engine.plan\n  engine_manifest_path: engine.json\n  device_id: 0\n"
            "model:\n  contract_path: contract.yaml\nruntime:\n  mode: " + mode +
            "\n  opencv_num_threads: 1\n" +
            (mode == "pipeline" ? "  pipeline:\n    queue_capacity: 2\n    drop_policy: block\n" : "") +
-           "input:\n  type: directory\n  directory: images\noutput:\n  json_path: result.json\n  console: false\n  overwrite: false\n"
+           input_section +
+           "output:\n  json_path: result.json\n  console: false\n  overwrite: false\n"
            "postprocess:\n  conf_threshold: 0.25\n  iou_threshold: 0.45\n  max_nms: 30000\n  max_det: 300\n  max_wh: 7680\n  agnostic: false\ntiming:\n  enabled: true\n";
 }
 
@@ -162,16 +170,83 @@ void test_v4_strict_union(TestContext& context, const Options& options) {
                        config.pipeline.queue_capacity == 2 && config.pipeline.drop_policy == "block",
                        "v4 pipeline fields", "fields mismatch");
     }
+
     const auto expect_bad = [&](const std::string& name, const std::string& yaml, const std::string& fragment) {
         const auto bad = options.temp_dir / (name + ".yaml");
         write_text_file(bad, yaml);
-        context.expect(!runtime::RuntimeConfigLoader::load(bad, &config).ok(), name, fragment);
+        runtime::RuntimeConfig cfg;
+        context.expect(!runtime::RuntimeConfigLoader::load(bad, &cfg).ok(), name, fragment);
     };
+
+    // Valid matrix: serial+directory, pipeline+directory, serial+video_file, pipeline+video_file
+    auto test_valid = [&](const std::string& name, const std::string& mode, const std::string& input) {
+        const auto p = options.temp_dir / (name + ".yaml");
+        write_text_file(p, valid_yaml_v4(mode, input));
+        runtime::RuntimeConfig cfg;
+        auto s = runtime::RuntimeConfigLoader::load(p, &cfg);
+        context.expect(s.ok(), name, s.message());
+        if (s.ok()) {
+            context.expect(cfg.schema_version == 4 && cfg.runtime_mode == mode,
+                           name + " fields", "mode mismatch");
+            if (mode == "pipeline") {
+                context.expect(cfg.pipeline.queue_capacity == 2, name + " qc", "queue_capacity mismatch");
+            }
+            context.expect(cfg.input_type == input, name + " input", "input_type mismatch");
+            if (input == "directory") {
+                context.expect(!cfg.input_directory.empty(), name + " dir", "directory empty");
+            } else {
+                context.expect(!cfg.input_video_path.empty(), name + " video", "video_path empty");
+            }
+        }
+    };
+    test_valid("v4_serial_dir", "serial", "directory");
+    test_valid("v4_pipeline_dir", "pipeline", "directory");
+    test_valid("v4_serial_video", "serial", "video_file");
+    test_valid("v4_pipeline_video", "pipeline", "video_file");
+
+    // Invalid union matrix
     expect_bad("v4_serial_pipeline", replace_once(valid_yaml_v4(), "mode: pipeline", "mode: serial"), "pipeline forbidden");
     expect_bad("v4_bad_backend", replace_once(valid_yaml_v4(), "tensorrt_fp16", "onnxruntime_cpu"), "backend");
     expect_bad("v4_bad_drop", replace_once(valid_yaml_v4(), "drop_policy: block", "drop_policy: drop"), "drop");
-    expect_bad("v4_unknown", valid_yaml_v4() + "unknown: true\n", "unknown");
-    expect_bad("v4_missing_video_union", replace_once(valid_yaml_v4(), "  directory: images", "  video_path: input.avi"), "directory");
+    expect_bad("v4_unknown_root", valid_yaml_v4() + "unknown: true\n", "unknown");
+    expect_bad("v4_missing_dir_video_union",
+               replace_once(valid_yaml_v4(), "  directory: images", "  video_path: input.avi"), "directory");
+    expect_bad("v4_video_missing_dir_union",
+               replace_once(valid_yaml_v4("pipeline", "video_file"), "  video_path: input.avi", "  directory: images"),
+               "video_path");
+    expect_bad("v4_queue_cap_0",
+               replace_once(valid_yaml_v4(), "queue_capacity: 2", "queue_capacity: 0"), "queue_capacity");
+    expect_bad("v4_queue_cap_17",
+               replace_once(valid_yaml_v4(), "queue_capacity: 2", "queue_capacity: 17"), "queue_capacity");
+    expect_bad("v4_drop_not_block",
+               replace_once(valid_yaml_v4(), "drop_policy: block", "drop_policy: drop_oldest"), "drop_policy");
+    expect_bad("v4_missing_directory",
+               replace_once(valid_yaml_v4(), "  directory: images\n", ""), "input.directory");
+    expect_bad("v4_missing_video_path",
+               replace_once(valid_yaml_v4("pipeline", "video_file"), "  video_path: input.avi\n", ""), "input.video_path");
+    expect_bad("v4_unknown_runtime_field",
+               replace_once(valid_yaml_v4(), "  opencv_num_threads: 1", "  opencv_num_threads: 1\n  foo: bar"), "runtime.foo");
+    expect_bad("v4_unknown_input_field",
+               replace_once(valid_yaml_v4(), "  directory: images", "  directory: images\n  bar: baz"), "input.bar");
+    expect_bad("v4_duplicate_root_key",
+               replace_once(valid_yaml_v4(), "schema_version: 4\n", "schema_version: 4\nschema_version: 4\n"), "$.schema_version");
+    expect_bad("v4_duplicate_nested_key",
+               replace_once(valid_yaml_v4(), "  mode: pipeline\n", "  mode: pipeline\n  mode: serial\n"), "runtime.mode");
+    expect_bad("v4_missing_timing_section",
+               replace_once(valid_yaml_v4(), "timing:\n  enabled: true\n", ""), "$.timing");
+    expect_bad("v4_missing_timing_enabled",
+               replace_once(valid_yaml_v4(), "  enabled: true", "  foo: bar"), "timing.enabled");
+}
+
+std::string valid_yaml_v3() {
+    return "schema_version: 3\n"
+           "backend:\n  type: tensorrt_fp16\n"
+           "tensorrt:\n  engine_path: engine.plan\n  engine_manifest_path: engine.json\n  device_id: 0\n"
+           "runtime:\n  opencv_num_threads: 1\n"
+           "model:\n  contract_path: contract.yaml\n"
+           "input:\n  type: directory\n  directory: images\n"
+           "output:\n  json_path: result.json\n  console: false\n  overwrite: false\n"
+           "postprocess:\n  conf_threshold: 0.25\n  iou_threshold: 0.45\n  max_nms: 30000\n  max_det: 300\n  max_wh: 7680\n  agnostic: false\n";
 }
 
 std::string replace_once(std::string source,
@@ -724,6 +799,29 @@ void test_schema_failures(TestContext& context, const Options& options) {
                    "timing.enabled");
 }
 
+void test_v3_parser_regression(TestContext& context, const Options& options) {
+    const auto path = options.temp_dir / "v3_valid.yaml";
+    context.expect(write_text_file(path, valid_yaml_v3()), "v3 valid write", "write failed");
+    runtime::RuntimeConfig config;
+    auto status = runtime::RuntimeConfigLoader::load(path, &config);
+    context.expect(status.ok(), "v3 valid parse", status.message());
+    if (status.ok()) {
+        context.expect(config.schema_version == 3 && config.backend_type == "tensorrt_fp16",
+                       "v3 valid fields", "schema/backend mismatch");
+        context.expect(!config.tensorrt.engine_path.empty(), "v3 engine_path", "engine_path missing");
+    }
+
+    // v3 rejects v4 runtime mode field
+    expect_failure(context, options, "v3_rejects_runtime_mode",
+                   replace_once(valid_yaml_v3(), "  opencv_num_threads: 1\n", "  opencv_num_threads: 1\n  mode: serial\n"),
+                   "runtime.mode");
+
+    // v3 rejects missing tensorrt
+    expect_failure(context, options, "v3_missing_tensorrt",
+                   replace_once(valid_yaml_v3(), "tensorrt:\n  engine_path: engine.plan\n  engine_manifest_path: engine.json\n  device_id: 0\n", ""),
+                   "$.tensorrt");
+}
+
 void test_loader_argument_failures(TestContext& context, const Options& options) {
     runtime::RuntimeConfig output = sentinel_config();
     const runtime::RuntimeConfig sentinel = output;
@@ -777,6 +875,7 @@ int main(int argc, char* argv[]) {
     TestContext context;
     test_valid_config_and_paths(context, options);
     test_v2_config_and_isolation(context, options);
+    test_v3_parser_regression(context, options);
     test_v4_strict_union(context, options);
     test_ort_options_record(context);
     test_opencv_thread_policy(context);

@@ -11,6 +11,7 @@ namespace edge_ai_defect::runtime::detail {
                                           const RunMetadata& metadata,
                                           std::size_t expected_sequence_index);
 [[nodiscard]] core::Status validate_summary(const RunSummary& summary,
+                                            const RunMetadata& metadata,
                                             std::size_t received_frames,
                                             std::size_t received_detections);
 [[nodiscard]] std::string json_escape(const std::string& value);

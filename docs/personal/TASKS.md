@@ -3177,3 +3177,43 @@ Stage J Plan or historical Evidence.
   no Jetson experiment or Stage P Evidence was generated.
 - P2/P3 work (queues, worker threads, PipelineRunner, and video source
   implementation) was not started. Pending P1 gate review.
+
+## 2026-07-30 - Stage P P1R Contract Gate Remediation
+
+- P1 Gate 审查发现合同缺口（`P1_GATE_FAIL_REMEDIATION_REQUIRED`），本 P1R 轮次修复。
+- **Canonical Serializer 修复**：
+  - CYCLE scope 现在使用 cycle vector 零基位置，不再序列化 global `sequence_index`；RUN scope 保持不变。
+  - 新增编译期 `static_assert(sizeof(float)==4)` 和 `std::numeric_limits<float>::is_iec559`。
+  - 新增运行时 checked_u64/checked_u32 整数范围校验（frame_index, sequence_index, candidate_index, path length, detection count 等）。
+  - 新增非空固定 vector 测试（含 UTF-8 路径、+0.0/-0.0、不同 class_id/candidate_index、正宽高），冻结完整 canonical bytes hex 和 SHA-256 golden。
+  - 新增跨 cycle 测试：Cycle A global seq 0..N-1，Cycle B 相同 path/dims/dets 但 global seq 180..180+N-1；验证 RUN_SHA_A != RUN_SHA_B 且 CYCLE_SHA_A == CYCLE_SHA_B。
+- **Result JSON v3 修复**：
+  - `serialize_run` 现在对 v2 和 v3 都输出 TensorRT model 字段（`artifact_kind`, `source_onnx_sha256`, `engine_manifest_filename`），使用 `tensorrt_result` 语义变量。
+  - `validate_metadata` 错误消息更新为 "schema_version must be 1, TensorRT v2, or Result v3"。
+  - `validate_summary` 签名更新为接受 `const RunMetadata&`，执行 metadata/summary carrier 联合校验：
+    - v1/v2 禁止携带 `runtime_v3` summary carrier；v3 要求 `runtime_v3` summary carrier。
+    - block-only 成功 run 要求 `source_frames == processed_images`，`dropped_frames == 0`。
+    - wall time 要求 finite 且 strictly > 0；derived throughput 验证为 finite。
+    - pipeline mode 要求 `queue_high_water_marks[i] <= queue_capacity`。
+    - 所有 `metadata.runtime_v3` / `summary.runtime_v3` optional 解引用前均有 guard。
+  - ConsoleSink 和 JsonSink 均已更新为传递 `metadata_` 给 `validate_summary`。
+  - 新增 v1/v2 golden byte-comparison 回归测试。
+  - 新增 v3 TensorRT model metadata 测试（验证 `artifact_kind` 等字段存在）。
+  - v3 有效 pipeline 示例改为 `processed_images=1, source_frames=1, dropped_frames=0`。
+  - 新增负向测试：缺少 runtime_v3 carrier、错误携带 runtime_v3、source_frames 与 processed_images 不匹配、wall=0/NaN/Inf、Serial 错误携带 pipeline、Pipeline 缺少 pipeline、high-water > capacity、target 未被破坏、temporary file 不残留。
+- **RuntimeConfig v4 测试补齐**：
+  - 覆盖 valid matrix：`serial+directory`, `pipeline+directory`, `serial+video_file`, `pipeline+video_file`。
+  - 覆盖 invalid union：queue_capacity=0/17, drop_policy!="block", directory 与 video_path 互斥, 缺失 directory/video_path, backend!="tensorrt_fp16", timing section 缺失, timing.enabled 缺失, unknown root/runtime/pipeline/input field, duplicate root/nested key。
+  - 保留 v1/v2/v3 parser regression（`test_valid_config_and_paths`, `test_v2_config_and_isolation`, `test_v3_parser_regression` 均通过）。
+- **ConcurrentFrameTraceRecorder 测试补齐**：
+  - 新增 duplicate completed interval rejection（同一 (cycle_id, stage) 完成后再次 begin 被 reject）。
+  - 新增测试：overlapping intervals（不同 frame/stage 可重叠）, duplicate begin fail, no-matching-end fail, end<begin fail, flush with active intervals fail。
+  - 验证 BUFFERED_RECORDS 保留 per-frame records, AGGREGATE_ONLY 不保留 records 但正确保存 count/sum/min/max。
+  - 验证 source-only EOS 不是 complete frame, 5 stage 全部完成才是 complete frame。
+  - 旧 TraceRecorder regression 保留并通过。
+- **WSL x86_64 Build 与 Gate**：
+  - 全新 `build-p1r-wsl` 目录，`EDGE_AI_ENABLE_TENSORRT=OFF`, `EDGE_AI_ENABLE_MODEL_SMOKE=OFF`。
+  - `uname -m`: `x86_64`；ONNX Runtime detected processor: `x86_64`；selected SDK: `linux-x64`。
+  - 定向 CTest 6/6 PASS；完整 CTest 39/41 PASS（2 pre-existing failures: `stage_j_ort_cpu_formal_unit` Jetson-specific, `k3_foundation` TensorRT-specific）。
+- **提交**：`fix(stage-p): close P1 contract gate gaps`（不 amend 原 P1 commit）。
+- **禁止事项确认**：未开始 P2；未修改 BoundedQueue, PipelineRunner, worker threads, VideoFileSource；未 push/merge/rebase/tag。
