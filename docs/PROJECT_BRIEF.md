@@ -581,7 +581,9 @@ Current live status: Stage J `COMPLETE`; Stage K `COMPLETE`; D066 accepts the
 Original TensorRT FP16 Engine based on task-level accuracy, stability, and
 formal serial performance while retaining raw Level B `FAIL`.
 
-Stage P Execution Plan v1.2 is `FINAL`. P0 Planning Freeze is
-`COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`; no Stage P production
-implementation is part of P0. P1 is
-`NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`.
+Stage P is `COMPLETE` on the
+`feature/jetson-pipeline-runtime` branch. Its completed scope includes the
+TensorRT FP16 backend, bounded four-worker Pipeline runtime, VideoFileSource,
+Serial/Pipeline benchmark, and 1800-second stability observation. The final
+status retains the thermal-status limitation and does not claim industrial
+deployment certification.

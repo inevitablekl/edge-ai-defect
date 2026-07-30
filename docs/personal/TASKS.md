@@ -3289,3 +3289,17 @@ Stage J Plan or historical Evidence.
   SD=`0.007915`，classification=`MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
 - 最终状态：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。P6 未执行，等待后续
   明确任务；未 push、merge、rebase 或 tag。
+
+## 2026-07-31 - Stage P P8 Consolidation and Closeout
+
+- P4/P5/P6/P7 Evidence 已按最终 verdict 建立索引，正式 Evidence 保留在
+  `results/validation/stage_p/` 和 `results/benchmark/stage_p/`，raw traces、
+  telemetry、generated video 与其他大文件保持 local-only。
+- Stage P Final Report、Evidence Index、README、Project Brief、Architecture、
+  Decisions、Tasks 与 Experiment Plan 已同步到 Stage P `COMPLETE`。
+- Stage P final state：P4 `PASS`；P5
+  `PASS_WITH_THERMAL_STATUS_UNAVAILABLE`；P6 `PASS`；P7 `PASS`；selected queue
+  capacity `1`；paired ratio mean `4.165718`；P7 source-active interval
+  `1800.006143093 s`。
+- 本轮不新增功能、不重跑 P4–P7、不修改 production source、headers、tests、
+  CMake、Engine、ONNX 或模型；未执行 push、merge、rebase 或 tag。

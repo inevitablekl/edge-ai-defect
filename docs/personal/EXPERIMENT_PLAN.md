@@ -1557,3 +1557,27 @@ known limitation。只有检测到 throttling 才使 attempt 进入
 - verdict：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。
 
 P6 仍未执行，必须等待后续明确任务。
+
+## Stage P Final Experimental Status
+
+更新时间：`2026-07-31`
+
+Stage P P4–P7 execution is COMPLETE. The final experimental chain is:
+
+| Phase | Purpose | Result |
+|---|---|---|
+| P4 | Exact Serial/Pipeline correctness on the frozen 180-frame corpus | `P4_PIPELINE_CORRECTNESS_PASS` |
+| P5 | Queue pilot and formal Serial/Pipeline throughput comparison | `P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`; selected capacity `1`; paired ratio mean `4.165718` |
+| P6 | Deterministic MJPG VideoFileSource validation | `P6_VIDEO_SOURCE_PASS` |
+| P7 | Bounded Pipeline long-running stability | `P7_PIPELINE_STABILITY_PASS`; source-active interval `1800.006143093 s` |
+
+P5R corrected only the validity interpretation of existing Evidence. It did
+not rerun the benchmark or change raw data. P5's measured classification is
+`MATERIAL_MEASURED_THROUGHPUT_INCREASE` under the frozen protocol; it is not a
+statistical-significance claim and does not imply lower single-frame latency.
+
+The final limitations remain: thermal throttle status is unavailable, the raw
+TensorRT Level B limitation inherited from Stage K is retained, and no
+industrial certification claim is made. Raw traces, telemetry, generated
+video, and other large runtime artifacts remain local-only. Future experiments
+require separate authorization and real measurements.

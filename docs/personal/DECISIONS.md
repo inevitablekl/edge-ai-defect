@@ -3761,3 +3761,24 @@ thermal interface unavailable 必须记录为
 `P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`，selected queue capacity 冻结为
 `1`，throughput classification 为 `MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
 历史 P5 invalid report 和 raw Evidence 保持不变。
+
+### D073 — Stage P P8 consolidation and closeout
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+Stage P P4–P7 Evidence 已完成整理并闭环：P4 为
+`P4_PIPELINE_CORRECTNESS_PASS`，P5 为
+`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`，P6 为
+`P6_VIDEO_SOURCE_PASS`，P7 为 `P7_PIPELINE_STABILITY_PASS`。
+
+接受 Stage P 的最终 bounded Pipeline 形态为四个 workers、三条 bounded SPSC
+queues、single inference worker，并将离线工作负载的 selected queue capacity
+冻结为 `1`。Stage P Final Report 与 Evidence Index 是 closeout 的文档入口；原始
+Evidence、生成视频、large trace 和 telemetry 按 retention boundary 保持
+local-only，不在文档 commit 中提交。
+
+本 Decision 不修改 src、include、tests、CMakeLists.txt、TensorRT Engine、ONNX、
+模型、Pipeline topology、queue semantics 或 benchmark data；不授权下一阶段开发。
+thermal status unavailable、Stage K inherited raw Level B limitation 和 no
+industrial certification claim 必须继续保留。

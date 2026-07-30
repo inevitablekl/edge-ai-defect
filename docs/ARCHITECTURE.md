@@ -753,16 +753,38 @@ phase.
   D066 accepted deployment candidate, with raw Level B retained as a known
   limitation.
 - Stage P Execution Plan v1.2: `FINAL`.
-- Stage P P0 Planning Freeze:
-  `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`.
-- Stage P P1: `NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`.
+- Stage P P4/P5/P6/P7 execution and P8 closeout: `COMPLETE`.
 
-The current production tree still has no PipelineRunner or VideoFileSource.
-P0 changes documentation only. Stage P exact identity compares ordered final
-Detection output across Serial/Pipeline scheduling; it does not reinterpret
-the raw TensorRT Level B result.
+The current production tree contains the validated PipelineRunner and
+VideoFileSource. Stage P exact identity compares ordered final Detection output
+across Serial/Pipeline scheduling; it does not reinterpret the raw TensorRT
+Level B result.
 
-P6 is not authorized until P5 queue capacity is selected and frozen **and**
-P5 formal benchmark protocol is complete. Camera, RTSP, live drop policies,
-ROS2, GPU preprocessing/NMS, INT8, and multiple inference contexts remain
-outside Stage P.
+Camera, RTSP, live drop policies, ROS2, GPU preprocessing/NMS, INT8, and
+multiple inference contexts remain outside the completed Stage P scope.
+
+## Stage P Final Architecture Status
+
+Stage P is COMPLETE. The validated runtime is the bounded TensorRT FP16 path:
+
+```text
+Source Worker
+→ bounded SPSC queue
+→ Preprocess Worker
+→ bounded SPSC queue
+→ single Inference Worker
+→ bounded SPSC queue
+→ Postprocess + Sink Worker
+```
+
+The selected queue capacity for the recorded offline benchmark and stability
+workload is `1`, with `drop_policy=block`. VideoFileSource passed the frozen
+MJPG validation. The P4/P5/P7 hash chain preserves exact final Detection
+identity; P5 reports a measured paired ratio mean of `4.165718`, and P7
+completed the 1800-second stability interval.
+
+This closeout does not change the backend-neutral interfaces or authorize a
+new stage. Thermal status remains unavailable, the raw TensorRT Level B
+limitation inherited from Stage K remains, and no industrial certification
+claim is made. See `docs/personal/STAGE_P_FINAL_REPORT.md` and
+`docs/personal/STAGE_P_EVIDENCE_INDEX.md` for the evidence authority.
