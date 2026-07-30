@@ -1527,3 +1527,33 @@ ratio of 1.10×; it is not a statistical-significance claim. P7 uses
 CanonicalHashSink CYCLE scope and AGGREGATE_ONLY trace, not JsonSink. No Stage P
 measurement or formal Evidence attempt was run during P0; all Stage P values
 remain `TBD: real experiment data required`.
+
+## Stage P P5R Protocol Correction and Reclassification
+
+更新日期：`2026-07-31`
+
+P5 attempt_001 已完成。P5R 仅修正 protocol interpretation 和 Evidence status，
+不重新运行 benchmark、不生成实验数据、不修改 runtime 或 attempt_001 raw
+Evidence。
+
+P4 的 180-frame RUN SHA 仅作为 single-cycle reference。P5 RUN SHA 是该 extended
+run 全部 accepted frames 的 hash；六个 formal run 必须互相一致。完整 180-frame
+CYCLE SHA 继续必须匹配 P4 expected CYCLE SHA；partial cycle 不参与 PASS。
+
+thermal interface unavailable 记录为 `thermal_throttle_status=unavailable` 的
+known limitation。只有检测到 throttling 才使 attempt 进入
+`RUN_INVALID_THERMAL_THROTTLING`；不能据此声称 no-throttling PASS。
+
+基于既有 Evidence 的最终状态：
+
+- selected queue capacity：`1`；
+- formal RUN SHA：六个一致；
+- complete CYCLE SHA：全部匹配；
+- formal accepted/processed：`5100/5100`；
+- dropped：`0`；
+- measured trace：每个 formal run `5000` complete frames；
+- paired ratio mean：`4.165718`；sample SD：`0.007915`；
+- classification：`MATERIAL_MEASURED_THROUGHPUT_INCREASE`；
+- verdict：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。
+
+P6 仍未执行，必须等待后续明确任务。

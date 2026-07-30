@@ -1698,3 +1698,37 @@ AND the selected capacity is frozen
 
 P8:
 NOT AUTHORIZED UNTIL P4–P7 dispositions are complete
+
+## P5R Protocol Amendment and Evidence Reclassification
+
+日期：`2026-07-31`
+
+本节是对 P5 validity interpretation 的文档修正，不删除或改写历史 P5
+protocol、attempt_001 raw Evidence 或历史 invalid report。P5R 不重新运行
+benchmark，不修改 runtime/source/test/config/Engine，不生成新的实验数据。
+
+原规则 `P5 RUN SHA == P4 RUN SHA` 不成立：P4 是 180-frame single-cycle run，
+P5 pilot/formal 分别是 1100/5100 accepted-frame extended runs，RUN domain
+输入长度不同。P4 RUN SHA 只保留为 single-cycle reference。
+
+P5 RUN SHA 定义为该 run 全部 accepted frames 的 hash；六个 formal run 必须
+互相一致。P5 CYCLE SHA 继续继承 P4 expected CYCLE SHA：每个完整 180-frame
+cycle 必须匹配；partial cycle 只记录，不参与 PASS。
+
+P5R thermal rule：检测到 throttling 才产生
+`RUN_INVALID_THERMAL_THROTTLING`；thermal interface unavailable 只记录
+`thermal_throttle_status=unavailable` 并作为 known limitation，不得声称
+no-throttling PASS。
+
+基于既有 P5 attempt_001 Evidence 的 reclassification：
+
+- 六个 formal RUN SHA identical；
+- 完整 CYCLE SHA 全部匹配 P4 expected；
+- accepted/processed=5100/5100，dropped=0，complete measured trace=5000；
+- queue selection 按 `throughput >= 0.95 * best` 选择最小 eligible capacity 1；
+- paired ratio mean `4.165718`，sample SD `0.007915`；
+- classification `MATERIAL_MEASURED_THROUGHPUT_INCREASE`；
+- final status `P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。
+
+P6 在本任务中未执行。详细 amendment、Evidence index 和 final report 位于
+`results/benchmark/stage_p/p5_serial_vs_pipeline_v1/`。

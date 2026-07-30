@@ -103,6 +103,7 @@
 | D069 | RuntimeConfig v4、Result JSON v3 与 compatibility | TensorRT-only v4，独立 Result v3，历史行为不变 | ACTIVE |
 | D070 | Exact correctness、timing 与 benchmark contract | RUN/CYCLE 独立域、精确 EOS/timing/window/Gate | ACTIVE |
 | D071 | Offline block-only sources 与 deferred live-stream scope | Directory/Video block-only；live/drop 延后 | ACTIVE |
+| D072 | Stage P P5R protocol correction and Evidence reclassification | Extended-window RUN SHA 比较同 protocol runs；complete CYCLE SHA 继承 P4；thermal unavailable 为 known limitation | ACTIVE |
 
 ---
 
@@ -3736,3 +3737,27 @@ count 与 resolution 仅进入 codec/asset sidecar，其中 FPS 是 descriptive 
 Camera、RTSP、`drop_oldest`、`drop_newest`、live-stream policy、DeepStream、
 GStreamer 专项优化与 ROS2 runtime 延后。P6 仅在 P5 queue capacity 已 selected
 and frozen 且 P5 formal benchmark protocol complete 后授权。
+
+### D072 — Stage P P5R protocol correction and Evidence reclassification
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+P5R 修正 Stage P P5 validity interpretation。P4 的 RUN SHA 对应 180-frame
+single-cycle reference；P5 pilot/formal 使用 1100/5100 accepted-frame
+extended windows，因此不得要求 P5 RUN SHA 等于 P4 RUN SHA。
+
+P5 RUN SHA 定义为该 run 全部 accepted frames 的 hash；六个 formal run 必须
+使用同一窗口并产生 identical RUN SHA。完整 180-frame CYCLE SHA 继续继承 P4
+expected CYCLE SHA；partial cycle 只记录，不参与 complete-cycle PASS。
+
+thermal interface unavailable 必须记录为
+`thermal_throttle_status=unavailable` 并作为 known limitation；只有实际检测
+到 throttling 才产生 `RUN_INVALID_THERMAL_THROTTLING`，不得把 unavailable
+解释为 no-throttling PASS。
+
+本 Decision 只改变 Evidence 解释，不授权重新运行、runtime 修改或 P6 提前执行。
+基于既有 attempt_001 Evidence，P5 重分类为
+`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`，selected queue capacity 冻结为
+`1`，throughput classification 为 `MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
+历史 P5 invalid report 和 raw Evidence 保持不变。

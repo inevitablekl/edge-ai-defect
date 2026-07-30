@@ -215,3 +215,26 @@ invalidation, and authorization contracts are inherited verbatim from the plan.
 - **Failure states:** Unclosed exact correctness, irreparable invalid Evidence,
   unaccepted video platform failure, or stability failure.
 - **Next authorized stage:** None automatically; closeout requires user review.
+
+## P5R — Protocol Correction and Evidence Reclassification
+
+- **Task ID:** P5R
+- **Status:** `COMPLETE`
+- **Scope:** Documentation and Evidence interpretation only.
+- **No execution:** No benchmark, build, runtime, telemetry, or data-generation
+  command was run; attempt_001 raw files and historical invalid report remain
+  unchanged.
+- **RUN SHA correction:** P4's 180-frame RUN SHA is a single-cycle reference.
+  P5 formal validity requires all six same-window formal RUN SHA values to be
+  identical; it does not require equality with P4 RUN SHA.
+- **CYCLE SHA correction:** Every complete 180-frame cycle must match the P4
+  expected CYCLE SHA. Partial cycles do not participate in PASS.
+- **Thermal correction:** `thermal_throttle_status=unavailable` is a known
+  limitation; only detected throttling creates
+  `RUN_INVALID_THERMAL_THROTTLING`.
+- **Reclassification:** Existing attempt_001 passes the corrected P5 gate with
+  `P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`; selected queue capacity is frozen
+  at `1`; throughput classification is
+  `MATERIAL_MEASURED_THROUGHPUT_INCREASE`.
+- **Next authorized stage:** P6 may be considered by a later explicit task;
+  P6 was not executed by P5R.

@@ -3270,3 +3270,22 @@ Stage J Plan or historical Evidence.
   `results/validation/stage_p/p4_correctness_v1/attempt_007/`；正式 P4 correctness
   未执行。
 - 本轮仅创建本地 commit，未 push、merge、rebase 或 tag。
+
+## 2026-07-31 - Stage P P5R Protocol Correction and Evidence Reclassification
+
+- P5R 完成；本轮只修改文档和新增 Evidence 解释，没有重新运行 benchmark、
+  build、runtime、telemetry 或数据生成，也没有修改 attempt_001 raw Evidence。
+- 修正 P5 validity contract：P4 的 180-frame RUN SHA 只作为 single-cycle
+  reference；P5 formal 要求六个同窗口 RUN SHA 一致；完整 180-frame CYCLE SHA
+  继续匹配 P4 expected；partial cycle 不参与 PASS。
+- 修正 thermal contract：`thermal_throttle_status=unavailable` 是 known
+  limitation，不是 invalid；仅实际检测到 throttling 才产生
+  `RUN_INVALID_THERMAL_THROTTLING`。
+- 基于已有 attempt_001 Evidence 重分类：六个 formal RUN SHA identical，完整
+  CYCLE SHA 全部匹配，accepted/processed=5100/5100，dropped=0，complete
+  measured trace=5000/run。
+- Queue selection 按 `throughput >= 0.95 * best` 得到并冻结
+  `selected_queue_capacity=1`；paired ratio mean=`4.165718`，sample
+  SD=`0.007915`，classification=`MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
+- 最终状态：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。P6 未执行，等待后续
+  明确任务；未 push、merge、rebase 或 tag。
