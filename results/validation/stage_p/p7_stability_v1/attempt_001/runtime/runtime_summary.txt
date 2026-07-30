@@ -1,0 +1,14 @@
+status_ok=true
+status_message=
+wall_seconds=1800.0263384489999
+source_active_seconds=1800.006143093
+source_frames=410691
+last_sequence=410690
+eos_returned=true
+processed_images=410691
+total_detections=1143091
+summary_source_frames=410691
+run_processing_wall_ms=1800025.396502
+q1_high_water=1
+q2_high_water=1
+q3_high_water=1

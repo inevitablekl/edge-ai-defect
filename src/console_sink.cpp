@@ -108,7 +108,7 @@ core::Status ConsoleSink::end_run(const RunSummary& summary) {
         return state_error("end_run");
     }
     const Status validation_status =
-        detail::validate_summary(summary, received_frames_, received_detections_);
+        detail::validate_summary(summary, metadata_, received_frames_, received_detections_);
     if (!validation_status.ok()) {
         return validation_status;
     }

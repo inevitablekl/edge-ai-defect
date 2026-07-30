@@ -104,12 +104,11 @@ v1 MUST NOT include unless explicitly approved:
 
 ### Current C++ baseline phase
 
-The Stage J C++17 ONNX Runtime CPU Serial Baseline remains the current
-production implementation baseline with the frozen static ONNX contract
-`float32 [1,3,640,640] -> float32 [1,10,8400]`. Stage K K0 is the current
-planning phase; TensorRT Engine Build is not authorized before K1 PASS and D062
-acceptance, production implementation is not authorized before K3, and Pipeline
-is not authorized before Stage K closeout.
+Stage J and Stage K are complete. The current implementation contains the C++17
+Serial runtime and accepted Original TensorRT FP16 backend; D066 retains the
+raw TensorRT Level B failure as a known limitation. Stage P P0 freezes the
+bounded Pipeline plan only. Production Stage P implementation has not started,
+and P1 is not authorized until the P0 commit is reviewed.
 
 ---
 
@@ -364,33 +363,36 @@ Frame input
 
 Pipeline mode MUST be implemented as the optimized runtime.
 
-Initial pipeline design:
+Frozen Stage P Pipeline design:
 
 ```text
-Capture Thread
-→ Inference Thread
-→ Output Thread
+Source Worker
+→ bounded SPSC queue
+→ Preprocess Worker
+→ bounded SPSC queue
+→ single Inference Worker
+→ bounded SPSC queue
+→ Postprocess + Sink Worker
 ```
 
-Pipeline queue size MUST be configurable.
+The topology MUST remain four workers, three bounded SPSC queues, one
+TensorRT ExecutionContext, one CUDA stream, batch 1, and at most one concurrent
+`engine.run()`.
 
-Recommended queue size:
+The queue-capacity pilot MUST test:
 
 ```text
-1 or 2
+1, 2, 4
 ```
 
-Pipeline mode SHOULD support:
+For Stage P DirectorySource and VideoFileSource:
 
 ```text
-drop_oldest
+drop_policy = block
 ```
 
-Meaning:
-
-```text
-when the queue is full, drop old frames and keep the latest frame
-```
+Every successfully returned non-EOS frame in a successful run MUST be
+processed. Camera, RTSP, `drop_oldest`, and `drop_newest` are deferred.
 
 Documentation MUST distinguish:
 
@@ -697,10 +699,12 @@ YOLOv8n industrial defect detection
 
 ## Current Implementation Scope and Downstream Boundary
 
-Stage J is `COMPLETE`. Stage K K0 is frozen; K1 is the next authorized step.
-TensorRT Engine Build is not authorized before K1 PASS and D062 acceptance,
-and Stage K production implementation is not authorized before K3.
+Stage J and Stage K are `COMPLETE`. Stage K task-level acceptance, K6 stability,
+and K7 serial performance are frozen; raw TensorRT Level B remains
+`FAIL — retained known limitation`.
 
-Stage P Pipeline remains a required downstream requirement, but its
-implementation is not authorized before Stage K closeout. This status boundary
-does not remove the long-term TensorRT or Pipeline requirements.
+Stage P Execution Plan v1.2 is `FINAL`; P0 Planning Freeze completes in the
+commit containing this changeset. P1 is
+`NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`. The strict authorization chain
+is P0→P1→P2→P3→P4→P5→P6→P7→P8, and P6 additionally waits for both selected/
+frozen queue capacity and completion of the P5 formal benchmark protocol.

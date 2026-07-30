@@ -437,25 +437,36 @@ FrameSource
 → Profiler
 ```
 
-Pipeline mode is the optimized runtime:
+Stage P Pipeline mode is the bounded throughput runtime:
 
 ```text
-Capture Thread
-→ Inference Thread
-→ Output Thread
+DirectorySource / VideoFileSource
+→ Source Worker
+→ bounded SPSC Queue 1
+→ Preprocess Worker
+→ bounded SPSC Queue 2
+→ single Inference Worker
+→ bounded SPSC Queue 3
+→ Postprocess + Sink Worker
 ```
 
 Pipeline queue rules:
 
-* queue size should be configurable
-* recommended queue size is 1 or 2
-* when full, drop old frames and keep the latest frame
-* avoid stale frame processing
-* avoid unbounded memory growth
+* exactly three bounded SPSC queues and four workers
+* capacity pilot values are 1, 2, and 4
+* one TensorRT ExecutionContext and one CUDA stream
+* maximum concurrent `engine.run()` is one
+* `drop_policy = block` for offline Directory/VideoFile input
+* accepted frames are not dropped; queues remain bounded
+* live-stream drop policies are deferred
 
 Pipeline mode may improve throughput / FPS.
 
 Pipeline mode does not necessarily reduce single-frame end-to-end latency.
+
+This four-worker detail is governed by D068. D012 remains ACTIVE for the
+Serial + Pipeline route; only its historical three-thread rationale is
+superseded.
 
 ---
 
@@ -738,7 +749,42 @@ phase.
 ## Current Backend Lifecycle
 
 - Stage J ORT serial baseline: `COMPLETE`.
-- Stage K TensorRT serial backend: `PLANNED/FROZEN` by the Stage K v1.1 FINAL
-  plan; TensorRtEngine is not implemented.
-- Stage P Pipeline: future required downstream scope and unauthorized before
-  Stage K closeout.
+- Stage K TensorRT serial backend: `COMPLETE`; Original TensorRT FP16 is the
+  D066 accepted deployment candidate, with raw Level B retained as a known
+  limitation.
+- Stage P Execution Plan v1.2: `FINAL`.
+- Stage P P4/P5/P6/P7 execution and P8 closeout: `COMPLETE`.
+
+The current production tree contains the validated PipelineRunner and
+VideoFileSource. Stage P exact identity compares ordered final Detection output
+across Serial/Pipeline scheduling; it does not reinterpret the raw TensorRT
+Level B result.
+
+Camera, RTSP, live drop policies, ROS2, GPU preprocessing/NMS, INT8, and
+multiple inference contexts remain outside the completed Stage P scope.
+
+## Stage P Final Architecture Status
+
+Stage P is COMPLETE. The validated runtime is the bounded TensorRT FP16 path:
+
+```text
+Source Worker
+→ bounded SPSC queue
+→ Preprocess Worker
+→ bounded SPSC queue
+→ single Inference Worker
+→ bounded SPSC queue
+→ Postprocess + Sink Worker
+```
+
+The selected queue capacity for the recorded offline benchmark and stability
+workload is `1`, with `drop_policy=block`. VideoFileSource passed the frozen
+MJPG validation. The P4/P5/P7 hash chain preserves exact final Detection
+identity; P5 reports a measured paired ratio mean of `4.165718`, and P7
+completed the 1800-second stability interval.
+
+This closeout does not change the backend-neutral interfaces or authorize a
+new stage. Thermal status remains unavailable, the raw TensorRT Level B
+limitation inherited from Stage K remains, and no industrial certification
+claim is made. See `docs/personal/STAGE_P_FINAL_REPORT.md` and
+`docs/personal/STAGE_P_EVIDENCE_INDEX.md` for the evidence authority.

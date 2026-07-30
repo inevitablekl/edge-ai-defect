@@ -107,6 +107,7 @@ core::Status SerialRunner::run(const RunMetadata& metadata,
     if (!begin_status.ok()) {
         return stage_failure("sink.begin_run", begin_status);
     }
+    const Clock::time_point run_begin = Clock::now();
 
     while (true) {
         const std::size_t current_cycle_id = cycle_id++;
@@ -257,6 +258,13 @@ core::Status SerialRunner::run(const RunMetadata& metadata,
     if (staged_summary.processed_images == 0U) {
         return Status::failure(ErrorCode::kInvalidArgument,
                                "source: end of stream before any image");
+    }
+
+    if (metadata.runtime_v3.has_value()) {
+        staged_summary.runtime_v3 = RunSummaryV3{};
+        staged_summary.runtime_v3->source_frames = staged_summary.processed_images;
+        staged_summary.runtime_v3->run_processing_wall_ms =
+            elapsed_ms(run_begin, Clock::now());
     }
 
     const Status end_status = sink_.end_run(staged_summary);

@@ -98,6 +98,12 @@
 | D037 | M5 ORT CPU Baseline 定位 | WSL2 x86_64 ONNX Runtime CPU Engineering Baseline | ACTIVE |
 | D038 | M5 Evidence、Retention 和失效 | clean committed HEAD、raw samples/summary/provenance、明确失效边界 | ACTIVE |
 | D039 | M5 NEU-DET 资产策略 | 不提交图片；跟踪 manifest/SHA/工具；本地合法 dataset root | ACTIVE |
+| D067 | Stage P baseline、scope 与 execution authority | `main@c6890d86…`、v1.2 FINAL、P0→P8 | ACTIVE |
+| D068 | Four-worker topology 与 single-inference boundary | 4 workers、3 bounded SPSC queues、最多一个 `engine.run()` | ACTIVE |
+| D069 | RuntimeConfig v4、Result JSON v3 与 compatibility | TensorRT-only v4，独立 Result v3，历史行为不变 | ACTIVE |
+| D070 | Exact correctness、timing 与 benchmark contract | RUN/CYCLE 独立域、精确 EOS/timing/window/Gate | ACTIVE |
+| D071 | Offline block-only sources 与 deferred live-stream scope | Directory/Video block-only；live/drop 延后 | ACTIVE |
+| D072 | Stage P P5R protocol correction and Evidence reclassification | Extended-window RUN SHA 比较同 protocol runs；complete CYCLE SHA 继承 P4；thermal unavailable 为 known limitation | ACTIVE |
 
 ---
 
@@ -3632,3 +3638,147 @@ search.
 
 可调整。若后续获得新的授权和真实证据，可重新评估部署候选；任何此类
 变化必须新增 Decision，并不得改写本 Decision 或历史 raw tensor Evidence。
+
+### D067 — Stage P baseline, scope and execution authority
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+冻结 Stage P 起点为
+`main@c6890d86e7534500cfe31c40dd73f151d77d5362`，并要求本地 main、
+`origin/main` 与 annotated tag
+`stage-k-tensorrt-fp16-complete-v1.0^{}` 相等。Stage P 的技术与实验协议权威
+为 `STAGE_P_EXECUTION_PLAN.md` v1.2 FINAL，任务边界权威为
+`STAGE_P_TASK_CARDS.md`，执行授权严格遵循 P0→P8。
+
+P0 在包含本 changeset 的 commit 完成；P1 仅在用户审查该 P0 commit 后才能
+授权。P0 不包含 production、header、CMake、tests、config schema、Engine build、
+正式 benchmark/stability 或 Evidence attempt。Stage K 已 COMPLETE；D066 的
+Original TensorRT FP16 candidate 与 raw Level B retained limitation 均不改写。
+
+### D068 — Four-worker topology and single-inference boundary
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+Stage P Pipeline 固定为 Source、Preprocess、single Inference、
+Postprocess+Sink 四个 workers 与三条 bounded SPSC queues。使用一个 TensorRT
+ExecutionContext、一个 CUDA stream、batch 1，且最大并发
+`engine.run() = 1`。组件由唯一 worker 使用，不实现可配置 worker 数、独立 Sink
+worker、thread pool、MPMC、multiple contexts 或 multiple streams。
+
+`D012 remains ACTIVE.` D068 只 supersede D012 rationale 中历史性的
+“three-thread pipeline” implementation detail；它不 supersede Serial + Pipeline
+路线。
+
+### D069 — RuntimeConfig v4, Result JSON v3 and compatibility
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+RuntimeConfig v4 是 TensorRT-only strict union：runtime 为 serial/pipeline，
+input 为 directory/video_file，Pipeline 仅允许 bounded `block`。配置 schema 与
+Result schema 独立；v4 明确映射到 Result JSON v3。Result v3 使用可选 internal
+`runtime_v3` metadata/summary carrier 承载 runtime/input/pipeline、source_frames、
+positive finite wall time 与 queue high-water marks。v1/v2/v3 config regression
+和 Result v1/v2 历史行为、字段与 bytes 不得因新默认值改变。
+
+Video 的 `max_frames` 只属于 constructor/test/experiment control，不进入
+RuntimeConfig v4；nominal FPS 不进入 production Result JSON v3。
+
+### D070 — Exact correctness, timing and benchmark contract
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+最终 Detection 按 canonical little-endian binary 精确比较。RUN scope=1 与 CYCLE
+scope=2 是相互独立的 byte streams；`RUN_AND_CYCLE` 必须维护两个 SHA，不能拼接
+成单一 digest。P4 与 P5 使用双 scope；P6 只用 RUN；P7 只用 CYCLE。Incomplete
+cycle 只记录 frame count/partial digest，不与完整 180-frame expected CYCLE SHA
+比较。
+
+`source_frames` 只统计 successful run 中 successfully returned non-EOS frames；
+final EOS probe、failed call、source-only EOS trace、cancelled/discarded item
+均不计。block-only successful run 必须
+`source_frames == processed_images`。Immediate EOS before the first accepted
+frame 是 failure；Serial/Pipeline 都只 probe 一次、不调用 `end_run`、不改变 caller
+summary、不伪造 wall time，也不生成成功的零帧 Result v3。
+
+任何 trace callback failure 均为 first error：cancel queues、join workers、不调用
+`end_run`、summary unchanged。Runner 成功后的 buffered trace write failure 使
+attempt invalid 且 sidecar 不得发布为 valid；已经 atomic committed 的 production
+JSON 不回滚，必须披露。
+
+P5 formal measured window 固定为完整 frames 100—5099，throughput 使用 frame 100
+source begin 到 frame 5099 outer Sink end；三对顺序、Type-7 percentile、paired
+ratio arithmetic mean、sample SD (n-1) 与 1.10× material classification 不变。
+D066 的 raw TensorRT Level B `FAIL — retained known limitation` 不因 Stage P
+exact scheduling identity 被改写。
+
+### D071 — Offline block-only sources and deferred live-stream scope
+
+时间：`2026-07-30`
+状态：`ACTIVE`
+
+Stage P 仅支持 DirectorySource 与 VideoFileSource 的离线无损 backpressure，
+`drop_policy = block`。Video identity 固定为：
+
+```text
+video_filename = video_path.filename().generic_u8string()
+relative_path = <video_filename>/frame_<zero-padded minimum width 6 index>
+```
+
+P6 正式 asset 与 MJPG codec preflight 在 Jetson 生成/执行；WSL codec smoke 仅为
+非正式能力检查。Jetson preflight 失败为 `P6_BLOCKED_CODEC_PREFLIGHT`，不得静默
+换 codec、引入 GStreamer 或扩大范围。FPS、container frame count、FourCC、decoded
+count 与 resolution 仅进入 codec/asset sidecar，其中 FPS 是 descriptive metadata，
+不是 pacing 或 timing authority。
+
+Camera、RTSP、`drop_oldest`、`drop_newest`、live-stream policy、DeepStream、
+GStreamer 专项优化与 ROS2 runtime 延后。P6 仅在 P5 queue capacity 已 selected
+and frozen 且 P5 formal benchmark protocol complete 后授权。
+
+### D072 — Stage P P5R protocol correction and Evidence reclassification
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+P5R 修正 Stage P P5 validity interpretation。P4 的 RUN SHA 对应 180-frame
+single-cycle reference；P5 pilot/formal 使用 1100/5100 accepted-frame
+extended windows，因此不得要求 P5 RUN SHA 等于 P4 RUN SHA。
+
+P5 RUN SHA 定义为该 run 全部 accepted frames 的 hash；六个 formal run 必须
+使用同一窗口并产生 identical RUN SHA。完整 180-frame CYCLE SHA 继续继承 P4
+expected CYCLE SHA；partial cycle 只记录，不参与 complete-cycle PASS。
+
+thermal interface unavailable 必须记录为
+`thermal_throttle_status=unavailable` 并作为 known limitation；只有实际检测
+到 throttling 才产生 `RUN_INVALID_THERMAL_THROTTLING`，不得把 unavailable
+解释为 no-throttling PASS。
+
+本 Decision 只改变 Evidence 解释，不授权重新运行、runtime 修改或 P6 提前执行。
+基于既有 attempt_001 Evidence，P5 重分类为
+`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`，selected queue capacity 冻结为
+`1`，throughput classification 为 `MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
+历史 P5 invalid report 和 raw Evidence 保持不变。
+
+### D073 — Stage P P8 consolidation and closeout
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+Stage P P4–P7 Evidence 已完成整理并闭环：P4 为
+`P4_PIPELINE_CORRECTNESS_PASS`，P5 为
+`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`，P6 为
+`P6_VIDEO_SOURCE_PASS`，P7 为 `P7_PIPELINE_STABILITY_PASS`。
+
+接受 Stage P 的最终 bounded Pipeline 形态为四个 workers、三条 bounded SPSC
+queues、single inference worker，并将离线工作负载的 selected queue capacity
+冻结为 `1`。Stage P Final Report 与 Evidence Index 是 closeout 的文档入口；原始
+Evidence、生成视频、large trace 和 telemetry 按 retention boundary 保持
+local-only，不在文档 commit 中提交。
+
+本 Decision 不修改 src、include、tests、CMakeLists.txt、TensorRT Engine、ONNX、
+模型、Pipeline topology、queue semantics 或 benchmark data；不授权下一阶段开发。
+thermal status unavailable、Stage K inherited raw Level B limitation 和 no
+industrial certification claim 必须继续保留。

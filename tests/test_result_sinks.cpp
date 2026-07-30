@@ -55,6 +55,16 @@ runtime::RunMetadata tensorrt_metadata() {
     return value;
 }
 
+runtime::RunMetadata result_v3_metadata(bool pipeline = true) {
+    runtime::RunMetadata value = tensorrt_metadata();
+    value.schema_version = 3;
+    value.runtime_v3 = runtime::RuntimeMetadataV3{
+        pipeline ? "pipeline" : "serial", "directory",
+        pipeline ? std::optional<runtime::PipelineMetadataV3>(runtime::PipelineMetadataV3{2, "block"})
+                 : std::nullopt};
+    return value;
+}
+
 runtime::FrameResult frame(std::size_t index = 0, bool timing_enabled = false) {
     runtime::FrameResult value;
     value.sequence_index = index;
@@ -74,6 +84,19 @@ runtime::FrameResult frame(std::size_t index = 0, bool timing_enabled = false) {
 
 runtime::RunSummary summary(std::size_t images = 1, std::size_t detections = 2) {
     return {images, detections};
+}
+
+runtime::RunSummary v3_pipeline_summary() {
+    runtime::RunSummary s{1, 2};
+    s.runtime_v3 = runtime::RunSummaryV3{1, 12.5,  // source_frames=1, wall=12.5ms
+        runtime::PipelineSummaryV3{{1, 2, 1}}};
+    return s;
+}
+
+runtime::RunSummary v3_serial_summary() {
+    runtime::RunSummary s{1, 2};
+    s.runtime_v3 = runtime::RunSummaryV3{1, 12.5, std::nullopt};
+    return s;
 }
 
 bool write_text(const fs::path& path, const std::string& value) {
@@ -141,6 +164,336 @@ void test_console(TestContext& context) {
     context.expect(invalid_sink.write_frame(frame()).ok(), "console failed write atomic", "valid retry must succeed");
 }
 
+// ============================================================================
+// v1 golden output
+// ============================================================================
+void test_json_v1_golden(TestContext& context, const fs::path& root) {
+    const fs::path target = root / "v1_golden.json";
+    std::unique_ptr<runtime::JsonSink> output;
+    context.expect(runtime::JsonSink::create(target, false, &output).ok(),
+                   "v1 golden create", "must succeed");
+
+    runtime::RunMetadata md = metadata(false);
+    md.class_names = {"crazing", "patches"};
+    context.expect(output->begin_run(md).ok(), "v1 golden begin", "must succeed");
+    runtime::FrameResult f = frame(0, false);
+    f.detections = {{1.0F, 2.0F, 20.0F, 30.0F, 0.91F, 0, 123}};
+    context.expect(output->write_frame(f).ok(), "v1 golden write", "must succeed");
+    runtime::RunSummary s{1, 1};
+    context.expect(output->end_run(s).ok(), "v1 golden end", "must succeed");
+
+    const std::string text = read_text(target);
+    const std::string expected =
+        "{\n"
+        "  \"schema_version\": 1,\n"
+        "  \"backend\": {\n"
+        "    \"type\": \"onnxruntime_cpu\"\n"
+        "  },\n"
+        "  \"model\": {\n"
+        "    \"filename\": \"frozen.onnx\",\n"
+        "    \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n"
+        "    \"contract_filename\": \"frozen.yaml\",\n"
+        "    \"classes\": [\n"
+        "      \"crazing\",\n"
+        "      \"patches\"\n"
+        "    ]\n"
+        "  },\n"
+        "  \"postprocess\": {\n"
+        "    \"confidence_threshold\": 0.25,\n"
+        "    \"iou_threshold\": 0.449999988,\n"
+        "    \"max_nms\": 30000,\n"
+        "    \"max_det\": 300,\n"
+        "    \"max_wh\": 7680,\n"
+        "    \"agnostic\": false,\n"
+        "    \"multi_label\": false\n"
+        "  },\n"
+        "  \"images\": [\n"
+        "    {\n"
+        "      \"sequence_index\": 0,\n"
+        "      \"relative_path\": \"a.jpg\",\n"
+        "      \"width\": 200,\n"
+        "      \"height\": 100,\n"
+        "      \"detections\": [\n"
+        "        {\n"
+        "          \"x1\": 1,\n"
+        "          \"y1\": 2,\n"
+        "          \"x2\": 20,\n"
+        "          \"y2\": 30,\n"
+        "          \"confidence\": 0.910000026,\n"
+        "          \"class_id\": 0,\n"
+        "          \"candidate_index\": 123\n"
+        "        }\n"
+        "      ]\n"
+        "    }\n"
+        "  ],\n"
+        "  \"summary\": {\n"
+        "    \"processed_images\": 1,\n"
+        "    \"total_detections\": 1\n"
+        "  }\n"
+        "}\n";
+    context.expect(text == expected, "v1 golden bytes", "v1 output changed");
+}
+
+// ============================================================================
+// v2 golden output (TensorRT)
+// ============================================================================
+void test_json_v2_golden(TestContext& context, const fs::path& root) {
+    const fs::path target = root / "v2_golden.json";
+    std::unique_ptr<runtime::JsonSink> output;
+    context.expect(runtime::JsonSink::create(target, false, &output).ok(),
+                   "v2 golden create", "must succeed");
+
+    runtime::RunMetadata md = tensorrt_metadata();
+    md.class_names = {"crazing"};
+    context.expect(output->begin_run(md).ok(), "v2 golden begin", "must succeed");
+    runtime::FrameResult f = frame(0, false);
+    f.detections = {{1.0F, 2.0F, 20.0F, 30.0F, 0.91F, 0, 123}};
+    context.expect(output->write_frame(f).ok(), "v2 golden write", "must succeed");
+    runtime::RunSummary s{1, 1};
+    context.expect(output->end_run(s).ok(), "v2 golden end", "must succeed");
+
+    const std::string text = read_text(target);
+    // Verify v2-specific fields
+    context.expect(text.find("\"schema_version\": 2") != std::string::npos,
+                   "v2 golden schema", "missing schema_version 2");
+    context.expect(text.find("\"artifact_kind\": \"tensorrt_engine\"") != std::string::npos,
+                   "v2 golden artifact_kind", "missing artifact_kind");
+    context.expect(text.find("\"source_onnx_sha256\":") != std::string::npos,
+                   "v2 golden source_onnx_sha256", "missing source_onnx_sha256");
+    context.expect(text.find("\"engine_manifest_filename\": \"engine.manifest.json\"") != std::string::npos,
+                   "v2 golden engine_manifest", "missing engine_manifest_filename");
+    // v2 should NOT have runtime section
+    context.expect(text.find("\"runtime\":") == std::string::npos,
+                   "v2 golden no runtime", "v2 must not have runtime section");
+    // v2 should NOT have runtime_v3 summary fields
+    context.expect(text.find("\"source_frames\":") == std::string::npos,
+                   "v2 golden no source_frames", "v2 must not have source_frames");
+}
+
+// ============================================================================
+// v3 TensorRT model metadata - MUST include artifact_kind, source_onnx_sha256, engine_manifest_filename
+// ============================================================================
+void test_json_v3_model_metadata(TestContext& context, const fs::path& root) {
+    const fs::path target = root / "v3_model.json";
+    std::unique_ptr<runtime::JsonSink> output;
+    context.expect(runtime::JsonSink::create(target, false, &output).ok(),
+                   "v3 model create", "must succeed");
+
+    context.expect(output->begin_run(result_v3_metadata()).ok() &&
+                   output->write_frame(frame()).ok() &&
+                   output->end_run(v3_pipeline_summary()).ok(),
+                   "v3 model end", "must succeed");
+
+    const std::string text = read_text(target);
+    context.expect(text.find("\"schema_version\": 3") != std::string::npos,
+                   "v3 model schema", "missing schema_version 3");
+    context.expect(text.find("\"artifact_kind\": \"tensorrt_engine\"") != std::string::npos,
+                   "v3 model artifact_kind", "v3 must include TensorRT artifact_kind");
+    context.expect(text.find("\"source_onnx_sha256\":") != std::string::npos,
+                   "v3 model source_onnx_sha256", "v3 must include source_onnx_sha256");
+    context.expect(text.find("\"engine_manifest_filename\": \"engine.manifest.json\"") != std::string::npos,
+                   "v3 model engine_manifest", "v3 must include engine_manifest_filename");
+}
+
+// ============================================================================
+// v3 pipeline valid test with block-only: processed=1, source=1, dropped=0
+// ============================================================================
+void test_json_v3_pipeline_valid(TestContext& context, const fs::path& root) {
+    const fs::path target = root / "v3_pipeline.json";
+    std::unique_ptr<runtime::JsonSink> output;
+    context.expect(runtime::JsonSink::create(target, false, &output).ok(),
+                   "v3 pipeline create", "must succeed");
+
+    context.expect(output->begin_run(result_v3_metadata(true)).ok() &&
+                   output->write_frame(frame()).ok() &&
+                   output->end_run(v3_pipeline_summary()).ok(),
+                   "v3 pipeline end", "must succeed");
+
+    const std::string text = read_text(target);
+    context.expect(text.find("\"schema_version\": 3") != std::string::npos,
+                   "v3 pipeline schema", "missing schema_version");
+    context.expect(text.find("\"runtime\":") != std::string::npos,
+                   "v3 pipeline runtime", "missing runtime section");
+    context.expect(text.find("\"processed_frames\": 1") != std::string::npos,
+                   "v3 pipeline processed_frames", "missing processed_frames");
+    context.expect(text.find("\"source_frames\": 1") != std::string::npos,
+                   "v3 pipeline source_frames", "missing source_frames");
+    context.expect(text.find("\"dropped_frames\": 0") != std::string::npos,
+                   "v3 pipeline dropped_frames=0", "block-only must have dropped=0");
+    context.expect(text.find("\"run_processing_wall_ms\":") != std::string::npos,
+                   "v3 pipeline wall_ms", "missing wall_ms");
+    context.expect(text.find("\"run_processing_throughput_fps\":") != std::string::npos,
+                   "v3 pipeline throughput", "missing throughput_fps");
+    context.expect(text.find("\"queue_high_water_marks\":") != std::string::npos,
+                   "v3 pipeline queue_high_water_marks", "missing high water marks");
+}
+
+// ============================================================================
+// v3 serial valid test
+// ============================================================================
+void test_json_v3_serial_valid(TestContext& context, const fs::path& root) {
+    const fs::path target = root / "v3_serial.json";
+    std::unique_ptr<runtime::JsonSink> output;
+    context.expect(runtime::JsonSink::create(target, false, &output).ok(),
+                   "v3 serial create", "must succeed");
+
+    context.expect(output->begin_run(result_v3_metadata(false)).ok() &&
+                   output->write_frame(frame()).ok() &&
+                   output->end_run(v3_serial_summary()).ok(),
+                   "v3 serial end", "must succeed");
+
+    const std::string text = read_text(target);
+    context.expect(text.find("\"schema_version\": 3") != std::string::npos,
+                   "v3 serial schema", "missing schema_version");
+    context.expect(text.find("\"mode\": \"serial\"") != std::string::npos,
+                   "v3 serial mode", "must be serial mode");
+    // Serial must NOT have pipeline in summary
+    context.expect(text.find("\"queue_high_water_marks\"") == std::string::npos,
+                   "v3 serial no pipeline marks", "serial must not have high water marks");
+}
+
+// ============================================================================
+// v3 negative tests
+// ============================================================================
+void test_json_v3_negative(TestContext& context, const fs::path& root) {
+    auto expect_end_fail = [&](const std::string& name,
+                                const runtime::RunMetadata& md,
+                                const runtime::RunSummary& sum,
+                                const std::string& fragment) {
+        const fs::path target = root / (name + ".json");
+        std::unique_ptr<runtime::JsonSink> out;
+        context.expect(runtime::JsonSink::create(target, true, &out).ok(),
+                       name + " create", "must succeed");
+        context.expect(out->begin_run(md).ok() && out->write_frame(frame()).ok(),
+                       name + " run", "must succeed before end");
+        context.expect(!out->end_run(sum).ok(), name, "must fail: " + fragment);
+        context.expect(!fs::exists(target), name + " no target", "target must not be committed");
+        context.expect(no_temporary_files(root), name + " no temp", "temporary file leaked");
+    };
+
+    // v3 metadata missing runtime_v3: begin_run must fail
+    {
+        runtime::RunMetadata md = tensorrt_metadata();
+        md.schema_version = 3;
+        // runtime_v3 is nullopt
+        const fs::path target = root / "v3_md_missing_runtime.json";
+        std::unique_ptr<runtime::JsonSink> out;
+        context.expect(runtime::JsonSink::create(target, true, &out).ok(),
+                       "v3 md missing runtime create", "must succeed");
+        context.expect(!out->begin_run(md).ok(),
+                       "v3 md missing runtime begin", "must reject metadata without runtime_v3");
+    }
+
+    // v1 metadata wrongly carrying runtime_v3
+    {
+        runtime::RunMetadata md = metadata();
+        md.runtime_v3 = runtime::RuntimeMetadataV3{"serial", "directory", std::nullopt};
+        // v1 must not have runtime_v3 in the summary
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 12.5, std::nullopt};
+        expect_end_fail("v1_wrong_runtime_v3", md, s, "v1 forbids runtime_v3 summary");
+    }
+
+    // v2 metadata wrongly carrying runtime_v3
+    {
+        runtime::RunMetadata md = tensorrt_metadata();
+        md.runtime_v3 = runtime::RuntimeMetadataV3{"serial", "directory", std::nullopt};
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 12.5, std::nullopt};
+        expect_end_fail("v2_wrong_runtime_v3", md, s, "v2 forbids runtime_v3 summary");
+    }
+
+    // v3 summary missing runtime_v3
+    {
+        runtime::RunSummary s{1, 2};
+        // no runtime_v3
+        expect_end_fail("v3_missing_runtime_v3_summary", result_v3_metadata(), s,
+                        "v3 requires runtime_v3 summary");
+    }
+
+    // source_frames > processed (should fail - block-only)
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{5, 12.5,  // source=5 > processed=1
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        expect_end_fail("v3_source_gt_processed", result_v3_metadata(), s,
+                        "source_frames > processed");
+    }
+
+    // wall = 0
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 0.0,
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        expect_end_fail("v3_wall_zero", result_v3_metadata(), s, "wall time = 0");
+    }
+
+    // wall = NaN
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, std::numeric_limits<double>::quiet_NaN(),
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        expect_end_fail("v3_wall_nan", result_v3_metadata(), s, "wall time NaN");
+    }
+
+    // wall = Inf
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, std::numeric_limits<double>::infinity(),
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        expect_end_fail("v3_wall_inf", result_v3_metadata(), s, "wall time Inf");
+    }
+
+    // Serial summary wrongly carrying pipeline
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 12.5,
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        expect_end_fail("v3_serial_wrong_pipeline", result_v3_metadata(false), s,
+                        "serial summary must not carry pipeline");
+    }
+
+    // Pipeline summary missing pipeline
+    {
+        runtime::RunMetadata md = result_v3_metadata(true);
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 12.5, std::nullopt};
+        expect_end_fail("v3_pipeline_missing_pipeline_summary", md, s,
+                        "pipeline summary missing pipeline");
+    }
+
+    // high-water > capacity
+    {
+        runtime::RunSummary s{1, 2};
+        s.runtime_v3 = runtime::RunSummaryV3{1, 12.5,
+            runtime::PipelineSummaryV3{{3, 2, 1}}};  // queue[0]=3 > capacity=2
+        expect_end_fail("v3_high_water_exceeds_capacity", result_v3_metadata(true), s,
+                        "high water > capacity");
+    }
+
+    // Invalid old target preserved on failure
+    {
+        const fs::path preserved = root / "v3_preserved.json";
+        context.expect(write_text(preserved, "old-content\n"),
+                       "v3 preserve setup", "could not write old target");
+        std::unique_ptr<runtime::JsonSink> out;
+        context.expect(runtime::JsonSink::create(preserved, true, &out).ok(),
+                       "v3 preserve create", "must succeed");
+        context.expect(out->begin_run(result_v3_metadata()).ok() &&
+                       out->write_frame(frame()).ok(),
+                       "v3 preserve run", "must succeed before invalid summary");
+        runtime::RunSummary bad{2, 4};  // mismatch
+        bad.runtime_v3 = runtime::RunSummaryV3{1, 12.5,
+            runtime::PipelineSummaryV3{{1, 2, 1}}};
+        context.expect(!out->end_run(bad).ok(),
+                       "v3 preserve failure", "must reject invalid summary");
+        context.expect(read_text(preserved) == "old-content\n",
+                       "v3 preserve old intact", "old target must not be modified");
+        context.expect(no_temporary_files(root),
+                       "v3 preserve no temp", "temporary file leaked");
+    }
+}
+
 void test_json(TestContext& context, const fs::path& root) {
     const fs::path missing_parent = root / "missing" / "run.json";
     std::unique_ptr<runtime::JsonSink> output;
@@ -174,22 +527,15 @@ void test_json(TestContext& context, const fs::path& root) {
                    "json detection order", "Detection order changed");
     context.expect(no_temporary_files(root), "json temporary cleanup", "temporary file leaked");
 
-    const fs::path tensorrt_target = root / "tensorrt.json";
-    std::unique_ptr<runtime::JsonSink> tensorrt_output;
-    context.expect(runtime::JsonSink::create(tensorrt_target, false, &tensorrt_output).ok(),
-                   "json TensorRT create", "must succeed");
-    context.expect(tensorrt_output->begin_run(tensorrt_metadata()).ok(),
-                   "json TensorRT begin", "must succeed");
-    context.expect(tensorrt_output->write_frame(frame()).ok() &&
-                       tensorrt_output->end_run(summary()).ok(),
-                   "json TensorRT end", "must succeed");
-    const std::string tensorrt_text = read_text(tensorrt_target);
-    context.expect(tensorrt_text.find("\"schema_version\": 2") != std::string::npos &&
-                       tensorrt_text.find("\"artifact_kind\": \"tensorrt_engine\"") != std::string::npos &&
-                       tensorrt_text.find("\"source_onnx_sha256\"") != std::string::npos &&
-                       tensorrt_text.find("\"engine_manifest_filename\"") != std::string::npos,
-                   "json TensorRT metadata", "v2 metadata is incomplete");
+    // Run the focused v1/v2/v3 tests
+    test_json_v1_golden(context, root);
+    test_json_v2_golden(context, root);
+    test_json_v3_model_metadata(context, root);
+    test_json_v3_pipeline_valid(context, root);
+    test_json_v3_serial_valid(context, root);
+    test_json_v3_negative(context, root);
 
+    // Original overwrite/race/abandon tests
     std::unique_ptr<runtime::JsonSink> existing;
     context.expect(!runtime::JsonSink::create(target, false, &existing).ok(),
                    "json overwrite false", "existing target must reject");
@@ -250,6 +596,9 @@ void test_json(TestContext& context, const fs::path& root) {
                    "json destructor cleanup", "uncommitted output must not leak");
 }
 
+// ============================================================================
+// Composite Sink tests (preserved)
+// ============================================================================
 class RecordingSink final : public runtime::IResultSink {
 public:
     RecordingSink(std::string name, std::vector<std::string>* calls,

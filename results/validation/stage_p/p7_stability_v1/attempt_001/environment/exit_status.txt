@@ -1,0 +1,9 @@
+harness_pid=35233
+harness_exit_code=0
+harness_process_state=exited_naturally
+tegrastats_pid=35234
+tegrastats_exit_state=stopped_by_monitor_after_harness_completion
+start=2026-07-31T00:44:50+08:00
+end=2026-07-31T01:14:59+08:00
+source_active_seconds=1800.006143093
+runner_wall_seconds=1800.0263384489999

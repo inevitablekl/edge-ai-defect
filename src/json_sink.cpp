@@ -130,7 +130,7 @@ core::Status JsonSink::end_run(const RunSummary& summary) {
         return state_error("end_run");
     }
     const Status summary_status =
-        detail::validate_summary(summary, frames_.size(), received_detections_);
+        detail::validate_summary(summary, metadata_, frames_.size(), received_detections_);
     if (!summary_status.ok()) {
         return summary_status;
     }

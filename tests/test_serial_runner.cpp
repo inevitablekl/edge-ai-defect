@@ -61,6 +61,19 @@ runtime::RunMetadata metadata(bool timing_enabled = false) {
     return value;
 }
 
+runtime::RunMetadata result_v3_serial_metadata() {
+    runtime::RunMetadata value = metadata(true);
+    value.schema_version = 3;
+    value.backend_type = "tensorrt_fp16";
+    value.model_filename = "frozen.engine";
+    value.model_sha256 = std::string(64, 'b');
+    value.artifact_kind = "tensorrt_engine";
+    value.source_onnx_sha256 = std::string(64, 'c');
+    value.engine_manifest_filename = "engine.manifest.json";
+    value.runtime_v3 = runtime::RuntimeMetadataV3{"serial", "directory", std::nullopt};
+    return value;
+}
+
 core::HostTensor raw_output(bool valid = true) {
     if (!valid) {
         return {{core::TensorDataType::kFloat32, core::TensorLayout::kNchw, {1, 2, 2}},
@@ -241,6 +254,19 @@ void test_success_and_timing(TestContext& context) {
                    "cross-component order", "source/engine/sink ordering wrong");
     context.expect(source.calls == 3 && engine.calls == 2 && sink.frames.size() == 2,
                    "multi-frame calls", "unexpected call count");
+    FakeSource v3_source({success_step(image(0, "frame.jpg"))});
+    FakeEngine v3_engine;
+    RecordingSink v3_sink;
+    runtime::SerialRunner v3_runner(v3_source, preprocessor, valid_input_info(), v3_engine,
+                                    postprocessor, v3_sink);
+    runtime::RunSummary v3_summary;
+    const core::Status v3_status = v3_runner.run(result_v3_serial_metadata(), &v3_summary);
+    context.expect(v3_status.ok(), "v3 serial summary", v3_status.message());
+    context.expect(v3_summary.runtime_v3.has_value() &&
+                       v3_summary.runtime_v3->source_frames == 1 &&
+                       v3_summary.runtime_v3->run_processing_wall_ms > 0.0 &&
+                       !v3_summary.runtime_v3->pipeline.has_value(),
+                   "v3 serial summary", "runtime summary carrier mismatch");
     context.expect(engine.received_inputs.size() == 2 &&
                        tensor_info_equal(engine.received_inputs[0], valid_input_info()),
                    "injected TensorInfo value copy",

@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CTest)
+find_package(Threads REQUIRED)
 
 option(
     EDGE_AI_ENABLE_TENSORRT
@@ -19,7 +20,7 @@ option(
 )
 
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
-find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs)
+find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 find_package(OpenSSL REQUIRED)
 
 option(
@@ -237,16 +238,23 @@ target_link_libraries(edge_ai_postprocess
 add_library(edge_ai_runtime STATIC
     src/cli.cpp
     src/composite_sink.cpp
+    src/canonical_detection_hash.cpp
+    src/canonical_hash_sink.cpp
     src/console_sink.cpp
+    src/corpus_replay_source.cpp
     src/directory_source.cpp
     src/frame_trace.cpp
     src/json_sink.cpp
     src/opencv_thread_policy.cpp
+    src/pipeline_runner.cpp
     src/portable_control.cpp
     src/result_sink.cpp
     src/runtime_config.cpp
+    src/stage_p_experiment_runner.cpp
     src/tensorrt_engine_manifest.cpp
+    src/timed_json_sink.cpp
     src/serial_runner.cpp
+    src/video_file_source.cpp
 )
 target_include_directories(edge_ai_runtime
     PUBLIC
@@ -255,8 +263,10 @@ target_include_directories(edge_ai_runtime
 target_link_libraries(edge_ai_runtime
     PUBLIC
         edge_ai_postprocess
+        Threads::Threads
     PRIVATE
         opencv_imgcodecs
+        opencv_videoio
         yaml-cpp
         OpenSSL::Crypto
 )
@@ -320,6 +330,23 @@ set_target_properties(stage_k_raw_tensor_runner
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_p_experiment_runner
+    tools/validation/stage_p_experiment_runner.cpp
+)
+target_link_libraries(stage_p_experiment_runner
+    PRIVATE
+        edge_ai_application
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        edge_ai_backend_trt
+)
+set_target_properties(stage_p_experiment_runner
+    PROPERTIES
+        BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
@@ -357,6 +384,15 @@ if(BUILD_TESTING)
     set_tests_properties(stage_k_raw_tensor_runner_help
         PROPERTIES
             LABELS "stage-k;k5;raw-tensor;validation"
+    )
+
+    add_test(
+        NAME stage_p_experiment_runner_help
+        COMMAND stage_p_experiment_runner --help
+    )
+    set_tests_properties(stage_p_experiment_runner_help
+        PROPERTIES
+            LABELS "stage-p;runtime;experiment;entry"
     )
 
     add_test(
@@ -697,6 +733,41 @@ if(BUILD_TESTING)
             LABELS "m4;runtime;contract"
     )
 
+    add_executable(test_concurrent_frame_trace
+        tests/test_concurrent_frame_trace.cpp
+    )
+    target_link_libraries(test_concurrent_frame_trace PRIVATE edge_ai_runtime)
+    add_test(NAME concurrent_frame_trace COMMAND test_concurrent_frame_trace)
+    set_tests_properties(concurrent_frame_trace PROPERTIES LABELS "stage-p;runtime;trace")
+
+    add_executable(test_bounded_queue tests/test_bounded_queue.cpp)
+    target_include_directories(test_bounded_queue PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_bounded_queue PRIVATE Threads::Threads)
+    add_test(NAME bounded_queue COMMAND test_bounded_queue)
+    set_tests_properties(bounded_queue PROPERTIES LABELS "stage-p;runtime;queue")
+
+    add_executable(test_canonical_detection_hash
+        tests/test_canonical_detection_hash.cpp
+    )
+    target_link_libraries(test_canonical_detection_hash PRIVATE edge_ai_runtime)
+    add_test(NAME canonical_detection_hash COMMAND test_canonical_detection_hash)
+    set_tests_properties(canonical_detection_hash PROPERTIES LABELS "stage-p;runtime;canonical")
+
+    add_executable(test_pipeline_runner tests/test_pipeline_runner.cpp)
+    target_include_directories(test_pipeline_runner PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_pipeline_runner PRIVATE edge_ai_runtime)
+    add_test(NAME pipeline_runner COMMAND test_pipeline_runner)
+    set_tests_properties(pipeline_runner PROPERTIES LABELS "stage-p;runtime;pipeline")
+
+    add_executable(test_stage_p_components tests/test_stage_p_components.cpp)
+    target_include_directories(test_stage_p_components PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(test_stage_p_components PRIVATE edge_ai_runtime)
+    add_test(NAME stage_p_components COMMAND test_stage_p_components)
+    set_tests_properties(stage_p_components PROPERTIES LABELS "stage-p;runtime;experiment")
+
     add_executable(test_directory_source
         tests/test_directory_source.cpp
     )
@@ -717,6 +788,28 @@ if(BUILD_TESTING)
     set_tests_properties(directory_source
         PROPERTIES
             LABELS "m4;runtime;source"
+    )
+
+    add_executable(test_video_file_source
+        tests/test_video_file_source.cpp
+    )
+    target_link_libraries(test_video_file_source
+        PRIVATE
+            edge_ai_runtime
+    )
+    set_target_properties(test_video_file_source
+        PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+    )
+    add_test(
+        NAME video_file_source
+        COMMAND test_video_file_source
+            --temp-dir
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/video_file_source"
+    )
+    set_tests_properties(video_file_source
+        PROPERTIES
+            LABELS "stage-p;runtime;source;video"
     )
 
     add_executable(test_result_sinks

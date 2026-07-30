@@ -121,11 +121,11 @@ The system should support:
 
 ### Current development-stage boundary
 
-The historical Stage J work is complete. The current active boundary is Stage K
-K0 Planning Freeze: the Stage K v1.1 FINAL plan is frozen, K1 is the next
-authorized step, and TensorRT Engine Build remains unauthorized before K1 PASS
-and D062 acceptance. Stage P remains downstream and unauthorized before Stage K
-closeout.
+Stage J and Stage K are complete. The Original TensorRT FP16 Engine is the
+accepted Stage K serial deployment candidate under D066, while raw TensorRT
+Level B remains a retained known limitation. Stage P Execution Plan v1.2 is
+FINAL; P0 Planning Freeze completes in the commit containing this changeset.
+P1 is not authorized until that P0 commit is reviewed.
 * command-line execution
 
 ---
@@ -406,21 +406,26 @@ Frame input
 → Log
 ```
 
-Pipeline mode is the optimized runtime:
+Stage P Pipeline mode is the bounded throughput runtime:
 
 ```text
-Capture Thread
-→ Inference Thread
-→ Output Thread
+Source Worker
+→ bounded SPSC queue
+→ Preprocess Worker
+→ bounded SPSC queue
+→ single Inference Worker
+→ bounded SPSC queue
+→ Postprocess + Sink Worker
 ```
 
 Pipeline rules:
 
-* queue size should be configurable
-* recommended queue size is 1 or 2
-* when full, drop old frames and keep the latest frame
-* avoid stale frame processing
-* avoid unbounded memory growth
+* exactly four workers and three bounded SPSC queues
+* queue capacity pilot values are 1, 2, and 4
+* maximum concurrent `engine.run()` is one
+* Stage P offline sources use `drop_policy = block`
+* DirectorySource and VideoFileSource preserve all accepted frames
+* camera, RTSP, and live drop policies are deferred
 
 Important:
 
@@ -572,11 +577,13 @@ The project should remain small, real, measurable, and explainable.
 
 ## Current Stage Boundary
 
-Current live status: Stage J `COMPLETE`; Stage K Execution Plan `FINAL`;
-K0 Planning Freeze `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`;
-K1 Platform Acceptance `READY_AFTER_K0_FREEZE_COMMIT`.
+Current live status: Stage J `COMPLETE`; Stage K `COMPLETE`; D066 accepts the
+Original TensorRT FP16 Engine based on task-level accuracy, stability, and
+formal serial performance while retaining raw Level B `FAIL`.
 
-TensorRT Engine Build is `NOT_AUTHORIZED_BEFORE_K1_PASS_AND_D062_ACCEPTED`.
-Stage K production implementation is
-`NOT_AUTHORIZED_BEFORE_K3`. Stage P Pipeline remains required downstream
-scope and is `NOT_AUTHORIZED_BEFORE_STAGE_K_CLOSEOUT`.
+Stage P is `COMPLETE` on the
+`feature/jetson-pipeline-runtime` branch. Its completed scope includes the
+TensorRT FP16 backend, bounded four-worker Pipeline runtime, VideoFileSource,
+Serial/Pipeline benchmark, and 1800-second stability observation. The final
+status retains the thermal-status limitation and does not claim industrial
+deployment certification.

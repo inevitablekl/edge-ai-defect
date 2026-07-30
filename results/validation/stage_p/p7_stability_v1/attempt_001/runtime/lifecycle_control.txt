@@ -1,0 +1,6 @@
+start=2026-07-31T00:44:50+08:00
+command=/home/orin/edge-ai-local-evidence/stage_p/p7_stability_v1/attempt_001/harness/p7_stability_harness /home/orin/edge-ai/edge-ai-defect/results/validation/stage_p/p7_stability_v1/attempt_001/configs/p7_pipeline.yaml /home/orin/edge-ai/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/test_manifest.json /home/orin/edge-ai/edge-ai-defect/results/validation/stage_p/p7_stability_v1/attempt_001/runtime 1800
+pid=35233
+tegrastats_pid=35234
+end=2026-07-31T01:14:59+08:00
+exit_code=0

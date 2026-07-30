@@ -1,0 +1,15 @@
+captured_at: 2026-07-31T01:15:00+08:00
+git_head: cd5933353d0676dcf5517a318f389be99b246ab1
+branch: feature/jetson-pipeline-runtime
+platform: Jetson Codex; aarch64
+kernel: Linux 5.15.185-tegra
+l4t: R36.5.0
+jetson_model: NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super
+power_mode: MAXN_SUPER (mode 2)
+opencv_num_threads: 1
+cuda: 12.6.68 runtime
+tensorrt: 10.3.0.30-1+cuda12.5
+opencv: 4.5.4
+cmake: 3.22.1
+harness: /home/orin/edge-ai-local-evidence/stage_p/p7_stability_v1/attempt_001/harness/p7_stability_harness
+harness_sha256: bfe473df04a90a22be585dbd49b27a099967f460a69d09698cf83f96cef1cdb5

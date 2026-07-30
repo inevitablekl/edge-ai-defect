@@ -62,6 +62,23 @@ Status validate_mapping(const YAML::Node& node,
     return Status::success();
 }
 
+Status validate_keys_only(const YAML::Node& node,
+                          const std::string& path,
+                          const std::vector<std::string>& allowed_keys) {
+    if (!node.IsMap()) return schema_error(path, "expected a mapping");
+    std::unordered_set<std::string> seen_keys;
+    for (const auto& entry : node) {
+        if (!entry.first.IsScalar()) return schema_error(path, "mapping key must be a scalar");
+        const std::string key = entry.first.Scalar();
+        const std::string key_path = path == "$" ? "$." + key : path + "." + key;
+        if (!seen_keys.insert(key).second) return schema_error(key_path, "duplicate key");
+        if (std::find(allowed_keys.begin(), allowed_keys.end(), key) == allowed_keys.end()) {
+            return schema_error(key_path, "unknown field");
+        }
+    }
+    return Status::success();
+}
+
 Status require_scalar(const YAML::Node& node, const std::string& path) {
     if (!node.IsScalar()) {
         return schema_error(path, "expected a scalar");
@@ -639,6 +656,93 @@ Status parse_runtime_config_v3(const YAML::Node& root,
     return Status::success();
 }
 
+Status parse_runtime_v4(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_keys_only(
+        node, "runtime", {"mode", "opencv_num_threads", "pipeline"});
+    if (!mapping_status.ok()) return mapping_status;
+    Status status = parse_scalar(node["mode"], "runtime.mode", &output->runtime_mode);
+    if (!status.ok()) return status;
+    if (output->runtime_mode != "serial" && output->runtime_mode != "pipeline") {
+        return schema_error("runtime.mode", "must be exactly 'serial' or 'pipeline'");
+    }
+    status = parse_positive_uint32(node["opencv_num_threads"],
+                                   "runtime.opencv_num_threads",
+                                   &output->opencv_num_threads);
+    if (!status.ok()) return status;
+    const YAML::Node pipeline = node["pipeline"];
+    if (output->runtime_mode == "serial") {
+        if (pipeline.IsDefined()) return schema_error("runtime.pipeline", "forbidden for serial mode");
+        return Status::success();
+    }
+    if (!pipeline.IsDefined()) return schema_error("runtime.pipeline", "required for pipeline mode");
+    status = validate_mapping(pipeline, "runtime.pipeline", {"queue_capacity", "drop_policy"});
+    if (!status.ok()) return status;
+    status = parse_positive_uint32(pipeline["queue_capacity"],
+                                   "runtime.pipeline.queue_capacity",
+                                   &output->pipeline.queue_capacity);
+    if (!status.ok()) return status;
+    if (output->pipeline.queue_capacity > 16U) {
+        return schema_error("runtime.pipeline.queue_capacity", "must be in range 1-16");
+    }
+    status = parse_scalar(pipeline["drop_policy"],
+                          "runtime.pipeline.drop_policy",
+                          &output->pipeline.drop_policy);
+    if (!status.ok()) return status;
+    if (output->pipeline.drop_policy != "block") {
+        return schema_error("runtime.pipeline.drop_policy", "must be exactly 'block'");
+    }
+    return Status::success();
+}
+
+Status parse_input_v4(const YAML::Node& node,
+                      const std::filesystem::path& config_directory,
+                      RuntimeConfig* output) {
+    const Status mapping_status = validate_keys_only(node, "input", {"type", "directory", "video_path"});
+    if (!mapping_status.ok()) return mapping_status;
+    Status status = parse_scalar(node["type"], "input.type", &output->input_type);
+    if (!status.ok()) return status;
+    if (output->input_type == "directory") {
+        if (node["video_path"].IsDefined()) return schema_error("input.video_path", "forbidden for directory input");
+        return parse_nonempty_path(node["directory"], "input.directory", config_directory,
+                                   &output->input_directory);
+    }
+    if (output->input_type == "video_file") {
+        if (node["directory"].IsDefined()) return schema_error("input.directory", "forbidden for video_file input");
+        return parse_nonempty_path(node["video_path"], "input.video_path", config_directory,
+                                   &output->input_video_path);
+    }
+    return schema_error("input.type", "must be exactly 'directory' or 'video_file'");
+}
+
+Status parse_runtime_config_v4(const YAML::Node& root,
+                               const std::filesystem::path& config_directory,
+                               RuntimeConfig* output) {
+    const Status root_status = validate_mapping(
+        root, "$", {"schema_version", "backend", "tensorrt", "model", "runtime",
+                     "input", "output", "postprocess", "timing"});
+    if (!root_status.ok()) return root_status;
+    RuntimeConfig config;
+    config.schema_version = 4;
+    Status status = parse_backend_v3(root["backend"], &config);
+    if (!status.ok()) return status;
+    status = parse_tensorrt_v3(root["tensorrt"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_model_v3(root["model"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_runtime_v4(root["runtime"], &config);
+    if (!status.ok()) return status;
+    status = parse_input_v4(root["input"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_output(root["output"], config_directory, &config);
+    if (!status.ok()) return status;
+    status = parse_postprocess_v2(root["postprocess"], &config);
+    if (!status.ok()) return status;
+    status = parse_timing(root["timing"], &config);
+    if (!status.ok()) return status;
+    *output = std::move(config);
+    return Status::success();
+}
+
 Status parse_runtime_config(const YAML::Node& root,
                             const std::filesystem::path& config_directory,
                             RuntimeConfig* output) {
@@ -656,7 +760,10 @@ Status parse_runtime_config(const YAML::Node& root,
     if (schema_version == 3) {
         return parse_runtime_config_v3(root, config_directory, output);
     }
-    return schema_error("schema_version", "must be exactly 1, 2, or 3");
+    if (schema_version == 4) {
+        return parse_runtime_config_v4(root, config_directory, output);
+    }
+    return schema_error("schema_version", "must be exactly 1, 2, 3, or 4");
 }
 
 }  // namespace

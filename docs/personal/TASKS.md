@@ -3137,3 +3137,169 @@ Stage J Plan or historical Evidence.
   rerun，no source/Engine/ONNX/ModelContract/tolerance was changed。
 - Stage P development may start from the cleaned repository state under its
   separately authorized task boundary。
+
+## 2026-07-30T01:26:25+08:00 - Stage P P0 Planning Freeze
+
+- Baseline verified: local `main`, `origin/main`, and peeled annotated tag
+  `stage-k-tensorrt-fp16-complete-v1.0` all equal
+  `c6890d86e7534500cfe31c40dd73f151d77d5362`.
+- The local and remote Stage P branch were absent; branch
+  `feature/jetson-pipeline-runtime` was created from the exact baseline.
+- Six confirmed untracked Stage P planning-audit files were moved unchanged to
+  `/home/orin/edge-ai-local-evidence/stage_p/p0_planning_audit/20260730T011741+0800/`;
+  pre/post SHA256 identities are recorded in `STAGE_P_BASELINE_REPORT.md`.
+- Stage P Execution Plan v1.2: `FINAL`; all v1.1 sections 1—35 and the frozen
+  route are retained with execution-contract normalizations integrated.
+- P0 Planning Freeze:
+  `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`.
+- Stage K: `COMPLETE`; D066 raw TensorRT Level B limitation remains
+  `FAIL — retained known limitation`. Historical Stage J/K Evidence was not
+  modified.
+- P0 made documentation-only changes. No production/header/CMake/test/config
+  modification, Engine build, benchmark, stability run, or formal Evidence
+  attempt was performed.
+- P1 is `NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`; P1 has not started.
+- No push, merge, rebase, or tag was performed.
+
+## 2026-07-30 - Stage P P1 Contract Implementation
+
+- P1 contract implementation completed on `feature/jetson-pipeline-runtime`.
+- Added RuntimeConfig v4 strict TensorRT-only unions for serial/pipeline and
+  directory/video-file input; v1-v3 parsing paths remain unchanged.
+- Added Result JSON v3 runtime/summary carriers, derived processed/dropped/
+  throughput fields, queue high-water marks, and optional queue residence
+  timing while preserving v1/v2 serialization paths.
+- Added packet contracts, LE canonical RUN/CYCLE serializer with finite float
+  validation and domain separation, and ConcurrentFrameTraceRecorder with
+  buffered/aggregate modes and source-only EOS exclusion semantics.
+- Added focused runtime config, Result v3, canonical hash, and overlapping
+  trace tests. WSL backend-neutral build used `EDGE_AI_ENABLE_TENSORRT=OFF`;
+  no Jetson experiment or Stage P Evidence was generated.
+- P2/P3 work (queues, worker threads, PipelineRunner, and video source
+  implementation) was not started. Pending P1 gate review.
+
+## 2026-07-30 - Stage P P1R Contract Gate Remediation
+
+- P1 Gate 审查发现合同缺口（`P1_GATE_FAIL_REMEDIATION_REQUIRED`），本 P1R 轮次修复。
+- **Canonical Serializer 修复**：
+  - CYCLE scope 现在使用 cycle vector 零基位置，不再序列化 global `sequence_index`；RUN scope 保持不变。
+  - 新增编译期 `static_assert(sizeof(float)==4)` 和 `std::numeric_limits<float>::is_iec559`。
+  - 新增运行时 checked_u64/checked_u32 整数范围校验（frame_index, sequence_index, candidate_index, path length, detection count 等）。
+  - 新增非空固定 vector 测试（含 UTF-8 路径、+0.0/-0.0、不同 class_id/candidate_index、正宽高），冻结完整 canonical bytes hex 和 SHA-256 golden。
+  - 新增跨 cycle 测试：Cycle A global seq 0..N-1，Cycle B 相同 path/dims/dets 但 global seq 180..180+N-1；验证 RUN_SHA_A != RUN_SHA_B 且 CYCLE_SHA_A == CYCLE_SHA_B。
+- **Result JSON v3 修复**：
+  - `serialize_run` 现在对 v2 和 v3 都输出 TensorRT model 字段（`artifact_kind`, `source_onnx_sha256`, `engine_manifest_filename`），使用 `tensorrt_result` 语义变量。
+  - `validate_metadata` 错误消息更新为 "schema_version must be 1, TensorRT v2, or Result v3"。
+  - `validate_summary` 签名更新为接受 `const RunMetadata&`，执行 metadata/summary carrier 联合校验：
+    - v1/v2 禁止携带 `runtime_v3` summary carrier；v3 要求 `runtime_v3` summary carrier。
+    - block-only 成功 run 要求 `source_frames == processed_images`，`dropped_frames == 0`。
+    - wall time 要求 finite 且 strictly > 0；derived throughput 验证为 finite。
+    - pipeline mode 要求 `queue_high_water_marks[i] <= queue_capacity`。
+    - 所有 `metadata.runtime_v3` / `summary.runtime_v3` optional 解引用前均有 guard。
+  - ConsoleSink 和 JsonSink 均已更新为传递 `metadata_` 给 `validate_summary`。
+  - 新增 v1/v2 golden byte-comparison 回归测试。
+  - 新增 v3 TensorRT model metadata 测试（验证 `artifact_kind` 等字段存在）。
+  - v3 有效 pipeline 示例改为 `processed_images=1, source_frames=1, dropped_frames=0`。
+  - 新增负向测试：缺少 runtime_v3 carrier、错误携带 runtime_v3、source_frames 与 processed_images 不匹配、wall=0/NaN/Inf、Serial 错误携带 pipeline、Pipeline 缺少 pipeline、high-water > capacity、target 未被破坏、temporary file 不残留。
+- **RuntimeConfig v4 测试补齐**：
+  - 覆盖 valid matrix：`serial+directory`, `pipeline+directory`, `serial+video_file`, `pipeline+video_file`。
+  - 覆盖 invalid union：queue_capacity=0/17, drop_policy!="block", directory 与 video_path 互斥, 缺失 directory/video_path, backend!="tensorrt_fp16", timing section 缺失, timing.enabled 缺失, unknown root/runtime/pipeline/input field, duplicate root/nested key。
+  - 保留 v1/v2/v3 parser regression（`test_valid_config_and_paths`, `test_v2_config_and_isolation`, `test_v3_parser_regression` 均通过）。
+- **ConcurrentFrameTraceRecorder 测试补齐**：
+  - 新增 duplicate completed interval rejection（同一 (cycle_id, stage) 完成后再次 begin 被 reject）。
+  - 新增测试：overlapping intervals（不同 frame/stage 可重叠）, duplicate begin fail, no-matching-end fail, end<begin fail, flush with active intervals fail。
+  - 验证 BUFFERED_RECORDS 保留 per-frame records, AGGREGATE_ONLY 不保留 records 但正确保存 count/sum/min/max。
+  - 验证 source-only EOS 不是 complete frame, 5 stage 全部完成才是 complete frame。
+  - 旧 TraceRecorder regression 保留并通过。
+- **WSL x86_64 Build 与 Gate**：
+  - 全新 `build-p1r-wsl` 目录，`EDGE_AI_ENABLE_TENSORRT=OFF`, `EDGE_AI_ENABLE_MODEL_SMOKE=OFF`。
+  - `uname -m`: `x86_64`；ONNX Runtime detected processor: `x86_64`；selected SDK: `linux-x64`。
+  - 定向 CTest 6/6 PASS；完整 CTest 39/41 PASS（2 pre-existing failures: `stage_j_ort_cpu_formal_unit` Jetson-specific, `k3_foundation` TensorRT-specific）。
+- **提交**：`fix(stage-p): close P1 contract gate gaps`（不 amend 原 P1 commit）。
+- **禁止事项确认**：未开始 P2；未修改 BoundedQueue, PipelineRunner, worker threads, VideoFileSource；未 push/merge/rebase/tag。
+
+## 2026-07-30 - Stage P P2 Bounded Queue Primitive
+
+- P2 开始记录：实现 bounded SPSC `BoundedQueue` 与独立的
+  `FirstErrorCancellation` primitive；本轮仅修改 runtime queue 头文件、queue
+  测试、必要的 CMake Threads 注册和本任务记录。
+- 队列合同：`OPEN`、`CLOSED`、`CANCELLED`；支持容量阻塞、FIFO、正常 close
+  drain/EOS，以及 cancel 优先、清空 pending item、唤醒所有等待线程。
+- 队列由自身在 item 获得容量并入队时记录 enqueue timestamp；提供 residence
+  与 push-block 聚合统计，并保证 high-water mark 不超过 capacity。
+- P3 禁止进入：未实现 PipelineRunner、worker、source、sink、实验或
+  TensorRT/Jetson 运行。
+
+## 2026-07-30 - Stage P P3 Pipeline Integration
+
+- P3 开始记录：在 P2 commit `86f74968` 基础上实现固定四 worker / 三 bounded
+  SPSC queue PipelineRunner，并通过现有 `run_with_components` seam dispatch
+  v4 pipeline；旧 SerialRunner 行为保持不变。
+- Pipeline lifecycle：normal EOS 按 Q1→Q2→Q3 drain/close；first error 只保留
+  一次，cancel 所有 queues，join 所有已启动 workers；失败不调用 `end_run`
+  且 caller summary 保持不变。Inference 只由单一 worker 调用。
+- 新增 experiment-only components：180-entry `CorpusReplaySource`、
+  `CanonicalHashSink` 的独立 RUN/CYCLE hashes、`TimedJsonSink` end-run timing、
+  以及显式组件注入的 `StagePExperimentRunner`；未加入 production CLI registry。
+- WSL backend-neutral focused tests `3/3 PASS`；full build PASS；full ctest
+  `42/44 PASS`，两个失败均为既有环境/资产限制：Jetson-only formal test 和
+  缺失/不匹配 TensorRT engine artifact。未执行 Jetson、TensorRT ON、benchmark、
+  stability 或 VideoFileSource formal validation。
+
+## 2026-07-30 - Stage P P4 Execution Entry Remediation
+
+- P4 correctness 入口补齐：新增 Stage P 专用 `stage_p_experiment_runner`
+  executable，支持 RuntimeConfig v4 的 Serial 与 Pipeline 两种模式，并复用
+  现有 `SerialRunner` / 四 worker `PipelineRunner`。
+- 入口显式接线 CorpusReplaySource、Preprocessor、TensorRT engine factory、
+  PostProcessor、CanonicalHashSink、TimedJsonSink 与
+  ConcurrentFrameTraceRecorder；输出 Result JSON v3、RUN/CYCLE hash、trace
+  与最小 sidecar。
+- `--max-frames` 仅用于 1–2 帧 smoke，默认不截断 replay；未执行正式 180 帧
+  P4 correctness，未进入 P5。
+
+## 2026-07-30 - Stage P P4 CorpusReplaySource Contract Remediation
+
+- 根据 P4 Manifest Contract Investigation，修复 `CorpusReplaySource`：读取
+  Stage K frozen manifest 的 `entries[].image_path`，保留 manifest 定义的相对
+  `relative_path`，拒绝绝对或非规范化路径；未修改 frozen manifest、corpus、SHA、
+  Preprocessor、PostProcessor、Pipeline topology、Hash serializer 或 RuntimeConfig。
+- 更新 Stage P focused test，覆盖 180-entry manifest、image_path 解析、相对路径、
+  sequence/cycle/frame 映射、缺失字段、绝对路径失败、确定性顺序和重复读取一致性。
+- Jetson TensorRT ON build、focused test、Serial/Pipeline 两帧 smoke 的结果记录在
+  `results/validation/stage_p/p4_correctness_v1/attempt_007/`；正式 P4 correctness
+  未执行。
+- 本轮仅创建本地 commit，未 push、merge、rebase 或 tag。
+
+## 2026-07-31 - Stage P P5R Protocol Correction and Evidence Reclassification
+
+- P5R 完成；本轮只修改文档和新增 Evidence 解释，没有重新运行 benchmark、
+  build、runtime、telemetry 或数据生成，也没有修改 attempt_001 raw Evidence。
+- 修正 P5 validity contract：P4 的 180-frame RUN SHA 只作为 single-cycle
+  reference；P5 formal 要求六个同窗口 RUN SHA 一致；完整 180-frame CYCLE SHA
+  继续匹配 P4 expected；partial cycle 不参与 PASS。
+- 修正 thermal contract：`thermal_throttle_status=unavailable` 是 known
+  limitation，不是 invalid；仅实际检测到 throttling 才产生
+  `RUN_INVALID_THERMAL_THROTTLING`。
+- 基于已有 attempt_001 Evidence 重分类：六个 formal RUN SHA identical，完整
+  CYCLE SHA 全部匹配，accepted/processed=5100/5100，dropped=0，complete
+  measured trace=5000/run。
+- Queue selection 按 `throughput >= 0.95 * best` 得到并冻结
+  `selected_queue_capacity=1`；paired ratio mean=`4.165718`，sample
+  SD=`0.007915`，classification=`MATERIAL_MEASURED_THROUGHPUT_INCREASE`。
+- 最终状态：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。P6 未执行，等待后续
+  明确任务；未 push、merge、rebase 或 tag。
+
+## 2026-07-31 - Stage P P8 Consolidation and Closeout
+
+- P4/P5/P6/P7 Evidence 已按最终 verdict 建立索引，正式 Evidence 保留在
+  `results/validation/stage_p/` 和 `results/benchmark/stage_p/`，raw traces、
+  telemetry、generated video 与其他大文件保持 local-only。
+- Stage P Final Report、Evidence Index、README、Project Brief、Architecture、
+  Decisions、Tasks 与 Experiment Plan 已同步到 Stage P `COMPLETE`。
+- Stage P final state：P4 `PASS`；P5
+  `PASS_WITH_THERMAL_STATUS_UNAVAILABLE`；P6 `PASS`；P7 `PASS`；selected queue
+  capacity `1`；paired ratio mean `4.165718`；P7 source-active interval
+  `1800.006143093 s`。
+- 本轮不新增功能、不重跑 P4–P7、不修改 production source、headers、tests、
+  CMake、Engine、ONNX 或模型；未执行 push、merge、rebase 或 tag。

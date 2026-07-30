@@ -1,0 +1,11 @@
+queue_policy=block
+queue_capacity=1
+q1_terminal_state=CLOSED
+q1_drained=true
+q2_terminal_state=CLOSED
+q2_drained=true
+q3_terminal_state=CLOSED
+q3_drained=true
+cancelled=false
+queue_high_water_marks=1,1,1
+evidence_basis=normal EOS, successful runner return, zero remaining output, and PipelineRunner normal-EOS close propagation

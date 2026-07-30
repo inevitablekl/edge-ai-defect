@@ -609,7 +609,7 @@ Pipeline mode reduced latency.
 | Device | Backend       | Input Size | Runtime Mode | Queue Size | Drop Policy | FPS | Avg Total Latency ms | P95 ms | Dropped Frames |
 | ------ | ------------- | ---------: | ------------ | ---------: | ----------- | --: | -------------------: | -----: | -------------: |
 | TBD    | TensorRT FP16 |        640 | Serial       |        N/A | N/A         | TBD |                  TBD |    TBD |            TBD |
-| TBD    | TensorRT FP16 |        640 | Pipeline     |          2 | drop_oldest | TBD |                  TBD |    TBD |            TBD |
+| TBD    | TensorRT FP16 |        640 | Pipeline     |          2 | block       | TBD |                  TBD |    TBD |              0 |
 
 ---
 
@@ -1495,3 +1495,89 @@ results/validation/stage_k8/final_summary_v1/
 ```
 
 Stage P Pipeline remains downstream work and was not executed by Stage K8。
+
+## Stage P P0 Planning Freeze
+
+更新日期：`2026-07-30`
+
+Stage K is `COMPLETE`; D066 retains the raw TensorRT Level B failure while
+accepting the Original TensorRT FP16 Engine from task-level accuracy,
+stability, and formal serial performance. Stage P Execution Plan v1.2 is
+`FINAL`. P0 completes at the commit containing this changeset; P1 is
+`NOT_AUTHORIZED_UNTIL_P0_COMMIT_IS_REVIEWED`.
+
+Stage P freezes a four-worker/three-bounded-SPSC-queue topology, one inference
+worker, maximum one concurrent `engine.run()`, TensorRT-only RuntimeConfig v4,
+Result JSON v3, block-only DirectorySource/VideoFileSource, and exact ordered
+Detection identity. RUN and CYCLE hashes use independent canonical scopes.
+
+Experiment sequence is strict:
+
+```text
+P4 exact correctness
+→ P5 capacity pilot 1/2/4 and complete formal three-pair benchmark
+→ P6 Jetson-frozen MJPG VideoFileSource validation
+→ P7 one-lifecycle >=1800 s Pipeline stability
+→ P8 closeout
+```
+
+P6 waits for both a selected/frozen P5 queue capacity and completion of the P5
+formal benchmark. The P5 classification threshold is a mean paired throughput
+ratio of 1.10×; it is not a statistical-significance claim. P7 uses
+CanonicalHashSink CYCLE scope and AGGREGATE_ONLY trace, not JsonSink. No Stage P
+measurement or formal Evidence attempt was run during P0; all Stage P values
+remain `TBD: real experiment data required`.
+
+## Stage P P5R Protocol Correction and Reclassification
+
+更新日期：`2026-07-31`
+
+P5 attempt_001 已完成。P5R 仅修正 protocol interpretation 和 Evidence status，
+不重新运行 benchmark、不生成实验数据、不修改 runtime 或 attempt_001 raw
+Evidence。
+
+P4 的 180-frame RUN SHA 仅作为 single-cycle reference。P5 RUN SHA 是该 extended
+run 全部 accepted frames 的 hash；六个 formal run 必须互相一致。完整 180-frame
+CYCLE SHA 继续必须匹配 P4 expected CYCLE SHA；partial cycle 不参与 PASS。
+
+thermal interface unavailable 记录为 `thermal_throttle_status=unavailable` 的
+known limitation。只有检测到 throttling 才使 attempt 进入
+`RUN_INVALID_THERMAL_THROTTLING`；不能据此声称 no-throttling PASS。
+
+基于既有 Evidence 的最终状态：
+
+- selected queue capacity：`1`；
+- formal RUN SHA：六个一致；
+- complete CYCLE SHA：全部匹配；
+- formal accepted/processed：`5100/5100`；
+- dropped：`0`；
+- measured trace：每个 formal run `5000` complete frames；
+- paired ratio mean：`4.165718`；sample SD：`0.007915`；
+- classification：`MATERIAL_MEASURED_THROUGHPUT_INCREASE`；
+- verdict：`P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`。
+
+P6 仍未执行，必须等待后续明确任务。
+
+## Stage P Final Experimental Status
+
+更新时间：`2026-07-31`
+
+Stage P P4–P7 execution is COMPLETE. The final experimental chain is:
+
+| Phase | Purpose | Result |
+|---|---|---|
+| P4 | Exact Serial/Pipeline correctness on the frozen 180-frame corpus | `P4_PIPELINE_CORRECTNESS_PASS` |
+| P5 | Queue pilot and formal Serial/Pipeline throughput comparison | `P5_PASS_WITH_THERMAL_STATUS_UNAVAILABLE`; selected capacity `1`; paired ratio mean `4.165718` |
+| P6 | Deterministic MJPG VideoFileSource validation | `P6_VIDEO_SOURCE_PASS` |
+| P7 | Bounded Pipeline long-running stability | `P7_PIPELINE_STABILITY_PASS`; source-active interval `1800.006143093 s` |
+
+P5R corrected only the validity interpretation of existing Evidence. It did
+not rerun the benchmark or change raw data. P5's measured classification is
+`MATERIAL_MEASURED_THROUGHPUT_INCREASE` under the frozen protocol; it is not a
+statistical-significance claim and does not imply lower single-frame latency.
+
+The final limitations remain: thermal throttle status is unavailable, the raw
+TensorRT Level B limitation inherited from Stage K is retained, and no
+industrial certification claim is made. Raw traces, telemetry, generated
+video, and other large runtime artifacts remain local-only. Future experiments
+require separate authorization and real measurements.

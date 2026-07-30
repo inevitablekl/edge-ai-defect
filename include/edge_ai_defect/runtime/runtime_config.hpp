@@ -36,6 +36,13 @@ struct RuntimeConfig {
 
     std::string input_type;
     std::filesystem::path input_directory;
+    std::filesystem::path input_video_path;
+
+    std::string runtime_mode;
+    struct PipelineConfig {
+        std::uint32_t queue_capacity = 0;
+        std::string drop_policy;
+    } pipeline;
 
     std::filesystem::path output_json_path;
     bool output_console = false;
