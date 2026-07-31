@@ -1,0 +1,8 @@
+{
+  "confirmed_int8_compute": 262,
+  "confirmed_fp16_compute": 6,
+  "confirmed_fp32_compute": 64,
+  "reformat_or_copy": 124,
+  "mixed_or_unclassified": 30,
+  "inspector_visible_layers": 486
+}
