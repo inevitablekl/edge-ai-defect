@@ -228,6 +228,11 @@ if(EDGE_AI_ENABLE_TENSORRT)
         ${EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY})
     add_executable(stage_q_int8_builder tools/stage_q_int8_builder.cpp)
     target_link_libraries(stage_q_int8_builder PRIVATE edge_ai_stage_q_builder)
+    add_executable(stage_q5_accuracy_runner
+        tools/validation/stage_q5_accuracy_runner.cpp)
+    target_link_libraries(stage_q5_accuracy_runner
+        PRIVATE edge_ai_application edge_ai_runtime edge_ai_backend_factory
+                edge_ai_core edge_ai_backend_trt OpenSSL::Crypto)
 else()
     add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
     target_include_directories(edge_ai_backend_trt PUBLIC
