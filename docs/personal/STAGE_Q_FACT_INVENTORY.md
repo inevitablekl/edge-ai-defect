@@ -240,6 +240,44 @@ pitted_surface, rolled-in_scale, scratches`。
 - Stage K/P evaluation corpus、16-image Level B reference 和 P6 video 均是评估/验证资产，不是已定义的 calibration corpus。
 - 当前仓库没有 calibration manifest、sample selection metadata 或 calibration cache，因此“可作为 candidate”不等于“已完成 calibration capability”。
 
+### 6.4 Q1-B deduplicated split
+
+Q1-B 在保留 historical split 的前提下生成了
+`results/validation/stage_q/split_v2_deduplicated/`。使用 image content
+SHA256 去重，按 normalized relative path 的 UTF-8 byte order 保留 first，未
+重新 shuffle。唯一重复组保留 `train/IMAGES/patches_101.jpg`，移除
+`val/IMAGES/patches_105.jpg`。
+
+| Split | Images | BBoxes | Manifest SHA256 |
+|---|---:|---:|---|
+| train v2 | 1260 | 2916 | `4e937507e0663ff76740b3fc6dd00552d82a3392a07a99fab17d816b7bc062b6` |
+| val v2 | 359 | 825 | `4be24ebe0a6b8c7e3b75840bd9bab8f67d72b1608e97c21172ce7eb9a6713dd9` |
+| test v2 | 180 | 442 | `ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194` |
+
+Q1-B path isolation and content SHA256 isolation both pass for every split
+pair. The v2 train split is the intended future calibration source, but no
+calibration manifest or calibration run has been generated.
+
+### 6.5 Final Q1 split gate state
+
+```text
+split_v1_historical
+status: preserved
+reason: historical evidence reference
+
+split_v2_deduplicated
+status: Stage Q dataset authority
+train_count: 1260
+val_count: 359
+test_count: 180
+```
+
+The Q1-B remediation result is content-isolated and path-isolated. The
+historical preflight failure remains retained in the original report; the
+final Q1 gate is represented as
+`Q1_PLATFORM_AND_ASSET_PASS_WITH_SPLIT_REMEDIATION`. Training impact remains
+`PENDING VERIFICATION`; Stage K/P test corpus identity is unchanged.
+
 ## 7. Benchmark Inventory
 
 ### 7.1 已有实验

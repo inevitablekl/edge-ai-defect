@@ -1,0 +1,42 @@
+{
+  "analysis_status": "Q1_BLOCKED_PENDING_SPLIT_DECISION",
+  "sha256": "4d2de82731b86cdbc7a66f2a9bfb01074bb4cb65e47bccf06b66470d53857071",
+  "entries": [
+    {
+      "split": "train",
+      "manifest": "results/validation/stage_k_task_eval_v2/split/train_manifest.json",
+      "entry_index": 935,
+      "path": "IMAGES/patches_101.jpg",
+      "annotation_path": "ANNOTATIONS/patches_101.xml",
+      "annotation_sha256": "052f875873e9fbbbdb823fc5f3975a462cf80209c61edd3704dbcf137003192d",
+      "class_list": ["patches"],
+      "bbox_count": 3
+    },
+    {
+      "split": "val",
+      "manifest": "results/validation/stage_k_task_eval_v2/split/val_manifest.json",
+      "entry_index": 187,
+      "path": "IMAGES/patches_105.jpg",
+      "annotation_path": "ANNOTATIONS/patches_105.xml",
+      "annotation_sha256": "05eafff1fdc2aa894a359ede9c6552dfe535a5a75dba4d9f8b77eb8ae71aaaa0",
+      "class_list": ["patches"],
+      "bbox_count": 3
+    }
+  ],
+  "duplicate_type": "content_duplicate",
+  "local_raw_dataset_verification": {
+    "dataset_root": "data/raw/NEU-DET",
+    "both_files_exist": true,
+    "same_content_sha256": true,
+    "same_size_bytes": 19829,
+    "same_image_dimensions": "200x200",
+    "upstream_original_neu_det_status": "NOT VERIFIED"
+  },
+  "split_isolation": {
+    "normalized_relative_path_overlap": 0,
+    "content_sha256_overlap_train_val": 1,
+    "content_sha256_overlap_train_test": 0,
+    "content_sha256_overlap_val_test": 0,
+    "pass": false
+  }
+}
