@@ -4040,3 +4040,9 @@ INT8 early stop 和最终 `INT8_RECOMMENDED`/`FP16_RETAINED` 分类均受此合�
 后续是否可调整：
 
 可调整。必须新增真实 Evidence 和 Decision；不得在执行中途修改 gate 或分类树。
+
+Stage Q closeout result（2026-08-01）：Q1–Q7 evidence gates completed with
+Q7 `Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION`; the required INT8
+300-second confirmation passed. Q8 documentation closeout is
+`Q8_COMPLETE_READY_FOR_MAIN_MERGE`, with final classification
+`STAGE_Q_COMPLETE_INT8_RECOMMENDED`. Merge and tag remain unauthorized.

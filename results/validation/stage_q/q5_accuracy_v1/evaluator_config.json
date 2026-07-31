@@ -1,0 +1,24 @@
+{
+  "evaluator": "tools/validation/evaluate_stage_q5_accuracy.py",
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "postprocess": {
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "max_wh": 7680.0,
+    "agnostic": false
+  },
+  "evaluator_source_sha256": "72a03fbb5ed53c0300679fa0be1e903f995ed40dcf87bcca8b17c7e1219d6810"
+}

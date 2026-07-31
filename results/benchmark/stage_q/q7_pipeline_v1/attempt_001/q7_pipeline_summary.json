@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "q7_pipeline_evaluation",
+  "classification": "Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION",
+  "protocol": {"warmup_frames": 100, "measured_frames": 5000, "accepted_frames": 5100, "cycle_length": 180, "queue_capacity": 1, "drop_policy": "block"},
+  "pairs": [
+    {"pair": 1, "fp16_fps": 77.131663, "int8_fps": 78.093937, "throughput_ratio": 1.012476},
+    {"pair": 2, "fp16_fps": 75.337878, "int8_fps": 75.978548, "throughput_ratio": 1.008504},
+    {"pair": 3, "fp16_fps": 75.452048, "int8_fps": 76.715496, "throughput_ratio": 1.016745}
+  ],
+  "mean_paired_throughput_ratio": 1.012575,
+  "latency_ms_mean": {"fp16": 62.485602, "int8": 59.059985},
+  "latency_ms_p95": {"fp16": 71.585833, "int8": 65.527168},
+  "cycle_verification": {"complete_cycles_per_run": 28, "partial_frames_per_run": 60, "all_complete_cycles_match_q5": true, "partial_digest_compared": false},
+  "runtime_failures": {"crash": 0, "deadlock": 0, "inference_failure": 0, "drop": 0, "queue_lifecycle_failure": 0, "worker_join_failure": 0}
+}
