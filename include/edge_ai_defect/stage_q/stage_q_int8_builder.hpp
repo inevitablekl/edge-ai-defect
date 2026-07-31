@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -14,6 +15,10 @@ struct CalibrationImage {
 struct CalibrationManifest {
     std::string split;
     std::string source_sha256;
+    std::string manifest_sha256;
+    std::string purpose;
+    std::string ordering_algorithm;
+    std::uint32_t seed = 0;
     std::vector<CalibrationImage> images;
 };
 
