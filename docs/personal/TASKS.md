@@ -132,6 +132,26 @@ M5 状态：
 Jetson/TensorRT planning（下一阶段入口；`PENDING`，尚未开始）
 ```
 
+### Stage Q 当前执行状态（2026-07-31）
+
+```text
+Stage Q:
+Q0 Planning Freeze
+
+Status:
+IN_PROGRESS
+```
+
+- Q0 Decision ID conflict 已发现：既有 Stage P 使用 D072、D073；Stage Q 原计划编号不能直接复用。
+- 编号修正已关闭冲突：既有 Stage P D072、D073 保持不变，Stage Q 分配 D074–D080。
+- Stage Q Execution Plan 保持 `v0.3 FINAL`；`output0` layout label 已按确定性修正为 `BCN`。
+- 当前正在完成文档冻结；Q0 freeze commit 创建后，Q0 状态为
+  `COMPLETE_AT_THE_COMMIT_CONTAINING_THIS_CHANGESET`。
+- 当前分支：`feature/jetson-tensorrt-int8`；分支起点：
+  `630822c7aeec471cc1f82b019d97bc431855045e`。
+- Q1：`NOT AUTHORIZED PENDING USER REVIEW`；Q2–Q8 和 production implementation：`NOT AUTHORIZED`。
+- Q1 asset/platform verification、asset recovery、builder、calibrator、INT8 code、Engine build 和 benchmark 均未执行。
+
 M5.5 首次预审曾在修改文件前 `STOPPED`：原计划未冻结 consolidation 目录、文件集合、schema、summary 和
 `sha256sums` 规则，分类为 `M5.5 evidence consolidation planning gap`，不是执行失败。本次 Planning Freeze
 Remediation 已完成并新增 D040，冻结路径 `results/consolidation/m5/<evidence_id>/`、固定六文件、三个 JSON
