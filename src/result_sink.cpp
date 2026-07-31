@@ -105,11 +105,13 @@ core::Status validate_metadata(const RunMetadata& metadata) {
                         metadata.backend_type == "tensorrt_fp16";
     const bool trt_v3 = metadata.schema_version == 3U &&
                         metadata.backend_type == "tensorrt_fp16";
-    if (metadata.schema_version != 1U && !trt_v2 && !trt_v3) {
+    const bool trt_v4 = metadata.schema_version == 4U &&
+                        metadata.backend_type == "tensorrt_int8";
+    if (metadata.schema_version != 1U && !trt_v2 && !trt_v3 && !trt_v4) {
         return Status::failure(ErrorCode::kSchemaViolation,
-                               "RunMetadata schema_version must be 1, TensorRT v2, or Result v3");
+                               "RunMetadata schema_version must be 1, TensorRT v2, Result v3, or Result v4");
     }
-    if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2 && !trt_v3) {
+    if (metadata.backend_type != "onnxruntime_cpu" && !trt_v2 && !trt_v3 && !trt_v4) {
         return Status::failure(ErrorCode::kSchemaViolation,
                                "RunMetadata backend_type is unsupported");
     }
@@ -121,13 +123,28 @@ core::Status validate_metadata(const RunMetadata& metadata) {
         return Status::failure(ErrorCode::kInvalidArgument,
                                "RunMetadata model_sha256 must be lowercase SHA256");
     }
-    if ((trt_v2 || trt_v3) && (metadata.artifact_kind != "tensorrt_engine" ||
+    if ((trt_v2 || trt_v3 || trt_v4) && (metadata.artifact_kind != "tensorrt_engine" ||
                    !is_lowercase_sha256(metadata.source_onnx_sha256) ||
                    !is_filename(metadata.engine_manifest_filename))) {
         return Status::failure(ErrorCode::kSchemaViolation,
-                               "TensorRT metadata is incomplete or invalid");
+                               "TensorRT metadata is incomplete or invalid: artifact_kind=" +
+                                   metadata.artifact_kind + ", source_onnx_sha256_length=" +
+                                   std::to_string(metadata.source_onnx_sha256.size()) +
+                                   ", engine_manifest_filename=" +
+                                   metadata.engine_manifest_filename);
     }
-    if (metadata.schema_version == 3U) {
+    if (metadata.schema_version == 4U) {
+        if (!metadata.precision_v4.has_value() || !metadata.precision_v4->int8_enabled ||
+            !metadata.precision_v4->fp16_enabled || metadata.precision_v4->host_io_dtype != "FP32" ||
+            !metadata.precision_v4->calibration.has_value())
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v4 precision/calibration metadata is incomplete");
+        const auto& calibration = *metadata.precision_v4->calibration;
+        if (calibration.algorithm != "IInt8EntropyCalibrator2" || calibration.source_split != "train" ||
+            calibration.image_count != 1260U || !is_lowercase_sha256(calibration.manifest_sha256) ||
+            !is_lowercase_sha256(calibration.cache_sha256) || !is_lowercase_sha256(calibration.cache_metadata_sha256))
+            return Status::failure(ErrorCode::kSchemaViolation, "Result v4 calibration metadata is invalid");
+    }
+    if (metadata.schema_version == 3U || metadata.schema_version == 4U) {
         if (!metadata.runtime_v3.has_value())
             return Status::failure(ErrorCode::kSchemaViolation, "Result v3 requires runtime metadata");
         const auto& runtime = *metadata.runtime_v3;
@@ -231,7 +248,7 @@ core::Status validate_summary(const RunSummary& summary,
                                "Result v1/v2 forbid runtime summary metadata");
     }
     // Schema v3: runtime_v3 is required
-    if (metadata.schema_version == 3U) {
+    if (metadata.schema_version == 3U || metadata.schema_version == 4U) {
         if (!summary.runtime_v3.has_value()) {
             return Status::failure(ErrorCode::kSchemaViolation,
                                    "Result v3 requires runtime summary metadata");
@@ -315,9 +332,10 @@ std::string serialize_run(const RunMetadata& metadata,
                           const RunSummary& summary) {
     std::ostringstream output;
     output.imbue(std::locale::classic());
-    const bool tensorrt_result =
-        metadata.schema_version == 2U || metadata.schema_version == 3U;
-    const bool result_v3 = metadata.schema_version == 3U;
+    const bool tensorrt_result = metadata.schema_version == 2U ||
+                                 metadata.schema_version == 3U ||
+                                 metadata.schema_version == 4U;
+    const bool result_v3 = metadata.schema_version == 3U || metadata.schema_version == 4U;
     output << "{\n"
            << "  \"schema_version\": " << metadata.schema_version << ",\n"
            << "  \"backend\": {\n"
@@ -341,6 +359,23 @@ std::string serialize_run(const RunMetadata& metadata,
     }
     output << "    ]\n"
            << "  },\n";
+    if (metadata.schema_version == 4U) {
+        const auto& precision = *metadata.precision_v4;
+        output << "  \"precision\": {\n"
+               << "    \"engine_compute_mode\": \"" << json_escape(precision.engine_compute_mode) << "\",\n"
+               << "    \"int8_enabled\": " << (precision.int8_enabled ? "true" : "false") << ",\n"
+               << "    \"fp16_enabled\": " << (precision.fp16_enabled ? "true" : "false") << ",\n"
+               << "    \"host_io_dtype\": \"" << json_escape(precision.host_io_dtype) << "\",\n"
+               << "    \"calibration\": {\n"
+               << "      \"algorithm\": \"" << json_escape(precision.calibration->algorithm) << "\",\n"
+               << "      \"source_split\": \"" << json_escape(precision.calibration->source_split) << "\",\n"
+               << "      \"image_count\": " << precision.calibration->image_count << ",\n"
+               << "      \"manifest_sha256\": \"" << precision.calibration->manifest_sha256 << "\",\n"
+               << "      \"cache_sha256\": \"" << precision.calibration->cache_sha256 << "\",\n"
+               << "      \"cache_metadata_sha256\": \"" << precision.calibration->cache_metadata_sha256 << "\"\n"
+               << "    }\n"
+               << "  },\n";
+    }
     if (result_v3) {
         output << "  \"runtime\": {\n"
                << "    \"mode\": \"" << json_escape(metadata.runtime_v3->runtime_mode) << "\",\n"

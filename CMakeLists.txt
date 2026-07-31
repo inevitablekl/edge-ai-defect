@@ -541,6 +541,20 @@ if(BUILD_TESTING)
     )
     add_test(NAME test_core COMMAND test_core)
 
+    add_executable(test_q4_runtime_integration
+        tests/test_q4_runtime_integration.cpp
+    )
+    target_link_libraries(test_q4_runtime_integration
+        PRIVATE edge_ai_runtime edge_ai_core)
+    add_test(
+        NAME q4_runtime_integration_focused
+        COMMAND test_q4_runtime_integration
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/q4_runtime_integration"
+    )
+    set_tests_properties(q4_runtime_integration_focused PROPERTIES
+        LABELS "stage-q;q4;runtime;integration"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
     add_executable(test_postprocessor_contract
         tests/test_postprocessor_contract.cpp
     )

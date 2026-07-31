@@ -30,11 +30,14 @@ Status failure(ErrorCode code, std::string message) {
 
 Status validate_config(const runtime::RuntimeConfig& config) {
     const bool supported_runtime_schema = config.schema_version == 3U ||
-                                          config.schema_version == 4U;
-    if (!supported_runtime_schema || config.backend_type != "tensorrt_fp16") {
+                                          config.schema_version == 4U ||
+                                          config.schema_version == 5U;
+    const bool supported_backend = config.backend_type == "tensorrt_fp16" ||
+                                   (config.schema_version == 5U && config.backend_type == "tensorrt_int8");
+    if (!supported_runtime_schema || !supported_backend) {
         return failure(ErrorCode::kSchemaViolation,
-                       "TensorRtEngine requires RuntimeConfig schema_version 3 or 4 "
-                       "and backend.type tensorrt_fp16");
+                       "TensorRtEngine requires RuntimeConfig schema_version 3, 4, or 5 "
+                       "and a supported TensorRT backend");
     }
     if (config.tensorrt.engine_path.empty() ||
         config.tensorrt.engine_manifest_path.empty()) {

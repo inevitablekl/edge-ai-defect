@@ -615,13 +615,17 @@ Status parse_model_v3(const YAML::Node& node,
                                config_directory, &output->model_contract_path);
 }
 
-Status parse_backend_v3(const YAML::Node& node, RuntimeConfig* output) {
+Status parse_backend_v3(const YAML::Node& node, RuntimeConfig* output,
+                        bool allow_int8 = false) {
     const Status mapping_status = validate_mapping(node, "backend", {"type"});
     if (!mapping_status.ok()) return mapping_status;
     Status status = parse_scalar(node["type"], "backend.type", &output->backend_type);
     if (!status.ok()) return status;
-    if (output->backend_type != "tensorrt_fp16") {
-        return schema_error("backend.type", "must be exactly 'tensorrt_fp16'");
+    if (output->backend_type != "tensorrt_fp16" &&
+        !(allow_int8 && output->backend_type == "tensorrt_int8")) {
+        return schema_error("backend.type", allow_int8
+                            ? "must be tensorrt_fp16 or tensorrt_int8"
+                            : "must be exactly 'tensorrt_fp16'");
     }
     return Status::success();
 }
@@ -716,14 +720,16 @@ Status parse_input_v4(const YAML::Node& node,
 
 Status parse_runtime_config_v4(const YAML::Node& root,
                                const std::filesystem::path& config_directory,
-                               RuntimeConfig* output) {
+                               RuntimeConfig* output,
+                               std::uint32_t schema_version = 4U,
+                               bool allow_int8 = false) {
     const Status root_status = validate_mapping(
         root, "$", {"schema_version", "backend", "tensorrt", "model", "runtime",
                      "input", "output", "postprocess", "timing"});
     if (!root_status.ok()) return root_status;
     RuntimeConfig config;
-    config.schema_version = 4;
-    Status status = parse_backend_v3(root["backend"], &config);
+    config.schema_version = schema_version;
+    Status status = parse_backend_v3(root["backend"], &config, allow_int8);
     if (!status.ok()) return status;
     status = parse_tensorrt_v3(root["tensorrt"], config_directory, &config);
     if (!status.ok()) return status;
@@ -763,7 +769,10 @@ Status parse_runtime_config(const YAML::Node& root,
     if (schema_version == 4) {
         return parse_runtime_config_v4(root, config_directory, output);
     }
-    return schema_error("schema_version", "must be exactly 1, 2, 3, or 4");
+    if (schema_version == 5) {
+        return parse_runtime_config_v4(root, config_directory, output, 5U, true);
+    }
+    return schema_error("schema_version", "must be exactly 1, 2, 3, 4, or 5");
 }
 
 }  // namespace

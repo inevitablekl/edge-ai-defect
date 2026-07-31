@@ -27,8 +27,11 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
                                    const RunOptions& options,
                                    const model::TensorRtEngineManifest* manifest) {
     runtime::RunMetadata metadata;
-    const bool tensorrt = config.backend_type == "tensorrt_fp16";
-    metadata.schema_version = config.schema_version == 4U ? 3U : (tensorrt ? 2U : 1U);
+    const bool tensorrt = config.backend_type == "tensorrt_fp16" ||
+                          config.backend_type == "tensorrt_int8";
+    const bool int8 = config.backend_type == "tensorrt_int8";
+    metadata.schema_version = config.schema_version == 5U ? 4U
+                            : (config.schema_version == 4U ? 3U : (tensorrt ? 2U : 1U));
     metadata.backend_type = config.backend_type;
     metadata.model_filename = tensorrt
                                   ? config.tensorrt.engine_path.filename().string()
@@ -43,11 +46,25 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
         metadata.engine_manifest_filename =
             config.tensorrt.engine_manifest_path.filename().string();
     }
+    if (int8 && manifest != nullptr) {
+        metadata.precision_v4 = runtime::PrecisionMetadataV4{
+            manifest->precision_mode,
+            manifest->int8_enabled,
+            manifest->fp16_fallback_enabled,
+            manifest->host_io_dtype,
+            runtime::CalibrationMetadataV4{
+                "IInt8EntropyCalibrator2",
+                "train",
+                1260U,
+                manifest->calibration_manifest_sha256,
+                manifest->calibration_cache_sha256,
+                manifest->cache_metadata_sha256}};
+    }
     metadata.class_names = contract.class_names;
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled =
         options.timing_enabled_override.value_or(config.timing_enabled);
-    if (config.schema_version == 4U) {
+    if (config.schema_version == 4U || config.schema_version == 5U) {
         metadata.runtime_v3 = runtime::RuntimeMetadataV3{
             config.runtime_mode,
             config.input_type,
@@ -69,7 +86,7 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
     core::Status status = model::ModelContractLoader::load(config.model_contract_path, &contract);
     if (!status.ok()) return {status, false};
     std::unique_ptr<model::TensorRtEngineManifest> manifest;
-    if (config.backend_type == "tensorrt_fp16") {
+    if (config.backend_type == "tensorrt_fp16" || config.backend_type == "tensorrt_int8") {
         manifest = std::make_unique<model::TensorRtEngineManifest>();
         status = model::TensorRtEngineManifestLoader::load(
             config.tensorrt.engine_manifest_path, &contract, manifest.get());
@@ -101,7 +118,7 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
         return {core::Status::failure(core::ErrorCode::kInvalidArgument,
                                       "run summary must not be null"), false};
     }
-    if (config.schema_version == 4U && config.runtime_mode == "pipeline") {
+    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(source, preprocessor, model_input_info,
                                        engine, postprocessor, sink,
                                        config.pipeline.queue_capacity,
@@ -131,7 +148,7 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     }
 
     std::unique_ptr<model::TensorRtEngineManifest> manifest;
-    if (config.backend_type == "tensorrt_fp16") {
+    if (config.backend_type == "tensorrt_fp16" || config.backend_type == "tensorrt_int8") {
         manifest = std::make_unique<model::TensorRtEngineManifest>();
         status = model::TensorRtEngineManifestLoader::load(
             config.tensorrt.engine_manifest_path, &contract, manifest.get());
@@ -187,7 +204,7 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
 
     const runtime::RunMetadata metadata = make_metadata(
         config, contract, options, manifest.get());
-    if (config.schema_version == 4U && config.runtime_mode == "pipeline") {
+    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(*source, preprocessor,
                                        contract.input.tensor_info, *engine,
                                        postprocessor, *sink,
