@@ -195,13 +195,15 @@ if(EDGE_AI_ENABLE_TENSORRT)
         PATHS /usr/include/aarch64-linux-gnu /usr/include /usr/local/cuda/include
               /usr/local/cuda/targets/aarch64-linux/include)
     find_library(EDGE_AI_TENSORRT_LIBRARY NAMES nvinfer)
+    find_library(EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY NAMES nvonnxparser)
     if(NOT EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR OR
        NOT EDGE_AI_TENSORRT_CUDART_LIBRARY OR
        NOT EDGE_AI_TENSORRT_INCLUDE_DIR OR
-       NOT EDGE_AI_TENSORRT_LIBRARY)
+       NOT EDGE_AI_TENSORRT_LIBRARY OR
+       NOT EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY)
         message(FATAL_ERROR
             "EDGE_AI_ENABLE_TENSORRT=ON requires cuda_runtime_api.h, libcudart.so, "
-            "NvInfer.h, and libnvinfer.so")
+            "NvInfer.h, libnvinfer.so, and libnvonnxparser.so")
     endif()
     add_library(edge_ai_backend_trt STATIC
         src/tensorrt_engine.cpp
@@ -213,6 +215,19 @@ if(EDGE_AI_ENABLE_TENSORRT)
         ${EDGE_AI_TENSORRT_INCLUDE_DIR})
     target_link_libraries(edge_ai_backend_trt PUBLIC
         edge_ai_core ${EDGE_AI_TENSORRT_CUDART_LIBRARY} ${EDGE_AI_TENSORRT_LIBRARY})
+    add_library(edge_ai_stage_q_builder STATIC src/stage_q_int8_builder.cpp)
+    target_include_directories(edge_ai_stage_q_builder PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR}
+        ${EDGE_AI_TENSORRT_INCLUDE_DIR}
+        ${OpenCV_INCLUDE_DIRS})
+    target_link_libraries(edge_ai_stage_q_builder PUBLIC
+        edge_ai_core yaml-cpp OpenSSL::Crypto opencv_imgcodecs
+        ${EDGE_AI_TENSORRT_CUDART_LIBRARY}
+        ${EDGE_AI_TENSORRT_LIBRARY}
+        ${EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY})
+    add_executable(stage_q_int8_builder tools/stage_q_int8_builder.cpp)
+    target_link_libraries(stage_q_int8_builder PRIVATE edge_ai_stage_q_builder)
 else()
     add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
     target_include_directories(edge_ai_backend_trt PUBLIC
@@ -411,6 +426,15 @@ if(BUILD_TESTING)
     )
 
     if(EDGE_AI_ENABLE_TENSORRT)
+        add_test(
+            NAME stage_q_builder_focused
+            COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_q_builder.py
+                $<TARGET_FILE:stage_q_int8_builder>
+        )
+        set_tests_properties(stage_q_builder_focused PROPERTIES
+            LABELS "stage-q;builder;smoke"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
         add_test(
             NAME stage_k_raw_tensor_runner_tensorrt
             COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
