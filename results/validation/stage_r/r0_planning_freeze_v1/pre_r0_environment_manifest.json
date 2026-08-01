@@ -34,9 +34,9 @@
     "model_contract": "configs/model_contracts/yolov8n_neudet_frozen.yaml",
     "test_manifest": "data/yolo/neu_det/test_manifest.json"
   },
-  "source_evidence": "Stage J environment audit (J1 discovery) and Stage Q Q1 platform preflight",
-  "source_evidence_sha256": "derived_from_frozen_stage_j_and_stage_q_evidence",
-  "verification_result": "VALID",
+  "source_evidence": "results/validation/stage_r/r0_planning_freeze_v1/pre_r0_environment_source_evidence.json",
+  "source_evidence_sha256": "0f601f7f76d90b66a0308a3fa884b6eb359155b46565777ef8a919bc9cfeddfa",
+  "verification_result": "PASS",
   "verification_timestamp": "2026-08-01",
   "verification_notes": "Environment facts verified via read-only system queries. No hardware experiments run in R0. INT8 engine is local-only; its existence is asserted from Q3 evidence, not independently verified in R0."
 }

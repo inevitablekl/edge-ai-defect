@@ -3390,3 +3390,8 @@ USER REVIEW OF R0 COMMIT
 - CUDA preprocessing, TensorRT device-input capability, Phase Barrier,
   profiling instrumentation, Double Buffer 尚未开始。
 - 无 push、merge、rebase、tag、build、CTest 或硬件实验执行。
+
+## 2026-08-02 — Stage R R0 Provenance Remediation
+
+- R1 第一次入口验证因 R0 manifest provenance 占位值阻断；没有进入 R1。
+  provenance remediation 已完成，R0 Gate 恢复为 `R0_PASS`；R1 等待用户审查后重新授权。

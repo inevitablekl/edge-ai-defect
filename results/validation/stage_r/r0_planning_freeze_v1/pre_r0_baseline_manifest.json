@@ -19,16 +19,9 @@
   "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
   "canonical_detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
   "cycle_length": 180,
-  "source_evidence": [
-    "results/validation/stage_q/q5_accuracy_v1/expected_int8_cycle_sha.json",
-    "results/validation/stage_q/q5_accuracy_v1/int8_result.json",
-    "results/build/tensorrt/q3_int8_engine_v1/layer_precision_audit_summary.json",
-    "results/build/tensorrt/q3_int8_engine_v1/formal_calibration_manifest.json",
-    "docs/personal/STAGE_Q_EVIDENCE_INDEX.md",
-    "docs/personal/STAGE_Q_FINAL_REPORT.md"
-  ],
-  "source_evidence_sha256": "frozen_at_git_commit_verification_only",
-  "verification_result": "PRE_R0_VERIFIED",
+  "source_evidence": "results/validation/stage_r/r0_planning_freeze_v1/pre_r0_baseline_source_evidence.json",
+  "source_evidence_sha256": "f7091e171ceb21a51ab051ac39c07294db209aca086f47a925c7dfd851062790",
+  "verification_result": "PASS",
   "verification_timestamp": "2026-08-01",
   "verification_notes": "All expected and observed baseline/tag values match. Worktree clean. Target branch created from exact baseline. No diff against baseline."
 }
