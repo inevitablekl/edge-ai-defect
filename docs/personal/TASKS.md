@@ -3367,7 +3367,7 @@ R0:
 R0_PASS
 
 R1:
-NOT AUTHORIZED
+R1_PASS
 
 R2–R6:
 NOT AUTHORIZED
@@ -3452,3 +3452,25 @@ USER REVIEW OF R0 COMMIT
   authorized bounded capture.
 - R2: `NOT AUTHORIZED PENDING USER REVIEW`
 - R3–R6: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R1 Final Bounded Nsight Capture
+
+- Historical initial blocker retained: `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`.
+- `cudaProfilerApi` remediation: `PASS`.
+- The single authorized bounded capture used Nsight Systems
+  `2024.5.4.34-245434855735v0` with `capture-range=cudaProfilerApi` and
+  `capture-range-end=stop`; no NVTX capture-range trigger was used.
+- Current HEAD was
+  `6e3481436a1c697495b96508cde3fd3cbcc19e1b`; application warmup/measured was
+  `180/180`, drop `0`, application exit `0`, EOS `PASS`, and worker join
+  `PASS`.
+- Result JSON remained schema v4. Detection SHA was
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Bounded capture: `PASS`; one measured NVTX range was observed with duration
+  `1.250797472 s`. CUDA activity observations included H2D, D2H, TensorRT
+  enqueue/kernel activity, and synchronization. Nsight was not used to
+  recalculate throughput or replace the existing performance authority.
+- Tracked summary: `results/validation/stage_r/r1_baseline_profiling_v1/nsight_capture_summary.json`.
+- R1: `R1_PASS`
+- V2/V3/V4: `NOT IMPLEMENTED`
+- R2: `NOT AUTHORIZED`

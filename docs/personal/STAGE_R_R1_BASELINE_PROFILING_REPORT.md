@@ -2,10 +2,10 @@
 
 ## Verdict
 
-R1 is `BLOCKED_PENDING_CAPTURE`: the V0 canonical and profiling perturbation
-sub-gates pass, but the bounded Nsight capture has not been run. The initial
-missing-tool blocker and subsequent capture-control defects are retained
-below. R2 is not authorized by this report.
+R1 is `R1_PASS`: the V0 canonical and profiling perturbation sub-gates pass,
+and the final bounded Nsight Systems capture completed with the CUDA Profiler
+API boundary. The initial missing-tool blocker and subsequent capture-control
+defects are retained below as history. R2 is not authorized by this report.
 
 ## Entry and environment
 
@@ -131,12 +131,23 @@ Nsight Systems was subsequently installed from the configured Jetson source:
 `stage_r_experiment_runner` had no measured NVTX capture boundary. This
 remediation adds that boundary and passes the source/evidence contract tests.
 
-The bounded Nsight capture is explicitly **NOT RUN** in this changeset. No raw
-trace, capture duration, captured frame count, or CUDA activity observation is
-claimed. The previous `NSYS_NVTX_CAPTURE_RANGE_UNRESOLVED` diagnosis is
-retained; this changeset prepares the CUDA Profiler API fallback without
-executing capture. Nsight is not treated as a formal throughput/latency
-authority.
+The initial blocker `R1_BLOCKED_NSIGHT_CAPTURE_FAILED` and the
+`NSYS_NVTX_CAPTURE_RANGE_UNRESOLVED` diagnosis remain historical records. The
+final bounded capture used `cudaProfilerApi` with `--capture-range-end=stop`,
+`--sample=none`, `--cpuctxsw=none`, and `--trace=cuda,nvtx,osrt`.
+
+The application completed with exit 0, warmup 180, measured 180, drop 0,
+EOS PASS, and worker join PASS. The Result JSON is schema v4 and its
+detection SHA is
+`12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+Nsight produced both raw outputs. SQLite contains one
+`stage_r.measured` range with duration `1.250797472` seconds, 180 H2D copies,
+180 D2H copies, 180 TensorRT enqueue ranges, CUDA kernel activity, and 360
+`cudaStreamSynchronize` calls. The capture began after warmup and covered the
+measured phase only. `cudaProfilerStart`/`cudaProfilerStop` remediation is
+PASS; the Nsight bounded capture is PASS. Nsight remains observation-only and
+is not a formal throughput/latency authority. Full details and raw hashes are
+in `results/validation/stage_r/r1_baseline_profiling_v1/nsight_capture_summary.json`.
 
 ## Scope audit
 
@@ -150,7 +161,9 @@ authority.
 - GPU NMS, Zero-Copy, mapped memory, generic BufferManager, and generic async inference API: NOT IMPLEMENTED
 - Result JSON: v4 unchanged
 - Stage Q configs and Evidence: unchanged
-- R2-R6: not executed
+- V2/V3/V4: NOT IMPLEMENTED
+- R2: NOT AUTHORIZED
+- R3-R6: not executed
 
 ## Tests and builds
 
@@ -164,12 +177,30 @@ authority.
 - Related CTest: PASS, 5/5 (OFF and ON)
 - CUDA Profiler API boundary: one start/stop pair, measured-only, verified by
   the capture-control contract test
+- cudaProfilerApi remediation: PASS
+- bounded Nsight capture: PASS
 - Sanitizer: NOT CONFIGURED
-- Nsight bounded capture: NOT RUN - explicitly deferred after control remediation
+- Nsight bounded capture: PASS; raw report and SQLite are local-only
 
 ## Evidence
 
 Tracked Evidence is under
-results/validation/stage_r/r1_baseline_profiling_v1/. Full Result JSON and
-raw per-sample output were local-only during analysis and were not included in
-tracked Evidence.
+results/validation/stage_r/r1_baseline_profiling_v1/. The bounded capture
+summary is tracked at
+results/validation/stage_r/r1_baseline_profiling_v1/nsight_capture_summary.json.
+The full Result JSON and raw Nsight report/SQLite export remain local-only
+during analysis.
+
+## Final bounded Nsight capture
+
+- commit: `6e3481436a1c697495b96508cde3fd3cbcc19e1b`
+- nsys: `2024.5.4.34-245434855735v0`
+- mechanism: `cudaProfilerApi`
+- warmup/measured: `180/180`
+- capture duration: `1.250797472 s` for the single measured NVTX range
+- application exit: `0`; nsys exit: `0`
+- detection SHA: `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`
+- Result JSON: schema v4, EOS PASS, worker join PASS, drop 0
+- remediation: `cudaProfilerApi PASS`; bounded capture: `PASS`
+- raw local-only SHA values are recorded in the tracked capture summary
+- performance authority: `false`
