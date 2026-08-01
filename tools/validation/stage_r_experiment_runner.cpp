@@ -12,6 +12,7 @@
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 
 #include <openssl/evp.h>
+#include <cuda_profiler_api.h>
 #include <opencv2/core.hpp>
 #include <nvToolsExt.h>
 
@@ -338,14 +339,24 @@ int main(int argc, char** argv) {
     MetricsSink metrics(*composite);
     const RunMetadata measured_metadata = make_metadata(config, contract, *manifest, true);
     nvtxMarkA("stage_r.measured_phase_start");
+    const cudaError_t profiler_start_status = cudaProfilerStart();
+    if (profiler_start_status != cudaSuccess) {
+        std::cerr << "cudaProfilerStart failed: " << static_cast<int>(profiler_start_status) << '\n';
+        return 4;
+    }
     nvtxRangePushA("stage_r.measured");
     const auto measured_start = std::chrono::steady_clock::now();
     RunSummary measured_summary;
     status = run_phase(config, *measured_source, preprocessor, contract.input.tensor_info,
                        *inference_engine, postprocessor, metrics, measured_metadata, &measured_summary);
     const auto measured_end = std::chrono::steady_clock::now();
+    const cudaError_t profiler_stop_status = cudaProfilerStop();
     nvtxMarkA("stage_r.measured_phase_end");
     nvtxRangePop();
+    if (profiler_stop_status != cudaSuccess) {
+        std::cerr << "cudaProfilerStop failed: " << static_cast<int>(profiler_stop_status) << '\n';
+        return 4;
+    }
     if (!status.ok() || metrics.frames() != a.measured_frames ||
         measured_summary.processed_images != a.measured_frames ||
         hash_sink.cycle_hashes().size() != a.measured_frames / 180U) {

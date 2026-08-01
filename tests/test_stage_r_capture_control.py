@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contract checks for the Stage R measured NVTX capture boundary."""
+"""Contract checks for the Stage R measured capture boundaries."""
 
 import argparse
 import json
@@ -10,6 +10,8 @@ START_MARKER = 'nvtxMarkA("stage_r.measured_phase_start");'
 RANGE_BEGIN = 'nvtxRangePushA("stage_r.measured");'
 END_MARKER = 'nvtxMarkA("stage_r.measured_phase_end");'
 RANGE_END = "nvtxRangePop();"
+PROFILER_START = "cudaProfilerStart()"
+PROFILER_STOP = "cudaProfilerStop()"
 EXPECTED_SHA = "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
 
 
@@ -30,6 +32,8 @@ def main() -> int:
         (RANGE_BEGIN, "measured range begin"),
         (END_MARKER, "measured end marker"),
         (RANGE_END, "measured range end"),
+        (PROFILER_START, "CUDA profiler start"),
+        (PROFILER_STOP, "CUDA profiler stop"),
     ):
         require(source.count(expression) == 1, f"{name} must occur exactly once")
 
@@ -38,10 +42,16 @@ def main() -> int:
     start_marker = source.index(START_MARKER)
     range_begin = source.index(RANGE_BEGIN)
     measured = source.index("status = run_phase(config, *measured_source")
+    measured_end_timestamp = source.index("const auto measured_end =")
+    profiler_start = source.index(PROFILER_START)
+    profiler_stop = source.index(PROFILER_STOP)
     end_marker = source.index(END_MARKER)
     range_end = source.index(RANGE_END)
-    require(warmup < metrics < start_marker < range_begin < measured < end_marker < range_end,
-            "NVTX boundary order does not match warmup -> measured contract")
+    require(warmup < metrics < start_marker < profiler_start < range_begin < measured <
+            measured_end_timestamp < profiler_stop < end_marker < range_end,
+            "capture boundary order does not match warmup -> measured contract")
+    require(source[:profiler_start].count(PROFILER_START) == 0,
+            "CUDA profiler start must not occur during warmup")
 
     require(source.count("metrics.frames() != a.measured_frames") == 1,
             "measured frame-count validation changed")

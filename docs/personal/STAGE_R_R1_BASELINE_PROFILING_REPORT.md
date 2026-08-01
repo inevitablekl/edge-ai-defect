@@ -2,10 +2,10 @@
 
 ## Verdict
 
-R1 is `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`: the V0 canonical and profiling
-perturbation sub-gates pass, but the bounded Nsight capture has not been run.
-The initial missing-tool blocker and the subsequent capture-control defect are
-retained below. R2 is not authorized by this report.
+R1 is `BLOCKED_PENDING_CAPTURE`: the V0 canonical and profiling perturbation
+sub-gates pass, but the bounded Nsight capture has not been run. The initial
+missing-tool blocker and subsequent capture-control defects are retained
+below. R2 is not authorized by this report.
 
 ## Entry and environment
 
@@ -55,18 +55,22 @@ samples only the existing V0 stream. Off mode creates no events and emits no
 samples.
 
 The capture-control remediation adds `nvToolsExt.h` markers only around the
-measured invocation. After the measured sink and its counter have been
-constructed, the exact order is:
+measured invocation. The CUDA Profiler API fallback adds one profiler start
+and one profiler stop around the same measured invocation. After the measured
+sink and its counter have been constructed, the exact order is:
 
 ```text
 nvtxMarkA("stage_r.measured_phase_start")
+cudaProfilerStart()
 nvtxRangePushA("stage_r.measured")
 measured phase
+cudaProfilerStop()
 nvtxMarkA("stage_r.measured_phase_end")
 nvtxRangePop()
 ```
 
-The NVTX calls are capture-boundary annotations only. They do not participate
+The NVTX calls and CUDA Profiler API calls are capture-boundary controls only.
+The profiler calls are outside the measured timing interval; none participate
 in throughput or latency calculations, and Result JSON v4 is unchanged.
 
 ## Baseline equivalence
@@ -129,7 +133,10 @@ remediation adds that boundary and passes the source/evidence contract tests.
 
 The bounded Nsight capture is explicitly **NOT RUN** in this changeset. No raw
 trace, capture duration, captured frame count, or CUDA activity observation is
-claimed. Nsight is not treated as a formal throughput/latency authority.
+claimed. The previous `NSYS_NVTX_CAPTURE_RANGE_UNRESOLVED` diagnosis is
+retained; this changeset prepares the CUDA Profiler API fallback without
+executing capture. Nsight is not treated as a formal throughput/latency
+authority.
 
 ## Scope audit
 
@@ -155,6 +162,8 @@ claimed. Nsight is not treated as a formal throughput/latency authority.
 - TensorRT engine target compiled: PASS
 - Stage R capture-control contract test: PASS (OFF and ON)
 - Related CTest: PASS, 5/5 (OFF and ON)
+- CUDA Profiler API boundary: one start/stop pair, measured-only, verified by
+  the capture-control contract test
 - Sanitizer: NOT CONFIGURED
 - Nsight bounded capture: NOT RUN - explicitly deferred after control remediation
 

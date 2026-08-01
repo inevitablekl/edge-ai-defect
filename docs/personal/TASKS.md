@@ -3413,6 +3413,24 @@ USER REVIEW OF R0 COMMIT
 - R2: `NOT AUTHORIZED PENDING USER REVIEW`
 - R3–R6: `NOT AUTHORIZED`
 
+## 2026-08-02 — Stage R R1 CUDA Profiler Capture Control Fallback
+
+- The prior `R1_BLOCKED_NSIGHT_CAPTURE_FAILED` and
+  `NSYS_NVTX_CAPTURE_RANGE_UNRESOLVED` diagnoses remain historical records.
+- Added the minimal CUDA Profiler API fallback in
+  `tools/validation/stage_r_experiment_runner.cpp`: after warmup and the
+  measured-phase start marker, one `cudaProfilerStart()` is issued before the
+  first measured frame; after the measured phase and timing end timestamp, one
+  `cudaProfilerStop()` is issued before the measured-phase end marker.
+- Warmup, frame counts, inference order, streams, synchronization, timing
+  calculations, detection SHA, and Result JSON v4 contracts are unchanged.
+- TensorRT-OFF and TensorRT-ON Release builds passed. Related CTest passed 5/5
+  in both build trees; the capture-control test passed in both.
+- No application experiment or Nsight capture was executed. R1 remains
+  `BLOCKED_PENDING_CAPTURE`.
+- R2: `NOT AUTHORIZED`
+- V2/V3/V4: `NOT AUTHORIZED`
+
 ## 2026-08-02 — Stage R R1 Nsight Capture Control Remediation
 
 - Initial R1 Nsight blocker remains recorded as `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`

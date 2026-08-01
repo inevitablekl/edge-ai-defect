@@ -32,6 +32,15 @@ if(NOT EDGE_AI_NVTX_INCLUDE_DIR OR NOT EDGE_AI_NVTX_LIBRARY)
         "Stage R Nsight capture markers require nvToolsExt.h and libnvToolsExt.so")
 endif()
 
+find_path(EDGE_AI_CUDA_PROFILER_INCLUDE_DIR cuda_profiler_api.h
+    PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include)
+find_library(EDGE_AI_CUDART_LIBRARY NAMES cudart
+    PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib)
+if(NOT EDGE_AI_CUDA_PROFILER_INCLUDE_DIR OR NOT EDGE_AI_CUDART_LIBRARY)
+    message(FATAL_ERROR
+        "Stage R CUDA profiler fallback requires cuda_profiler_api.h and libcudart.so")
+endif()
+
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
     "Enable tests requiring the local frozen ONNX asset"
@@ -393,10 +402,12 @@ target_link_libraries(stage_r_experiment_runner
         OpenSSL::Crypto
         edge_ai_backend_trt
         ${EDGE_AI_NVTX_LIBRARY}
+        ${EDGE_AI_CUDART_LIBRARY}
 )
 target_include_directories(stage_r_experiment_runner
     PRIVATE
         ${EDGE_AI_NVTX_INCLUDE_DIR}
+        ${EDGE_AI_CUDA_PROFILER_INCLUDE_DIR}
 )
 set_target_properties(stage_r_experiment_runner
     PROPERTIES
