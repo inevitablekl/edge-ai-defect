@@ -3474,3 +3474,44 @@ USER REVIEW OF R0 COMMIT
 - R1: `R1_PASS`
 - V2/V3/V4: `NOT IMPLEMENTED`
 - R2: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R2 Planning Freeze
+
+- R1: `PASS`；R2 Entry Review: `PASS`；当前 HEAD 为
+  `c488283fdc1e328588a0f90430b058b84c9e064e`。
+- R2 Plan: `FINAL`；本轮仅完成 documentation-only planning freeze，未执行
+  CUDA kernel、生产代码、CMake、编译或实验。
+- V2 唯一路径冻结为：decoded `cv::Mat` → CPU row-aware raw staging → raw
+  H2D → CUDA fused preprocessing → TensorRT device input → existing TensorRT
+  output path → existing postprocess。
+- CPU 只负责 decode、geometry metadata 和 raw staging copy；CUDA 负责 resize、
+  padding、BGR→RGB、float32 normalization、HWC→CHW。
+- V3 只允许 pinned raw buffer、device raw buffer、device FP32 input buffer；
+  pinned output、mapped memory、zero-copy、double buffer 和跨帧 overlap 禁止。
+- `TensorRtDeviceInputCapability` 仅允许存在于 `backend_tensorrt`，不得进入
+  `IInferenceEngine`、`HostTensor` 或 runtime core。
+- CUDA kernel I/O、R2 correctness thresholds 和 implementation file whitelist
+  已冻结于 `STAGE_R_EXECUTION_PLAN.md`、`STAGE_R_TASK_CARDS.md` 和 D084。
+- R2: `NOT AUTHORIZED`；必须等待后续明确的 R2 implementation authorization。
+
+## 2026-08-02 — Stage R R2.1 CUDA Preprocessing Foundation
+
+- User authorization contract for this task: R2.1 `AUTHORIZED`; R2.2 and R2.3
+  `NOT STARTED`.
+- Added an isolated CUDA preprocessing foundation under `backend_tensorrt/`.
+  It reuses the existing CPU `compute_letterbox_geometry()` helper and accepts
+  host uint8 BGR data, width, height, row stride, and CPU geometry metadata.
+- The CUDA path produces a device FP32 NCHW `[1,3,640,640]` tensor and performs
+  only resize, padding value 114, BGR-to-RGB, `/255`, and HWC-to-CHW. It does
+  not call TensorRT enqueue and does not modify `IInferenceEngine`, `HostTensor`,
+  ORT, FP16, PipelineRunner, or Result JSON v4.
+- Resource lifetime contract: one stream and persistent raw/output device
+  buffers are created during `create()`; `preprocess()` contains no
+  `cudaMalloc`, `cudaFree`, or stream creation.
+- Added a CUDA OFF CMake option path, kernel contract test, and an independent
+  16-entry CPU-vs-CUDA tensor gate. No FPS, latency, throughput, or benchmark
+  result is recorded.
+- Real tensor gate result:
+  `MAE=0.000412164`, `P99=0.00392163`, `max=0.00392163`, `non-finite=0`,
+  status `PASS`; all geometry cases passed.
+- R2.1 status: `COMPLETE`; R2.2: `NOT STARTED`; R2.3: `NOT STARTED`.

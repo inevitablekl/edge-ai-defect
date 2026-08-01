@@ -1136,6 +1136,101 @@ Completes:
 - task accuracy;
 - V2/V3 identity.
 
+### R2 Planning Freeze — Final Execution Contract
+
+```text
+R2 Plan:
+FINAL
+
+R2 implementation:
+NOT AUTHORIZED
+
+Planning freeze:
+DOCUMENTATION-ONLY
+```
+
+This section is the unique R2 implementation contract. It freezes the minimum
+Stage R data path and correctness boundary; it does not authorize production
+implementation, build, or experiment execution.
+
+V2 pageable path:
+
+```text
+decoded cv::Mat
+→ CPU row-aware raw staging
+→ cudaMemcpyAsync H2D
+→ CUDA fused preprocessing
+→ TensorRT device input
+→ existing TensorRT output path
+→ existing postprocess
+```
+
+The CPU may decode images, compute geometry metadata, and perform the required
+row-aware raw staging copy. CPU must not perform the V2/V3 functional pixel
+transform. CUDA performs resize, padding, BGR→RGB, float32 normalization, and
+HWC→CHW.
+
+V3 is the same path with long-lived pinned raw staging. The only newly allowed
+resources are a pinned raw buffer, a device raw buffer, and a device FP32 input
+buffer. Pinned output, mapped memory, zero-copy, and double buffering are
+forbidden. V2/V3 use one CUDA stream, one TensorRT ExecutionContext, and no
+cross-frame overlap.
+
+TensorRtDeviceInputCapability exists only inside backend_tensorrt. It may
+receive a device FP32 NCHW input and return the existing FP32 HostTensor
+output through the existing TensorRT output path. It must not enter
+IInferenceEngine, HostTensor, or runtime core.
+
+The current generic PipelineRunner and packet contract carry HostTensor input.
+V2/V3 must therefore use a Stage R-specific data-path adapter/runner or an
+equivalent backend-specific execution path. CUDA types must not be added to
+the public generic PipelineRunner, packet types, or common runtime contract.
+
+CUDA fused preprocessing has this fixed contract:
+
+```text
+Input:  uint8 BGR raw image, width, height, row stride, geometry metadata
+Output: float32 device NCHW [1,3,640,640]
+```
+
+The kernel boundary excludes NMS, decode, Result JSON generation, and
+TensorRT enqueue.
+
+R2 correctness evidence is fixed as follows:
+
+- 16-image tensor gate: MAE `<= 5e-4`, P99 `<= 2/255 + 1e-6`, maximum
+  `<= 4/255 + 1e-6`, non-finite count `0`;
+- 180-image task accuracy thresholds remain the R2 Task Card thresholds;
+- V2 and V3 tensor digests must be identical;
+- V2 and V3 detection SHA values must be identical;
+- V0 canonical SHA and Stage Q correctness authority remain unchanged;
+- Result JSON v4 remains unchanged, with CUDA-specific evidence in separate
+  Stage R evidence/manifest records.
+
+Implementation-phase file whitelist:
+
+```text
+backend_tensorrt/
+stage_r/
+tools/validation/
+tests/
+configs/stage_r/
+CMakeLists.txt
+docs/personal/
+results/validation/stage_r/
+```
+
+The following are protected and must not be modified by R2:
+
+```text
+HostTensor public contract
+IInferenceEngine
+ORT backend
+FP16 backend
+Result JSON v4
+Stage Q Evidence
+```
+
 ## R3 — Formal Performance
 
 Completes:

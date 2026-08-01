@@ -19,6 +19,12 @@ option(
     OFF
 )
 
+option(
+    EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING
+    "Build the Stage R R2.1 CUDA preprocessing foundation"
+    OFF
+)
+
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
 find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 find_package(OpenSSL REQUIRED)
@@ -260,6 +266,45 @@ else()
     add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
     target_include_directories(edge_ai_backend_trt PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+endif()
+
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
+    enable_language(CUDA)
+    find_path(EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR cuda_runtime_api.h
+        PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include
+              /usr/include /usr/include/aarch64-linux-gnu)
+    find_library(EDGE_AI_STAGE_R_CUDART_LIBRARY NAMES cudart
+        PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib
+              /usr/local/cuda-12.6/targets/aarch64-linux/lib)
+    if(NOT EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR OR
+       NOT EDGE_AI_STAGE_R_CUDART_LIBRARY)
+        message(FATAL_ERROR
+            "EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING=ON requires "
+            "cuda_runtime_api.h and libcudart.so")
+    endif()
+
+    add_library(edge_ai_stage_r_cuda_preprocess STATIC
+        backend_tensorrt/cuda_preprocessor.cu
+    )
+    set_target_properties(edge_ai_stage_r_cuda_preprocess PROPERTIES
+        CUDA_STANDARD 17
+        CUDA_STANDARD_REQUIRED ON
+        CUDA_EXTENSIONS OFF
+        # Keep the target architecture supplied by the deployment environment;
+        # the specific Jetson target remains a Stage R environment fact.
+        CUDA_ARCHITECTURES OFF
+    )
+    target_include_directories(edge_ai_stage_r_cuda_preprocess
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+    )
+    target_link_libraries(edge_ai_stage_r_cuda_preprocess
+        PUBLIC
+            edge_ai_core
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY}
+    )
 endif()
 
 add_library(edge_ai_postprocess STATIC
@@ -871,6 +916,40 @@ if(BUILD_TESTING)
     target_link_libraries(test_stage_r_runtime PRIVATE edge_ai_runtime)
     add_test(NAME stage_r_runtime COMMAND test_stage_r_runtime)
     set_tests_properties(stage_r_runtime PROPERTIES LABELS "stage-r;runtime;sampling")
+
+    if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
+        add_executable(test_stage_r_cuda_preprocess
+            tests/test_stage_r_cuda_preprocess.cpp
+        )
+        target_link_libraries(test_stage_r_cuda_preprocess
+            PRIVATE edge_ai_stage_r_cuda_preprocess
+        )
+        set_target_properties(test_stage_r_cuda_preprocess PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(NAME stage_r_cuda_preprocess
+            COMMAND test_stage_r_cuda_preprocess
+        )
+        set_tests_properties(stage_r_cuda_preprocess PROPERTIES
+            LABELS "stage-r;r2.1;cuda;preprocess;correctness"
+            SKIP_RETURN_CODE 77
+        )
+
+        add_executable(stage_r_cuda_preprocess_gate
+            tools/validation/stage_r_cuda_preprocess_gate.cpp
+        )
+        target_link_libraries(stage_r_cuda_preprocess_gate
+            PRIVATE
+                edge_ai_stage_r_cuda_preprocess
+                edge_ai_core
+                yaml-cpp
+                opencv_imgcodecs
+                OpenSSL::Crypto
+        )
+        set_target_properties(stage_r_cuda_preprocess_gate PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
+        )
+    endif()
 
     add_test(
         NAME stage_r_capture_control

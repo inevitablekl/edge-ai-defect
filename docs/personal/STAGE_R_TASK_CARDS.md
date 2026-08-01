@@ -276,6 +276,111 @@ Condition: geometry PASS, tensor PASS, task accuracy PASS, V2/V3 identity PASS.
 R3_AUTHORIZED_AFTER_R2_PASS_AND_USER_REVIEW
 ```
 
+### R2 Planning Freeze — Unique Execution Contract
+
+The following contract is frozen for R2 and takes precedence over any
+underspecified implementation detail in this card. This is a planning-only
+freeze; it does not authorize implementation.
+
+#### V2 Pageable Data Path
+
+```text
+decoded cv::Mat
+→ CPU row-aware raw staging
+→ cudaMemcpyAsync H2D
+→ CUDA fused preprocessing
+→ TensorRT device input
+→ existing TensorRT output path
+→ existing postprocess
+```
+
+CPU responsibilities are decode, geometry metadata, and the row-aware raw
+staging copy only. CUDA responsibilities are resize, padding, BGR→RGB,
+float32 normalization, and HWC→CHW.
+
+#### V3 Pinned Data Path
+
+V3 uses the V2 path with a long-lived pinned raw buffer. The only allowed new
+resources are:
+
+- pinned raw buffer;
+- device raw buffer;
+- device FP32 input buffer.
+
+Pinned output, mapped memory, zero-copy, and double buffer are forbidden.
+V2/V3 use one CUDA stream, one TensorRT ExecutionContext, and no cross-frame
+overlap.
+
+#### TensorRtDeviceInputCapability Boundary
+
+TensorRtDeviceInputCapability is backend-specific and exists only inside
+backend_tensorrt. It must not be added to IInferenceEngine, HostTensor,
+or runtime core. It consumes device FP32 NCHW input and returns the existing
+FP32 HostTensor output through the existing TensorRT output path.
+
+The generic PipelineRunner and packet contract remain HostTensor-based. V2/V3
+must use a Stage R-specific data-path adapter/runner or equivalent backend-only
+execution path; CUDA types must not be added to the generic runner, packets,
+or common runtime contract.
+
+#### CUDA Kernel Contract
+
+Input:
+
+```text
+uint8 BGR raw image
+width
+height
+row stride
+geometry metadata
+```
+
+Output:
+
+```text
+float32 device NCHW [1,3,640,640]
+```
+
+The kernel must not perform NMS, decode, Result JSON generation, or TensorRT
+enqueue.
+
+#### Correctness Evidence Contract
+
+- 16-image tensor gate: MAE `<= 5e-4`;
+- P99 `<= 2/255 + 1e-6`;
+- maximum `<= 4/255 + 1e-6`;
+- non-finite count `0`;
+- 180-image task accuracy uses the frozen thresholds above in this card;
+- V2/V3 tensor digest identical;
+- V2/V3 detection SHA identical;
+- V0 canonical SHA and Stage Q correctness authority unchanged;
+- Result JSON v4 unchanged.
+
+#### File Contract
+
+Implementation may modify only:
+
+```text
+backend_tensorrt/
+stage_r/
+tools/validation/
+tests/
+configs/stage_r/
+CMakeLists.txt
+docs/personal/
+results/validation/stage_r/
+```
+
+The following are protected:
+
+```text
+HostTensor public contract
+IInferenceEngine
+ORT backend
+FP16 backend
+Result JSON v4
+Stage Q Evidence
+```
 ---
 
 ## R3 — Formal Performance

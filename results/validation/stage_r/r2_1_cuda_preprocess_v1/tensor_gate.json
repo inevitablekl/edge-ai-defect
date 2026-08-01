@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_cuda_preprocess_tensor_gate",
+  "corpus_id": "stage_r_cuda_preprocess_16_v1",
+  "image_count": 16,
+  "measured_fps": null,
+  "measured_latency_ms": null,
+  "gate": {
+    "mae": 0.00041216449077775033,
+    "mae_limit": 0.00050000000000000001,
+    "p99": 0.0039216279983520508,
+    "p99_limit": 0.0078441372549019599,
+    "max_abs": 0.0039216279983520508,
+    "max_abs_limit": 0.015687274509803922,
+    "nonfinite": 0,
+    "status": "PASS"
+  },
+  "cases": [
+    {"id": "original_00", "mae": 0.00048513826150156094, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_01", "mae": 0.00048716472243540918, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_02", "mae": 0.00046690833383763677, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_03", "mae": 0.00041616171754867539, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_04", "mae": 0.00047748595089615266, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_05", "mae": 0.00048492547160549292, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_06", "mae": 0.00046161977008523535, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_07", "mae": 0.00046912243284168652, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_08", "mae": 0.00048105625628522828, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_09", "mae": 0.0004760864841955481, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_10", "mae": 0.00039806941033020848, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "original_11", "mae": 0.00042999926008633336, "max_abs": 0.0039215981960296631, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "nonsquare_00", "mae": 0.00035543254463542929, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "nonsquare_01", "mae": 0.00030158937853381454, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "nonsquare_02", "mae": 0.00024107832224672164, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"},
+    {"id": "nonsquare_03", "mae": 0.00016279353537887193, "max_abs": 0.0039216279983520508, "nonfinite": 0, "geometry": "PASS"}
+  ]
+}

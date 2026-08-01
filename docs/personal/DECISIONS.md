@@ -4214,3 +4214,61 @@ ACTIVE
 
 可调整。任何放宽 same-path identity 或改变 V0 vs GPU family 可比性合同
 必须新增 Decision，并重新评估 correctness Gate 和论文结论。
+
+---
+
+### D084 — Stage R R2 Minimal CUDA Data-Path Planning Freeze
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACTIVE — planning contract; implementation not authorized
+```
+
+决策：
+
+1. V2 固定为：decoded `cv::Mat` → CPU row-aware raw staging → raw H2D →
+   CUDA fused preprocessing → TensorRT device input → existing TensorRT
+   output path → existing postprocess。
+2. CPU 只允许负责 decode、geometry metadata 和 raw staging copy；resize、
+   padding、BGR→RGB、float32 normalization、HWC→CHW 属于 CUDA preprocessing。
+3. V3 仅在 V2 基础上替换为 long-lived pinned raw buffer；允许 pinned raw
+   buffer、device raw buffer、device FP32 input buffer。
+4. Pinned output、mapped memory、zero-copy、double buffer、跨帧 overlap 和
+额外 CUDA stream 不属于 R2。
+5. `TensorRtDeviceInputCapability` 只存在于 `backend_tensorrt`，不得进入
+   `IInferenceEngine`、`HostTensor` 或 runtime core。
+6. CUDA kernel 输入为 uint8 BGR raw image、width、height、row stride 和
+   geometry metadata；输出为 float32 device NCHW `[1,3,640,640]`。
+7. CUDA kernel 不负责 NMS、decode、Result JSON 或 TensorRT enqueue。
+8. R2 tensor gate 固定为 MAE `<=5e-4`、P99 `<=2/255+1e-6`、maximum
+   `<=4/255+1e-6`、non-finite `0`；V2/V3 tensor digest 与 detection SHA
+   必须分别相同。
+9. R2 实施文件仅限 Stage R、TensorRT backend、validation/tests、Stage R
+   configs、CMake、Stage R docs 和 Stage R validation Evidence；既有
+   HostTensor、IInferenceEngine、ORT、FP16、Result JSON v4 和 Stage Q
+   Evidence 受保护。
+10. 本 Decision 只冻结 R2 实施合同，不授权生产代码、CMake、编译或实验。
+11. 当前通用 PipelineRunner 与 packet contract 携带 HostTensor input；V2/V3
+   必须使用 Stage R 专用 data-path adapter/runner 或等价的 backend-only
+   execution path，不得向通用 runner、packet 或 runtime contract 加入 CUDA 类型。
+
+理由：
+
+- 保持 V0 的通用 HostTensor/同步 TensorRT 合同不变；
+- 将 CUDA 类型限制在 TensorRT INT8 Stage R backend 边界；
+- 使 V2/V3 只研究 pageable 与 pinned raw staging 差异；
+- 通过 geometry、tensor、task accuracy 和 V2/V3 identity 形成最小正确性闭环；
+- 防止 R2 扩展为通用异步推理、Zero-Copy 或 GPU postprocess 项目。
+
+影响范围：
+
+- 仅 Stage R R2 V2/V3 planning and implementation boundary；
+- 不改变 Stage Q correctness authority；
+- 不授权 R3/R4 或 V4。
