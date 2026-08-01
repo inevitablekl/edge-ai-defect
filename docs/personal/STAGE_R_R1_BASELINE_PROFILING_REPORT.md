@@ -2,10 +2,10 @@
 
 ## Verdict
 
-R1_PASS for the V0 canonical and profiling perturbation gates. Nsight Systems
-capture is R1_BLOCKED_NSIGHT_CAPTURE_FAILED because nsys is not installed on
-the Jetson image; no Nsight raw or summary was fabricated. R2 is not
-authorized by this report.
+R1 is `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`: the V0 canonical and profiling
+perturbation sub-gates pass, but the bounded Nsight capture has not been run.
+The initial missing-tool blocker and the subsequent capture-control defect are
+retained below. R2 is not authorized by this report.
 
 ## Entry and environment
 
@@ -54,6 +54,21 @@ v4. Diagnostic mode creates six reusable CUDA events only after warmup and
 samples only the existing V0 stream. Off mode creates no events and emits no
 samples.
 
+The capture-control remediation adds `nvToolsExt.h` markers only around the
+measured invocation. After the measured sink and its counter have been
+constructed, the exact order is:
+
+```text
+nvtxMarkA("stage_r.measured_phase_start")
+nvtxRangePushA("stage_r.measured")
+measured phase
+nvtxMarkA("stage_r.measured_phase_end")
+nvtxRangePop()
+```
+
+The NVTX calls are capture-boundary annotations only. They do not participate
+in throughput or latency calculations, and Result JSON v4 is unchanged.
+
 ## Baseline equivalence
 
 Both v5 and v6 used warmup 180, measured 180, one complete cycle, queue
@@ -99,10 +114,22 @@ performance, and no cross-variant conclusion is authorized.
 
 ## Nsight
 
-nsys --version and nsys profile --help both returned command not found.
-Therefore version, command, capture range, frames, duration, raw path, raw SHA,
-and CUDA API/kernel observations are NOT AVAILABLE; no raw evidence exists.
-Nsight is not treated as a formal throughput/latency authority.
+The initial R1 attempt was:
+
+```text
+R1_BLOCKED_NSIGHT_CAPTURE_FAILED
+Reason: nsys command not found
+```
+
+Nsight Systems was subsequently installed from the configured Jetson source:
+`nsight-systems-2024.5.4`, version `2024.5.4.34-245434855735v0`, architecture
+`arm64`. The first post-install audit found the real control defect:
+`stage_r_experiment_runner` had no measured NVTX capture boundary. This
+remediation adds that boundary and passes the source/evidence contract tests.
+
+The bounded Nsight capture is explicitly **NOT RUN** in this changeset. No raw
+trace, capture duration, captured frame count, or CUDA activity observation is
+claimed. Nsight is not treated as a formal throughput/latency authority.
 
 ## Scope audit
 
@@ -126,8 +153,10 @@ Nsight is not treated as a formal throughput/latency authority.
 - Pipeline and Stage P component regression tests: PASS
 - Stage R runner help test: PASS
 - TensorRT engine target compiled: PASS
+- Stage R capture-control contract test: PASS (OFF and ON)
+- Related CTest: PASS, 5/5 (OFF and ON)
 - Sanitizer: NOT CONFIGURED
-- Nsight bounded capture: NOT RUN - nsys missing
+- Nsight bounded capture: NOT RUN - explicitly deferred after control remediation
 
 ## Evidence
 

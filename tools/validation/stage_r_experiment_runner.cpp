@@ -13,6 +13,7 @@
 
 #include <openssl/evp.h>
 #include <opencv2/core.hpp>
+#include <nvToolsExt.h>
 
 #include <chrono>
 #include <cstdio>
@@ -336,11 +337,15 @@ int main(int argc, char** argv) {
     if (!status.ok()) { std::cerr << "sink: " << status.message() << '\n'; return 4; }
     MetricsSink metrics(*composite);
     const RunMetadata measured_metadata = make_metadata(config, contract, *manifest, true);
+    nvtxMarkA("stage_r.measured_phase_start");
+    nvtxRangePushA("stage_r.measured");
     const auto measured_start = std::chrono::steady_clock::now();
     RunSummary measured_summary;
     status = run_phase(config, *measured_source, preprocessor, contract.input.tensor_info,
                        *inference_engine, postprocessor, metrics, measured_metadata, &measured_summary);
     const auto measured_end = std::chrono::steady_clock::now();
+    nvtxMarkA("stage_r.measured_phase_end");
+    nvtxRangePop();
     if (!status.ok() || metrics.frames() != a.measured_frames ||
         measured_summary.processed_images != a.measured_frames ||
         hash_sink.cycle_hashes().size() != a.measured_frames / 180U) {

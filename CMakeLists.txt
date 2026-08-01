@@ -23,6 +23,15 @@ find_package(yaml-cpp 0.7 REQUIRED CONFIG)
 find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 find_package(OpenSSL REQUIRED)
 
+find_path(EDGE_AI_NVTX_INCLUDE_DIR nvToolsExt.h
+    PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include)
+find_library(EDGE_AI_NVTX_LIBRARY NAMES nvToolsExt
+    PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib)
+if(NOT EDGE_AI_NVTX_INCLUDE_DIR OR NOT EDGE_AI_NVTX_LIBRARY)
+    message(FATAL_ERROR
+        "Stage R Nsight capture markers require nvToolsExt.h and libnvToolsExt.so")
+endif()
+
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
     "Enable tests requiring the local frozen ONNX asset"
@@ -383,6 +392,11 @@ target_link_libraries(stage_r_experiment_runner
         edge_ai_core
         OpenSSL::Crypto
         edge_ai_backend_trt
+        ${EDGE_AI_NVTX_LIBRARY}
+)
+target_include_directories(stage_r_experiment_runner
+    PRIVATE
+        ${EDGE_AI_NVTX_INCLUDE_DIR}
 )
 set_target_properties(stage_r_experiment_runner
     PROPERTIES
@@ -846,6 +860,18 @@ if(BUILD_TESTING)
     target_link_libraries(test_stage_r_runtime PRIVATE edge_ai_runtime)
     add_test(NAME stage_r_runtime COMMAND test_stage_r_runtime)
     set_tests_properties(stage_r_runtime PROPERTIES LABELS "stage-r;runtime;sampling")
+
+    add_test(
+        NAME stage_r_capture_control
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_r_capture_control.py
+            --repo-root ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    set_tests_properties(stage_r_capture_control
+        PROPERTIES
+            LABELS "stage-r;runtime;capture"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
 
     add_executable(test_directory_source
         tests/test_directory_source.cpp

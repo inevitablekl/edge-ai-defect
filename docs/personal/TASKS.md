@@ -3412,3 +3412,25 @@ USER REVIEW OF R0 COMMIT
 - Nsight: `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`
 - R2: `NOT AUTHORIZED PENDING USER REVIEW`
 - R3–R6: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R1 Nsight Capture Control Remediation
+
+- Initial R1 Nsight blocker remains recorded as `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`
+  because `nsys` was not found.
+- After manual installation of Nsight Systems 2024.5.4 arm64, the capture audit
+  identified `R1_BLOCKED_NSIGHT_CAPTURE_CONTROL_DEFECT`: the runner had no
+  measured-phase capture boundary.
+- Added NVTX-only measured boundary markers to
+  `tools/validation/stage_r_experiment_runner.cpp`. The order is start marker,
+  range begin, measured phase, end marker, range end. No performance calculation,
+  RuntimeConfig, Result JSON v4, PipelineRunner, or TensorRtEngine logic changed.
+- Added `stage_r_capture_control` contract test. It verifies one start/end pair,
+  warmup exclusion, unchanged measured-frame contracts, unchanged canonical
+  detection SHA, and unchanged Result JSON v4 contract.
+- TensorRT-OFF and TensorRT-ON builds passed. Related CTest passed 5/5 in both
+  build trees.
+- Nsight bounded capture was not executed in this remediation.
+- Final R1 gate remains `R1_BLOCKED_NSIGHT_CAPTURE_FAILED` pending the single
+  authorized bounded capture.
+- R2: `NOT AUTHORIZED PENDING USER REVIEW`
+- R3–R6: `NOT AUTHORIZED`
