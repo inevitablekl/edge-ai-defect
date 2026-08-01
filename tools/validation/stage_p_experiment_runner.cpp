@@ -48,6 +48,7 @@ struct Arguments {
     std::string run_id;
     std::size_t cycles = 1;
     std::size_t max_frames = 0;
+    bool aggregate_only = false;
 };
 
 class SinkForwarder final : public edge_ai_defect::runtime::IResultSink {
@@ -69,7 +70,8 @@ private:
 void print_usage(std::ostream& output) {
     output << "Usage: stage_p_experiment_runner --config PATH"
               " [--corpus-manifest PATH] --run-id ID --trace PATH"
-              " --sidecar PATH --hashes PATH [--cycles N] [--max-frames N]\n"
+              " --sidecar PATH --hashes PATH [--cycles N] [--max-frames N]"
+              " [--aggregate-only]\n"
               "Stage P experiment-only RuntimeConfig v4 runner.\n";
 }
 
@@ -103,6 +105,10 @@ Status parse_arguments(int argc, char** argv, Arguments* output) {
             arguments.help_requested = true;
             *output = std::move(arguments);
             return Status::success();
+        }
+        if (option == "--aggregate-only") {
+            arguments.aggregate_only = true;
+            continue;
         }
         if (index + 1 >= argc) {
             return Status::failure(ErrorCode::kInvalidArgument, "missing value for " + option);
@@ -268,10 +274,11 @@ int main(int argc, char** argv) {
         std::cerr << "runtime config: " << status.message() << '\n';
         return 3;
     }
-    if (config.schema_version != 4U || config.backend_type != "tensorrt_fp16" ||
+    if ((config.schema_version != 4U && config.schema_version != 5U) ||
+        (config.backend_type != "tensorrt_fp16" && config.backend_type != "tensorrt_int8") ||
         (config.runtime_mode != "serial" && config.runtime_mode != "pipeline")) {
-        std::cerr << "stage_p_experiment_runner requires RuntimeConfig v4 with"
-                     " backend.type tensorrt_fp16 and runtime.mode serial or pipeline\n";
+        std::cerr << "stage_p_experiment_runner requires RuntimeConfig v4/v5 with"
+                     " backend.type tensorrt_fp16/tensorrt_int8 and runtime.mode serial or pipeline\n";
         return 3;
     }
     if (config.input_type == "directory" && arguments.corpus_manifest.empty()) {
@@ -327,22 +334,13 @@ int main(int argc, char** argv) {
             return 3;
         }
     }
-    std::unique_ptr<edge_ai_defect::runtime::JsonSink> json_sink;
-    status = edge_ai_defect::runtime::JsonSink::create(
-        config.output_json_path, config.output_overwrite, &json_sink);
-    if (!status.ok()) {
-        std::cerr << "JSON sink: " << status.message() << '\n';
-        return 3;
-    }
-
     edge_ai_defect::preprocess::Preprocessor preprocessor;
     edge_ai_defect::postprocess::PostProcessor postprocessor(config.postprocess_config);
-    edge_ai_defect::runtime::TimedJsonSink timed_json_sink(*json_sink);
     edge_ai_defect::runtime::CanonicalHashSink hash_sink;
     edge_ai_defect::runtime::ConcurrentFrameTraceRecorder trace_recorder;
 
     edge_ai_defect::runtime::RunMetadata metadata;
-    metadata.schema_version = 3;
+    metadata.schema_version = config.backend_type == "tensorrt_int8" ? 4U : 3U;
     metadata.backend_type = config.backend_type;
     metadata.model_filename = config.tensorrt.engine_path.filename().string();
     metadata.model_sha256 = manifest->engine_sha256;
@@ -350,6 +348,16 @@ int main(int argc, char** argv) {
     metadata.artifact_kind = "tensorrt_engine";
     metadata.source_onnx_sha256 = manifest->source_onnx_sha256;
     metadata.engine_manifest_filename = config.tensorrt.engine_manifest_path.filename().string();
+    if (config.backend_type == "tensorrt_int8") {
+        metadata.precision_v4 = edge_ai_defect::runtime::PrecisionMetadataV4{
+            manifest->precision_mode, manifest->int8_enabled,
+            manifest->fp16_fallback_enabled, manifest->host_io_dtype,
+            edge_ai_defect::runtime::CalibrationMetadataV4{
+                "IInt8EntropyCalibrator2", "train", 1260U,
+                manifest->calibration_manifest_sha256,
+                manifest->calibration_cache_sha256,
+                manifest->cache_metadata_sha256}};
+    }
     metadata.class_names = contract.class_names;
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled = config.timing_enabled;
@@ -362,7 +370,18 @@ int main(int argc, char** argv) {
             : std::nullopt};
 
     std::vector<std::unique_ptr<edge_ai_defect::runtime::IResultSink>> sinks;
-    sinks.push_back(std::make_unique<SinkForwarder>(timed_json_sink));
+    std::unique_ptr<edge_ai_defect::runtime::JsonSink> json_sink;
+    std::unique_ptr<edge_ai_defect::runtime::TimedJsonSink> timed_json_sink;
+    if (!arguments.aggregate_only) {
+        status = edge_ai_defect::runtime::JsonSink::create(
+            config.output_json_path, config.output_overwrite, &json_sink);
+        if (!status.ok()) {
+            std::cerr << "JSON sink: " << status.message() << '\n';
+            return 3;
+        }
+        timed_json_sink = std::make_unique<edge_ai_defect::runtime::TimedJsonSink>(*json_sink);
+        sinks.push_back(std::make_unique<SinkForwarder>(*timed_json_sink));
+    }
     sinks.push_back(std::make_unique<SinkForwarder>(hash_sink));
     std::unique_ptr<edge_ai_defect::runtime::CompositeSink> composite_sink;
     status = edge_ai_defect::runtime::CompositeSink::create(

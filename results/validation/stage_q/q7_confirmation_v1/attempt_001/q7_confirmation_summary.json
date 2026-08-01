@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "q7_300_second_confirmation",
+  "backend": "tensorrt_int8",
+  "runtime_mode": "pipeline",
+  "queue_capacity": 1,
+  "drop_policy": "block",
+  "sink_mode": "AGGREGATE_ONLY",
+  "completed_cycles": 126,
+  "processed_frames": 22680,
+  "active_wall_seconds": 319.674510239,
+  "partial_cycles": 0,
+  "all_complete_cycles_match_q5_int8_sha": true,
+  "crash": 0,
+  "deadlock": 0,
+  "inference_error": 0,
+  "drop": 0,
+  "workers_joined": true
+}

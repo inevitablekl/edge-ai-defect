@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "evaluated_images": 180,
+  "ground_truth_boxes": 442,
+  "image_failures": 0,
+  "non_finite_values": 0,
+  "metrics": {
+    "fp16": {
+      "Precision": 0.6347305389221557,
+      "Recall": 0.7194570135746606,
+      "mAP50": 0.6560241687065433,
+      "mAP50-95": 0.35954952098725673,
+      "detection_count": 501,
+      "tp": 318,
+      "fp": 183,
+      "fn": 124,
+      "per_class": {
+        "crazing": {
+          "AP50": 0.17598431536553635,
+          "Recall": 0.33783783783783783
+        },
+        "inclusion": {
+          "AP50": 0.6287050524968979,
+          "Recall": 0.7168141592920354
+        },
+        "patches": {
+          "AP50": 0.8576807069328729,
+          "Recall": 0.8875
+        },
+        "pitted_surface": {
+          "AP50": 0.8056396734991224,
+          "Recall": 0.8484848484848485
+        },
+        "rolled-in_scale": {
+          "AP50": 0.5500531503439209,
+          "Recall": 0.68
+        },
+        "scratches": {
+          "AP50": 0.9180821136009099,
+          "Recall": 0.9253731343283582
+        }
+      }
+    },
+    "int8": {
+      "Precision": 0.6912751677852349,
+      "Recall": 0.6990950226244343,
+      "mAP50": 0.647625463793534,
+      "mAP50-95": 0.3523443910494967,
+      "detection_count": 447,
+      "tp": 309,
+      "fp": 138,
+      "fn": 133,
+      "per_class": {
+        "crazing": {
+          "AP50": 0.2037064778274966,
+          "Recall": 0.3108108108108108
+        },
+        "inclusion": {
+          "AP50": 0.6287516497993013,
+          "Recall": 0.7079646017699115
+        },
+        "patches": {
+          "AP50": 0.8462547740623322,
+          "Recall": 0.8625
+        },
+        "pitted_surface": {
+          "AP50": 0.769864959184994,
+          "Recall": 0.8181818181818182
+        },
+        "rolled-in_scale": {
+          "AP50": 0.563851931912887,
+          "Recall": 0.6666666666666666
+        },
+        "scratches": {
+          "AP50": 0.8733229899741927,
+          "Recall": 0.8955223880597015
+        }
+      }
+    }
+  },
+  "drops": {
+    "mAP50-95": 0.007205129937760013,
+    "mAP50": 0.008398704913009314,
+    "Precision": -0.056544628863079205,
+    "Recall": 0.020361990950226283,
+    "max_class_AP50": 0.04475912362671719,
+    "max_class_Recall": 0.030303030303030276
+  },
+  "classification": "ACCEPTABLE",
+  "fp16_result_sha256": "583c1c7f4212094b7b0706fea2445163fb82009f7ffec51b178b72e9b5c37047",
+  "int8_result_sha256": "93cedece0b87342bb74bafed1624cb95f6d675945b9001442e3f6a2543a8e8cb"
+}

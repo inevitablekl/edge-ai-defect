@@ -195,13 +195,15 @@ if(EDGE_AI_ENABLE_TENSORRT)
         PATHS /usr/include/aarch64-linux-gnu /usr/include /usr/local/cuda/include
               /usr/local/cuda/targets/aarch64-linux/include)
     find_library(EDGE_AI_TENSORRT_LIBRARY NAMES nvinfer)
+    find_library(EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY NAMES nvonnxparser)
     if(NOT EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR OR
        NOT EDGE_AI_TENSORRT_CUDART_LIBRARY OR
        NOT EDGE_AI_TENSORRT_INCLUDE_DIR OR
-       NOT EDGE_AI_TENSORRT_LIBRARY)
+       NOT EDGE_AI_TENSORRT_LIBRARY OR
+       NOT EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY)
         message(FATAL_ERROR
             "EDGE_AI_ENABLE_TENSORRT=ON requires cuda_runtime_api.h, libcudart.so, "
-            "NvInfer.h, and libnvinfer.so")
+            "NvInfer.h, libnvinfer.so, and libnvonnxparser.so")
     endif()
     add_library(edge_ai_backend_trt STATIC
         src/tensorrt_engine.cpp
@@ -213,6 +215,29 @@ if(EDGE_AI_ENABLE_TENSORRT)
         ${EDGE_AI_TENSORRT_INCLUDE_DIR})
     target_link_libraries(edge_ai_backend_trt PUBLIC
         edge_ai_core ${EDGE_AI_TENSORRT_CUDART_LIBRARY} ${EDGE_AI_TENSORRT_LIBRARY})
+    add_library(edge_ai_stage_q_builder STATIC src/stage_q_int8_builder.cpp)
+    target_include_directories(edge_ai_stage_q_builder PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        ${EDGE_AI_TENSORRT_CUDA_INCLUDE_DIR}
+        ${EDGE_AI_TENSORRT_INCLUDE_DIR}
+        ${OpenCV_INCLUDE_DIRS})
+    target_link_libraries(edge_ai_stage_q_builder PUBLIC
+        edge_ai_core yaml-cpp OpenSSL::Crypto opencv_imgcodecs
+        ${EDGE_AI_TENSORRT_CUDART_LIBRARY}
+        ${EDGE_AI_TENSORRT_LIBRARY}
+        ${EDGE_AI_TENSORRT_ONNX_PARSER_LIBRARY})
+    add_executable(stage_q_int8_builder tools/stage_q_int8_builder.cpp)
+    target_link_libraries(stage_q_int8_builder PRIVATE edge_ai_stage_q_builder)
+    add_executable(stage_q5_accuracy_runner
+        tools/validation/stage_q5_accuracy_runner.cpp)
+    target_link_libraries(stage_q5_accuracy_runner
+        PRIVATE edge_ai_application edge_ai_runtime edge_ai_backend_factory
+                edge_ai_core edge_ai_backend_trt OpenSSL::Crypto)
+    add_executable(stage_q6_serial_runner
+        tools/validation/stage_q6_serial_runner.cpp)
+    target_link_libraries(stage_q6_serial_runner
+        PRIVATE edge_ai_application edge_ai_runtime edge_ai_backend_factory
+                edge_ai_core edge_ai_backend_trt OpenSSL::Crypto)
 else()
     add_library(edge_ai_backend_trt STATIC src/tensorrt_backend_stub.cpp)
     target_include_directories(edge_ai_backend_trt PUBLIC
@@ -412,6 +437,15 @@ if(BUILD_TESTING)
 
     if(EDGE_AI_ENABLE_TENSORRT)
         add_test(
+            NAME stage_q_builder_focused
+            COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_q_builder.py
+                $<TARGET_FILE:stage_q_int8_builder>
+        )
+        set_tests_properties(stage_q_builder_focused PROPERTIES
+            LABELS "stage-q;builder;smoke"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+        add_test(
             NAME stage_k_raw_tensor_runner_tensorrt
             COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_k_raw_tensor_runner.py
@@ -516,6 +550,20 @@ if(BUILD_TESTING)
             edge_ai_core
     )
     add_test(NAME test_core COMMAND test_core)
+
+    add_executable(test_q4_runtime_integration
+        tests/test_q4_runtime_integration.cpp
+    )
+    target_link_libraries(test_q4_runtime_integration
+        PRIVATE edge_ai_runtime edge_ai_core)
+    add_test(
+        NAME q4_runtime_integration_focused
+        COMMAND test_q4_runtime_integration
+            "${CMAKE_CURRENT_BINARY_DIR}/tests/tmp/q4_runtime_integration"
+    )
+    set_tests_properties(q4_runtime_integration_focused PROPERTIES
+        LABELS "stage-q;q4;runtime;integration"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
     add_executable(test_postprocessor_contract
         tests/test_postprocessor_contract.cpp

@@ -132,6 +132,32 @@ M5 状态：
 Jetson/TensorRT planning（下一阶段入口；`PENDING`，尚未开始）
 ```
 
+### Stage Q 当前执行状态（2026-08-01）
+
+```text
+Stage Q:
+Q0–Q8 Consolidation and Closeout
+
+Status:
+CLOSED
+
+Final classification:
+STAGE_Q_COMPLETE_INT8_RECOMMENDED
+```
+
+- Q0 Decision ID conflict 已发现：既有 Stage P 使用 D072、D073；Stage Q 原计划编号不能直接复用。
+- 编号修正已关闭冲突：既有 Stage P D072、D073 保持不变，Stage Q 分配 D074–D080。
+- Stage Q Execution Plan 保持 `v0.3 FINAL`；`output0` layout label 已按确定性修正为 `BCN`。
+- Q0–Q8 已按授权链完成；Q8 closeout 状态为
+  `Q8_COMPLETE_READY_FOR_MAIN_MERGE`。
+- 当前分支：`feature/jetson-tensorrt-int8`；分支起点：
+  `630822c7aeec471cc1f82b019d97bc431855045e`。
+- Q1：`Q1_PLATFORM_AND_ASSET_PASS_WITH_SPLIT_REMEDIATION`；Q2：`Q2_BUILDER_AND_SMOKE_PASS`；Q3：`Q3_INT8_ENGINE_BUILD_PASS`；
+  Q4：`Q4_INT8_RUNTIME_INTEGRATION_PASS`；Q5：`ACCEPTABLE`；Q6：`MATERIAL_INT8_INFERENCE_GAIN`；
+  Q7：`Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION`。
+- Q8 Final Report：`docs/personal/STAGE_Q_FINAL_REPORT.md`；Evidence Index：`docs/personal/STAGE_Q_EVIDENCE_INDEX.md`。
+- Q8 为 documentation-only closeout；未执行新实验、benchmark、accuracy rerun、Pipeline rerun、merge、tag 或 push。
+
 M5.5 首次预审曾在修改文件前 `STOPPED`：原计划未冻结 consolidation 目录、文件集合、schema、summary 和
 `sha256sums` 规则，分类为 `M5.5 evidence consolidation planning gap`，不是执行失败。本次 Planning Freeze
 Remediation 已完成并新增 D040，冻结路径 `results/consolidation/m5/<evidence_id>/`、固定六文件、三个 JSON

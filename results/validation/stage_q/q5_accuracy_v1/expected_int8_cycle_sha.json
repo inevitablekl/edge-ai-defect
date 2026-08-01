@@ -1,0 +1,7 @@
+{
+  "backend": "int8",
+  "cycles": 1,
+  "accepted_frames": 180,
+  "expected_cycle_sha": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "run_sha": "133c44408738814a0f3dc44b443c15b1980b64643a661ae86825421a1de90532"
+}

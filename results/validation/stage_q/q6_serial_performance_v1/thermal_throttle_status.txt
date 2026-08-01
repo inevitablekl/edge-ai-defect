@@ -1,0 +1,2 @@
+thermal_throttle_status=unavailable
+reason=No readable runtime throttle-status interface was exposed; tegrastats temperature and power samples were available.

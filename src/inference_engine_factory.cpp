@@ -23,7 +23,7 @@ core::Status create_inference_engine(
         *output = std::move(engine);
         return core::Status::success();
     }
-    if (config.backend_type == "tensorrt_fp16") {
+    if (config.backend_type == "tensorrt_fp16" || config.backend_type == "tensorrt_int8") {
         auto engine = std::make_unique<backend_tensorrt::TensorRtEngine>();
         core::Status status = engine->initialize(config, contract);
         if (!status.ok()) return status;

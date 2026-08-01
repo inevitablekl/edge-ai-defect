@@ -20,6 +20,16 @@ struct TensorRtEngineManifest {
     std::string engine_sha256;
     std::string source_onnx_sha256;
     std::string model_contract_sha256;
+    std::string backend_type;
+    std::string precision_mode;
+    bool int8_enabled = false;
+    bool fp16_fallback_enabled = false;
+    std::string host_io_dtype;
+    std::string calibration_manifest_sha256;
+    std::string calibration_cache_sha256;
+    std::string cache_metadata_sha256;
+    std::string precision_audit_sha256;
+    std::uint64_t confirmed_int8_compute = 0;
     TensorContract input;
     TensorContract output;
 };

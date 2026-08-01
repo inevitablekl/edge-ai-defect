@@ -1,0 +1,29 @@
+{
+  "classification": "ACCEPTABLE",
+  "thresholds": {
+    "acceptable": {
+      "mAP50-95": 0.02,
+      "mAP50": 0.02,
+      "Precision": 0.03,
+      "Recall": 0.03,
+      "class_AP50": 0.05,
+      "class_Recall": 0.1
+    },
+    "tradeoff": {
+      "mAP50-95": 0.04,
+      "mAP50": 0.04,
+      "Precision": 0.06,
+      "Recall": 0.06,
+      "class_AP50": 0.1,
+      "class_Recall": 0.2
+    }
+  },
+  "drops": {
+    "mAP50-95": 0.007205129937760013,
+    "mAP50": 0.008398704913009314,
+    "Precision": -0.056544628863079205,
+    "Recall": 0.020361990950226283,
+    "max_class_AP50": 0.04475912362671719,
+    "max_class_Recall": 0.030303030303030276
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "backend": "fp16",
+  "cycles": 1,
+  "accepted_frames": 180,
+  "expected_cycle_sha": "6faee435cb3705c94406b5b295d8d053f49e5621b6f8aa6f7ada52c22f4531b3",
+  "run_sha": "d0f5275824e2359cd80f6428bbfb7249e058eb72173bc9a124d8890bc30dd1a5"
+}

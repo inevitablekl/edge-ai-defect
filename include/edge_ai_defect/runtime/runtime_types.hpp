@@ -39,6 +39,23 @@ struct RuntimeMetadataV3 {
     std::optional<PipelineMetadataV3> pipeline;
 };
 
+struct CalibrationMetadataV4 {
+    std::string algorithm;
+    std::string source_split;
+    std::size_t image_count = 0;
+    std::string manifest_sha256;
+    std::string cache_sha256;
+    std::string cache_metadata_sha256;
+};
+
+struct PrecisionMetadataV4 {
+    std::string engine_compute_mode;
+    bool int8_enabled = false;
+    bool fp16_enabled = false;
+    std::string host_io_dtype;
+    std::optional<CalibrationMetadataV4> calibration;
+};
+
 struct RunMetadata {
     std::uint32_t schema_version = 0;
     std::string backend_type;
@@ -55,6 +72,7 @@ struct RunMetadata {
 
     bool timing_enabled = false;
     std::optional<RuntimeMetadataV3> runtime_v3;
+    std::optional<PrecisionMetadataV4> precision_v4;
 };
 
 struct FrameResult {

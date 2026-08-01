@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "q6_serial_performance_summary",
+  "protocol": {
+    "warmup_frames": 100,
+    "measured_frames": 5000,
+    "accepted_frames": 5100,
+    "cycle_length": 180,
+    "complete_cycles": 28,
+    "partial_cycle_frames": 60,
+    "percentile": "Hyndman-Fan Type 7"
+  },
+  "pairs": [
+    {
+      "schema_version": 1,
+      "artifact_kind": "q6_serial_performance_evaluation",
+      "protocol": {
+        "warmup_frames": 100,
+        "measured_frames": 5000,
+        "accepted_frames": 5100,
+        "cycle_length": 180,
+        "complete_cycles": 28,
+        "partial_cycle_frames": 60,
+        "percentile": "Hyndman-Fan Type 7"
+      },
+      "backends": {
+        "tensorrt_fp16": {
+          "backend": "tensorrt_fp16",
+          "result_sha256": "ea4d47c51d61d6caef4846e44ea4026ebafa20c60ec2b4bbd6b13842ab3ceec6",
+          "trace_sha256": "19d1481d0014763b3c862ec6b82674d846d8085ddcb0a066e3a22f1388024472",
+          "hashes_sha256": "d7dbdcfe912c6fdbad3f249003ef05556467539577ebedba2751e41dbd13e960",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "6faee435cb3705c94406b5b295d8d053f49e5621b6f8aa6f7ada52c22f4531b3",
+          "partial_cycle_sha256": "9caaad38d86be68fba5687a818bebc060ebf57bcc37287cf766692cdf9dd6d87",
+          "inference_service_ms": {
+            "mean": 13.857585789799998
+          },
+          "pre_sink_throughput_fps": 31.902121059704445,
+          "end_to_end_latency_ms": {
+            "mean": 31.167325385999998,
+            "p50": 31.2473955,
+            "p95": 32.00240035,
+            "p99": 32.18663182
+          }
+        },
+        "tensorrt_int8": {
+          "backend": "tensorrt_int8",
+          "result_sha256": "47acba10af3f8640776fe89878ba5b214165f2452845ec36c905f0266b0763fc",
+          "trace_sha256": "f86ca81df5dc4906839e49b1c132a50e3881bff11ba262f808dc5681dbd1ecea",
+          "hashes_sha256": "ea2929a9e0a902e3c51321dd854bd70e9ebe9d013b7c192a5014c357ec90f427",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+          "partial_cycle_sha256": "69d9801289dc87ee8185f80d52cec798dcd2d691e7d74505c83de68240ec20db",
+          "inference_service_ms": {
+            "mean": 10.9081384892
+          },
+          "pre_sink_throughput_fps": 37.51645566549572,
+          "end_to_end_latency_ms": {
+            "mean": 26.4895411434,
+            "p50": 26.501003,
+            "p95": 27.18374255,
+            "p99": 27.429658869999997
+          }
+        }
+      },
+      "paired_ratios": {
+        "inference_speedup": 1.2703896089621713,
+        "throughput_int8_over_fp16": 1.1759862485407824,
+        "mean_latency_int8_over_fp16": 0.8499138381408498,
+        "p95_latency_int8_over_fp16": 0.8494282382790077
+      },
+      "classification": {
+        "inference_gain": "MATERIAL_INT8_INFERENCE_GAIN",
+        "end_to_end_regression": "NO_MATERIAL_END_TO_END_REGRESSION"
+      }
+    },
+    {
+      "schema_version": 1,
+      "artifact_kind": "q6_serial_performance_evaluation",
+      "protocol": {
+        "warmup_frames": 100,
+        "measured_frames": 5000,
+        "accepted_frames": 5100,
+        "cycle_length": 180,
+        "complete_cycles": 28,
+        "partial_cycle_frames": 60,
+        "percentile": "Hyndman-Fan Type 7"
+      },
+      "backends": {
+        "tensorrt_fp16": {
+          "backend": "tensorrt_fp16",
+          "result_sha256": "62df9ec483729d2d055673d42f39831a0fa76681428f16e87361b3eed315a450",
+          "trace_sha256": "27f87e0d65c91cf2c629d6ffafe7b440a5329734eed77fbf4b487c45571be52a",
+          "hashes_sha256": "e8c813412142f838eb7c357a45b72964a26ffaef173b7d71748c90fc7d3b5af9",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "6faee435cb3705c94406b5b295d8d053f49e5621b6f8aa6f7ada52c22f4531b3",
+          "partial_cycle_sha256": "9caaad38d86be68fba5687a818bebc060ebf57bcc37287cf766692cdf9dd6d87",
+          "inference_service_ms": {
+            "mean": 13.7898485304
+          },
+          "pre_sink_throughput_fps": 32.2181883610098,
+          "end_to_end_latency_ms": {
+            "mean": 30.861873620799997,
+            "p50": 30.8404145,
+            "p95": 31.7356759,
+            "p99": 31.9511523
+          }
+        },
+        "tensorrt_int8": {
+          "backend": "tensorrt_int8",
+          "result_sha256": "a23a764c01a8b822343b589cc049a81096be55a985f5442de1d622a25d9f6165",
+          "trace_sha256": "5e91f6a2a7c8546a6f83ce24e8ab86b60bbc019550ec10c63930bafc3a01c974",
+          "hashes_sha256": "8fc5b83170f26d91aa06a8b5d8d60d8da1b211562427afea19c4b00c77a04413",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+          "partial_cycle_sha256": "69d9801289dc87ee8185f80d52cec798dcd2d691e7d74505c83de68240ec20db",
+          "inference_service_ms": {
+            "mean": 10.898178436999999
+          },
+          "pre_sink_throughput_fps": 37.44295772459574,
+          "end_to_end_latency_ms": {
+            "mean": 26.5402049326,
+            "p50": 26.526119,
+            "p95": 27.21086855,
+            "p99": 27.437008040000002
+          }
+        }
+      },
+      "paired_ratios": {
+        "inference_speedup": 1.2653351759760696,
+        "throughput_int8_over_fp16": 1.1621683163882957,
+        "mean_latency_int8_over_fp16": 0.8599673907909686,
+        "p95_latency_int8_over_fp16": 0.8574220582458116
+      },
+      "classification": {
+        "inference_gain": "MATERIAL_INT8_INFERENCE_GAIN",
+        "end_to_end_regression": "NO_MATERIAL_END_TO_END_REGRESSION"
+      }
+    },
+    {
+      "schema_version": 1,
+      "artifact_kind": "q6_serial_performance_evaluation",
+      "protocol": {
+        "warmup_frames": 100,
+        "measured_frames": 5000,
+        "accepted_frames": 5100,
+        "cycle_length": 180,
+        "complete_cycles": 28,
+        "partial_cycle_frames": 60,
+        "percentile": "Hyndman-Fan Type 7"
+      },
+      "backends": {
+        "tensorrt_fp16": {
+          "backend": "tensorrt_fp16",
+          "result_sha256": "6cf188aee13f7d75020abb2d795b3c2164643ed3b780496629453bd266442e56",
+          "trace_sha256": "7d6d000756c679c1717f2cd0fb18715c750e9273b9e76e30012d1224e07dc14b",
+          "hashes_sha256": "a52f5c32b745a2ce8a7daf01d43a30b00243071723996c3a4bf9a65393e63fe3",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "6faee435cb3705c94406b5b295d8d053f49e5621b6f8aa6f7ada52c22f4531b3",
+          "partial_cycle_sha256": "9caaad38d86be68fba5687a818bebc060ebf57bcc37287cf766692cdf9dd6d87",
+          "inference_service_ms": {
+            "mean": 13.9006138514
+          },
+          "pre_sink_throughput_fps": 31.74838713669994,
+          "end_to_end_latency_ms": {
+            "mean": 31.3192150254,
+            "p50": 31.441405,
+            "p95": 32.0562136,
+            "p99": 32.23709947
+          }
+        },
+        "tensorrt_int8": {
+          "backend": "tensorrt_int8",
+          "result_sha256": "d87deda0296bf85bb5ca3d6a00416c38905e994f4272d614c16a454170a160d3",
+          "trace_sha256": "0e9c49c3a7d287fe45a1e0cd2579f1f3dea469a0e89a087f253c05955fe53834",
+          "hashes_sha256": "594941e358ebf5897089c038d5b46dad01518864576a760757933d8b016208ed",
+          "accepted_frames": 5100,
+          "warmup_frames": 100,
+          "measured_frames": 5000,
+          "complete_cycles": 28,
+          "partial_cycle_frames": 60,
+          "expected_cycle_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+          "partial_cycle_sha256": "69d9801289dc87ee8185f80d52cec798dcd2d691e7d74505c83de68240ec20db",
+          "inference_service_ms": {
+            "mean": 10.9123330368
+          },
+          "pre_sink_throughput_fps": 37.475627208025784,
+          "end_to_end_latency_ms": {
+            "mean": 26.5180292822,
+            "p50": 26.5038685,
+            "p95": 27.226840199999998,
+            "p99": 27.457522320000002
+          }
+        }
+      },
+      "paired_ratios": {
+        "inference_speedup": 1.2738443561539523,
+        "throughput_int8_over_fp16": 1.1803946778986254,
+        "mean_latency_int8_over_fp16": 0.8467015939158686,
+        "p95_latency_int8_over_fp16": 0.8493467300829315
+      },
+      "classification": {
+        "inference_gain": "MATERIAL_INT8_INFERENCE_GAIN",
+        "end_to_end_regression": "NO_MATERIAL_END_TO_END_REGRESSION"
+      }
+    }
+  ],
+  "average_backend_metrics": {
+    "tensorrt_fp16": {
+      "inference_service_ms": {
+        "mean": 13.849349390533334
+      },
+      "pre_sink_throughput_fps": 31.956232185804726,
+      "end_to_end_latency_ms": {
+        "mean": 31.116138010733334,
+        "p50": 31.176405,
+        "p95": 31.93142995,
+        "p99": 32.12496119666667
+      }
+    },
+    "tensorrt_int8": {
+      "inference_service_ms": {
+        "mean": 10.906216654333333
+      },
+      "pre_sink_throughput_fps": 37.47834686603908,
+      "end_to_end_latency_ms": {
+        "mean": 26.5159251194,
+        "p50": 26.510330166666666,
+        "p95": 27.207150433333336,
+        "p99": 27.44139641
+      }
+    }
+  },
+  "primary_arithmetic_mean_ratios": {
+    "inference_speedup": 1.2698563803640643,
+    "throughput_int8_over_fp16": 1.1728497476092345,
+    "mean_latency_int8_over_fp16": 0.8521942742825623,
+    "p95_latency_int8_over_fp16": 0.8520656755359169
+  },
+  "classification": {
+    "inference_gain": "MATERIAL_INT8_INFERENCE_GAIN",
+    "end_to_end_regression": "NO_MATERIAL_END_TO_END_REGRESSION"
+  }
+}

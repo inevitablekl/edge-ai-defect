@@ -1,0 +1,42 @@
+{
+  "verdict": "Q1_BLOCKED_SPLIT_ISOLATION_FAILURE",
+  "onnx": {
+    "path": "models/onnx/yolov8n_neudet_frozen.onnx",
+    "exists": true,
+    "size_bytes": 12242487,
+    "sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "expected_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+    "sha_verified": true
+  },
+  "fp16_engine": {
+    "path": "/home/orin/edge-ai-local-models/stage_k/yolov8n_neudet_trt10.3_fp16_b1_640.engine",
+    "exists": true,
+    "size_bytes": 8928756,
+    "sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+    "expected_sha256": "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
+    "sha_verified": true,
+    "recovery_path": "Stage K local Evidence and local model directory contain the frozen artifact; rebuild not required and was not attempted."
+  },
+  "fp16_manifest": {
+    "path": "models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+    "exists": true,
+    "sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+    "expected_sha256": "39caa8df46b23210e836d88132696dce055f86fe95b8ba4aa7d46ba40f982d63",
+    "sha_verified": true
+  },
+  "split_manifests": {
+    "train": {"path": "results/validation/stage_k_task_eval_v2/split/train_manifest.json", "sha256": "82687d1b969ac7b9af2a759ea0c39fbf68f71161a13765f3ceb27443c67c8591", "image_count": 1260},
+    "val": {"path": "results/validation/stage_k_task_eval_v2/split/val_manifest.json", "sha256": "d7de5f3ee47353144ac8a11706cd8cfcfe89285fe08ab01b7ee60f0a2d757ebf", "image_count": 360},
+    "test": {"path": "results/validation/stage_k_task_eval_v2/split/test_manifest.json", "sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8", "image_count": 180}
+  },
+  "split_isolation": {
+    "normalized_relative_path": {"train_val": 0, "train_test": 0, "val_test": 0},
+    "image_content_sha256": {"train_val": 1, "train_test": 0, "val_test": 0},
+    "failure_detail": {
+      "sha256": "4d2de82731b86cdbc7a66f2a9bfb01074bb4cb65e47bccf06b66470d53857071",
+      "train_path": "IMAGES/patches_101.jpg",
+      "val_path": "IMAGES/patches_105.jpg"
+    },
+    "pass": false
+  }
+}

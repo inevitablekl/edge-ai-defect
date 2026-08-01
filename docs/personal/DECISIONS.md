@@ -104,6 +104,14 @@
 | D070 | Exact correctness、timing 与 benchmark contract | RUN/CYCLE 独立域、精确 EOS/timing/window/Gate | ACTIVE |
 | D071 | Offline block-only sources 与 deferred live-stream scope | Directory/Video block-only；live/drop 延后 | ACTIVE |
 | D072 | Stage P P5R protocol correction and Evidence reclassification | Extended-window RUN SHA 比较同 protocol runs；complete CYCLE SHA 继承 P4；thermal unavailable 为 known limitation | ACTIVE |
+| D073 | Stage P P8 consolidation and closeout | Stage P P4–P7 Evidence closed；bounded Pipeline closeout | ACTIVE |
+| D074 | Stage Q baseline, scope and authority | Stage Q exact baseline、v0.3 FINAL plan、Q0–Q8 authorization chain | ACTIVE |
+| D075 | TensorRT 10.3 version-bound legacy PTQ | Implicit INT8 calibration with entropy calibrator、INT8+FP16 fallback、FP32 Host I/O | ACTIVE |
+| D076 | Calibration data isolation and ordering | All 1260 train images、path/content split isolation、seed 42 deterministic ordering | ACTIVE |
+| D077 | Builder, cache and artifact authority | Stage Q builder唯一；Q2 smoke、Q3 formal force-miss、atomic publication | ACTIVE |
+| D078 | Manifest, runtime and result mapping | RuntimeConfig v5、Manifest v2 INT8、Result JSON v4、validated provenance | ACTIVE |
+| D079 | Accuracy, hash and Serial performance authority | Same-runtime-build controls、frozen replay/hash、three paired Serial runs | ACTIVE |
+| D080 | Conditional Pipeline and final disposition | Frozen Pipeline gate、300-second confirmation、mechanical disposition tree | ACTIVE |
 
 ---
 
@@ -3782,3 +3790,259 @@ local-only，不在文档 commit 中提交。
 模型、Pipeline topology、queue semantics 或 benchmark data；不授权下一阶段开发。
 thermal status unavailable、Stage K inherited raw Level B limitation 和 no
 industrial certification claim 必须继续保留。
+
+### D074 — Stage Q baseline, scope and authority
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+冻结 Stage Q 的权威起点为 `main@630822c7aeec471cc1f82b019d97bc431855045e`，
+Stage P annotated tag 的 peeled commit 与之相同；Stage Q 分支必须从该 exact
+commit 创建。Stage Q 技术、实验和授权正文为
+`STAGE_Q_EXECUTION_PLAN.md` v0.3 FINAL，任务边界由
+`STAGE_Q_TASK_CARDS.md` 固定，执行链为 Q0→Q1→Q2→Q3→Q4→Q5→Q6→Q7→Q8。
+Q0 只冻结计划和事实，不执行 Q1；INT8 负结果不自动构成 Stage Q 失败。
+
+备选方案：
+
+- 从旧 feature branch 开始；
+- 在 Q0 执行平台、资产或 Engine 预检；
+- 将 Q0 计划与 Q1/Q2 实施合并。
+
+决策理由：
+
+exact baseline、独立 Q0 freeze 和逐 Gate 授权链保证后续实验可追溯、可复核，
+并防止在资产和平台事实尚未验证时提前改变 production 行为。
+
+影响范围：
+
+- Stage Q 分支从 exact Stage P closeout commit 创建；
+- Q0 仅允许文档、事实盘点和只读 inventory；
+- Q1 仅在用户审查 Q0 commit 后授权；
+- Q2–Q8 与 production implementation 继续保持未授权。
+
+后续是否可调整：
+
+可调整。若基线、范围或授权链需要变化，必须新增 Decision，不得改写本记录或
+历史 Stage P D072/D073。
+
+### D075 — TensorRT 10.3 version-bound legacy PTQ
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+Stage Q 使用 TensorRT 10.3 的 version-bound legacy implicit INT8 calibration
+workflow、`IInt8EntropyCalibrator2`、`BuilderFlag::kINT8`、
+`BuilderFlag::kFP16`、FP32 Host I/O、static batch 1、input
+`[1,3,640,640]` 和 output `[1,10,8400]`。正式 Engine 只能描述为
+`TensorRT INT8-enabled mixed-precision Engine` 或
+`INT8 + FP16 + FP32 mixed-precision Engine`。
+
+备选方案：
+
+- QAT；
+- NVIDIA ModelOpt；
+- ONNX Q/DQ rewrite；
+- pure/full/all-layer INT8；
+- TensorRT 11 migration。
+
+决策理由：
+
+该路线与冻结 TensorRT 10.3 平台和既有 FP32 Host I/O 合同一致，能够回答
+INT8 PTQ 相对 FP16 的工程性能—精度权衡问题，同时避免把 deprecated workflow
+误述为新 TensorRT 项目的推荐方案。
+
+影响范围：
+
+calibration、builder、audit、Manifest、runtime 和报告均必须遵守该版本与
+mixed-precision表述；未来版本迁移属于 Future Work。
+
+后续是否可调整：
+
+可调整。只有新增授权和真实平台证据才能改变版本路线；不得在 Stage Q 中
+引入另一种量化路线。
+
+### D076 — Calibration data isolation and ordering
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+正式 calibration 只使用全部 1260 张 train images；val、test、Stage K/P
+evaluation corpus、Level B corpus 和 P6 video 均禁止使用。split isolation
+同时按 normalized relative path 和 image content SHA256 验证。正式 ordering
+固定为 `sha256_key_permutation_v1`，seed 为 `42`；算法只改变顺序，不进行
+selection。
+
+备选方案：
+
+- 使用 val/test 或混合评估 corpus；
+- calibration-size ablation；
+- 其他 sample selection 或 ordering 算法。
+
+决策理由：
+
+保持 calibration 与 held-out evaluation 隔离，避免数据泄漏，并使 1260-image
+formal build 可以被确定性复核。
+
+影响范围：
+
+manifest 必须记录 source split、数量、每张图的 path/SHA/decoded shape/index/
+ordering key；任一 split 交集必须阻断 Q1/Q3 路径。
+
+后续是否可调整：
+
+可调整。必须新增 Decision 和独立实验授权；不得在 Stage Q 内改变数量、顺序或
+隔离域。
+
+### D077 — Builder, cache and artifact authority
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+`stage_q_int8_builder` 是唯一 formal builder。Q2 仅执行 4-image smoke；Q3
+使用同一权威 invocation 完成 1260-image calibration、cache 和 Engine，首次
+formal build 强制 cache miss。cache reuse 必须逐项验证 metadata；`trtexec`
+只用于 load/inspection。formal artifacts 必须在同一文件系统的 attempt 临时
+目录完成后原子发布，不覆盖既有 attempt。
+
+备选方案：
+
+- 直接用 trtexec 生成正式 Engine；
+- 将 smoke cache 复用于 formal build；
+- 忽略 cache metadata 或覆盖既有 attempt。
+
+决策理由：
+
+单一 builder 与 atomic publication 使 calibration、cache、Engine、audit、
+Manifest 和 build summary 具有同一 attempt、builder identity 和环境 provenance。
+
+影响范围：
+
+builder、cache sidecar、artifact identity、attempt 目录和失败处置均受此合同
+约束；cache provenance mismatch 必须拒绝复用。
+
+后续是否可调整：
+
+可调整。只能通过新增 builder/artifact authority Decision；不得在 Q2/Q3 中
+静默改变正式构建入口。
+
+### D078 — Manifest, runtime and result mapping
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+RuntimeConfig v5 支持 `tensorrt_fp16` 与 `tensorrt_int8`。Manifest v1 仅用于
+历史 FP16 Engine；Manifest v2 仅用于 Stage Q INT8 Engine。Result JSON v4 的
+precision 必须来自 validated Manifest；INT8 才携带 calibration object，FP16
+不得输出空 calibration object。Manifest v2 必须绑定 layer audit、Engine、
+ONNX、ModelContract、calibration provenance 和 FP32 Host I/O 合同。
+
+备选方案：
+
+- 只修改 Result writer；
+- 让 runtime 从配置字符串推断 precision；
+- 用 Manifest v2 加载 FP16 Engine；
+- 为 FP16 输出空 calibration object。
+
+决策理由：
+
+将 artifact provenance 的验证放在 loader/runtime contract 中，避免同一 backend
+名称下的 Engine 被错误标识或错误运行，同时保持历史 Result v1/v2/v3 字节行为。
+
+影响范围：
+
+RuntimeConfig、Manifest loader、factory、TensorRtEngine、Result JSON v4 和
+兼容性测试均必须遵守该映射；audit sidecar 是构建期 authority，不是 runtime
+依赖。
+
+后续是否可调整：
+
+可调整。schema 变化必须新增 Decision、迁移合同和真实回归证据。
+
+### D079 — Accuracy, hash and Serial performance authority
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+FP16 与 INT8 各执行一次正式 CorpusReplaySource Serial invocation，使用相同
+frozen test manifest、image root、manifest order、relative-path domain 和
+cycle length 180。evaluator 必须消费同一 invocation 生成的 Result JSON v4。
+Serial 性能固定为三组 paired process，100 warmup、5000 measured、drop=0，
+并使用完整 cycle SHA、partial-cycle 记录、Type-7 percentile 和固定
+accuracy/performance thresholds。
+
+备选方案：
+
+- 用 DirectorySource 重新枚举 accuracy corpus；
+- 从 evaluator summary 反向生成 expected hash；
+- 改变 cycle/path domain 或临时增加指标阈值；
+- 只运行单一方向或单一 process。
+
+决策理由：
+
+单一 source 和 Result JSON authority 使 accuracy、hash、timing 与性能比较保持
+可追溯；FP16/INT8 不要求 detection hash 相同，但同一 backend 必须 deterministic。
+
+影响范围：
+
+Q5/Q6 的 source、sink、evaluator、统计公式、窗口、阈值、Engine/runtime
+identity 和 Evidence disposition 均被冻结。
+
+后续是否可调整：
+
+可调整。只能在新增 protocol Decision 和重新生成真实 Evidence 后调整。
+
+### D080 — Conditional Pipeline and final disposition
+
+时间：`2026-07-31`
+状态：`ACTIVE`
+
+当前选择：
+
+Pipeline 只有在 accuracy 为 ACCEPTABLE 或 TRADEOFF 且 mean paired Serial
+inference speedup 至少 1.05 时进入；queue capacity 固定为 1，drop policy
+固定为 block。Q7 必须输出五种互斥状态之一。只有 accuracy ACCEPTABLE、Serial
+speedup 至少 1.05、无 material end-to-end regression 且 Q7 Pipeline valid
+no-regression 时，才可执行 INT8 Pipeline 的正常 EOS 300-second confirmation。
+最终分类按 frozen decision tree 机械执行；zero INT8 compute、accuracy
+unacceptable、Serial gain insufficient 或有效 Pipeline 负结果均可得到
+FP16 retained，而非自动 Stage failure。
+
+备选方案：
+
+- 无条件进入 Pipeline；
+- retune queue 或改变 drop policy；
+- 在 cycle 中间取消 300-second run；
+- 将有效负结果写成 Evidence invalid 或工业稳定性认证。
+
+决策理由：
+
+把 Pipeline 的吞吐收益、单帧端到端回归、runtime failure 和 Evidence invalid
+分开，避免把吞吐改善误报为低延迟，也避免把真实负结果误写成实验失败。
+
+影响范围：
+
+Q7/Q8 的 entry gate、五态 disposition、300-second EOS/drain/join 语义、zero
+INT8 early stop 和最终 `INT8_RECOMMENDED`/`FP16_RETAINED` 分类均受此合同约束。
+
+后续是否可调整：
+
+可调整。必须新增真实 Evidence 和 Decision；不得在执行中途修改 gate 或分类树。
+
+Stage Q closeout result（2026-08-01）：Q1–Q7 evidence gates completed with
+Q7 `Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION`; the required INT8
+300-second confirmation passed. Q8 documentation closeout is
+`Q8_COMPLETE_READY_FOR_MAIN_MERGE`, with final classification
+`STAGE_Q_COMPLETE_INT8_RECOMMENDED`. Merge and tag remain unauthorized.

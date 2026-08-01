@@ -147,3 +147,12 @@ artifacts/transfer/
 /results/archive/stage_k_diagnostics_v1/**
 !/results/archive/stage_k_diagnostics_v1/
 !/results/archive/stage_k_diagnostics_v1/archive_manifest.json
+
+# Stage Q local-only raw evidence; curated reports, manifests, summaries, and
+# reproducibility hash metadata remain trackable.
+/results/validation/stage_q/**/*_result.json
+/results/validation/stage_q/**/*_sidecar.json
+/results/validation/stage_q/**/environment_*.txt
+/results/validation/stage_q/**/tegrastats.txt
+/results/benchmark/stage_q/**/*_sidecar.json
+/results/benchmark/stage_q/**/environment_*.txt
