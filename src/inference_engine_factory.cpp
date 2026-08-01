@@ -24,6 +24,10 @@ core::Status create_inference_engine(
         return core::Status::success();
     }
     if (config.backend_type == "tensorrt_fp16" || config.backend_type == "tensorrt_int8") {
+        if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+            return core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                         "Stage R variants other than V0 are not implemented");
+        }
         auto engine = std::make_unique<backend_tensorrt::TensorRtEngine>();
         core::Status status = engine->initialize(config, contract);
         if (!status.ok()) return status;

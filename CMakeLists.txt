@@ -372,6 +372,23 @@ set_target_properties(stage_p_experiment_runner
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_r_experiment_runner
+    tools/validation/stage_r_experiment_runner.cpp
+)
+target_link_libraries(stage_r_experiment_runner
+    PRIVATE
+        edge_ai_application
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        edge_ai_backend_trt
+)
+set_target_properties(stage_r_experiment_runner
+    PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
@@ -418,6 +435,15 @@ if(BUILD_TESTING)
     set_tests_properties(stage_p_experiment_runner_help
         PROPERTIES
             LABELS "stage-p;runtime;experiment;entry"
+    )
+
+    add_test(
+        NAME stage_r_experiment_runner_help
+        COMMAND stage_r_experiment_runner --help
+    )
+    set_tests_properties(stage_r_experiment_runner_help
+        PROPERTIES
+            LABELS "stage-r;runtime;experiment;entry"
     )
 
     add_test(
@@ -815,6 +841,11 @@ if(BUILD_TESTING)
     target_link_libraries(test_stage_p_components PRIVATE edge_ai_runtime)
     add_test(NAME stage_p_components COMMAND test_stage_p_components)
     set_tests_properties(stage_p_components PROPERTIES LABELS "stage-p;runtime;experiment")
+
+    add_executable(test_stage_r_runtime tests/test_stage_r_runtime.cpp)
+    target_link_libraries(test_stage_r_runtime PRIVATE edge_ai_runtime)
+    add_test(NAME stage_r_runtime COMMAND test_stage_r_runtime)
+    set_tests_properties(stage_r_runtime PROPERTIES LABELS "stage-r;runtime;sampling")
 
     add_executable(test_directory_source
         tests/test_directory_source.cpp

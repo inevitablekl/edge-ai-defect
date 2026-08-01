@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R1",
+  "status": "R1_BLOCKED_NSIGHT_CAPTURE_FAILED",
+  "nsys_version": "NOT AVAILABLE: command not found",
+  "actual_command": "NOT RUN",
+  "capture_range_mechanism": "NOT AVAILABLE",
+  "captured_frames": null,
+  "capture_duration_seconds": null,
+  "raw_path": null,
+  "raw_sha256": null,
+  "local_only_classification": "no raw evidence created",
+  "observations": "Nsight Systems is not installed on the Jetson image; no capture or observation was fabricated.",
+  "formal_authority": false
+}

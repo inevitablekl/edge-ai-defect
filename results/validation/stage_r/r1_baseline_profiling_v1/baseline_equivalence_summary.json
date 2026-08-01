@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R1",
+  "gate": "R1_PASS",
+  "test_manifest_path": "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "expected_detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "warmup_frames": 180,
+  "measured_frames": 180,
+  "complete_measured_cycles": 1,
+  "drop_count": 0,
+  "v5": {
+    "config": "configs/stage_r/runtime_v5_v0_compat.yaml",
+    "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+    "run_sha256": "133c44408738814a0f3dc44b443c15b1980b64643a661ae86825421a1de90532"
+  },
+  "v6": {
+    "config": "configs/stage_r/runtime_v6_v0_off.yaml",
+    "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+    "run_sha256": "133c44408738814a0f3dc44b443c15b1980b64643a661ae86825421a1de90532"
+  },
+  "frame_order_identical": true,
+  "relative_paths_identical": true,
+  "image_dimensions_identical": true,
+  "per_frame_detections_identical": true,
+  "result_json_schema": 4,
+  "result_json_semantic_fields_identical_ignoring_runtime_timing": true,
+  "engine_manifest_and_model_contract_identical": true,
+  "pipeline_metadata_identical": true,
+  "warmup_absent_from_measured_output": true,
+  "phase_barrier_verified": true
+}

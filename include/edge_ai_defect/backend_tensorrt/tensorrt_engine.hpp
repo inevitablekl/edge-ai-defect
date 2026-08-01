@@ -4,8 +4,20 @@
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace edge_ai_defect::backend_tensorrt {
+
+struct TensorRtDiagnosticSample {
+    std::size_t measured_frame = 0;
+    std::size_t cycle_index = 0;
+    std::size_t frame_in_cycle = 0;
+    double h2d_ms = 0.0;
+    double tensorrt_ms = 0.0;
+    double d2h_ms = 0.0;
+    double host_output_construction_ms = 0.0;
+    double host_roundtrip_ms = 0.0;
+};
 
 class TensorRtEngine final : public inference::IInferenceEngine {
 public:
@@ -28,6 +40,10 @@ public:
     [[nodiscard]] core::Status run(
         const core::HostTensor& input,
         core::HostTensor* output) override;
+
+    [[nodiscard]] core::Status set_diagnostic_profiling(bool enabled);
+    [[nodiscard]] core::Status reset_diagnostic_profiling();
+    [[nodiscard]] const std::vector<TensorRtDiagnosticSample>& diagnostic_samples() const noexcept;
 
 private:
     class Impl;

@@ -34,6 +34,17 @@ std::string replace_once(std::string source, const std::string& from,
     return source;
 }
 
+std::string replace_field_hash(std::string source, const std::string& field) {
+    const std::string marker = "\"" + field + "\": \"";
+    const std::size_t begin = source.find(marker);
+    if (begin == std::string::npos) return {};
+    const std::size_t value_begin = begin + marker.size();
+    const std::size_t value_end = source.find('"', value_begin);
+    if (value_end == std::string::npos || value_end - value_begin != 64U) return {};
+    source.replace(value_begin, 64U, std::string(64, '0'));
+    return source;
+}
+
 runtime::RuntimeConfig config_for(const std::filesystem::path& engine,
                                   const std::filesystem::path& manifest,
                                   const std::filesystem::path& contract,
@@ -165,20 +176,45 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    if (!engine.set_diagnostic_profiling(false).ok() || !engine.diagnostic_samples().empty()) {
+        std::cerr << "profiling off must not produce samples\n";
+        return 1;
+    }
+    if (!engine.set_diagnostic_profiling(true).ok()) {
+        std::cerr << "diagnostic profiling setup failed\n";
+        return 1;
+    }
+    for (int index = 0; index < 20; ++index) {
+        if (!engine.run(input, &output).ok()) {
+            std::cerr << "diagnostic inference failed\n";
+            return 1;
+        }
+    }
+    if (engine.diagnostic_samples().size() != 2U) {
+        std::cerr << "diagnostic sampling schedule mismatch\n";
+        return 1;
+    }
+    for (const auto& sample : engine.diagnostic_samples()) {
+        if (!std::isfinite(sample.h2d_ms) || !std::isfinite(sample.tensorrt_ms) ||
+            !std::isfinite(sample.d2h_ms) || sample.h2d_ms < 0.0 ||
+            sample.tensorrt_ms < 0.0 || sample.d2h_ms < 0.0) {
+            std::cerr << "diagnostic duration invalid\n";
+            return 1;
+        }
+    }
+    if (!engine.set_diagnostic_profiling(false).ok() || !engine.diagnostic_samples().empty()) {
+        std::cerr << "profiling reset failed\n";
+        return 1;
+    }
+
     const std::string manifest_text = read_text(manifest_path);
-    const std::string bad_hash = replace_once(
-        manifest_text,
-        "6c3d12dcbd8a568d28e038f192eecfd6a3f917d06a52876de49d4e7d7750d9bc",
-        std::string(64, '0'));
+    const std::string bad_hash = replace_field_hash(manifest_text, "engine_sha256");
     const auto bad_hash_manifest = temp_dir / "bad_engine_hash.manifest.json";
     if (bad_hash.empty() || !write_text(bad_hash_manifest, bad_hash)) return 1;
     backend::TensorRtEngine bad_hash_engine;
     if (bad_hash_engine.initialize(config_for(engine_path, bad_hash_manifest, contract_path), contract).ok()) return 1;
 
-    const std::string bad_contract_hash = replace_once(
-        manifest_text,
-        "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
-        std::string(64, '0'));
+    const std::string bad_contract_hash = replace_field_hash(manifest_text, "onnx_sha256");
     const auto bad_contract_manifest = temp_dir / "bad_contract_hash.manifest.json";
     if (bad_contract_hash.empty() || !write_text(bad_contract_manifest, bad_contract_hash)) return 1;
     backend::TensorRtEngine bad_contract_engine;

@@ -3395,3 +3395,20 @@ USER REVIEW OF R0 COMMIT
 
 - R1 第一次入口验证因 R0 manifest provenance 占位值阻断；没有进入 R1。
   provenance remediation 已完成，R0 Gate 恢复为 `R0_PASS`；R1 等待用户审查后重新授权。
+
+## 2026-08-02 — Stage R R1 Baseline and Profiling
+
+- R1 V0 baseline/profiling implementation and experiments completed.
+- RuntimeConfig v5 derives V0/off; RuntimeConfig v6 V0/off and diagnostic parse
+  and execute. V2/V3/V4 remain parse-only and are rejected before execution.
+- v5/v6 measured detection SHA both equal
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Profiling perturbation gate passed: diagnostic/off throughput ratio
+  `1.011560852`; mean pre-sink latency ratio `1.035711199`.
+- Nsight gate is blocked by the real environment fact `nsys: command not
+  found`; no raw capture was created.
+- R1 evidence: `results/validation/stage_r/r1_baseline_profiling_v1/`.
+- R1: `R1_PASS`
+- Nsight: `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`
+- R2: `NOT AUTHORIZED PENDING USER REVIEW`
+- R3–R6: `NOT AUTHORIZED`

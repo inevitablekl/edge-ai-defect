@@ -14,6 +14,26 @@
 #include <vector>
 
 namespace edge_ai_defect::runtime {
+
+const char* data_path_variant_name(DataPathVariant value) noexcept {
+    switch (value) {
+        case DataPathVariant::kV0: return "V0";
+        case DataPathVariant::kV2: return "V2";
+        case DataPathVariant::kV3: return "V3";
+        case DataPathVariant::kV4: return "V4";
+    }
+    return "unknown";
+}
+
+const char* profiling_mode_name(ProfilingMode value) noexcept {
+    switch (value) {
+        case ProfilingMode::kOff: return "off";
+        case ProfilingMode::kDiagnostic: return "diagnostic";
+        case ProfilingMode::kFormal: return "formal";
+    }
+    return "unknown";
+}
+
 namespace {
 
 using core::ErrorCode;
@@ -722,10 +742,15 @@ Status parse_runtime_config_v4(const YAML::Node& root,
                                const std::filesystem::path& config_directory,
                                RuntimeConfig* output,
                                std::uint32_t schema_version = 4U,
-                               bool allow_int8 = false) {
+                               bool allow_int8 = false,
+                               bool allow_v6_fields = false) {
+    const std::vector<std::string> root_keys = allow_v6_fields
+        ? std::vector<std::string>{"schema_version", "backend", "tensorrt", "model", "runtime",
+                                   "input", "output", "postprocess", "timing", "data_path", "profiling"}
+        : std::vector<std::string>{"schema_version", "backend", "tensorrt", "model", "runtime",
+                                   "input", "output", "postprocess", "timing"};
     const Status root_status = validate_mapping(
-        root, "$", {"schema_version", "backend", "tensorrt", "model", "runtime",
-                     "input", "output", "postprocess", "timing"});
+        root, "$", root_keys);
     if (!root_status.ok()) return root_status;
     RuntimeConfig config;
     config.schema_version = schema_version;
@@ -745,6 +770,30 @@ Status parse_runtime_config_v4(const YAML::Node& root,
     if (!status.ok()) return status;
     status = parse_timing(root["timing"], &config);
     if (!status.ok()) return status;
+    if (allow_v6_fields) {
+        const Status data_path_status = validate_mapping(
+            root["data_path"], "data_path", {"variant"});
+        if (!data_path_status.ok()) return data_path_status;
+        std::string variant;
+        status = parse_scalar(root["data_path"]["variant"], "data_path.variant", &variant);
+        if (!status.ok()) return status;
+        if (variant == "V0") config.data_path_variant = DataPathVariant::kV0;
+        else if (variant == "V2") config.data_path_variant = DataPathVariant::kV2;
+        else if (variant == "V3") config.data_path_variant = DataPathVariant::kV3;
+        else if (variant == "V4") config.data_path_variant = DataPathVariant::kV4;
+        else return schema_error("data_path.variant", "must be exactly V0, V2, V3, or V4");
+
+        const Status profiling_status = validate_mapping(
+            root["profiling"], "profiling", {"mode"});
+        if (!profiling_status.ok()) return profiling_status;
+        std::string mode;
+        status = parse_scalar(root["profiling"]["mode"], "profiling.mode", &mode);
+        if (!status.ok()) return status;
+        if (mode == "off") config.profiling_mode = ProfilingMode::kOff;
+        else if (mode == "diagnostic") config.profiling_mode = ProfilingMode::kDiagnostic;
+        else if (mode == "formal") config.profiling_mode = ProfilingMode::kFormal;
+        else return schema_error("profiling.mode", "must be exactly off, diagnostic, or formal");
+    }
     *output = std::move(config);
     return Status::success();
 }
@@ -772,7 +821,10 @@ Status parse_runtime_config(const YAML::Node& root,
     if (schema_version == 5) {
         return parse_runtime_config_v4(root, config_directory, output, 5U, true);
     }
-    return schema_error("schema_version", "must be exactly 1, 2, 3, 4, or 5");
+    if (schema_version == 6) {
+        return parse_runtime_config_v4(root, config_directory, output, 6U, true, true);
+    }
+    return schema_error("schema_version", "must be exactly 1, 2, 3, 4, 5, or 6");
 }
 
 }  // namespace

@@ -3,11 +3,13 @@
 #include "cuda_status.hpp"
 #include "tensorrt_logger.hpp"
 #include "edge_ai_defect/model/tensorrt_engine_manifest.hpp"
+#include "edge_ai_defect/runtime/diagnostic_sampling.hpp"
 
 #include <NvInfer.h>
 #include <cuda_runtime_api.h>
 
 #include <cmath>
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
@@ -31,13 +33,19 @@ Status failure(ErrorCode code, std::string message) {
 Status validate_config(const runtime::RuntimeConfig& config) {
     const bool supported_runtime_schema = config.schema_version == 3U ||
                                           config.schema_version == 4U ||
-                                          config.schema_version == 5U;
+                                          config.schema_version == 5U ||
+                                          config.schema_version == 6U;
     const bool supported_backend = config.backend_type == "tensorrt_fp16" ||
-                                   (config.schema_version == 5U && config.backend_type == "tensorrt_int8");
+                                   ((config.schema_version == 5U || config.schema_version == 6U) &&
+                                    config.backend_type == "tensorrt_int8");
     if (!supported_runtime_schema || !supported_backend) {
         return failure(ErrorCode::kSchemaViolation,
-                       "TensorRtEngine requires RuntimeConfig schema_version 3, 4, or 5 "
+                       "TensorRtEngine requires RuntimeConfig schema_version 3, 4, 5, or 6 "
                        "and a supported TensorRT backend");
+    }
+    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+        return failure(ErrorCode::kSchemaViolation,
+                       "TensorRtEngine only implements Stage R data_path.variant V0");
     }
     if (config.tensorrt.engine_path.empty() ||
         config.tensorrt.engine_manifest_path.empty()) {
@@ -148,8 +156,28 @@ public:
     core::TensorInfo input_info;
     core::TensorInfo output_info;
     std::uint32_t device_id = 0;
+    bool diagnostic_enabled = false;
+    std::size_t diagnostic_frame = 0;
+    std::vector<TensorRtDiagnosticSample> diagnostic_samples;
+    cudaEvent_t h2d_begin = nullptr;
+    cudaEvent_t h2d_end = nullptr;
+    cudaEvent_t trt_begin = nullptr;
+    cudaEvent_t trt_end = nullptr;
+    cudaEvent_t d2h_begin = nullptr;
+    cudaEvent_t d2h_end = nullptr;
+
+    void destroy_diagnostic_events() noexcept {
+        if (h2d_begin != nullptr) cudaEventDestroy(h2d_begin);
+        if (h2d_end != nullptr) cudaEventDestroy(h2d_end);
+        if (trt_begin != nullptr) cudaEventDestroy(trt_begin);
+        if (trt_end != nullptr) cudaEventDestroy(trt_end);
+        if (d2h_begin != nullptr) cudaEventDestroy(d2h_begin);
+        if (d2h_end != nullptr) cudaEventDestroy(d2h_end);
+        h2d_begin = h2d_end = trt_begin = trt_end = d2h_begin = d2h_end = nullptr;
+    }
 
     ~Impl() {
+        destroy_diagnostic_events();
         if (input_device != nullptr) cudaFree(input_device);
         if (output_device != nullptr) cudaFree(output_device);
         if (stream != nullptr) cudaStreamDestroy(stream);
@@ -302,10 +330,23 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
                        "TensorRtEngine input does not match the frozen contract");
     }
 
+    const std::size_t measured_frame = impl_->diagnostic_frame++;
+    const std::size_t cycle_index = measured_frame / 180U;
+    const std::size_t frame_in_cycle = measured_frame % 180U;
+    const bool sample = impl_->diagnostic_enabled &&
+        runtime::should_sample_diagnostic(frame_in_cycle, cycle_index);
+    const auto host_roundtrip_begin = std::chrono::steady_clock::now();
+    if (sample) {
+        cudaEventRecord(impl_->h2d_begin, impl_->stream);
+    }
     Status status = cuda_status(cudaMemcpyAsync(
         impl_->input_device, input.data.data(), impl_->input_bytes,
         cudaMemcpyHostToDevice, impl_->stream), "cudaMemcpyAsync host-to-device");
     if (!status.ok()) return status;
+    if (sample) {
+        cudaEventRecord(impl_->h2d_end, impl_->stream);
+        cudaEventRecord(impl_->trt_begin, impl_->stream);
+    }
     if (!impl_->context->setTensorAddress(impl_->input_name.c_str(), impl_->input_device) ||
         !impl_->context->setTensorAddress(impl_->output_name.c_str(), impl_->output_device)) {
         return failure(ErrorCode::kBackendRuntimeError,
@@ -315,6 +356,7 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
         return failure(ErrorCode::kBackendRuntimeError,
                        "TensorRT enqueueV3 failed");
     }
+    if (sample) cudaEventRecord(impl_->trt_end, impl_->stream);
     status = cuda_status(cudaStreamSynchronize(impl_->stream),
                          "cudaStreamSynchronize");
     if (!status.ok()) return status;
@@ -322,14 +364,33 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
     std::size_t output_elements = 0;
     status = core::checked_element_count(impl_->output_info.shape, output_elements);
     if (!status.ok()) return status;
+    const auto host_output_begin = std::chrono::steady_clock::now();
     std::vector<float> host_output(output_elements);
+    const auto host_output_end = std::chrono::steady_clock::now();
+    if (sample) cudaEventRecord(impl_->d2h_begin, impl_->stream);
     status = cuda_status(cudaMemcpyAsync(
         host_output.data(), impl_->output_device, impl_->output_bytes,
         cudaMemcpyDeviceToHost, impl_->stream), "cudaMemcpyAsync device-to-host");
     if (!status.ok()) return status;
+    if (sample) cudaEventRecord(impl_->d2h_end, impl_->stream);
     status = cuda_status(cudaStreamSynchronize(impl_->stream),
                          "cudaStreamSynchronize output");
     if (!status.ok()) return status;
+    if (sample) {
+        float h2d_ms = 0.0F;
+        float trt_ms = 0.0F;
+        float d2h_ms = 0.0F;
+        if (cudaEventElapsedTime(&h2d_ms, impl_->h2d_begin, impl_->h2d_end) != cudaSuccess ||
+            cudaEventElapsedTime(&trt_ms, impl_->trt_begin, impl_->trt_end) != cudaSuccess ||
+            cudaEventElapsedTime(&d2h_ms, impl_->d2h_begin, impl_->d2h_end) != cudaSuccess) {
+            return failure(ErrorCode::kBackendRuntimeError, "TensorRT diagnostic event elapsed time failed");
+        }
+        impl_->diagnostic_samples.push_back(TensorRtDiagnosticSample{
+            measured_frame, cycle_index, frame_in_cycle,
+            h2d_ms, trt_ms, d2h_ms,
+            std::chrono::duration<double, std::milli>(host_output_end - host_output_begin).count(),
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - host_roundtrip_begin).count()});
+    }
     for (const float value : host_output) {
         if (!std::isfinite(value)) {
             return failure(ErrorCode::kBackendRuntimeError,
@@ -341,6 +402,42 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
     if (!status.ok()) return status;
     *output = std::move(candidate);
     return Status::success();
+}
+
+core::Status TensorRtEngine::set_diagnostic_profiling(bool enabled) {
+    if (!impl_) return failure(ErrorCode::kBackendRuntimeError, "TensorRtEngine is not initialized");
+    if (!enabled) {
+        impl_->diagnostic_enabled = false;
+        impl_->diagnostic_frame = 0;
+        impl_->diagnostic_samples.clear();
+        impl_->destroy_diagnostic_events();
+        return Status::success();
+    }
+    if (!impl_->diagnostic_enabled) {
+        cudaEvent_t* events[] = {&impl_->h2d_begin, &impl_->h2d_end, &impl_->trt_begin,
+                                 &impl_->trt_end, &impl_->d2h_begin, &impl_->d2h_end};
+        for (cudaEvent_t* event : events) {
+            const cudaError_t error = cudaEventCreate(event);
+            if (error != cudaSuccess) {
+                impl_->destroy_diagnostic_events();
+                return failure(ErrorCode::kBackendInitializationError, "TensorRT diagnostic event creation failed");
+            }
+        }
+        impl_->diagnostic_enabled = true;
+    }
+    return reset_diagnostic_profiling();
+}
+
+core::Status TensorRtEngine::reset_diagnostic_profiling() {
+    if (!impl_) return failure(ErrorCode::kBackendRuntimeError, "TensorRtEngine is not initialized");
+    impl_->diagnostic_frame = 0;
+    impl_->diagnostic_samples.clear();
+    return Status::success();
+}
+
+const std::vector<TensorRtDiagnosticSample>& TensorRtEngine::diagnostic_samples() const noexcept {
+    static const std::vector<TensorRtDiagnosticSample> empty;
+    return impl_ ? impl_->diagnostic_samples : empty;
 }
 
 }  // namespace edge_ai_defect::backend_tensorrt

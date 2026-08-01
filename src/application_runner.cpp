@@ -30,7 +30,7 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
     const bool tensorrt = config.backend_type == "tensorrt_fp16" ||
                           config.backend_type == "tensorrt_int8";
     const bool int8 = config.backend_type == "tensorrt_int8";
-    metadata.schema_version = config.schema_version == 5U ? 4U
+    metadata.schema_version = config.schema_version == 5U || config.schema_version == 6U ? 4U
                             : (config.schema_version == 4U ? 3U : (tensorrt ? 2U : 1U));
     metadata.backend_type = config.backend_type;
     metadata.model_filename = tensorrt
@@ -64,7 +64,7 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled =
         options.timing_enabled_override.value_or(config.timing_enabled);
-    if (config.schema_version == 4U || config.schema_version == 5U) {
+    if (config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) {
         metadata.runtime_v3 = runtime::RuntimeMetadataV3{
             config.runtime_mode,
             config.input_type,
@@ -118,7 +118,11 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
         return {core::Status::failure(core::ErrorCode::kInvalidArgument,
                                       "run summary must not be null"), false};
     }
-    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
+    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+        return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                      "Stage R variants other than V0 are not implemented"), false};
+    }
+    if ((config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(source, preprocessor, model_input_info,
                                        engine, postprocessor, sink,
                                        config.pipeline.queue_capacity,
@@ -131,6 +135,10 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
 }
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
+    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+        return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                      "Stage R variants other than V0 are not implemented"), false};
+    }
     std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> opencv_policy_record;
     if (config.schema_version == 2U) {
         const core::Status policy_status =
@@ -204,7 +212,7 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
 
     const runtime::RunMetadata metadata = make_metadata(
         config, contract, options, manifest.get());
-    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
+    if ((config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(*source, preprocessor,
                                        contract.input.tensor_info, *engine,
                                        postprocessor, *sink,
