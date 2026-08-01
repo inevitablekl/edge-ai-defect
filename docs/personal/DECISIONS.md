@@ -112,6 +112,9 @@
 | D078 | Manifest, runtime and result mapping | RuntimeConfig v5、Manifest v2 INT8、Result JSON v4、validated provenance | ACTIVE |
 | D079 | Accuracy, hash and Serial performance authority | Same-runtime-build controls、frozen replay/hash、three paired Serial runs | ACTIVE |
 | D080 | Conditional Pipeline and final disposition | Frozen Pipeline gate、300-second confirmation、mechanical disposition tree | ACTIVE |
+| D081 | Controlled CUDA Preprocessing Exception | Stage R V2–V4 CUDA fused preprocessing authorization; no GPU NMS/postprocess/通用BufferManager/Zero-Copy | ACTIVE |
+| D082 | Limited Application CUDA Streams Exception | V2/V3 no overlap; V4 max 2 streams, 2 slots; no concurrent inference/output overlap | ACTIVE |
+| D083 | Cross-Preprocess Identity Exception | V0 vs GPU family by geometry/tensor/task accuracy Gates; V2/V3/V4 same-path identity required | ACTIVE |
 
 ---
 
@@ -4046,3 +4049,168 @@ Q7 `Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION`; the required INT8
 300-second confirmation passed. Q8 documentation closeout is
 `Q8_COMPLETE_READY_FOR_MAIN_MERGE`, with final classification
 `STAGE_Q_COMPLETE_INT8_RECOMMENDED`. Merge and tag remain unauthorized.
+
+---
+
+### D081 — Controlled CUDA Preprocessing Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. Stage R 特例授权 V2–V4 使用 CUDA fused preprocessing。
+2. 该 CUDA preprocessing 只允许服务于冻结的 TensorRT INT8 Stage R 数据路径。
+3. 允许在 TensorRT backend 中增加窄能力 `TensorRtDeviceInputCapability`。
+4. CUDA 类型不得扩散到通用 `IInferenceEngine`、ORT、FP16 或 TensorRT-OFF target。
+5. 不授权 GPU NMS、GPU postprocess、通用 CUDA BufferManager、通用异步推理 API、
+   Zero-Copy 或 Mapped memory。
+6. 本 Decision 只解除 Stage R 所需的最小 CUDA preprocessing 禁令。
+7. R0 本身不授权实施；实施仅在 R1–R6 经逐 Gate 授权后进行。
+
+备选方案：
+
+- 在通用 `IInferenceEngine` 级别增加 device-input capability；
+- 将 CUDA preprocessing 实现为独立通用预处理库；
+- 完全禁止 CUDA preprocessing，仅使用 CPU preprocessing。
+
+选择理由：
+
+- Stage R 的研究问题需要评估 CUDA fused preprocessing 是否能降低 CPU preprocessing
+  在数据路径中的成本；
+- 窄能力授权（TensorRT INT8 专用）将 CUDA 类型暴露范围限制在最小必要接口内；
+- 不修改通用 Engine 接口可保护 ORT、FP16 和 TensorRT-OFF 的稳定性；
+- 在 Decision 级别明确授权边界，防止 CUDA preprocessing 在 R1 实施时扩散。
+
+影响范围：
+
+- Stage R V2–V4 CUDA preprocessing implementation（仅 R2 授权后）；
+- `TensorRtEngine` 的 device-input 能力（仅 R2 授权后）；
+- `IInferenceEngine` 通用接口保持不变；
+- ORT、FP16、TensorRT-OFF target 不受影响。
+
+后续是否可调整：
+
+可调整。任何扩展 CUDA preprocessing 范围（如 GPU NMS、通用 BufferManager、
+多 backend device-input）必须新增 Decision，并重新评估对既有接口和 target
+的影响。
+
+---
+
+### D082 — Limited Application CUDA Streams Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. V2/V3 不进行跨帧 overlap。
+2. V4 最多使用 `preprocess_stream` 和 `inference_stream` 两条 CUDA stream。
+3. V4 固定两个 GPU slot。
+4. 只允许 `preprocess(N+1)` 与 `inference(N)` 重叠。
+5. 继续保持一个 TensorRT ExecutionContext。
+6. 继续保持一个 inference worker。
+7. 最大 unfinished `enqueueV3` 数量为 1。
+8. `D2H(N)` 和 output packet(N) 必须在 `enqueueV3(N+1)` 前完成。
+9. 禁止第三条 stream、第三个 slot、并发 TensorRT inference、output copy overlap
+   和 input-consumed Event。
+10. V4 只有通过 profiling opportunity gate 后才可授权。
+11. R0 本身不授权实施。
+
+备选方案：
+
+- 允许任意数量 CUDA streams 和 GPU slots；
+- 允许并发 TensorRT inference；
+- 允许 output copy overlap；
+- 完全禁止 CUDA streams，所有操作串行。
+
+选择理由：
+
+- 双 stream 设计提供了最小可行跨帧重叠（preprocess 与 inference），同时避免
+  multi-context、output overlap 和 triple-buffering 的复杂性；
+- 固定两个 slot 和单 ExecutionContext 保持实现复杂度可控；
+- 限制最大 unfinished enqueueV3 为 1 确保了 D2H 和 output packet 顺序；
+- profiling gate 确保只有存在实际机会时才投入 V4 实施成本。
+
+影响范围：
+
+- V4 Double Buffer implementation（仅 R4 授权后）；
+- CUDA stream 管理；
+- GPU slot/buffer 管理；
+- V2/V3 不受影响。
+
+后续是否可调整：
+
+可调整。任何增加 stream、slot 或放宽 overlap 约束必须新增 Decision，并
+通过真实 profiling evidence 证明必要性。
+
+---
+
+### D083 — Cross-Preprocess Identity Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. V0 CPU preprocessing 与 GPU preprocessing family 不要求 detection SHA 或
+   tensor digest 完全相同。
+2. V0 与 GPU family 通过 geometry、全 tensor 误差阈值和 task accuracy Gate
+   建立可比性。
+3. V2 与 V3 必须保持 detection SHA 和 tensor digest 完全一致。
+4. 若实施 V4，V4 必须与 V2 保持 detection SHA 和 tensor digest 完全一致。
+5. 该例外不得被解释为放宽 V2/V3/V4 同路径确定性。
+6. 不得改变 Stage Q 的历史 correctness authority。
+7. R0 本身不执行 correctness 实验。
+
+备选方案：
+
+- 要求 V0 与 GPU family 的 detection SHA 完全一致；
+- 要求所有 Variant 的 tensor digest 完全一致；
+- 完全放弃 cross-preprocess identity 验证。
+
+选择理由：
+
+- CPU OpenCV preprocessing 与 CUDA preprocessing 使用不同的数值路径（CPU
+  resize/interpolation、颜色转换等 vs GPU texture/sampler），位级相同不可行；
+- geometry + tensor 误差阈值 + task accuracy 三层 Gate 提供了可靠的可比性；
+- V2/V3/V4 同路径确定性保证了 GPU preprocessing family 内部可比；
+- 保留 Stage Q correctness authority 防止历史 Evidence 被重新解读。
+
+影响范围：
+
+- Stage R Gate 2 — Correctness 的 same-path identity 合同；
+- V2/V3/V4 的 detection SHA 和 tensor digest 验证；
+- Stage Q historical correctness baseline 不受影响。
+
+后续是否可调整：
+
+可调整。任何放宽 same-path identity 或改变 V0 vs GPU family 可比性合同
+必须新增 Decision，并重新评估 correctness Gate 和论文结论。

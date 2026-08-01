@@ -3329,3 +3329,64 @@ Stage J Plan or historical Evidence.
   `1800.006143093 s`。
 - 本轮不新增功能、不重跑 P4–P7、不修改 production source、headers、tests、
   CMake、Engine、ONNX 或模型；未执行 push、merge、rebase 或 tag。
+
+---
+
+## 2026-08-01 — Stage Q Merge, Tag, and Stage R R0 Planning Freeze
+
+### Stage Q Merge and Tag
+
+- Stage Q (`feature/jetson-tensorrt-int8`) 已通过 PR #6 合并到 `main`。
+- Merge commit: `4c67858610e14ba7d3c951b33f0948230451827f`。
+- Annotated tag `stage-q-int8-complete-v1.0` 已创建:
+  tag object `066eefb134ecaadb3069933efff89d132b9a938d`，
+  peeled commit `4c67858610e14ba7d3c951b33f0948230451827f`。
+- Stage Q final classification: `STAGE_Q_COMPLETE_INT8_RECOMMENDED`。
+- Stage Q 已 CLOSED。
+
+### Stage R R0 Planning Freeze
+
+- Stage R feature branch `feature/jetson-int8-data-path-optimization`
+  已从 exact baseline `4c67858610e14ba7d3c951b33f0948230451827f` 创建。
+- Stage R Plan FINAL 已写入 `docs/personal/STAGE_R_EXECUTION_PLAN.md`。
+- D081 (Controlled CUDA Preprocessing Exception)、
+  D082 (Limited Application CUDA Streams Exception)、
+  D083 (Cross-Preprocess Identity Exception) 已写入 `docs/personal/DECISIONS.md`。
+  状态均为 ACTIVE。
+- D001–D080 历史 Decision 均未被改写或删除。
+- Stage R Fact Inventory 已写入 `docs/personal/STAGE_R_FACT_INVENTORY.md`。
+- Stage R Task Cards (R0–R6) 已写入 `docs/personal/STAGE_R_TASK_CARDS.md`。
+- Pre-R0 baseline manifest 为 `PRE_R0_VERIFIED`。
+- Pre-R0 environment manifest 为 `VALID`。
+- R0 Gate: `R0_PASS`。
+
+### Stage R Authorization Status
+
+```text
+R0:
+R0_PASS
+
+R1:
+NOT AUTHORIZED
+
+R2–R6:
+NOT AUTHORIZED
+
+Production implementation:
+NOT AUTHORIZED
+
+CMake/CUDA implementation:
+NOT AUTHORIZED
+
+Hardware experiments:
+NOT AUTHORIZED
+
+Next action:
+USER REVIEW OF R0 COMMIT
+```
+
+- Production code (`src/`, `include/`, `tests/`, `tools/`, `configs/`),
+  `CMakeLists.txt`, `.gitignore` 均未被修改。
+- CUDA preprocessing, TensorRT device-input capability, Phase Barrier,
+  profiling instrumentation, Double Buffer 尚未开始。
+- 无 push、merge、rebase、tag、build、CTest 或硬件实验执行。
