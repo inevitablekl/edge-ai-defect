@@ -41,6 +41,16 @@ public:
         const core::HostTensor& input,
         core::HostTensor* output) override;
 
+    // Backend-only Stage R capability. The pointer must be this engine's
+    // persistent device input allocation; callers cannot replace ownership.
+    [[nodiscard]] void* device_input_buffer() const noexcept;
+    [[nodiscard]] std::size_t device_input_bytes() const noexcept;
+    [[nodiscard]] void* cuda_stream_handle() const noexcept;
+    [[nodiscard]] core::Status run_device_input(
+        const void* device_input,
+        std::size_t input_bytes,
+        core::HostTensor* output);
+
     [[nodiscard]] core::Status set_diagnostic_profiling(bool enabled);
     [[nodiscard]] core::Status reset_diagnostic_profiling();
     [[nodiscard]] const std::vector<TensorRtDiagnosticSample>& diagnostic_samples() const noexcept;

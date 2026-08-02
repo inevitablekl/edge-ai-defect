@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v2_pageable_task_correctness",
+  "status": "NOT RUN",
+  "reason": "Frozen Engine and 180-image TensorRT execution were not available in this workspace",
+  "processed_frames": null,
+  "frame_order": "NOT RUN",
+  "relative_paths": "NOT RUN",
+  "dimensions": "NOT RUN",
+  "drop": null,
+  "eos": "NOT RUN",
+  "worker_join": "NOT RUN",
+  "result_json_schema": "v4 contract unchanged; run NOT EXECUTED",
+  "frozen_thresholds": {
+    "map50_95_drop": 0.005,
+    "map50_drop": 0.005,
+    "precision_drop": 0.01,
+    "recall_drop": 0.01,
+    "class_ap50_drop": 0.02,
+    "class_recall_drop": 0.03
+  }
+}

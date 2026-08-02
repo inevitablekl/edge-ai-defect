@@ -43,9 +43,10 @@ Status validate_config(const runtime::RuntimeConfig& config) {
                        "TensorRtEngine requires RuntimeConfig schema_version 3, 4, 5, or 6 "
                        "and a supported TensorRT backend");
     }
-    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+    if (config.data_path_variant == runtime::DataPathVariant::kV3 ||
+        config.data_path_variant == runtime::DataPathVariant::kV4) {
         return failure(ErrorCode::kSchemaViolation,
-                       "TensorRtEngine only implements Stage R data_path.variant V0");
+                       "TensorRtEngine only implements Stage R V0 and V2");
     }
     if (config.tensorrt.engine_path.empty() ||
         config.tensorrt.engine_manifest_path.empty()) {
@@ -330,12 +331,11 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
                        "TensorRtEngine input does not match the frozen contract");
     }
 
-    const std::size_t measured_frame = impl_->diagnostic_frame++;
+    const std::size_t measured_frame = impl_->diagnostic_frame;
     const std::size_t cycle_index = measured_frame / 180U;
     const std::size_t frame_in_cycle = measured_frame % 180U;
     const bool sample = impl_->diagnostic_enabled &&
         runtime::should_sample_diagnostic(frame_in_cycle, cycle_index);
-    const auto host_roundtrip_begin = std::chrono::steady_clock::now();
     if (sample) {
         cudaEventRecord(impl_->h2d_begin, impl_->stream);
     }
@@ -343,10 +343,42 @@ core::Status TensorRtEngine::run(const core::HostTensor& input,
         impl_->input_device, input.data.data(), impl_->input_bytes,
         cudaMemcpyHostToDevice, impl_->stream), "cudaMemcpyAsync host-to-device");
     if (!status.ok()) return status;
-    if (sample) {
-        cudaEventRecord(impl_->h2d_end, impl_->stream);
-        cudaEventRecord(impl_->trt_begin, impl_->stream);
+    if (sample) cudaEventRecord(impl_->h2d_end, impl_->stream);
+    return run_device_input(impl_->input_device, impl_->input_bytes, output);
+}
+
+void* TensorRtEngine::device_input_buffer() const noexcept {
+    return impl_ ? impl_->input_device : nullptr;
+}
+
+std::size_t TensorRtEngine::device_input_bytes() const noexcept {
+    return impl_ ? impl_->input_bytes : 0U;
+}
+
+void* TensorRtEngine::cuda_stream_handle() const noexcept {
+    return impl_ ? reinterpret_cast<void*>(impl_->stream) : nullptr;
+}
+
+core::Status TensorRtEngine::run_device_input(const void* device_input,
+                                              std::size_t input_bytes,
+                                              core::HostTensor* output) {
+    if (!impl_ || !impl_->context) {
+        return failure(ErrorCode::kBackendRuntimeError,
+                       "TensorRtEngine is not initialized");
     }
+    if (output == nullptr || device_input != impl_->input_device ||
+        input_bytes != impl_->input_bytes) {
+        return failure(ErrorCode::kInvalidArgument,
+                       "device input must be the TensorRT-owned fixed-size buffer");
+    }
+    const std::size_t measured_frame = impl_->diagnostic_frame++;
+    const std::size_t cycle_index = measured_frame / 180U;
+    const std::size_t frame_in_cycle = measured_frame % 180U;
+    const bool sample = impl_->diagnostic_enabled &&
+        runtime::should_sample_diagnostic(frame_in_cycle, cycle_index);
+    const auto host_roundtrip_begin = std::chrono::steady_clock::now();
+    Status status = Status::success();
+    if (sample) cudaEventRecord(impl_->trt_begin, impl_->stream);
     if (!impl_->context->setTensorAddress(impl_->input_name.c_str(), impl_->input_device) ||
         !impl_->context->setTensorAddress(impl_->output_name.c_str(), impl_->output_device)) {
         return failure(ErrorCode::kBackendRuntimeError,

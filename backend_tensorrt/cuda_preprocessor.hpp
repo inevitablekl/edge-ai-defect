@@ -41,6 +41,14 @@ public:
         std::size_t max_row_stride,
         std::unique_ptr<CudaPreprocessor>* output);
 
+    [[nodiscard]] static core::Status create_for_external_tensor(
+        int max_width,
+        int max_height,
+        std::size_t max_row_stride,
+        cudaStream_t stream,
+        float* device_tensor,
+        std::unique_ptr<CudaPreprocessor>* output);
+
     ~CudaPreprocessor() noexcept;
 
     CudaPreprocessor(const CudaPreprocessor&) = delete;
@@ -82,14 +90,24 @@ public:
 private:
     CudaPreprocessor(int max_width,
                      int max_height,
-                     std::size_t max_row_stride) noexcept
+                     std::size_t max_row_stride,
+                     bool owns_stream,
+                     bool owns_tensor,
+                     cudaStream_t stream,
+                     float* device_tensor) noexcept
         : max_width_(max_width),
           max_height_(max_height),
-          max_row_stride_(max_row_stride) {}
+          max_row_stride_(max_row_stride),
+          owns_stream_(owns_stream),
+          owns_tensor_(owns_tensor),
+          stream_(stream),
+          device_tensor_(device_tensor) {}
 
     int max_width_ = 0;
     int max_height_ = 0;
     std::size_t max_row_stride_ = 0U;
+    bool owns_stream_ = true;
+    bool owns_tensor_ = true;
     std::uint8_t* device_raw_ = nullptr;
     float* device_tensor_ = nullptr;
     cudaStream_t stream_ = nullptr;

@@ -305,6 +305,35 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
             edge_ai_core
             ${EDGE_AI_STAGE_R_CUDART_LIBRARY}
     )
+    if(EDGE_AI_ENABLE_TENSORRT)
+        add_library(edge_ai_stage_r_v2 STATIC
+            stage_r/pageable_runner.cpp
+        )
+        target_include_directories(edge_ai_stage_r_v2 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR})
+        target_link_libraries(edge_ai_stage_r_v2 PUBLIC
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_runtime)
+        add_executable(stage_r_v2_tensor_gate
+            tools/validation/stage_r_v2_tensor_gate.cpp)
+        target_include_directories(stage_r_v2_tensor_gate PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+            ${EDGE_AI_TENSORRT_INCLUDE_DIR})
+        target_link_libraries(stage_r_v2_tensor_gate PRIVATE
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            yaml-cpp
+            opencv_imgcodecs
+            OpenSSL::Crypto
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
+    endif()
 endif()
 
 add_library(edge_ai_postprocess STATIC
@@ -342,11 +371,13 @@ add_library(edge_ai_runtime STATIC
     src/tensorrt_engine_manifest.cpp
     src/timed_json_sink.cpp
     src/serial_runner.cpp
+    backend_tensorrt/pageable_raw_staging.cpp
     src/video_file_source.cpp
 )
 target_include_directories(edge_ai_runtime
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 target_link_libraries(edge_ai_runtime
     PUBLIC
@@ -378,6 +409,12 @@ target_link_libraries(edge_ai_application
         edge_ai_backend_factory
         edge_ai_runtime
 )
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
+    target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V2_AVAILABLE=1)
+    target_include_directories(edge_ai_application PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v2)
+endif()
 
 add_executable(edge_ai_infer src/main.cpp)
 target_compile_definitions(edge_ai_infer
@@ -461,6 +498,11 @@ set_target_properties(stage_r_experiment_runner
 
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+    add_executable(test_pageable_raw_staging tests/test_pageable_raw_staging.cpp)
+    target_link_libraries(test_pageable_raw_staging PRIVATE edge_ai_runtime)
+    add_test(NAME stage_r_pageable_raw_staging COMMAND test_pageable_raw_staging)
+    set_tests_properties(stage_r_pageable_raw_staging PROPERTIES LABELS "stage-r;r2.2;pageable")
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
         set(EDGE_AI_M5_PYTHON_EXECUTABLE "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
     else()

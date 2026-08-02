@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "NOT RUN",
+  "v2_detection_sha256": null,
+  "v2_tensor_digest": null,
+  "authority_statement": "No V2 identity baseline is frozen because the V2 TensorRT path was not executed. These values must be frozen before any future V3 identity comparison.",
+  "v0_canonical_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
+}

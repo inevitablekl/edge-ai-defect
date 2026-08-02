@@ -190,7 +190,8 @@ core::Status CudaPreprocessor::create(
     }
 
     auto candidate = std::unique_ptr<CudaPreprocessor>(
-        new CudaPreprocessor(max_width, max_height, max_row_stride));
+        new CudaPreprocessor(max_width, max_height, max_row_stride,
+                             true, true, nullptr, nullptr));
     const std::size_t raw_bytes =
         static_cast<std::size_t>(max_height) * max_row_stride;
     cudaError_t error = cudaStreamCreate(&candidate->stream_);
@@ -205,11 +206,36 @@ core::Status CudaPreprocessor::create(
     return core::Status::success();
 }
 
+core::Status CudaPreprocessor::create_for_external_tensor(
+    int max_width, int max_height, std::size_t max_row_stride,
+    cudaStream_t stream, float* device_tensor,
+    std::unique_ptr<CudaPreprocessor>* output) {
+    if (output == nullptr || stream == nullptr || device_tensor == nullptr) {
+        return core::Status::failure(core::ErrorCode::kInvalidArgument,
+                                     "external CUDA resources must not be null");
+    }
+    if (max_width <= 0 || max_height <= 0 || max_row_stride == 0U ||
+        max_row_stride < static_cast<std::size_t>(max_width) * 3U ||
+        static_cast<std::size_t>(max_height) >
+            std::numeric_limits<std::size_t>::max() / max_row_stride) {
+        return core::Status::failure(core::ErrorCode::kInvalidArgument,
+                                     "invalid external CUDA buffer limits");
+    }
+    auto candidate = std::unique_ptr<CudaPreprocessor>(
+        new CudaPreprocessor(max_width, max_height, max_row_stride,
+                             false, false, stream, device_tensor));
+    const std::size_t raw_bytes = static_cast<std::size_t>(max_height) * max_row_stride;
+    const cudaError_t error = cudaMalloc(reinterpret_cast<void**>(&candidate->device_raw_), raw_bytes);
+    if (error != cudaSuccess) return cuda_failure(error, "cudaMalloc raw buffer");
+    *output = std::move(candidate);
+    return core::Status::success();
+}
+
 CudaPreprocessor::~CudaPreprocessor() noexcept {
     if (stream_ != nullptr) (void)cudaStreamSynchronize(stream_);
-    if (device_tensor_ != nullptr) (void)cudaFree(device_tensor_);
+    if (device_tensor_ != nullptr && owns_tensor_) (void)cudaFree(device_tensor_);
     if (device_raw_ != nullptr) (void)cudaFree(device_raw_);
-    if (stream_ != nullptr) (void)cudaStreamDestroy(stream_);
+    if (stream_ != nullptr && owns_stream_) (void)cudaStreamDestroy(stream_);
 }
 
 core::Status CudaPreprocessor::compute_geometry(
