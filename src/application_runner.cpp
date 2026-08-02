@@ -14,9 +14,10 @@
 #include "edge_ai_defect/runtime/serial_runner.hpp"
 #include "edge_ai_defect/runtime/video_file_source.hpp"
 
-#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE)
+#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE) || defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
 #include "edge_ai_defect/backend_tensorrt/tensorrt_engine.hpp"
 #include "stage_r/pageable_runner.hpp"
+#include "stage_r/double_buffer_runner.hpp"
 #endif
 
 #include <iostream>
@@ -138,6 +139,22 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
         return {runner.run(metadata, summary), true};
     }
 #endif
+#if defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
+    if (config.data_path_variant == runtime::DataPathVariant::kV4) {
+        if (config.backend_type != "tensorrt_int8") {
+            return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                          "V4 requires the TensorRT INT8 backend"), false};
+        }
+        auto* tensorrt = dynamic_cast<backend_tensorrt::TensorRtEngine*>(&engine);
+        if (tensorrt == nullptr) {
+            return {core::Status::failure(core::ErrorCode::kBackendRuntimeError,
+                                          "V4 TensorRT capability is unavailable"), false};
+        }
+        stage_r::DoubleBufferRunner runner(source, *tensorrt, postprocessor, sink);
+        stage_r::V4RunStats stats;
+        return {runner.run(metadata, summary, &stats), true};
+    }
+ #endif
     if (config.data_path_variant != runtime::DataPathVariant::kV0) {
         return {core::Status::failure(core::ErrorCode::kSchemaViolation,
                                       "Stage R variants other than V0 are not implemented"), false};
@@ -155,7 +172,8 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
 }
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
-    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+    if (config.data_path_variant != runtime::DataPathVariant::kV0 &&
+        config.data_path_variant != runtime::DataPathVariant::kV4) {
         return {core::Status::failure(core::ErrorCode::kSchemaViolation,
                                       "Stage R variants other than V0 are not implemented"), false};
     }

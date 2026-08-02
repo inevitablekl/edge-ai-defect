@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v4_double_buffer_runtime",
+  "status": "PASS",
+  "variant": "V4",
+  "commit_sha": "2b624c7",
+  "buffer_count": 2,
+  "allocation_count": 7,
+  "reuse_count": 178,
+  "synchronization_count": 360,
+  "raw_staging": "two fixed cudaHostAlloc pinned buffers",
+  "device_preprocessing": "two fixed device raw buffers and two fixed device input slots",
+  "synchronization_strategy": "existing single CUDA stream; preprocess output synchronized before enqueue; enqueue/D2H synchronized before slot reuse",
+  "tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+  "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+  "result_json_version": 4,
+  "frame_contract": {
+    "frames": 180,
+    "order": "PASS",
+    "relative_paths": "PASS",
+    "dimensions": "PASS",
+    "drop": 0,
+    "eos": "PASS",
+    "worker_join": "PASS"
+  },
+  "benchmark": "NOT EXECUTED",
+  "resource_power_stability": "NOT EXECUTED"
+}

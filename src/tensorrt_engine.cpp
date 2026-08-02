@@ -43,10 +43,6 @@ Status validate_config(const runtime::RuntimeConfig& config) {
                        "TensorRtEngine requires RuntimeConfig schema_version 3, 4, 5, or 6 "
                        "and a supported TensorRT backend");
     }
-    if (config.data_path_variant == runtime::DataPathVariant::kV4) {
-        return failure(ErrorCode::kSchemaViolation,
-                       "TensorRtEngine implements Stage R V0, V2, and V3; V4 is not implemented");
-    }
     if (config.tensorrt.engine_path.empty() ||
         config.tensorrt.engine_manifest_path.empty()) {
         return failure(ErrorCode::kInvalidArgument,
@@ -426,6 +422,81 @@ core::Status TensorRtEngine::run_device_input(const void* device_input,
         if (!std::isfinite(value)) {
             return failure(ErrorCode::kBackendRuntimeError,
                            "TensorRT output contains a non-finite value");
+        }
+    }
+    core::HostTensor candidate{impl_->output_info, std::move(host_output)};
+    status = core::validate_host_tensor(candidate);
+    if (!status.ok()) return status;
+    *output = std::move(candidate);
+    return Status::success();
+}
+
+core::Status TensorRtEngine::run_device_input_slot(const void* device_input,
+                                                   std::size_t input_bytes,
+                                                   core::HostTensor* output) {
+    if (!impl_ || !impl_->context) {
+        return failure(ErrorCode::kBackendRuntimeError,
+                       "TensorRtEngine is not initialized");
+    }
+    if (output == nullptr || device_input == nullptr || input_bytes != impl_->input_bytes) {
+        return failure(ErrorCode::kInvalidArgument,
+                       "V4 device input slot does not match the frozen input size");
+    }
+    const std::size_t measured_frame = impl_->diagnostic_frame++;
+    const std::size_t cycle_index = measured_frame / 180U;
+    const std::size_t frame_in_cycle = measured_frame % 180U;
+    const bool sample = impl_->diagnostic_enabled &&
+        runtime::should_sample_diagnostic(frame_in_cycle, cycle_index);
+    const auto host_roundtrip_begin = std::chrono::steady_clock::now();
+    if (sample) cudaEventRecord(impl_->trt_begin, impl_->stream);
+    if (!impl_->context->setTensorAddress(impl_->input_name.c_str(),
+                                          const_cast<void*>(device_input)) ||
+        !impl_->context->setTensorAddress(impl_->output_name.c_str(), impl_->output_device)) {
+        return failure(ErrorCode::kBackendRuntimeError,
+                       "TensorRT setTensorAddress failed for V4 slot");
+    }
+    if (!impl_->context->enqueueV3(impl_->stream)) {
+        return failure(ErrorCode::kBackendRuntimeError,
+                       "TensorRT enqueueV3 failed for V4 slot");
+    }
+    if (sample) cudaEventRecord(impl_->trt_end, impl_->stream);
+    Status status = cuda_status(cudaStreamSynchronize(impl_->stream),
+                                "cudaStreamSynchronize V4 inference");
+    if (!status.ok()) return status;
+    std::size_t output_elements = 0;
+    status = core::checked_element_count(impl_->output_info.shape, output_elements);
+    if (!status.ok()) return status;
+    const auto host_output_begin = std::chrono::steady_clock::now();
+    std::vector<float> host_output(output_elements);
+    const auto host_output_end = std::chrono::steady_clock::now();
+    if (sample) cudaEventRecord(impl_->d2h_begin, impl_->stream);
+    status = cuda_status(cudaMemcpyAsync(host_output.data(), impl_->output_device,
+                                         impl_->output_bytes, cudaMemcpyDeviceToHost,
+                                         impl_->stream), "cudaMemcpyAsync V4 device-to-host");
+    if (!status.ok()) return status;
+    if (sample) cudaEventRecord(impl_->d2h_end, impl_->stream);
+    status = cuda_status(cudaStreamSynchronize(impl_->stream),
+                         "cudaStreamSynchronize V4 output");
+    if (!status.ok()) return status;
+    if (sample) {
+        float h2d_ms = 0.0F;
+        float trt_ms = 0.0F;
+        float d2h_ms = 0.0F;
+        if (cudaEventElapsedTime(&h2d_ms, impl_->h2d_begin, impl_->h2d_end) != cudaSuccess ||
+            cudaEventElapsedTime(&trt_ms, impl_->trt_begin, impl_->trt_end) != cudaSuccess ||
+            cudaEventElapsedTime(&d2h_ms, impl_->d2h_begin, impl_->d2h_end) != cudaSuccess) {
+            return failure(ErrorCode::kBackendRuntimeError,
+                           "TensorRT V4 diagnostic event elapsed time failed");
+        }
+        impl_->diagnostic_samples.push_back(TensorRtDiagnosticSample{
+            measured_frame, cycle_index, frame_in_cycle, h2d_ms, trt_ms, d2h_ms,
+            std::chrono::duration<double, std::milli>(host_output_end - host_output_begin).count(),
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - host_roundtrip_begin).count()});
+    }
+    for (const float value : host_output) {
+        if (!std::isfinite(value)) {
+            return failure(ErrorCode::kBackendRuntimeError,
+                           "TensorRT V4 output contains a non-finite value");
         }
     }
     core::HostTensor candidate{impl_->output_info, std::move(host_output)};

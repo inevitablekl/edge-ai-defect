@@ -155,3 +155,17 @@ V3 tensor digest and detection SHA are identical to the live V2 run at the
 same code state; V3 task metrics are inherited from V2. The frozen V2 hash
 fields correspond to the pre-remediation code state (see the equivalence
 summary for the root cause).
+
+## R2.4 V4 Limited Double-Buffer Evidence (D087)
+
+| Path | Purpose | Authority |
+|---|---|---|
+| `results/validation/stage_r/r2_v4_double_buffer_v1/v4_runtime_summary.json` | V4 runtime, slot ownership, and frame contract | formal V4 correctness evidence |
+| `results/validation/stage_r/r2_v4_double_buffer_v1/v4_v3_equivalence_summary.json` | V3/V4 tensor and detection equivalence | formal V4 equivalence evidence |
+| `results/validation/stage_r/r2_v4_double_buffer_v1/v4_hashes.json` | V4 tensor digest and detection SHA | formal hash evidence |
+| `results/validation/stage_r/r2_v4_double_buffer_v1/v4_run_manifest.json` | V4 run identity and frame contract | formal runtime evidence |
+| `results/validation/stage_r/r2_v4_double_buffer_v1/v4_result.json` | 180-frame Result JSON v4 | raw result evidence |
+| `results/validation/stage_r/r2_v4_double_buffer_v1/artifact_sha256.txt` | V4 evidence artifact hashes | integrity record |
+
+V4 is correctness-complete only: tensor digest and detection SHA are identical
+to V3, and no FPS, latency, resource, power, or stability benchmark was run.

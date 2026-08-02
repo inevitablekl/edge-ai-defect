@@ -10,6 +10,7 @@
 #include "edge_ai_defect/runtime/json_sink.hpp"
 #include "edge_ai_defect/runtime/runtime_config.hpp"
 #include "stage_r/pinned_runner.hpp"
+#include "stage_r/double_buffer_runner.hpp"
 
 #include <openssl/evp.h>
 
@@ -195,10 +196,11 @@ int main(int argc, char** argv) {
     edge_ai_defect::runtime::RuntimeConfig config;
     status = edge_ai_defect::runtime::RuntimeConfigLoader::load(args.config, &config);
     if (!status.ok()) { std::cerr << "config: " << status.message() << '\n'; return 3; }
-    if (config.data_path_variant != edge_ai_defect::runtime::DataPathVariant::kV3 ||
+    if ((config.data_path_variant != edge_ai_defect::runtime::DataPathVariant::kV3 &&
+         config.data_path_variant != edge_ai_defect::runtime::DataPathVariant::kV4) ||
         config.backend_type != "tensorrt_int8" || config.schema_version != 6U ||
         config.profiling_mode != edge_ai_defect::runtime::ProfilingMode::kOff) {
-        std::cerr << "harness requires RuntimeConfig v6 V3 TensorRT INT8 profiling off\n";
+        std::cerr << "harness requires RuntimeConfig v6 V3/V4 TensorRT INT8 profiling off\n";
         return 3;
     }
     for (const fs::path& path : {args.result, args.hashes, args.run_manifest}) {
@@ -242,7 +244,59 @@ int main(int argc, char** argv) {
         edge_ai_defect::runtime::CanonicalHashSink& hash_;
     } sink(*json_sink, detection_hash);
 
+    edge_ai_defect::postprocess::PostProcessor postprocessor(config.postprocess_config);
     const RunMetadata metadata = make_metadata(config, contract, engine_manifest);
+    if (config.data_path_variant == edge_ai_defect::runtime::DataPathVariant::kV4) {
+        edge_ai_defect::stage_r::DoubleBufferRunner runner(
+            *source, *engine, postprocessor, sink);
+        edge_ai_defect::stage_r::V4RunStats stats;
+        RunSummary summary;
+        status = runner.run(metadata, &summary, &stats);
+        if (!status.ok()) { std::cerr << "V4 runner: " << status.message() << '\n'; return 4; }
+        if (stats.processed_frames != 180U || detection_hash.cycle_hashes().size() != 1U) {
+            std::cerr << "V4 frame contract failed\n"; return 5;
+        }
+        const std::string binary = fs::read_symlink("/proc/self/exe").string();
+        std::string binary_sha, config_sha, engine_sha, manifest_sha, result_sha;
+        for (const auto& pair : std::vector<std::pair<fs::path, std::string*>>{
+                 {binary, &binary_sha}, {args.config, &config_sha},
+                 {config.tensorrt.engine_path, &engine_sha}, {args.manifest, &manifest_sha},
+                 {args.result, &result_sha}}) {
+            status = sha256_file(pair.first, pair.second);
+            if (!status.ok()) { std::cerr << status.message() << '\n'; return 5; }
+        }
+        std::ostringstream hashes;
+        hashes << "{\n  \"schema_version\": 1,\n  \"variant\": \"V4\",\n"
+               << "  \"detection_sha256\": \"" << detection_hash.cycle_hashes().begin()->second
+               << "\",\n  \"tensor_digest_sha256\": \"" << stats.tensor_digest_sha256
+               << "\",\n  \"frames\": 180\n}\n";
+        status = write_text(args.hashes, hashes.str());
+        if (!status.ok()) { std::cerr << status.message() << '\n'; return 5; }
+        std::ostringstream run_manifest;
+        run_manifest << "{\n  \"schema_version\": 1,\n  \"stage\": \"R\",\n"
+                     << "  \"phase\": \"R2.4\",\n  \"variant\": \"V4\",\n"
+                     << "  \"commit\": \"" << current_commit() << "\",\n"
+                     << "  \"binary_sha256\": \"" << binary_sha << "\",\n"
+                     << "  \"config_sha256\": \"" << config_sha << "\",\n"
+                     << "  \"engine_sha256\": \"" << engine_sha << "\",\n"
+                     << "  \"test_manifest_sha256\": \"" << manifest_sha << "\",\n"
+                     << "  \"result_json_sha256\": \"" << result_sha << "\",\n"
+                     << "  \"processed_frames\": 180,\n  \"drop_count\": 0,\n"
+                     << "  \"eos\": true,\n  \"worker_join\": true,\n"
+                     << "  \"buffer_count\": " << stats.buffer_count << ",\n"
+                     << "  \"allocation_count\": " << stats.allocation_count << ",\n"
+                     << "  \"reuse_count\": " << stats.reuse_count << ",\n"
+                     << "  \"synchronization_count\": " << stats.synchronization_count << ",\n"
+                     << "  \"runtime_path\": \"two fixed pinned raw/device preprocessing/input slots -> single TensorRT context/enqueueV3 -> existing postprocess\",\n"
+                     << "  \"overlap\": \"limited ownership alternation; single CUDA stream serialized by explicit slot reuse synchronization\",\n"
+                     << "  \"result_json_schema\": 4,\n  \"cpu_preprocessing_fallback\": false\n}\n";
+        status = write_text(args.run_manifest, run_manifest.str());
+        if (!status.ok()) { std::cerr << status.message() << '\n'; return 5; }
+        std::cout << "V4 task harness PASS\nframes=180\ndetection_sha256="
+                  << detection_hash.cycle_hashes().begin()->second
+                  << "\ntensor_digest_sha256=" << stats.tensor_digest_sha256 << '\n';
+        return 0;
+    }
     status = sink.begin_run(metadata);
     if (!status.ok()) { std::cerr << "sink begin: " << status.message() << '\n'; return 4; }
     std::unique_ptr<edge_ai_defect::stage_r::CudaPreprocessor> preprocessor;
@@ -256,7 +310,6 @@ int main(int argc, char** argv) {
     edge_ai_defect::stage_r::PinnedRawStaging staging;
     status = staging.allocate(4096U * 4096U * 3U);
     if (!status.ok()) { std::cerr << "pinned staging: " << status.message() << '\n'; return 4; }
-    edge_ai_defect::postprocess::PostProcessor postprocessor(config.postprocess_config);
     std::vector<float> tensor(edge_ai_defect::stage_r::CudaPreprocessor::kTargetElementCount);
     Sha256Accumulator tensor_digest;
     std::size_t frames = 0;

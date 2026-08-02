@@ -51,6 +51,13 @@ public:
         std::size_t input_bytes,
         core::HostTensor* output);
 
+    // Stage R V4-only backend capability. The caller owns the fixed device
+    // slot; execution still uses this engine's single context and stream.
+    [[nodiscard]] core::Status run_device_input_slot(
+        const void* device_input,
+        std::size_t input_bytes,
+        core::HostTensor* output);
+
     [[nodiscard]] core::Status set_diagnostic_profiling(bool enabled);
     [[nodiscard]] core::Status reset_diagnostic_profiling();
     [[nodiscard]] const std::vector<TensorRtDiagnosticSample>& diagnostic_samples() const noexcept;

@@ -367,6 +367,7 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
             tools/validation/stage_r_v3_task_harness.cpp)
         target_link_libraries(stage_r_v3_task_harness PRIVATE
             edge_ai_stage_r_v3
+            edge_ai_stage_r_v4
             edge_ai_backend_trt
             edge_ai_backend_factory
             edge_ai_runtime
@@ -377,6 +378,32 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
             PROPERTIES
                 BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
         )
+        add_executable(stage_r_v4_task_harness
+            tools/validation/stage_r_v3_task_harness.cpp)
+        target_link_libraries(stage_r_v4_task_harness PRIVATE
+            edge_ai_stage_r_v4
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            OpenSSL::Crypto
+            ${EDGE_AI_CUDART_LIBRARY})
+        set_target_properties(stage_r_v4_task_harness PROPERTIES
+            BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+        add_library(edge_ai_stage_r_v4 STATIC
+            backend_tensorrt/pinned_raw_staging.cpp
+            stage_r/double_buffer_runner.cpp
+        )
+        target_include_directories(edge_ai_stage_r_v4 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR})
+        target_link_libraries(edge_ai_stage_r_v4 PUBLIC
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_runtime
+            OpenSSL::Crypto)
+        target_compile_definitions(edge_ai_stage_r_v4 PUBLIC EDGE_AI_STAGE_R_V4_AVAILABLE=1)
     endif()
 endif()
 
@@ -455,9 +482,14 @@ target_link_libraries(edge_ai_application
 )
 if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
     target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V2_AVAILABLE=1)
+    target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V4_AVAILABLE=1)
     target_include_directories(edge_ai_application PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR})
     target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v2)
+endif()
+
+if(TARGET edge_ai_stage_r_v4)
+    target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v4)
 endif()
 
 add_executable(edge_ai_infer src/main.cpp)
