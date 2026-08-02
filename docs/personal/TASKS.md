@@ -3515,3 +3515,25 @@ USER REVIEW OF R0 COMMIT
   `MAE=0.000412164`, `P99=0.00392163`, `max=0.00392163`, `non-finite=0`,
   status `PASS`; all geometry cases passed.
 - R2.1 status: `COMPLETE`; R2.2: `NOT STARTED`; R2.3: `NOT STARTED`.
+
+## 2026-08-02 — Stage R R2.2 Negative Result Closure
+
+- V2 pageable raw staging → CUDA preprocessing → TensorRT device input →
+  TensorRT INT8 → existing postprocess is runnable for the frozen 180-image
+  manifest. Frame order, drop count, EOS, worker join, and Result JSON v4
+  contracts passed.
+- Gate B remained `PASS`: tensor MAE/P99/maximum and non-finite thresholds
+  passed; Gate C remained `PASS` with the retained V0 canonical SHA
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Original V2 Gate D failed: mAP50 drop `0.00552337`, maximum class AP50 drop
+  `0.02751543`, maximum class Recall drop `0.03030303`.
+- The first minimal 11-bit fixed-point resize remediation improved the values
+  to mAP50 drop `0.00537575`, maximum class AP50 drop `0.02673348`, and maximum
+  class Recall drop `0.03030303`, but still failed the frozen replacement
+  criteria. No separable resize or broader CUDA compatibility work was done.
+- Final classification:
+  `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`.
+- V2 CUDA preprocessing candidate: not selected as replacement; V2 is an
+  experimental result only. Stage Q INT8 V0 baseline is retained.
+- V3: `SKIPPED`; V4: `SKIPPED`; R2.3: `NOT AUTHORIZED`; benchmark and performance
+  experiments: not executed.

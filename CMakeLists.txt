@@ -496,6 +496,24 @@ set_target_properties(stage_r_experiment_runner
         BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_r_v2_task_harness
+    tools/validation/stage_r_v2_task_harness.cpp
+)
+target_link_libraries(stage_r_v2_task_harness
+    PRIVATE
+        edge_ai_stage_r_v2
+        edge_ai_backend_trt
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        ${EDGE_AI_CUDART_LIBRARY}
+)
+set_target_properties(stage_r_v2_task_harness
+    PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
 

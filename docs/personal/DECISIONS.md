@@ -4272,3 +4272,61 @@ ACTIVE — planning contract; implementation not authorized
 - 仅 Stage R R2 V2/V3 planning and implementation boundary；
 - 不改变 Stage Q correctness authority；
 - 不授权 R3/R4 或 V4。
+
+### D085 — Stage R R2.2 V2 Negative Result Closure
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — negative result closure
+```
+
+决策：
+
+1. V2 pageable raw staging → CUDA preprocessing → TensorRT device input →
+   TensorRT INT8 → existing postprocess is accepted as a runnable experimental
+   path, not as the selected replacement.
+2. Gate B and Gate C remain `PASS`; the Stage Q V0 canonical SHA
+   `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2` remains
+   the correctness authority.
+3. Gate D remains `FAIL` after the first minimal 11-bit fixed-point resize
+   remediation. The remediation improved task metrics but did not satisfy the
+   frozen replacement criteria.
+4. Stage Q INT8 V0 is retained as the selected candidate:
+   `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`.
+5. V2 is recorded as an experimental result only. No further CUDA resize
+   compatibility expansion, including separable resize, is authorized by this
+   closure.
+6. V3 is `SKIPPED`, V4 is `SKIPPED`, R2.3 is `NOT AUTHORIZED`, and no benchmark
+   or performance conclusion is made.
+
+技术结论：
+
+```text
+Under the evaluated YOLOv8n INT8 deployment configuration, CUDA fused
+preprocessing introduced small numerical differences relative to OpenCV CPU
+preprocessing due to resize interpolation implementation differences. These
+differences remained within tensor-level tolerance but affected task-level
+metrics near the replacement threshold.
+```
+
+理由：
+
+- V2 runtime and frame contracts are valid;
+- tensor-level correctness is within the frozen Gate B contract;
+- task-level replacement criteria are not satisfied;
+- retaining the Stage Q V0 baseline preserves the existing correctness
+  authority without inventing success metrics or expanding scope.
+
+影响范围：
+
+- Stage R R2.2 final classification and evidence;
+- selected candidate remains Stage Q INT8 V0;
+- V2 remains experimental only;
+- V3/V4 and R2.3 remain skipped/not authorized.

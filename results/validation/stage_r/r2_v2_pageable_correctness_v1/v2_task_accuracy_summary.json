@@ -1,22 +1,251 @@
 {
   "schema_version": 1,
   "validation": "stage_r_r2_v2_pageable_task_correctness",
-  "status": "NOT RUN",
-  "reason": "Frozen Engine and 180-image TensorRT execution were not available in this workspace",
-  "processed_frames": null,
-  "frame_order": "NOT RUN",
-  "relative_paths": "NOT RUN",
-  "dimensions": "NOT RUN",
-  "drop": null,
-  "eos": "NOT RUN",
-  "worker_join": "NOT RUN",
-  "result_json_schema": "v4 contract unchanged; run NOT EXECUTED",
-  "frozen_thresholds": {
-    "map50_95_drop": 0.005,
-    "map50_drop": 0.005,
-    "precision_drop": 0.01,
-    "recall_drop": 0.01,
-    "class_ap50_drop": 0.02,
-    "class_recall_drop": 0.03
+  "status": "FAIL",
+  "commit": "abf9d24b95964e9865f8a1cc5104a61edd42d4ca",
+  "binary_sha256": "757d1de2ea7cce98c5e56f07d7715828af6d0cbdabf7fc6e11ce48ac69911425",
+  "config_sha256": "a4d9335ed0a13d21b34da4ea05b8c5e50975b2ec08b6419877adb6b5d4595bc3",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "test_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "variant": "V2",
+  "result_json_sha256": "1e639c974e2d67a95f2cdabbe7b9fe0be5444b8b1f5c302314a782c278660bd2",
+  "detection_sha256": "b4a7f173afdf54b9ed1ed368ea026b0e7fe31a945d5f098377f0864f45a178ab",
+  "tensor_digest": "c00128515fa72b2fe024d865f05edb2e7b49239e3c1aa16f278f16d508effa97",
+  "frame_count": 180,
+  "frame_order": "PASS",
+  "relative_paths": "PASS",
+  "dimensions": "PASS",
+  "drop": 0,
+  "eos": true,
+  "worker_join": true,
+  "result_json_schema": 4,
+  "metrics": {
+    "authority_v0": {
+      "precision": 0.6912751677852349,
+      "recall": 0.6990950226244343,
+      "mAP50": 0.647625463793534,
+      "mAP50_95": 0.3523443910494967,
+      "tp": 309,
+      "fp": 138,
+      "fn": 133,
+      "prediction_count": 447,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6912751677852349,
+        "recall": 0.6990950226244343,
+        "tp": 309,
+        "fp": 138,
+        "fn": 133,
+        "prediction_count": 447,
+        "gt_count": 442,
+        "matched_iou_count": 309
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "v2": {
+      "precision": 0.6836283185840708,
+      "recall": 0.6990950226244343,
+      "mAP50": 0.642102097498774,
+      "mAP50_95": 0.3547992444091024,
+      "tp": 309,
+      "fp": 143,
+      "fn": 133,
+      "prediction_count": 452,
+      "gt_count": 442,
+      "iou50": {
+        "precision": 0.6836283185840708,
+        "recall": 0.6990950226244343,
+        "tp": 309,
+        "fp": 143,
+        "fn": 133,
+        "prediction_count": 452,
+        "gt_count": 442,
+        "matched_iou_count": 309
+      },
+      "iou_thresholds": [
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95
+      ]
+    },
+    "per_class_authority_v0": {
+      "crazing": {
+        "AP50": 0.2037064778274966,
+        "AP50_95": 0.09592932835963826,
+        "precision": 0.3709677419354839,
+        "recall": 0.3108108108108108,
+        "tp": 23,
+        "fp": 39,
+        "fn": 51,
+        "prediction_count": 62,
+        "gt_count": 74
+      },
+      "inclusion": {
+        "AP50": 0.6287516497993013,
+        "AP50_95": 0.3269146814991847,
+        "precision": 0.6611570247933884,
+        "recall": 0.7079646017699115,
+        "tp": 80,
+        "fp": 41,
+        "fn": 33,
+        "prediction_count": 121,
+        "gt_count": 113
+      },
+      "patches": {
+        "AP50": 0.8462547740623322,
+        "AP50_95": 0.4944760015335111,
+        "precision": 0.8734177215189873,
+        "recall": 0.8625,
+        "tp": 69,
+        "fp": 10,
+        "fn": 11,
+        "prediction_count": 79,
+        "gt_count": 80
+      },
+      "pitted_surface": {
+        "AP50": 0.769864959184994,
+        "AP50_95": 0.49114547631010763,
+        "precision": 0.7714285714285715,
+        "recall": 0.8181818181818182,
+        "tp": 27,
+        "fp": 8,
+        "fn": 6,
+        "prediction_count": 35,
+        "gt_count": 33
+      },
+      "rolled-in_scale": {
+        "AP50": 0.563851931912887,
+        "AP50_95": 0.2341098045887708,
+        "precision": 0.5882352941176471,
+        "recall": 0.6666666666666666,
+        "tp": 50,
+        "fp": 35,
+        "fn": 25,
+        "prediction_count": 85,
+        "gt_count": 75
+      },
+      "scratches": {
+        "AP50": 0.8733229899741927,
+        "AP50_95": 0.471491054005768,
+        "precision": 0.9230769230769231,
+        "recall": 0.8955223880597015,
+        "tp": 60,
+        "fp": 5,
+        "fn": 7,
+        "prediction_count": 65,
+        "gt_count": 67
+      }
+    },
+    "per_class_v2": {
+      "crazing": {
+        "AP50": 0.2161238350118182,
+        "AP50_95": 0.09950726542339453,
+        "precision": 0.4,
+        "recall": 0.35135135135135137,
+        "tp": 26,
+        "fp": 39,
+        "fn": 48,
+        "prediction_count": 65,
+        "gt_count": 74
+      },
+      "inclusion": {
+        "AP50": 0.6037910574435797,
+        "AP50_95": 0.3181615607490082,
+        "precision": 0.6260162601626016,
+        "recall": 0.6814159292035398,
+        "tp": 77,
+        "fp": 46,
+        "fn": 36,
+        "prediction_count": 123,
+        "gt_count": 113
+      },
+      "patches": {
+        "AP50": 0.8573089115903666,
+        "AP50_95": 0.5100063061324431,
+        "precision": 0.8860759493670886,
+        "recall": 0.875,
+        "tp": 70,
+        "fp": 9,
+        "fn": 10,
+        "prediction_count": 79,
+        "gt_count": 80
+      },
+      "pitted_surface": {
+        "AP50": 0.7423495274404293,
+        "AP50_95": 0.490531598203899,
+        "precision": 0.7428571428571429,
+        "recall": 0.7878787878787878,
+        "tp": 26,
+        "fp": 9,
+        "fn": 7,
+        "prediction_count": 35,
+        "gt_count": 33
+      },
+      "rolled-in_scale": {
+        "AP50": 0.5662900523517163,
+        "AP50_95": 0.23663426137095872,
+        "precision": 0.5952380952380952,
+        "recall": 0.6666666666666666,
+        "tp": 50,
+        "fp": 34,
+        "fn": 25,
+        "prediction_count": 84,
+        "gt_count": 75
+      },
+      "scratches": {
+        "AP50": 0.8667492011547336,
+        "AP50_95": 0.47395447457491047,
+        "precision": 0.9090909090909091,
+        "recall": 0.8955223880597015,
+        "tp": 60,
+        "fp": 6,
+        "fn": 7,
+        "prediction_count": 66,
+        "gt_count": 67
+      }
+    }
+  },
+  "drops": {
+    "mAP50-95": -0.0024548533596056576,
+    "mAP50": 0.005523366294760024,
+    "precision": 0.0076468492011640965,
+    "recall": 0.0,
+    "max_class_AP50": 0.027515431744564722,
+    "max_class_recall": 0.030303030303030387
+  },
+  "thresholds": {
+    "mAP50-95": 0.005,
+    "mAP50": 0.005,
+    "precision": 0.01,
+    "recall": 0.01,
+    "class_AP50": 0.02,
+    "class_recall": 0.03
+  },
+  "threshold_pass": false,
+  "benchmark": "NOT EXECUTED",
+  "runtime_path": "pageable raw staging -> CUDA preprocessing -> TensorRtDeviceInputCapability -> TensorRT INT8 -> existing postprocess",
+  "cpu_preprocessing_fallback": false,
+  "scope": {
+    "v3": "NOT IMPLEMENTED",
+    "v4": "NOT IMPLEMENTED",
+    "benchmark": "NOT EXECUTED"
   }
 }

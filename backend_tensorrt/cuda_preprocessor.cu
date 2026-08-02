@@ -16,6 +16,8 @@ namespace {
 
 constexpr float kNormalization = 1.0F / 255.0F;
 constexpr float kPaddingNormalized = 114.0F / 255.0F;
+constexpr int kResizeCoefficientBits = 11;
+constexpr int kResizeCoefficientScale = 1 << kResizeCoefficientBits;
 
 __device__ float raw_pixel(const std::uint8_t* raw,
                            std::size_t row_stride,
@@ -61,22 +63,39 @@ __device__ float read_bilinear_channel(const std::uint8_t* raw,
 
     const int x0_unclamped = static_cast<int>(floor(source_x));
     const int y0_unclamped = static_cast<int>(floor(source_y));
-    const float x_alpha = static_cast<float>(source_x - x0_unclamped);
-    const float y_alpha = static_cast<float>(source_y - y0_unclamped);
+    // OpenCV's 8-bit INTER_LINEAR path quantizes resize coefficients to
+    // 11-bit fixed point.  Keep the first remediation deliberately local to
+    // coefficient precision; separable horizontal/vertical execution is not
+    // attempted here.
+    const int x_alpha = __float2int_rn(
+        static_cast<float>(source_x - x0_unclamped) *
+        static_cast<float>(kResizeCoefficientScale));
+    const int y_alpha = __float2int_rn(
+        static_cast<float>(source_y - y0_unclamped) *
+        static_cast<float>(kResizeCoefficientScale));
+    const int x_weight_0 = kResizeCoefficientScale - x_alpha;
+    const int y_weight_0 = kResizeCoefficientScale - y_alpha;
 
     const int x0 = max(0, min(x0_unclamped, original_width - 1));
     const int x1 = max(0, min(x0_unclamped + 1, original_width - 1));
     const int y0 = max(0, min(y0_unclamped, original_height - 1));
     const int y1 = max(0, min(y0_unclamped + 1, original_height - 1));
 
-    const float top = raw_pixel(raw, row_stride, y0, x0, channel) *
-                          (1.0F - x_alpha) +
-                      raw_pixel(raw, row_stride, y0, x1, channel) * x_alpha;
-    const float bottom = raw_pixel(raw, row_stride, y1, x0, channel) *
-                             (1.0F - x_alpha) +
-                         raw_pixel(raw, row_stride, y1, x1, channel) * x_alpha;
-    const float interpolated = top * (1.0F - y_alpha) + bottom * y_alpha;
-    return static_cast<float>(__float2int_rn(interpolated));
+    const std::int64_t top =
+        static_cast<std::int64_t>(raw_pixel(raw, row_stride, y0, x0, channel)) *
+            x_weight_0 +
+        static_cast<std::int64_t>(raw_pixel(raw, row_stride, y0, x1, channel)) *
+            x_alpha;
+    const std::int64_t bottom =
+        static_cast<std::int64_t>(raw_pixel(raw, row_stride, y1, x0, channel)) *
+            x_weight_0 +
+        static_cast<std::int64_t>(raw_pixel(raw, row_stride, y1, x1, channel)) *
+            x_alpha;
+    const std::int64_t weighted = top * y_weight_0 + bottom * y_alpha;
+    constexpr std::int64_t kRounding =
+        static_cast<std::int64_t>(1) << (kResizeCoefficientBits * 2 - 1);
+    return static_cast<float>((weighted + kRounding) >>
+                              (kResizeCoefficientBits * 2));
 }
 
 __global__ void preprocess_kernel(const std::uint8_t* raw,
