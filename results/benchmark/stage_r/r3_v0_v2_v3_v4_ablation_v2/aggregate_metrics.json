@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "classification": "R3_ATTEMPT_2_UNIFIED_HARNESS",
+  "comparability_status": "UNIFIED_HARNESS_COMPARABLE",
+  "variants": [
+    {
+      "variant": "V0",
+      "run_count": 5,
+      "measured_frames": 5400,
+      "measured_frames_per_run": 1080,
+      "drop_count": 0,
+      "cpu_equivalent_cores_mean": 0.8405238095238096,
+      "detection_sha": [
+        "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
+      ],
+      "tensor_digest": [
+        null
+      ],
+      "accuracy_source": "Stage R R2 remediated V2 Gate D result; V3/V4 inherit identical detection SHA",
+      "throughput_mean": 54.865242691940885,
+      "throughput_mean_stddev_across_runs": 0.31210102088302116,
+      "latency_mean": 18.167954922222222,
+      "latency_mean_stddev_across_runs": 0.10409617199378496,
+      "latency_median": 18.2564186,
+      "latency_median_stddev_across_runs": 0.07102130766636176,
+      "latency_p95": 18.830267839999998,
+      "latency_p95_stddev_across_runs": 0.07154875180750075,
+      "latency_p99": 19.004484748,
+      "latency_p99_stddev_across_runs": 0.02880959120337834,
+      "latency_min": 14.4267572,
+      "latency_min_stddev_across_runs": 0.7754772418987937,
+      "latency_max": 19.2341274,
+      "latency_max_stddev_across_runs": 0.05431204267416283,
+      "latency_stddev": 0.5241653684399022,
+      "latency_stddev_stddev_across_runs": 0.12214962519430372
+    },
+    {
+      "variant": "V2",
+      "run_count": 5,
+      "measured_frames": 5400,
+      "measured_frames_per_run": 1080,
+      "drop_count": 0,
+      "cpu_equivalent_cores_mean": 0.7562222222222222,
+      "detection_sha": [
+        "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed"
+      ],
+      "tensor_digest": [
+        "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f"
+      ],
+      "accuracy_source": "Stage R R2 remediated V2 Gate D result; V3/V4 inherit identical detection SHA",
+      "throughput_mean": 126.12030462893935,
+      "throughput_mean_stddev_across_runs": 1.074795742675434,
+      "latency_mean": 7.87042523962963,
+      "latency_mean_stddev_across_runs": 0.06752274341942698,
+      "latency_median": 7.6048256,
+      "latency_median_stddev_across_runs": 0.04750999311239718,
+      "latency_p95": 9.93485472,
+      "latency_p95_stddev_across_runs": 0.11904283687403705,
+      "latency_p99": 11.552093880000001,
+      "latency_p99_stddev_across_runs": 0.6523474278222358,
+      "latency_min": 6.6572873999999995,
+      "latency_min_stddev_across_runs": 0.3072548176166486,
+      "latency_max": 12.6857328,
+      "latency_max_stddev_across_runs": 0.6946620689179455,
+      "latency_stddev": 0.8928514527018155,
+      "latency_stddev_stddev_across_runs": 0.0902762326455788
+    },
+    {
+      "variant": "V3",
+      "run_count": 5,
+      "measured_frames": 5400,
+      "measured_frames_per_run": 1080,
+      "drop_count": 0,
+      "cpu_equivalent_cores_mean": 0.8373777777777779,
+      "detection_sha": [
+        "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed"
+      ],
+      "tensor_digest": [
+        "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f"
+      ],
+      "accuracy_source": "Stage R R2 remediated V2 Gate D result; V3/V4 inherit identical detection SHA",
+      "throughput_mean": 127.00490837666182,
+      "throughput_mean_stddev_across_runs": 0.6765379555922377,
+      "latency_mean": 7.8065112231481475,
+      "latency_mean_stddev_across_runs": 0.03926220820156528,
+      "latency_median": 7.5498323,
+      "latency_median_stddev_across_runs": 0.02921538178015147,
+      "latency_p95": 9.89409136,
+      "latency_p95_stddev_across_runs": 0.15967109680401567,
+      "latency_p99": 11.220268662,
+      "latency_p99_stddev_across_runs": 0.809327284247508,
+      "latency_min": 6.620492400000001,
+      "latency_min_stddev_across_runs": 0.19812598923170063,
+      "latency_max": 12.492633000000001,
+      "latency_max_stddev_across_runs": 0.9516771476588055,
+      "latency_stddev": 0.8732396090653953,
+      "latency_stddev_stddev_across_runs": 0.1332052125908899
+    },
+    {
+      "variant": "V4",
+      "run_count": 5,
+      "measured_frames": 5400,
+      "measured_frames_per_run": 1080,
+      "drop_count": 0,
+      "cpu_equivalent_cores_mean": 1.000671096345515,
+      "detection_sha": [
+        "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed"
+      ],
+      "tensor_digest": [
+        "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f"
+      ],
+      "accuracy_source": "Stage R R2 remediated V2 Gate D result; V3/V4 inherit identical detection SHA",
+      "throughput_mean": 26.746066176353565,
+      "throughput_mean_stddev_across_runs": 0.276234712330206,
+      "latency_mean": 32.27793978611111,
+      "latency_mean_stddev_across_runs": 0.39008113991192767,
+      "latency_median": 22.141664600000002,
+      "latency_median_stddev_across_runs": 0.03817917648719011,
+      "latency_p95": 22.6748868,
+      "latency_p95_stddev_across_runs": 0.06307091795235598,
+      "latency_p99": 22.906557636000002,
+      "latency_p99_stddev_across_runs": 0.09467176841973704,
+      "latency_min": 18.4973906,
+      "latency_min_stddev_across_runs": 0.20563798632412303,
+      "latency_max": 9324.2314064,
+      "latency_max_stddev_across_runs": 467.5158400455196,
+      "latency_stddev": 285.4670844427246,
+      "latency_stddev_stddev_across_runs": 14.020805525774692
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R3",
+  "status": "COMPLETE_SAMPLING_COMPARABILITY_BLOCKED",
+  "research_mode": "MULTI_BRANCH_ABLATION_MODE",
+  "production_commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+  "branch": "feature/jetson-int8-data-path-optimization",
+  "worktree_status_at_start": "M CMakeLists.txt\n?? tools/benchmark/run_stage_r_r3_ablation.py\n?? tools/benchmark/stage_r_r3_ablation_runner.cpp",
+  "runner_path": "/home/orin/edge-ai/edge-ai-defect/build_r3/stage_r_r3_ablation_runner",
+  "runner_sha256": "7d2da2f786d11ad0d3774e1915bb35b559be87b74be55282971b0ab83b3c9c64",
+  "corpus_manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+  "corpus_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "warmup_frames": 60,
+  "measured_frames_per_run": 1080,
+  "independent_runs_per_variant": 5,
+  "queue_capacity": 1,
+  "drop_policy": "block",
+  "order_schedule": [
+    [
+      "V0",
+      "V2",
+      "V3",
+      "V4"
+    ],
+    [
+      "V4",
+      "V3",
+      "V2",
+      "V0"
+    ],
+    [
+      "V2",
+      "V0",
+      "V4",
+      "V3"
+    ],
+    [
+      "V3",
+      "V4",
+      "V0",
+      "V2"
+    ],
+    [
+      "V0",
+      "V3",
+      "V2",
+      "V4"
+    ]
+  ],
+  "entry_environment": {
+    "timestamp_utc": "2026-08-02T06:13:09.560308+00:00",
+    "uname": "Linux ubuntu 5.15.185-tegra #1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026 aarch64 aarch64 aarch64 GNU/Linux",
+    "architecture": "aarch64",
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2",
+    "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+    "cuda_version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Wed_Aug_14_10:14:07_PDT_2024\nCuda compilation tools, release 12.6, V12.6.68\nBuild cuda_12.6.r12.6/compiler.34714021_0",
+    "tensorrt_version": "unavailable: executable not found",
+    "opencv_threads_contract": 1,
+    "cpu_affinity_contract": "0-5",
+    "temperatures_c": {
+      "thermal_zone0": 47.687,
+      "thermal_zone1": 48.031,
+      "thermal_zone5": 47.875,
+      "thermal_zone6": 47.843,
+      "thermal_zone7": 47.406,
+      "thermal_zone8": 48.031
+    }
+  },
+  "variants": {
+    "V0": "configs/stage_r/runtime_v6_v0_off.yaml",
+    "V2": "configs/stage_r/runtime_v6_v2_pageable.yaml",
+    "V3": "configs/stage_r/runtime_v6_v3_pinned.yaml",
+    "V4": "configs/stage_r/runtime_v6_v4_double_buffer.yaml"
+  },
+  "prohibited_during_sampling": [
+    "production code changes",
+    "CUDA resize changes",
+    "retuning",
+    "engine/model/postprocess changes"
+  ],
+  "completed_run_count": 20,
+  "exit_environment": {
+    "timestamp_utc": "2026-08-02T06:24:15.244430+00:00",
+    "uname": "Linux ubuntu 5.15.185-tegra #1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026 aarch64 aarch64 aarch64 GNU/Linux",
+    "architecture": "aarch64",
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2",
+    "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+    "cuda_version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Wed_Aug_14_10:14:07_PDT_2024\nCuda compilation tools, release 12.6, V12.6.68\nBuild cuda_12.6.r12.6/compiler.34714021_0",
+    "tensorrt_version": "unavailable: executable not found",
+    "opencv_threads_contract": 1,
+    "cpu_affinity_contract": "0-5",
+    "temperatures_c": {
+      "thermal_zone0": 48.093,
+      "thermal_zone1": 48.312,
+      "thermal_zone5": 47.781,
+      "thermal_zone6": 47.906,
+      "thermal_zone7": 47.562,
+      "thermal_zone8": 48.312
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R5",
+  "classification": "STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION",
+  "authority_r3_evidence": "results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/",
+  "authority_classification": "R3_ATTEMPT_2_UNIFIED_HARNESS",
+  "comparability_status": "UNIFIED_HARNESS_COMPARABLE",
+  "variants": ["V0", "V2", "V3", "V4"],
+  "runs_per_variant": 5,
+  "frames_per_run": 1080,
+  "harness": "unified single-thread ablation, batch-1 640x640, queue capacity 1 block policy",
+  "performance_metrics": {
+    "V0": {
+      "fps_mean": 54.865243,
+      "fps_std": 0.312101,
+      "fps_min": 54.381823,
+      "fps_max": 55.279406,
+      "latency_mean_ms": 18.167955,
+      "latency_std_ms": 0.104096,
+      "latency_p95_ms": 18.830268,
+      "latency_p99_ms": 19.004485,
+      "cpu_equivalent_cores": 0.840524
+    },
+    "V2": {
+      "fps_mean": 126.120305,
+      "fps_std": 1.074796,
+      "fps_min": 124.482840,
+      "fps_max": 127.662155,
+      "latency_mean_ms": 7.870425,
+      "latency_std_ms": 0.067523,
+      "latency_p95_ms": 9.934855,
+      "latency_p99_ms": 11.552094,
+      "cpu_equivalent_cores": 0.756222
+    },
+    "V3": {
+      "fps_mean": 127.004908,
+      "fps_std": 0.676538,
+      "fps_min": 126.098076,
+      "fps_max": 127.842282,
+      "latency_mean_ms": 7.806511,
+      "latency_std_ms": 0.039262,
+      "latency_p95_ms": 9.894091,
+      "latency_p99_ms": 11.220269,
+      "cpu_equivalent_cores": 0.837378
+    },
+    "V4": {
+      "fps_mean": 26.746066,
+      "fps_std": 0.276235,
+      "fps_min": 26.223715,
+      "fps_max": 26.969355,
+      "latency_mean_ms": 32.277940,
+      "latency_std_ms": 0.390081,
+      "latency_p95_ms": 22.674887,
+      "latency_p99_ms": 22.906558,
+      "cpu_equivalent_cores": 1.000671,
+      "latency_max_ms": [10236.581644, 8976.955426, 9173.937149, 8991.817103, 9241.865710],
+      "latency_stddev_ms": [312.830788, 275.065994, 280.915652, 275.504785, 283.018204]
+    }
+  },
+  "paired_differences": {
+    "V2_vs_V0": {
+      "fps_change": 71.255061937,
+      "fps_relative": 1.298728638,
+      "latency_mean_change_ms": -10.297529683,
+      "latency_mean_relative": -0.566796303,
+      "cpu_equivalent_cores_change": -0.084301587
+    },
+    "V3_vs_V2": {
+      "fps_change": 0.884603748,
+      "fps_relative": 0.007013968,
+      "latency_mean_change_ms": -0.063914016,
+      "latency_mean_relative": -0.008120783,
+      "cpu_equivalent_cores_change": 0.081155556
+    },
+    "V4_vs_V3": {
+      "fps_change": -100.258842200,
+      "fps_relative": -0.789409193,
+      "latency_mean_change_ms": 24.471428563,
+      "latency_mean_relative": 3.134745838,
+      "cpu_equivalent_cores_change": 0.163293319
+    },
+    "V4_vs_V0": {
+      "fps_change": -28.119176516,
+      "fps_relative": -0.512513481,
+      "latency_mean_change_ms": 14.109984864,
+      "latency_mean_relative": 0.776641340,
+      "cpu_equivalent_cores_change": 0.160147287
+    }
+  },
+  "accuracy_metrics": {
+    "V0": {
+      "map50_delta": 0.0,
+      "max_class_ap50_delta": 0.0,
+      "max_class_recall_delta": 0.0,
+      "detection_sha": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
+    },
+    "V2": {
+      "map50_delta": -0.00537575,
+      "max_class_ap50_delta": -0.02673348,
+      "max_class_recall_delta": -0.03030303,
+      "detection_sha": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "inherited": true
+    },
+    "V3": {
+      "map50_delta": -0.00537575,
+      "max_class_ap50_delta": -0.02673348,
+      "max_class_recall_delta": -0.03030303,
+      "detection_sha": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "inherited": true
+    },
+    "V4": {
+      "map50_delta": -0.00537575,
+      "max_class_ap50_delta": -0.02673348,
+      "max_class_recall_delta": -0.03030303,
+      "detection_sha": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "inherited": true
+    }
+  },
+  "gate_d": {
+    "result": "FAIL",
+    "limit_map50": 0.005,
+    "v2_map50_drop": 0.00537575,
+    "amount_exceeding_limit": 0.00037575,
+    "threshold_unchanged": true
+  },
+  "complexity_classification": {
+    "V0": "BASELINE_CPU_PREPROCESSING",
+    "V2": "MODERATE_CUDA_FUSED_PREPROCESSING_PAGEABLE",
+    "V3": "MODERATE_PLUS_LONG_LIVED_PINNED_RAW",
+    "V4": "HIGHEST_TWO_SLOT_LIMITED_ALTERNATION"
+  },
+  "stability_classification": {
+    "V0": "STABLE",
+    "V2": "STABLE",
+    "V3": "STABLE",
+    "V4": "SEVERE_TAIL_AND_OOM_EVENT"
+  },
+  "pareto_frontier": {
+    "deployment_baseline": "STAGE_Q_INT8_V0",
+    "research_tradeoff_candidate": "STAGE_R_V2_CUDA_PREPROCESSING",
+    "on_frontier": ["V0", "V2"],
+    "not_on_frontier": {
+      "V3": "incremental benefit insufficient relative to added mechanism",
+      "V4": "dominated by V2/V3 and affected by severe tail instability"
+    }
+  },
+  "deployment_baseline": "STAGE_Q_INT8_V0",
+  "research_tradeoff_candidate": "STAGE_R_V2_CUDA_PREPROCESSING",
+  "attempt_1_disposition": "R3_ATTEMPT_1_NONCOMPARABLE_HARNESS",
+  "attempt_1_pipeline_runner_v0_fps": {
+    "value": 231.9,
+    "status": "CONTEXT ONLY",
+    "comparability": "NOT COMPARABLE WITH THE UNIFIED SINGLE-THREAD ABLATION"
+  },
+  "v3_disposition": "NO_MEANINGFUL_INCREMENTAL_BENEFIT_OBSERVED",
+  "v4_disposition": "DOMINATED_NEGATIVE_ABLATION_RESULT",
+  "v5_disposition": "NOT_IMPLEMENTED",
+  "limitations": [
+    "five formal runs per variant; observed differences not claimed statistically significant",
+    "unified single-thread batch-1 harness; not directly comparable to multi-thread PipelineRunner",
+    "accuracy inherited from R2 Gate D; V3/V4 inherit V2 task metrics via identical detection SHA",
+    "V4 root cause beyond tested synchronization model not established",
+    "Gate D limit unchanged; V2 is a trade-off candidate not a Gate-passing replacement",
+    "V4 outlier not repaired; V5 and zero-copy not implemented"
+  ]
+}

@@ -14,6 +14,12 @@
 #include "edge_ai_defect/runtime/serial_runner.hpp"
 #include "edge_ai_defect/runtime/video_file_source.hpp"
 
+#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE) || defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
+#include "edge_ai_defect/backend_tensorrt/tensorrt_engine.hpp"
+#include "stage_r/pageable_runner.hpp"
+#include "stage_r/double_buffer_runner.hpp"
+#endif
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -30,7 +36,7 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
     const bool tensorrt = config.backend_type == "tensorrt_fp16" ||
                           config.backend_type == "tensorrt_int8";
     const bool int8 = config.backend_type == "tensorrt_int8";
-    metadata.schema_version = config.schema_version == 5U ? 4U
+    metadata.schema_version = config.schema_version == 5U || config.schema_version == 6U ? 4U
                             : (config.schema_version == 4U ? 3U : (tensorrt ? 2U : 1U));
     metadata.backend_type = config.backend_type;
     metadata.model_filename = tensorrt
@@ -64,7 +70,7 @@ runtime::RunMetadata make_metadata(const runtime::RuntimeConfig& config,
     metadata.postprocess_config = config.postprocess_config;
     metadata.timing_enabled =
         options.timing_enabled_override.value_or(config.timing_enabled);
-    if (config.schema_version == 4U || config.schema_version == 5U) {
+    if (config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) {
         metadata.runtime_v3 = runtime::RuntimeMetadataV3{
             config.runtime_mode,
             config.input_type,
@@ -118,7 +124,42 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
         return {core::Status::failure(core::ErrorCode::kInvalidArgument,
                                       "run summary must not be null"), false};
     }
-    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
+#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE)
+    if (config.data_path_variant == runtime::DataPathVariant::kV2) {
+        if (config.backend_type != "tensorrt_int8") {
+            return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                          "V2 requires the TensorRT INT8 backend"), false};
+        }
+        auto* tensorrt = dynamic_cast<backend_tensorrt::TensorRtEngine*>(&engine);
+        if (tensorrt == nullptr) {
+            return {core::Status::failure(core::ErrorCode::kBackendRuntimeError,
+                                          "V2 TensorRT capability is unavailable"), false};
+        }
+        stage_r::PageableRunner runner(source, *tensorrt, postprocessor, sink);
+        return {runner.run(metadata, summary), true};
+    }
+#endif
+#if defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
+    if (config.data_path_variant == runtime::DataPathVariant::kV4) {
+        if (config.backend_type != "tensorrt_int8") {
+            return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                          "V4 requires the TensorRT INT8 backend"), false};
+        }
+        auto* tensorrt = dynamic_cast<backend_tensorrt::TensorRtEngine*>(&engine);
+        if (tensorrt == nullptr) {
+            return {core::Status::failure(core::ErrorCode::kBackendRuntimeError,
+                                          "V4 TensorRT capability is unavailable"), false};
+        }
+        stage_r::DoubleBufferRunner runner(source, *tensorrt, postprocessor, sink);
+        stage_r::V4RunStats stats;
+        return {runner.run(metadata, summary, &stats), true};
+    }
+ #endif
+    if (config.data_path_variant != runtime::DataPathVariant::kV0) {
+        return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                      "Stage R variants other than V0 are not implemented"), false};
+    }
+    if ((config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(source, preprocessor, model_input_info,
                                        engine, postprocessor, sink,
                                        config.pipeline.queue_capacity,
@@ -131,6 +172,11 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
 }
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
+    if (config.data_path_variant != runtime::DataPathVariant::kV0 &&
+        config.data_path_variant != runtime::DataPathVariant::kV4) {
+        return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                      "Stage R variants other than V0 are not implemented"), false};
+    }
     std::unique_ptr<const runtime::OpenCvThreadPolicyRecord> opencv_policy_record;
     if (config.schema_version == 2U) {
         const core::Status policy_status =
@@ -204,7 +250,7 @@ RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
 
     const runtime::RunMetadata metadata = make_metadata(
         config, contract, options, manifest.get());
-    if ((config.schema_version == 4U || config.schema_version == 5U) && config.runtime_mode == "pipeline") {
+    if ((config.schema_version == 4U || config.schema_version == 5U || config.schema_version == 6U) && config.runtime_mode == "pipeline") {
         runtime::PipelineRunner runner(*source, preprocessor,
                                        contract.input.tensor_info, *engine,
                                        postprocessor, *sink,

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R1",
+  "gate": "R1_PASS",
+  "warmup_frames": 180,
+  "measured_frames": 1800,
+  "complete_cycles": 10,
+  "drop_count": 0,
+  "off": {
+    "throughput_fps": 255.085,
+    "mean_pre_sink_latency_ms": 8.33072,
+    "sample_count": 0,
+    "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
+  },
+  "diagnostic": {
+    "throughput_fps": 258.034,
+    "mean_pre_sink_latency_ms": 8.62822,
+    "sample_count": 180,
+    "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2"
+  },
+  "throughput_ratio_diagnostic_over_off": 1.011560852,
+  "mean_latency_ratio_diagnostic_over_off": 1.035711199,
+  "throughput_gate": "PASS (>= 0.95)",
+  "latency_gate": "PASS (<= 1.05)",
+  "sampling_rule": "frame_in_cycle % 10 == cycle_index % 10",
+  "sample_coverage": {
+    "sample_count": 180,
+    "unique_cycle_position_pairs": 180,
+    "unique_manifest_positions": 180,
+    "duplicate": 0,
+    "missing": 0
+  },
+  "diagnostic_cuda_event_means_ms": {
+    "h2d": 0.690427356,
+    "tensorrt": 2.806860778,
+    "d2h": 0.099916267,
+    "host_output_construction": 0.034834906,
+    "host_roundtrip": 3.705427278
+  },
+  "diagnostic_cpu_means_ms": {
+    "source": 0.932768299,
+    "preprocess": 3.652910182,
+    "inference_host_roundtrip": 3.762928002,
+    "postprocess": 0.279608743,
+    "pre_sink": 8.628215226
+  },
+  "pipeline_queue_wait_means_ms": {
+    "source_to_preprocess": 3.819664172,
+    "preprocess_to_inference": 1.011639421,
+    "inference_to_postprocess": 0.0
+  },
+  "interpretation": "Measured V0 data path is dominated by CPU preprocess and synchronous host-side inference roundtrip; CUDA event timings provide component evidence. This is a V0 observation only and does not establish V2/V3/V4 performance."
+}

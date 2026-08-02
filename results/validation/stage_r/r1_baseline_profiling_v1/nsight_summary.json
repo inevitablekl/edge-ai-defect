@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R1",
+  "status": "BLOCKED_PENDING_CAPTURE",
+  "nsys_version": "NVIDIA Nsight Systems version 2024.5.4.34-245434855735v0",
+  "nsys_package": "nsight-systems-2024.5.4=2024.5.4.34-245434855735v0 arm64",
+  "actual_command": "NOT RUN: capture explicitly deferred after control remediation",
+  "capture_range_mechanism": "CUDA Profiler API start/stop around measured phase; NVTX range stage_r.measured retained; bounded capture not run",
+  "capture_control_status": "REMEDIATED",
+  "capture_control_order": [
+    "stage_r.measured_phase_start marker",
+    "cudaProfilerStart()",
+    "stage_r.measured range begin",
+    "measured phase",
+    "cudaProfilerStop()",
+    "stage_r.measured_phase_end marker",
+    "stage_r.measured range end"
+  ],
+  "captured_frames": null,
+  "capture_duration_seconds": null,
+  "raw_path": null,
+  "raw_sha256": null,
+  "local_only_classification": "no raw evidence created",
+  "observations": "Nsight Systems is installed and the runner exposes both the retained NVTX measured boundary and a CUDA Profiler API measured boundary. No capture or CUDA observation was performed in this remediation.",
+  "formal_authority": false
+}

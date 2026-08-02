@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v4_v3_equivalence",
+  "status": "PASS",
+  "v3_tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+  "v4_tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+  "tensor_digest_identical": true,
+  "v3_detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+  "v4_detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+  "detection_sha_identical": true,
+  "result_json_version": 4,
+  "comparison_frames": 180,
+  "changed_contract": false,
+  "benchmark": "NOT EXECUTED"
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "variant": "V4",
+  "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+  "tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+  "frames": 180
+}

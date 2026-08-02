@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R3",
+  "status": "COMPLETE_UNIFIED_HARNESS_COMPARABLE",
+  "attempt": 2,
+  "classification": "R3_ATTEMPT_2_UNIFIED_HARNESS",
+  "research_mode": "MULTI_BRANCH_ABLATION_MODE",
+  "production_commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+  "branch": "feature/jetson-int8-data-path-optimization",
+  "worktree_status_at_start": "M CMakeLists.txt\n M docs/personal/STAGE_R_EVIDENCE_INDEX.md\n M docs/personal/TASKS.md\n?? docs/personal/STAGE_R_R3_ABLATION_REPORT.md\n?? results/benchmark/stage_r/\n?? tools/benchmark/aggregate_stage_r_r3_ablation.py\n?? tools/benchmark/run_stage_r_r3_ablation.py\n?? tools/benchmark/stage_r_r3_ablation_runner.cpp\n?? tools/benchmark/validate_stage_r_r3_run.py",
+  "runner_path": "/home/orin/edge-ai/edge-ai-defect/build_r3/stage_r_r3_ablation_runner",
+  "runner_sha256": "f3e5ba4a43c76d7d0688070245418c0d2de44dde8b480fb8d6c0c361a3ebfef0",
+  "corpus_manifest_path": "/home/orin/edge-ai/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+  "corpus_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "warmup_frames": 60,
+  "measured_frames_per_run": 1080,
+  "independent_runs_per_variant": 5,
+  "queue_capacity": 1,
+  "drop_policy": "block",
+  "order_schedule": [
+    [
+      "V0",
+      "V2",
+      "V3",
+      "V4"
+    ],
+    [
+      "V4",
+      "V3",
+      "V2",
+      "V0"
+    ],
+    [
+      "V2",
+      "V0",
+      "V4",
+      "V3"
+    ],
+    [
+      "V3",
+      "V4",
+      "V0",
+      "V2"
+    ],
+    [
+      "V0",
+      "V3",
+      "V2",
+      "V4"
+    ]
+  ],
+  "entry_environment": {
+    "timestamp_utc": "2026-08-02T06:42:18.994073+00:00",
+    "uname": "Linux ubuntu 5.15.185-tegra #1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026 aarch64 aarch64 aarch64 GNU/Linux",
+    "architecture": "aarch64",
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2",
+    "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+    "cuda_version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Wed_Aug_14_10:14:07_PDT_2024\nCuda compilation tools, release 12.6, V12.6.68\nBuild cuda_12.6.r12.6/compiler.34714021_0",
+    "tensorrt_version": "unavailable: executable not found",
+    "opencv_threads_contract": 1,
+    "cpu_affinity_contract": "0-5",
+    "temperatures_c": {
+      "thermal_zone0": 47.75,
+      "thermal_zone1": 47.781,
+      "thermal_zone5": 47.718,
+      "thermal_zone6": 47.625,
+      "thermal_zone7": 47.281,
+      "thermal_zone8": 47.937
+    }
+  },
+  "variants": {
+    "V0": "configs/stage_r/runtime_v6_v0_off.yaml",
+    "V2": "configs/stage_r/runtime_v6_v2_pageable.yaml",
+    "V3": "configs/stage_r/runtime_v6_v3_pinned.yaml",
+    "V4": "configs/stage_r/runtime_v6_v4_double_buffer.yaml"
+  },
+  "prohibited_during_sampling": [
+    "production code changes",
+    "CUDA resize changes",
+    "retuning",
+    "engine/model/postprocess changes"
+  ],
+  "exit_environment": {
+    "timestamp_utc": "2026-08-02T06:49:15.961843+00:00",
+    "uname": "Linux ubuntu 5.15.185-tegra #1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026 aarch64 aarch64 aarch64 GNU/Linux",
+    "architecture": "aarch64",
+    "nvpmodel": "NV Power Mode: MAXN_SUPER\n2",
+    "jetson_clocks_show": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+    "cuda_version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Wed_Aug_14_10:14:07_PDT_2024\nCuda compilation tools, release 12.6, V12.6.68\nBuild cuda_12.6.r12.6/compiler.34714021_0",
+    "tensorrt_version": "unavailable: executable not found",
+    "opencv_threads_contract": 1,
+    "cpu_affinity_contract": "0-5",
+    "temperatures_c": {
+      "thermal_zone0": 51.156,
+      "thermal_zone1": 50.812,
+      "thermal_zone5": 50.812,
+      "thermal_zone6": 50.906,
+      "thermal_zone7": 50.437,
+      "thermal_zone8": 51.156
+    }
+  },
+  "completed_run_count": 20
+}

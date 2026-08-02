@@ -1,0 +1,35 @@
+schema_version: 6
+backend:
+  type: tensorrt_int8
+tensorrt:
+  engine_path: /home/orin/edge-ai-local-models/stage_q/formal/yolov8n_neudet_trt10.3_int8_ptq_b1_640.engine
+  engine_manifest_path: /home/orin/edge-ai-local-models/stage_q/formal/engine_manifest_v2.json
+  device_id: 0
+model:
+  contract_path: /home/orin/edge-ai/edge-ai-defect/configs/model_contracts/yolov8n_neudet_frozen.yaml
+runtime:
+  mode: pipeline
+  opencv_num_threads: 1
+  pipeline:
+    queue_capacity: 1
+    drop_policy: block
+input:
+  type: directory
+  directory: /home/orin/edge-ai/edge-ai-defect/data/raw/NEU-DET
+output:
+  json_path: /tmp/stage_r_unused.json
+  console: false
+  overwrite: false
+postprocess:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_nms: 30000
+  max_det: 300
+  max_wh: 7680
+  agnostic: false
+timing:
+  enabled: true
+data_path:
+  variant: V0
+profiling:
+  mode: off

@@ -19,9 +19,33 @@ option(
     OFF
 )
 
+option(
+    EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING
+    "Build the Stage R R2.1 CUDA preprocessing foundation"
+    OFF
+)
+
 find_package(yaml-cpp 0.7 REQUIRED CONFIG)
 find_package(OpenCV 4 REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 find_package(OpenSSL REQUIRED)
+
+find_path(EDGE_AI_NVTX_INCLUDE_DIR nvToolsExt.h
+    PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include)
+find_library(EDGE_AI_NVTX_LIBRARY NAMES nvToolsExt
+    PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib)
+if(NOT EDGE_AI_NVTX_INCLUDE_DIR OR NOT EDGE_AI_NVTX_LIBRARY)
+    message(FATAL_ERROR
+        "Stage R Nsight capture markers require nvToolsExt.h and libnvToolsExt.so")
+endif()
+
+find_path(EDGE_AI_CUDA_PROFILER_INCLUDE_DIR cuda_profiler_api.h
+    PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include)
+find_library(EDGE_AI_CUDART_LIBRARY NAMES cudart
+    PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib)
+if(NOT EDGE_AI_CUDA_PROFILER_INCLUDE_DIR OR NOT EDGE_AI_CUDART_LIBRARY)
+    message(FATAL_ERROR
+        "Stage R CUDA profiler fallback requires cuda_profiler_api.h and libcudart.so")
+endif()
 
 option(
     EDGE_AI_ENABLE_MODEL_SMOKE
@@ -244,6 +268,145 @@ else()
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 endif()
 
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
+    enable_language(CUDA)
+    find_path(EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR cuda_runtime_api.h
+        PATHS /usr/local/cuda/include /usr/local/cuda/targets/aarch64-linux/include
+              /usr/include /usr/include/aarch64-linux-gnu)
+    find_library(EDGE_AI_STAGE_R_CUDART_LIBRARY NAMES cudart
+        PATHS /usr/local/cuda/lib64 /usr/local/cuda/targets/aarch64-linux/lib
+              /usr/local/cuda-12.6/targets/aarch64-linux/lib)
+    if(NOT EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR OR
+       NOT EDGE_AI_STAGE_R_CUDART_LIBRARY)
+        message(FATAL_ERROR
+            "EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING=ON requires "
+            "cuda_runtime_api.h and libcudart.so")
+    endif()
+
+    add_library(edge_ai_stage_r_cuda_preprocess STATIC
+        backend_tensorrt/cuda_preprocessor.cu
+    )
+    set_target_properties(edge_ai_stage_r_cuda_preprocess PROPERTIES
+        CUDA_STANDARD 17
+        CUDA_STANDARD_REQUIRED ON
+        CUDA_EXTENSIONS OFF
+        # Keep the target architecture supplied by the deployment environment;
+        # the specific Jetson target remains a Stage R environment fact.
+        CUDA_ARCHITECTURES OFF
+    )
+    target_include_directories(edge_ai_stage_r_cuda_preprocess
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+    )
+    target_link_libraries(edge_ai_stage_r_cuda_preprocess
+        PUBLIC
+            edge_ai_core
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY}
+    )
+    if(EDGE_AI_ENABLE_TENSORRT)
+        add_library(edge_ai_stage_r_v2 STATIC
+            stage_r/pageable_runner.cpp
+        )
+        target_include_directories(edge_ai_stage_r_v2 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR})
+        target_link_libraries(edge_ai_stage_r_v2 PUBLIC
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_runtime)
+        add_executable(stage_r_v2_tensor_gate
+            tools/validation/stage_r_v2_tensor_gate.cpp)
+        target_include_directories(stage_r_v2_tensor_gate PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+            ${EDGE_AI_TENSORRT_INCLUDE_DIR})
+        target_link_libraries(stage_r_v2_tensor_gate PRIVATE
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            yaml-cpp
+            opencv_imgcodecs
+            OpenSSL::Crypto
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
+    endif()
+    if(EDGE_AI_ENABLE_TENSORRT)
+        add_library(edge_ai_stage_r_v3 STATIC
+            backend_tensorrt/pinned_raw_staging.cpp
+            stage_r/pinned_runner.cpp
+        )
+        target_include_directories(edge_ai_stage_r_v3 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR})
+        target_link_libraries(edge_ai_stage_r_v3 PUBLIC
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_runtime)
+        add_executable(stage_r_v3_tensor_gate
+            tools/validation/stage_r_v3_tensor_gate.cpp)
+        target_include_directories(stage_r_v3_tensor_gate PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+            ${EDGE_AI_TENSORRT_INCLUDE_DIR})
+        target_link_libraries(stage_r_v3_tensor_gate PRIVATE
+            edge_ai_stage_r_v3
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            yaml-cpp
+            opencv_imgcodecs
+            OpenSSL::Crypto
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
+        add_executable(stage_r_v3_task_harness
+            tools/validation/stage_r_v3_task_harness.cpp)
+        target_link_libraries(stage_r_v3_task_harness PRIVATE
+            edge_ai_stage_r_v3
+            edge_ai_stage_r_v4
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            OpenSSL::Crypto
+            ${EDGE_AI_CUDART_LIBRARY})
+        set_target_properties(stage_r_v3_task_harness
+            PROPERTIES
+                BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
+        )
+        add_executable(stage_r_v4_task_harness
+            tools/validation/stage_r_v3_task_harness.cpp)
+        target_link_libraries(stage_r_v4_task_harness PRIVATE
+            edge_ai_stage_r_v4
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            OpenSSL::Crypto
+            ${EDGE_AI_CUDART_LIBRARY})
+        set_target_properties(stage_r_v4_task_harness PROPERTIES
+            BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+        add_library(edge_ai_stage_r_v4 STATIC
+            backend_tensorrt/pinned_raw_staging.cpp
+            stage_r/double_buffer_runner.cpp
+        )
+        target_include_directories(edge_ai_stage_r_v4 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR})
+        target_link_libraries(edge_ai_stage_r_v4 PUBLIC
+            edge_ai_stage_r_cuda_preprocess
+            edge_ai_backend_trt
+            edge_ai_runtime
+            OpenSSL::Crypto)
+        target_compile_definitions(edge_ai_stage_r_v4 PUBLIC EDGE_AI_STAGE_R_V4_AVAILABLE=1)
+    endif()
+endif()
+
 add_library(edge_ai_postprocess STATIC
     src/postprocess_config.cpp
     src/postprocessor.cpp
@@ -279,11 +442,13 @@ add_library(edge_ai_runtime STATIC
     src/tensorrt_engine_manifest.cpp
     src/timed_json_sink.cpp
     src/serial_runner.cpp
+    backend_tensorrt/pageable_raw_staging.cpp
     src/video_file_source.cpp
 )
 target_include_directories(edge_ai_runtime
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 target_link_libraries(edge_ai_runtime
     PUBLIC
@@ -315,12 +480,42 @@ target_link_libraries(edge_ai_application
         edge_ai_backend_factory
         edge_ai_runtime
 )
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
+    target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V2_AVAILABLE=1)
+    target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V4_AVAILABLE=1)
+    target_include_directories(edge_ai_application PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v2)
+endif()
+
+if(TARGET edge_ai_stage_r_v4)
+    target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v4)
+endif()
 
 add_executable(edge_ai_infer src/main.cpp)
 target_compile_definitions(edge_ai_infer
     PRIVATE EDGE_AI_DEFECT_VERSION="${PROJECT_VERSION}"
 )
 target_link_libraries(edge_ai_infer PRIVATE edge_ai_application)
+
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
+    # Benchmark-only executable for the frozen Stage R R3 ablation protocol.
+    # It is deliberately separate from the production command-line path.
+    add_executable(stage_r_r3_ablation_runner
+        tools/benchmark/stage_r_r3_ablation_runner.cpp)
+    target_include_directories(stage_r_r3_ablation_runner PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(stage_r_r3_ablation_runner PRIVATE
+        edge_ai_application
+        edge_ai_stage_r_v3
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        ${EDGE_AI_CUDART_LIBRARY})
+    set_target_properties(stage_r_r3_ablation_runner PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+endif()
 set_target_properties(edge_ai_infer
     PROPERTIES
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
@@ -372,8 +567,61 @@ set_target_properties(stage_p_experiment_runner
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"
 )
 
+add_executable(stage_r_experiment_runner
+    tools/validation/stage_r_experiment_runner.cpp
+)
+target_link_libraries(stage_r_experiment_runner
+    PRIVATE
+        edge_ai_application
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        edge_ai_backend_trt
+        ${EDGE_AI_NVTX_LIBRARY}
+        ${EDGE_AI_CUDART_LIBRARY}
+)
+target_include_directories(stage_r_experiment_runner
+    PRIVATE
+        ${EDGE_AI_NVTX_INCLUDE_DIR}
+        ${EDGE_AI_CUDA_PROFILER_INCLUDE_DIR}
+)
+set_target_properties(stage_r_experiment_runner
+    PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
+)
+
+add_executable(stage_r_v2_task_harness
+    tools/validation/stage_r_v2_task_harness.cpp
+)
+target_link_libraries(stage_r_v2_task_harness
+    PRIVATE
+        edge_ai_stage_r_v2
+        edge_ai_backend_trt
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        ${EDGE_AI_CUDART_LIBRARY}
+)
+set_target_properties(stage_r_v2_task_harness
+    PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib"
+)
+
 if(BUILD_TESTING)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+    add_executable(test_pageable_raw_staging tests/test_pageable_raw_staging.cpp)
+    target_link_libraries(test_pageable_raw_staging PRIVATE edge_ai_runtime)
+    add_test(NAME stage_r_pageable_raw_staging COMMAND test_pageable_raw_staging)
+    set_tests_properties(stage_r_pageable_raw_staging PROPERTIES LABELS "stage-r;r2.2;pageable")
+    if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
+        add_executable(test_pinned_raw_staging tests/test_pinned_raw_staging.cpp)
+        target_link_libraries(test_pinned_raw_staging PRIVATE edge_ai_stage_r_v3)
+        add_test(NAME stage_r_pinned_raw_staging COMMAND test_pinned_raw_staging)
+        set_tests_properties(stage_r_pinned_raw_staging PROPERTIES LABELS "stage-r;r2.3;pinned")
+    endif()
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
         set(EDGE_AI_M5_PYTHON_EXECUTABLE "${CMAKE_CURRENT_SOURCE_DIR}/.venv/bin/python")
     else()
@@ -418,6 +666,15 @@ if(BUILD_TESTING)
     set_tests_properties(stage_p_experiment_runner_help
         PROPERTIES
             LABELS "stage-p;runtime;experiment;entry"
+    )
+
+    add_test(
+        NAME stage_r_experiment_runner_help
+        COMMAND stage_r_experiment_runner --help
+    )
+    set_tests_properties(stage_r_experiment_runner_help
+        PROPERTIES
+            LABELS "stage-r;runtime;experiment;entry"
     )
 
     add_test(
@@ -815,6 +1072,57 @@ if(BUILD_TESTING)
     target_link_libraries(test_stage_p_components PRIVATE edge_ai_runtime)
     add_test(NAME stage_p_components COMMAND test_stage_p_components)
     set_tests_properties(stage_p_components PROPERTIES LABELS "stage-p;runtime;experiment")
+
+    add_executable(test_stage_r_runtime tests/test_stage_r_runtime.cpp)
+    target_link_libraries(test_stage_r_runtime PRIVATE edge_ai_runtime)
+    add_test(NAME stage_r_runtime COMMAND test_stage_r_runtime)
+    set_tests_properties(stage_r_runtime PROPERTIES LABELS "stage-r;runtime;sampling")
+
+    if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
+        add_executable(test_stage_r_cuda_preprocess
+            tests/test_stage_r_cuda_preprocess.cpp
+        )
+        target_link_libraries(test_stage_r_cuda_preprocess
+            PRIVATE edge_ai_stage_r_cuda_preprocess
+        )
+        set_target_properties(test_stage_r_cuda_preprocess PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tests"
+        )
+        add_test(NAME stage_r_cuda_preprocess
+            COMMAND test_stage_r_cuda_preprocess
+        )
+        set_tests_properties(stage_r_cuda_preprocess PROPERTIES
+            LABELS "stage-r;r2.1;cuda;preprocess;correctness"
+            SKIP_RETURN_CODE 77
+        )
+
+        add_executable(stage_r_cuda_preprocess_gate
+            tools/validation/stage_r_cuda_preprocess_gate.cpp
+        )
+        target_link_libraries(stage_r_cuda_preprocess_gate
+            PRIVATE
+                edge_ai_stage_r_cuda_preprocess
+                edge_ai_core
+                yaml-cpp
+                opencv_imgcodecs
+                OpenSSL::Crypto
+        )
+        set_target_properties(stage_r_cuda_preprocess_gate PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
+        )
+    endif()
+
+    add_test(
+        NAME stage_r_capture_control
+        COMMAND ${EDGE_AI_M5_PYTHON_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage_r_capture_control.py
+            --repo-root ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    set_tests_properties(stage_r_capture_control
+        PROPERTIES
+            LABELS "stage-r;runtime;capture"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
 
     add_executable(test_directory_source
         tests/test_directory_source.cpp

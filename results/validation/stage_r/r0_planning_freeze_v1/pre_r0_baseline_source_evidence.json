@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R0",
+  "evidence_type": "baseline_source_evidence",
+  "repository": "/home/orin/edge-ai/edge-ai-defect",
+  "observation_commit": "60a04a22bbfeae320312dd018f4ebfebae9eeafe",
+  "commands": [
+    {
+      "command": "git rev-parse --show-toplevel",
+      "stdout": "/home/orin/edge-ai/edge-ai-defect\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git branch --show-current",
+      "stdout": "feature/jetson-int8-data-path-optimization\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse HEAD",
+      "stdout": "60a04a22bbfeae320312dd018f4ebfebae9eeafe\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse HEAD^",
+      "stdout": "4c67858610e14ba7d3c951b33f0948230451827f\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse main",
+      "stdout": "4c67858610e14ba7d3c951b33f0948230451827f\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse origin/main",
+      "stdout": "4c67858610e14ba7d3c951b33f0948230451827f\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse stage-q-int8-complete-v1.0",
+      "stdout": "066eefb134ecaadb3069933efff89d132b9a938d\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse 'stage-q-int8-complete-v1.0^{}'",
+      "stdout": "4c67858610e14ba7d3c951b33f0948230451827f\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git merge-base HEAD main",
+      "stdout": "4c67858610e14ba7d3c951b33f0948230451827f\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-list --count 4c67858610e14ba7d3c951b33f0948230451827f..HEAD",
+      "stdout": "1\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git status --porcelain=v1 --untracked-files=all",
+      "stdout": "",
+      "stderr": "",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff-tree --no-commit-id --name-only -r 60a04a22bbfeae320312dd018f4ebfebae9eeafe",
+      "stdout": "docs/personal/DECISIONS.md\ndocs/personal/STAGE_R_EXECUTION_PLAN.md\ndocs/personal/STAGE_R_FACT_INVENTORY.md\ndocs/personal/STAGE_R_TASK_CARDS.md\ndocs/personal/TASKS.md\nresults/validation/stage_r/r0_planning_freeze_v1/pre_r0_baseline_manifest.json\nresults/validation/stage_r/r0_planning_freeze_v1/pre_r0_environment_manifest.json\n",
+      "stderr": "",
+      "exit_code": 0
+    }
+  ],
+  "source_files": [
+    {
+      "path": "results/validation/stage_q/q5_accuracy_v1/expected_int8_cycle_sha.json",
+      "sha256": "22498cd391b6bc48802a2cc189cb6eccd443b2bda8b0191e5af9184cdd0c9cfd",
+      "git_tracked": true,
+      "git_blob_sha": "ea8df2564f4c47609d05751c67dd4af27515f369",
+      "role": "Canonical detection cycle SHA and accepted frame count."
+    },
+    {
+      "path": "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+      "sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+      "git_tracked": true,
+      "git_blob_sha": "2bb138f8112afe17e7f156a780016b2fa45cbf96",
+      "role": "Stage Q test corpus manifest and test manifest SHA."
+    },
+    {
+      "path": "results/build/tensorrt/q3_int8_engine_v1/layer_precision_audit_summary.json",
+      "sha256": "cb75512c06792e362f33aa5c8d916ddddb6ade2a4d1bd809da72bc4a1394b870",
+      "git_tracked": true,
+      "git_blob_sha": "9290e446069f118d8965b6477a6981d1ab44530a",
+      "role": "Stage Q INT8/FP16/FP32 layer precision audit."
+    },
+    {
+      "path": "results/build/tensorrt/q3_int8_engine_v1/formal_calibration_manifest.json",
+      "sha256": "f436fd9d82267174f71c2afaf575b9beef09763aa9e4fed12f054eaedefb69d9",
+      "git_tracked": true,
+      "git_blob_sha": "7c046ec2b47393786e07164a69ecaffeeec130f9",
+      "role": "Stage Q formal calibration identity and source contract."
+    },
+    {
+      "path": "docs/personal/STAGE_Q_EVIDENCE_INDEX.md",
+      "sha256": "77766812a8724f9cb1b9400445b072932df49ce3a5e753a66dba91db2a3862f0",
+      "git_tracked": true,
+      "git_blob_sha": "cb2579fc9c6a1865c0756812bed728406c75f7ab",
+      "role": "Stage Q evidence index and final evidence identities."
+    },
+    {
+      "path": "docs/personal/STAGE_Q_FINAL_REPORT.md",
+      "sha256": "d847389ccc0cd597cd8932d602a003829ca12560a086c199c212b1e4c60e1730",
+      "git_tracked": true,
+      "git_blob_sha": "db27beb9e344ceee439e9ea474bfb3f1dcbc9606",
+      "role": "Stage Q final classification and test corpus contract."
+    }
+  ],
+  "observed_facts": {
+    "branch": {
+      "value": "feature/jetson-int8-data-path-optimization",
+      "source": "git branch --show-current"
+    },
+    "head": {
+      "value": "60a04a22bbfeae320312dd018f4ebfebae9eeafe",
+      "source": "git rev-parse HEAD"
+    },
+    "parent": {
+      "value": "4c67858610e14ba7d3c951b33f0948230451827f",
+      "source": "git rev-parse HEAD^"
+    },
+    "main": {
+      "value": "4c67858610e14ba7d3c951b33f0948230451827f",
+      "source": "git rev-parse main"
+    },
+    "origin_main": {
+      "value": "4c67858610e14ba7d3c951b33f0948230451827f",
+      "source": "git rev-parse origin/main"
+    },
+    "tag_object": {
+      "value": "066eefb134ecaadb3069933efff89d132b9a938d",
+      "source": "git rev-parse stage-q-int8-complete-v1.0"
+    },
+    "peeled_commit": {
+      "value": "4c67858610e14ba7d3c951b33f0948230451827f",
+      "source": "git rev-parse 'stage-q-int8-complete-v1.0^{}'"
+    },
+    "merge_base": {
+      "value": "4c67858610e14ba7d3c951b33f0948230451827f",
+      "source": "git merge-base HEAD main"
+    },
+    "commits_after_baseline": {
+      "value": 1,
+      "source": "git rev-list --count 4c67858610e14ba7d3c951b33f0948230451827f..HEAD"
+    },
+    "worktree_clean": {
+      "value": true,
+      "source": "git status --porcelain=v1 --untracked-files=all"
+    },
+    "r0_changed_files": {
+      "value": [
+        "docs/personal/DECISIONS.md",
+        "docs/personal/STAGE_R_EXECUTION_PLAN.md",
+        "docs/personal/STAGE_R_FACT_INVENTORY.md",
+        "docs/personal/STAGE_R_TASK_CARDS.md",
+        "docs/personal/TASKS.md",
+        "results/validation/stage_r/r0_planning_freeze_v1/pre_r0_baseline_manifest.json",
+        "results/validation/stage_r/r0_planning_freeze_v1/pre_r0_environment_manifest.json"
+      ],
+      "source": "git diff-tree --no-commit-id --name-only -r 60a04a22bbfeae320312dd018f4ebfebae9eeafe"
+    },
+    "test_manifest_sha256": {
+      "value": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+      "source_files": [
+        "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+        "docs/personal/STAGE_Q_FINAL_REPORT.md"
+      ]
+    },
+    "canonical_detection_sha256": {
+      "value": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+      "source": "results/validation/stage_q/q5_accuracy_v1/expected_int8_cycle_sha.json"
+    },
+    "cycle_length": {
+      "value": 180,
+      "source_files": [
+        "results/validation/stage_q/q5_accuracy_v1/expected_int8_cycle_sha.json",
+        "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json"
+      ]
+    },
+    "stage_q_final_classification": {
+      "value": "STAGE_Q_COMPLETE_INT8_RECOMMENDED",
+      "source_files": [
+        "docs/personal/STAGE_Q_FINAL_REPORT.md",
+        "docs/personal/STAGE_Q_EVIDENCE_INDEX.md"
+      ]
+    }
+  },
+  "verification_result": "PASS"
+}

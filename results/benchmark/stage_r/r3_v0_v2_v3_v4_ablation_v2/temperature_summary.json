@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "runs": [
+    {
+      "run_id": "set_01_v0",
+      "sample_count": 21,
+      "start_temperature_c_from_first_tegrastats_sample": 49.031,
+      "end_temperature_c_from_last_tegrastats_sample": 49.312
+    },
+    {
+      "run_id": "set_01_v2",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 49.656,
+      "end_temperature_c_from_last_tegrastats_sample": 50.593
+    },
+    {
+      "run_id": "set_01_v3",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 50.343,
+      "end_temperature_c_from_last_tegrastats_sample": 51.156
+    },
+    {
+      "run_id": "set_01_v4",
+      "sample_count": 43,
+      "start_temperature_c_from_first_tegrastats_sample": 48.0,
+      "end_temperature_c_from_last_tegrastats_sample": 49.25
+    },
+    {
+      "run_id": "set_02_v0",
+      "sample_count": 21,
+      "start_temperature_c_from_first_tegrastats_sample": 50.906,
+      "end_temperature_c_from_last_tegrastats_sample": 50.562
+    },
+    {
+      "run_id": "set_02_v2",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 50.281,
+      "end_temperature_c_from_last_tegrastats_sample": 51.406
+    },
+    {
+      "run_id": "set_02_v3",
+      "sample_count": 10,
+      "start_temperature_c_from_first_tegrastats_sample": 49.687,
+      "end_temperature_c_from_last_tegrastats_sample": 50.5
+    },
+    {
+      "run_id": "set_02_v4",
+      "sample_count": 42,
+      "start_temperature_c_from_first_tegrastats_sample": 49.125,
+      "end_temperature_c_from_last_tegrastats_sample": 49.812
+    },
+    {
+      "run_id": "set_03_v0",
+      "sample_count": 20,
+      "start_temperature_c_from_first_tegrastats_sample": 51.062,
+      "end_temperature_c_from_last_tegrastats_sample": 51.187
+    },
+    {
+      "run_id": "set_03_v2",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 50.937,
+      "end_temperature_c_from_last_tegrastats_sample": 51.625
+    },
+    {
+      "run_id": "set_03_v3",
+      "sample_count": 10,
+      "start_temperature_c_from_first_tegrastats_sample": 51.312,
+      "end_temperature_c_from_last_tegrastats_sample": 51.843
+    },
+    {
+      "run_id": "set_03_v4",
+      "sample_count": 42,
+      "start_temperature_c_from_first_tegrastats_sample": 51.062,
+      "end_temperature_c_from_last_tegrastats_sample": 51.25
+    },
+    {
+      "run_id": "set_04_v0",
+      "sample_count": 21,
+      "start_temperature_c_from_first_tegrastats_sample": 52.0,
+      "end_temperature_c_from_last_tegrastats_sample": 51.625
+    },
+    {
+      "run_id": "set_04_v2",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 51.687,
+      "end_temperature_c_from_last_tegrastats_sample": 52.75
+    },
+    {
+      "run_id": "set_04_v3",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 51.937,
+      "end_temperature_c_from_last_tegrastats_sample": 52.906
+    },
+    {
+      "run_id": "set_04_v4",
+      "sample_count": 42,
+      "start_temperature_c_from_first_tegrastats_sample": 51.968,
+      "end_temperature_c_from_last_tegrastats_sample": 51.718
+    },
+    {
+      "run_id": "set_05_v0",
+      "sample_count": 21,
+      "start_temperature_c_from_first_tegrastats_sample": 52.375,
+      "end_temperature_c_from_last_tegrastats_sample": 51.812
+    },
+    {
+      "run_id": "set_05_v2",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 52.531,
+      "end_temperature_c_from_last_tegrastats_sample": 53.218
+    },
+    {
+      "run_id": "set_05_v3",
+      "sample_count": 9,
+      "start_temperature_c_from_first_tegrastats_sample": 51.968,
+      "end_temperature_c_from_last_tegrastats_sample": 52.937
+    },
+    {
+      "run_id": "set_05_v4",
+      "sample_count": 42,
+      "start_temperature_c_from_first_tegrastats_sample": 52.437,
+      "end_temperature_c_from_last_tegrastats_sample": 52.375
+    }
+  ]
+}

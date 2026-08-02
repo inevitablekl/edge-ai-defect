@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R1",
+  "status": "PASS",
+  "commit": "6e3481436a1c697495b96508cde3fd3cbcc19e1b",
+  "binary_sha256": "f0bcdb654ee157367188e24c209cd4188f9ac4014493591954de306646c90fc5",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "engine_manifest_sha256": "67f6ce3337d9c28c4aa2b32ba62554eaaa028f096c448041c063ec695f3b981c",
+  "config_sha256": "2003b0ef51a3d89c4e879a8ddc02499e168366dffb823e89977b434d11972aad",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "nsys_version": "NVIDIA Nsight Systems version 2024.5.4.34-245434855735v0",
+  "command": "nsys profile --trace=cuda,nvtx,osrt --capture-range=cudaProfilerApi --capture-range-end=stop --sample=none --cpuctxsw=none --stats=true --export=sqlite --force-overwrite=true --show-output=true --stop-on-exit=true -o /tmp/stage_r_r1_nsight_final/stage_r_bounded taskset -c 0-5 /tmp/stage_r_cuda_profiler_build_trt/stage_r_experiment_runner --config configs/stage_r/runtime_v6_v0_off.yaml --corpus-manifest results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json --run-id r1_nsight_final --warmup-frames 180 --measured-frames 180 --result-json /tmp/stage_r_r1_nsight_final/application/result.json --run-manifest /tmp/stage_r_r1_nsight_final/application/run_manifest.json --hashes /tmp/stage_r_r1_nsight_final/application/hashes.json --profiling-output /tmp/stage_r_r1_nsight_final/application/profiling.json",
+  "capture_mechanism": "cudaProfilerApi",
+  "warmup_frames": 180,
+  "measured_frames": 180,
+  "capture_duration": 1.250797472,
+  "captured_range": "measured phase only",
+  "cuda_profiler_start": 1,
+  "cuda_profiler_stop": 1,
+  "raw_files": [
+    {
+      "path": "/tmp/stage_r_r1_nsight_final/stage_r_bounded.nsys-rep",
+      "sha256": "ab6f06ab6919f15a442b37fd1b421ec14c4e3c88a7bdb40251da7359d4cdc6b",
+      "bytes": 1807153,
+      "retention": "local-only"
+    },
+    {
+      "path": "/tmp/stage_r_r1_nsight_final/stage_r_bounded.sqlite",
+      "sha256": "1b062de506e72c07c128ecfa1b12ec9d8e89d784a3e653fa0ec3915a65778cab",
+      "bytes": 4845568,
+      "retention": "local-only"
+    }
+  ],
+  "raw_sha256": {
+    "stage_r_bounded.nsys-rep": "ab6f06ab6919f15a442b37fd1b421ec14c4e3c88a7bdb40251da7359d4cdc6b",
+    "stage_r_bounded.sqlite": "1b062de506e72c07c128ecfa1b12ec9d8e89d784a3e653fa0ec3915a65778cab"
+  },
+  "application_exit": 0,
+  "nsys_exit": 0,
+  "drop_count": 0,
+  "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "result_json_schema_version": 4,
+  "result_json_sha256": "9988dd5a0fa0082a941bddc5b0c432275a24319ac5fd03311103559440c66228",
+  "application_run_sha256": "133c44408738814a0f3dc44b443c15b1980b64643a661ae86825421a1de90532",
+  "worker_join": "PASS",
+  "eos": "PASS",
+  "observations": [
+    "Nsight reported capture range started and ended in the application.",
+    "SQLite contains one stage_r.measured NVTX range with duration 1.250797472 seconds.",
+    "SQLite contains one cuProfilerStart call; the application completed the matching cudaProfilerStop call and Nsight reported the capture range ended.",
+    "Nsight stats contain 180 host-to-device and 180 device-to-host CUDA memory copies.",
+    "Nsight stats contain 180 TensorRT ExecutionContext::enqueue ranges and CUDA kernel activity.",
+    "Nsight stats contain 360 cudaStreamSynchronize calls.",
+    "The capture boundary was entered after the 180-frame warmup and covered the 180-frame measured phase."
+  ],
+  "limitations": [
+    "The raw Nsight report and SQLite export are local-only evidence under /tmp.",
+    "Nsight was used for CUDA activity observations only; existing application throughput remains the performance authority.",
+    "No FPS or throughput value was recomputed from the Nsight trace."
+  ],
+  "performance_authority": false
+}

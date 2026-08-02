@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "r0_planning_freeze",
+  "status": "VALID",
+  "device": {
+    "model": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "architecture": "aarch64",
+    "soc": "Tegra234"
+  },
+  "jetpack": "6.2.2",
+  "l4t": "R36.5.0",
+  "tensorrt": "10.3.0.30",
+  "cuda": "12.6.68",
+  "kernel": "5.15.185-tegra",
+  "nvpmodel_name": "MAXN_SUPER",
+  "nvpmodel_mode": "2",
+  "cpu_affinity_contract": "0-5",
+  "opencv_threads": 1,
+  "jetson_clocks_policy": "not_invoked",
+  "fan_policy": "automatic",
+  "manual_pwm_clock_writes": "prohibited",
+  "required_tool_inventory": {
+    "tegrastats": "/usr/bin/tegrastats",
+    "trtexec": "/usr/src/tensorrt/bin/trtexec",
+    "nvpmodel": "available",
+    "jetson_clocks": "available"
+  },
+  "required_asset_inventory": {
+    "int8_engine": "local-only at /home/orin/edge-ai-local-models/stage_q/",
+    "int8_engine_manifest": "results/build/tensorrt/q3_int8_engine_v1/",
+    "fp16_engine_manifest": "models/tensorrt/yolov8n_neudet_trt10.3_fp16_b1_640.manifest.json",
+    "frozen_onnx": "models/onnx/yolov8n_neudet_frozen.onnx",
+    "model_contract": "configs/model_contracts/yolov8n_neudet_frozen.yaml",
+    "test_manifest": "data/yolo/neu_det/test_manifest.json"
+  },
+  "source_evidence": "results/validation/stage_r/r0_planning_freeze_v1/pre_r0_environment_source_evidence.json",
+  "source_evidence_sha256": "0f601f7f76d90b66a0308a3fa884b6eb359155b46565777ef8a919bc9cfeddfa",
+  "verification_result": "PASS",
+  "verification_timestamp": "2026-08-01",
+  "verification_notes": "Environment facts verified via read-only system queries. No hardware experiments run in R0. INT8 engine is local-only; its existence is asserted from Q3 evidence, not independently verified in R0."
+}

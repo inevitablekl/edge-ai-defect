@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v2_minimal_remediation_negative_result_closure",
+  "status": "STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED",
+  "variant": "V2",
+  "candidate_selection": "NOT_SELECTED_AS_REPLACEMENT",
+  "candidate_role": "EXPERIMENTAL_RESULT_ONLY",
+  "runtime_path": "pageable raw staging -> CUDA preprocessing -> TensorRtDeviceInputCapability -> TensorRT INT8 -> existing postprocess",
+  "frame_contract": {
+    "processed_frames": 180,
+    "frame_order": "PASS",
+    "drop": 0,
+    "eos": "PASS",
+    "worker_join": "PASS",
+    "result_json_v4": "PASS"
+  },
+  "gate_status": {
+    "gate_a": "PASS",
+    "gate_b": "PASS",
+    "gate_c": "PASS",
+    "gate_d": "FAIL"
+  },
+  "v0_canonical_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "gate_b_tensor": {
+    "status": "PASS",
+    "mae": 0.000415586,
+    "p99": 0.00392163,
+    "max_abs": 0.00392163,
+    "nonfinite": 0
+  },
+  "gate_d_original_v2": {
+    "status": "FAIL",
+    "mAP50_drop": 0.00552337,
+    "max_class_AP50_drop": 0.02751543,
+    "max_class_recall": 0.03030303
+  },
+  "gate_d_minimal_11bit_fixed_point_remediation": {
+    "status": "FAIL",
+    "mAP50_drop": 0.00537575,
+    "max_class_AP50_drop": 0.02673348,
+    "max_class_recall": 0.03030303,
+    "effect": "IMPROVED_BUT_INSUFFICIENT"
+  },
+  "root_cause": "functional mismatch caused by CUDA resize numerical contract",
+  "technical_finding": "Under the evaluated YOLOv8n INT8 deployment configuration, CUDA fused preprocessing introduced small numerical differences relative to OpenCV CPU preprocessing due to resize interpolation implementation differences. These differences remained within tensor-level tolerance but affected task-level metrics near the replacement threshold.",
+  "scope_decisions": {
+    "separable_resize": "NOT_IMPLEMENTED",
+    "v3": "SKIPPED",
+    "v4": "SKIPPED",
+    "benchmark": "NOT_EXECUTED",
+    "r2_3": "NOT_AUTHORIZED"
+  },
+  "selected_candidate": "Stage Q INT8 V0 baseline retained"
+}

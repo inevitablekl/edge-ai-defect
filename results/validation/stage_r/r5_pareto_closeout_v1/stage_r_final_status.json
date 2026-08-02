@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "R5",
+  "final_classification": "STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION",
+  "deployment_baseline": "V0",
+  "research_tradeoff_candidate": "V2",
+  "v2_replacement_status": "NOT_CORRECTNESS_EQUIVALENT",
+  "v3_status": "NOT_SELECTED",
+  "v4_status": "NEGATIVE_ABLATION_RESULT",
+  "v5_status": "NOT_IMPLEMENTED",
+  "further_stage_r_implementation": "NOT_AUTHORIZED",
+  "further_stage_r_benchmark": "NOT_AUTHORIZED",
+  "gate_d": {
+    "result": "FAIL",
+    "threshold_unchanged": true
+  },
+  "stage_q_evidence_unchanged": true,
+  "attempt_2_authority": "results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/",
+  "attempt_1_disposition": "R3_ATTEMPT_1_NONCOMPARABLE_HARNESS",
+  "historical_closeout_retained": "STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED (b008af7, replacement-selection record only)",
+  "superseded_by": "STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION (post-D087 full ablation)",
+  "report_path": "docs/personal/STAGE_R_R5_PARETO_REPORT.md",
+  "final_report_path": "docs/personal/STAGE_R_FINAL_REPORT.md",
+  "push_merge_tag": "NOT_EXECUTED"
+}

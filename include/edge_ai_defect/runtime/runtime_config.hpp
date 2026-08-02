@@ -9,6 +9,12 @@
 
 namespace edge_ai_defect::runtime {
 
+enum class DataPathVariant { kV0, kV2, kV3, kV4 };
+enum class ProfilingMode { kOff, kDiagnostic, kFormal };
+
+[[nodiscard]] const char* data_path_variant_name(DataPathVariant value) noexcept;
+[[nodiscard]] const char* profiling_mode_name(ProfilingMode value) noexcept;
+
 struct OnnxRuntimeConfig {
     std::string execution_mode = "sequential";
     std::string graph_optimization_level = "all";
@@ -28,6 +34,10 @@ struct TensorRtConfig {
 
 struct RuntimeConfig {
     std::uint32_t schema_version = 0;
+
+    // v5 derives these values as V0/off. v6 accepts the explicit closed enums.
+    DataPathVariant data_path_variant = DataPathVariant::kV0;
+    ProfilingMode profiling_mode = ProfilingMode::kOff;
 
     std::string backend_type;
 

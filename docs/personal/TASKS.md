@@ -3329,3 +3329,305 @@ Stage J Plan or historical Evidence.
   `1800.006143093 s`。
 - 本轮不新增功能、不重跑 P4–P7、不修改 production source、headers、tests、
   CMake、Engine、ONNX 或模型；未执行 push、merge、rebase 或 tag。
+
+---
+
+## 2026-08-01 — Stage Q Merge, Tag, and Stage R R0 Planning Freeze
+
+### Stage Q Merge and Tag
+
+- Stage Q (`feature/jetson-tensorrt-int8`) 已通过 PR #6 合并到 `main`。
+- Merge commit: `4c67858610e14ba7d3c951b33f0948230451827f`。
+- Annotated tag `stage-q-int8-complete-v1.0` 已创建:
+  tag object `066eefb134ecaadb3069933efff89d132b9a938d`，
+  peeled commit `4c67858610e14ba7d3c951b33f0948230451827f`。
+- Stage Q final classification: `STAGE_Q_COMPLETE_INT8_RECOMMENDED`。
+- Stage Q 已 CLOSED。
+
+### Stage R R0 Planning Freeze
+
+- Stage R feature branch `feature/jetson-int8-data-path-optimization`
+  已从 exact baseline `4c67858610e14ba7d3c951b33f0948230451827f` 创建。
+- Stage R Plan FINAL 已写入 `docs/personal/STAGE_R_EXECUTION_PLAN.md`。
+- D081 (Controlled CUDA Preprocessing Exception)、
+  D082 (Limited Application CUDA Streams Exception)、
+  D083 (Cross-Preprocess Identity Exception) 已写入 `docs/personal/DECISIONS.md`。
+  状态均为 ACTIVE。
+- D001–D080 历史 Decision 均未被改写或删除。
+- Stage R Fact Inventory 已写入 `docs/personal/STAGE_R_FACT_INVENTORY.md`。
+- Stage R Task Cards (R0–R6) 已写入 `docs/personal/STAGE_R_TASK_CARDS.md`。
+- Pre-R0 baseline manifest 为 `PRE_R0_VERIFIED`。
+- Pre-R0 environment manifest 为 `VALID`。
+- R0 Gate: `R0_PASS`。
+
+### Stage R Authorization Status
+
+```text
+R0:
+R0_PASS
+
+R1:
+R1_PASS
+
+R2–R6:
+NOT AUTHORIZED
+
+Production implementation:
+NOT AUTHORIZED
+
+CMake/CUDA implementation:
+NOT AUTHORIZED
+
+Hardware experiments:
+NOT AUTHORIZED
+
+Next action:
+USER REVIEW OF R0 COMMIT
+```
+
+- Production code (`src/`, `include/`, `tests/`, `tools/`, `configs/`),
+  `CMakeLists.txt`, `.gitignore` 均未被修改。
+- CUDA preprocessing, TensorRT device-input capability, Phase Barrier,
+  profiling instrumentation, Double Buffer 尚未开始。
+- 无 push、merge、rebase、tag、build、CTest 或硬件实验执行。
+
+## 2026-08-02 — Stage R R0 Provenance Remediation
+
+- R1 第一次入口验证因 R0 manifest provenance 占位值阻断；没有进入 R1。
+  provenance remediation 已完成，R0 Gate 恢复为 `R0_PASS`；R1 等待用户审查后重新授权。
+
+## 2026-08-02 — Stage R R1 Baseline and Profiling
+
+- R1 V0 baseline/profiling implementation and experiments completed.
+- RuntimeConfig v5 derives V0/off; RuntimeConfig v6 V0/off and diagnostic parse
+  and execute. V2/V3/V4 remain parse-only and are rejected before execution.
+- v5/v6 measured detection SHA both equal
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Profiling perturbation gate passed: diagnostic/off throughput ratio
+  `1.011560852`; mean pre-sink latency ratio `1.035711199`.
+- Nsight gate is blocked by the real environment fact `nsys: command not
+  found`; no raw capture was created.
+- R1 evidence: `results/validation/stage_r/r1_baseline_profiling_v1/`.
+- R1: `R1_PASS`
+- Nsight: `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`
+- R2: `NOT AUTHORIZED PENDING USER REVIEW`
+- R3–R6: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R1 CUDA Profiler Capture Control Fallback
+
+- The prior `R1_BLOCKED_NSIGHT_CAPTURE_FAILED` and
+  `NSYS_NVTX_CAPTURE_RANGE_UNRESOLVED` diagnoses remain historical records.
+- Added the minimal CUDA Profiler API fallback in
+  `tools/validation/stage_r_experiment_runner.cpp`: after warmup and the
+  measured-phase start marker, one `cudaProfilerStart()` is issued before the
+  first measured frame; after the measured phase and timing end timestamp, one
+  `cudaProfilerStop()` is issued before the measured-phase end marker.
+- Warmup, frame counts, inference order, streams, synchronization, timing
+  calculations, detection SHA, and Result JSON v4 contracts are unchanged.
+- TensorRT-OFF and TensorRT-ON Release builds passed. Related CTest passed 5/5
+  in both build trees; the capture-control test passed in both.
+- No application experiment or Nsight capture was executed. R1 remains
+  `BLOCKED_PENDING_CAPTURE`.
+- R2: `NOT AUTHORIZED`
+- V2/V3/V4: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R1 Nsight Capture Control Remediation
+
+- Initial R1 Nsight blocker remains recorded as `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`
+  because `nsys` was not found.
+- After manual installation of Nsight Systems 2024.5.4 arm64, the capture audit
+  identified `R1_BLOCKED_NSIGHT_CAPTURE_CONTROL_DEFECT`: the runner had no
+  measured-phase capture boundary.
+- Added NVTX-only measured boundary markers to
+  `tools/validation/stage_r_experiment_runner.cpp`. The order is start marker,
+  range begin, measured phase, end marker, range end. No performance calculation,
+  RuntimeConfig, Result JSON v4, PipelineRunner, or TensorRtEngine logic changed.
+- Added `stage_r_capture_control` contract test. It verifies one start/end pair,
+  warmup exclusion, unchanged measured-frame contracts, unchanged canonical
+  detection SHA, and unchanged Result JSON v4 contract.
+- TensorRT-OFF and TensorRT-ON builds passed. Related CTest passed 5/5 in both
+  build trees.
+- Nsight bounded capture was not executed in this remediation.
+- Final R1 gate remains `R1_BLOCKED_NSIGHT_CAPTURE_FAILED` pending the single
+  authorized bounded capture.
+- R2: `NOT AUTHORIZED PENDING USER REVIEW`
+- R3–R6: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R1 Final Bounded Nsight Capture
+
+- Historical initial blocker retained: `R1_BLOCKED_NSIGHT_CAPTURE_FAILED`.
+- `cudaProfilerApi` remediation: `PASS`.
+- The single authorized bounded capture used Nsight Systems
+  `2024.5.4.34-245434855735v0` with `capture-range=cudaProfilerApi` and
+  `capture-range-end=stop`; no NVTX capture-range trigger was used.
+- Current HEAD was
+  `6e3481436a1c697495b96508cde3fd3cbcc19e1b`; application warmup/measured was
+  `180/180`, drop `0`, application exit `0`, EOS `PASS`, and worker join
+  `PASS`.
+- Result JSON remained schema v4. Detection SHA was
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Bounded capture: `PASS`; one measured NVTX range was observed with duration
+  `1.250797472 s`. CUDA activity observations included H2D, D2H, TensorRT
+  enqueue/kernel activity, and synchronization. Nsight was not used to
+  recalculate throughput or replace the existing performance authority.
+- Tracked summary: `results/validation/stage_r/r1_baseline_profiling_v1/nsight_capture_summary.json`.
+- R1: `R1_PASS`
+- V2/V3/V4: `NOT IMPLEMENTED`
+- R2: `NOT AUTHORIZED`
+
+## 2026-08-02 — Stage R R2 Planning Freeze
+
+- R1: `PASS`；R2 Entry Review: `PASS`；当前 HEAD 为
+  `c488283fdc1e328588a0f90430b058b84c9e064e`。
+- R2 Plan: `FINAL`；本轮仅完成 documentation-only planning freeze，未执行
+  CUDA kernel、生产代码、CMake、编译或实验。
+- V2 唯一路径冻结为：decoded `cv::Mat` → CPU row-aware raw staging → raw
+  H2D → CUDA fused preprocessing → TensorRT device input → existing TensorRT
+  output path → existing postprocess。
+- CPU 只负责 decode、geometry metadata 和 raw staging copy；CUDA 负责 resize、
+  padding、BGR→RGB、float32 normalization、HWC→CHW。
+- V3 只允许 pinned raw buffer、device raw buffer、device FP32 input buffer；
+  pinned output、mapped memory、zero-copy、double buffer 和跨帧 overlap 禁止。
+- `TensorRtDeviceInputCapability` 仅允许存在于 `backend_tensorrt`，不得进入
+  `IInferenceEngine`、`HostTensor` 或 runtime core。
+- CUDA kernel I/O、R2 correctness thresholds 和 implementation file whitelist
+  已冻结于 `STAGE_R_EXECUTION_PLAN.md`、`STAGE_R_TASK_CARDS.md` 和 D084。
+- R2: `NOT AUTHORIZED`；必须等待后续明确的 R2 implementation authorization。
+
+## 2026-08-02 — Stage R R2.1 CUDA Preprocessing Foundation
+
+- User authorization contract for this task: R2.1 `AUTHORIZED`; R2.2 and R2.3
+  `NOT STARTED`.
+- Added an isolated CUDA preprocessing foundation under `backend_tensorrt/`.
+  It reuses the existing CPU `compute_letterbox_geometry()` helper and accepts
+  host uint8 BGR data, width, height, row stride, and CPU geometry metadata.
+- The CUDA path produces a device FP32 NCHW `[1,3,640,640]` tensor and performs
+  only resize, padding value 114, BGR-to-RGB, `/255`, and HWC-to-CHW. It does
+  not call TensorRT enqueue and does not modify `IInferenceEngine`, `HostTensor`,
+  ORT, FP16, PipelineRunner, or Result JSON v4.
+- Resource lifetime contract: one stream and persistent raw/output device
+  buffers are created during `create()`; `preprocess()` contains no
+  `cudaMalloc`, `cudaFree`, or stream creation.
+- Added a CUDA OFF CMake option path, kernel contract test, and an independent
+  16-entry CPU-vs-CUDA tensor gate. No FPS, latency, throughput, or benchmark
+  result is recorded.
+- Real tensor gate result:
+  `MAE=0.000412164`, `P99=0.00392163`, `max=0.00392163`, `non-finite=0`,
+  status `PASS`; all geometry cases passed.
+- R2.1 status: `COMPLETE`; R2.2: `NOT STARTED`; R2.3: `NOT STARTED`.
+
+## 2026-08-02 — Stage R R2.2 Negative Result Closure
+
+- V2 pageable raw staging → CUDA preprocessing → TensorRT device input →
+  TensorRT INT8 → existing postprocess is runnable for the frozen 180-image
+  manifest. Frame order, drop count, EOS, worker join, and Result JSON v4
+  contracts passed.
+- Gate B remained `PASS`: tensor MAE/P99/maximum and non-finite thresholds
+  passed; Gate C remained `PASS` with the retained V0 canonical SHA
+  `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2`.
+- Original V2 Gate D failed: mAP50 drop `0.00552337`, maximum class AP50 drop
+  `0.02751543`, maximum class Recall drop `0.03030303`.
+- The first minimal 11-bit fixed-point resize remediation improved the values
+  to mAP50 drop `0.00537575`, maximum class AP50 drop `0.02673348`, and maximum
+  class Recall drop `0.03030303`, but still failed the frozen replacement
+  criteria. No separable resize or broader CUDA compatibility work was done.
+- Final classification:
+  `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`.
+- V2 CUDA preprocessing candidate: not selected as replacement; V2 is an
+  experimental result only. Stage Q INT8 V0 baseline is retained.
+- V3: `SKIPPED`; V4: `SKIPPED`; R2.3: `NOT AUTHORIZED`; benchmark and performance
+  experiments: not executed.
+
+## 2026-08-02 — Stage R R6 Documentation-Only Negative-Result Closeout
+
+- D086 "Controlled Negative-Result Closeout and R3–R5 Skip" accepted; D001–D085 and Stage Q Evidence remain unchanged.
+- R3: "SKIPPED_BY_NEGATIVE_RESULT_DISPOSITION"; R4: "NOT APPLICABLE"; R5: "SKIPPED — Stage Q V0 retained".
+- R6 documentation-only closeout completed; final classification:
+  "STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED".
+- Selected candidate remains Stage Q INT8 V0. V2 remains
+  "EXPERIMENTAL_RESULT_ONLY — NOT SELECTED"; V3 and V4 remain "SKIPPED".
+- No V0-vs-V2 performance comparison, benchmark, correctness rerun, V3/V4 execution, production-code change, Stage Q Evidence change, push, merge, tag, or PR was performed in R6.
+- Final Report, Evidence Index, machine-readable status, and closeout hashes are in
+  docs/personal/STAGE_R_FINAL_REPORT.md,
+  docs/personal/STAGE_R_EVIDENCE_INDEX.md, and
+  results/validation/stage_r/r6_closeout_v1/.
+
+---
+
+## D087 Stage R Multi-Branch Ablation Reopening (2026-08-02)
+
+Previous closeout:
+
+```text
+valid as the replacement-selection disposition at b008af7
+```
+
+Current research status:
+
+```text
+REOPENED_FOR_MULTI_BRANCH_ABLATION under D087
+```
+
+```text
+Stage R:
+REOPENED_FOR_MULTI_BRANCH_ABLATION
+
+V0:
+FORMAL_BASELINE
+
+V2:
+V2_ACCURACY_TRADE_OFF_BASELINE
+
+R2.3 / V3:
+AUTHORIZED
+
+V4:
+AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION
+
+R3:
+PENDING V3/V4 AVAILABILITY
+```
+
+## 2026-08-02 — Stage R R3 Attempt 1 Sampling (R3_ATTEMPT_1_NONCOMPARABLE_HARNESS)
+
+- Executed 20 real independent processes: V0/V2/V3/V4 × 5, with 60 warmup
+  frames and 1080 measured frames per run over the frozen 180-image manifest.
+- All runs completed with Result JSON v4, EOS PASS, 1080 processed frames, and
+  drop count 0. Current remediated V2/V3/V4 detection SHA identity passed.
+- Evidence is under
+  `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/`; report is
+  `docs/personal/STAGE_R_R3_ABLATION_REPORT.md`.
+- The comparability gate was blocked: V0 dispatched through PipelineRunner
+  while V2/V3/V4 used dedicated single-thread runners. The record is retained
+  and classified `R3_ATTEMPT_1_NONCOMPARABLE_HARNESS` (diagnostic only; not
+  citable in the paper's final performance table).
+- R3 status at the time: `R3_FORMAL_SAMPLING_COMPLETE_COMPARABILITY_BLOCKED`.
+
+## 2026-08-02 — Stage R R3 Attempt 2: Unified Harness Remediation and Formal Rerun
+
+- The benchmark-only harness now runs V0 through `runtime::SerialRunner`
+  (single-thread inline loop) instead of `run_with_components`/`PipelineRunner`,
+  making the executable, loop, timing boundary, thread model, Result JSON v4
+  generation, and CPU sampling identical across V0/V2/V3/V4. Production code,
+  PipelineRunner, CUDA resize, postprocess, thresholds, and Stage Q Evidence
+  are unchanged.
+- Short harness validation PASS (10 warmup / 180 measured per variant):
+  Result JSON v4, sequence/path/dimension order PASS, drop 0, V2/V3/V4
+  detection SHA identity PASS, V0 baseline detection SHA PASS, no silent CPU
+  fallback.
+- Formal unified rerun completed under
+  `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/`: 20 independent runs
+  (5 per variant, 60 warmup / 1080 measured frames), same deterministic
+  interleaved order schedule as Attempt 1, nvpmodel MAXN_SUPER mode 2,
+  affinity 0-5.
+- One documented system anomaly: `set_01_v4` was killed by the kernel OOM
+  killer (14:37:30, PID 22323, anon-rss 5.1 GiB); failure record retained in
+  `failure.json`, run re-executed once per protocol, all other runs untouched.
+- Unified results (all 0 drops): V0 54.87 FPS, V2 126.12 FPS, V3 127.00 FPS,
+  V4 26.75 FPS. V2 vs V0 +129.9% FPS; V3 vs V2 +0.7%; V4 vs V3 −78.9%
+  (V4 long-tail outlier retained: max 9324 ms vs median 22.1 ms). Accuracy
+  axis unchanged: V0 delta 0; V2/V3/V4 mAP50 drop 0.00537575, max class AP50
+  drop 0.02673348, max class Recall drop 0.03030303.
+- R3 status: `R3_ABLATION_COMPLETE`.
+- R5 Pareto evaluation: `READY`.
+- Push, merge, tag, and PR: `NOT EXECUTED`.

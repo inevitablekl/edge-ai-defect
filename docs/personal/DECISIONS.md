@@ -112,6 +112,9 @@
 | D078 | Manifest, runtime and result mapping | RuntimeConfig v5、Manifest v2 INT8、Result JSON v4、validated provenance | ACTIVE |
 | D079 | Accuracy, hash and Serial performance authority | Same-runtime-build controls、frozen replay/hash、three paired Serial runs | ACTIVE |
 | D080 | Conditional Pipeline and final disposition | Frozen Pipeline gate、300-second confirmation、mechanical disposition tree | ACTIVE |
+| D081 | Controlled CUDA Preprocessing Exception | Stage R V2–V4 CUDA fused preprocessing authorization; no GPU NMS/postprocess/通用BufferManager/Zero-Copy | ACTIVE |
+| D082 | Limited Application CUDA Streams Exception | V2/V3 no overlap; V4 max 2 streams, 2 slots; no concurrent inference/output overlap | ACTIVE |
+| D083 | Cross-Preprocess Identity Exception | V0 vs GPU family by geometry/tensor/task accuracy Gates; V2/V3/V4 same-path identity required | ACTIVE |
 
 ---
 
@@ -4046,3 +4049,487 @@ Q7 `Q7_PIPELINE_EVIDENCE_VALID_NO_MATERIAL_REGRESSION`; the required INT8
 300-second confirmation passed. Q8 documentation closeout is
 `Q8_COMPLETE_READY_FOR_MAIN_MERGE`, with final classification
 `STAGE_Q_COMPLETE_INT8_RECOMMENDED`. Merge and tag remain unauthorized.
+
+---
+
+### D081 — Controlled CUDA Preprocessing Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. Stage R 特例授权 V2–V4 使用 CUDA fused preprocessing。
+2. 该 CUDA preprocessing 只允许服务于冻结的 TensorRT INT8 Stage R 数据路径。
+3. 允许在 TensorRT backend 中增加窄能力 `TensorRtDeviceInputCapability`。
+4. CUDA 类型不得扩散到通用 `IInferenceEngine`、ORT、FP16 或 TensorRT-OFF target。
+5. 不授权 GPU NMS、GPU postprocess、通用 CUDA BufferManager、通用异步推理 API、
+   Zero-Copy 或 Mapped memory。
+6. 本 Decision 只解除 Stage R 所需的最小 CUDA preprocessing 禁令。
+7. R0 本身不授权实施；实施仅在 R1–R6 经逐 Gate 授权后进行。
+
+备选方案：
+
+- 在通用 `IInferenceEngine` 级别增加 device-input capability；
+- 将 CUDA preprocessing 实现为独立通用预处理库；
+- 完全禁止 CUDA preprocessing，仅使用 CPU preprocessing。
+
+选择理由：
+
+- Stage R 的研究问题需要评估 CUDA fused preprocessing 是否能降低 CPU preprocessing
+  在数据路径中的成本；
+- 窄能力授权（TensorRT INT8 专用）将 CUDA 类型暴露范围限制在最小必要接口内；
+- 不修改通用 Engine 接口可保护 ORT、FP16 和 TensorRT-OFF 的稳定性；
+- 在 Decision 级别明确授权边界，防止 CUDA preprocessing 在 R1 实施时扩散。
+
+影响范围：
+
+- Stage R V2–V4 CUDA preprocessing implementation（仅 R2 授权后）；
+- `TensorRtEngine` 的 device-input 能力（仅 R2 授权后）；
+- `IInferenceEngine` 通用接口保持不变；
+- ORT、FP16、TensorRT-OFF target 不受影响。
+
+后续是否可调整：
+
+可调整。任何扩展 CUDA preprocessing 范围（如 GPU NMS、通用 BufferManager、
+多 backend device-input）必须新增 Decision，并重新评估对既有接口和 target
+的影响。
+
+---
+
+### D082 — Limited Application CUDA Streams Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. V2/V3 不进行跨帧 overlap。
+2. V4 最多使用 `preprocess_stream` 和 `inference_stream` 两条 CUDA stream。
+3. V4 固定两个 GPU slot。
+4. 只允许 `preprocess(N+1)` 与 `inference(N)` 重叠。
+5. 继续保持一个 TensorRT ExecutionContext。
+6. 继续保持一个 inference worker。
+7. 最大 unfinished `enqueueV3` 数量为 1。
+8. `D2H(N)` 和 output packet(N) 必须在 `enqueueV3(N+1)` 前完成。
+9. 禁止第三条 stream、第三个 slot、并发 TensorRT inference、output copy overlap
+   和 input-consumed Event。
+10. V4 只有通过 profiling opportunity gate 后才可授权。
+11. R0 本身不授权实施。
+
+备选方案：
+
+- 允许任意数量 CUDA streams 和 GPU slots；
+- 允许并发 TensorRT inference；
+- 允许 output copy overlap；
+- 完全禁止 CUDA streams，所有操作串行。
+
+选择理由：
+
+- 双 stream 设计提供了最小可行跨帧重叠（preprocess 与 inference），同时避免
+  multi-context、output overlap 和 triple-buffering 的复杂性；
+- 固定两个 slot 和单 ExecutionContext 保持实现复杂度可控；
+- 限制最大 unfinished enqueueV3 为 1 确保了 D2H 和 output packet 顺序；
+- profiling gate 确保只有存在实际机会时才投入 V4 实施成本。
+
+影响范围：
+
+- V4 Double Buffer implementation（仅 R4 授权后）；
+- CUDA stream 管理；
+- GPU slot/buffer 管理；
+- V2/V3 不受影响。
+
+后续是否可调整：
+
+可调整。任何增加 stream、slot 或放宽 overlap 约束必须新增 Decision，并
+通过真实 profiling evidence 证明必要性。
+
+---
+
+### D083 — Cross-Preprocess Identity Exception
+
+时间：
+
+```text
+2026-08-01
+```
+
+状态：
+
+```text
+ACTIVE
+```
+
+决策：
+
+1. V0 CPU preprocessing 与 GPU preprocessing family 不要求 detection SHA 或
+   tensor digest 完全相同。
+2. V0 与 GPU family 通过 geometry、全 tensor 误差阈值和 task accuracy Gate
+   建立可比性。
+3. V2 与 V3 必须保持 detection SHA 和 tensor digest 完全一致。
+4. 若实施 V4，V4 必须与 V2 保持 detection SHA 和 tensor digest 完全一致。
+5. 该例外不得被解释为放宽 V2/V3/V4 同路径确定性。
+6. 不得改变 Stage Q 的历史 correctness authority。
+7. R0 本身不执行 correctness 实验。
+
+备选方案：
+
+- 要求 V0 与 GPU family 的 detection SHA 完全一致；
+- 要求所有 Variant 的 tensor digest 完全一致；
+- 完全放弃 cross-preprocess identity 验证。
+
+选择理由：
+
+- CPU OpenCV preprocessing 与 CUDA preprocessing 使用不同的数值路径（CPU
+  resize/interpolation、颜色转换等 vs GPU texture/sampler），位级相同不可行；
+- geometry + tensor 误差阈值 + task accuracy 三层 Gate 提供了可靠的可比性；
+- V2/V3/V4 同路径确定性保证了 GPU preprocessing family 内部可比；
+- 保留 Stage Q correctness authority 防止历史 Evidence 被重新解读。
+
+影响范围：
+
+- Stage R Gate 2 — Correctness 的 same-path identity 合同；
+- V2/V3/V4 的 detection SHA 和 tensor digest 验证；
+- Stage Q historical correctness baseline 不受影响。
+
+后续是否可调整：
+
+可调整。任何放宽 same-path identity 或改变 V0 vs GPU family 可比性合同
+必须新增 Decision，并重新评估 correctness Gate 和论文结论。
+
+---
+
+### D084 — Stage R R2 Minimal CUDA Data-Path Planning Freeze
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACTIVE — planning contract; implementation not authorized
+```
+
+决策：
+
+1. V2 固定为：decoded `cv::Mat` → CPU row-aware raw staging → raw H2D →
+   CUDA fused preprocessing → TensorRT device input → existing TensorRT
+   output path → existing postprocess。
+2. CPU 只允许负责 decode、geometry metadata 和 raw staging copy；resize、
+   padding、BGR→RGB、float32 normalization、HWC→CHW 属于 CUDA preprocessing。
+3. V3 仅在 V2 基础上替换为 long-lived pinned raw buffer；允许 pinned raw
+   buffer、device raw buffer、device FP32 input buffer。
+4. Pinned output、mapped memory、zero-copy、double buffer、跨帧 overlap 和
+额外 CUDA stream 不属于 R2。
+5. `TensorRtDeviceInputCapability` 只存在于 `backend_tensorrt`，不得进入
+   `IInferenceEngine`、`HostTensor` 或 runtime core。
+6. CUDA kernel 输入为 uint8 BGR raw image、width、height、row stride 和
+   geometry metadata；输出为 float32 device NCHW `[1,3,640,640]`。
+7. CUDA kernel 不负责 NMS、decode、Result JSON 或 TensorRT enqueue。
+8. R2 tensor gate 固定为 MAE `<=5e-4`、P99 `<=2/255+1e-6`、maximum
+   `<=4/255+1e-6`、non-finite `0`；V2/V3 tensor digest 与 detection SHA
+   必须分别相同。
+9. R2 实施文件仅限 Stage R、TensorRT backend、validation/tests、Stage R
+   configs、CMake、Stage R docs 和 Stage R validation Evidence；既有
+   HostTensor、IInferenceEngine、ORT、FP16、Result JSON v4 和 Stage Q
+   Evidence 受保护。
+10. 本 Decision 只冻结 R2 实施合同，不授权生产代码、CMake、编译或实验。
+11. 当前通用 PipelineRunner 与 packet contract 携带 HostTensor input；V2/V3
+   必须使用 Stage R 专用 data-path adapter/runner 或等价的 backend-only
+   execution path，不得向通用 runner、packet 或 runtime contract 加入 CUDA 类型。
+
+理由：
+
+- 保持 V0 的通用 HostTensor/同步 TensorRT 合同不变；
+- 将 CUDA 类型限制在 TensorRT INT8 Stage R backend 边界；
+- 使 V2/V3 只研究 pageable 与 pinned raw staging 差异；
+- 通过 geometry、tensor、task accuracy 和 V2/V3 identity 形成最小正确性闭环；
+- 防止 R2 扩展为通用异步推理、Zero-Copy 或 GPU postprocess 项目。
+
+影响范围：
+
+- 仅 Stage R R2 V2/V3 planning and implementation boundary；
+- 不改变 Stage Q correctness authority；
+- 不授权 R3/R4 或 V4。
+
+### D085 — Stage R R2.2 V2 Negative Result Closure
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — negative result closure
+```
+
+决策：
+
+1. V2 pageable raw staging → CUDA preprocessing → TensorRT device input →
+   TensorRT INT8 → existing postprocess is accepted as a runnable experimental
+   path, not as the selected replacement.
+2. Gate B and Gate C remain `PASS`; the Stage Q V0 canonical SHA
+   `12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2` remains
+   the correctness authority.
+3. Gate D remains `FAIL` after the first minimal 11-bit fixed-point resize
+   remediation. The remediation improved task metrics but did not satisfy the
+   frozen replacement criteria.
+4. Stage Q INT8 V0 is retained as the selected candidate:
+   `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`.
+5. V2 is recorded as an experimental result only. No further CUDA resize
+   compatibility expansion, including separable resize, is authorized by this
+   closure.
+6. V3 is `SKIPPED`, V4 is `SKIPPED`, R2.3 is `NOT AUTHORIZED`, and no benchmark
+   or performance conclusion is made.
+
+技术结论：
+
+```text
+Under the evaluated YOLOv8n INT8 deployment configuration, CUDA fused
+preprocessing introduced small numerical differences relative to OpenCV CPU
+preprocessing due to resize interpolation implementation differences. These
+differences remained within tensor-level tolerance but affected task-level
+metrics near the replacement threshold.
+```
+
+理由：
+
+- V2 runtime and frame contracts are valid;
+- tensor-level correctness is within the frozen Gate B contract;
+- task-level replacement criteria are not satisfied;
+- retaining the Stage Q V0 baseline preserves the existing correctness
+  authority without inventing success metrics or expanding scope.
+
+影响范围：
+
+- Stage R R2.2 final classification and evidence;
+- selected candidate remains Stage Q INT8 V0;
+- V2 remains experimental only;
+- V3/V4 and R2.3 remain skipped/not authorized.
+
+### D086 — Controlled Negative-Result Closeout and R3–R5 Skip
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R closeout decision
+```
+
+决策：
+
+1. R2.2 Gate D did not pass the frozen replacement correctness thresholds.
+2. V2 passed tensor, integration, and V0 regression checks, but was not selected as a replacement.
+3. The authorized 11-bit fixed-point resize remediation produced limited improvement and still failed Gate D.
+4. V3 changes only raw staging memory type and cannot resolve the observed CUDA resize numerical mismatch; V3 is skipped.
+5. V4 depends on a correctness-qualified V3 candidate and is not applicable.
+6. R3 formal performance experiments are not required for candidate selection after the negative correctness disposition and are skipped.
+7. Stage Q INT8 V0 remains the selected candidate.
+8. R3–R5 are skipped under this controlled disposition, and documentation-only R6 closeout is authorized.
+9. No performance benefit may be claimed for V2, pinned memory, or double buffering.
+10. Future work may investigate OpenCV-compatible CUDA resize, pinned staging, and limited overlap experiments; these are not current Stage R tasks.
+
+影响范围：
+
+- Stage R final classification;
+- R3–R5 status and R6 documentation-only closeout;
+- Stage Q INT8 V0 correctness and selected-candidate authority;
+- Stage R paper tables and limitations.
+
+本 Decision 不修改 D001–D085，不修改 Stage Q Evidence，不授权新的实现或 benchmark。
+
+### D087 — Multi-Branch Ablation Reopening and Gate-D Metric Disposition
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R multi-branch ablation reopening
+```
+
+背景：
+
+Stage R 的执行模式调整为 `MULTI_BRANCH_ABLATION_MODE`。项目核心归宿为研究生
+毕业论文、工程应用型论文和 Edge AI Deployment 求职项目。Experimental Integrity
+和 Comparative Study 优先于单一 replacement Gate 的阶段阻断。本 Decision 不修改
+D085/D086 的记录内容；D085/D086 作为 b008af7 时刻 replacement-selection 处置的
+有效历史记录保留。
+
+决策：
+
+1. V2 Gate D 的 FAIL 与冻结阈值保持原样：不修改、不伪造 PASS。
+2. V2 的状态调整为：
+
+   ```text
+   V2_ACCURACY_TRADE_OFF_BASELINE
+   NOT CORRECTNESS-EQUIVALENT REPLACEMENT
+   ```
+
+3. Gate A/B/C 仍是实验有效性检查。
+4. Gate D 调整为任务精度评价维度，不再作为阻断 V3/V4 的硬性进度屏障。
+5. 授权继续：
+
+   ```text
+   V3: pinned raw staging
+   V4: limited double buffering/overlap
+   R3: V0/V2/V3/V4 comparative benchmark
+   R5: performance-accuracy Pareto evaluation
+   ```
+
+6. Stage Q V0 继续作为正式 correctness-first baseline。
+7. V3/V4 不需要重新证明 V2 与 OpenCV 的完全等价性。
+8. 禁止修改 Gate D 阈值。
+9. 禁止为了跨过 Gate D 再次修改 CUDA resize。
+10. 最终论文必须同时报告性能收益、任务指标变化和实现复杂度。
+
+准确记录（不得写成 V2 总精度只下降 `0.05%`）：
+
+```text
+Remediated V2 mAP50 absolute drop:
+0.00537575
+approximately 0.54 percentage points
+
+Amount exceeding frozen 0.005 limit:
+0.00037575
+approximately 0.038 percentage points
+```
+
+理由：
+
+- 单一 replacement Gate 的阶段阻断会掩盖多分支研究中的有效 trade-off 信息；
+- V2 的精度代价是已定位、有界、可复现的（CUDA resize 插值数值差异），适合作为
+  trade-off 基准而非研究终止条件；
+- 保持 V0 作为 correctness-first baseline，同时允许 V2/V3/V4 作为 ablation
+  分支进入比较研究，满足论文的 Comparative Study 需求；
+- 明确禁止改写阈值、伪造 PASS 或再次修改 CUDA resize，保证 Experimental
+  Integrity。
+
+影响范围：
+
+- Stage R 执行模式：MULTI_BRANCH_ABLATION_MODE；
+- V2：V2_ACCURACY_TRADE_OFF_BASELINE，非 correctness-equivalent replacement；
+- R2.3/V3：AUTHORIZED；
+- V4：AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION；
+- R3：PENDING V3/V4 AVAILABILITY；
+- Stage Q Evidence、Gate D 阈值、CUDA resize：UNCHANGED。
+
+本 Decision 不修改 D001–D086 的历史记录，不修改 Stage Q Evidence，不修改 Gate D
+阈值，不授权新的 CUDA resize remediation。
+
+---
+
+### D088 — Final Stage R Multi-Branch Ablation and Pareto Disposition
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R 最终关闭
+```
+
+背景：
+
+D087 重新开放的多分支消融已全部完成。R3 Attempt 2 统一单线程消融
+（`r3_v0_v2_v3_v4_ablation_v2/`）是最终跨变体数值结论的正式 authority。
+R5 依据该 Evidence 完成性能—精度—复杂度 Pareto 评价并正式关闭 Stage R。
+
+决策：
+
+1. D087 多分支消融已完成，Attempt 2 是最终消融 authority。
+2. Gate D 结果保持 FAIL，阈值 0.005 未修改。
+3. V0 是正式 correctness-first deployment baseline
+   （`STAGE_Q_INT8_V0`）。
+4. V2 是最佳受控 performance-accuracy trade-off 分支
+   （`STAGE_R_V2_CUDA_PREPROCESSING`），论文主优化分支。
+5. V2 不是 correctness-equivalent replacement，不写入对现有
+   PipelineRunner 的直接生产替换。
+6. V3 未观察到有意义的增量收益（`NO_MEANINGFUL_INCREMENTAL_BENEFIT_OBSERVED`）。
+7. V4 是负面消融结果（`DOMINATED_NEGATIVE_ABLATION_RESULT`），不再修复。
+8. V5 不实施。
+9. Attempt 1（`r3_v0_v2_v3_v4_ablation_v1/`）保留为
+   `R3_ATTEMPT_1_NONCOMPARABLE_HARNESS`，不进入正式比较。
+10. Stage R 不再授权新的实现或实验。
+11. Stage R 最终状态冻结为 `STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION`。
+
+准确记录（与 D087 一致的措辞边界）：
+
+```text
+V2 vs V0 (unified single-thread ablation):
+FPS change:            +129.9% (observed)
+mean latency change:   -56.7% (observed)
+mAP50 absolute drop:   0.00537575, approximately 0.54 percentage points
+exceeding frozen Gate D limit (0.005): 0.00037575,
+  approximately 0.038 percentage points
+
+V3 vs V2:
+incremental effect was small relative to run-level variation
+
+V4:
+single-frame long tail approximately 8.98-10.24 s in every run;
+one OOM kill during the formal set rerun per frozen rule
+```
+
+理由：
+
+- 单一 replacement Gate 掩盖了 V2 的有界、可复现精度代价下的性能收益；
+  双层结论（deployment baseline = V0，research trade-off = V2）同时满足
+  correctness-first 部署与论文 Comparative Study 需求；
+- V3 的增量相对 run-level variation 无实际意义，机制复杂度增加；
+- V4 长尾与稳定性代价严重且无测得收益，按冻结规则记录 OOM 后补跑，
+  不作为可修复候选；
+- 不修改 Gate D、不伪造 PASS、不修复 V4、不实现 V5，保证 Experimental
+  Integrity 和 scope 冻结。
+
+影响范围：
+
+- Stage R 最终状态：`STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION`；
+- Deployment baseline：`STAGE_Q_INT8_V0`；
+- Best controlled research trade-off：`STAGE_R_V2_CUDA_PREPROCESSING`；
+- V3：NOT SELECTED；V4：NEGATIVE_ABLATION_RESULT；V5：NOT IMPLEMENTED；
+- 旧分类 `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`
+  仅作为 b008af7 历史 closeout 保留，不再作为当前最终状态；
+- Stage Q Evidence、Gate D 阈值、Result JSON v4：UNCHANGED；
+- Further Stage R implementation / benchmark：NOT AUTHORIZED；
+- Push / Merge / Tag：NOT EXECUTED。
+
+本 Decision 不修改 D001–D087 的历史记录，不修改 Stage Q Evidence，不修改
+Gate D 阈值，不授权新的 Stage R 实现或实验。

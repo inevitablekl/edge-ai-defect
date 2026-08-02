@@ -1,0 +1,24 @@
+schema_version: 1
+corpus_id: stage_r_cuda_preprocess_16_v1
+entry_count: 16
+target_shape: [1, 3, 640, 640]
+cases:
+  # Twelve original NEU-DET validation images.  The files remain external
+  # dataset assets; their SHA-256 values freeze the corpus identity.
+  - {id: original_00, format: image, path: data/raw/NEU-DET/IMAGES/crazing_51.jpg, source_sha256: 185daa31428cf2467d48f9f57ff582575d07a796cd26d77f3e05537bae681503}
+  - {id: original_01, format: image, path: data/raw/NEU-DET/IMAGES/crazing_10.jpg, source_sha256: 522352a6c3532d45a64184b7b1435a74e8cdb732ebdc8e062ced67fa737cf63c}
+  - {id: original_02, format: image, path: data/raw/NEU-DET/IMAGES/inclusion_18.jpg, source_sha256: c1c54814ecaf2bf4f6d84aaf5c744fb648dc3c8323c3b0cfe1bd9f55df20788b}
+  - {id: original_03, format: image, path: data/raw/NEU-DET/IMAGES/inclusion_217.jpg, source_sha256: e40821c51a341286572663cbba1159e7efe8a7cd729c763a5c439d851e6a9c77}
+  - {id: original_04, format: image, path: data/raw/NEU-DET/IMAGES/patches_156.jpg, source_sha256: 9961f0ffde85a40516f54262b3fa74eb35cee24fc87a54d4fe8f07b7e7fb2ec2}
+  - {id: original_05, format: image, path: data/raw/NEU-DET/IMAGES/patches_211.jpg, source_sha256: f988631bac3b31eac7be7a1f56e118d14d3327989ce4b454370761c5c8700305}
+  - {id: original_06, format: image, path: data/raw/NEU-DET/IMAGES/pitted_surface_224.jpg, source_sha256: 419e1d0d40ce7c53fcce40b55f4b8091d4573881d2315969d74318df493a0e80}
+  - {id: original_07, format: image, path: data/raw/NEU-DET/IMAGES/pitted_surface_231.jpg, source_sha256: 0bfa310238545597ac7a48495a85ae1a945d2f6f8e4fa470d1bce5f4648c931c}
+  - {id: original_08, format: image, path: data/raw/NEU-DET/IMAGES/rolled-in_scale_146.jpg, source_sha256: 4b76ee7c33602b95115a2acec07b4cd74cab87eeb2cdc2a602534646cbed047b}
+  - {id: original_09, format: image, path: data/raw/NEU-DET/IMAGES/rolled-in_scale_262.jpg, source_sha256: 67cab4d93752e5def8a7d34b72504c1ecacadc673f252d4d719b716aeda0c083}
+  - {id: original_10, format: image, path: data/raw/NEU-DET/IMAGES/scratches_126.jpg, source_sha256: fd1f86fe4349e991e98e1b00c1b1aa94088669822cdb30a5c0dfffa5782134c3}
+  - {id: original_11, format: image, path: data/raw/NEU-DET/IMAGES/scratches_246.jpg, source_sha256: 06811a835826c47ad78e91e90cb758f6334f348d21765375b2ce9146be1309b4}
+  # Four tracked deterministic non-square raw BGR cases.
+  - {id: nonsquare_00, format: raw_bgr, path: tests/data/preprocess_level_a/inputs/non_integer_resize.bgr, width: 7, height: 5, row_stride: 21, source_sha256: e16f68aa088450a629c3b87427722356b3c27f22a0f43b09c6e11d963d8bc1f3}
+  - {id: nonsquare_01, format: raw_bgr, path: tests/data/preprocess_level_a/inputs/odd_horizontal_padding.bgr, width: 5, height: 8, row_stride: 15, source_sha256: 4ae3ec70825ea7d180385098f47347f12fda1277d475138452bff68c1401a38d}
+  - {id: nonsquare_02, format: raw_bgr, path: tests/data/preprocess_level_a/inputs/vertical_padding.bgr, width: 8, height: 4, row_stride: 24, source_sha256: fb17081fbe0b95b7b1d0a640fc710ea286ab552b06c6ad3e4e4fc4252b1b7816}
+  - {id: nonsquare_03, format: raw_bgr, path: tests/data/preprocess_level_a/inputs/small_upscale.bgr, width: 3, height: 2, row_stride: 9, source_sha256: fb86db47f0794ff15c359f2253fc1e2c2db2eb92d59f15a2a20cf99b081f60b1}

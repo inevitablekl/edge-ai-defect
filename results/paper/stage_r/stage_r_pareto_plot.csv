@@ -1,0 +1,5 @@
+variant,fps,mean_latency_ms,mAP50_delta,classification,on_frontier
+V0,54.865242691940885,18.167954922222222,0.0,correctness-first deployment baseline,True
+V2,126.12030462893935,7.87042523962963,-0.00537575,best controlled performance-accuracy trade-off (research),True
+V3,127.00490837666182,7.8065112231481475,-0.00537575,no meaningful incremental benefit under tested conditions,False
+V4,26.746066176353565,32.27793978611111,-0.00537575,negative ablation result,False
