@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "purpose": "Stage R paper-ready data (tables and plot inputs)",
+  "evidence_authority": {
+    "benchmark": {
+      "path": "results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/",
+      "classification": "R3_ATTEMPT_2_UNIFIED_HARNESS",
+      "comparability_status": "UNIFIED_HARNESS_COMPARABLE",
+      "sha256": {
+        "aggregate_metrics.json": "5f0c11480f1303c45c4f2b7153947429685c525cb0c8867ed0c3807902770cb3",
+        "comparison_matrix.json": "ac72fa48b898c1261ebe71ed5fafe9734cd77e72a3917cfd9097f7f1cf32e53c",
+        "performance_accuracy_tradeoff.json": "0e047c0342d014ae1df46df5021f4015a8d9c3d26f0a1ec58e8fefbe6dc50b6e",
+        "per_run_metrics.json": "a2cc1c596e6e4890f5a6a9fdd5dc4338565a7fbe9f93fc79d030972c242e0bc8"
+      }
+    },
+    "pareto_closeout": {
+      "path": "results/validation/stage_r/r5_pareto_closeout_v1/",
+      "classification": "STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION",
+      "sha256": {
+        "stage_r_pareto_summary.json": "ba95aa09b8d294d6106e8a03dff4786bfe48384b62f573ae8acc061d4b65fc38",
+        "stage_r_final_status.json": "c8be41bc62933e00928aeca69cb2e4ca58933fd6d0f716c51d0d4c240573a29b"
+      }
+    }
+  },
+  "attempt_1_disposition": "results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/ (R3_ATTEMPT_1_NONCOMPARABLE_HARNESS) - NOT used in these tables",
+  "generation_commit": "d05a5a6307f090c49cb962259023aeca22535b0b",
+  "generation_commit_note": "branch HEAD at CSV generation time (pre-paper commit); CSV bytes unchanged in the paper-materials commit that carries these files",
+  "generated_files": [
+    "stage_r_ablation_table.csv",
+    "stage_r_accuracy_tradeoff.csv",
+    "stage_r_fps_latency_plot.csv",
+    "stage_r_incremental_comparison.csv",
+    "stage_r_pareto_plot.csv",
+    "stage_r_tail_latency_plot.csv"
+  ]
+}

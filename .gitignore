@@ -110,6 +110,9 @@ experiments/evaluation/**
 !configs/**/*.json
 !experiments/configs/**/*.json
 
+# Track paper-ready Stage R ablation tables and plot inputs.
+!results/paper/**/*.csv
+
 # Track lightweight training result summaries.
 !results/training/*.csv
 !results/training/*.json

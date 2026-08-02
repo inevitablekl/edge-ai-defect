@@ -233,3 +233,28 @@ summary for the root cause).
 
 V4 is correctness-complete only: tensor digest and detection SHA are identical
 to V3, and no FPS, latency, resource, power, or stability benchmark was run.
+
+---
+
+## Paper Integration — Stage R Paper-Ready Materials (2026-08-02)
+
+Documentation-only integration of the frozen Stage R Evidence into
+paper-ready experiment materials. No production code, benchmark runner,
+config, Stage Q Evidence, or Stage R raw Evidence was modified; no benchmark
+or accuracy evaluation was re-run; no outlier was removed.
+
+| Path | Purpose | Authority |
+|---|---|---|
+| `docs/personal/PAPER_STAGE_R_DATA_PATH_ABLATION.md` | Paper experiment-section draft (motivation, variants, correctness, protocol, ablation tables, per-variant analysis, Pareto, contributions, limitations, defense/resume phrasing) | paper material authority |
+| `results/paper/stage_r/stage_r_ablation_table.csv` | Main ablation table (V0/V2/V3/V4) | generated from Attempt 2 aggregate evidence |
+| `results/paper/stage_r/stage_r_incremental_comparison.csv` | Paired incremental comparison (V2/V0, V3/V2, V4/V3, V4/V0) | generated from comparison_matrix.json |
+| `results/paper/stage_r/stage_r_accuracy_tradeoff.csv` | Accuracy axis incl. Gate D FAIL precision | generated from R5 Pareto accuracy metrics |
+| `results/paper/stage_r/stage_r_fps_latency_plot.csv` | Plot input: per-run FPS / mean / P95 / P99 / CPU cores | generated from per_run_metrics.json |
+| `results/paper/stage_r/stage_r_pareto_plot.csv` | Plot input: fps / mean latency / mAP50 delta / frontier flag | generated from aggregate + tradeoff evidence |
+| `results/paper/stage_r/stage_r_tail_latency_plot.csv` | Plot input: per-run mean / P95 / P99 / maximum (V4 long tail not masked) | generated from per_run_metrics.json |
+| `results/paper/stage_r/metadata.json` | Source evidence paths + SHA-256 + generation commit | integrity record |
+
+Paper-material numeric scope is identical to the formal ablation authority:
+the paper's performance table may only cite Attempt 2. Attempt 1 remains
+`R3_ATTEMPT_1_NONCOMPARABLE_HARNESS` (PipelineRunner V0 ~231.9 FPS is
+`CONTEXT ONLY`).
