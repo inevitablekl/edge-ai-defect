@@ -133,6 +133,70 @@ R3:
 PENDING V3/V4 AVAILABILITY
 ```
 
+## R3 Attempt 1 — Sampling Record, Non-Comparable Harness (2026-08-02)
+
+Classification: `R3_ATTEMPT_1_NONCOMPARABLE_HARNESS`
+
+The requested 5-run-per-variant sampling completed under the frozen 180-image
+manifest, with 60 warmup frames, 1080 measured frames per process, zero drops,
+and Result JSON v4 for all 20 runs. All run artifacts are real and retained,
+but cross-variant performance comparison is invalid: V0 dispatched through
+`PipelineRunner` (four worker threads, prefetch) while V2/V3/V4 used
+dedicated single-thread runners. Attempt 1 is diagnostic reference only and
+must not enter the paper's final performance table. The unified rerun
+quantified the confound: the same V0 data path measures 54.9 FPS single-thread
+versus 231.9 FPS under PipelineRunner.
+
+| Path | Purpose | Status |
+|---|---|---|
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/experiment_manifest.json` | Protocol, entry identity, environment, and artifact identity | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/per_run_metrics.json` | Per-run latency distributions and hashes | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/aggregate_metrics.json` | Four-variant aggregate metrics | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/comparison_matrix.json` | V2/V0, V3/V2, V4/V3, V4/V0 calculations | descriptive; comparability blocked |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/performance_accuracy_tradeoff.json` | Performance/accuracy matrix | descriptive; no candidate selection |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/temperature_summary.json` | First/last tegrastats temperature samples | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/ATTEMPT_1_DISPOSITION.md` | Attempt 1 disposition and validity scope | disposition authority |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/artifact_sha256.txt` | Recursive evidence hashes | integrity record |
+| `docs/personal/STAGE_R_R3_ABLATION_REPORT.md` | R3 report (Attempt 1 + Attempt 2 sections) | report authority |
+
+Historical pre-remediation V2 hashes remain unchanged and were not used.
+
+## R3 Attempt 2 — Unified Harness Formal Ablation (2026-08-02)
+
+Classification: `R3_ATTEMPT_2_UNIFIED_HARNESS`
+Status: `COMPLETE_UNIFIED_HARNESS_COMPARABLE`
+
+The comparability remediation re-executed the frozen protocol with one unified
+harness: a single benchmark-only executable runs all four variants through the
+same single-thread inline loop (V0 via `runtime::SerialRunner`; V2/V3/V4 via
+their existing Stage R runners), the same pre-sink end-to-end timing boundary,
+the same Result JSON v4 generation, and the same CPU sampling. A short
+harness validation (10 warmup / 180 measured frames per variant) passed all
+checks, including V2/V3/V4 detection SHA identity and the V0 baseline SHA.
+
+One documented system anomaly: `set_01_v4` was killed by the kernel OOM
+killer (14:37:30, PID 22323, anon-rss 5.1 GiB). The failure record is retained
+in `failure.json`; the run was re-executed once per the R3 protocol and
+completed.
+
+| Path | Purpose | Status |
+|---|---|---|
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/experiment_manifest.json` | Protocol, entry identity, environment, and artifact identity | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/per_run_metrics.json` | Per-run latency distributions and hashes | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/aggregate_metrics.json` | Four-variant aggregate metrics | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/comparison_matrix.json` | V2/V0, V3/V2, V4/V3, V4/V0 calculations | formal ablation authority |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/performance_accuracy_tradeoff.json` | Performance/accuracy matrix | descriptive; no candidate selected |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/temperature_summary.json` | First/last tegrastats temperature samples | tracked evidence |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/failure.json` | OOM-kill failure record (retained) | anomaly record |
+| `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/artifact_sha256.txt` | Recursive evidence hashes | integrity record |
+| `results/benchmark/stage_r/r3_unified_validation/` | Short harness validation runs + summary | validation record |
+
+Key unified results: V0 54.87 FPS, V2 126.12 FPS, V3 127.00 FPS, V4 26.75 FPS,
+all with 0 drops. Detection SHA identity: V0 baseline
+`12bdb792...`; V2/V3/V4 `0a668fd5...` shared. R3 status:
+`R3_ABLATION_COMPLETE`. R5 Pareto evaluation: `READY`. The paper's final
+performance table may only cite Attempt 2.
+
 The integrity boundaries above remain valid for the historical closeout
 evidence and are not rewritten.
 

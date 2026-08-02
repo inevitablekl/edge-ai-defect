@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "classification": "R3_HARNESS_VALIDATION",
+  "purpose": "unified harness correctness check; no accuracy evaluation",
+  "expected_frames_per_run": 180,
+  "v0_baseline_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "v2_v3_v4_detection_identity_pass": true,
+  "v0_baseline_detection_sha256_pass": true,
+  "all_runs_pass": true,
+  "runs": [
+    {
+      "variant": "V0",
+      "run_id": "set_01_v0",
+      "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+      "result_json_sha256": "80b1da528282b897867daf928d9daa32de4795b188e7e58c725f784be2603a8b",
+      "summary_processed_frames": 180,
+      "summary_dropped_frames": 0,
+      "binary_sha256": "f3e5ba4a43c76d7d0688070245418c0d2de44dde8b480fb8d6c0c361a3ebfef0",
+      "commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "variant": "V2",
+      "run_id": "set_01_v2",
+      "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "result_json_sha256": "e7aaf9a361b948f2bf731435198e7f5e6bfd93d4aed1e03c610aae7b53adb524",
+      "summary_processed_frames": 180,
+      "summary_dropped_frames": 0,
+      "binary_sha256": "f3e5ba4a43c76d7d0688070245418c0d2de44dde8b480fb8d6c0c361a3ebfef0",
+      "commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "variant": "V3",
+      "run_id": "set_01_v3",
+      "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "result_json_sha256": "280c292c55e07822d001c0bf2b0ed85cd3c47b61f7d2d5a3f4421303361519ac",
+      "summary_processed_frames": 180,
+      "summary_dropped_frames": 0,
+      "binary_sha256": "f3e5ba4a43c76d7d0688070245418c0d2de44dde8b480fb8d6c0c361a3ebfef0",
+      "commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "variant": "V4",
+      "run_id": "set_01_v4",
+      "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+      "result_json_sha256": "ea76dc39703cb7e4fb061474b8199b06b91fb59c420ceaa25e1132303296f6d5",
+      "summary_processed_frames": 180,
+      "summary_dropped_frames": 0,
+      "binary_sha256": "f3e5ba4a43c76d7d0688070245418c0d2de44dde8b480fb8d6c0c361a3ebfef0",
+      "commit": "b789a672cf1ecbac4a4d7c25cb0c5a8575c5eba0",
+      "status": "PASS",
+      "errors": []
+    }
+  ]
+}

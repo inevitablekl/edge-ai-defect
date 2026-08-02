@@ -497,6 +497,25 @@ target_compile_definitions(edge_ai_infer
     PRIVATE EDGE_AI_DEFECT_VERSION="${PROJECT_VERSION}"
 )
 target_link_libraries(edge_ai_infer PRIVATE edge_ai_application)
+
+if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
+    # Benchmark-only executable for the frozen Stage R R3 ablation protocol.
+    # It is deliberately separate from the production command-line path.
+    add_executable(stage_r_r3_ablation_runner
+        tools/benchmark/stage_r_r3_ablation_runner.cpp)
+    target_include_directories(stage_r_r3_ablation_runner PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(stage_r_r3_ablation_runner PRIVATE
+        edge_ai_application
+        edge_ai_stage_r_v3
+        edge_ai_backend_factory
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        ${EDGE_AI_CUDART_LIBRARY})
+    set_target_properties(stage_r_r3_ablation_runner PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+endif()
 set_target_properties(edge_ai_infer
     PROPERTIES
         BUILD_RPATH "${ONNXRUNTIME_ROOT}/lib"

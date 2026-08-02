@@ -3587,3 +3587,47 @@ AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION
 R3:
 PENDING V3/V4 AVAILABILITY
 ```
+
+## 2026-08-02 — Stage R R3 Attempt 1 Sampling (R3_ATTEMPT_1_NONCOMPARABLE_HARNESS)
+
+- Executed 20 real independent processes: V0/V2/V3/V4 × 5, with 60 warmup
+  frames and 1080 measured frames per run over the frozen 180-image manifest.
+- All runs completed with Result JSON v4, EOS PASS, 1080 processed frames, and
+  drop count 0. Current remediated V2/V3/V4 detection SHA identity passed.
+- Evidence is under
+  `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v1/`; report is
+  `docs/personal/STAGE_R_R3_ABLATION_REPORT.md`.
+- The comparability gate was blocked: V0 dispatched through PipelineRunner
+  while V2/V3/V4 used dedicated single-thread runners. The record is retained
+  and classified `R3_ATTEMPT_1_NONCOMPARABLE_HARNESS` (diagnostic only; not
+  citable in the paper's final performance table).
+- R3 status at the time: `R3_FORMAL_SAMPLING_COMPLETE_COMPARABILITY_BLOCKED`.
+
+## 2026-08-02 — Stage R R3 Attempt 2: Unified Harness Remediation and Formal Rerun
+
+- The benchmark-only harness now runs V0 through `runtime::SerialRunner`
+  (single-thread inline loop) instead of `run_with_components`/`PipelineRunner`,
+  making the executable, loop, timing boundary, thread model, Result JSON v4
+  generation, and CPU sampling identical across V0/V2/V3/V4. Production code,
+  PipelineRunner, CUDA resize, postprocess, thresholds, and Stage Q Evidence
+  are unchanged.
+- Short harness validation PASS (10 warmup / 180 measured per variant):
+  Result JSON v4, sequence/path/dimension order PASS, drop 0, V2/V3/V4
+  detection SHA identity PASS, V0 baseline detection SHA PASS, no silent CPU
+  fallback.
+- Formal unified rerun completed under
+  `results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2/`: 20 independent runs
+  (5 per variant, 60 warmup / 1080 measured frames), same deterministic
+  interleaved order schedule as Attempt 1, nvpmodel MAXN_SUPER mode 2,
+  affinity 0-5.
+- One documented system anomaly: `set_01_v4` was killed by the kernel OOM
+  killer (14:37:30, PID 22323, anon-rss 5.1 GiB); failure record retained in
+  `failure.json`, run re-executed once per protocol, all other runs untouched.
+- Unified results (all 0 drops): V0 54.87 FPS, V2 126.12 FPS, V3 127.00 FPS,
+  V4 26.75 FPS. V2 vs V0 +129.9% FPS; V3 vs V2 +0.7%; V4 vs V3 −78.9%
+  (V4 long-tail outlier retained: max 9324 ms vs median 22.1 ms). Accuracy
+  axis unchanged: V0 delta 0; V2/V3/V4 mAP50 drop 0.00537575, max class AP50
+  drop 0.02673348, max class Recall drop 0.03030303.
+- R3 status: `R3_ABLATION_COMPLETE`.
+- R5 Pareto evaluation: `READY`.
+- Push, merge, tag, and PR: `NOT EXECUTED`.

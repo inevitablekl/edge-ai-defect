@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "comparability_status": "BLOCKED_RUNNER_TOPOLOGY_MISMATCH",
+  "interpretation_status": "DESCRIPTIVE_ONLY",
+  "comparisons": [
+    {
+      "comparison": "V2_vs_V0",
+      "candidate": "V2",
+      "baseline": "V0",
+      "absolute_fps_difference": -104.79207782448587,
+      "relative_fps_change": -0.4518806539013813,
+      "absolute_mean_latency_ms_difference": -11.662523339444444,
+      "relative_mean_latency_change": -0.5989339802937524,
+      "absolute_p95_latency_ms_difference": -21.80440192,
+      "relative_p95_latency_change": -0.6963364057252541,
+      "absolute_p99_latency_ms_difference": -26.469543612,
+      "relative_p99_latency_change": -0.7167816297314384,
+      "cpu_equivalent_cores_difference": -1.2280000000000004,
+      "accuracy_delta": -0.00537575,
+      "implementation_increment": "CUDA fused preprocessing with pageable raw staging"
+    },
+    {
+      "comparison": "V3_vs_V2",
+      "candidate": "V3",
+      "baseline": "V2",
+      "absolute_fps_difference": 0.0012594839699175964,
+      "relative_fps_change": 9.908611717333067e-06,
+      "absolute_mean_latency_ms_difference": -0.008180067037038441,
+      "relative_mean_latency_change": -0.0010474358212958518,
+      "absolute_p95_latency_ms_difference": 0.33917073000000286,
+      "relative_p95_latency_change": 0.03566979066873438,
+      "absolute_p99_latency_ms_difference": 0.9668191799999999,
+      "relative_p99_latency_change": 0.09244091831929858,
+      "cpu_equivalent_cores_difference": -0.008955555555555494,
+      "accuracy_delta": 0.0,
+      "implementation_increment": "replace pageable raw staging with long-lived pinned raw staging"
+    },
+    {
+      "comparison": "V4_vs_V3",
+      "candidate": "V4",
+      "baseline": "V3",
+      "absolute_fps_difference": -93.73815458058924,
+      "relative_fps_change": -0.7374494601335826,
+      "absolute_mean_latency_ms_difference": 16.933571254814815,
+      "relative_mean_latency_change": 2.1705722831366736,
+      "absolute_p95_latency_ms_difference": 9.245320219999996,
+      "relative_p95_latency_change": 0.9388211045279806,
+      "absolute_p99_latency_ms_difference": 8.227259834,
+      "relative_p99_latency_change": 0.7200725385114927,
+      "cpu_equivalent_cores_difference": 0.3821198030727443,
+      "accuracy_delta": 0.0,
+      "implementation_increment": "two pinned raw/device slots with limited fixed alternation"
+    },
+    {
+      "comparison": "V4_vs_V0",
+      "candidate": "V4",
+      "baseline": "V0",
+      "absolute_fps_difference": -198.5289729211052,
+      "relative_fps_change": -0.8560895438318769,
+      "absolute_mean_latency_ms_difference": 5.262867848333332,
+      "relative_mean_latency_change": 0.27027687717471727,
+      "absolute_p95_latency_ms_difference": -12.21991097,
+      "relative_p95_latency_change": -0.39025004741484803,
+      "absolute_p99_latency_ms_difference": -17.275464598,
+      "relative_p99_latency_change": -0.4678106978508115,
+      "cpu_equivalent_cores_difference": -0.8548357524828116,
+      "accuracy_delta": -0.00537575,
+      "implementation_increment": "complete V0 to V4 data-path increment"
+    }
+  ]
+}
