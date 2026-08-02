@@ -4449,3 +4449,87 @@ approximately 0.038 percentage points
 
 本 Decision 不修改 D001–D086 的历史记录，不修改 Stage Q Evidence，不修改 Gate D
 阈值，不授权新的 CUDA resize remediation。
+
+---
+
+### D088 — Final Stage R Multi-Branch Ablation and Pareto Disposition
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R 最终关闭
+```
+
+背景：
+
+D087 重新开放的多分支消融已全部完成。R3 Attempt 2 统一单线程消融
+（`r3_v0_v2_v3_v4_ablation_v2/`）是最终跨变体数值结论的正式 authority。
+R5 依据该 Evidence 完成性能—精度—复杂度 Pareto 评价并正式关闭 Stage R。
+
+决策：
+
+1. D087 多分支消融已完成，Attempt 2 是最终消融 authority。
+2. Gate D 结果保持 FAIL，阈值 0.005 未修改。
+3. V0 是正式 correctness-first deployment baseline
+   （`STAGE_Q_INT8_V0`）。
+4. V2 是最佳受控 performance-accuracy trade-off 分支
+   （`STAGE_R_V2_CUDA_PREPROCESSING`），论文主优化分支。
+5. V2 不是 correctness-equivalent replacement，不写入对现有
+   PipelineRunner 的直接生产替换。
+6. V3 未观察到有意义的增量收益（`NO_MEANINGFUL_INCREMENTAL_BENEFIT_OBSERVED`）。
+7. V4 是负面消融结果（`DOMINATED_NEGATIVE_ABLATION_RESULT`），不再修复。
+8. V5 不实施。
+9. Attempt 1（`r3_v0_v2_v3_v4_ablation_v1/`）保留为
+   `R3_ATTEMPT_1_NONCOMPARABLE_HARNESS`，不进入正式比较。
+10. Stage R 不再授权新的实现或实验。
+11. Stage R 最终状态冻结为 `STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION`。
+
+准确记录（与 D087 一致的措辞边界）：
+
+```text
+V2 vs V0 (unified single-thread ablation):
+FPS change:            +129.9% (observed)
+mean latency change:   -56.7% (observed)
+mAP50 absolute drop:   0.00537575, approximately 0.54 percentage points
+exceeding frozen Gate D limit (0.005): 0.00037575,
+  approximately 0.038 percentage points
+
+V3 vs V2:
+incremental effect was small relative to run-level variation
+
+V4:
+single-frame long tail approximately 8.98-10.24 s in every run;
+one OOM kill during the formal set rerun per frozen rule
+```
+
+理由：
+
+- 单一 replacement Gate 掩盖了 V2 的有界、可复现精度代价下的性能收益；
+  双层结论（deployment baseline = V0，research trade-off = V2）同时满足
+  correctness-first 部署与论文 Comparative Study 需求；
+- V3 的增量相对 run-level variation 无实际意义，机制复杂度增加；
+- V4 长尾与稳定性代价严重且无测得收益，按冻结规则记录 OOM 后补跑，
+  不作为可修复候选；
+- 不修改 Gate D、不伪造 PASS、不修复 V4、不实现 V5，保证 Experimental
+  Integrity 和 scope 冻结。
+
+影响范围：
+
+- Stage R 最终状态：`STAGE_R_COMPLETE_MULTI_BRANCH_ABLATION`；
+- Deployment baseline：`STAGE_Q_INT8_V0`；
+- Best controlled research trade-off：`STAGE_R_V2_CUDA_PREPROCESSING`；
+- V3：NOT SELECTED；V4：NEGATIVE_ABLATION_RESULT；V5：NOT IMPLEMENTED；
+- 旧分类 `STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED`
+  仅作为 b008af7 历史 closeout 保留，不再作为当前最终状态；
+- Stage Q Evidence、Gate D 阈值、Result JSON v4：UNCHANGED；
+- Further Stage R implementation / benchmark：NOT AUTHORIZED；
+- Push / Merge / Tag：NOT EXECUTED。
+
+本 Decision 不修改 D001–D087 的历史记录，不修改 Stage Q Evidence，不修改
+Gate D 阈值，不授权新的 Stage R 实现或实验。
