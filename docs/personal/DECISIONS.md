@@ -4330,3 +4330,39 @@ metrics near the replacement threshold.
 - selected candidate remains Stage Q INT8 V0;
 - V2 remains experimental only;
 - V3/V4 and R2.3 remain skipped/not authorized.
+
+### D086 — Controlled Negative-Result Closeout and R3–R5 Skip
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R closeout decision
+```
+
+决策：
+
+1. R2.2 Gate D did not pass the frozen replacement correctness thresholds.
+2. V2 passed tensor, integration, and V0 regression checks, but was not selected as a replacement.
+3. The authorized 11-bit fixed-point resize remediation produced limited improvement and still failed Gate D.
+4. V3 changes only raw staging memory type and cannot resolve the observed CUDA resize numerical mismatch; V3 is skipped.
+5. V4 depends on a correctness-qualified V3 candidate and is not applicable.
+6. R3 formal performance experiments are not required for candidate selection after the negative correctness disposition and are skipped.
+7. Stage Q INT8 V0 remains the selected candidate.
+8. R3–R5 are skipped under this controlled disposition, and documentation-only R6 closeout is authorized.
+9. No performance benefit may be claimed for V2, pinned memory, or double buffering.
+10. Future work may investigate OpenCV-compatible CUDA resize, pinned staging, and limited overlap experiments; these are not current Stage R tasks.
+
+影响范围：
+
+- Stage R final classification;
+- R3–R5 status and R6 documentation-only closeout;
+- Stage Q INT8 V0 correctness and selected-candidate authority;
+- Stage R paper tables and limitations.
+
+本 Decision 不修改 D001–D085，不修改 Stage Q Evidence，不授权新的实现或 benchmark。

@@ -3537,3 +3537,17 @@ USER REVIEW OF R0 COMMIT
   experimental result only. Stage Q INT8 V0 baseline is retained.
 - V3: `SKIPPED`; V4: `SKIPPED`; R2.3: `NOT AUTHORIZED`; benchmark and performance
   experiments: not executed.
+
+## 2026-08-02 — Stage R R6 Documentation-Only Negative-Result Closeout
+
+- D086 "Controlled Negative-Result Closeout and R3–R5 Skip" accepted; D001–D085 and Stage Q Evidence remain unchanged.
+- R3: "SKIPPED_BY_NEGATIVE_RESULT_DISPOSITION"; R4: "NOT APPLICABLE"; R5: "SKIPPED — Stage Q V0 retained".
+- R6 documentation-only closeout completed; final classification:
+  "STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED".
+- Selected candidate remains Stage Q INT8 V0. V2 remains
+  "EXPERIMENTAL_RESULT_ONLY — NOT SELECTED"; V3 and V4 remain "SKIPPED".
+- No V0-vs-V2 performance comparison, benchmark, correctness rerun, V3/V4 execution, production-code change, Stage Q Evidence change, push, merge, tag, or PR was performed in R6.
+- Final Report, Evidence Index, machine-readable status, and closeout hashes are in
+  docs/personal/STAGE_R_FINAL_REPORT.md,
+  docs/personal/STAGE_R_EVIDENCE_INDEX.md, and
+  results/validation/stage_r/r6_closeout_v1/.

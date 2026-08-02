@@ -1457,6 +1457,20 @@ Subsequently only permitted:
 - paper writing;
 - limited supplementary experiments required by reviewers.
 
+## 28. Actual R6 Disposition — Documentation-Only Negative Result
+
+The original planned path was R3–R5. After R2.2 Gate D failed and D086 was accepted, the actual disposition is recorded without rewriting the frozen execution contract:
+
+R3: SKIPPED_BY_NEGATIVE_RESULT_DISPOSITION
+R4: NOT APPLICABLE
+R5: SKIPPED — Stage Q V0 retained
+R6: COMPLETE
+
+R6 was documentation-only. No new Variant, performance experiment, correctness experiment, implementation, or Stage Q Evidence change was authorized.
+The final classification is:
+
+STAGE_R_COMPLETE_NEGATIVE_RESULT_STAGE_Q_BASELINE_RETAINED
+
 ---
 
 # 27. Final Authorization

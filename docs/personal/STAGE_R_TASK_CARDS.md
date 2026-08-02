@@ -685,6 +685,19 @@ supplementary experiments required by reviewers.
 
 ---
 
+## R6 Actual Disposition — Documentation-Only Negative Result
+
+Following R2.2 Gate D failure and accepted Decision D086, the frozen planned R3–R5 path was closed by controlled disposition:
+
+R3: SKIPPED_BY_NEGATIVE_RESULT_DISPOSITION
+R4: NOT APPLICABLE
+R5: SKIPPED — Stage Q V0 retained
+R6: COMPLETE
+
+This is an actual-status note, not a rewrite of the original task cards. R6 created only documentation and Evidence closeout artifacts. No implementation, benchmark, correctness rerun, V3/V4 execution, or Stage Q Evidence change was performed.
+
+---
+
 ## Out of Scope (Future Work)
 
 The following are explicitly NOT Stage R task cards and are only referenced
