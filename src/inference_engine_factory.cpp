@@ -24,10 +24,9 @@ core::Status create_inference_engine(
         return core::Status::success();
     }
     if (config.backend_type == "tensorrt_fp16" || config.backend_type == "tensorrt_int8") {
-        if (config.data_path_variant == runtime::DataPathVariant::kV3 ||
-            config.data_path_variant == runtime::DataPathVariant::kV4) {
+        if (config.data_path_variant == runtime::DataPathVariant::kV4) {
             return core::Status::failure(core::ErrorCode::kSchemaViolation,
-                                         "Stage R V3/V4 are not implemented");
+                                         "Stage R V4 is not implemented");
         }
         auto engine = std::make_unique<backend_tensorrt::TensorRtEngine>();
         core::Status status = engine->initialize(config, contract);

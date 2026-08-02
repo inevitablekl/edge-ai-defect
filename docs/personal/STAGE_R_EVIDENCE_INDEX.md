@@ -96,3 +96,62 @@ final conclusion.
 - Local-only raw Nsight artifacts, if absent, are not backfilled or assigned
   invented hashes.
 - The R6 artifacts are documentation/evidence closeout artifacts only.
+
+---
+
+## D087 Reopening Addendum (2026-08-02, read-only append)
+
+Previous closeout:
+
+```text
+valid as the replacement-selection disposition at b008af7
+```
+
+Current research status:
+
+```text
+REOPENED_FOR_MULTI_BRANCH_ABLATION under D087
+```
+
+```text
+Stage R:
+REOPENED_FOR_MULTI_BRANCH_ABLATION
+
+V0:
+FORMAL_BASELINE
+
+V2:
+V2_ACCURACY_TRADE_OFF_BASELINE
+
+R2.3 / V3:
+AUTHORIZED
+
+V4:
+AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION
+
+R3:
+PENDING V3/V4 AVAILABILITY
+```
+
+The integrity boundaries above remain valid for the historical closeout
+evidence and are not rewritten.
+
+---
+
+## R2.3 V3 Pinned Evidence (D087)
+
+| Path | Purpose | Authority |
+|---|---|---|
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_tensor_gate.json` | 16-case tensor gate | formal Gate B evidence (V3) |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_hashes.json` | V3 detection SHA and tensor digest | formal equivalence evidence |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_run_manifest.json` | Run-time record and frame contract | formal runtime evidence |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_result.json` | 180-frame Result JSON v4 | raw result evidence |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_runtime_summary.json` | Runtime summary | formal runtime authority |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/v3_v2_equivalence_summary.json` | V2/V3 equivalence incl. frozen-value finding | formal equivalence authority |
+| `results/validation/stage_r/r2_v3_pinned_correctness_v1/artifact_sha256.txt` | Evidence artifact hashes | integrity record |
+| `docs/personal/STAGE_R_R2_V3_PINNED_REPORT.md` | R2.3 implementation report | report authority |
+
+V3 tensor digest and detection SHA are identical to the live V2 run at the
+same code state; V3 task metrics are inherited from V2. The frozen V2 hash
+fields correspond to the pre-remediation code state (see the equivalence
+summary for the root cause).

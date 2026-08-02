@@ -4366,3 +4366,86 @@ ACCEPTED — Stage R closeout decision
 - Stage R paper tables and limitations.
 
 本 Decision 不修改 D001–D085，不修改 Stage Q Evidence，不授权新的实现或 benchmark。
+
+### D087 — Multi-Branch Ablation Reopening and Gate-D Metric Disposition
+
+时间：
+
+```text
+2026-08-02
+```
+
+状态：
+
+```text
+ACCEPTED — Stage R multi-branch ablation reopening
+```
+
+背景：
+
+Stage R 的执行模式调整为 `MULTI_BRANCH_ABLATION_MODE`。项目核心归宿为研究生
+毕业论文、工程应用型论文和 Edge AI Deployment 求职项目。Experimental Integrity
+和 Comparative Study 优先于单一 replacement Gate 的阶段阻断。本 Decision 不修改
+D085/D086 的记录内容；D085/D086 作为 b008af7 时刻 replacement-selection 处置的
+有效历史记录保留。
+
+决策：
+
+1. V2 Gate D 的 FAIL 与冻结阈值保持原样：不修改、不伪造 PASS。
+2. V2 的状态调整为：
+
+   ```text
+   V2_ACCURACY_TRADE_OFF_BASELINE
+   NOT CORRECTNESS-EQUIVALENT REPLACEMENT
+   ```
+
+3. Gate A/B/C 仍是实验有效性检查。
+4. Gate D 调整为任务精度评价维度，不再作为阻断 V3/V4 的硬性进度屏障。
+5. 授权继续：
+
+   ```text
+   V3: pinned raw staging
+   V4: limited double buffering/overlap
+   R3: V0/V2/V3/V4 comparative benchmark
+   R5: performance-accuracy Pareto evaluation
+   ```
+
+6. Stage Q V0 继续作为正式 correctness-first baseline。
+7. V3/V4 不需要重新证明 V2 与 OpenCV 的完全等价性。
+8. 禁止修改 Gate D 阈值。
+9. 禁止为了跨过 Gate D 再次修改 CUDA resize。
+10. 最终论文必须同时报告性能收益、任务指标变化和实现复杂度。
+
+准确记录（不得写成 V2 总精度只下降 `0.05%`）：
+
+```text
+Remediated V2 mAP50 absolute drop:
+0.00537575
+approximately 0.54 percentage points
+
+Amount exceeding frozen 0.005 limit:
+0.00037575
+approximately 0.038 percentage points
+```
+
+理由：
+
+- 单一 replacement Gate 的阶段阻断会掩盖多分支研究中的有效 trade-off 信息；
+- V2 的精度代价是已定位、有界、可复现的（CUDA resize 插值数值差异），适合作为
+  trade-off 基准而非研究终止条件；
+- 保持 V0 作为 correctness-first baseline，同时允许 V2/V3/V4 作为 ablation
+  分支进入比较研究，满足论文的 Comparative Study 需求；
+- 明确禁止改写阈值、伪造 PASS 或再次修改 CUDA resize，保证 Experimental
+  Integrity。
+
+影响范围：
+
+- Stage R 执行模式：MULTI_BRANCH_ABLATION_MODE；
+- V2：V2_ACCURACY_TRADE_OFF_BASELINE，非 correctness-equivalent replacement；
+- R2.3/V3：AUTHORIZED；
+- V4：AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION；
+- R3：PENDING V3/V4 AVAILABILITY；
+- Stage Q Evidence、Gate D 阈值、CUDA resize：UNCHANGED。
+
+本 Decision 不修改 D001–D086 的历史记录，不修改 Stage Q Evidence，不修改 Gate D
+阈值，不授权新的 CUDA resize remediation。

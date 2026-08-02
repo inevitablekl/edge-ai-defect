@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v3_pinned_runtime",
+  "status": "PASS",
+  "variant": "V3",
+  "run_time_commit": "b008af7df28036fa1dd82b3685452928a64fbc13",
+  "binary_sha256": "fb81c57d5779d2445c59cefb863963c18d42b2accc115d960ab311744f84bb19",
+  "config_sha256": "63bc9601516f0b4d31cf762a9661760ffc925c8c87535ac314f974b02e1b51b0",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "test_manifest_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "pinned_allocation_method": "cudaHostAlloc with cudaHostAllocDefault, allocated once at initialization",
+  "pinned_allocation_count": 1,
+  "pinned_reuse_count": 180,
+  "per_frame_allocation": false,
+  "no_fallback": true,
+  "frame_contract": {
+    "frames": 180,
+    "frame_order": "PASS",
+    "relative_paths": "PASS",
+    "dimensions": "PASS",
+    "drop": 0,
+    "eos": true,
+    "worker_join": true,
+    "result_json_schema": 4
+  },
+  "tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+  "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+  "tensor_gate": {
+    "status": "PASS",
+    "image_count": 16,
+    "mae": 0.00041558645672675235,
+    "p99": 0.0039216279983520508,
+    "max_abs": 0.0039216279983520508,
+    "nonfinite": 0,
+    "geometry": "16/16 PASS"
+  },
+  "runtime_path": "pinned raw staging -> CUDA preprocessing -> TensorRtDeviceInputCapability -> TensorRT INT8 -> existing postprocess",
+  "accuracy_source": "inherited from V2 because the complete inference-result detection SHA is identical to the V2 run at the same code state",
+  "benchmark": "NOT EXECUTED"
+}

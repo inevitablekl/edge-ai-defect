@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "validation": "stage_r_r2_v3_v2_numerical_equivalence",
+  "status": "PASS",
+  "comparison": "V3 pinned raw staging vs V2 pageable raw staging at the same code state and engine",
+  "v3": {
+    "tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+    "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+    "result_json_sha256": "4f6ed231014ada05adde9344f1647f685416f3e3ac7da23bb8ad1da1775e052d"
+  },
+  "v2_live_run_same_code_state": {
+    "tensor_digest_sha256": "0a9b8ead7235bcb340fb8e6eb45833c09b250f4384268d7082255b7dcb1d5d8f",
+    "detection_sha256": "0a668fd5937d83b28521a00847c9dd8567299697c8e1f5c1159b4e84fe81f5ed",
+    "result_json_sha256": "9100f8e31e5256c54b374dbeeea17cf85562560d4a2233241cf8ebf9631755c8"
+  },
+  "comparisons": {
+    "tensor_digest_identical": true,
+    "detection_sha_identical": true,
+    "per_frame_detection_content_identical": true,
+    "per_frame_detection_content_note": "V2 and V3 result JSONs differ only in summary.run_processing_wall_ms and run_processing_throughput_fps (incidental single-run wall-clock metadata); all per-frame detections, paths, dimensions, and order are byte-identical",
+    "tensor_gate_mae_identical": true,
+    "tensor_gate_mae": 0.00041558645672675235
+  },
+  "v2_frozen_recorded_values": {
+    "tensor_digest_sha256": "c00128515fa72b2fe024d865f05edb2e7b49239e3c1aa16f278f16d508effa97",
+    "detection_sha256": "b4a7f173afdf54b9ed1ed368ea026b0e7fe31a945d5f098377f0864f45a178ab",
+    "source": "results/validation/stage_r/r2_v2_pageable_correctness_v1/v2_task_accuracy_summary.json"
+  },
+  "v2_frozen_values_reproducibility": {
+    "reproduced_at_current_head": false,
+    "root_cause": "The frozen V2 digest/detection values correspond to the pre-remediation code state (commit abf9d24). Commit 488a608 applied the authorized 11-bit fixed-point CUDA resize remediation, which slightly changed preprocessing numerics (tensor gate MAE 0.000412164 -> 0.000415586). The V2 task summary hash fields were not refreshed when the remediation was recorded. This is a pre-existing evidence-integrity finding in the V2 closeout, unrelated to V3 and unrelated to the staging memory type.",
+    "v2_remediation_metrics_unchanged": true,
+    "v2_remediation_metrics_note": "The frozen V2 accuracy trade-off metrics (mAP50 drop 0.00537575, max class AP50 drop 0.02673348, max class Recall drop 0.03030303) remain the accuracy source inherited by V3."
+  },
+  "conclusion": "Changing the raw host staging memory type from pageable to pinned did not change any numerical result. V3 tensor digest, detection SHA, and per-frame detection content are identical to V2 at the same code state.",
+  "task_metrics_source": "V3 task metrics inherited from V2 because the complete inference-result detection SHA is identical",
+  "benchmark": "NOT EXECUTED"
+}

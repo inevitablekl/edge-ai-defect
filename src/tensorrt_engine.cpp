@@ -43,10 +43,9 @@ Status validate_config(const runtime::RuntimeConfig& config) {
                        "TensorRtEngine requires RuntimeConfig schema_version 3, 4, 5, or 6 "
                        "and a supported TensorRT backend");
     }
-    if (config.data_path_variant == runtime::DataPathVariant::kV3 ||
-        config.data_path_variant == runtime::DataPathVariant::kV4) {
+    if (config.data_path_variant == runtime::DataPathVariant::kV4) {
         return failure(ErrorCode::kSchemaViolation,
-                       "TensorRtEngine only implements Stage R V0 and V2");
+                       "TensorRtEngine implements Stage R V0, V2, and V3; V4 is not implemented");
     }
     if (config.tensorrt.engine_path.empty() ||
         config.tensorrt.engine_manifest_path.empty()) {

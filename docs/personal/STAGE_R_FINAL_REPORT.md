@@ -200,3 +200,42 @@ Stage Q Evidence: UNCHANGED
 Result JSON: v4 unchanged
 Paper Stop Rule: ACTIVE
 ```
+
+---
+
+# D087 Reopening Addendum (2026-08-02, read-only append)
+
+Previous closeout:
+
+```text
+valid as the replacement-selection disposition at b008af7
+```
+
+Current research status:
+
+```text
+REOPENED_FOR_MULTI_BRANCH_ABLATION under D087
+```
+
+```text
+Stage R:
+REOPENED_FOR_MULTI_BRANCH_ABLATION
+
+V0:
+FORMAL_BASELINE
+
+V2:
+V2_ACCURACY_TRADE_OFF_BASELINE
+
+R2.3 / V3:
+AUTHORIZED
+
+V4:
+AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION
+
+R3:
+PENDING V3/V4 AVAILABILITY
+```
+
+The negative-result sections above remain the historical replacement-selection
+disposition and are not rewritten.

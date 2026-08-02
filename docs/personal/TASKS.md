@@ -3551,3 +3551,39 @@ USER REVIEW OF R0 COMMIT
   docs/personal/STAGE_R_FINAL_REPORT.md,
   docs/personal/STAGE_R_EVIDENCE_INDEX.md, and
   results/validation/stage_r/r6_closeout_v1/.
+
+---
+
+## D087 Stage R Multi-Branch Ablation Reopening (2026-08-02)
+
+Previous closeout:
+
+```text
+valid as the replacement-selection disposition at b008af7
+```
+
+Current research status:
+
+```text
+REOPENED_FOR_MULTI_BRANCH_ABLATION under D087
+```
+
+```text
+Stage R:
+REOPENED_FOR_MULTI_BRANCH_ABLATION
+
+V0:
+FORMAL_BASELINE
+
+V2:
+V2_ACCURACY_TRADE_OFF_BASELINE
+
+R2.3 / V3:
+AUTHORIZED
+
+V4:
+AUTHORIZED AFTER V3 FUNCTIONAL VALIDATION
+
+R3:
+PENDING V3/V4 AVAILABILITY
+```
