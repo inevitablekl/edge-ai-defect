@@ -11,6 +11,13 @@
 
 namespace edge_ai_defect::stage_r {
 
+enum class ResizeSemantic {
+    kHistoricalV2V3,
+    kOpenCv454AlignedFixedContract,
+};
+
+[[nodiscard]] const char* resize_semantic_name(ResizeSemantic value) noexcept;
+
 struct DeviceTensorView {
     const float* data = nullptr;
     std::size_t element_count = 0U;
@@ -39,7 +46,8 @@ public:
         int max_width,
         int max_height,
         std::size_t max_row_stride,
-        std::unique_ptr<CudaPreprocessor>* output);
+        std::unique_ptr<CudaPreprocessor>* output,
+        ResizeSemantic semantic = ResizeSemantic::kHistoricalV2V3);
 
     [[nodiscard]] static core::Status create_for_external_tensor(
         int max_width,
@@ -47,7 +55,8 @@ public:
         std::size_t max_row_stride,
         cudaStream_t stream,
         float* device_tensor,
-        std::unique_ptr<CudaPreprocessor>* output);
+        std::unique_ptr<CudaPreprocessor>* output,
+        ResizeSemantic semantic = ResizeSemantic::kHistoricalV2V3);
 
     ~CudaPreprocessor() noexcept;
 
@@ -94,14 +103,16 @@ private:
                      bool owns_stream,
                      bool owns_tensor,
                      cudaStream_t stream,
-                     float* device_tensor) noexcept
+                     float* device_tensor,
+                     ResizeSemantic semantic) noexcept
         : max_width_(max_width),
           max_height_(max_height),
           max_row_stride_(max_row_stride),
           owns_stream_(owns_stream),
           owns_tensor_(owns_tensor),
           stream_(stream),
-          device_tensor_(device_tensor) {}
+          device_tensor_(device_tensor),
+          semantic_(semantic) {}
 
     int max_width_ = 0;
     int max_height_ = 0;
@@ -111,6 +122,7 @@ private:
     std::uint8_t* device_raw_ = nullptr;
     float* device_tensor_ = nullptr;
     cudaStream_t stream_ = nullptr;
+    ResizeSemantic semantic_ = ResizeSemantic::kHistoricalV2V3;
 };
 
 }  // namespace edge_ai_defect::stage_r

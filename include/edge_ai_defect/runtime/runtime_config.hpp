@@ -9,7 +9,7 @@
 
 namespace edge_ai_defect::runtime {
 
-enum class DataPathVariant { kV0, kV2, kV3, kV4 };
+enum class DataPathVariant { kV0, kV2, kV3, kV4, kV2R, kV3R };
 enum class ProfilingMode { kOff, kDiagnostic, kFormal };
 
 [[nodiscard]] const char* data_path_variant_name(DataPathVariant value) noexcept;

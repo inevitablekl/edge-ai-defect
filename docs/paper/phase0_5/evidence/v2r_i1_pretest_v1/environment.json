@@ -1,0 +1,13 @@
+{
+  "date": "2026-08-03",
+  "timezone": "Asia/Shanghai",
+  "host": "ubuntu",
+  "platform": "Linux-5.15.185-tegra-aarch64-with-glibc2.35",
+  "machine": "aarch64",
+  "gpu_query": "GPU 0: Orin (nvgpu) (UUID: 00d9e988-e0f1-5b17-ba75-b6d28f10c113)",
+  "opencv_cpp_pkg_config": "4.5.4",
+  "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2024 NVIDIA Corporation\nBuilt on Wed_Aug_14_10:14:07_PDT_2024\nCuda compilation tools, release 12.6, V12.6.68\nBuild cuda_12.6.r12.6/compiler.34714021_0",
+  "cmake": "cmake version 3.22.1",
+  "cuda_compiler": "/usr/local/cuda-12.6/bin/nvcc",
+  "tensorrt_engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee"
+}

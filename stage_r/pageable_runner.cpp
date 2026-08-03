@@ -14,8 +14,10 @@ namespace edge_ai_defect::stage_r {
 PageableRunner::PageableRunner(runtime::ImageSource& source,
                                backend_tensorrt::TensorRtEngine& engine,
                                postprocess::PostProcessor& postprocessor,
-                               runtime::IResultSink& sink)
-    : source_(source), engine_(engine), postprocessor_(postprocessor), sink_(sink) {}
+                               runtime::IResultSink& sink,
+                               ResizeSemantic semantic)
+    : source_(source), engine_(engine), postprocessor_(postprocessor), sink_(sink),
+      semantic_(semantic) {}
 
 core::Status PageableRunner::run(const runtime::RunMetadata& metadata,
                                  runtime::RunSummary* summary) {
@@ -33,7 +35,8 @@ core::Status PageableRunner::run(const runtime::RunMetadata& metadata,
     status = CudaPreprocessor::create_for_external_tensor(
         4096, 4096, static_cast<std::size_t>(4096) * 3U,
         reinterpret_cast<cudaStream_t>(engine_.cuda_stream_handle()),
-        static_cast<float*>(engine_.device_input_buffer()), &cuda_preprocessor);
+        static_cast<float*>(engine_.device_input_buffer()), &cuda_preprocessor,
+        semantic_);
     if (!status.ok()) return status;
     PageableRawStaging staging;
 

@@ -235,9 +235,10 @@ int run(const Options& options) {
     e::runtime::RuntimeConfig config;
     auto status = e::runtime::RuntimeConfigLoader::load(options.config, &config);
     if (!status.ok()) throw GateError("config: " + status.message());
-    if (config.data_path_variant != e::runtime::DataPathVariant::kV2 ||
+    if ((config.data_path_variant != e::runtime::DataPathVariant::kV2 &&
+         config.data_path_variant != e::runtime::DataPathVariant::kV2R) ||
         config.backend_type != "tensorrt_int8") {
-        throw GateError("validator requires RuntimeConfig V2 and tensorrt_int8");
+        throw GateError("validator requires RuntimeConfig V2/V2R and tensorrt_int8");
     }
     e::model::ModelContract contract;
     status = e::model::ModelContractLoader::load(config.model_contract_path, &contract);
@@ -247,6 +248,9 @@ int run(const Options& options) {
     if (!status.ok()) throw GateError("engine: " + status.message());
     auto* engine = dynamic_cast<e::backend_tensorrt::TensorRtEngine*>(generic_engine.get());
     if (engine == nullptr) throw GateError("V2 TensorRT capability is unavailable");
+    const auto semantic = config.data_path_variant == e::runtime::DataPathVariant::kV2R
+        ? e::stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract
+        : e::stage_r::ResizeSemantic::kHistoricalV2V3;
 
     const auto cases = load_cases(options.manifest);
     int max_width = 0;
@@ -290,7 +294,7 @@ int run(const Options& options) {
     status = e::stage_r::CudaPreprocessor::create_for_external_tensor(
         max_width, max_height, max_stride,
         reinterpret_cast<cudaStream_t>(engine->cuda_stream_handle()),
-        static_cast<float*>(engine->device_input_buffer()), &preprocessor);
+        static_cast<float*>(engine->device_input_buffer()), &preprocessor, semantic);
     if (!status.ok()) throw GateError("V2 external preprocessor: " + status.message());
     e::stage_r::PageableRawStaging staging;
     e::preprocess::Preprocessor cpu_preprocessor;

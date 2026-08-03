@@ -1,0 +1,19 @@
+{
+  "build_dir": "build-paper-phase0-5c-i1",
+  "configure": "PASS",
+  "build": "PASS",
+  "cuda_enabled": true,
+  "tensorrt_enabled": true,
+  "targets": [
+    "edge_ai_application",
+    "test_stage_r_cuda_preprocess",
+    "test_stage_r_runtime",
+    "test_pageable_raw_staging",
+    "test_pinned_raw_staging",
+    "stage_r_cuda_preprocess_gate",
+    "stage_r_v2_tensor_gate",
+    "stage_r_v3_tensor_gate",
+    "stage_r_v2r_integration_pretest"
+  ],
+  "formal_benchmark_built_or_run": false
+}

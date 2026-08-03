@@ -1,0 +1,34 @@
+{
+  "pre_freeze_commit": "77af864dbd636aa0f331605a6c158e750846e00a",
+  "branch": "main",
+  "parent_variant": {
+    "V2R": "V2",
+    "V3R": "V3"
+  },
+  "remediation_id": "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1",
+  "resize_reference": "OpenCV C++ 4.5.4 CV_8UC3 INTER_LINEAR aarch64 fixed-point contract",
+  "changed_files": [
+    "CMakeLists.txt",
+    "backend_tensorrt/cuda_preprocessor.cu",
+    "backend_tensorrt/cuda_preprocessor.hpp",
+    "include/edge_ai_defect/runtime/runtime_config.hpp",
+    "src/application_runner.cpp",
+    "src/runtime_config.cpp",
+    "stage_r/pageable_runner.cpp",
+    "stage_r/pageable_runner.hpp",
+    "stage_r/pinned_runner.cpp",
+    "stage_r/pinned_runner.hpp",
+    "tests/test_stage_r_cuda_preprocess.cpp",
+    "tests/test_stage_r_runtime.cpp",
+    "tools/validation/stage_r_cuda_preprocess_gate.cpp",
+    "tools/validation/stage_r_v2_tensor_gate.cpp",
+    "tools/validation/stage_r_v3_tensor_gate.cpp",
+    "configs/stage_r/runtime_v6_v2r_pageable.yaml",
+    "configs/stage_r/runtime_v6_v3r_pinned.yaml",
+    "tools/validation/assemble_v2r_pretest_evidence.py",
+    "tools/validation/stage_r_v2r_integration_pretest.cpp"
+  ],
+  "formal_gate_d": "NOT RUN",
+  "task_metrics": "NOT GENERATED",
+  "phase_0_5d": "NOT RUN"
+}

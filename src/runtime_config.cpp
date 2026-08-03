@@ -21,6 +21,8 @@ const char* data_path_variant_name(DataPathVariant value) noexcept {
         case DataPathVariant::kV2: return "V2";
         case DataPathVariant::kV3: return "V3";
         case DataPathVariant::kV4: return "V4";
+        case DataPathVariant::kV2R: return "V2R";
+        case DataPathVariant::kV3R: return "V3R";
     }
     return "unknown";
 }
@@ -781,7 +783,9 @@ Status parse_runtime_config_v4(const YAML::Node& root,
         else if (variant == "V2") config.data_path_variant = DataPathVariant::kV2;
         else if (variant == "V3") config.data_path_variant = DataPathVariant::kV3;
         else if (variant == "V4") config.data_path_variant = DataPathVariant::kV4;
-        else return schema_error("data_path.variant", "must be exactly V0, V2, V3, or V4");
+        else if (variant == "V2R") config.data_path_variant = DataPathVariant::kV2R;
+        else if (variant == "V3R") config.data_path_variant = DataPathVariant::kV3R;
+        else return schema_error("data_path.variant", "must be exactly V0, V2, V3, V4, V2R, or V3R");
 
         const Status profiling_status = validate_mapping(
             root["profiling"], "profiling", {"mode"});

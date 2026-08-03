@@ -14,9 +14,10 @@
 #include "edge_ai_defect/runtime/serial_runner.hpp"
 #include "edge_ai_defect/runtime/video_file_source.hpp"
 
-#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE) || defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
+#if defined(EDGE_AI_STAGE_R_V2_AVAILABLE) || defined(EDGE_AI_STAGE_R_V3_AVAILABLE) || defined(EDGE_AI_STAGE_R_V4_AVAILABLE)
 #include "edge_ai_defect/backend_tensorrt/tensorrt_engine.hpp"
 #include "stage_r/pageable_runner.hpp"
+#include "stage_r/pinned_runner.hpp"
 #include "stage_r/double_buffer_runner.hpp"
 #endif
 
@@ -125,7 +126,8 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
                                       "run summary must not be null"), false};
     }
 #if defined(EDGE_AI_STAGE_R_V2_AVAILABLE)
-    if (config.data_path_variant == runtime::DataPathVariant::kV2) {
+    if (config.data_path_variant == runtime::DataPathVariant::kV2 ||
+        config.data_path_variant == runtime::DataPathVariant::kV2R) {
         if (config.backend_type != "tensorrt_int8") {
             return {core::Status::failure(core::ErrorCode::kSchemaViolation,
                                           "V2 requires the TensorRT INT8 backend"), false};
@@ -135,7 +137,27 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
             return {core::Status::failure(core::ErrorCode::kBackendRuntimeError,
                                           "V2 TensorRT capability is unavailable"), false};
         }
-        stage_r::PageableRunner runner(source, *tensorrt, postprocessor, sink);
+        const auto semantic = config.data_path_variant == runtime::DataPathVariant::kV2R
+            ? stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract
+            : stage_r::ResizeSemantic::kHistoricalV2V3;
+        stage_r::PageableRunner runner(source, *tensorrt, postprocessor, sink, semantic);
+        return {runner.run(metadata, summary), true};
+    }
+#endif
+#if defined(EDGE_AI_STAGE_R_V3_AVAILABLE)
+    if (config.data_path_variant == runtime::DataPathVariant::kV3R) {
+        if (config.backend_type != "tensorrt_int8") {
+            return {core::Status::failure(core::ErrorCode::kSchemaViolation,
+                                          "V3R requires the TensorRT INT8 backend"), false};
+        }
+        auto* tensorrt = dynamic_cast<backend_tensorrt::TensorRtEngine*>(&engine);
+        if (tensorrt == nullptr) {
+            return {core::Status::failure(core::ErrorCode::kBackendRuntimeError,
+                                          "V3R TensorRT capability is unavailable"), false};
+        }
+        stage_r::PinnedRunner runner(
+            source, *tensorrt, postprocessor, sink,
+            stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract);
         return {runner.run(metadata, summary), true};
     }
 #endif
@@ -173,7 +195,10 @@ RunResult run_with_components(const runtime::RuntimeConfig& config,
 
 RunResult run(const runtime::RuntimeConfig& config, const RunOptions& options) {
     if (config.data_path_variant != runtime::DataPathVariant::kV0 &&
-        config.data_path_variant != runtime::DataPathVariant::kV4) {
+        config.data_path_variant != runtime::DataPathVariant::kV4 &&
+        config.data_path_variant != runtime::DataPathVariant::kV2 &&
+        config.data_path_variant != runtime::DataPathVariant::kV2R &&
+        config.data_path_variant != runtime::DataPathVariant::kV3R) {
         return {core::Status::failure(core::ErrorCode::kSchemaViolation,
                                       "Stage R variants other than V0 are not implemented"), false};
     }

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "validation": "paper_phase0_5c_i1_gate_c2_integration_pretest",
+  "remediation_id": "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "test_manifest_sha256": "d4a6be139fbb352ff71d0100b4fb7371cf7c21d99fa199259679a8a10e6583b5",
+  "formal_gate_d": "NOT RUN",
+  "task_metrics": "NOT GENERATED",
+  "v2r_v3r_identity_pass": true,
+  "variants": {
+    "V2R": {"frames": 16, "total_detections": 44, "nonfinite_outputs": 0, "shape_pass": true, "cuda_pass": true, "tensor_digest_sha256": "8b7a07b28c10e360cb75ab55a377c3e254937d88e49181503cfa3c275eaa8f75", "detection_sha256": "1a65a16a25335dde4524dccae2579035f54ac7425e12086cced81e2af01c6dcb"},
+    "V3R": {"frames": 16, "total_detections": 44, "nonfinite_outputs": 0, "shape_pass": true, "cuda_pass": true, "tensor_digest_sha256": "8b7a07b28c10e360cb75ab55a377c3e254937d88e49181503cfa3c275eaa8f75", "detection_sha256": "1a65a16a25335dde4524dccae2579035f54ac7425e12086cced81e2af01c6dcb"}
+  },
+  "status": "PASS"
+}

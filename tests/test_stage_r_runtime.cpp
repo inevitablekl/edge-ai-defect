@@ -42,7 +42,9 @@ void test_config() {
         {"v6off", v6("V0", "off"), runtime::DataPathVariant::kV0, runtime::ProfilingMode::kOff},
         {"v6diag", v6("V0", "diagnostic"), runtime::DataPathVariant::kV0, runtime::ProfilingMode::kDiagnostic},
         {"v6formal", v6("V0", "formal"), runtime::DataPathVariant::kV0, runtime::ProfilingMode::kFormal},
-        {"v6v2", v6("V2", "off"), runtime::DataPathVariant::kV2, runtime::ProfilingMode::kOff}}) {
+        {"v6v2", v6("V2", "off"), runtime::DataPathVariant::kV2, runtime::ProfilingMode::kOff},
+        {"v6v2r", v6("V2R", "off"), runtime::DataPathVariant::kV2R, runtime::ProfilingMode::kOff},
+        {"v6v3r", v6("V3R", "off"), runtime::DataPathVariant::kV3R, runtime::ProfilingMode::kOff}}) {
         const auto path = root / (name + ".yaml");
         std::ofstream(path) << text;
         runtime::RuntimeConfig config;

@@ -119,6 +119,19 @@ int run() {
     pass = check(status.ok(), "persistent_resources", status.message()) && pass;
     if (!status.ok()) return 1;
 
+    std::unique_ptr<stage_r::CudaPreprocessor> cuda_remediated;
+    status = stage_r::CudaPreprocessor::create(
+        kWidth, kHeight, kStride, &cuda_remediated,
+        stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract);
+    pass = check(status.ok(), "v2r_fixed_contract_resources", status.message()) && pass;
+    if (!status.ok()) return 1;
+    std::unique_ptr<stage_r::CudaPreprocessor> cuda_pinned_semantic;
+    status = stage_r::CudaPreprocessor::create(
+        kWidth, kHeight, kStride, &cuda_pinned_semantic,
+        stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract);
+    pass = check(status.ok(), "v3r_shared_semantic_resources", status.message()) && pass;
+    if (!status.ok()) return 1;
+
     preprocess::PreprocessedFrame cpu_output;
     const edge_ai_defect::core::TensorInfo input_info{
         edge_ai_defect::core::TensorDataType::kFloat32,
@@ -133,10 +146,27 @@ int run() {
     pass = check(status.ok(), "kernel_submission", status.message()) && pass;
     if (!status.ok()) return 1;
 
+    status = cuda_remediated->preprocess(
+        input.data, kWidth, kHeight, input.step, geometry);
+    pass = check(status.ok(), "v2r_kernel_submission", status.message()) && pass;
+    if (!status.ok()) return 1;
+    status = cuda_pinned_semantic->preprocess(
+        input.data, kWidth, kHeight, input.step, geometry);
+    pass = check(status.ok(), "v3r_kernel_submission", status.message()) && pass;
+    if (!status.ok()) return 1;
+
     std::vector<float> cuda_output(stage_r::CudaPreprocessor::kTargetElementCount);
     status = cuda_preprocessor->copy_output_to_host(
         cuda_output.data(), cuda_output.size());
     pass = check(status.ok(), "device_output_copy", status.message()) && pass;
+    if (!status.ok()) return 1;
+    std::vector<float> v2r_output(stage_r::CudaPreprocessor::kTargetElementCount);
+    status = cuda_remediated->copy_output_to_host(v2r_output.data(), v2r_output.size());
+    pass = check(status.ok(), "v2r_device_output_copy", status.message()) && pass;
+    if (!status.ok()) return 1;
+    std::vector<float> v3r_output(stage_r::CudaPreprocessor::kTargetElementCount);
+    status = cuda_pinned_semantic->copy_output_to_host(v3r_output.data(), v3r_output.size());
+    pass = check(status.ok(), "v3r_device_output_copy", status.message()) && pass;
     if (!status.ok()) return 1;
 
     double mae = 0.0;
@@ -156,6 +186,21 @@ int run() {
                      " p99=" + std::to_string(p99) +
                      " max=" + std::to_string(max_abs) +
                      " nonfinite=" + std::to_string(nonfinite)) && pass;
+
+    double v2r_mae = 0.0;
+    double v2r_p99 = 0.0;
+    double v2r_max_abs = 0.0;
+    std::size_t v2r_nonfinite = 0U;
+    const bool v2r_finite = compare_tensor(v2r_output, cpu_output.tensor.data,
+                                           &v2r_mae, &v2r_p99, &v2r_max_abs,
+                                           &v2r_nonfinite);
+    pass = check(v2r_finite && v2r_mae <= kMaeLimit && v2r_p99 <= kP99Limit &&
+                     v2r_max_abs <= kMaxLimit && v2r_nonfinite == 0U,
+                 "v2r_tensor_gate",
+                 "mae=" + std::to_string(v2r_mae) +
+                     " p99=" + std::to_string(v2r_p99) +
+                     " max=" + std::to_string(v2r_max_abs)) && pass;
+    pass = check(v2r_output == v3r_output, "v2r_v3r_same_semantic") && pass;
 
     const std::size_t plane = static_cast<std::size_t>(640) * 640U;
     bool padding_pass = true;

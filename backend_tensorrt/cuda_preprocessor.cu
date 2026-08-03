@@ -12,6 +12,17 @@
 #include <string>
 
 namespace edge_ai_defect::stage_r {
+
+const char* resize_semantic_name(ResizeSemantic value) noexcept {
+    switch (value) {
+        case ResizeSemantic::kHistoricalV2V3:
+            return "historical_v2_v3_resize";
+        case ResizeSemantic::kOpenCv454AlignedFixedContract:
+            return "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1";
+    }
+    return "unknown";
+}
+
 namespace {
 
 constexpr float kNormalization = 1.0F / 255.0F;
@@ -98,9 +109,108 @@ __device__ float read_bilinear_channel(const std::uint8_t* raw,
                               (kResizeCoefficientBits * 2));
 }
 
+__device__ int opencv_resize_coefficient(float value) {
+    // OpenCV 4.5.4 stores each CV_8U INTER_LINEAR coefficient independently
+    // at INTER_RESIZE_COEF_BITS precision.  This is a fixed implementation
+    // detail of the bounded contract, not a runtime-selectable mode.
+    return __float2int_rn(value * static_cast<float>(kResizeCoefficientScale));
+}
+
+__device__ float read_opencv_454_aligned_channel(const std::uint8_t* raw,
+                                                std::size_t row_stride,
+                                                int original_width,
+                                                int original_height,
+                                                int resized_width,
+                                                int resized_height,
+                                                int x,
+                                                int y,
+                                                int channel) {
+    // Fixed contract: CV_8UC3 BGR, current letterbox dimensions, and the
+    // OpenCV C++ 4.5.4 uint8 INTER_LINEAR mapping.  This is intentionally a
+    // narrow GPU implementation and does not copy a general OpenCV resize.
+    const float source_x = static_cast<float>(
+        (static_cast<double>(x) + 0.5) *
+            static_cast<double>(original_width) /
+            static_cast<double>(resized_width) -
+        0.5);
+    const float source_y = static_cast<float>(
+        (static_cast<double>(y) + 0.5) *
+            static_cast<double>(original_height) /
+            static_cast<double>(resized_height) -
+        0.5);
+    const int x_unclamped = static_cast<int>(floorf(source_x));
+    const int y_unclamped = static_cast<int>(floorf(source_y));
+    float x_fraction = source_x - static_cast<float>(x_unclamped);
+    const float y_fraction = source_y - static_cast<float>(y_unclamped);
+    int x0 = x_unclamped;
+    const bool y_is_edge = y_unclamped < 0 || y_unclamped >= original_height - 1;
+    const int y0 = max(0, min(y_unclamped, original_height - 1));
+    if (x0 < 0) {
+        x0 = 0;
+        x_fraction = 0.0F;
+    } else if (x0 >= original_width - 1) {
+        x0 = original_width - 1;
+        x_fraction = 0.0F;
+    }
+    const int x1 = min(x0 + 1, original_width - 1);
+    const int y1 = y_is_edge ? y0 : min(y0 + 1, original_height - 1);
+    const int x_weight_0 = opencv_resize_coefficient(1.0F - x_fraction);
+    const int x_weight_1 = opencv_resize_coefficient(x_fraction);
+    const int y_weight_0 = opencv_resize_coefficient(1.0F - y_fraction);
+    const int y_weight_1 = opencv_resize_coefficient(y_fraction);
+    const bool x_is_edge = x_unclamped < 0 || x_unclamped >= original_width - 1;
+
+    const std::int64_t top = x_is_edge
+        ? static_cast<std::int64_t>(raw_pixel(raw, row_stride, y0, x0, channel)) *
+              kResizeCoefficientScale
+        : static_cast<std::int64_t>(raw_pixel(raw, row_stride, y0, x0, channel)) *
+                  x_weight_0 +
+              static_cast<std::int64_t>(raw_pixel(raw, row_stride, y0, x1, channel)) *
+                  x_weight_1;
+    const std::int64_t bottom = x_is_edge
+        ? static_cast<std::int64_t>(raw_pixel(raw, row_stride, y1, x0, channel)) *
+              kResizeCoefficientScale
+        : static_cast<std::int64_t>(raw_pixel(raw, row_stride, y1, x0, channel)) *
+                  x_weight_0 +
+              static_cast<std::int64_t>(raw_pixel(raw, row_stride, y1, x1, channel)) *
+                  x_weight_1;
+    // OpenCV 4.5.4's aarch64 CV_8U vector path keeps the horizontal fixed
+    // point product at 11 bits, discards its low four bits, then performs the
+    // two vertical products and the final two-bit rounding.  Keeping this
+    // order is the bounded platform contract used by the Jetson reference.
+    const std::int64_t horizontal_top = top >> 4;
+    const std::int64_t horizontal_bottom = bottom >> 4;
+    const std::int64_t value =
+        (((static_cast<std::int64_t>(y_weight_0) * horizontal_top) >> 16) +
+         ((static_cast<std::int64_t>(y_weight_1) * horizontal_bottom) >> 16) +
+         2) >> 2;
+    const std::int64_t clamped = value < 0 ? 0 : (value > 255 ? 255 : value);
+    return static_cast<float>(clamped);
+}
+
+__device__ float read_resize_channel(const std::uint8_t* raw,
+                                     std::size_t row_stride,
+                                     int original_width,
+                                     int original_height,
+                                     int resized_width,
+                                     int resized_height,
+                                     int x,
+                                     int y,
+                                     int channel,
+                                     ResizeSemantic semantic) {
+    if (semantic == ResizeSemantic::kOpenCv454AlignedFixedContract) {
+        return read_opencv_454_aligned_channel(raw, row_stride, original_width,
+                                               original_height, resized_width,
+                                               resized_height, x, y, channel);
+    }
+    return read_bilinear_channel(raw, row_stride, original_width, original_height,
+                                 resized_width, resized_height, x, y, channel);
+}
+
 __global__ void preprocess_kernel(const std::uint8_t* raw,
                                   std::size_t row_stride,
                                   DeviceGeometry geometry,
+                                  ResizeSemantic semantic,
                                   float* output) {
     const std::size_t spatial_index =
         static_cast<std::size_t>(blockIdx.x) * blockDim.x + threadIdx.x;
@@ -129,7 +239,7 @@ __global__ void preprocess_kernel(const std::uint8_t* raw,
         const int resized_x = output_x - geometry.pad_left;
         const int resized_y = output_y - geometry.pad_top;
         for (int channel = 0; channel < 3; ++channel) {
-            bgr[channel] = read_bilinear_channel(
+            bgr[channel] = read_resize_channel(
                 raw,
                 row_stride,
                 geometry.original_width,
@@ -138,7 +248,8 @@ __global__ void preprocess_kernel(const std::uint8_t* raw,
                 geometry.resized_height,
                 resized_x,
                 resized_y,
-                channel);
+                channel,
+                semantic);
         }
     }
 
@@ -191,7 +302,8 @@ core::Status CudaPreprocessor::create(
     int max_width,
     int max_height,
     std::size_t max_row_stride,
-    std::unique_ptr<CudaPreprocessor>* output) {
+    std::unique_ptr<CudaPreprocessor>* output,
+    ResizeSemantic semantic) {
     if (output == nullptr) {
         return core::Status::failure(core::ErrorCode::kInvalidArgument,
                                      "output must not be null");
@@ -210,7 +322,7 @@ core::Status CudaPreprocessor::create(
 
     auto candidate = std::unique_ptr<CudaPreprocessor>(
         new CudaPreprocessor(max_width, max_height, max_row_stride,
-                             true, true, nullptr, nullptr));
+                             true, true, nullptr, nullptr, semantic));
     const std::size_t raw_bytes =
         static_cast<std::size_t>(max_height) * max_row_stride;
     cudaError_t error = cudaStreamCreate(&candidate->stream_);
@@ -228,7 +340,8 @@ core::Status CudaPreprocessor::create(
 core::Status CudaPreprocessor::create_for_external_tensor(
     int max_width, int max_height, std::size_t max_row_stride,
     cudaStream_t stream, float* device_tensor,
-    std::unique_ptr<CudaPreprocessor>* output) {
+    std::unique_ptr<CudaPreprocessor>* output,
+    ResizeSemantic semantic) {
     if (output == nullptr || stream == nullptr || device_tensor == nullptr) {
         return core::Status::failure(core::ErrorCode::kInvalidArgument,
                                      "external CUDA resources must not be null");
@@ -242,7 +355,7 @@ core::Status CudaPreprocessor::create_for_external_tensor(
     }
     auto candidate = std::unique_ptr<CudaPreprocessor>(
         new CudaPreprocessor(max_width, max_height, max_row_stride,
-                             false, false, stream, device_tensor));
+                             false, false, stream, device_tensor, semantic));
     const std::size_t raw_bytes = static_cast<std::size_t>(max_height) * max_row_stride;
     const cudaError_t error = cudaMalloc(reinterpret_cast<void**>(&candidate->device_raw_), raw_bytes);
     if (error != cudaSuccess) return cuda_failure(error, "cudaMalloc raw buffer");
@@ -311,7 +424,7 @@ core::Status CudaPreprocessor::preprocess(
     constexpr std::size_t kBlocks =
         (kTargetElementCount / kTargetChannels + kThreads - 1U) / kThreads;
     preprocess_kernel<<<static_cast<unsigned int>(kBlocks), kThreads, 0, stream_>>>(
-        device_raw_, max_row_stride_, device_geometry, device_tensor_);
+        device_raw_, max_row_stride_, device_geometry, semantic_, device_tensor_);
     error = cudaGetLastError();
     return cuda_failure(error, "CUDA preprocessing kernel launch");
 }

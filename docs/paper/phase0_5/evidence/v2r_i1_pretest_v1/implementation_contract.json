@@ -1,0 +1,31 @@
+{
+  "identity": "OpenCV 4.5.4-aligned fixed-contract CUDA resize",
+  "remediation_id": "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1",
+  "applicability": [
+    "Jetson current environment",
+    "OpenCV C++ 4.5.4 CPU reference",
+    "CV_8UC3 BGR",
+    "current compute_letterbox_geometry",
+    "640x640 output",
+    "uint8 resize-result semantics",
+    "RGB NCHW float32 /255"
+  ],
+  "preserved": [
+    "geometry",
+    "padding value 114 and region",
+    "BGR to RGB",
+    "HWC to CHW",
+    "FP32 normalization",
+    "TensorRT engine",
+    "postprocess and thresholds"
+  ],
+  "historical_identity_preserved": true,
+  "v2r_v3r_only_difference": "pageable versus pinned raw staging",
+  "unsupported_claims": [
+    "universal bit-exact",
+    "all OpenCV versions",
+    "generic CUDA resize framework",
+    "arbitrary dimensions/types/channels"
+  ],
+  "attribution_basis": "Narrow implementation follows OpenCV 4.5.4 modules/imgproc/src/resize.cpp CV_8U INTER_LINEAR fixed-point coefficient and aarch64 vector accumulation order; no OpenCV source copied."
+}

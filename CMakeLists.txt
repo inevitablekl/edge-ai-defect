@@ -363,6 +363,23 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING)
             opencv_imgcodecs
             OpenSSL::Crypto
             ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
+        add_executable(stage_r_v2r_integration_pretest
+            tools/validation/stage_r_v2r_integration_pretest.cpp)
+        target_include_directories(stage_r_v2r_integration_pretest PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${EDGE_AI_STAGE_R_CUDA_INCLUDE_DIR}
+            ${EDGE_AI_TENSORRT_INCLUDE_DIR})
+        target_link_libraries(stage_r_v2r_integration_pretest PRIVATE
+            edge_ai_stage_r_v2
+            edge_ai_stage_r_v3
+            edge_ai_backend_trt
+            edge_ai_backend_factory
+            edge_ai_runtime
+            edge_ai_core
+            yaml-cpp
+            opencv_imgcodecs
+            OpenSSL::Crypto
+            ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
         add_executable(stage_r_v3_task_harness
             tools/validation/stage_r_v3_task_harness.cpp)
         target_link_libraries(stage_r_v3_task_harness PRIVATE
@@ -482,10 +499,12 @@ target_link_libraries(edge_ai_application
 )
 if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
     target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V2_AVAILABLE=1)
+    target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V3_AVAILABLE=1)
     target_compile_definitions(edge_ai_application PRIVATE EDGE_AI_STAGE_R_V4_AVAILABLE=1)
     target_include_directories(edge_ai_application PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR})
     target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v2)
+    target_link_libraries(edge_ai_application PUBLIC edge_ai_stage_r_v3)
 endif()
 
 if(TARGET edge_ai_stage_r_v4)

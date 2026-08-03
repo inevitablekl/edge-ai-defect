@@ -36,6 +36,8 @@ struct Options {
     fs::path manifest;
     fs::path image_root;
     fs::path report;
+    std::string variant = "V2";
+    stage_r::ResizeSemantic semantic = stage_r::ResizeSemantic::kHistoricalV2V3;
 };
 
 struct CaseInput {
@@ -51,9 +53,14 @@ struct CaseInput {
 struct CaseResult {
     std::string id;
     double mae = 0.0;
+    double p99 = 0.0;
     double max_abs = 0.0;
     std::size_t nonfinite = 0U;
     bool geometry_pass = false;
+    double padding_mae = 0.0;
+    double resize_mae = 0.0;
+    double padding_max_abs = 0.0;
+    double resize_max_abs = 0.0;
 };
 
 struct Aggregate {
@@ -61,6 +68,12 @@ struct Aggregate {
     double sum = 0.0;
     double max_abs = 0.0;
     std::size_t nonfinite = 0U;
+    double padding_sum = 0.0;
+    double resize_sum = 0.0;
+    std::size_t padding_count = 0U;
+    std::size_t resize_count = 0U;
+    double padding_max_abs = 0.0;
+    double resize_max_abs = 0.0;
 };
 
 class GateError final : public std::runtime_error {
@@ -69,10 +82,11 @@ public:
 };
 
 Options parse_options(int argc, char** argv) {
-    if (argc != 7) {
+    if (argc < 7 || argc % 2 == 0) {
         throw GateError(
             "usage: stage_r_cuda_preprocess_gate --manifest PATH "
-            "--image-root PATH --report PATH");
+            "--image-root PATH --report PATH [--variant V2|V2R|V3R] "
+            "[--semantic historical|opencv454]");
     }
     Options options;
     for (int i = 1; i < argc; i += 2) {
@@ -81,7 +95,13 @@ Options parse_options(int argc, char** argv) {
         if (option == "--manifest") options.manifest = value;
         else if (option == "--image-root") options.image_root = value;
         else if (option == "--report") options.report = value;
-        else throw GateError("unknown option: " + option);
+        else if (option == "--variant") options.variant = value.string();
+        else if (option == "--semantic") {
+            const std::string semantic = value.string();
+            if (semantic == "historical") options.semantic = stage_r::ResizeSemantic::kHistoricalV2V3;
+            else if (semantic == "opencv454") options.semantic = stage_r::ResizeSemantic::kOpenCv454AlignedFixedContract;
+            else throw GateError("semantic must be historical or opencv454");
+        } else throw GateError("unknown option: " + option);
     }
     if (options.manifest.empty() || options.image_root.empty() || options.report.empty()) {
         throw GateError("manifest, image-root, and report are required");
@@ -190,9 +210,11 @@ double type7_p99(std::vector<double> values) {
 
 void write_report(const fs::path& path,
                   const std::string& corpus_id,
+                  const Options& options,
                   const std::vector<CaseResult>& results,
                   const Aggregate& aggregate,
                   double p99,
+                  const std::string& tensor_digest,
                   bool pass) {
     if (!path.parent_path().empty()) fs::create_directories(path.parent_path());
     std::ofstream output(path);
@@ -200,8 +222,17 @@ void write_report(const fs::path& path,
     output << std::setprecision(17)
            << "{\n  \"schema_version\": 1,\n"
            << "  \"validation\": \"stage_r_cuda_preprocess_tensor_gate\",\n"
+           << "  \"variant\": \"" << options.variant << "\",\n"
+           << "  \"resize_semantic\": \"" << stage_r::resize_semantic_name(options.semantic) << "\",\n"
            << "  \"corpus_id\": \"" << corpus_id << "\",\n"
            << "  \"image_count\": " << results.size() << ",\n"
+           << "  \"tensor_digest_sha256\": \"" << tensor_digest << "\",\n"
+           << "  \"padding_region\": {\"mae\": "
+           << aggregate.padding_sum / static_cast<double>(aggregate.padding_count)
+           << ", \"max_abs\": " << aggregate.padding_max_abs << "},\n"
+           << "  \"resize_region\": {\"mae\": "
+           << aggregate.resize_sum / static_cast<double>(aggregate.resize_count)
+           << ", \"max_abs\": " << aggregate.resize_max_abs << "},\n"
            << "  \"measured_fps\": null,\n  \"measured_latency_ms\": null,\n"
            << "  \"gate\": {\n"
            << "    \"mae\": " << aggregate.sum /
@@ -218,7 +249,12 @@ void write_report(const fs::path& path,
         const auto& result = results[i];
         output << "    {\"id\": \"" << result.id << "\", \"mae\": "
                << result.mae << ", \"max_abs\": " << result.max_abs
+               << ", \"p99\": " << result.p99
                << ", \"nonfinite\": " << result.nonfinite
+               << ", \"padding_mae\": " << result.padding_mae
+               << ", \"resize_mae\": " << result.resize_mae
+               << ", \"padding_max_abs\": " << result.padding_max_abs
+               << ", \"resize_max_abs\": " << result.resize_max_abs
                << ", \"geometry\": \""
                << (result.geometry_pass ? "PASS" : "FAIL") << "\"}"
                << (i + 1U == results.size() ? "\n" : ",\n");
@@ -285,7 +321,7 @@ int run(const Options& options) {
 
     std::unique_ptr<stage_r::CudaPreprocessor> cuda_preprocessor;
     auto status = stage_r::CudaPreprocessor::create(
-        max_width, max_height, max_stride, &cuda_preprocessor);
+        max_width, max_height, max_stride, &cuda_preprocessor, options.semantic);
     if (!status.ok()) throw GateError(status.message());
 
     const edge_ai_defect::core::TensorInfo input_info{
@@ -297,6 +333,13 @@ int run(const Options& options) {
     Aggregate aggregate;
     aggregate.errors.reserve(cases.size() * stage_r::CudaPreprocessor::kTargetElementCount);
     bool pass = true;
+    EVP_MD_CTX* tensor_digest_context = EVP_MD_CTX_new();
+    if (tensor_digest_context == nullptr ||
+        EVP_DigestInit_ex(tensor_digest_context, EVP_sha256(), nullptr) != 1) {
+        if (tensor_digest_context != nullptr) EVP_MD_CTX_free(tensor_digest_context);
+        throw GateError("tensor digest initialization failed");
+    }
+    constexpr std::size_t kPlane = 640U * 640U;
     for (std::size_t i = 0; i < cases.size(); ++i) {
         preprocess::PreprocessedFrame cpu_output;
         status = preprocess::Preprocessor().preprocess(decoded[i], input_info, &cpu_output);
@@ -325,11 +368,22 @@ int run(const Options& options) {
         status = cuda_preprocessor->copy_output_to_host(cuda_tensor.data(), cuda_tensor.size());
         if (!status.ok()) throw GateError("CUDA output copy failed for " + cases[i].id +
                                          ": " + status.message());
+        if (EVP_DigestUpdate(tensor_digest_context, cuda_tensor.data(),
+                             cuda_tensor.size() * sizeof(float)) != 1) {
+            EVP_MD_CTX_free(tensor_digest_context);
+            throw GateError("tensor digest update failed");
+        }
 
         CaseResult result;
         result.id = cases[i].id;
         result.geometry_pass = geometry_pass;
         double case_sum = 0.0;
+        std::vector<double> case_errors;
+        case_errors.reserve(cuda_tensor.size());
+        double padding_sum = 0.0;
+        double resize_sum = 0.0;
+        std::size_t padding_count = 0U;
+        std::size_t resize_count = 0U;
         for (std::size_t index = 0; index < cuda_tensor.size(); ++index) {
             if (!std::isfinite(cuda_tensor[index]) ||
                 !std::isfinite(cpu_output.tensor.data[index])) {
@@ -344,8 +398,34 @@ int run(const Options& options) {
             aggregate.max_abs = std::max(aggregate.max_abs, error);
             result.max_abs = std::max(result.max_abs, error);
             aggregate.errors.push_back(error);
+            case_errors.push_back(error);
+            const std::size_t spatial = index % kPlane;
+            const int output_y = static_cast<int>(spatial / 640U);
+            const int output_x = static_cast<int>(spatial % 640U);
+            const bool padding = output_x < geometry.pad_left ||
+                output_x >= geometry.pad_left + geometry.resized_width ||
+                output_y < geometry.pad_top ||
+                output_y >= geometry.pad_top + geometry.resized_height;
+            if (padding) {
+                padding_sum += error;
+                ++padding_count;
+                aggregate.padding_sum += error;
+                ++aggregate.padding_count;
+                aggregate.padding_max_abs = std::max(aggregate.padding_max_abs, error);
+                result.padding_max_abs = std::max(result.padding_max_abs, error);
+            } else {
+                resize_sum += error;
+                ++resize_count;
+                aggregate.resize_sum += error;
+                ++aggregate.resize_count;
+                aggregate.resize_max_abs = std::max(aggregate.resize_max_abs, error);
+                result.resize_max_abs = std::max(result.resize_max_abs, error);
+            }
         }
         result.mae = case_sum / static_cast<double>(cuda_tensor.size());
+        result.p99 = type7_p99(case_errors);
+        result.padding_mae = padding_count == 0U ? 0.0 : padding_sum / padding_count;
+        result.resize_mae = resize_count == 0U ? 0.0 : resize_sum / resize_count;
         pass = pass && result.geometry_pass && result.nonfinite == 0U &&
                result.mae <= kMaeLimit && result.max_abs <= kMaxLimit;
         results.push_back(result);
@@ -356,7 +436,20 @@ int run(const Options& options) {
     }
     const double p99 = type7_p99(aggregate.errors);
     pass = pass && aggregate.nonfinite == 0U && p99 <= kP99Limit;
-    write_report(options.report, corpus_id, results, aggregate, p99, pass);
+    unsigned char digest[EVP_MAX_MD_SIZE] = {};
+    unsigned int digest_length = 0U;
+    if (EVP_DigestFinal_ex(tensor_digest_context, digest, &digest_length) != 1) {
+        EVP_MD_CTX_free(tensor_digest_context);
+        throw GateError("tensor digest finalization failed");
+    }
+    EVP_MD_CTX_free(tensor_digest_context);
+    std::ostringstream digest_text;
+    digest_text << std::hex << std::setfill('0');
+    for (unsigned int i = 0; i < digest_length; ++i) {
+        digest_text << std::setw(2) << static_cast<unsigned int>(digest[i]);
+    }
+    write_report(options.report, corpus_id, options, results, aggregate, p99,
+                 digest_text.str(), pass);
     std::cout << "tensor gate: " << (pass ? "PASS" : "FAIL")
               << " mae=" << aggregate.sum / static_cast<double>(aggregate.errors.size())
               << " p99=" << p99 << " max=" << aggregate.max_abs

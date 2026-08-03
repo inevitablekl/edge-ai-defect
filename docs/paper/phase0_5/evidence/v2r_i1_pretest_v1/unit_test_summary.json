@@ -1,0 +1,20 @@
+{
+  "ctest_regex": "stage_r_(pageable_raw_staging|pinned_raw_staging|runtime|cuda_preprocess)",
+  "tests_run": 4,
+  "passed": 4,
+  "failed": 0,
+  "focused_contracts": [
+    "identity resize coverage via CUDA contract",
+    "non-square resize",
+    "row stride",
+    "padding value",
+    "BGR RGB",
+    "NCHW FP32 normalization",
+    "nonfinite count",
+    "CUDA launch and copy status",
+    "historical V2 mode",
+    "V2R fixed semantic",
+    "V2R/V3R same semantic"
+  ],
+  "status": "PASS"
+}

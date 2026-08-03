@@ -5,6 +5,7 @@
 #include "edge_ai_defect/runtime/image_source.hpp"
 #include "edge_ai_defect/runtime/result_sink.hpp"
 #include "edge_ai_defect/runtime/runtime_types.hpp"
+#include "backend_tensorrt/cuda_preprocessor.hpp"
 
 #include <filesystem>
 
@@ -18,9 +19,10 @@ namespace edge_ai_defect::stage_r {
 class PinnedRunner final {
 public:
     PinnedRunner(runtime::ImageSource& source,
-                 backend_tensorrt::TensorRtEngine& engine,
-                 postprocess::PostProcessor& postprocessor,
-                 runtime::IResultSink& sink);
+                   backend_tensorrt::TensorRtEngine& engine,
+                   postprocess::PostProcessor& postprocessor,
+                   runtime::IResultSink& sink,
+                   ResizeSemantic semantic = ResizeSemantic::kHistoricalV2V3);
 
     [[nodiscard]] core::Status run(const runtime::RunMetadata& metadata,
                                    runtime::RunSummary* summary);
@@ -30,6 +32,7 @@ private:
     backend_tensorrt::TensorRtEngine& engine_;
     postprocess::PostProcessor& postprocessor_;
     runtime::IResultSink& sink_;
+    ResizeSemantic semantic_;
 };
 
 }  // namespace edge_ai_defect::stage_r
