@@ -1,0 +1,32 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_evaluation_contract",
+  "phase0_5b_source_contract": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/evaluation_contract.json",
+  "phase0_5b_source_contract_sha256": "bb701e9e878c6f6cd0dac3e925614b3c5c2ab9bbdead320092081a1f0612c966",
+  "data_yaml_v1": "/tmp/paper_phase0_5b_r_staging_v1/split_v1/dataset.yaml",
+  "data_yaml_v1_sha256": "0497fce64f9a8dfad1f855fb98dc97f730aa654a00778d20a2f2832a884a50ce",
+  "parameters": {
+    "task": "detect",
+    "mode": "val",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "device": "0",
+    "workers": 4,
+    "rect": false,
+    "conf": null,
+    "iou": 0.7,
+    "max_det": 300,
+    "half": false,
+    "augment": false,
+    "tta": false,
+    "plots": true,
+    "same_classes_and_postprocessing": true
+  },
+  "command_template": "./.venv/bin/yolo detect val model=<same archive-extracted-best.pt> data=/tmp/paper_phase0_5b_r_staging_v1/split_v1/dataset.yaml split=val imgsz=640 batch=16 device=0 workers=4 rect=false iou=0.7 max_det=300 half=false augment=false plots=true project=/tmp/paper_phase0_5b_r_evaluations name=<variant> exist_ok=false",
+  "formal_runs": 9,
+  "attempts_each": 1,
+  "retry_policy": "one same-parameter retry permitted only for non-model failure; none used",
+  "test_used_for_selection": false,
+  "training_performed": false,
+  "raw_evaluation_dirs_persisted_in_output": false
+}

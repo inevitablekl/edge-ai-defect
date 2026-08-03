@@ -1,0 +1,50 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_label_equivalence_audit",
+  "generator_identity": {
+    "same_generator_logic_used_for": "split_v1 and split_v2",
+    "reference_phase0_5b_generation_record_sha256": "3a17aac47a8b9959488c6aeba48d2455e4c1db15ffe47db8d0d4fb5daf8fe4e4",
+    "xml_to_yolo_reference_script_sha256": "dd11664ba52d1d411df392d20825a532f24c41441ae1538e1d079c8e577d8f6a",
+    "format": "class_id x_center y_center width height, six decimals, exact duplicate YOLO-row removal"
+  },
+  "sample_set": {
+    "v1_count": 360,
+    "v2_count": 359,
+    "common_count": 359,
+    "v1_only": [
+      "IMAGES/patches_105.jpg"
+    ],
+    "v2_only": []
+  },
+  "image_identity": {
+    "exact": 359,
+    "mismatch": 0
+  },
+  "xml_annotation_identity": {
+    "exact": 359,
+    "mismatch": 0
+  },
+  "generated_label_text_common_359": {
+    "exact": 359,
+    "text_format_different_numeric_equivalent": 0,
+    "numeric_mismatch": 0
+  },
+  "generated_v1_vs_canonical_common_359": {
+    "exact": 359,
+    "text_format_different_numeric_equivalent": 0,
+    "numeric_mismatch": 0
+  },
+  "box_counts_common_359": {
+    "generated_v1": 825,
+    "generated_v2": 825,
+    "canonical": 825,
+    "missing_v1_vs_canonical": 0,
+    "extra_v1_vs_canonical": 0,
+    "missing_v1_vs_v2": 0,
+    "extra_v1_vs_v2": 0
+  },
+  "label_file_symdiff": {
+    "generated_v1": 0,
+    "generated_v2": 0
+  },
+  "canonical_label_root": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/data/yolo/neu_det/labels/val"
+}

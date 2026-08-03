@@ -1,0 +1,48 @@
+{
+  "artifact_kind": "paper_phase0_5b_validation_contract",
+  "source_historical_authority": {
+    "training_final_report": "docs/TRAINING_FINAL_REPORT.md",
+    "freeze_record": "docs/MODEL_FREEZE_RECORD.md",
+    "effective_args_archive": "training_evidence_patch_20260712/experiment_effective_args_summary.json"
+  },
+  "parameters": {
+    "task": "detect",
+    "mode": "val",
+    "split": "val",
+    "imgsz": 640,
+    "batch": 16,
+    "device": "0",
+    "workers": 4,
+    "rect": false,
+    "conf": null,
+    "iou": 0.7,
+    "max_det": 300,
+    "half": false,
+    "augment": false,
+    "tta": false,
+    "agnostic_nms": false,
+    "classes": null,
+    "dnn": false,
+    "data_yaml": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/staging_dataset_v2/dataset.yaml",
+    "postprocessing_contract": "Ultralytics 8.4.50 effective defaults retained; no class or pre/post-processing changes"
+  },
+  "command_template": "./.venv/bin/yolo detect val model=<archive-extracted-best.pt> data=<result-staging>/staging_dataset_v2/dataset.yaml split=val imgsz=640 batch=16 device=0 workers=4 rect=false iou=0.7 max_det=300 half=false augment=false plots=true project=<result>/evaluations_formal name=<variant> exist_ok=false",
+  "formal_runs": 9,
+  "run_once_each": true,
+  "retry_policy": "Only one same-parameter retry allowed for non-model failure; no retry was needed.",
+  "batch_adjustment": {
+    "requested": 16,
+    "used": 16,
+    "oom_observed": false,
+    "uniform_lowering": false
+  },
+  "model_selection_rule": {
+    "primary": "descending validation mAP50-95",
+    "secondary": "Recall for equivalent candidates",
+    "equivalence_threshold_formalized": false,
+    "instruction": "Do not invent threshold; rank by mAP50-95 and report Recall alongside tied candidates; ambiguity is a limitation."
+  },
+  "metric_source": "Ultralytics console summary: redirected logs for E1-E3/E5-E9 and a seed7 execution record; values recorded at the displayed three-decimal precision.",
+  "evaluation_log_dir": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/evaluation_logs",
+  "evaluation_output_dir": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/evaluations_formal"
+}

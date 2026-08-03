@@ -1,0 +1,190 @@
+{
+  "artifact_kind": "paper_phase0_5b_ranking_comparison",
+  "historical_ranking": [
+    {
+      "run_id": "E4_SEED7",
+      "run": "seed=7",
+      "mAP50_95": 0.45085,
+      "mAP50": 0.7666,
+      "precision": 0.69223,
+      "recall": 0.74469,
+      "rank": 1
+    },
+    {
+      "run_id": "E1_V1_BASELINE",
+      "run": "V1 baseline",
+      "mAP50_95": 0.44983,
+      "mAP50": 0.77699,
+      "precision": 0.73268,
+      "recall": 0.73257,
+      "rank": 2
+    },
+    {
+      "run_id": "E9_SEED42_DET",
+      "run": "seed=42 deterministic",
+      "mAP50_95": 0.44983,
+      "mAP50": 0.77699,
+      "precision": 0.73268,
+      "recall": 0.73257,
+      "rank": 2
+    },
+    {
+      "run_id": "E7_V5_COSLR",
+      "run": "V5 cosine LR",
+      "mAP50_95": 0.44381,
+      "mAP50": 0.74955,
+      "precision": 0.71953,
+      "recall": 0.70318,
+      "rank": 3
+    },
+    {
+      "run_id": "E8_V6_NO_WARMUP",
+      "run": "V6 no warmup",
+      "mAP50_95": 0.44147,
+      "mAP50": 0.76101,
+      "precision": 0.73712,
+      "recall": 0.70795,
+      "rank": 4
+    },
+    {
+      "run_id": "E2_V2_EXTENDED",
+      "run": "V2 extended",
+      "mAP50_95": 0.44091,
+      "mAP50": 0.75816,
+      "precision": 0.72533,
+      "recall": 0.71047,
+      "rank": 5
+    },
+    {
+      "run_id": "E5_SEED123",
+      "run": "seed=123",
+      "mAP50_95": 0.44017,
+      "mAP50": 0.76481,
+      "precision": 0.67694,
+      "recall": 0.76089,
+      "rank": 6
+    },
+    {
+      "run_id": "E6_V4_ADAMW",
+      "run": "V4 AdamW",
+      "mAP50_95": 0.43769,
+      "mAP50": 0.75664,
+      "precision": 0.65529,
+      "recall": 0.75971,
+      "rank": 7
+    },
+    {
+      "run_id": "E3_V3_NO_MOSAIC",
+      "run": "V3 no mosaic",
+      "mAP50_95": 0.43675,
+      "mAP50": 0.76621,
+      "precision": 0.71163,
+      "recall": 0.73328,
+      "rank": 8
+    }
+  ],
+  "deduplicated_ranking": [
+    {
+      "run_id": "E4_SEED7",
+      "run": "seed=7",
+      "mAP50_95": 0.427,
+      "mAP50": 0.751,
+      "precision": 0.697,
+      "recall": 0.704,
+      "rank": 1
+    },
+    {
+      "run_id": "E1_V1_BASELINE",
+      "run": "V1 baseline",
+      "mAP50_95": 0.423,
+      "mAP50": 0.758,
+      "precision": 0.716,
+      "recall": 0.698,
+      "rank": 2
+    },
+    {
+      "run_id": "E9_SEED42_DET",
+      "run": "seed=42 deterministic",
+      "mAP50_95": 0.423,
+      "mAP50": 0.758,
+      "precision": 0.716,
+      "recall": 0.698,
+      "rank": 2
+    },
+    {
+      "run_id": "E8_V6_NO_WARMUP",
+      "run": "V6 no warmup",
+      "mAP50_95": 0.416,
+      "mAP50": 0.744,
+      "precision": 0.694,
+      "recall": 0.705,
+      "rank": 3
+    },
+    {
+      "run_id": "E3_V3_NO_MOSAIC",
+      "run": "V3 no mosaic",
+      "mAP50_95": 0.413,
+      "mAP50": 0.754,
+      "precision": 0.701,
+      "recall": 0.694,
+      "rank": 4
+    },
+    {
+      "run_id": "E6_V4_ADAMW",
+      "run": "V4 AdamW",
+      "mAP50_95": 0.412,
+      "mAP50": 0.737,
+      "precision": 0.702,
+      "recall": 0.685,
+      "rank": 5
+    },
+    {
+      "run_id": "E7_V5_COSLR",
+      "run": "V5 cosine LR",
+      "mAP50_95": 0.41,
+      "mAP50": 0.73,
+      "precision": 0.701,
+      "recall": 0.68,
+      "rank": 6
+    },
+    {
+      "run_id": "E5_SEED123",
+      "run": "seed=123",
+      "mAP50_95": 0.408,
+      "mAP50": 0.737,
+      "precision": 0.67,
+      "recall": 0.711,
+      "rank": 7
+    },
+    {
+      "run_id": "E2_V2_EXTENDED",
+      "run": "V2 extended",
+      "mAP50_95": 0.4,
+      "mAP50": 0.719,
+      "precision": 0.672,
+      "recall": 0.695,
+      "rank": 8
+    }
+  ],
+  "selection_rule_execution": {
+    "primary_metric": "mAP50_95 descending",
+    "secondary_metric": "Recall only for equivalent/tied candidates",
+    "equivalence_threshold": "not formalized in historical authority; no threshold invented",
+    "deduplicated_primary_winner": "E4_SEED7",
+    "deduplicated_primary_winner_value": 0.427,
+    "next_candidates": [
+      {
+        "run_id": "E1_V1_BASELINE",
+        "mAP50_95": 0.423,
+        "recall": 0.698
+      },
+      {
+        "run_id": "E9_SEED42_DET",
+        "mAP50_95": 0.423,
+        "recall": 0.698
+      }
+    ],
+    "selection_decision": "SEED7_SELECTION_CONFIRMED",
+    "defensible_basis": "seed7 has the highest displayed deduplicated validation mAP50-95 (0.427); E1/V1 and E9/seed42 deterministic tie at 0.423, and no other existing checkpoint exceeds seed7 on the primary metric. Recall is reported beside the ranking."
+  }
+}

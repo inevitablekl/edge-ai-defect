@@ -1,0 +1,243 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_matched_split_comparison",
+  "primary_comparison": "matched reconstructed split v1 versus reconstructed split v2",
+  "rows": [
+    {
+      "run_id": "E1_V1_BASELINE",
+      "run": "V1 baseline",
+      "variant": "v1_baseline",
+      "split_v1": {
+        "precision": 0.716,
+        "recall": 0.697,
+        "mAP50": 0.758,
+        "mAP50_95": 0.424,
+        "rank": 2
+      },
+      "split_v2": {
+        "precision": 0.716,
+        "recall": 0.698,
+        "mAP50": 0.758,
+        "mAP50_95": 0.423,
+        "rank": 2
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0,
+        "recall": -0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E2_V2_EXTENDED",
+      "run": "V2 extended",
+      "variant": "v2_extended",
+      "split_v1": {
+        "precision": 0.672,
+        "recall": 0.695,
+        "mAP50": 0.719,
+        "mAP50_95": 0.401,
+        "rank": 8
+      },
+      "split_v2": {
+        "precision": 0.672,
+        "recall": 0.695,
+        "mAP50": 0.719,
+        "mAP50_95": 0.4,
+        "rank": 8
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E3_V3_NO_MOSAIC",
+      "run": "V3 no mosaic",
+      "variant": "v3_no_mosaic",
+      "split_v1": {
+        "precision": 0.702,
+        "recall": 0.695,
+        "mAP50": 0.754,
+        "mAP50_95": 0.414,
+        "rank": 4
+      },
+      "split_v2": {
+        "precision": 0.701,
+        "recall": 0.694,
+        "mAP50": 0.754,
+        "mAP50_95": 0.413,
+        "rank": 4
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0010000000000000009,
+        "recall": 0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E4_SEED7",
+      "run": "seed=7",
+      "variant": "seed7",
+      "split_v1": {
+        "precision": 0.697,
+        "recall": 0.705,
+        "mAP50": 0.751,
+        "mAP50_95": 0.428,
+        "rank": 1
+      },
+      "split_v2": {
+        "precision": 0.697,
+        "recall": 0.704,
+        "mAP50": 0.751,
+        "mAP50_95": 0.427,
+        "rank": 1
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0,
+        "recall": 0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E5_SEED123",
+      "run": "seed=123",
+      "variant": "seed123",
+      "split_v1": {
+        "precision": 0.671,
+        "recall": 0.712,
+        "mAP50": 0.737,
+        "mAP50_95": 0.409,
+        "rank": 7
+      },
+      "split_v2": {
+        "precision": 0.67,
+        "recall": 0.711,
+        "mAP50": 0.737,
+        "mAP50_95": 0.408,
+        "rank": 7
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0010000000000000009,
+        "recall": 0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E6_V4_ADAMW",
+      "run": "V4 AdamW",
+      "variant": "v4_adamw",
+      "split_v1": {
+        "precision": 0.703,
+        "recall": 0.686,
+        "mAP50": 0.737,
+        "mAP50_95": 0.413,
+        "rank": 5
+      },
+      "split_v2": {
+        "precision": 0.702,
+        "recall": 0.685,
+        "mAP50": 0.737,
+        "mAP50_95": 0.412,
+        "rank": 5
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0010000000000000009,
+        "recall": 0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E7_V5_COSLR",
+      "run": "V5 cosine LR",
+      "variant": "v5_coslr",
+      "split_v1": {
+        "precision": 0.7,
+        "recall": 0.681,
+        "mAP50": 0.73,
+        "mAP50_95": 0.411,
+        "rank": 6
+      },
+      "split_v2": {
+        "precision": 0.701,
+        "recall": 0.68,
+        "mAP50": 0.73,
+        "mAP50_95": 0.41,
+        "rank": 6
+      },
+      "delta_v1_minus_v2": {
+        "precision": -0.0010000000000000009,
+        "recall": 0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E8_V6_NO_WARMUP",
+      "run": "V6 no warmup",
+      "variant": "v6_no_warmup",
+      "split_v1": {
+        "precision": 0.694,
+        "recall": 0.705,
+        "mAP50": 0.744,
+        "mAP50_95": 0.417,
+        "rank": 3
+      },
+      "split_v2": {
+        "precision": 0.694,
+        "recall": 0.705,
+        "mAP50": 0.744,
+        "mAP50_95": 0.416,
+        "rank": 3
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    },
+    {
+      "run_id": "E9_SEED42_DET",
+      "run": "seed=42 deterministic",
+      "variant": "seed42_deterministic",
+      "split_v1": {
+        "precision": 0.716,
+        "recall": 0.697,
+        "mAP50": 0.758,
+        "mAP50_95": 0.424,
+        "rank": 2
+      },
+      "split_v2": {
+        "precision": 0.716,
+        "recall": 0.698,
+        "mAP50": 0.758,
+        "mAP50_95": 0.423,
+        "rank": 2
+      },
+      "delta_v1_minus_v2": {
+        "precision": 0.0,
+        "recall": -0.0010000000000000009,
+        "mAP50": 0.0,
+        "mAP50_95": 0.0010000000000000009
+      },
+      "winner_rank_unchanged": true
+    }
+  ],
+  "winner_split_v1": "E4_SEED7",
+  "winner_split_v2": "E4_SEED7",
+  "winner_unchanged": true
+}

@@ -1,0 +1,249 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_historical_metric_reconciliation",
+  "source_historical_metrics": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/metrics_by_checkpoint.json",
+  "source_historical_metrics_sha256": "a964318f9a458f6e9a3c60ea01e4721f1a6d1a63333e4de44317f73ecb5f0ed8",
+  "rows": [
+    {
+      "run_id": "E1_V1_BASELINE",
+      "run": "V1 baseline",
+      "reconstructed_split_v1": {
+        "precision": 0.716,
+        "recall": 0.697,
+        "mAP50": 0.758,
+        "mAP50_95": 0.424
+      },
+      "historical_recorded": {
+        "precision": 0.73268,
+        "recall": 0.73257,
+        "mAP50": 0.77699,
+        "mAP50_95": 0.44983,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.016680000000000028,
+        "recall": -0.0355700000000001,
+        "mAP50": -0.01898999999999995,
+        "mAP50_95": -0.02583000000000002
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E2_V2_EXTENDED",
+      "run": "V2 extended",
+      "reconstructed_split_v1": {
+        "precision": 0.672,
+        "recall": 0.695,
+        "mAP50": 0.719,
+        "mAP50_95": 0.401
+      },
+      "historical_recorded": {
+        "precision": 0.72533,
+        "recall": 0.71047,
+        "mAP50": 0.75816,
+        "mAP50_95": 0.44091,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.05332999999999999,
+        "recall": -0.015470000000000095,
+        "mAP50": -0.03915999999999997,
+        "mAP50_95": -0.03991
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E3_V3_NO_MOSAIC",
+      "run": "V3 no mosaic",
+      "reconstructed_split_v1": {
+        "precision": 0.702,
+        "recall": 0.695,
+        "mAP50": 0.754,
+        "mAP50_95": 0.414
+      },
+      "historical_recorded": {
+        "precision": 0.71163,
+        "recall": 0.73328,
+        "mAP50": 0.76621,
+        "mAP50_95": 0.43675,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.009630000000000027,
+        "recall": -0.03828000000000009,
+        "mAP50": -0.012209999999999943,
+        "mAP50_95": -0.022750000000000048
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E4_SEED7",
+      "run": "seed=7",
+      "reconstructed_split_v1": {
+        "precision": 0.697,
+        "recall": 0.705,
+        "mAP50": 0.751,
+        "mAP50_95": 0.428
+      },
+      "historical_recorded": {
+        "precision": 0.69223,
+        "recall": 0.74469,
+        "mAP50": 0.7666,
+        "mAP50_95": 0.45085,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": 0.004769999999999941,
+        "recall": -0.03969,
+        "mAP50": -0.015599999999999947,
+        "mAP50_95": -0.02284999999999998
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E5_SEED123",
+      "run": "seed=123",
+      "reconstructed_split_v1": {
+        "precision": 0.671,
+        "recall": 0.712,
+        "mAP50": 0.737,
+        "mAP50_95": 0.409
+      },
+      "historical_recorded": {
+        "precision": 0.67694,
+        "recall": 0.76089,
+        "mAP50": 0.76481,
+        "mAP50_95": 0.44017,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.005939999999999945,
+        "recall": -0.04888999999999999,
+        "mAP50": -0.02781,
+        "mAP50_95": -0.03117000000000003
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E6_V4_ADAMW",
+      "run": "V4 AdamW",
+      "reconstructed_split_v1": {
+        "precision": 0.703,
+        "recall": 0.686,
+        "mAP50": 0.737,
+        "mAP50_95": 0.413
+      },
+      "historical_recorded": {
+        "precision": 0.65529,
+        "recall": 0.75971,
+        "mAP50": 0.75664,
+        "mAP50_95": 0.43769,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": 0.04770999999999992,
+        "recall": -0.07370999999999994,
+        "mAP50": -0.01963999999999999,
+        "mAP50_95": -0.024690000000000045
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E7_V5_COSLR",
+      "run": "V5 cosine LR",
+      "reconstructed_split_v1": {
+        "precision": 0.7,
+        "recall": 0.681,
+        "mAP50": 0.73,
+        "mAP50_95": 0.411
+      },
+      "historical_recorded": {
+        "precision": 0.71953,
+        "recall": 0.70318,
+        "mAP50": 0.74955,
+        "mAP50_95": 0.44381,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.019530000000000047,
+        "recall": -0.022179999999999978,
+        "mAP50": -0.019550000000000067,
+        "mAP50_95": -0.032810000000000006
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E8_V6_NO_WARMUP",
+      "run": "V6 no warmup",
+      "reconstructed_split_v1": {
+        "precision": 0.694,
+        "recall": 0.705,
+        "mAP50": 0.744,
+        "mAP50_95": 0.417
+      },
+      "historical_recorded": {
+        "precision": 0.73712,
+        "recall": 0.70795,
+        "mAP50": 0.76101,
+        "mAP50_95": 0.44147,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.04312000000000005,
+        "recall": -0.002950000000000008,
+        "mAP50": -0.01700999999999997,
+        "mAP50_95": -0.024469999999999992
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    },
+    {
+      "run_id": "E9_SEED42_DET",
+      "run": "seed=42 deterministic",
+      "reconstructed_split_v1": {
+        "precision": 0.716,
+        "recall": 0.697,
+        "mAP50": 0.758,
+        "mAP50_95": 0.424
+      },
+      "historical_recorded": {
+        "precision": 0.73268,
+        "recall": 0.73257,
+        "mAP50": 0.77699,
+        "mAP50_95": 0.44983,
+        "historical_evaluation_image_count": 360
+      },
+      "delta_reconstructed_minus_historical": {
+        "precision": -0.016680000000000028,
+        "recall": -0.0355700000000001,
+        "mAP50": -0.01898999999999995,
+        "mAP50_95": -0.02583000000000002
+      },
+      "difference_present": true,
+      "attribution_to_duplicate_allowed": false
+    }
+  ],
+  "contract_assessment": {
+    "verified": [
+      "same nine checkpoint SHA256 identities from Phase 0.5B inventory",
+      "same .venv and package versions",
+      "same GPU identity for Phase 0.5B and 0.5B-R",
+      "same validation command semantics and batch=16",
+      "historical split authority reconstructed deterministically",
+      "common 359 image/XML identities and generated/canonical labels exact"
+    ],
+    "unverified_or_different": [
+      "historical records report NVIDIA GeForce RTX 3090 (24GB), current matched control uses NVIDIA GeForce GTX 1050 Ti (4GB)",
+      "historical raw prediction outputs and exact metric serialization are unavailable",
+      "historical authority does not retain a byte-identical historical evaluation invocation against this WSL .venv",
+      "current metrics are retained at three-decimal console precision"
+    ],
+    "interpretation": "Reconstructed split-v1 versus historical absolute metric differences are not attributed automatically to the removed duplicate. Selection sensitivity is decided from matched reconstructed split-v1 versus split-v2."
+  }
+}

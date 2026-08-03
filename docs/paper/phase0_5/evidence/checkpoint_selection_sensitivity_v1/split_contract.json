@@ -1,0 +1,71 @@
+{
+  "artifact_kind": "paper_phase0_5b_split_contract",
+  "required_split": "split_v2_deduplicated",
+  "validation_manifest": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/val_manifest_v2.json",
+    "sha256": "4be24ebe0a6b8c7e3b75840bd9bab8f67d72b1608e97c21172ce7eb9a6713dd9",
+    "image_count": 359,
+    "bbox_count": 825
+  },
+  "train_manifest": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/train_manifest_v2.json",
+    "sha256": "4e937507e0663ff76740b3fc6dd00552d82a3392a07a99fab17d816b7bc062b6",
+    "image_count": 1260,
+    "bbox_count": 2916
+  },
+  "test_manifest_v2": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+    "sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+    "image_count": 180,
+    "bbox_count": 442
+  },
+  "historical_authority": {
+    "train": {
+      "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/train_manifest.json",
+      "sha256": "82687d1b969ac7b9af2a759ea0c39fbf68f71161a13765f3ceb27443c67c8591",
+      "image_count": 1260
+    },
+    "val": {
+      "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/val_manifest.json",
+      "sha256": "d7de5f3ee47353144ac8a11706cd8cfcfe89285fe08ab01b7ee60f0a2d757ebf",
+      "image_count": 360
+    },
+    "test": {
+      "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/test_manifest.json",
+      "sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+      "image_count": 180
+    }
+  },
+  "isolation": {
+    "train_val_path": 0,
+    "train_test_path": 0,
+    "val_test_path": 0,
+    "train_val_content_sha": 0,
+    "train_test_content_sha": 0,
+    "val_test_content_sha": 0,
+    "pass": true
+  },
+  "test_membership_exactly_historical": true,
+  "duplicate_resolution": {
+    "removed_duplicate_count": 1,
+    "removed_val_entry": "IMAGES/patches_105.jpg",
+    "kept_train_entry": "IMAGES/patches_101.jpg",
+    "duplicate_sha256": "4d2de82731b86cdbc7a66f2a9bfb01074bb4cb65e47bccf06b66470d53857071",
+    "annotation_image_mapping_valid": true,
+    "val_entries_removed_vs_historical": [
+      "IMAGES/patches_105.jpg"
+    ]
+  },
+  "staging": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/staging_dataset_v2",
+    "dataset_yaml": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/staging_dataset_v2/dataset.yaml",
+    "image_list": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/staging_dataset_v2/val_image_list.txt",
+    "generation_record": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1/staging_dataset_v2/generation_record.json",
+    "generation_record_sha256": "3a17aac47a8b9959488c6aeba48d2455e4c1db15ffe47db8d0d4fb5daf8fe4e4",
+    "symlink_images": 359,
+    "generated_labels": 359,
+    "staging_image_count": 359,
+    "staging_bbox_count": 825,
+    "raw_dataset_modified": false
+  }
+}

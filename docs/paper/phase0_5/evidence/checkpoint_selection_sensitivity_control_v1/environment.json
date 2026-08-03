@@ -1,0 +1,37 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_environment",
+  "captured_at_utc": "2026-08-03T13:06:13.270361+00:00",
+  "repository_root": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect",
+  "branch": "main",
+  "head": "e3ffe83a1753aff4166b3bd57cf4193a72fecc75",
+  "formal_python": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/.venv/bin/python",
+  "python_version": "3.10.12",
+  "torch": "2.3.1+cu118",
+  "cuda": "11.8",
+  "ultralytics": "8.4.50",
+  "numpy": "1.26.4",
+  "matplotlib": "3.8.4",
+  "opencv": "4.10.0",
+  "pyyaml": "6.0.2",
+  "gpu_identity": "NVIDIA GeForce GTX 1050 Ti, GPU-6d822942-3b13-88fb-27a2-5253e7d90a34, 582.28, 4096 MiB",
+  "cuda_available": true,
+  "batch16_oom": false,
+  "phase0_5_source": {
+    "phase0_5_result_path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/paper_phase0_5/checkpoint_selection_sensitivity_v1",
+    "phase0_5_metrics_json_sha256": "a964318f9a458f6e9a3c60ea01e4721f1a6d1a63333e4de44317f73ecb5f0ed8",
+    "phase0_5_evaluation_contract_sha256": "bb701e9e878c6f6cd0dac3e925614b3c5c2ab9bbdead320092081a1f0612c966",
+    "phase0_5_staging_generation_record_sha256": "3a17aac47a8b9959488c6aeba48d2455e4c1db15ffe47db8d0d4fb5daf8fe4e4",
+    "phase0_5_staging_yaml_sha256": "2e80dafc7a7d62fa9782dc3c66bfd541f408b0a4ea8a2196c62913cd9907df1b",
+    "xml_to_yolo_reference_script_sha256": "dd11664ba52d1d411df392d20825a532f24c41441ae1538e1d079c8e577d8f6a",
+    "canonical_dataset_yaml_sha256": "c48e9c744ca6d19b59ae21efdf3cda8ee2ed13e18a8bb70eb60558b6fd862490",
+    "yolo_launcher_sha256": "11760549d61c1d9f8c7b1a63b61a199e551a160a88c8d68546e27e083802037f"
+  },
+  "historical_recorded_environment": {
+    "framework": "Ultralytics 8.4.50",
+    "pytorch": "2.3.1+cu118",
+    "cuda": "11.8",
+    "gpu": "NVIDIA GeForce RTX 3090 (24GB)"
+  },
+  "no_dependency_install_or_upgrade": true,
+  "no_commit_push_tag": true
+}

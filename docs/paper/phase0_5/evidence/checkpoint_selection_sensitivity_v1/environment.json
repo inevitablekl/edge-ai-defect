@@ -1,0 +1,50 @@
+{
+  "artifact_kind": "paper_phase0_5b_checkpoint_selection_sensitivity_environment",
+  "captured_at_utc": "2026-08-03T12:45:52.778723+00:00",
+  "repository_root": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect",
+  "branch": "main",
+  "head": "e3ffe83a1753aff4166b3bd57cf4193a72fecc75",
+  "formal_environment": {
+    "python_executable": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/.venv/bin/python",
+    "python_version": "3.10.12",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "machine": "x86_64",
+    "torch_version": "2.3.1+cu118",
+    "cuda_version": "11.8",
+    "cudnn_version": 8700,
+    "cuda_available": true,
+    "gpu_count": 1,
+    "gpu_identity": "NVIDIA GeForce GTX 1050 Ti",
+    "gpu_memory_total_mib": 4096,
+    "nvidia_driver": "582.28",
+    "ultralytics_version": "8.4.50",
+    "numpy_version": "1.26.4",
+    "matplotlib_version": "3.8.4",
+    "opencv_version": "4.10.0",
+    "pyyaml_version": "6.0.2",
+    "environment_role": "formal controlled evaluation environment (.venv)"
+  },
+  "formal_environment_matches_priority": {
+    "python": "3.10.12",
+    "torch": "2.3.1+cu118",
+    "cuda": "11.8",
+    "ultralytics": "8.4.50"
+  },
+  "formal_environment_usable": true,
+  "default_shell_environment_difference": {
+    "python_command": "not found",
+    "python3_executable": "/usr/bin/python3",
+    "numpy": "2.2.6",
+    "matplotlib": "3.5.1 system package",
+    "torch": "2.3.1+cu118",
+    "ultralytics": "8.4.50",
+    "observed_failure": "matplotlib ABI import failed under NumPy 2.2.6 during Ultralytics dataset font check; no package install/upgrade performed",
+    "used_for_formal_evaluation": false
+  },
+  "gpu_identity_evidence": "NVIDIA GeForce GTX 1050 Ti, GPU-6d822942-3b13-88fb-27a2-5253e7d90a34, 582.28, 4096 MiB",
+  "git_status_before_task_observation": "Initial snapshot showed no tracked modifications and a pre-existing set of untracked build/test artifacts under build-p1r-wsl; this task output did not exist at the initial snapshot.",
+  "preexisting_status_line_count_excluding_task_output": 268,
+  "preexisting_tracked_status_lines": [],
+  "task_status_lines_after_outputs": 830,
+  "no_commit_push_tag": true
+}

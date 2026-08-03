@@ -1,0 +1,40 @@
+{
+  "artifact_kind": "paper_phase0_5b_r_historical_split_contract",
+  "historical_split_authority": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/val_manifest.json",
+    "sha256": "d7de5f3ee47353144ac8a11706cd8cfcfe89285fe08ab01b7ee60f0a2d757ebf",
+    "split": "val",
+    "image_count": 360,
+    "bbox_count": 828,
+    "dataset_root": "data/raw/NEU-DET"
+  },
+  "split_v2_reference": {
+    "path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/val_manifest_v2.json",
+    "sha256": "4be24ebe0a6b8c7e3b75840bd9bab8f67d72b1608e97c21172ce7eb9a6713dd9",
+    "image_count": 359,
+    "bbox_count": 825
+  },
+  "difference": {
+    "common_entry_count": 359,
+    "v1_only_entry": "IMAGES/patches_105.jpg",
+    "v2_only_entries": [],
+    "removed_duplicate_sha256": "4d2de82731b86cdbc7a66f2a9bfb01074bb4cb65e47bccf06b66470d53857071",
+    "kept_train_entry": "IMAGES/patches_101.jpg",
+    "removed_entry_bbox_count": 3
+  },
+  "train_unchanged_exact": true,
+  "test_unchanged_exact": true,
+  "test_v1_path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_k_task_eval_v2/split/test_manifest.json",
+  "test_v1_sha256": "fd978beae99d8d88b72bcf2da082ed4caddccc502d882106e0e91e27a61797b8",
+  "test_v2_path": "/home/ros2/wangkl/edge-ai-defect/edge-ai-defect/results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+  "test_v2_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "staging": {
+    "v1_path": "/tmp/paper_phase0_5b_r_staging_v1/split_v1",
+    "v1_yaml_sha256": "0497fce64f9a8dfad1f855fb98dc97f730aa654a00778d20a2f2832a884a50ce",
+    "v1_generation_record_sha256": "25ad409aa0e9f9f7f2be4daf614fd4c45ba79bdf63805e1d4cb212c82df1da62",
+    "v2_path": "/tmp/paper_phase0_5b_r_staging_v1/split_v2",
+    "v2_yaml_sha256": "831ad6b0b36d5ef70c397b83d754a38bd5fdf6bd3855204a862f227eaeec37b6",
+    "v2_generation_record_sha256": "ce4789af6a0e8bbde4f0bd22cb0d55b17335a1d783d4ef6dce62a712492dd7f0",
+    "raw_dataset_modified": false
+  }
+}
