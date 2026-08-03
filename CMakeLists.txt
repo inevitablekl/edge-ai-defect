@@ -535,8 +535,8 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
     set_target_properties(stage_r_r3_ablation_runner PROPERTIES
         BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
 
-    # Phase 0.5D-I1-only tools. They are preflight/freeze tooling and do not
-    # replace or alter the production runner dispatch semantics.
+    # Phase 0.5D timing-aligned tools. They are dedicated benchmark tooling and
+    # do not replace or alter the production runner dispatch semantics.
     add_executable(stage_r_phase0_5d_timing_aligned_runner
         tools/benchmark/stage_r_phase0_5d_timing_aligned_runner.cpp)
     target_include_directories(stage_r_phase0_5d_timing_aligned_runner PRIVATE

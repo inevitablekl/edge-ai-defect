@@ -46,7 +46,8 @@ using edge_ai_defect::runtime::IResultSink;
 using edge_ai_defect::runtime::RunMetadata;
 using edge_ai_defect::runtime::RunSummary;
 
-constexpr std::string_view kEvidenceClass = "NOT_FORMAL_PERFORMANCE_EVIDENCE";
+constexpr std::string_view kPreflightEvidenceClass = "NOT_FORMAL_PERFORMANCE_EVIDENCE";
+constexpr std::string_view kFormalEvidenceClass = "FORMAL_PERFORMANCE_EVIDENCE";
 constexpr std::string_view kRemediationId =
     "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1";
 
@@ -63,7 +64,7 @@ void usage() {
     std::cout << "Usage: stage_r_phase0_5d_timing_aligned_runner"
                  " --config PATH --manifest PATH --output-dir PATH"
                  " --warmup-frames N --measured-frames N"
-                 " --execution-mode PREFLIGHT_ONLY\n";
+                 " --execution-mode PREFLIGHT_ONLY|FORMAL_AUTHORITY\n";
 }
 
 Status parse_size(std::string_view value, const char* name, std::size_t* output) {
@@ -106,13 +107,16 @@ Status parse_args(int argc, char** argv, Arguments* output) {
             return Status::failure(ErrorCode::kInvalidArgument, "unknown option " + option);
         }
     }
+    const bool valid_mode = args.execution_mode == "PREFLIGHT_ONLY" ||
+                            args.execution_mode == "FORMAL_AUTHORITY";
+    const bool preflight_limits_ok = args.execution_mode != "PREFLIGHT_ONLY" ||
+                                     (args.warmup_frames <= 3U && args.measured_frames <= 16U);
     if (args.config.empty() || args.manifest.empty() || args.output_dir.empty() ||
-        args.execution_mode != "PREFLIGHT_ONLY" || args.warmup_frames > 3U ||
-        args.measured_frames > 16U) {
+        !valid_mode || !preflight_limits_ok) {
         return Status::failure(
             ErrorCode::kInvalidArgument,
-            "preflight requires config, manifest, output-dir, execution-mode PREFLIGHT_ONLY, "
-            "warmup <= 3 and measured <= 16");
+            "requires config, manifest, output-dir, execution-mode PREFLIGHT_ONLY or "
+            "FORMAL_AUTHORITY; PREFLIGHT_ONLY requires warmup <= 3 and measured <= 16");
     }
     *output = std::move(args);
     return Status::success();
@@ -369,9 +373,9 @@ Status run_selected(const edge_ai_defect::runtime::RuntimeConfig& config,
 }
 
 Status write_failure(const fs::path& output_dir, std::string_view phase,
-                     const Status& status) {
+                     std::string_view evidence_class, const Status& status) {
     std::ostringstream text;
-    text << "{\n  \"evidence_class\": \"" << kEvidenceClass << "\",\n"
+    text << "{\n  \"evidence_class\": \"" << evidence_class << "\",\n"
          << "  \"status\": \"IMPLEMENTATION_FAILURE\",\n"
          << "  \"phase\": \"" << json_escape(phase) << "\",\n"
          << "  \"message\": \"" << json_escape(status.message()) << "\"\n}\n";
@@ -390,6 +394,9 @@ int main(int argc, char** argv) {
         return 2;
     }
 
+    const std::string_view evidence_class = args.execution_mode == "FORMAL_AUTHORITY"
+        ? kFormalEvidenceClass : kPreflightEvidenceClass;
+
     std::error_code error;
     const fs::path output_dir = fs::absolute(args.output_dir, error).lexically_normal();
     if (error || output_dir.empty() || fs::exists(output_dir)) {
@@ -407,7 +414,7 @@ int main(int argc, char** argv) {
     }
     auto fail = [&](std::string_view phase, const Status& status, int code) {
         std::cerr << phase << ": " << status.message() << '\n';
-        (void)write_failure(output_dir, phase, status);
+        (void)write_failure(output_dir, phase, evidence_class, status);
         return code;
     };
 
@@ -423,6 +430,12 @@ int main(int argc, char** argv) {
         config.phase0_5d.execution_mode != "FORMAL_AUTHORITY") {
         return fail("config", Status::failure(ErrorCode::kSchemaViolation,
             "timing-aligned config contract is not frozen v1"), 3);
+    }
+    if (args.execution_mode == "FORMAL_AUTHORITY" &&
+        (args.warmup_frames != config.phase0_5d.warmup_frames ||
+         args.measured_frames != config.phase0_5d.measured_frames)) {
+        return fail("config", Status::failure(ErrorCode::kSchemaViolation,
+            "formal execution counts must match phase0_5d warmup/measured config"), 3);
     }
     const auto variant = config.data_path_variant;
     if (variant != edge_ai_defect::runtime::DataPathVariant::kV0 &&
@@ -521,8 +534,9 @@ int main(int argc, char** argv) {
 
     std::ostringstream metrics;
     metrics << std::setprecision(17)
-            << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << kEvidenceClass
-            << "\",\n  \"execution_mode\": \"PREFLIGHT_ONLY\",\n  \"variant\": \""
+            << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << evidence_class
+            << "\",\n  \"execution_mode\": \"" << args.execution_mode
+            << "\",\n  \"variant\": \""
             << edge_ai_defect::runtime::data_path_variant_name(variant)
             << "\",\n  \"measured_frames\": " << args.measured_frames
             << ",\n  \"processed_frames\": " << summary.processed_images
@@ -543,8 +557,9 @@ int main(int argc, char** argv) {
     if (!status.ok()) return fail("metrics", status, 6);
 
     std::ostringstream hashes;
-    hashes << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << kEvidenceClass
-           << "\",\n  \"execution_mode\": \"PREFLIGHT_ONLY\",\n  \"variant\": \""
+    hashes << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << evidence_class
+           << "\",\n  \"execution_mode\": \"" << args.execution_mode
+           << "\",\n  \"variant\": \""
            << edge_ai_defect::runtime::data_path_variant_name(variant)
            << "\",\n  \"detection_sha256\": \"" << sink.detection_sha()
            << "\",\n  \"tensor_digest_sha256\": null,\n  \"frames\": "
@@ -553,8 +568,9 @@ int main(int argc, char** argv) {
     if (!status.ok()) return fail("hashes", status, 6);
 
     std::ostringstream run_manifest;
-    run_manifest << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << kEvidenceClass
-                 << "\",\n  \"execution_mode\": \"PREFLIGHT_ONLY\",\n  \"variant\": \""
+    run_manifest << "{\n  \"schema_version\": 1,\n  \"evidence_class\": \"" << evidence_class
+                 << "\",\n  \"execution_mode\": \"" << args.execution_mode
+                 << "\",\n  \"variant\": \""
                  << edge_ai_defect::runtime::data_path_variant_name(variant)
                  << "\",\n  \"commit\": \"" << current_commit()
                  << "\",\n  \"binary_sha256\": \"" << binary_sha
@@ -593,7 +609,7 @@ int main(int argc, char** argv) {
     status = write_text(output_dir / "run_manifest.json", run_manifest.str());
     if (!status.ok()) return fail("run_manifest", status, 6);
 
-    std::cout << "PREFLIGHT PASS variant="
+    std::cout << args.execution_mode << " PASS variant="
               << edge_ai_defect::runtime::data_path_variant_name(variant)
               << " frames=" << args.measured_frames
               << " detection_sha256=" << sink.detection_sha() << '\n';
