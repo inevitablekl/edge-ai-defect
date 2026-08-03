@@ -50,6 +50,12 @@ constexpr std::string_view kPreflightEvidenceClass = "NOT_FORMAL_PERFORMANCE_EVI
 constexpr std::string_view kFormalEvidenceClass = "FORMAL_PERFORMANCE_EVIDENCE";
 constexpr std::string_view kRemediationId =
     "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1";
+constexpr std::size_t kReplayCycleFrames = 180U;
+
+std::size_t replay_cycles_for(std::size_t requested_frames) {
+    return requested_frames / kReplayCycleFrames +
+           (requested_frames % kReplayCycleFrames == 0U ? 0U : 1U);
+}
 
 struct Arguments {
     fs::path config;
@@ -476,9 +482,11 @@ int main(int argc, char** argv) {
 
     // Warmup deliberately uses the same source/runner/result serialization and
     // canonical digest path. Its result is retained but never aggregated.
+    const std::size_t warmup_cycles = replay_cycles_for(args.warmup_frames);
     std::unique_ptr<edge_ai_defect::runtime::CorpusReplaySource> warmup_source;
     status = edge_ai_defect::runtime::CorpusReplaySource::create(
-        config.input_directory, args.manifest, 1U, &warmup_source, args.warmup_frames);
+        config.input_directory, args.manifest, warmup_cycles,
+        &warmup_source, args.warmup_frames);
     if (!status.ok()) return fail("warmup_source", status, 4);
     std::unique_ptr<edge_ai_defect::runtime::JsonSink> warmup_json;
     status = edge_ai_defect::runtime::JsonSink::create(
@@ -495,9 +503,11 @@ int main(int argc, char** argv) {
         return fail("warmup", status, 4);
     }
 
+    const std::size_t measured_cycles = replay_cycles_for(args.measured_frames);
     std::unique_ptr<edge_ai_defect::runtime::CorpusReplaySource> measured_base;
     status = edge_ai_defect::runtime::CorpusReplaySource::create(
-        config.input_directory, args.manifest, 1U, &measured_base, args.measured_frames);
+        config.input_directory, args.manifest, measured_cycles,
+        &measured_base, args.measured_frames);
     if (!status.ok()) return fail("measured_source", status, 4);
     TimingSource measured_source(*measured_base);
     std::unique_ptr<edge_ai_defect::runtime::JsonSink> result_json;
