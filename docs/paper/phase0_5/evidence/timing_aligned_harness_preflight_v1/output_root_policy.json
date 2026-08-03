@@ -1,0 +1,9 @@
+{
+  "historical_root": "results/benchmark/stage_r/r3_v0_v2_v3_v4_ablation_v2",
+  "historical_root_exists": true,
+  "new_root": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1",
+  "existing_directory_probe": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1/existing_output_probe",
+  "sentinel_preserved": true,
+  "refusal_returncode": 2,
+  "refusal_pass": true
+}

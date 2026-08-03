@@ -348,6 +348,67 @@ Status parse_timing(const YAML::Node& node, RuntimeConfig* output) {
     return parse_scalar(node["enabled"], "timing.enabled", &output->timing_enabled);
 }
 
+Status parse_phase0_5d(const YAML::Node& node, RuntimeConfig* output) {
+    const Status mapping_status = validate_mapping(
+        node, "phase0_5d",
+        {"execution_mode", "warmup_frames", "measured_frames", "input_size",
+         "batch", "repetitions", "schedule_id", "result_root", "cpu_affinity",
+         "opencv_threads", "timing_boundary_id", "sink_id", "serialization_id",
+         "digest_id"});
+    if (!mapping_status.ok()) return mapping_status;
+
+    Status status = parse_scalar(node["execution_mode"],
+                                 "phase0_5d.execution_mode",
+                                 &output->phase0_5d.execution_mode);
+    if (!status.ok()) return status;
+    if (output->phase0_5d.execution_mode != "FORMAL_AUTHORITY" &&
+        output->phase0_5d.execution_mode != "PREFLIGHT_ONLY") {
+        return schema_error("phase0_5d.execution_mode",
+                            "must be exactly FORMAL_AUTHORITY or PREFLIGHT_ONLY");
+    }
+    status = parse_positive_uint32(node["warmup_frames"],
+                                   "phase0_5d.warmup_frames",
+                                   &output->phase0_5d.warmup_frames);
+    if (!status.ok()) return status;
+    status = parse_positive_uint32(node["measured_frames"],
+                                   "phase0_5d.measured_frames",
+                                   &output->phase0_5d.measured_frames);
+    if (!status.ok()) return status;
+    status = parse_positive_uint32(node["input_size"], "phase0_5d.input_size",
+                                   &output->phase0_5d.input_size);
+    if (!status.ok()) return status;
+    status = parse_positive_uint32(node["batch"], "phase0_5d.batch",
+                                   &output->phase0_5d.batch);
+    if (!status.ok()) return status;
+    status = parse_positive_uint32(node["repetitions"],
+                                   "phase0_5d.repetitions",
+                                   &output->phase0_5d.repetitions);
+    if (!status.ok()) return status;
+
+    for (const auto& field : {
+             std::pair<const char*, std::string*>("schedule_id", &output->phase0_5d.schedule_id),
+             std::pair<const char*, std::string*>("result_root", &output->phase0_5d.result_root),
+             std::pair<const char*, std::string*>("cpu_affinity", &output->phase0_5d.cpu_affinity),
+             std::pair<const char*, std::string*>("timing_boundary_id", &output->phase0_5d.timing_boundary_id),
+             std::pair<const char*, std::string*>("sink_id", &output->phase0_5d.sink_id),
+             std::pair<const char*, std::string*>("serialization_id", &output->phase0_5d.serialization_id),
+             std::pair<const char*, std::string*>("digest_id", &output->phase0_5d.digest_id)}) {
+        status = parse_scalar(node[field.first],
+                              std::string("phase0_5d.") + field.first,
+                              field.second);
+        if (!status.ok()) return status;
+        if (field.second->empty()) {
+            return schema_error(std::string("phase0_5d.") + field.first,
+                                "must not be empty");
+        }
+    }
+    status = parse_positive_uint32(node["opencv_threads"],
+                                   "phase0_5d.opencv_threads",
+                                   &output->phase0_5d.opencv_threads);
+    if (!status.ok()) return status;
+    return Status::success();
+}
+
 Status parse_model_v2(const YAML::Node& node,
                       const std::filesystem::path& config_directory,
                       RuntimeConfig* output) {
@@ -456,11 +517,11 @@ Status parse_runtime_v2(const YAML::Node& node, RuntimeConfig* output) {
 }
 
 Status parse_postprocess_v2(const YAML::Node& node, RuntimeConfig* output) {
-    const Status mapping_status = validate_mapping(
+    const Status mapping_status = validate_keys_only(
         node,
         "postprocess",
         {"conf_threshold", "iou_threshold", "max_nms", "max_det",
-         "max_wh", "agnostic"});
+         "max_wh", "agnostic", "multi_label"});
     if (!mapping_status.ok()) {
         return mapping_status;
     }
@@ -508,6 +569,11 @@ Status parse_postprocess_v2(const YAML::Node& node, RuntimeConfig* output) {
         return status;
     }
     config.multi_label = false;
+    if (node["multi_label"].IsDefined()) {
+        status = parse_scalar(node["multi_label"], "postprocess.multi_label",
+                              &config.multi_label);
+        if (!status.ok()) return status;
+    }
 
     status = postprocess::validate_postprocess_config(config);
     if (!status.ok()) {
@@ -748,12 +814,23 @@ Status parse_runtime_config_v4(const YAML::Node& root,
                                bool allow_v6_fields = false) {
     const std::vector<std::string> root_keys = allow_v6_fields
         ? std::vector<std::string>{"schema_version", "backend", "tensorrt", "model", "runtime",
-                                   "input", "output", "postprocess", "timing", "data_path", "profiling"}
+                                   "input", "output", "postprocess", "timing", "data_path", "profiling",
+                                   "phase0_5d"}
         : std::vector<std::string>{"schema_version", "backend", "tensorrt", "model", "runtime",
                                    "input", "output", "postprocess", "timing"};
-    const Status root_status = validate_mapping(
-        root, "$", root_keys);
+    const Status root_status = allow_v6_fields
+        ? validate_keys_only(root, "$", root_keys)
+        : validate_mapping(root, "$", root_keys);
     if (!root_status.ok()) return root_status;
+    if (allow_v6_fields) {
+        for (const std::string& key : {"schema_version", "backend", "tensorrt", "model",
+                                       "runtime", "input", "output", "postprocess",
+                                       "timing", "data_path", "profiling"}) {
+            if (!root[key].IsDefined()) {
+                return schema_error("$.", key + " is required for schema v6");
+            }
+        }
+    }
     RuntimeConfig config;
     config.schema_version = schema_version;
     Status status = parse_backend_v3(root["backend"], &config, allow_int8);
@@ -797,6 +874,10 @@ Status parse_runtime_config_v4(const YAML::Node& root,
         else if (mode == "diagnostic") config.profiling_mode = ProfilingMode::kDiagnostic;
         else if (mode == "formal") config.profiling_mode = ProfilingMode::kFormal;
         else return schema_error("profiling.mode", "must be exactly off, diagnostic, or formal");
+        if (root["phase0_5d"].IsDefined()) {
+            status = parse_phase0_5d(root["phase0_5d"], &config);
+            if (!status.ok()) return status;
+        }
     }
     *output = std::move(config);
     return Status::success();

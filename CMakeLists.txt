@@ -534,6 +534,33 @@ if(EDGE_AI_ENABLE_STAGE_R_CUDA_PREPROCESSING AND EDGE_AI_ENABLE_TENSORRT)
         ${EDGE_AI_CUDART_LIBRARY})
     set_target_properties(stage_r_r3_ablation_runner PROPERTIES
         BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+
+    # Phase 0.5D-I1-only tools. They are preflight/freeze tooling and do not
+    # replace or alter the production runner dispatch semantics.
+    add_executable(stage_r_phase0_5d_timing_aligned_runner
+        tools/benchmark/stage_r_phase0_5d_timing_aligned_runner.cpp)
+    target_include_directories(stage_r_phase0_5d_timing_aligned_runner PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(stage_r_phase0_5d_timing_aligned_runner PRIVATE
+        edge_ai_stage_r_v2
+        edge_ai_stage_r_v3
+        edge_ai_backend_factory
+        edge_ai_backend_trt
+        edge_ai_runtime
+        edge_ai_core
+        OpenSSL::Crypto
+        ${EDGE_AI_STAGE_R_CUDART_LIBRARY})
+    set_target_properties(stage_r_phase0_5d_timing_aligned_runner PROPERTIES
+        BUILD_RPATH "\${ONNXRUNTIME_ROOT}/lib")
+
+    add_executable(stage_r_phase0_5d_config_validator
+        tools/benchmark/stage_r_phase0_5d_config_validator.cpp)
+    target_include_directories(stage_r_phase0_5d_config_validator PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(stage_r_phase0_5d_config_validator PRIVATE
+        edge_ai_runtime
+        edge_ai_core
+        yaml-cpp)
 endif()
 set_target_properties(edge_ai_infer
     PROPERTIES

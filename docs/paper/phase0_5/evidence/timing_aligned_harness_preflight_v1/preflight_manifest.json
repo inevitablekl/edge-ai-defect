@@ -1,0 +1,103 @@
+{
+  "evidence_class": "NOT_FORMAL_PERFORMANCE_EVIDENCE",
+  "execution_mode": "PREFLIGHT_ONLY",
+  "historical_result_root_preserved": true,
+  "measured_frames": 16,
+  "output_root": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1",
+  "runs": [
+    {
+      "detection_sha256": "3872f9c25c78b42a56c6c821b6acba33747fcecd56280e5d7af2042ea3d6f59a",
+      "drop_count": 0,
+      "errors": [],
+      "evidence_class": "NOT_FORMAL_PERFORMANCE_EVIDENCE",
+      "latency_sample_count": 16,
+      "per_frame_fields": [
+        "detections",
+        "height",
+        "relative_path",
+        "sequence_index",
+        "width"
+      ],
+      "processed_frames": 16,
+      "profiling_mode": "off",
+      "run_dir": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1/runs/preflight_v0",
+      "schema_version": 4,
+      "status": "PASS",
+      "timing_enabled": false,
+      "top_level_fields": [
+        "backend",
+        "images",
+        "model",
+        "postprocess",
+        "precision",
+        "runtime",
+        "schema_version",
+        "summary"
+      ],
+      "variant": "V0"
+    },
+    {
+      "detection_sha256": "3872f9c25c78b42a56c6c821b6acba33747fcecd56280e5d7af2042ea3d6f59a",
+      "drop_count": 0,
+      "errors": [],
+      "evidence_class": "NOT_FORMAL_PERFORMANCE_EVIDENCE",
+      "latency_sample_count": 16,
+      "per_frame_fields": [
+        "detections",
+        "height",
+        "relative_path",
+        "sequence_index",
+        "width"
+      ],
+      "processed_frames": 16,
+      "profiling_mode": "off",
+      "run_dir": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1/runs/preflight_v2r",
+      "schema_version": 4,
+      "status": "PASS",
+      "timing_enabled": false,
+      "top_level_fields": [
+        "backend",
+        "images",
+        "model",
+        "postprocess",
+        "precision",
+        "runtime",
+        "schema_version",
+        "summary"
+      ],
+      "variant": "V2R"
+    },
+    {
+      "detection_sha256": "3872f9c25c78b42a56c6c821b6acba33747fcecd56280e5d7af2042ea3d6f59a",
+      "drop_count": 0,
+      "errors": [],
+      "evidence_class": "NOT_FORMAL_PERFORMANCE_EVIDENCE",
+      "latency_sample_count": 16,
+      "per_frame_fields": [
+        "detections",
+        "height",
+        "relative_path",
+        "sequence_index",
+        "width"
+      ],
+      "processed_frames": 16,
+      "profiling_mode": "off",
+      "run_dir": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_harness_preflight_v1/runs/preflight_v3r",
+      "schema_version": 4,
+      "status": "PASS",
+      "timing_enabled": false,
+      "top_level_fields": [
+        "backend",
+        "images",
+        "model",
+        "postprocess",
+        "precision",
+        "runtime",
+        "schema_version",
+        "summary"
+      ],
+      "variant": "V3R"
+    }
+  ],
+  "schema_version": 1
+}

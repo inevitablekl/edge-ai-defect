@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "boundary_id": "source_pull_to_pre_sink_frame_construction_v1",
+  "start": {
+    "source": "tools/benchmark/stage_r_phase0_5d_timing_aligned_runner.cpp",
+    "line": 217,
+    "operation": "steady_clock timestamp immediately before inner ImageSource::next"
+  },
+  "end": {
+    "source": "tools/benchmark/stage_r_phase0_5d_timing_aligned_runner.cpp",
+    "line": 257,
+    "operation": "latency read in FanoutSink::write_frame before shared JsonSink serialization"
+  },
+  "included_order": [
+    "source pull and decode", "raw staging", "H2D", "CUDA preprocessing",
+    "TensorRT inference and synchronization", "D2H", "postprocess",
+    "frame result construction"
+  ],
+  "excluded": ["JSON serialization", "file write", "digest finalization", "summary persistence"],
+  "shared_for": ["V0", "V2R", "V3R"],
+  "internal_timing_objects": false,
+  "cuda_event_timing": false,
+  "profiling_mode": "off"
+}

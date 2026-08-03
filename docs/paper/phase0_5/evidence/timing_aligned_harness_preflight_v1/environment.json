@@ -1,0 +1,39 @@
+{
+  "architecture": "aarch64",
+  "background_load": "PID COMMAND         %CPU %MEM\n   3757 codex            1.9  2.7\n   3710 node             1.5  9.0\n   2727 node             0.2  2.0\n   3677 code-8b640eef5a  0.2  0.2\n   4394 codex-code-mode  0.1  0.2\n      1 systemd          0.0  0.1\n      2 kthreadd         0.0  0.0\n      3 rcu_gp           0.0  0.0\n      4 rcu_par_gp       0.0  0.0\n      5 slub_flushwq     0.0  0.0\n      6 netns            0.0  0.0",
+  "clock_state": "SOC family:tegra234  Machine:NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super\nError: Run this script(/usr/bin/jetson_clocks) as a root user",
+  "cpu_affinity_contract": "0-5",
+  "cuda": "{\n   \"cuda\" : {\n      \"name\" : \"CUDA SDK\",\n      \"version\" : \"12.6.11\"\n   },\n   \"cuda_cccl\" : {\n      \"name\" : \"CUDA C++ Core Compute Libraries\",\n      \"version\" : \"12.6.37\"\n   },\n   \"cuda_compat\" : {\n      \"name\" : \"CUDA Specific Libraries\",\n      \"version\" : \"12.6.36890662\"\n   },\n   \"cuda_cudart\" : {\n      \"name\" : \"CUDA Runtime (cudart)\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_cuobjdump\" : {\n      \"name\" : \"cuobjdump\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_cupti\" : {\n      \"name\" : \"CUPTI\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_cuxxfilt\" : {\n      \"name\" : \"CUDA cu++ filt\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_gdb\" : {\n      \"name\" : \"CUDA GDB\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvcc\" : {\n      \"name\" : \"CUDA NVCC\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvdisasm\" : {\n      \"name\" : \"CUDA nvdisasm\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvml_dev\" : {\n      \"name\" : \"CUDA NVML Headers\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvprune\" : {\n      \"name\" : \"CUDA nvprune\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvrtc\" : {\n      \"name\" : \"CUDA NVRTC\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_nvtx\" : {\n      \"name\" : \"CUDA NVTX\",\n      \"version\" : \"12.6.68\"\n   },\n   \"cuda_sanitizer_api\" : {\n      \"name\" : \"CUDA Compute Sanitizer API\",\n      \"version\" : \"12.6.68\"\n   },\n   \"libcublas\" : {\n      \"name\" : \"CUDA cuBLAS\",\n      \"version\" : \"12.6.1.4\"\n   },\n   \"libcudla\" : {\n      \"name\" : \"CUDA cuDLA\",\n      \"version\" : \"12.6.68\"\n   },\n   \"libcufft\" : {\n      \"name\" : \"CUDA cuFFT\",\n      \"version\" : \"11.2.6.59\"\n   },\n   \"libcufile\" : {\n      \"name\" : \"GPUDirect Storage (cufile)\",\n      \"version\" : \"1.11.1.6\"\n   },\n   \"libcurand\" : {\n      \"name\" : \"CUDA cuRAND\",\n      \"version\" : \"10.3.7.68\"\n   },\n   \"libcusolver\" : {\n      \"name\" : \"CUDA cuSOLVER\",\n      \"version\" : \"11.6.4.69\"\n   },\n   \"libcusparse\" : {\n      \"name\" : \"CUDA cuSPARSE\",\n      \"version\" : \"12.5.3.3\"\n   },\n   \"libnpp\" : {\n      \"name\" : \"CUDA NPP\",\n      \"version\" : \"12.3.1.54\"\n   },\n   \"libnvfatbin\" : {\n      \"name\" : \"Fatbin interaction library\",\n      \"version\" : \"12.6.68\"\n   },\n   \"libnvjitlink\" : {\n      \"name\" : \"JIT Linker Library\",\n      \"version\" : \"12.6.68\"\n   },\n   \"libnvjpeg\" : {\n      \"name\" : \"CUDA nvJPEG\",\n      \"version\" : \"12.3.3.54\"\n   },\n   \"nsight_compute\" : {\n      \"name\" : \"Nsight Compute\",\n      \"version\" : \"2024.3.1.2\"\n   },\n   \"nvidia_fs\" : {\n      \"name\" : \"NVIDIA file-system\",\n      \"version\" : \"2.22.3\"\n   }\n}",
+  "fan_state": "/sys/class/thermal/cooling_device0/cur_state=0\n/sys/class/thermal/cooling_device1/cur_state=0\n/sys/class/thermal/cooling_device10/cur_state=0\n/sys/class/thermal/cooling_device11/cur_state=0\n/sys/class/thermal/cooling_device12/cur_state=0\n/sys/class/thermal/cooling_device2/cur_state=1\n/sys/class/thermal/cooling_device3/cur_state=0\n/sys/class/thermal/cooling_device4/cur_state=0\n/sys/class/thermal/cooling_device5/cur_state=0\n/sys/class/thermal/cooling_device6/cur_state=0\n/sys/class/thermal/cooling_device7/cur_state=0\n/sys/class/thermal/cooling_device8/cur_state=0\n/sys/class/thermal/cooling_device9/cur_state=0",
+  "jetpack": "unavailable unless exposed by platform tools",
+  "jetson_board": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+  "l4t_release": "# R36 (release), REVISION: 5.0, GCID: 43688277, BOARD: generic, EABI: aarch64, DATE: Fri Jan 16 03:50:45 UTC 2026\n# KERNEL_VARIANT: oot\nTARGET_USERSPACE_LIB_DIR=nvidia\nTARGET_USERSPACE_LIB_DIR_PATH=usr/lib/aarch64-linux-gnu/nvidia",
+  "observation_class": "I1_PREFLIGHT_ENVIRONMENT_CAPABILITY",
+  "observed_process_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "opencv": "4.5.4",
+  "opencv_threads_contract": 1,
+  "power_mode": "NV Power Mode: MAXN_SUPER\n2",
+  "schema_version": 1,
+  "start_end_time_source": "each run_manifest process_wall_start/end_utc",
+  "swap_zram": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n/dev/zram0                              partition\t649160\t\t0\t\t5\n/dev/zram1                              partition\t649160\t\t0\t\t5\n/dev/zram2                              partition\t649160\t\t0\t\t5\n/dev/zram3                              partition\t649160\t\t0\t\t5\n/dev/zram4                              partition\t649160\t\t0\t\t5\n/dev/zram5                              partition\t649160\t\t0\t\t5",
+  "temperatures_c": {
+    "thermal_zone0": 47.656,
+    "thermal_zone1": 47.468,
+    "thermal_zone2": "unavailable",
+    "thermal_zone3": "unavailable",
+    "thermal_zone4": "unavailable",
+    "thermal_zone5": 47.375,
+    "thermal_zone6": 47.531,
+    "thermal_zone7": 46.906,
+    "thermal_zone8": 47.656
+  },
+  "tensorrt": "10.3.0.30-1+cuda12.5",
+  "uname": "Linux ubuntu 5.15.185-tegra #1 SMP PREEMPT Thu Jan 15 19:24:38 PST 2026 aarch64 aarch64 aarch64 GNU/Linux"
+}

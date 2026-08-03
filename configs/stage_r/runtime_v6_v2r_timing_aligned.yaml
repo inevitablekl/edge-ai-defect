@@ -1,0 +1,48 @@
+schema_version: 6
+backend:
+  type: tensorrt_int8
+tensorrt:
+  engine_path: /home/orin/edge-ai-local-models/stage_q/formal/yolov8n_neudet_trt10.3_int8_ptq_b1_640.engine
+  engine_manifest_path: /home/orin/edge-ai-local-models/stage_q/formal/engine_manifest_v2.json
+  device_id: 0
+model:
+  contract_path: /home/orin/edge-ai/edge-ai-defect/configs/model_contracts/yolov8n_neudet_frozen.yaml
+runtime:
+  mode: serial
+  opencv_num_threads: 1
+input:
+  type: directory
+  directory: /home/orin/edge-ai/edge-ai-defect/data/raw/NEU-DET
+output:
+  json_path: /tmp/stage_r_phase0_5d_configured_sink.json
+  console: false
+  overwrite: false
+postprocess:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_nms: 30000
+  max_det: 300
+  max_wh: 7680
+  agnostic: false
+  multi_label: false
+timing:
+  enabled: false
+data_path:
+  variant: V2R
+profiling:
+  mode: off
+phase0_5d:
+  execution_mode: FORMAL_AUTHORITY
+  warmup_frames: 60
+  measured_frames: 1080
+  input_size: 640
+  batch: 1
+  repetitions: 5
+  schedule_id: stage_r_v0_v2r_v3r_timing_aligned_v1
+  result_root: /home/orin/edge-ai-local-evidence/stage_r/phase0_5d_formal_v1
+  cpu_affinity: 0-5
+  opencv_threads: 1
+  timing_boundary_id: source_pull_to_pre_sink_frame_construction_v1
+  sink_id: shared_json_sink_v1
+  serialization_id: result_json_v4_v1
+  digest_id: canonical_detection_hash_run_and_cycle_v1

@@ -65,6 +65,26 @@ struct RuntimeConfig {
     OnnxRuntimeConfig onnxruntime;
     TensorRtConfig tensorrt;
     std::uint32_t opencv_num_threads = 1;
+
+    // Phase 0.5D protocol metadata is parsed here so the dedicated harness
+    // and the normal YAML loader share one configuration identity. These
+    // values do not alter runner or backend execution semantics.
+    struct Phase0_5DConfig {
+        std::string execution_mode;
+        std::uint32_t warmup_frames = 0;
+        std::uint32_t measured_frames = 0;
+        std::uint32_t input_size = 0;
+        std::uint32_t batch = 0;
+        std::uint32_t repetitions = 0;
+        std::string schedule_id;
+        std::string result_root;
+        std::string cpu_affinity;
+        std::uint32_t opencv_threads = 0;
+        std::string timing_boundary_id;
+        std::string sink_id;
+        std::string serialization_id;
+        std::string digest_id;
+    } phase0_5d;
 };
 
 class RuntimeConfigLoader {
