@@ -1,0 +1,32 @@
+{
+  "experiment": {
+    "phase": "0.5D-I2",
+    "verdict": "TIMING_ALIGNED_RERUN_PASS"
+  },
+  "commit": {
+    "execution_commit": "6885dc5c8d1099c34f1cd8d10c4b30426df61daf"
+  },
+  "variants": ["V0", "V2R", "V3R"],
+  "run_count": 15,
+  "formal_contract": {
+    "warmup": 60,
+    "measured": 1080,
+    "schedule_sha256": "bd3818db70dc552a8f06bfc875a7a990418f0b6672d9a43482871d35bdb5dcd7"
+  },
+  "raw_evidence": {
+    "original_path": "results/benchmark/stage_r/phase0_5d_v0_v2r_v3r_timing_aligned_v1/",
+    "archive_path": "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_v0_v2r_v3r_timing_aligned_v1/",
+    "archive_manifest": "archive_manifest.tsv"
+  },
+  "artifact_summary": {
+    "file_count": 112,
+    "total_size": 12746622
+  },
+  "identity": {
+    "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+    "model_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+    "model_identity_kind": "frozen_model_contract",
+    "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194"
+  },
+  "notes": "Raw evidence archived locally; formal raw JSON is not copied into this compact evidence package."
+}

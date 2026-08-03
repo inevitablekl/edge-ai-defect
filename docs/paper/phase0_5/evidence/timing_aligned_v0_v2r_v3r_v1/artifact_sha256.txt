@@ -1,0 +1,6 @@
+# Phase 0.5D-I2 compact evidence SHA manifest
+# Generated from the frozen formal report and raw evidence root.
+74b77515020d4924060dd7f4c7bd773229684fb18d0bd5a6e004cfe41f5309c0  manifest.json
+3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec  docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md
+RAW_EVIDENCE_ROOT_FILE_COUNT  112
+RAW_EVIDENCE_ROOT_TOTAL_SIZE  12746622
