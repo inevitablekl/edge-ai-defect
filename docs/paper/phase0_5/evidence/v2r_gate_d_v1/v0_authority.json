@@ -1,0 +1,24 @@
+{
+  "authority_result": "results/validation/stage_q/q5_accuracy_v1/int8_result.json",
+  "authority_result_sha256": "93cedece0b87342bb74bafed1624cb95f6d675945b9001442e3f6a2543a8e8cb",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "processed_images": 180,
+  "total_detections": 447,
+  "metrics": {
+    "precision": 0.6912751677852349,
+    "recall": 0.6990950226244343,
+    "mAP50": 0.647625463793534,
+    "mAP50-95": 0.3523443910494967
+  },
+  "config_contract": {
+    "conf": 0.25,
+    "iou": 0.45,
+    "max_nms": 30000,
+    "max_det": 300,
+    "agnostic": false,
+    "multi_label": false,
+    "batch": 1,
+    "input": "640x640"
+  }
+}

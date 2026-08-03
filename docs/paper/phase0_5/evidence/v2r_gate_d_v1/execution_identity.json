@@ -1,0 +1,50 @@
+{
+  "implementation_commit": "4815a9d129fca1bce6d69926792c05a52f3b3530",
+  "branch": "main",
+  "implementation_message": "feat(stage-r): freeze bounded V2R resize remediation",
+  "remediation_id": "opencv_4_5_4_aligned_fixed_contract_cuda_resize_v1",
+  "v2r_source_sha256": {
+    "backend_tensorrt/cuda_preprocessor.cu": "5649528fa8293a2a10878d8f3d553a46e2279550008fff5787993e258ad3a091",
+    "backend_tensorrt/cuda_preprocessor.hpp": "e4a582f7bda07aff8500f919c21b3ab5edda50da4cb20c073212149d4f73e618",
+    "stage_r/pageable_runner.cpp": "040d0ebecac4eb2ac5bed235c42efca4b8e8f094ca74f264614637448c899022",
+    "stage_r/pageable_runner.hpp": "0d597c3925f52199894ae80079acaedb174efdafb4fd5da90c29406848af4bc1"
+  },
+  "v3r_source_dispatch_sha256": {
+    "backend_tensorrt/cuda_preprocessor.cu": "5649528fa8293a2a10878d8f3d553a46e2279550008fff5787993e258ad3a091",
+    "backend_tensorrt/cuda_preprocessor.hpp": "e4a582f7bda07aff8500f919c21b3ab5edda50da4cb20c073212149d4f73e618",
+    "stage_r/pinned_runner.cpp": "cf5df403d3bcc418300a03d076133df22bcde8dbf7723d9a4912a9c4aedb2220",
+    "stage_r/pinned_runner.hpp": "b2b9b40d9cfe632524828f3a656c5ac4d4e7823f402de11cda471fbb86c60a32",
+    "src/application_runner.cpp": "5a00c14aac3c41dcafc43fe3921013cd5f10f7388f60fae123d1294818913921",
+    "src/runtime_config.cpp": "2fc3836ea809c08f41bc7a1d901fe64e7fdacd0ab399c7d693d3d7aba22709e6",
+    "include/edge_ai_defect/runtime/runtime_config.hpp": "d50ca3538d6f38ef6769c127c783d97d97b8cf1a9c8e0d8ed3ee2a3fabc243cc"
+  },
+  "binary_sha256": {
+    "v2r_task_harness": "ad728ec66eb06e1165aad2fa95b5d7b3661d2346f393923528f2196ca69b4747",
+    "v3r_task_harness": "b4fd3db4c0220ad473216764601b2a2cdbe07a00924aef789159931a7aaa24d3"
+  },
+  "config_sha256": {
+    "v2r": "5bfed21e5bdb81034703dcdd7880b65e078c79f49ea5b33ecf77d722daf27506",
+    "v3r": "b06d6b35bf192c446194e9a53657465dc84293179b431e9973127fe82e48a960"
+  },
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "engine_manifest_sha256": "67f6ce3337d9c28c4aa2b32ba62554eaaa028f096c448041c063ec695f3b981c",
+  "model_contract_sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190",
+  "source_onnx_sha256": "c88ac014bb6110cf14394d8bf2dfc7be05676d1b9a6ab73014f0542490245944",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "i1_evidence_package_sha256": "21e531040270200812ff3e5ec61f627274d68bf083d49c77ad1460249e9772b2",
+  "task_harness_rebuild": {
+    "scope": "validation-only V2R/V3R guard and existing frozen semantic dispatch; no production implementation change",
+    "temporary_source_files": [
+      "tools/validation/stage_r_v2_task_harness.cpp",
+      "tools/validation/stage_r_v3_task_harness.cpp"
+    ],
+    "restored_source_sha256": {
+      "tools/validation/stage_r_v2_task_harness.cpp": "3a2c38699ffcac72882d5b25be6fa9d79978f8331fad64e782c55afa50260f7f",
+      "tools/validation/stage_r_v3_task_harness.cpp": "bea025adae97cedec62ed5efd0dd043afa61087d6142faa1a98a32d7164262d2"
+    },
+    "production_source_modified": false,
+    "restored_before_formal_execution": true
+  },
+  "post_gate_d_kernel_modification": "NONE",
+  "second_remediation": "PROHIBITED"
+}

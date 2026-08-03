@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "stage": "Paper Phase 0.5C-I2",
+  "run_id": "v2r_gate_d_v1",
+  "implementation_commit": "4815a9d129fca1bce6d69926792c05a52f3b3530",
+  "variants": ["V2R", "V3R"],
+  "formal_gate_d_variant": "V2R",
+  "companion_identity_variant": "V3R",
+  "formal_gate_d_run_count": 1,
+  "v3r_identity_run_count": 1,
+  "retry": "NONE",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "detection_identity": "PASS",
+  "phase_0_5d": "NOT RUN",
+  "post_gate_d_kernel_modification": "NONE",
+  "second_remediation": "PROHIBITED"
+}

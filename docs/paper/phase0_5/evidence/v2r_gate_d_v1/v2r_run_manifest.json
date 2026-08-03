@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "stage": "R",
+  "phase": "0.5C-I2",
+  "variant": "V2R",
+  "commit": "4815a9d129fca1bce6d69926792c05a52f3b3530",
+  "binary_sha256": "ad728ec66eb06e1165aad2fa95b5d7b3661d2346f393923528f2196ca69b4747",
+  "config_sha256": "5bfed21e5bdb81034703dcdd7880b65e078c79f49ea5b33ecf77d722daf27506",
+  "engine_sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+  "test_manifest_sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+  "result_json_sha256": "fb18d7afabd08406697749fb2a033be5455c2af989dc1bb4087310e54c2a4aaa",
+  "processed_frames": 180,
+  "drop_count": 0,
+  "eos": true,
+  "worker_join": true,
+  "worker_model": "single-threaded validation harness; join is vacuous",
+  "runtime_path": "pageable raw staging -> CUDA preprocessing -> TensorRtDeviceInputCapability -> TensorRT INT8 -> existing postprocess",
+  "cpu_preprocessing_fallback": false
+}

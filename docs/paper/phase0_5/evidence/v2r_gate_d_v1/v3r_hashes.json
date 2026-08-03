@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "variant": "V3R",
+  "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "tensor_digest_sha256": "da2b2bba8d71a25b9bafce988ee838e184666369bbd94bcecc73c6a513d6abb6",
+  "frames": 180
+}

@@ -1,0 +1,20 @@
+{
+  "decision": "V2R_CORRECTNESS_ACCEPTED",
+  "v2r_task_status": "PASS",
+  "gates": {
+    "mAP50-95_drop": {"observed": 0.0, "limit": 0.005, "pass": true},
+    "mAP50_drop": {"observed": 0.0, "limit": 0.005, "pass": true},
+    "precision_drop": {"observed": 0.0, "limit": 0.01, "pass": true},
+    "recall_drop": {"observed": 0.0, "limit": 0.01, "pass": true},
+    "max_per_class_AP50_drop": {"observed": 0.0, "limit": 0.02, "pass": true},
+    "max_per_class_recall_drop": {"observed": 0.0, "limit": 0.03, "pass": true}
+  },
+  "processed_images": 180,
+  "class_count": 6,
+  "total_detections": 447,
+  "result_json_sha256": "fb18d7afabd08406697749fb2a033be5455c2af989dc1bb4087310e54c2a4aaa",
+  "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "formal_gate_d_execution_count": 1,
+  "metric_retry": false,
+  "phase_0_5d": "NOT RUN"
+}

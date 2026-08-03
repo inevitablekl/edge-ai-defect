@@ -1,0 +1,17 @@
+{
+  "date": "2026-08-03",
+  "timezone": "Asia/Shanghai",
+  "host": "ubuntu",
+  "platform": "Linux-5.15.185-tegra-aarch64-with-glibc2.35",
+  "machine": "aarch64",
+  "gpu_query": "GPU 0: Orin (nvgpu)",
+  "opencv_cpp_pkg_config": "4.5.4",
+  "cuda": "12.6.68 (I1 environment record)",
+  "tensorrt": "10.3.0.30 (I1 environment record)",
+  "cmake": "3.22.1",
+  "build_dir": "build-paper-phase0-5c-i1",
+  "build_type": "Release",
+  "rebuild": true,
+  "rebuild_reason": "I1 recorded the build contract and source/config identities, but no Gate-D task executable was retained",
+  "dependency_changes": "NONE"
+}

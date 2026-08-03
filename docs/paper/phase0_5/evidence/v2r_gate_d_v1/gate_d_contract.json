@@ -1,0 +1,23 @@
+{
+  "baseline": "existing V0 accuracy authority: Stage Q INT8 result",
+  "test_split": "frozen split-v2 deduplicated test, 180 images",
+  "input": "640x640",
+  "batch": 1,
+  "conf": 0.25,
+  "iou": 0.45,
+  "max_nms": 30000,
+  "max_det": 300,
+  "agnostic": false,
+  "multi_label": false,
+  "thresholds": {
+    "mAP50-95_drop_max": 0.005,
+    "mAP50_drop_max": 0.005,
+    "precision_drop_max": 0.010,
+    "recall_drop_max": 0.010,
+    "max_per_class_AP50_drop_max": 0.020,
+    "max_per_class_recall_drop_max": 0.030
+  },
+  "formal_gate_d_runs": 1,
+  "non_metric_retry": false,
+  "phase_0_5d": "NOT RUN"
+}

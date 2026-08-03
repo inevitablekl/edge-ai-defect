@@ -1,0 +1,21 @@
+{
+  "variant": "V3R",
+  "companion_role": "pinned companion identity only",
+  "processed_images": 180,
+  "frame_order": "PASS",
+  "image_paths": "PASS",
+  "geometry": "PASS",
+  "zero_drop": "PASS",
+  "eos": "PASS",
+  "worker_join": "PASS",
+  "tensor_digest_sha256": "da2b2bba8d71a25b9bafce988ee838e184666369bbd94bcecc73c6a513d6abb6",
+  "v2r_tensor_digest_sha256": "da2b2bba8d71a25b9bafce988ee838e184666369bbd94bcecc73c6a513d6abb6",
+  "detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "v2r_detection_sha256": "12bdb792840316e5569ba1a7f8a7d56221b47a6c064ff2be01ce4ceb69513de2",
+  "detection_count": 447,
+  "v2r_detection_count": 447,
+  "result_contract": "PASS",
+  "identity_pass": true,
+  "independent_gate_d": false,
+  "phase_0_5d": "ELIGIBLE AS PINNED COMPANION AFTER PROJECT MANAGER REVIEW"
+}
