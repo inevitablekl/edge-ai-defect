@@ -13,8 +13,10 @@ attachments. Their unresolved parameters are explicitly marked
 
 - Branch: `main`
 - Starting HEAD: `68dce90c084c7f54199966791a0a0ebcea258817`
+- Independent-review remediation base:
+  `4e2b1266663c08ae53ef025cfa2d96f42f5f8272`
 - Final HEAD: `SELF` — the commit containing this report, with message
-  `docs(paper): prepare phase 2 article writing architecture`
+  `docs(paper): remediate phase 2 F1 crosswalk`
 - Starting worktree/index: clean
 - Final worktree/index target: clean after the Phase 2-only commit
 - Phase 1 ancestor check: PASS
@@ -157,8 +159,9 @@ counts, SHA256, fonts, sizes, dimensions, DPI, and rule widths remain
 - Phase 1 metric count: 87 (unchanged).
 - Phase 1 claim count: 9 (`C1-C9`).
 - Article core claims: `A1->C1`, `A2->C2`, `A3->C3`.
-- Supporting claims: `A4->C4` for INT8 prerequisite and `A5->C8` for
-  dataset/model disclosure.
+- Supporting claims: `A4->C4` for protocol-local INT8 prerequisite context and
+  `A5->C8` for dataset/model disclosure. A4 is prose-only
+  (`figure_or_table=NONE`) and does not establish a Stage Q result line.
 - Background/limitation support: `C5` Pipeline and `C7` ORT CPU, with no Stage R
   numeric comparison.
 - Limitation support/background: `C6` TensorRT FP16 correctness-layer context,
@@ -171,11 +174,12 @@ counts, SHA256, fonts, sizes, dimensions, DPI, and rule widths remain
 
 - Figure 1: V0/V2R/V3R data paths and common timing interval; sources are the
   experiment matrix, claim map, and Phase 0.5D formal report.
-- Table 1: platform/model/dataset/run protocol; sources are the experiment
-  matrix, metric provenance, compact manifest, formal report, and Stage Q final
-  report.
-- Table 2: task-level correctness and V3R identity evidence; sources are the
-  four Gate D metric rows and compact Gate D/V3R JSON.
+- Table 1: platform/model/dataset/run protocol; claim binding is limited to A1
+  and A5. Sources are the experiment matrix, metric provenance, compact
+  manifest, formal report, and Stage Q final report.
+- Table 2: Stage R task-level correctness and V3R identity evidence; claim
+  binding is limited to A1, A2, and A3. Sources are the four Gate D metric rows
+  and compact Gate D/V3R JSON.
 - Figure 2: V0/V2R/V3R mean FPS with only the frozen sample SD; sources are six
   Phase 1 metric rows.
 - Figure 3: V0/V2R/V3R mean/P95/P99 latency in ms; sources are nine Phase 1
@@ -223,6 +227,9 @@ source, include, or test file was created or changed.
   1 provenance file.
 - Claim crosswalk: PASS; every article claim maps to one of `C1-C9`; all core
   claims include Phase 1 claim and metric IDs.
+- F1 claim/display crosswalk: PASS; A4 has `figure_or_table=NONE`, and neither
+  T1 nor T2 lists A4. Q6 inference-speedup and throughput-ratio metrics remain
+  protocol-local prerequisite context in the writing packet only.
 - Frozen-count check: PASS; 16 experiments, 87 metrics, `C1-C3` core, `C4-C9`
   supporting/limitation/guardrail.
 - Numeric provenance/tolerance check: PASS; all Phase 2 numeric tokens used as

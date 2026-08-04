@@ -238,7 +238,12 @@ variables, and common measurement interval before describing methods.
 
 `M_TRAIN_SEED7_RANK`, `M_TRAIN_SPLIT_V1_COUNTS`,
 `M_TRAIN_SPLIT_V2_COUNTS`, `M_Q_INT8_PRECISION`, `M_Q_INT8_RECALL`,
-`M_Q_INT8_MAP50`, `M_Q_INT8_MAP5095`, `M_Q_INT8_MAP5095_DELTA`.
+`M_Q_INT8_MAP50`, `M_Q_INT8_MAP5095`, `M_Q_INT8_MAP5095_DELTA`,
+`M_Q_SERIAL_INFERENCE_SPEEDUP`, `M_Q_SERIAL_THROUGHPUT_RATIO`.
+
+The two Q6 metrics are protocol-local Stage Q prerequisite context only. They
+must remain separate from Stage R metrics and must not establish an independent
+Stage Q result line in Section 4.
 
 ### 证据文件
 
@@ -271,7 +276,8 @@ memory` and `pinned host memory`; do not abbreviate both to generic host memory.
 ### 禁止表述
 
 No direct J/K/P/R numeric comparison; no statement that V3R overlaps frames;
-no silent replacement of historical split-v1 by split-v2.
+no silent replacement of historical split-v1 by split-v2; no independent Stage
+Q result line in the results section.
 
 ### 引用需求
 
