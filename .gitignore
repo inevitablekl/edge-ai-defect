@@ -103,6 +103,8 @@ experiments/evaluation/**
 *.7z
 *.rar
 *.csv
+!docs/paper/phase0/PAPER_ASSET_MANIFEST_v1.1.csv
+!docs/paper/phase0/PAPER_EXPERIMENT_USE_MATRIX_v1.1.csv
 !docs/paper/phase0/PAPER_EXPERIMENT_USE_MATRIX_v1.0.csv
 *.jsonl
 *.log
