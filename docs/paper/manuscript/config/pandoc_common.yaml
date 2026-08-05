@@ -1,0 +1,14 @@
+# Candidate common Pandoc defaults; no build is executed by Step 5.
+from: markdown
+to: docx
+standalone: true
+reference-doc: docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx
+resource-path:
+  - docs/paper/manuscript
+  - docs/paper/manuscript/figures
+  - docs/paper/manuscript/tables
+metadata-file: docs/paper/manuscript/metadata/metadata_common.yaml
+bibliography: docs/paper/manuscript/references/references.bib
+citeproc: true
+# CSL_STATUS: PENDING_STEP6_POC
+# No CSL path is supplied because CSL is not frozen.

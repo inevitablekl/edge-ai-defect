@@ -1,0 +1,3 @@
+metadata_private.yaml
+metadata_local.yaml
+*.secret.yaml

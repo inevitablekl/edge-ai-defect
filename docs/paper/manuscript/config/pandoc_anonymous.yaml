@@ -1,0 +1,9 @@
+# Composition profile only; not a standalone Pandoc defaults file in Step 5.
+# COMMON_CONFIG: pandoc_common.yaml
+# METADATA_COMBINATION: future build script shall combine common metadata with
+# metadata_anonymous.yaml; no unsupported defaults inheritance is assumed.
+# IDENTITY_BOUNDARY: anonymous review copy; author, affiliation, funding,
+# biography, acknowledgement, and contact fields remain hidden or pending.
+# CSL_STATUS: PENDING_STEP6_POC
+metadata-file: docs/paper/manuscript/metadata/metadata_anonymous.yaml
+output-file: docs/paper/manuscript/output/draft_anonymous.docx

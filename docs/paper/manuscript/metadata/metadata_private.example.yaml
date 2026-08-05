@@ -1,0 +1,11 @@
+# Example field structure only. Replace locally with real values when authorized.
+# This file is safe placeholder structure and must not contain real identity data.
+authors:
+  - "[AUTHOR_1_NAME_PLACEHOLDER]"
+affiliations:
+  - "[AFFILIATION_1_PLACEHOLDER]"
+corresponding-author: "[CORRESPONDING_AUTHOR_PLACEHOLDER]"
+email: "[EMAIL_PLACEHOLDER]"
+funding: "[FUNDING_PLACEHOLDER_OR_OMIT_IF_NONE]"
+author-biography: "[AUTHOR_BIOGRAPHY_PLACEHOLDER]"
+acknowledgements: "[ACKNOWLEDGEMENTS_PLACEHOLDER]"

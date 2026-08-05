@@ -1,0 +1,12 @@
+# Non-identity metadata only. Do not replace placeholders with author data here.
+lang: zh-CN
+title-placeholder: "[TITLE_PENDING_PHASE_3]"
+subtitle: "[NO_SUBTITLE_PLANNED]"
+abstract-placeholder: "[ABSTRACT_PENDING_PHASE_3]"
+keywords-placeholder: "[KEYWORDS_PENDING_PHASE_3]"
+document-status: TOOLCHAIN_SKELETON_ONLY
+journal: "《合肥工业大学学报（自然科学版）》[TARGET_JOURNAL_CANDIDATE]"
+reference-doc: docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx
+bibliography: docs/paper/manuscript/references/references.bib
+csl-status: PENDING_STEP6_POC
+phase-status: PHASE_3_NOT_AUTHORIZED

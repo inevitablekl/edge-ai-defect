@@ -1,0 +1,8 @@
+# Composition profile only; not a standalone Pandoc defaults file in Step 5.
+# COMMON_CONFIG: pandoc_common.yaml
+# METADATA_COMBINATION: future build script shall combine common metadata with
+# metadata_private.yaml after identity data is locally authorized.
+# IDENTITY_BOUNDARY: full author copy; real identity remains local and untracked.
+# CSL_STATUS: PENDING_STEP6_POC
+metadata-file: docs/paper/manuscript/metadata/metadata_private.yaml
+output-file: docs/paper/manuscript/output/draft_full.docx
