@@ -2,12 +2,13 @@
 
 ## 1. Verdict
 
-`STEP_1_COMPLETE_WITH_PROVENANCE_GAPS`
+`STEP_1_COMPLETE`
 
 The external raw input inventory, read-only metadata capture, SHA256/MD5
 inventory, file-type detection, permission observations, and byte-level
-deduplication are complete. Provenance remains incomplete for two PDF files
-present in raw storage but absent from `SOURCE_NOTES.txt`.
+deduplication are complete. All eight raw files now have an identity and
+provenance classification supported by the supplemented `SOURCE_NOTES.txt`
+and official journal pages.
 
 No DOC conversion, formal specification extraction, `reference.docx` creation,
 Markdown-to-DOCX POC, or source-content rewriting was performed.
@@ -38,10 +39,12 @@ root; absolute paths are current-host audit locations only.
 ## 4. Files Discovered
 
 Eight regular files were found: four journal attachment candidates, one
-standard-copy PDF, one web-excerpt PDF, and two additional issue-like PDF files.
-The two additional PDFs are absent from source notes and have no inferred
-publication identity. The complete inventory is in
+standard-copy PDF, one web-excerpt PDF, and two formally published articles
+from the target journal. The complete inventory is in
 `PAPER_PHASE2_5_TEMPLATE_SOURCE_MANIFEST_v1.0.csv`.
+
+The two published-article PDFs are visual references only. They are not
+submission templates and do not automatically enter the formal bibliography.
 
 ## 5. File Type Detection
 
@@ -79,15 +82,23 @@ independent official payload chain are not recorded.
 `GBT 7714—2025 信息与文献 参考文献著录规则.pdf` is
 `USER_PROVIDED_STANDARD_COPY`, not an asserted official standard-body original.
 `摘录-202608052030.pdf` is `USER_CAPTURED_WEB_EXCERPT`, not an official
-template. The two issue-like PDFs are conservatively `UNKNOWN_SOURCE` because
-they are absent from source notes; no content claim is inferred.
+template. The two article PDFs are both
+`OFFICIAL_JOURNAL_PUBLISHED_ARTICLE_VERIFIED`, based on the supplemented
+source notes and their official manuscript pages. They are formal published
+visual references, not format-authority attachments or mandatory templates.
+
+`1003-5060-2026-5-2.pdf` is the primary visual reference and related AI article;
+`1003-5060-2026-1-3.pdf` is a secondary visual reference and general engineering
+layout reference. Neither article is automatically a formal reference for the
+current paper.
 
 ## 8. Duplicate Analysis
 
 SHA256 grouping produced eight singleton groups. No byte-identical duplicate
 exists. The four attachment filenames share a journal prefix but identify
-different roles and have non-similar sizes; the two unknown PDFs have different
-sizes. No `POSSIBLE_SEMANTIC_DUPLICATE` group is declared. This is a
+different roles and have non-similar sizes; the two article PDFs also have
+different sizes and distinct roles. No `POSSIBLE_SEMANTIC_DUPLICATE` group is
+declared. This is a
 filename/size/role review only; semantic content was not parsed.
 
 ## 9. Permission and File-System Observations
@@ -103,11 +114,14 @@ filename/size/role review only; semantic content was not parsed.
 
 ## 10. Missing or Deferred Inputs
 
-- Provenance notes and source identity for the two unknown PDFs are deferred.
-- Explicit attachment URLs and independently verified payload provenance for the
-  four `.doc` candidates are not recorded.
+- `UNKNOWN_SOURCE` count: `0`; all eight files have an identity
+  classification.
+- The four `.doc` files remain official attachment candidates. Their formal
+  content authority will be checked in Step 2 against the source pages; their
+  contents have not been extracted in Step 1.
 - The supplied GBT PDF's official publication source/version chain is unverified.
-- The two unknown PDFs require identification before citation or visual use.
+- The two article PDFs remain visual references only and are not automatically
+  added to the formal bibliography.
 
 ## 11. Git Inclusion Policy
 
@@ -122,12 +136,11 @@ notes, and any conversion or temporary DOCX outputs remain external.
 
 ## 12. Step 2 Readiness
 
-`READY_WITH_PROVENANCE_GAPS`
+`READY_FOR_SPEC_EXTRACTION`
 
-Step 2 textual specification extraction may begin for identified candidate
-inputs under the manifest controls. The two unknown PDFs remain blocked from
-citation/content use until provenance review. This does not authorize DOC
-conversion or any later step.
+Step 2 textual specification extraction may begin for the four official
+attachment candidates and other identified source inputs under the manifest
+controls. This does not authorize DOC conversion or any later step.
 
 ## 13. Next Executor
 
@@ -135,6 +148,6 @@ conversion or any later step.
 
 ## 14. Next Action
 
-Review the manifest, identify and document the two additional PDF sources if
-intended, then perform only the authorized Step 2 specification-extraction
-task. Preserve raw files as external read-only inputs.
+Perform only the authorized Step 2 specification-extraction task. Preserve raw
+files as external read-only inputs; do not treat the published article PDFs as
+templates, mandatory formatting authorities, or automatic bibliography entries.
