@@ -8,6 +8,7 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+import posixpath
 import re
 import sys
 import zipfile
@@ -19,7 +20,8 @@ M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PR = "http://schemas.openxmlformats.org/package/2006/relationships"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
-NS = {"w": W, "m": M, "r": R, "pr": PR, "a": A}
+MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+NS = {"w": W, "m": M, "r": R, "pr": PR, "a": A, "mc": MC}
 
 REQUIRED_PARTS = {
     "[Content_Types].xml",
@@ -72,6 +74,50 @@ FORBIDDEN_ANONYMOUS = (
     "作者简介测试字段",
     "致谢测试字段",
 )
+FORBIDDEN_EXTERNAL_FIELD_TYPES = {
+    "INCLUDEPICTURE", "INCLUDETEXT", "LINK", "DDE", "DDEAUTO", "RD"
+}
+PPR_ORDER = (
+    "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
+    "widowControl", "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs",
+    "suppressAutoHyphens", "kinsoku", "wordWrap", "overflowPunct",
+    "topLinePunct", "autoSpaceDE", "autoSpaceDN", "bidi", "adjustRightInd",
+    "snapToGrid", "spacing", "ind", "contextualSpacing", "mirrorIndents",
+    "suppressOverlap", "jc", "textDirection", "textAlignment",
+    "textboxTightWrap", "outlineLvl", "divId", "cnfStyle", "rPr", "sectPr",
+    "pPrChange",
+)
+SECTPR_ORDER = (
+    "headerReference", "footerReference", "footnotePr", "endnotePr", "type",
+    "pgSz", "pgMar", "paperSrc", "pgBorders", "lnNumType", "pgNumType",
+    "cols", "formProt", "vAlign", "noEndnote", "titlePg", "textDirection",
+    "bidi", "rtlGutter", "docGrid", "printerSettings", "sectPrChange",
+)
+TBLPR_ORDER = (
+    "tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
+    "tblStyleColBandSize", "tblW", "jc", "tblCellSpacing", "tblInd",
+    "tblBorders", "shd", "tblLayout", "tblCellMar", "tblLook", "tblCaption",
+    "tblDescription", "tblPrChange",
+)
+RPR_ORDER = (
+    "rStyle", "rFonts", "b", "bCs", "i", "iCs", "caps", "smallCaps",
+    "strike", "dstrike", "outline", "shadow", "emboss", "imprint",
+    "noProof", "snapToGrid", "vanish", "webHidden", "color", "spacing",
+    "w", "kern", "position", "sz", "szCs", "highlight", "u", "effect",
+    "bdr", "shd", "fitText", "vertAlign", "rtl", "cs", "em", "lang",
+    "eastAsianLayout", "specVanish", "oMath", "rPrChange",
+)
+STYLE_ORDER = (
+    "name", "aliases", "basedOn", "next", "link", "autoRedefine", "hidden",
+    "uiPriority", "semiHidden", "unhideWhenUsed", "qFormat", "locked",
+    "personal", "personalCompose", "personalReply", "rsid", "pPr", "rPr",
+    "tblPr", "trPr", "tcPr", "tblStylePr",
+)
+LVL_ORDER = (
+    "start", "numFmt", "lvlRestart", "pStyle", "isLgl", "suff", "lvlText",
+    "lvlPicBulletId", "legacy", "lvlJc", "pPr", "rPr",
+)
+VALID_STYLE_TYPES = {"paragraph", "character", "table", "numbering"}
 
 
 def qn(namespace: str, local: str) -> str:
@@ -90,6 +136,30 @@ def attr(node: ET.Element | None, name: str, default: str = "") -> str:
     return default if node is None else node.get(qn(W, name), default)
 
 
+def local_name(node: ET.Element) -> str:
+    return node.tag.rsplit("}", 1)[-1]
+
+
+def order_violations(nodes: list[ET.Element], order: tuple[str, ...]) -> list[list[str]]:
+    violations = []
+    rank = {name: index for index, name in enumerate(order)}
+    for node in nodes:
+        children = [local_name(child) for child in node]
+        known = [rank[name] for name in children if name in rank]
+        if known != sorted(known):
+            violations.append(children)
+    return violations
+
+
+def relationship_source_part(rel_part: str) -> str | None:
+    path = Path(rel_part)
+    if path.name == ".rels" and path.parent.as_posix() == "_rels":
+        return None
+    if path.parent.name != "_rels" or not path.name.endswith(".rels"):
+        return None
+    return (path.parent.parent / path.name[:-5]).as_posix()
+
+
 def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     errors: list[str] = []
     result: dict[str, object] = {
@@ -106,7 +176,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "size_bytes": path.stat().st_size,
     }
-    if path.name != f"poc_{variant}.docx":
+    if path.name not in {f"poc_{variant}.docx", f"poc_{variant}_v2.docx"}:
         errors.append("unexpected output filename")
 
     try:
@@ -162,6 +232,12 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     result["sections"] = {"count": len(section_nodes), "columns": columns, "geometry": geometry}
     if len(section_nodes) != 2 or [item["num"] for item in columns] != [1, 2]:
         errors.append("expected single-column front matter and double-column body")
+    direct_final_sections = [child for child in body if local_name(child) == "sectPr"]
+    final_section_is_last = bool(direct_final_sections) and body[-1] is direct_final_sections[0]
+    result["sections"]["direct_final_count"] = len(direct_final_sections)
+    result["sections"]["final_section_is_last"] = final_section_is_last
+    if len(direct_final_sections) != 1 or not final_section_is_last:
+        errors.append("body must end with exactly one final sectPr")
     if any(item["space_twips"] != 425 for item in columns):
         errors.append("column spacing is not 425 twips")
     expected_page = [11906, 16838]
@@ -172,9 +248,41 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         errors.append("page-number restart found")
     result["page_number_continuity"] = "NO_RESTART_PROPERTY"
 
-    defined_styles = {
-        node.get(qn(W, "styleId"), "") for node in styles.findall("w:style", NS)
-    }
+    style_nodes = styles.findall("w:style", NS)
+    style_ids = [node.get(qn(W, "styleId"), "") for node in style_nodes]
+    duplicate_style_ids = sorted(style_id for style_id, count in Counter(style_ids).items() if count > 1)
+    invalid_style_types = sorted({
+        node.get(qn(W, "type"), "") for node in style_nodes
+        if node.get(qn(W, "type"), "") not in VALID_STYLE_TYPES
+    })
+    default_style_counts = Counter(
+        node.get(qn(W, "type"), "") for node in style_nodes
+        if node.get(qn(W, "default"), "").lower() in {"1", "true", "on"}
+    )
+    duplicate_default_types = sorted(
+        style_type for style_type, count in default_style_counts.items() if count > 1
+    )
+    defined_styles = set(style_ids)
+    missing_based_on = []
+    based_on: dict[str, str] = {}
+    for node in style_nodes:
+        style_id = node.get(qn(W, "styleId"), "")
+        parent = node.find("w:basedOn", NS)
+        if parent is not None:
+            parent_id = attr(parent, "val")
+            based_on[style_id] = parent_id
+            if parent_id not in defined_styles:
+                missing_based_on.append({"style": style_id, "basedOn": parent_id})
+    based_on_cycles = []
+    for style_id in sorted(based_on):
+        trail: list[str] = []
+        current = style_id
+        while current in based_on:
+            if current in trail:
+                based_on_cycles.append(trail[trail.index(current):] + [current])
+                break
+            trail.append(current)
+            current = based_on[current]
     style_counts = Counter(
         node.get(qn(W, "val"), "") for node in document.findall(".//w:pStyle", NS)
     )
@@ -184,10 +292,20 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     missing_defined = sorted(required_used - defined_styles)
     missing_used = sorted(style for style in required_used if style_counts[style] == 0)
     result["styles"] = {
+        "definition_count": len(style_nodes),
+        "duplicate_style_ids": duplicate_style_ids,
+        "invalid_style_types": invalid_style_types,
+        "default_style_counts": dict(sorted(default_style_counts.items())),
+        "duplicate_default_types": duplicate_default_types,
+        "missing_based_on": missing_based_on,
+        "based_on_cycles": based_on_cycles,
         "defined_required_missing": missing_defined,
         "used_required_missing": missing_used,
         "actual_usage": dict(sorted(style_counts.items())),
     }
+    if (duplicate_style_ids or invalid_style_types or duplicate_default_types
+            or missing_based_on or based_on_cycles):
+        errors.append("style definition integrity failed")
     if missing_defined or missing_used:
         errors.append(f"required style definition/use missing: defined={missing_defined}, used={missing_used}")
 
@@ -218,15 +336,25 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         int(node.get(qn(W, "abstractNumId"), "-1")): [attr(level.find("w:lvlText", NS), "val") for level in node.findall("w:lvl", NS)]
         for node in numbering.findall("w:abstractNum", NS)
     }
+    abstract_ids = [int(node.get(qn(W, "abstractNumId"), "-1")) for node in numbering.findall("w:abstractNum", NS)]
+    num_ids = [int(node.get(qn(W, "numId"), "-1")) for node in numbering.findall("w:num", NS)]
+    duplicate_abstract_ids = sorted(value for value, count in Counter(abstract_ids).items() if count > 1)
+    duplicate_num_ids = sorted(value for value, count in Counter(num_ids).items() if count > 1)
+    missing_abstract_refs = sorted({value for value in num_to_abstract.values() if value not in set(abstract_ids)})
     result["heading_numbering"] = {
         "paragraph_numPr": headings,
         "num_to_abstract": num_to_abstract,
         "abstract_formats": abstract_formats,
+        "duplicate_abstract_ids": duplicate_abstract_ids,
+        "duplicate_num_ids": duplicate_num_ids,
+        "missing_abstract_refs": missing_abstract_refs,
         "visual_text_requires_renderer": True,
         "word_field_refresh_required": True,
     }
     if num_to_abstract.get(1) != 0 or num_to_abstract.get(2) != 1:
         errors.append("numbering numId/abstractNum relationship mismatch")
+    if duplicate_abstract_ids or duplicate_num_ids or missing_abstract_refs:
+        errors.append("numbering definition integrity failed")
 
     math_inline = len(document.findall(".//m:oMath", NS))
     math_para = len(document.findall(".//m:oMathPara", NS))
@@ -255,13 +383,25 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "svg_display_blip_count": len(document.findall(".//{http://schemas.microsoft.com/office/drawing/2016/SVG/main}svgBlip")),
         "primary_image_relationship_count": len(document.findall(".//a:blip[@r:embed]", NS)),
         "raster_fallback_present": bool(set(extensions) & {".png", ".jpg", ".jpeg"}),
-        "display_representation": "PNG_FALLBACK_WITH_SVG_PACKAGE_COPY",
+        "display_representation": "INTERNAL_PNG_WORD_COMPATIBILITY_CANDIDATE",
         "caption_style_count": style_counts["HFUTFigureCaption"],
         "numbering": "STATIC_TEXT_ONLY",
         "cross_reference": "STATIC_TEXT_ONLY",
     }
-    if ".svg" not in extensions or ".png" not in extensions or style_counts["HFUTFigureCaption"] < 1:
-        errors.append("figure media or figure caption missing")
+    alternate_content = document.findall(".//mc:AlternateContent", NS)
+    invalid_alternate_content = []
+    for node in alternate_content:
+        children = [local_name(child) for child in node]
+        choices = node.findall("mc:Choice", NS)
+        fallbacks = node.findall("mc:Fallback", NS)
+        if (not choices or len(fallbacks) != 1 or children[-1:] != ["Fallback"]
+                or any(not choice.get("Requires") for choice in choices)):
+            invalid_alternate_content.append(children)
+    result["figure"]["alternate_content_count"] = len(alternate_content)
+    result["figure"]["invalid_alternate_content"] = invalid_alternate_content
+    if (".png" not in extensions or ".svg" in extensions
+            or style_counts["HFUTFigureCaption"] < 1 or invalid_alternate_content):
+        errors.append("figure must use one embedded PNG with a valid caption and no orphan SVG")
 
     tables = body.findall("w:tbl", NS)
     table_details = []
@@ -328,15 +468,43 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     if unresolved or not body_order_pass or text.count("TOOLCHAIN TEST") < 5 or style_counts["HFUTReferenceEntry"] < 5:
         errors.append("citation/reference-list validation failed")
 
-    field_instructions = [
-        node.get(qn(W, "instr"), "").strip() for node in document.findall(".//w:fldSimple", NS)
-    ] + [node.text.strip() for node in document.findall(".//w:instrText", NS) if node.text]
+    all_fields = []
+    for name in sorted(part for part in names if part.startswith("word/") and part.endswith(".xml")):
+        root = ET.fromstring(parts[name])
+        all_fields.extend({"part": name, "instruction": node.get(qn(W, "instr"), "").strip()}
+                          for node in root.findall(".//w:fldSimple", NS))
+        all_fields.extend({"part": name, "instruction": (node.text or "").strip()}
+                          for node in root.findall(".//w:instrText", NS))
+    forbidden_fields = []
+    for field in all_fields:
+        keyword_match = re.match(r"\s*([A-Za-z]+)", field["instruction"])
+        if keyword_match and keyword_match.group(1).upper() in FORBIDDEN_EXTERNAL_FIELD_TYPES:
+            forbidden_fields.append(field)
+    settings = ET.fromstring(parts["word/settings.xml"])
+    update_fields = settings.find("w:updateFields", NS)
+    open_time_update = update_fields is not None and attr(update_fields, "val", "true").lower() not in {"0", "false", "off"}
+    bookmark_start_ids = [node.get(qn(W, "id"), "") for node in document.findall(".//w:bookmarkStart", NS)]
+    bookmark_end_ids = [node.get(qn(W, "id"), "") for node in document.findall(".//w:bookmarkEnd", NS)]
+    duplicate_bookmark_ids = sorted(value for value, count in Counter(bookmark_start_ids).items() if count > 1)
+    unmatched_bookmark_ids = sorted(set(bookmark_start_ids) ^ set(bookmark_end_ids))
+    doc_pr_ids = [node.get("id", "") for node in document.iter() if local_name(node) == "docPr"]
+    duplicate_doc_pr_ids = sorted(value for value, count in Counter(doc_pr_ids).items() if count > 1)
     result["fields_and_bookmarks"] = {
-        "document_fields": field_instructions,
-        "bookmark_count": len(document.findall(".//w:bookmarkStart", NS)),
+        "all_fields": all_fields,
+        "forbidden_external_fields": forbidden_fields,
+        "open_time_update_enabled": open_time_update,
+        "bookmark_count": len(bookmark_start_ids),
+        "duplicate_bookmark_ids": duplicate_bookmark_ids,
+        "unmatched_bookmark_ids": unmatched_bookmark_ids,
+        "drawing_docPr_ids": doc_pr_ids,
+        "duplicate_drawing_docPr_ids": duplicate_doc_pr_ids,
         "dynamic_figure_table_equation_cross_refs": False,
         "future": "WORD_FIELD_POSTPROCESS_FUTURE_OR_WORD_MANUAL",
     }
+    if forbidden_fields or open_time_update:
+        errors.append("external or open-time-updating field risk present")
+    if duplicate_bookmark_ids or unmatched_bookmark_ids or duplicate_doc_pr_ids:
+        errors.append("bookmark or drawing ID integrity failed")
 
     track_changes = len(document.findall(".//w:ins", NS)) + len(document.findall(".//w:del", NS))
     comments = sorted(name for name in names if "comment" in name.lower())
@@ -358,15 +526,67 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
 
     relationship_parts = sorted(name for name in names if name.endswith(".rels"))
     external_relationships = []
+    invalid_external_relationships = []
+    missing_internal_targets = []
+    duplicate_relationship_ids = []
+    dangling_explicit_relationships = []
     for name in relationship_parts:
         try:
             rel_root = ET.fromstring(parts[name])
         except ET.ParseError:
             continue
-        for rel in rel_root.findall("pr:Relationship", NS):
+        rel_nodes = rel_root.findall("pr:Relationship", NS)
+        rel_ids = [rel.get("Id", "") for rel in rel_nodes]
+        duplicate_relationship_ids.extend(
+            {"part": name, "id": rel_id}
+            for rel_id, count in Counter(rel_ids).items() if count > 1
+        )
+        source_part = relationship_source_part(name)
+        source_root = None
+        used_ids: set[str] = set()
+        if source_part and source_part in parts:
+            source_root = ET.fromstring(parts[source_part])
+            used_ids = {
+                value for node in source_root.iter() for key, value in node.attrib.items()
+                if key.startswith(f"{{{R}}}")
+            }
+        for rel in rel_nodes:
+            target = rel.get("Target", "")
+            rel_type = rel.get("Type", "")
             if rel.get("TargetMode") == "External":
-                external_relationships.append({"part": name, "target": rel.get("Target", ""), "type": rel.get("Type", "")})
-    result["relationships"] = {"parts": relationship_parts, "external": external_relationships}
+                record = {"part": name, "target": target, "type": rel_type}
+                external_relationships.append(record)
+                if not (rel_type.endswith("/hyperlink") and re.match(r"^https?://", target, re.IGNORECASE)):
+                    invalid_external_relationships.append(record)
+            else:
+                base = "" if source_part is None else posixpath.dirname(source_part)
+                resolved = posixpath.normpath(posixpath.join(base, target))
+                if resolved not in parts:
+                    missing_internal_targets.append({"part": name, "id": rel.get("Id", ""), "target": target})
+            if source_root is not None and (rel_type.endswith("/image") or rel_type.endswith("/hyperlink")) and rel.get("Id") not in used_ids:
+                dangling_explicit_relationships.append({"part": name, "id": rel.get("Id", ""), "target": target})
+    result["relationships"] = {
+        "parts": relationship_parts,
+        "external": external_relationships,
+        "invalid_external": invalid_external_relationships,
+        "missing_internal_targets": missing_internal_targets,
+        "duplicate_ids": duplicate_relationship_ids,
+        "dangling_explicit": dangling_explicit_relationships,
+    }
+    if invalid_external_relationships or missing_internal_targets or duplicate_relationship_ids or dangling_explicit_relationships:
+        errors.append("relationship integrity failed")
+
+    ordering = {
+        "pPr": order_violations(document.findall(".//w:pPr", NS), PPR_ORDER),
+        "rPr": order_violations(document.findall(".//w:rPr", NS), RPR_ORDER),
+        "sectPr": order_violations(document.findall(".//w:sectPr", NS), SECTPR_ORDER),
+        "tblPr": order_violations(document.findall(".//w:tblPr", NS), TBLPR_ORDER),
+        "style": order_violations(style_nodes, STYLE_ORDER),
+        "numbering_lvl": order_violations(numbering.findall(".//w:lvl", NS), LVL_ORDER),
+    }
+    result["schema_ordering"] = ordering
+    if any(ordering.values()):
+        errors.append("WordprocessingML child ordering failed")
 
     anonymous_hits = []
     if variant == "anonymous":

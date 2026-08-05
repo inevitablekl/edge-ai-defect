@@ -1,0 +1,68 @@
+variant,category,part,item,original,repaired,delta,diagnosis
+full,file,poc_full.docx,size_bytes,26809,41069,14260,Word repaired derivative is larger after normalization
+anonymous,file,poc_anonymous.docx,size_bytes,26394,40475,14081,Word repaired derivative is larger after normalization
+full,package,package,part_count,19,18,-1,Net count after four removals and three additions
+anonymous,package,package,part_count,19,18,-1,Net count after four removals and three additions
+both,package,word/endnotes.xml,presence,absent,present,added,Word added conventional empty endnotes part
+both,package,word/footer2.xml,presence,absent,present,added,Word duplicated footer for the second section
+both,package,word/media/image1.png,presence,absent,present,added,Same embedded PNG bytes under Word-normalized name
+both,package,word/_rels/footnotes.xml.rels,presence,present,absent,deleted,Unused hyperlink relationship part removed
+both,package,word/comments.xml,presence,present,absent,deleted,Empty comments part removed
+both,package,word/media/poc_figure_fallback.png,presence,present,absent,deleted,Replaced by image1.png with same image bytes
+both,package,word/media/rId16.svg,presence,present,absent,deleted,Unused SVG package copy removed
+full,xml_count,[Content_Types].xml,elements,19,18,-1,Content types normalized
+anonymous,xml_count,[Content_Types].xml,elements,19,18,-1,Content types normalized
+full,xml_count,_rels/.rels,elements,5,5,0,Relationship IDs normalized only
+anonymous,xml_count,_rels/.rels,elements,5,5,0,Relationship IDs normalized only
+full,xml_count,docProps/app.xml,elements,9,17,8,Word application properties expanded
+anonymous,xml_count,docProps/app.xml,elements,9,17,8,Word application properties expanded
+full,xml_count,docProps/core.xml,elements,10,11,1,Word metadata expanded
+anonymous,xml_count,docProps/core.xml,elements,10,11,1,Word metadata expanded
+full,xml_count,docProps/custom.xml,elements,27,27,0,Canonical XML unchanged
+anonymous,xml_count,docProps/custom.xml,elements,15,15,0,Canonical XML unchanged
+full,xml_count,word/_rels/document.xml.rels,elements,13,13,0,Types and targets changed despite stable count
+anonymous,xml_count,word/_rels/document.xml.rels,elements,13,13,0,Types and targets changed despite stable count
+full,xml_count,word/document.xml,elements,910,1327,417,Word expanded run properties and retargeted styles
+anonymous,xml_count,word/document.xml,elements,848,1245,397,Word expanded run properties and retargeted styles
+full,xml_count,word/fontTable.xml,elements,16,45,29,Word font metadata expanded
+anonymous,xml_count,word/fontTable.xml,elements,16,45,29,Word font metadata expanded
+full,xml_count,word/footer1.xml,elements,9,16,7,PAGE converted from fldSimple to complex field
+anonymous,xml_count,word/footer1.xml,elements,9,16,7,PAGE converted from fldSimple to complex field
+full,xml_count,word/footnotes.xml,elements,9,13,4,Word normalized separator metadata
+anonymous,xml_count,word/footnotes.xml,elements,9,13,4,Word normalized separator metadata
+full,xml_count,word/numbering.xml,elements,128,156,28,IDs and metadata normalized while semantics preserved
+anonymous,xml_count,word/numbering.xml,elements,128,156,28,IDs and metadata normalized while semantics preserved
+full,xml_count,word/settings.xml,elements,21,58,37,Word settings expanded and updateFields removed
+anonymous,xml_count,word/settings.xml,elements,21,58,37,Word settings expanded and updateFields removed
+full,xml_count,word/styles.xml,elements,926,1134,208,Duplicate styles renamed and Word defaults expanded
+anonymous,xml_count,word/styles.xml,elements,898,1106,208,Duplicate styles renamed and Word defaults expanded
+full,xml_count,word/theme/theme1.xml,elements,41,227,186,Word theme metadata expanded
+anonymous,xml_count,word/theme/theme1.xml,elements,41,227,186,Word theme metadata expanded
+full,xml_count,word/webSettings.xml,elements,3,2,-1,Word normalized web settings
+anonymous,xml_count,word/webSettings.xml,elements,3,2,-1,Word normalized web settings
+full,styles,word/styles.xml,style_nodes,103,110,7,Original has 77 distinct IDs and 26 duplicate IDs
+anonymous,styles,word/styles.xml,style_nodes,96,103,7,Original has 77 distinct IDs and 19 duplicate IDs
+full,styles,word/styles.xml,duplicate_style_ids,26,0,-26,Word makes duplicate HFUT IDs unique by renaming placeholders
+anonymous,styles,word/styles.xml,duplicate_style_ids,19,0,-19,Word makes duplicate HFUT IDs unique by renaming placeholders
+both,styles,word/document.xml,title_style_ref,HFUTTitleCN,HFUTTitleCN0,changed,Paragraph retargeted to renamed no-format placeholder
+both,styles,word/document.xml,english_title_style_ref,HFUTTitleEN,HFUTTitleEN0,changed,Paragraph retargeted to renamed no-format placeholder
+full,styles,word/document.xml,authors_style_ref,HFUTAuthorsCN,HFUTAuthorsCN0,changed,Full front-matter style regression
+full,styles,word/document.xml,affiliation_style_ref,HFUTAffiliationCN,HFUTAffiliationCN0,changed,Full front-matter style regression
+both,styles,word/document.xml,abstract_style_ref,HFUTAbstractBodyCN,HFUTAbstractBodyCN0,changed,Paragraph retargeted to renamed no-format placeholder
+both,styles,word/document.xml,classification_style_ref,HFUTClassification,HFUTClassification0,changed,Paragraph retargeted to renamed no-format placeholder
+both,ordering,word/document.xml,continuous_sectPr,type|footerReference|pgSz|pgMar|cols|docGrid,footerReference|type|pgSz|pgMar|cols|docGrid,changed,Word repaired schema order
+both,ordering,word/document.xml,tblPr,tblStyle|tblW|tblLook|tblBorders,tblStyle|tblW|tblInd|tblBorders|tblLook,changed,Word repaired schema order and added indentation
+both,numbering,word/numbering.xml,abstractNum_count,3,3,0,Unique and valid in both packages
+both,numbering,word/numbering.xml,num_count,3,3,0,Unique and valid in both packages
+both,sections,word/document.xml,section_count,2,2,0,Single-column front matter and double-column body preserved
+both,fields,word/footer1.xml,field_instruction,PAGE,PAGE,0,PAGE retained and rewritten as complex field
+both,fields,word/settings.xml,updateFields,true,absent,deleted,Word removed open-time field refresh request
+both,fields,all_word_xml,external_auto_update_fields,0,0,0,No INCLUDEPICTURE INCLUDETEXT LINK DDE DDEAUTO or RD
+both,relationships,word/_rels/document.xml.rels,image_relationships,2,1,-1,Unused SVG relationship removed and PNG retained
+both,relationships,word/_rels/footnotes.xml.rels,external_hyperlinks,1,0,-1,Unused footnote hyperlink relationship removed
+both,relationships,word/_rels/document.xml.rels,http_hyperlinks,1,1,0,Permitted normal HTTP text hyperlink retained
+both,drawing,word/document.xml,drawing_count,1,1,0,Figure preserved
+both,drawing,word/document.xml,docPr_id,17,17,0,Unique drawing ID preserved
+both,formula,word/document.xml,oMath_count,3,3,0,OMML preserved
+both,formula,word/document.xml,oMathPara_count,2,2,0,Display OMML preserved
+both,table,word/document.xml,table_count,1,1,0,Three-line table content preserved
