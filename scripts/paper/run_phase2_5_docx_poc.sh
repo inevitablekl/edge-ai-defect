@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Paper Phase 2.5 Step 7A remediation candidate — TOOLCHAIN_POC_ONLY.
+# Paper Phase 2.5 Step 7B remediation candidate — TOOLCHAIN_POC_ONLY.
 # Generates only synthetic Microsoft Word compatibility candidates outside Git.
 
 REPO_ROOT="${PHASE2_5_REPO_ROOT:-/home/orin/edge-ai/edge-ai-defect}"
@@ -307,7 +307,7 @@ build_one() {
   local variant="$1"
   local metadata="$SOURCE_DIR/poc_$variant.yaml"
   local raw_docx="$TEMP_DIR/poc_"$variant"_raw.docx"
-  local final_docx="$OUTPUT_DIR/poc_${variant}_v2.docx"
+  local final_docx="$OUTPUT_DIR/poc_${variant}_v3.docx"
   local stdout_log="$LOG_DIR/pandoc_$variant.stdout.log"
   local stderr_log="$LOG_DIR/pandoc_$variant.stderr.log"
   local command_log="$LOG_DIR/pandoc_"$variant"_command.log"
@@ -357,11 +357,11 @@ build_one() {
     > "$LOG_DIR/postprocess_$variant.log" 2>&1
   python3 "$REPO_ROOT/scripts/paper/inspect_phase2_5_poc_docx.py" \
     "$final_docx" --variant "$variant" \
-    --json-output "$INSPECTION_DIR/poc_${variant}_v2_inspection.json" \
+    --json-output "$INSPECTION_DIR/poc_${variant}_v3_inspection.json" \
     > "$LOG_DIR/inspection_$variant.log" 2>&1
-  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v2_file.txt"
-  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v2_sha256.txt"
-  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v2_unzip_test.txt"
+  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_file.txt"
+  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_sha256.txt"
+  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_unzip_test.txt"
 }
 
 build_one full
@@ -371,25 +371,25 @@ for variant in full anonymous; do
   lo_profile="$TEMP_DIR/libreoffice_profile_$variant.$$.tmp"
   mkdir -p "$lo_profile"
   libreoffice "-env:UserInstallation=file://$lo_profile" --headless \
-    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v2.docx" \
+    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v3.docx" \
     > "$LOG_DIR/libreoffice_$variant.stdout.log" \
     2> "$LOG_DIR/libreoffice_$variant.stderr.log"
-  mv -f "$RENDERED_DIR/poc_${variant}_v2.pdf" "$RENDERED_DIR/poc_${variant}_v2_preview.pdf"
-  pdfinfo "$RENDERED_DIR/poc_${variant}_v2_preview.pdf" \
-    > "$INSPECTION_DIR/poc_${variant}_v2_preview_pdfinfo.txt"
-  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v2_preview_pdfinfo.txt")"
+  mv -f "$RENDERED_DIR/poc_${variant}_v3.pdf" "$RENDERED_DIR/poc_${variant}_v3_preview.pdf"
+  pdfinfo "$RENDERED_DIR/poc_${variant}_v3_preview.pdf" \
+    > "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt"
+  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt")"
   if [[ "$page_count" -lt 2 || "$page_count" -gt 4 ]]; then
     echo "POC_FAILED: $variant preview has $page_count pages; expected 2-4" >&2
     exit 1
   fi
-  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v2_preview_pdfinfo.txt"; then
+  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt"; then
     echo "POC_FAILED: $variant preview is not reported as A4" >&2
     exit 1
   fi
 done
 
 if rg -n 'POC测试作者|POC测试单位|poc@example\.invalid|基金测试字段|作者简介测试字段|致谢测试字段' \
-  "$INSPECTION_DIR/poc_anonymous_v2_inspection.json" \
+  "$INSPECTION_DIR/poc_anonymous_v3_inspection.json" \
   "$LOG_DIR/pandoc_anonymous_command.log" \
   "$LOG_DIR/pandoc_anonymous.stdout.log" \
   "$LOG_DIR/pandoc_anonymous.stderr.log"; then
@@ -419,10 +419,10 @@ NON_AUTHORITATIVE_LIBREOFFICE_PREVIEW
 MICROSOFT_WORD_RENDERING_NOT_VERIFIED
 MICROSOFT_WORD_COMPATIBILITY_REMEDIATION_CANDIDATE
 MICROSOFT_WORD_RETEST_REQUIRED
-full_docx=$OUTPUT_DIR/poc_full_v2.docx
-anonymous_docx=$OUTPUT_DIR/poc_anonymous_v2.docx
-full_preview=$RENDERED_DIR/poc_full_v2_preview.pdf
-anonymous_preview=$RENDERED_DIR/poc_anonymous_v2_preview.pdf
+full_docx=$OUTPUT_DIR/poc_full_v3.docx
+anonymous_docx=$OUTPUT_DIR/poc_anonymous_v3.docx
+full_preview=$RENDERED_DIR/poc_full_v3_preview.pdf
+anonymous_preview=$RENDERED_DIR/poc_anonymous_v3_preview.pdf
 EOF
 
 echo "POC_RUN_PASS"

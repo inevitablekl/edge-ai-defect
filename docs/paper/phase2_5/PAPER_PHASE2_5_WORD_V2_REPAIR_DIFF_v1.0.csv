@@ -1,0 +1,29 @@
+variant,part,item,v2_original,word_saved,diagnosis
+both,package,part_count,17,18,Word added three parts and removed two source parts plus renamed media netting one
+both,[Content_Types].xml,missing_override_target,word/media/rId16.svg,removed,Dangling SVG override is a first-open repair candidate
+both,_rels/.rels,relationship_count,5,5,Root package relationships normalized
+both,word/_rels/document.xml.rels,comments_relationship,present,removed,Empty comments part no longer referenced
+both,word/_rels/document.xml.rels,image_relationships,2,1,Unused SVG image path removed and PNG retained
+both,word/document.xml,section_count,2,2,One-column front matter and two-column body preserved
+both,word/document.xml,section_child_order,footerReference|type|pgSz|pgMar|cols|docGrid,same semantics,Word serialization normalized attributes/order
+both,word/document.xml,formula_counts,3 oMath; 2 oMathPara,3 oMath; 2 oMathPara,OMML preserved
+both,word/document.xml,table_count,1,1,Three-line table preserved
+both,word/document.xml,drawing_count,1,1,Figure preserved
+both,word/styles.xml,style_count,77,80,Word adds/default-normalizes style records
+both,word/styles.xml,duplicate_style_ids,0,0,No duplicate style ID in this v2 package
+both,word/styles.xml,HFUTEquation_pPr_order,jc|spacing|keepLines,keepLines|spacing|jc,Style-level OOXML order normalized by Word
+both,word/styles.xml,HFUTEquation_spacing,line=320 lineRule=exact before=0 after=0,lineRule=atLeast line=480 before=80 after=80,v3 remediation removes clipping fixed height
+both,word/settings.xml,w:updateFields,absent,absent,No open-time field update in current v2
+both,word/footer1.xml,PAGE,PAGE,PAGE,PAGE retained; Word rewrites field representation
+both,word/footer2.xml,presence,absent,present,Word creates a second footer during save normalization
+both,word/media/poc_figure_fallback.png,presence,present,absent,Renamed to image1.png by Word
+both,word/media/image1.png,presence,absent,present,Same embedded PNG bytes under Word name
+both,word/media/rId16.svg,presence,absent,absent,Content-type override exists in v2 but part is absent
+both,word/comments.xml,presence,present,absent,Empty comments package removed
+both,word/endnotes.xml,presence,absent,present,Word-added conventional empty part
+both,docProps/core.xml,creator,PAPER_PROJECT_AI_POC,PAPER_PROJECT_AI_POC,Neutral generator marker retained
+both,docProps/core.xml,lastModifiedBy,PAPER_PROJECT_AI_POC,凯伦 王,Word save added current-user identity metadata
+both,docProps/core.xml,revision,absent,1,Word save metadata increment
+anonymous,docProps/custom.xml,csl_property,/home/orin/.../china-national-standard-gb-t-7714-2025-numeric.csl,china-national-standard-gb-t-7714-2025-numeric.csl,GENERATOR_METADATA_LEAK removed by v3
+both,word/document.xml,mc:Ignorable,absent,w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14,Word compatibility serialization
+both,word/header*.xml,header_parts,none,none,No header identity carrier

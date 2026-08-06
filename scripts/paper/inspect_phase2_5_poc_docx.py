@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect a Phase 2.5 Step 6 POC DOCX without claiming Word acceptance."""
+"""Inspect a Phase 2.5 Step 7B POC DOCX without claiming Word acceptance."""
 
 from __future__ import annotations
 
@@ -19,9 +19,10 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PR = "http://schemas.openxmlformats.org/package/2006/relationships"
+CT = "http://schemas.openxmlformats.org/package/2006/content-types"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
-NS = {"w": W, "m": M, "r": R, "pr": PR, "a": A, "mc": MC}
+NS = {"w": W, "m": M, "r": R, "pr": PR, "ct": CT, "a": A, "mc": MC}
 
 REQUIRED_PARTS = {
     "[Content_Types].xml",
@@ -77,6 +78,7 @@ FORBIDDEN_ANONYMOUS = (
 FORBIDDEN_EXTERNAL_FIELD_TYPES = {
     "INCLUDEPICTURE", "INCLUDETEXT", "LINK", "DDE", "DDEAUTO", "RD"
 }
+NEUTRAL_GENERATOR_IDENTITIES = {"", "PAPER_PROJECT_AI_POC", "PAPER_PROJECT_TOOLCHAIN"}
 PPR_ORDER = (
     "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
     "widowControl", "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs",
@@ -176,7 +178,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "size_bytes": path.stat().st_size,
     }
-    if path.name not in {f"poc_{variant}.docx", f"poc_{variant}_v2.docx"}:
+    if path.name not in {f"poc_{variant}.docx", f"poc_{variant}_v2.docx", f"poc_{variant}_v3.docx"}:
         errors.append("unexpected output filename")
 
     try:
@@ -309,6 +311,14 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     if missing_defined or missing_used:
         errors.append(f"required style definition/use missing: defined={missing_defined}, used={missing_used}")
 
+    style_ppr_ordering = order_violations(
+        [node for style in style_nodes for node in style.findall("w:pPr", NS)],
+        PPR_ORDER,
+    )
+    result["styles"]["paragraph_property_ordering"] = style_ppr_ordering
+    if style_ppr_ordering:
+        errors.append("style-level paragraph property ordering failed")
+
     headings = []
     expected_numbering = {
         "HFUTIntroHeading": (0, 2),
@@ -358,6 +368,41 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
 
     math_inline = len(document.findall(".//m:oMath", NS))
     math_para = len(document.findall(".//m:oMathPara", NS))
+    equation_layout = []
+    inline_formula_paragraphs = []
+    style_by_id = {
+        node.get(qn(W, "styleId"), ""): node for node in style_nodes
+    }
+    for paragraph in paragraphs:
+        has_display = paragraph.find(".//m:oMathPara", NS) is not None
+        has_math = paragraph.find(".//m:oMath", NS) is not None
+        if not has_math:
+            continue
+        ppr = paragraph.find("w:pPr", NS)
+        pstyle = attr(ppr.find("w:pStyle", NS) if ppr is not None else None, "val")
+        spacing = ppr.find("w:spacing", NS) if ppr is not None else None
+        spacing_source = "paragraph"
+        if spacing is None:
+            style_ppr = style_by_id.get(pstyle, ET.Element(qn(W, "pPr"))).find("w:pPr", NS)
+            spacing = style_ppr.find("w:spacing", NS) if style_ppr is not None else None
+            spacing_source = "style"
+        detail = {
+            "style": pstyle,
+            "display": has_display,
+            "line": attr(spacing, "line"),
+            "lineRule": attr(spacing, "lineRule"),
+            "before": attr(spacing, "before"),
+            "after": attr(spacing, "after"),
+            "spacing_source": spacing_source,
+        }
+        equation_layout.append(detail)
+        if has_display:
+            if pstyle != "HFUTEquation" or detail["lineRule"] not in {"auto", "atLeast"}:
+                errors.append("display equation uses an unsafe fixed line rule")
+        else:
+            inline_formula_paragraphs.append(detail)
+            if detail["lineRule"] == "exact":
+                errors.append("inline equation paragraph retains exact line spacing")
     result["formulas"] = {
         "oMath_count": math_inline,
         "oMathPara_count": math_para,
@@ -365,6 +410,9 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "mathtype_status": "WORD_MANUAL_REQUIRED",
         "numbering": "STATIC_TEXT_ONLY",
         "cross_reference": "STATIC_TEXT_ONLY",
+        "layout": equation_layout,
+        "display_style_contract": "HFUTEquation lineRule=atLeast, line=480, before=80, after=80",
+        "inline_style_contract": "HFUTBody direct lineRule=atLeast, line=360",
     }
     if math_inline < 3 or math_para < 2:
         errors.append("expected inline and two display OMML formulas")
@@ -503,6 +551,30 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     }
     if forbidden_fields or open_time_update:
         errors.append("external or open-time-updating field risk present")
+
+    core = ET.fromstring(parts["docProps/core.xml"])
+    creator_node = core.find("dc:creator", {"dc": "http://purl.org/dc/elements/1.1/"})
+    modifier_node = core.find("cp:lastModifiedBy", {"cp": "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"})
+    creator = "" if creator_node is None or creator_node.text is None else creator_node.text
+    last_modified_by = "" if modifier_node is None or modifier_node.text is None else modifier_node.text
+    absolute_path_hits = []
+    for name, data in parts.items():
+        if re.search(rb"(?:/home/[^/]+/|[A-Za-z]:\\Users\\|/Users/[^/]+/)", data):
+            absolute_path_hits.append(name)
+    result["metadata"] = {
+        "creator": creator,
+        "lastModifiedBy": last_modified_by,
+        "creator_classification": "NEUTRAL_GENERATOR" if creator in NEUTRAL_GENERATOR_IDENTITIES else "UNKNOWN",
+        "lastModifiedBy_classification": "NEUTRAL_GENERATOR" if last_modified_by in NEUTRAL_GENERATOR_IDENTITIES else "UNKNOWN",
+        "absolute_path_parts": sorted(set(absolute_path_hits)),
+        "word_save_identity_check": "WORD_DOCUMENT_INSPECTOR_REQUIRED",
+    }
+    if variant == "anonymous" and (
+        creator not in NEUTRAL_GENERATOR_IDENTITIES
+        or last_modified_by not in NEUTRAL_GENERATOR_IDENTITIES
+        or absolute_path_hits
+    ):
+        errors.append("anonymous metadata contains non-neutral identity or absolute path")
     if duplicate_bookmark_ids or unmatched_bookmark_ids or duplicate_doc_pr_ids:
         errors.append("bookmark or drawing ID integrity failed")
 
@@ -575,6 +647,17 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     }
     if invalid_external_relationships or missing_internal_targets or duplicate_relationship_ids or dangling_explicit_relationships:
         errors.append("relationship integrity failed")
+
+    content_types = ET.fromstring(parts["[Content_Types].xml"])
+    present_parts = set(names)
+    missing_content_type_targets = sorted(
+        node.get("PartName", "")
+        for node in content_types.findall("ct:Override", NS)
+        if node.get("PartName", "").lstrip("/") not in present_parts
+    )
+    result["content_types"] = {"missing_override_targets": missing_content_type_targets}
+    if missing_content_type_targets:
+        errors.append("content-type override targets missing")
 
     ordering = {
         "pPr": order_violations(document.findall(".//w:pPr", NS), PPR_ORDER),

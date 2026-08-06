@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic OOXML post-processing for the Phase 2.5 Step 6 POC only."""
+"""Deterministic OOXML post-processing for the Phase 2.5 Step 7B POC only."""
 
 from __future__ import annotations
 
@@ -57,6 +57,19 @@ def insert_in_schema_order(
             parent.insert(index, node)
             return
     parent.append(node)
+
+
+def normalize_children(parent: ET.Element, ordered_names: tuple[str, ...]) -> None:
+    """Reorder known children while retaining unknown extension children."""
+    rank = {name: index for index, name in enumerate(ordered_names)}
+    children = list(parent)
+    known = sorted(
+        (child for child in children if child.tag.rsplit("}", 1)[-1] in rank),
+        key=lambda child: rank[child.tag.rsplit("}", 1)[-1]],
+    )
+    iterator = iter(known)
+    parent[:] = [next(iterator) if child.tag.rsplit("}", 1)[-1] in rank else child
+                 for child in children]
 
 
 PPR_ORDER = (
@@ -223,8 +236,22 @@ def transform_document(xml_bytes: bytes, fallback_relationship_id: str | None = 
         elif style == "HFUTHeading3":
             set_heading_numbering(paragraph, 2, 1)
 
-        if paragraph.find(".//m:oMathPara", NS) is not None:
+        has_display_math = paragraph.find(".//m:oMathPara", NS) is not None
+        has_inline_math = paragraph.find(".//m:oMath", NS) is not None and not has_display_math
+        if has_display_math:
             set_paragraph_style(paragraph, "HFUTEquation")
+        elif has_inline_math:
+            # HFUTBody is intentionally exact-spaced for ordinary text.  An
+            # inline OMML run needs only a small minimum-height exception.
+            ppr = set_paragraph_style(paragraph, "HFUTBody")
+            spacing = ppr.find("w:spacing", NS)
+            if spacing is None:
+                spacing = ET.Element(qn(W, "spacing"))
+                insert_in_schema_order(ppr, spacing, PPR_ORDER)
+            spacing.set(qn(W, "before"), "0")
+            spacing.set(qn(W, "after"), "0")
+            spacing.set(qn(W, "line"), "360")
+            spacing.set(qn(W, "lineRule"), "atLeast")
         if text.startswith("图1 "):
             set_paragraph_style(paragraph, "HFUTFigureCaption")
         if paragraph.find(".//w:drawing", NS) is not None:
@@ -293,6 +320,18 @@ def scrub_core_properties(xml_bytes: bytes, variant: str) -> bytes:
             node = ET.SubElement(root, qn(DCTERMS, local))
         node.set(qn(XSI, "type"), "dcterms:W3CDTF")
         node.text = "2026-08-06T00:00:00Z"
+    return ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
+def scrub_custom_properties(xml_bytes: bytes) -> bytes:
+    """Remove machine-specific absolute paths from generator metadata."""
+    root = ET.fromstring(xml_bytes)
+    for property_node in root:
+        if property_node.get("name") != "csl":
+            continue
+        value_node = next(iter(property_node), None)
+        if value_node is not None:
+            value_node.text = "china-national-standard-gb-t-7714-2025-numeric.csl"
     return ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
@@ -383,10 +422,73 @@ def remove_unused_svg(parts: dict[str, bytes]) -> None:
     content_types = ET.fromstring(parts["[Content_Types].xml"])
     if not any(name.lower().endswith(".svg") for name in parts):
         for node in list(content_types):
-            if node.get("Extension", "").lower() == "svg":
+            if (node.get("Extension", "").lower() == "svg"
+                    or node.get("PartName", "").lower().endswith(".svg")):
                 content_types.remove(node)
     ET.register_namespace("", CT)
     parts["[Content_Types].xml"] = ET.tostring(content_types, encoding="utf-8", xml_declaration=True)
+
+
+def remove_empty_comments(parts: dict[str, bytes]) -> None:
+    """Remove Pandoc's empty comments part and its now-unused relationship."""
+    comments_name = "word/comments.xml"
+    if comments_name not in parts:
+        return
+    root = ET.fromstring(parts[comments_name])
+    if root.findall("w:comment", NS):
+        return
+    del parts[comments_name]
+    rel_name = "word/_rels/document.xml.rels"
+    rel_root = ET.fromstring(parts[rel_name])
+    for rel in list(rel_root):
+        if rel.get("Type", "").endswith("/comments"):
+            rel_root.remove(rel)
+    ET.register_namespace("", PR)
+    parts[rel_name] = ET.tostring(rel_root, encoding="utf-8", xml_declaration=True)
+
+
+def remove_dangling_content_type_overrides(parts: dict[str, bytes]) -> None:
+    """Remove overrides whose package part is absent (not caught by unzip)."""
+    content_types = ET.fromstring(parts["[Content_Types].xml"])
+    present = set(parts)
+    for node in list(content_types):
+        part_name = node.get("PartName", "").lstrip("/")
+        if part_name and part_name not in present:
+            content_types.remove(node)
+    ET.register_namespace("", CT)
+    parts["[Content_Types].xml"] = ET.tostring(content_types, encoding="utf-8", xml_declaration=True)
+
+
+def repair_style_paragraph_properties(parts: dict[str, bytes]) -> None:
+    """Normalize style-level w:pPr order before Word has to repair it."""
+    root = ET.fromstring(parts["word/styles.xml"])
+    for style in root.findall("w:style", NS):
+        ppr = style.find("w:pPr", NS)
+        if ppr is not None:
+            normalize_children(ppr, PPR_ORDER)
+    parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
+def repair_equation_style(parts: dict[str, bytes]) -> None:
+    """Give display OMML a minimum height instead of a clipping exact height."""
+    root = ET.fromstring(parts["word/styles.xml"])
+    style = next((node for node in root.findall("w:style", NS)
+                  if node.get(qn(W, "styleId")) == "HFUTEquation"), None)
+    if style is None:
+        raise ValueError("HFUTEquation style is missing")
+    ppr = style.find("w:pPr", NS)
+    if ppr is None:
+        ppr = ET.SubElement(style, qn(W, "pPr"))
+    spacing = ppr.find("w:spacing", NS)
+    if spacing is None:
+        spacing = ET.Element(qn(W, "spacing"))
+        insert_in_schema_order(ppr, spacing, PPR_ORDER)
+    spacing.set(qn(W, "before"), "80")
+    spacing.set(qn(W, "after"), "80")
+    spacing.set(qn(W, "line"), "480")
+    spacing.set(qn(W, "lineRule"), "atLeast")
+    normalize_children(ppr, PPR_ORDER)
+    parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
 def remove_unused_explicit_relationships(parts: dict[str, bytes]) -> None:
@@ -427,9 +529,15 @@ def rewrite_docx(input_path: Path, output_path: Path, variant: str, fallback_png
     disable_open_time_field_updates(parts)
     if fallback_relationship_id:
         remove_unused_svg(parts)
+    remove_empty_comments(parts)
     remove_unused_explicit_relationships(parts)
+    remove_dangling_content_type_overrides(parts)
     if "docProps/core.xml" in parts:
         parts["docProps/core.xml"] = scrub_core_properties(parts["docProps/core.xml"], variant)
+    if "docProps/custom.xml" in parts:
+        parts["docProps/custom.xml"] = scrub_custom_properties(parts["docProps/custom.xml"])
+    repair_style_paragraph_properties(parts)
+    repair_equation_style(parts)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=output_path.parent, suffix=".docx", delete=False) as tmp:
