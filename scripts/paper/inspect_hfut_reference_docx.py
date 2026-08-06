@@ -10,6 +10,8 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from inspect_phase2_5_poc_docx import inspect_content_types
+
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -200,6 +202,11 @@ def check(path: Path) -> tuple[bool, list[str]]:
         custom_text = " ".join(text for text in custom.itertext() if text)
         if "ColumnStrategy" not in raw["docProps/custom.xml"].decode("utf-8", errors="ignore") or "body double-column target" not in custom_text:
             errors.append("custom properties do not record column strategy")
+    content_type_result, content_type_errors = inspect_content_types(raw, names)
+    if content_type_errors:
+        errors.extend(f"content types: {error}" for error in content_type_errors)
+    if content_type_result["default_after_override_count"] != 0:
+        errors.append("content types: Default-after-Override violation")
     return not errors, errors
 
 

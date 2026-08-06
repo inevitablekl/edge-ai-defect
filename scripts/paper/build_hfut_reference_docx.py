@@ -19,6 +19,8 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 import zipfile
 
+from inspect_phase2_5_poc_docx import inspect_content_types
+
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = REPO / "docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
@@ -555,6 +557,15 @@ def make_external_tree(root: Path, canonical_hash: str, specimen_hash: str) -> N
     (root / "metadata/build_metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def validate_content_types(path: Path) -> None:
+    with zipfile.ZipFile(path) as archive:
+        names = set(archive.namelist())
+        parts = {name: archive.read(name) for name in names}
+    result, errors = inspect_content_types(parts, names)
+    if errors or result["default_after_override_count"] != 0:
+        raise RuntimeError(f"invalid reference Content Types in {path}: {errors}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
@@ -563,10 +574,12 @@ def main() -> int:
     args = parser.parse_args()
     write_style_map()
     canonical_hash = write_deterministic_docx(args.output, specimen=False)
+    validate_content_types(args.output)
     specimen_path = args.external_root / "generated" / SPECIMEN_NAME
     specimen_hash = "NOT_GENERATED"
     if not args.no_specimen:
         specimen_hash = write_deterministic_docx(specimen_path, specimen=True)
+        validate_content_types(specimen_path)
     make_external_tree(args.external_root, canonical_hash, specimen_hash)
     print(f"reference={args.output}")
     print(f"reference_sha256={canonical_hash}")

@@ -171,6 +171,100 @@ def relationship_source_part(rel_part: str) -> str | None:
     return (path.parent.parent / path.name[:-5]).as_posix()
 
 
+def inspect_content_types(parts: dict[str, bytes], package_parts: set[str]) -> tuple[dict[str, object], list[str]]:
+    """Validate OPC CT_Types order, uniqueness, and package coverage."""
+    errors: list[str] = []
+    root = ET.fromstring(parts["[Content_Types].xml"])
+    children = list(root)
+    sequence = [local_name(node) for node in children]
+    content_types_order = [
+        f"{local_name(node)}:{node.get('Extension') or node.get('PartName', '')}"
+        for node in children
+    ]
+    default_count = sum(name == "Default" for name in sequence)
+    override_count = sum(name == "Override" for name in sequence)
+    seen_override = False
+    default_after_override_count = 0
+    unknown_nodes = []
+    for node in children:
+        name = local_name(node)
+        if name == "Override":
+            seen_override = True
+        elif name == "Default" and seen_override:
+            default_after_override_count += 1
+        elif name not in {"Default", "Override"}:
+            unknown_nodes.append(name)
+
+    default_extensions = [
+        node.get("Extension", "").casefold()
+        for node in children if local_name(node) == "Default"
+    ]
+    override_names = [
+        node.get("PartName", "")
+        for node in children if local_name(node) == "Override"
+    ]
+    duplicate_default_extensions = sorted(
+        value for value, count in Counter(default_extensions).items()
+        if value and count > 1
+    )
+    duplicate_override_part_names = sorted(
+        value for value, count in Counter(override_names).items()
+        if value and count > 1
+    )
+    empty_content_types = [
+        content_type
+        for node in children if local_name(node) in {"Default", "Override"}
+        for content_type in [node.get("ContentType", "")]
+        if not content_type
+    ]
+
+    override_targets = {
+        node.get("PartName", "").lstrip("/")
+        for node in children if local_name(node) == "Override"
+    }
+    dangling_overrides = sorted(
+        target for target in override_targets
+        if target and target not in package_parts
+    )
+    default_by_extension = {
+        node.get("Extension", "").casefold()
+        for node in children if local_name(node) == "Default"
+    }
+    missing_part_content_types = []
+    for part_name in sorted(package_parts):
+        base_name = posixpath.basename(part_name)
+        extension = base_name.rsplit(".", 1)[1].casefold() if "." in base_name else ""
+        if part_name not in override_targets and extension not in default_by_extension:
+            missing_part_content_types.append(part_name)
+
+    result = {
+        "content_types_order": content_types_order,
+        "default_count": default_count,
+        "override_count": override_count,
+        "default_after_override_count": default_after_override_count,
+        "duplicate_default_extensions": duplicate_default_extensions,
+        "duplicate_override_part_names": duplicate_override_part_names,
+        "missing_part_content_types": missing_part_content_types,
+        "dangling_overrides": dangling_overrides,
+        "unknown_nodes": sorted(set(unknown_nodes)),
+        "empty_content_types": empty_content_types,
+        # Kept as compatibility aliases for the v4 inspection schema.
+        "duplicate_override_names": duplicate_override_part_names,
+        "missing_override_targets": dangling_overrides,
+    }
+    if default_after_override_count:
+        errors.append("OPC_CONTENT_TYPES_ORDER_VIOLATION")
+    if unknown_nodes:
+        errors.append("content-types contains unsupported child elements")
+    if duplicate_default_extensions or duplicate_override_part_names:
+        errors.append("content-type uniqueness failed")
+    if empty_content_types:
+        errors.append("content-type value is empty")
+    if missing_part_content_types or dangling_overrides:
+        errors.append("content-type coverage failed")
+    return result, errors
+
+
 def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     errors: list[str] = []
     result: dict[str, object] = {
@@ -190,6 +284,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     if path.name not in {
         f"poc_{variant}.docx", f"poc_{variant}_v2.docx",
         f"poc_{variant}_v3.docx", f"poc_{variant}_v4.docx",
+        f"poc_{variant}_v5.docx",
     }:
         errors.append("unexpected output filename")
 
@@ -660,28 +755,9 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     if invalid_external_relationships or missing_internal_targets or duplicate_relationship_ids or dangling_explicit_relationships:
         errors.append("relationship integrity failed")
 
-    content_types = ET.fromstring(parts["[Content_Types].xml"])
-    present_parts = set(names)
-    missing_content_type_targets = sorted(
-        node.get("PartName", "")
-        for node in content_types.findall("ct:Override", NS)
-        if node.get("PartName", "").lstrip("/") not in present_parts
-    )
-    default_extensions = [node.get("Extension", "").lower() for node in content_types.findall("ct:Default", NS)]
-    override_names = [node.get("PartName", "") for node in content_types.findall("ct:Override", NS)]
-    duplicate_default_extensions = sorted(
-        value for value, count in Counter(default_extensions).items() if count > 1
-    )
-    duplicate_override_names = sorted(
-        value for value, count in Counter(override_names).items() if count > 1
-    )
-    result["content_types"] = {
-        "missing_override_targets": missing_content_type_targets,
-        "duplicate_default_extensions": duplicate_default_extensions,
-        "duplicate_override_names": duplicate_override_names,
-    }
-    if missing_content_type_targets or duplicate_default_extensions or duplicate_override_names:
-        errors.append("content-type integrity failed")
+    content_type_result, content_type_errors = inspect_content_types(parts, set(names))
+    result["content_types"] = content_type_result
+    errors.extend(content_type_errors)
 
     nested_numbering_run_properties = [
         [local_name(child) for child in node]

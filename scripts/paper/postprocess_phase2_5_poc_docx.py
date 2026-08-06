@@ -335,6 +335,48 @@ def scrub_custom_properties(xml_bytes: bytes) -> bytes:
     return ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
+def normalize_content_types(root: ET.Element) -> None:
+    """Normalize CT_Types children to the OPC Default* / Override* order."""
+    defaults: list[ET.Element] = []
+    overrides: list[ET.Element] = []
+    unknown: list[ET.Element] = []
+    for child in list(root):
+        local = child.tag.rsplit("}", 1)[-1]
+        if local == "Default":
+            defaults.append(child)
+        elif local == "Override":
+            overrides.append(child)
+        else:
+            unknown.append(child)
+
+    default_extensions = [node.get("Extension", "").casefold() for node in defaults]
+    duplicate_defaults = sorted(
+        extension for extension in set(default_extensions)
+        if default_extensions.count(extension) > 1
+    )
+    if duplicate_defaults:
+        raise ValueError(f"duplicate Default extensions: {duplicate_defaults}")
+
+    override_names = [node.get("PartName", "") for node in overrides]
+    duplicate_overrides = sorted(
+        part_name for part_name in set(override_names)
+        if override_names.count(part_name) > 1
+    )
+    if duplicate_overrides:
+        raise ValueError(f"duplicate Override PartName values: {duplicate_overrides}")
+
+    for node in defaults:
+        if not node.get("Extension") or not node.get("ContentType"):
+            raise ValueError("Default requires non-empty Extension and ContentType")
+    for node in overrides:
+        if not node.get("PartName") or not node.get("ContentType"):
+            raise ValueError("Override requires non-empty PartName and ContentType")
+
+    # Keep extension children after the known OPC declarations so a valid
+    # extension is not silently deleted by normalization.
+    root[:] = defaults + overrides + unknown
+
+
 def add_png_fallback(parts: dict[str, bytes], png_path: Path) -> str:
     media_name = "word/media/poc_figure_fallback.png"
     relationship_id = "rId26"
@@ -351,11 +393,18 @@ def add_png_fallback(parts: dict[str, bytes], png_path: Path) -> str:
     parts[rel_name] = ET.tostring(rel_root, encoding="utf-8", xml_declaration=True)
 
     content_types = ET.fromstring(parts["[Content_Types].xml"])
-    if not any(node.get("Extension") == "png" for node in content_types):
-        ET.SubElement(content_types, qn(CT, "Default"), {
+    if not any(node.get("Extension", "").casefold() == "png" for node in content_types):
+        png_default = ET.Element(qn(CT, "Default"), {
             "Extension": "png",
             "ContentType": "image/png",
         })
+        first_override = next(
+            (index for index, node in enumerate(content_types)
+             if node.tag.rsplit("}", 1)[-1] == "Override"),
+            len(content_types),
+        )
+        content_types.insert(first_override, png_default)
+    normalize_content_types(content_types)
     ET.register_namespace("", CT)
     parts["[Content_Types].xml"] = ET.tostring(content_types, encoding="utf-8", xml_declaration=True)
     return relationship_id
@@ -538,6 +587,12 @@ def rewrite_docx(input_path: Path, output_path: Path, variant: str, fallback_png
         parts["docProps/custom.xml"] = scrub_custom_properties(parts["docProps/custom.xml"])
     repair_style_paragraph_properties(parts)
     repair_equation_style(parts)
+    content_types = ET.fromstring(parts["[Content_Types].xml"])
+    normalize_content_types(content_types)
+    ET.register_namespace("", CT)
+    parts["[Content_Types].xml"] = ET.tostring(
+        content_types, encoding="utf-8", xml_declaration=True
+    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=output_path.parent, suffix=".docx", delete=False) as tmp:
