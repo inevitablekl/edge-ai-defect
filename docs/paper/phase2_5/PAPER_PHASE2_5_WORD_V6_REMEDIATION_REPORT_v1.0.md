@@ -27,6 +27,12 @@ The canonical reference was rebuilt deterministically. Current SHA256:
 c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6
 ```
 
+This value remains the historical v6 input hash. Step 7G later supersedes the
+current canonical with
+`416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7`
+to synchronize the validated equation contract and canonical table-layout
+governance. The v6 evidence and hashes in this report remain historical.
+
 Two independent rebuilds matched byte-for-byte. Official OpenXmlValidator and
 the custom reference Inspector both report zero errors.
 

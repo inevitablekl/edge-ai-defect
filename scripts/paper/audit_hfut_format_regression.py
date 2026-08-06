@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Phase 2.5 journal-format regression audit for canonical/v6 DOCX.
+"""Read-only Phase 2.5 journal-format regression audit for canonical/v7 DOCX.
 
 The audit uses only the Python standard library.  It does not repair or rewrite
 any DOCX.  Its repository CSV output is the governance-facing regression
@@ -24,18 +24,19 @@ import zipfile
 
 REPO = Path(__file__).resolve().parents[2]
 STYLE_MAP_DEFAULT = REPO / "docs/paper/phase2_5/PAPER_PHASE2_5_REFERENCE_STYLE_MAP_v1.0.csv"
-MATRIX_DEFAULT = REPO / "docs/paper/phase2_5/PAPER_PHASE2_5_JOURNAL_FORMAT_REGRESSION_MATRIX_v1.0.csv"
+MATRIX_DEFAULT = REPO / "docs/paper/phase2_5/PAPER_PHASE2_5_JOURNAL_FORMAT_REGRESSION_MATRIX_v1.1.csv"
 EXTERNAL_AUDIT_ROOT = Path(
     "/home/orin/paper-external-inputs/hfut-journal/phase2_5_source_v1/derived/"
-    "step7f_journal_format_regression_audit_v1"
+    "step7g_journal_format_remediation_v1/audit"
 )
-JSON_DEFAULT = EXTERNAL_AUDIT_ROOT / "audit_hfut_format_regression_v1.0.json"
+JSON_DEFAULT = EXTERNAL_AUDIT_ROOT / "audit_hfut_format_regression_v1.1.json"
 
 EXPECTED_SHA256 = {
-    "reference": "c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6",
-    "full": "aef3335e7f726c58a932852e29cd0c0e6808ae264b41b08c51e0fb9a01f83cdf",
-    "anonymous": "cc4b105ff6fe950bb871a129b53c983426a22bd63e536bcdf63c393e638faa43",
+    "reference": "416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7",
+    "full": "1af8d83fca4fec3ebd051936ab7c9551167fd33a2f4396ebb99383cb057894fc",
+    "anonymous": "c29189954e4953039432fdea21bbab6fb70dc32d8412a2e15061531fe94127c6",
 }
+FIRST_PAGE_BIOGRAPHY = "TOOLCHAIN TEST 虚拟作者简介，仅用于首页页脚能力验证"
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
@@ -243,6 +244,12 @@ def inspect_docx(path: Path) -> dict[str, Any]:
         for node in styles_root.findall("w:style", NS)
         if wattr(node, "styleId").startswith("HFUT")
     }
+    document_relationships = ET.fromstring(parts["word/_rels/document.xml.rels"])
+    footer_targets = {
+        rel.get("Id", ""): "word/" + rel.get("Target", "")
+        for rel in document_relationships
+        if rel.get("Type", "").endswith("/footer")
+    }
     sections = []
     for section in document.findall(".//w:sectPr", NS):
         pg = section.find("w:pgSz", NS)
@@ -255,6 +262,10 @@ def inspect_docx(path: Path) -> dict[str, Any]:
             "margins": {key: wattr(mar, key) for key in ("top", "right", "bottom", "left", "header", "footer", "gutter")},
             "columns": {"num": wattr(cols, "num", "1"), "space": wattr(cols, "space")},
             "titlePg": section.find("w:titlePg", NS) is not None,
+            "footer_references": {
+                wattr(node, "type"): footer_targets.get(node.get(qn(R, "id"), ""), "MISSING")
+                for node in section.findall("w:footerReference", NS)
+            },
         })
     drawings = []
     for extent in document.findall(".//wp:extent", NS):
@@ -264,6 +275,15 @@ def inspect_docx(path: Path) -> dict[str, Any]:
             "width_cm": round(cx / 360000, 4), "height_cm": round(cy / 360000, 4),
         })
     footer_parts = sorted(name for name in names if re.fullmatch(r"word/footer\d+\.xml", name))
+    footer_details = {}
+    for name in footer_parts:
+        footer = ET.fromstring(parts[name])
+        footer_details[name] = {
+            "text": "".join(node.text or "" for node in footer.findall(".//w:t", NS)),
+            "styles": [wattr(node, "val") for node in footer.findall(".//w:pStyle", NS)],
+            "fields": [wattr(node, "instr").strip() for node in footer.findall(".//w:fldSimple", NS)]
+            + [(node.text or "").strip() for node in footer.findall(".//w:instrText", NS)],
+        }
     fields = []
     for name in sorted(name for name in names if name.startswith("word/") and name.endswith(".xml")):
         root = ET.fromstring(parts[name])
@@ -279,7 +299,7 @@ def inspect_docx(path: Path) -> dict[str, Any]:
         "sections": sections, "styles": styles, "paragraphs": paragraphs,
         "style_usage": dict(sorted(Counter(row["style"] for row in paragraphs if row["style"]).items())),
         "drawings": drawings, "tables": [table_record(node) for node in body.findall("w:tbl", NS)],
-        "fields": fields, "footer_parts": footer_parts,
+        "fields": fields, "footer_parts": footer_parts, "footer_details": footer_details,
         "settings": {
             "updateFields_present": update_fields is not None,
             "updateFields_value": wattr(update_fields, "val") if update_fields is not None else "ABSENT",
@@ -306,9 +326,9 @@ def read_style_map(path: Path) -> tuple[list[dict[str, str]], dict[str, dict[str
 def validation_history(full_path: Path) -> dict[str, Any]:
     validation_dir = full_path.parents[2] / "validation"
     files = {
-        "reference": validation_dir / "reference_fixed_openxml_errors.json",
-        "full": validation_dir / "v6_full_openxml_errors.json",
-        "anonymous": validation_dir / "v6_anonymous_openxml_errors.json",
+        "reference": validation_dir / "reference_openxml_errors.json",
+        "full": validation_dir / "v7_full_openxml_errors.json",
+        "anonymous": validation_dir / "v7_anonymous_openxml_errors.json",
     }
     result: dict[str, Any] = {"validation_dir": str(validation_dir), "files": {}}
     for key, path in files.items():
@@ -346,7 +366,10 @@ def normalized_common_paragraphs(doc: dict[str, Any]) -> list[dict[str, Any]]:
 
 def compare_variants(full: dict[str, Any], anonymous: dict[str, Any]) -> dict[str, Any]:
     full_parts = set(full["package_parts"]); anon_parts = set(anonymous["package_parts"])
-    identity_parts = {"word/document.xml", "docProps/core.xml", "docProps/custom.xml"}
+    identity_parts = {
+        "word/document.xml", "docProps/core.xml", "docProps/custom.xml",
+        "word/footer2.xml",
+    }
     common_nonidentity = sorted((full_parts & anon_parts) - identity_parts)
     differing = [name for name in common_nonidentity
                  if full["part_sha256"][name] != anonymous["part_sha256"][name]]
@@ -442,10 +465,14 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
     add("JFR-008", "HFUT-WEB-025;HFUT-WEB-026;HFUT-WEB-031", "HFUT_WEB_EXCERPT_PDF",
         "TEXTUALLY_EXPLICIT_REQUIREMENT", "Author biography must be in first-page footer; funding conditional; acknowledgement governed",
         "TEXTUALLY_EXPLICIT", "first-page footer versus body paragraphs", "Biography in first-page footer",
-        "Funding/biography/acknowledgement are ordinary body paragraphs; footer contains PAGE only",
-        "Identity roles omitted; footer contains PAGE only", "DOCX paragraph and footer inspection", "FAIL",
-        "LibreOffice preview places all three in first-page body flow", "NOT_TESTED_IN_MICROSOFT_WORD_V6",
-        "POC_NOT_COVERED", "NO_DRIFT", "YES", "NO", "Design and run a minimal first-page-footer POC before Phase 2.5 closeout",
+        {"sections": full["sections"], "footer_details": full["footer_details"],
+         "body_biography_count": sum(1 for row in fp if FIRST_PAGE_BIOGRAPHY in row["text"])},
+        {"sections": anonymous["sections"], "footer_details": anonymous["footer_details"],
+         "body_biography_count": sum(1 for row in ap if FIRST_PAGE_BIOGRAPHY in row["text"])},
+        "DOCX paragraph/footer relationship inspection", "PASS",
+        "Frozen v7 preview confirms the Full biography in the first-page footer and no Anonymous identity",
+        "WINDOWS_V7_FIRST_OPEN_REQUIRED", "PASS_TEXTUALLY_EXPLICIT", "NO_DRIFT", "NO", "NO",
+        "Confirm first-page footer placement during final v7 Word acceptance",
         "No claim is made that funding or acknowledgement share the biography footer rule")
     add("JFR-009", "HFUT-FMT-003", "HFUT_FMT_DOC", "TEXTUALLY_EXPLICIT_REQUIREMENT",
         "Chinese abstract label/body fonts and 14-pt line spacing", "TEXTUALLY_EXPLICIT",
@@ -499,17 +526,18 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
     add("JFR-017", "HFUT-FMT-018", "HFUT_FMT_DOC", "TEXTUALLY_EXPLICIT_REQUIREMENT",
         "Equations are entered and editable with MathType", "TEXTUALLY_EXPLICIT", "equation objects",
         "Editable MathType objects", "3 OMML objects; no MathType embedding", "3 OMML objects; no MathType embedding",
-        "DOCX OMML/embeddings inspection", "FAIL", "OMML visible and historically editable in Word",
+        "DOCX OMML/embeddings inspection", "NOT_AUTOMATABLE", "OMML visible and historically editable in Word",
         "WINDOWS_FINAL_REQUIRED", "WINDOWS_FINAL_REQUIRED", "NO_DRIFT", "NO", "NO",
         "Convert/rebuild final equations in MathType during publication-asset stage")
-    add("JFR-018", "HFUT-AUDIT-EQUATION-STYLE", "WORD_V3_MANUAL_RESULT", "VALIDATED_WORD_RESULT",
+    add("JFR-018", "HFUT-AUDIT-EQUATION-STYLE", "WORD_V3_MANUAL_RESULT;WORD_V6_MANUAL_ACCEPTANCE", "VALIDATED_WORD_RESULT",
         "Display equation spacing avoids clipping/overlap", "PROJECT_DERIVED_CANDIDATE", "HFUTEquation",
-        "Style Map says exact 16 pt, 0/0; validated v6 uses atLeast 480, 80/80",
+        "Style Map, canonical, and v7 use atLeast 24 pt with 4/4 pt before/after",
         {"style_map": {key: eq_map[key] for key in ("line_spacing_rule", "line_spacing_value", "space_before_pt", "space_after_pt")}, "actual": fs["HFUTEquation"]},
         {"style_map": {key: eq_map[key] for key in ("line_spacing_rule", "line_spacing_value", "space_before_pt", "space_after_pt")}, "actual": ans["HFUTEquation"]},
-        "Style Map; v6 styles.xml; Word v3 manual result", "PASS", "Word-export evidence found no clipping/overlap",
-        "WORD_RESULT_SUPPORTS_CANDIDATE", "PASS_PROJECT_DERIVED_CANDIDATE", "GOVERNANCE_DRIFT", "YES", "NO",
-        "Keep v6 spacing; reconcile Style Map/Design/Report instead of restoring unsafe exact spacing")
+        "Style Map; canonical/v7 styles.xml; Word v3/v6 manual evidence", "PASS",
+        "Word-export evidence found no clipping/overlap", "WORD_RESULT_SUPPORTS_CANDIDATE",
+        "PASS_PROJECT_DERIVED_CANDIDATE", "NO_DRIFT", "NO", "NO",
+        "Retain the synchronized validated project-derived candidate")
     add("JFR-019", "HFUT-FIG-002", "HFUT_FIG_DOC", "TEXTUALLY_EXPLICIT_REQUIREMENT",
         "Single-column figure width <=7.5 cm", "TEXTUALLY_EXPLICIT", "wp:extent", "<=7.5 cm",
         full["drawings"], anonymous["drawings"], "DOCX drawing extent", "PASS",
@@ -524,7 +552,7 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
     add("JFR-021", "HFUT-FIG-005;HFUT-FIG-006;HFUT-FIG-007;HFUT-FIG-008", "HFUT_FIG_DOC",
         "TEXTUALLY_EXPLICIT_REQUIREMENT", "Origin/Visio figures remain editable and are not screenshots", "TEXTUALLY_EXPLICIT",
         "embedded figure objects", "Editable Origin/Visio where applicable", "PNG fallback only", "PNG fallback only",
-        "DOCX media/embeddings inspection", "FAIL", "PNG displays", "WINDOWS_FINAL_REQUIRED",
+        "DOCX media/embeddings inspection", "NOT_AUTOMATABLE", "PNG displays", "WINDOWS_FINAL_REQUIRED",
         "POC_NOT_COVERED", "NO_DRIFT", "NO", "NO", "Validate final publication assets with Origin/Visio")
     add("JFR-022", "HFUT-WEB-018;HFUT-TBL-003;HFUT-TBL-004", "HFUT_WEB_EXCERPT_PDF;HFUT_TABLE_DOC",
         "TEXTUALLY_EXPLICIT_REQUIREMENT", "Three-line table with top/bottom 1 pt and header rule 0.5 pt", "TEXTUALLY_EXPLICIT",
@@ -540,12 +568,13 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
         "PASS_STYLE_EVIDENCE_CONFIRMED", "NO_DRIFT", "NO", "NO", "Validate final table fonts and cell margins")
     add("JFR-024", "HFUT-AUDIT-TABLE-CONTRACT", "REFERENCE_STYLE_MAP;REFERENCE_DOCX_DESIGN",
         "PROJECT_GOVERNANCE", "Table inheritance and layout strategy remain synchronized", "PROJECT_DERIVED_CANDIDATE",
-        "HFUTThreeLineTable basedOn; tblPr/tblW/tblLayout/gridCol", "Style Map based_on=TableNormal; earlier specimen fixed layout",
+        "HFUTThreeLineTable basedOn; tblPr/tblW/tblLayout/gridCol",
+        "Canonical may retain basedOn=TableNormal; v7 may omit basedOn; direct tblW=4400, grid=1400/1400/1600, no fixed layout",
         {"style_map_based_on": table_map["based_on"], "actual_based_on": fs["HFUTThreeLineTable"]["basedOn"], "table": ftable},
         {"style_map_based_on": table_map["based_on"], "actual_based_on": ans["HFUTThreeLineTable"]["basedOn"], "table": atable},
-        "Style Map; canonical/v6 styles.xml; v6 document.xml", "FAIL", "Stable preview candidate",
-        "WORD_RESULT_SUPPORTS_DIRECT_LAYOUT", "PASS_PROJECT_DERIVED_CANDIDATE", "GOVERNANCE_DRIFT", "YES", "NO",
-        "Record removed inheritance/fixed layout and direct tblW/gridCol/border dependency in Style Map and Design")
+        "Style Map; canonical/v7 styles.xml; v7 document.xml", "PASS", "Stable preview candidate",
+        "WORD_RESULT_SUPPORTS_DIRECT_LAYOUT", "PASS_PROJECT_DERIVED_CANDIDATE", "NO_DRIFT", "NO", "NO",
+        "Retain the documented layer-specific inheritance and direct-layout contract")
     add("JFR-025", "HFUT-AUDIT-REFERENCE-HEADING-STYLE", "REFERENCE_STYLE_MAP", "PROJECT_GOVERNANCE",
         "Reference heading uses HFUTReferenceHeading", "PROJECT_DERIVED_CANDIDATE", "reference heading paragraph style",
         "HFUTReferenceHeading", fref["style"], aref["style"], "DOCX document.xml", "PASS",
@@ -554,12 +583,12 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
     add("JFR-026", "HFUT-AUDIT-REFERENCE-HEADING-NUMBERING", "HFUT_WEB_EXCERPT_PDF;HFUT_REF_DOC",
         "NO_SOURCE_AUTHORIZATION_FOUND", "Reference heading must not inherit unauthorized body-heading numbering",
         "PROJECT_GOVERNANCE", "reference heading pPr/numPr and Style Map numbering_level", "No direct numPr; Style Map numbering_level blank",
-        {"paragraph": fref, "style_map_numbering_level": ref_map["numbering_level"], "resolved_visual": "2 参考文献"},
-        {"paragraph": aref, "style_map_numbering_level": ref_map["numbering_level"], "resolved_visual": "2 参考文献"},
-        "DOCX document.xml; Style Map; frozen LibreOffice preview", "FAIL",
-        "Both v6 previews display 2 参考文献", "NOT_AUTHORIZED_BY_WINDOWS_VISUAL_ACCEPTANCE",
-        "FAIL", "REFERENCE_HEADING_NUMBERING_DRIFT", "YES", "YES",
-        "Remove direct numPr from reference heading in a later authorized remediation and rerun Word/schema checks",
+        {"paragraph": fref, "style_map_numbering_level": ref_map["numbering_level"], "resolved_visual": "参考文献"},
+        {"paragraph": aref, "style_map_numbering_level": ref_map["numbering_level"], "resolved_visual": "参考文献"},
+        "DOCX document.xml; Style Map; frozen LibreOffice preview", "PASS",
+        "Both v7 previews display unnumbered 参考文献 while 0/1/1.1/1.1.1 remain intact",
+        "WINDOWS_V7_FIRST_OPEN_REQUIRED", "PASS_PROJECT_DERIVED_CANDIDATE", "NO_DRIFT", "NO", "NO",
+        "Retain the inspector guard against REFERENCE_HEADING_NUMBERING_DRIFT",
         "Neither journal source nor Style Map authorizes reference-heading numbering")
     add("JFR-027", "HFUT-REF-002", "HFUT_REF_DOC", "TEXTUALLY_EXPLICIT_REQUIREMENT",
         "Reference entries use 7.5 pt Songti/TNR and exact 14-pt spacing", "TEXTUALLY_EXPLICIT",
@@ -592,23 +621,27 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
         "docProps and review artifacts", "Neutral generator metadata; final Document Inspector",
         {"core": full["core_properties"], "custom": full["custom_properties"]},
         {"core": anonymous["core_properties"], "custom": anonymous["custom_properties"]}, "DOCX properties",
-        "PASS", "Not a visual claim", "DOCUMENT_INSPECTOR_REQUIRED", "WINDOWS_FINAL_REQUIRED", "NO_DRIFT",
-        "NO", "NO", "Run Document Inspector after final Word save")
+        "PASS", "Not a visual claim", "ANONYMOUS_DOCUMENT_INSPECTOR_REQUIRED", "WINDOWS_FINAL_REQUIRED", "NO_DRIFT",
+        "YES", "NO", "Run Document Inspector on v7 Anonymous after final Word save")
     add("JFR-032", "HFUT-AUDIT-OPENXML", "OPENXML_VALIDATOR_REPORT", "OFFICIAL_TOOL_RESULT",
         "Official OpenXmlValidator reports zero errors", "SCHEMA_VALIDATION", "all OOXML parts", "0 errors each",
         validator_result, validator_result, "Frozen DocumentFormat.OpenXml 3.5.1 report", "PASS" if all(value == 0 for value in validator_result.values()) else "FAIL",
         "Not a visual/layout acceptance claim", "NOT_APPLICABLE", "PASS_STYLE_EVIDENCE_CONFIRMED", "NO_DRIFT",
         "NO", "NO", "Rerun after any remediation")
     add("JFR-033", "HFUT-AUDIT-WORD-FIRST-OPEN", "WORD_V6_REMEDIATION_REPORT", "REQUIRED_MANUAL_ACCEPTANCE",
-        "Untouched v6 first-open in Microsoft Word produces no repair prompt", "WINDOWS_MANUAL",
-        "Full/Anonymous v6 packages", "No unreadable-content prompt", "Not tested", "Not tested",
-        "Word v6 remediation report", "NOT_AUTOMATABLE", "LibreOffice cannot substitute", "WINDOWS_FINAL_REQUIRED",
-        "WINDOWS_FINAL_REQUIRED", "NO_DRIFT", "YES", "NO", "Open untouched v6 files in Microsoft Word and record result")
+        "Untouched v7 first-open in Microsoft Word produces no repair prompt", "WINDOWS_MANUAL",
+        "Full/Anonymous v7 packages", "No unreadable-content prompt",
+        "v6 first-open PASS; v7 not tested", "v6 first-open PASS; v7 not tested",
+        "Word v6 manual acceptance plus v7 remediation report", "NOT_AUTOMATABLE",
+        "LibreOffice cannot substitute", "WINDOWS_V7_FIRST_OPEN_REQUIRED",
+        "WINDOWS_FINAL_REQUIRED", "NO_DRIFT", "YES", "NO",
+        "Open untouched v7 files in Microsoft Word and record the first-open result")
     add("JFR-034", "HFUT-AUDIT-WORD-REOPEN", "WINDOWS_WORD_POC_CHECKLIST", "REQUIRED_MANUAL_ACCEPTANCE",
-        "Save, close, and reopen both accepted v6 documents", "WINDOWS_MANUAL", "Word-saved v6 derivatives",
-        "Normal reopen; no repair prompt", "Not tested for v6", "Not tested for v6", "Frozen Windows checklist",
-        "NOT_AUTOMATABLE", "Not covered by LibreOffice preview", "WINDOWS_FINAL_REQUIRED", "WINDOWS_FINAL_REQUIRED",
-        "NO_DRIFT", "YES", "NO", "Perform save/close/reopen after v6 first-open acceptance")
+        "Save, close, and reopen both accepted v7 documents", "WINDOWS_MANUAL", "Word-saved v7 derivatives",
+        "Normal reopen; no repair prompt", "Not tested for v7", "Not tested for v7", "Frozen Windows checklist",
+        "NOT_AUTOMATABLE", "Not covered by LibreOffice preview", "WINDOWS_V7_SAVE_REOPEN_REQUIRED",
+        "WINDOWS_FINAL_REQUIRED", "NO_DRIFT", "YES", "NO",
+        "Perform save/close/reopen after v7 first-open acceptance")
     add("JFR-035", "HFUT-AUDIT-FIRST-PAGE-FLOW", "PUBLISHED_VISUAL_EXAMPLES", "VISUAL_EXAMPLE_ONLY",
         "First-page body flow is assessed without elevating a visual example to a rule", "VISUAL_CANDIDATE",
         "section break/page breaks/rendered pagination", "No mandatory first-page body-start rule established",
@@ -619,10 +652,10 @@ def build_matrix(reference: dict[str, Any], full: dict[str, Any], anonymous: dic
         "Treat as visual candidate only; reassess with real front matter", "No frozen textual rule requires body on page 1")
     add("JFR-036", "HFUT-AUDIT-FIELD-POLICY", "REFERENCE_DOCX_DESIGN;REFERENCE_DOCX_REPORT", "PROJECT_GOVERNANCE",
         "Field-update policy is described consistently", "PROJECT_DERIVED_CANDIDATE", "word/settings.xml updateFields",
-        "Design says update on open; Report/current implementation say disabled", reference["settings"], full["settings"],
-        "Design/Report; canonical/v6 settings.xml", "FAIL", "PAGE renders in preview", "MANUAL_REFRESH_REQUIRED",
-        "PASS_PROJECT_DERIVED_CANDIDATE", "DESIGN_DOCUMENT_STALE", "YES", "NO",
-        "Update Design to state updateFields is absent and PAGE requires manual/F9 refresh")
+        "Design, Report, canonical, and v7 omit updateFields; PAGE uses controlled Ctrl+A/F9 refresh",
+        reference["settings"], full["settings"], "Design/Report; canonical/v7 settings.xml", "PASS",
+        "PAGE renders in preview", "MANUAL_REFRESH_REQUIRED", "PASS_PROJECT_DERIVED_CANDIDATE",
+        "NO_DRIFT", "NO", "NO", "Retain the controlled Ctrl+A/F9 refresh policy")
     add("JFR-037", "HFUT-AUDIT-NATIVE-TOOLS", "HFUT_FMT_DOC;HFUT_FIG_DOC", "TEXTUALLY_EXPLICIT_REQUIREMENT",
         "MathType/Visio/Origin publication-object boundary remains explicit", "TOOL_BOUNDARY",
         "embeddings and native editability", "Applicable final objects editable in required native tools",
@@ -699,8 +732,11 @@ def main() -> int:
                              if row["blocking_for_phase2_5"] == "YES"
                              and (row["compliance_status"] in {"FAIL", "POC_NOT_COVERED", "WINDOWS_FINAL_REQUIRED"}
                                   or row["governance_status"] != "NO_DRIFT")]
+    allowed_windows_pending = {"JFR-031", "JFR-033", "JFR-034"}
+    automatic_blockers = [row for row in blocking_unauthorized
+                          if row["audit_id"] not in allowed_windows_pending]
     result = {
-        "audit_identity": "PAPER_PHASE2_5_STEP7F_JOURNAL_FORMAT_REGRESSION_AUDIT_V1.0",
+        "audit_identity": "PAPER_PHASE2_5_STEP7G_JOURNAL_FORMAT_REMEDIATION_AUDIT_V1.1",
         "read_only_docx_audit": True,
         "inputs": {key: {"path": str(inputs[key]), "expected_sha256": EXPECTED_SHA256[key],
                          "actual_sha256": hashes[key], "sha_match": hash_results[key]} for key in inputs},
@@ -711,8 +747,11 @@ def main() -> int:
         "variant_comparison": variants,
         "matrix": {"path": str(args.matrix_output), "row_count": len(matrix), "rows": matrix},
         "blocking_unauthorized_audit_ids": [row["audit_id"] for row in blocking_unauthorized],
-        "verdict": "FORMAT_REMEDIATION_REQUIRED" if blocking_unauthorized else "FORMAT_REGRESSION_PASS",
-        "exit_contract": "1=blocking unauthorized difference; 2=audit/tool failure; 0=no blocking difference",
+        "allowed_windows_pending_audit_ids": sorted(allowed_windows_pending),
+        "automatic_blocking_audit_ids": [row["audit_id"] for row in automatic_blockers],
+        "verdict": "FORMAT_REMEDIATION_INCOMPLETE" if automatic_blockers
+        else "FORMAT_REMEDIATION_CANDIDATE_READY_FOR_WORD",
+        "exit_contract": "1=blocking automatic/governance difference; 2=audit/tool failure; 0=only allowed Windows acceptance remains or no blockers",
     }
     args.json_output.parent.mkdir(parents=True, exist_ok=True)
     args.json_output.write_text(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -729,6 +768,7 @@ def main() -> int:
     print(f"verdict={result['verdict']}")
     if blocking_unauthorized:
         print("blocking_unauthorized=" + ",".join(row["audit_id"] for row in blocking_unauthorized))
+    if automatic_blockers:
         return 1
     return 0
 

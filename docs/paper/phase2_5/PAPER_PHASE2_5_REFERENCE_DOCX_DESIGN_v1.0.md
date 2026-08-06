@@ -123,11 +123,19 @@ Word update testing.
 
 ## 6. Formula boundary
 
-`HFUTEquation` is a centered equation-paragraph style candidate. No MathType
-object is created, embedded, or claimed. No equation number is positioned by
-spaces. MathType object creation, variable typography, equation numbering,
-right-side alignment, long-equation wrapping, and editability remain POC or
-manual Word/MathType work.
+`HFUTEquation` is a centered equation-paragraph style candidate with
+`lineRule=atLeast`, `line=480` twips (24 pt), and 80 twips (4 pt) before and
+after. The separate inline-formula paragraph remains `atLeast` 360 twips.
+These values are a `VALIDATED_PROJECT_DERIVED_CANDIDATE`: Microsoft Word POC
+evidence showed that they avoid formula intrusion into adjacent lines. They
+are not line-spacing values textually specified by the journal, must not be
+automatically reverted to the former exact 16 pt and 0/0 spacing, and do not
+replace the journal's final MathType requirement.
+
+No MathType object is created, embedded, or claimed. No equation number is
+positioned by spaces. MathType object creation, variable typography, equation
+numbering, right-side alignment, long-equation wrapping, and editability
+remain POC or manual Word/MathType work.
 
 ## 7. Figure and table styles
 
@@ -146,6 +154,14 @@ controlled table. OOXML border sizes use eighths of a point:
 - inside vertical borders: `nil`;
 - left/right cell margins: 108 twips = 5.4 pt;
 - top/bottom cell margins: 0 twips.
+
+The inheritance and layout contract is layer-specific. The canonical
+reference style may legally retain `basedOn=TableNormal`. Pandoc-generated
+v7 removes `basedOn` when that parent style is absent. The final v7 layout is
+controlled directly by `tblW=4400`, grid columns `1400/1400/1600`, the border
+rules above, and the verified cell margins; it does not contain or depend on
+`tblLayout=fixed`. Neither `TableNormal` inheritance nor fixed layout is
+claimed as a textual journal requirement.
 
 Merged-cell behavior, continuation tables, unit placement, and Word rendering
 remain `PENDING_POC` or `PENDING_WINDOWS_CHECK`.
@@ -166,10 +182,13 @@ template-only step.
 
 ## 9. Page number and document properties
 
-The footer contains a `PAGE` field, not a fixed page-number paragraph. Word is
-configured to update fields on open. The canonical file contains no formal
-received/revised date, funding, acknowledgement, biography, contact, or real
-author data.
+The footer contains a `PAGE` field, not a fixed page-number paragraph.
+Open-time `w:updateFields` is intentionally disabled while the `PAGE` field is
+preserved. A controlled Microsoft Word refresh (`Ctrl+A`, then `F9`) is
+required when final fields need updating. This avoids external-field or
+automatic-update prompts during document opening. The canonical file contains
+no formal received/revised date, funding, acknowledgement, biography, contact,
+or real author data.
 
 ## 10. Determinism and inspection
 

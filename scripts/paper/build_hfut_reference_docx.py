@@ -79,10 +79,19 @@ def rpr(
     return "<w:rPr>" + "".join(bits) + "</w:rPr>"
 
 
-def spacing(line: int | None = None, before: str = "0", after: str = "0", exact: bool = False) -> str:
+def spacing(
+    line: int | None = None,
+    before: str = "0",
+    after: str = "0",
+    exact: bool = False,
+    line_rule: str | None = None,
+) -> str:
     attrs = [f'w:before="{before}"', f'w:after="{after}"']
     if line is not None:
-        attrs.extend([f'w:line="{line}"', f'w:lineRule="{"exact" if exact else "auto"}"'])
+        attrs.extend([
+            f'w:line="{line}"',
+            f'w:lineRule="{line_rule or ("exact" if exact else "auto")}"',
+        ])
     return "<w:spacing " + " ".join(attrs) + "/>"
 
 
@@ -103,6 +112,7 @@ def ppr(
     num_id: int | None = None,
     ilvl: int | None = None,
     tabs: str = "",
+    line_rule: str | None = None,
 ) -> str:
     bits: list[str] = []
     if keep_next:
@@ -113,7 +123,7 @@ def ppr(
         bits.append("<w:pageBreakBefore/>")
     if num_id is not None:
         bits.append(f'<w:numPr><w:ilvl w:val="{ilvl or 0}"/><w:numId w:val="{num_id}"/></w:numPr>')
-    bits.append(spacing(line, before, after, exact))
+    bits.append(spacing(line, before, after, exact, line_rule))
     ind_attrs = []
     if first is not None:
         if first < 0:
@@ -160,6 +170,7 @@ def para_style(
     num_id: int | None = None,
     ilvl: int | None = None,
     qformat: bool = True,
+    line_rule: str | None = None,
 ) -> str:
     qfmt = "<w:qFormat/>" if qformat else ""
     based = f'<w:basedOn w:val="{based_on}"/>' if based_on else ""
@@ -171,6 +182,7 @@ def para_style(
             before=before, after=after, exact=exact, keep_next=keep_next,
             keep_lines=keep_lines, page_break_before=page_break_before,
             outline=outline, num_id=num_id, ilvl=ilvl,
+            line_rule=line_rule,
         )
         + rpr(east, ascii_font, size, bold, italic)
         + "</w:style>"
@@ -231,7 +243,12 @@ def styles_xml() -> str:
         para_style("HFUTHeading2", "HFUT Heading 2", based_on="Normal", east="黑体", size="21", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=1, num_id=1, ilvl=1),
         para_style("HFUTHeading3", "HFUT Heading 3", based_on="Normal", east="楷体", size="21", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=2, num_id=1, ilvl=2),
         para_style("HFUTIntroHeading", "HFUT Introduction Heading", based_on="HFUTHeading1", east="黑体", size="28", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0, num_id=2, ilvl=0),
-        para_style("HFUTEquation", "HFUT Equation", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="21", align="center", line=320, exact=True, keep_lines=True),
+        para_style(
+            "HFUTEquation", "HFUT Equation", based_on="Normal",
+            east="Times New Roman", ascii_font="Times New Roman", size="21",
+            align="center", line=480, before="80", after="80",
+            line_rule="atLeast", keep_lines=True,
+        ),
         para_style("HFUTFigureCaption", "HFUT Figure Caption", based_on="Normal", east="黑体", size="15", bold=True, align="center", line=320, exact=True, keep_lines=True),
         para_style("HFUTTableCaption", "HFUT Table Caption", based_on="Normal", east="黑体", size="15", bold=True, align="center", line=320, exact=True, keep_lines=True),
         para_style("HFUTTableContent", "HFUT Table Content", based_on="Normal", east="宋体", size="15", align="center", line=240, exact=True, keep_lines=True),
@@ -312,7 +329,7 @@ def table_specimen() -> str:
         ["示例项", "0.00"],
         ["占位项", "－"],
     ]
-    return '<w:tbl><w:tblPr><w:tblStyle w:val="HFUTThreeLineTable"/><w:tblW w:w="7200" w:type="dxa"/><w:tblLayout w:type="fixed"/>' + borders + '<w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="3600"/><w:gridCol w:w="3600"/></w:tblGrid>' + ''.join('<w:tr>' + ''.join(cell(v) for v in row) + '</w:tr>' for row in rows) + '</w:tbl>'
+    return '<w:tbl><w:tblPr><w:tblStyle w:val="HFUTThreeLineTable"/><w:tblW w:w="7200" w:type="dxa"/>' + borders + '<w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="3600"/><w:gridCol w:w="3600"/></w:tblGrid>' + ''.join('<w:tr>' + ''.join(cell(v) for v in row) + '</w:tr>' for row in rows) + '</w:tbl>'
 
 
 def sect_pr(*, columns: int = 1) -> str:
@@ -506,7 +523,9 @@ def style_map_rows() -> list[dict[str, str]]:
     add("HFUTHeading1", "HFUT Heading 1", "level-1 heading", "heading", "Normal", "黑体", "Times New Roman", "14", "TRUE", "left", "0", "0", "exact", "16", "TRUE", "1", "OOXML named style + numbering", "HFUT-FMT-013; HFUT-FMT-016", "14 pt Heiti; keep-next candidate", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic numbering not Word-accepted yet")
     add("HFUTHeading2", "HFUT Heading 2", "level-2 heading", "heading", "Normal", "黑体", "Times New Roman", "10.5", "TRUE", "left", "0", "0", "exact", "16", "TRUE", "2", "OOXML named style + numbering", "HFUT-FMT-014; HFUT-FMT-016", "10.5 pt Heiti", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic numbering not Word-accepted yet")
     add("HFUTHeading3", "HFUT Heading 3", "level-3 heading", "heading", "Normal", "楷体", "Times New Roman", "10.5", "FALSE", "left", "0", "0", "exact", "16", "TRUE", "3", "OOXML named style + numbering", "HFUT-FMT-015; HFUT-FMT-016", "10.5 pt Kaiti", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic numbering not Word-accepted yet")
-    add("HFUTEquation", "HFUT Equation", "equation paragraph", "math", "Normal", "Times New Roman", "Times New Roman", "10.5", "FALSE", "center", "0", "0", "exact", "16", "FALSE", "", "OOXML named style", "HFUT-FMT-017; HFUT-FMT-023", "equation paragraph boundary", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "does not create or replace MathType")
+    add("HFUTEquation", "HFUT Equation", "equation paragraph", "math", "Normal", "Times New Roman", "Times New Roman", "10.5", "FALSE", "center", "0", "0", "atLeast", "24", "FALSE", "", "OOXML named style", "HFUT-FMT-017; HFUT-FMT-023", "Word POC validated 480-twip minimum line with 80-twip before/after spacing", "VALIDATED_PROJECT_DERIVED_CANDIDATE", "WORD_POC_VALIDATED", "YES", "Microsoft Word POC-derived spacing; not a textual journal line-spacing rule; does not create or replace MathType; never auto-restore exact 16 pt")
+    rows[-1]["space_before_pt"] = "4"
+    rows[-1]["space_after_pt"] = "4"
     add("HFUTFigureCaption", "HFUT Figure Caption", "figure caption", "caption", "Normal", "黑体", "Times New Roman", "7.5", "TRUE", "center", "0", "0", "exact", "16", "FALSE", "", "OOXML named style", "HFUT-FIG-017", "7.5 pt Heiti centered candidate", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "caption evidence remains candidate-level")
     add("HFUTTableCaption", "HFUT Table Caption", "table caption", "caption", "Normal", "黑体", "Times New Roman", "7.5", "TRUE", "center", "0", "0", "exact", "16", "FALSE", "", "OOXML named style", "HFUT-TBL-010", "7.5 pt Heiti centered candidate", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "unit placement and continuation pending")
     add("HFUTTableContent", "HFUT Table Content", "table content", "table", "Normal", "宋体", "Times New Roman", "7.5", "FALSE", "center", "0", "0", "exact", "12", "FALSE", "", "OOXML named style", "HFUT-TBL-005; HFUT-TBL-012", "7.5 pt content; 108 twip cell margins", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "generic table cell alignment is a candidate")
@@ -515,7 +534,7 @@ def style_map_rows() -> list[dict[str, str]]:
     add("HFUTAuthorBiography", "HFUT Author Biography", "author biography", "author-bio", "Normal", "宋体", "Times New Roman", "7.5", "FALSE", "left", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-WEB-025", "footer field requirement; no content supplied", "TEXTUALLY_CONFIRMED", "PENDING_WINDOWS_CHECK", "YES", "not populated in candidate")
     add("HFUTFunding", "HFUT Funding", "funding", "funding", "Normal", "宋体", "Times New Roman", "7.5", "FALSE", "left", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-WEB-026", "conditional funding requirement", "TEXTUALLY_CONFIRMED", "PENDING_WINDOWS_CHECK", "YES", "not populated; no funding invented")
     add("HFUTAcknowledgement", "HFUT Acknowledgement", "acknowledgement", "acknowledgement", "Normal", "宋体", "Times New Roman", "7.5", "FALSE", "left", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-WEB-031", "anonymous-copy pending check", "PENDING_WINDOWS_CHECK", "PENDING_POC", "YES", "not populated")
-    add("HFUTThreeLineTable", "HFUT Three Line Table", "three-line table", "table", "TableNormal", "宋体", "Times New Roman", "7.5", "FALSE", "", "0", "0", "", "", "FALSE", "", "OOXML table style", "HFUT-WEB-018; HFUT-TBL-003; HFUT-TBL-004", "top/bottom 1 pt; middle 0.5 pt; no verticals", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "Word border and merged-cell behavior pending")
+    add("HFUTThreeLineTable", "HFUT Three Line Table", "three-line table", "table", "TableNormal", "宋体", "Times New Roman", "7.5", "FALSE", "", "0", "0", "", "", "FALSE", "", "OOXML table style", "HFUT-WEB-018; HFUT-TBL-003; HFUT-TBL-004", "canonical may legally inherit TableNormal; Pandoc output removes the parent when undefined; final layout uses direct tblW/gridCol/borders/cell properties without fixed layout", "TEXTUALLY_CONFIRMED", "WORD_POC_VALIDATED", "YES", "TableNormal and fixed layout are not journal requirements; do not force missing basedOn or tblLayout=fixed into generated output")
     add("HFUTSpecimenNotice", "HFUT Specimen Notice", "external specimen notice", "none", "Normal", "Times New Roman", "Times New Roman", "9", "TRUE", "center", "0", "0", "exact", "12", "TRUE", "", "OOXML named style", "", "external specimen governance text", "PROJECT_DERIVED_CANDIDATE", "PENDING_POC", "YES", "external specimen only; not canonical manuscript content")
     add("Normal", "Normal", "base paragraph mapping", "paragraph", "", "宋体", "Times New Roman", "10.5", "FALSE", "both", "200", "0", "exact", "16", "FALSE", "", "OOXML base style", "HFUT-FMT-012; HFUT-FMT-028", "base font and body candidate", "PROJECT_DERIVED_CANDIDATE", "PENDING_POC", "YES", "Pandoc compatibility style")
     add("BodyText", "Body Text", "Pandoc body-text mapping", "paragraph", "HFUTBody", "宋体", "Times New Roman", "10.5", "FALSE", "both", "200", "0", "exact", "16", "FALSE", "", "Pandoc compatibility style", "HFUT-FMT-012; HFUT-FMT-028", "maps to HFUTBody", "PROJECT_DERIVED_CANDIDATE", "PENDING_POC", "YES", "Pandoc common-style mapping")

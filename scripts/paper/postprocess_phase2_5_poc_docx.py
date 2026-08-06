@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import re
 import tempfile
 import zipfile
 from pathlib import Path
@@ -278,7 +279,10 @@ def transform_document(xml_bytes: bytes, fallback_relationship_id: str | None = 
         if text.startswith("表1 "):
             set_paragraph_style(paragraph, "HFUTTableCaption")
         if text == "参考文献":
-            set_paragraph_style(paragraph, "HFUTReferenceHeading")
+            ppr = set_paragraph_style(paragraph, "HFUTReferenceHeading")
+            direct_numbering = ppr.find("w:numPr", NS)
+            if direct_numbering is not None:
+                ppr.remove(direct_numbering)
             references_started = True
         elif references_started and text:
             set_paragraph_style(paragraph, "HFUTReferenceEntry")
@@ -416,6 +420,89 @@ def add_png_fallback(parts: dict[str, bytes], png_path: Path) -> str:
     ET.register_namespace("", CT)
     parts["[Content_Types].xml"] = ET.tostring(content_types, encoding="utf-8", xml_declaration=True)
     return relationship_id
+
+
+FIRST_PAGE_BIOGRAPHY = "TOOLCHAIN TEST 虚拟作者简介，仅用于首页页脚能力验证"
+
+
+def first_page_footer_xml(variant: str) -> bytes:
+    biography = ""
+    if variant == "full":
+        biography = (
+            '<w:p><w:pPr><w:pStyle w:val="HFUTAuthorBiography"/></w:pPr>'
+            f'<w:r><w:t>{FIRST_PAGE_BIOGRAPHY}</w:t></w:r></w:p>'
+        )
+    page = (
+        '<w:p><w:pPr><w:pStyle w:val="PageNumber"/><w:jc w:val="center"/></w:pPr>'
+        '<w:fldSimple w:instr=" PAGE "><w:r><w:rPr><w:noProof/></w:rPr></w:r></w:fldSimple>'
+        '</w:p>'
+    )
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>'
+        f'<w:ftr xmlns:w="{W}" xmlns:r="{R}">{biography}{page}</w:ftr>'
+    ).encode("utf-8")
+
+
+def add_first_page_footer(parts: dict[str, bytes], variant: str) -> None:
+    """Add an explicit first-page footer without changing later PAGE footers."""
+    footer_numbers = [
+        int(match.group(1))
+        for name in parts
+        for match in [re.fullmatch(r"word/footer(\d+)\.xml", name)]
+        if match
+    ]
+    footer_number = max(footer_numbers, default=0) + 1
+    footer_name = f"word/footer{footer_number}.xml"
+    parts[footer_name] = first_page_footer_xml(variant)
+
+    rel_name = "word/_rels/document.xml.rels"
+    rel_root = ET.fromstring(parts[rel_name])
+    numeric_ids = [
+        int(match.group(1))
+        for rel in rel_root
+        for match in [re.fullmatch(r"rId(\d+)", rel.get("Id", ""))]
+        if match
+    ]
+    relationship_id = f"rId{max(numeric_ids, default=0) + 1}"
+    ET.SubElement(rel_root, qn(PR, "Relationship"), {
+        "Id": relationship_id,
+        "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer",
+        "Target": f"footer{footer_number}.xml",
+    })
+    ET.register_namespace("", PR)
+    parts[rel_name] = ET.tostring(rel_root, encoding="utf-8", xml_declaration=True)
+
+    document = ET.fromstring(parts["word/document.xml"])
+    sections = document.findall(".//w:sectPr", NS)
+    if len(sections) != 2:
+        raise ValueError(f"expected two sections before first-footer insertion, found {len(sections)}")
+    first_section = sections[0]
+    for existing in list(first_section.findall("w:footerReference", NS)):
+        if existing.get(qn(W, "type")) == "first":
+            first_section.remove(existing)
+    first_reference = ET.Element(qn(W, "footerReference"), {
+        qn(W, "type"): "first",
+        qn(R, "id"): relationship_id,
+    })
+    insert_in_schema_order(first_section, first_reference, SECTPR_ORDER)
+    title_page = first_section.find("w:titlePg", NS)
+    if title_page is None:
+        insert_in_schema_order(first_section, ET.Element(qn(W, "titlePg")), SECTPR_ORDER)
+    normalize_children(first_section, SECTPR_ORDER)
+    parts["word/document.xml"] = ET.tostring(document, encoding="utf-8", xml_declaration=True)
+
+    content_types = ET.fromstring(parts["[Content_Types].xml"])
+    part_name = f"/{footer_name}"
+    if not any(node.get("PartName") == part_name for node in content_types):
+        ET.SubElement(content_types, qn(CT, "Override"), {
+            "PartName": part_name,
+            "ContentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml",
+        })
+    normalize_content_types(content_types)
+    ET.register_namespace("", CT)
+    parts["[Content_Types].xml"] = ET.tostring(
+        content_types, encoding="utf-8", xml_declaration=True
+    )
 
 
 def deduplicate_styles(parts: dict[str, bytes]) -> None:
@@ -582,6 +669,7 @@ def rewrite_docx(input_path: Path, output_path: Path, variant: str, fallback_png
         parts = {name: archive.read(name) for name in archive.namelist()}
     fallback_relationship_id = add_png_fallback(parts, fallback_png) if fallback_png else None
     parts["word/document.xml"] = transform_document(parts["word/document.xml"], fallback_relationship_id)
+    add_first_page_footer(parts, variant)
     deduplicate_styles(parts)
     disable_open_time_field_updates(parts)
     if fallback_relationship_id:

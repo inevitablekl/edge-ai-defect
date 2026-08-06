@@ -40,7 +40,6 @@ function Pandoc(doc)
         output:insert(styled(meta_text(doc.meta, "poc-affiliation-en"), "HFUTAffiliationEN"))
         output:insert(styled(meta_text(doc.meta, "poc-contact"), "HFUTBody"))
         output:insert(styled(meta_text(doc.meta, "poc-funding"), "HFUTFunding"))
-        output:insert(styled(meta_text(doc.meta, "poc-biography"), "HFUTAuthorBiography"))
         output:insert(styled(meta_text(doc.meta, "poc-acknowledgement"), "HFUTAcknowledgement"))
       else
         output:insert(styled("ANONYMIZED_POC_CANDIDATE", "HFUTSpecimenNotice"))

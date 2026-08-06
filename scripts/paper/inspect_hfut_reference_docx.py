@@ -112,6 +112,7 @@ def check(path: Path) -> tuple[bool, list[str]]:
     document = root("word/document.xml")
     styles = root("word/styles.xml")
     numbering = root("word/numbering.xml")
+    settings = root("word/settings.xml")
     footer = root("word/footer1.xml")
     core = root("docProps/core.xml")
     custom = root("docProps/custom.xml")
@@ -168,6 +169,29 @@ def check(path: Path) -> tuple[bool, list[str]]:
                 errors.append("three-line table style lacks 1 pt / 0.5 pt borders")
             if "nil" not in inside_v_values:
                 errors.append("three-line table style does not explicitly disable inside vertical borders")
+            based_on = table_style.find("w:basedOn", NS)
+            if based_on is None or attr(based_on, "val") != "TableNormal":
+                errors.append("canonical three-line table style no longer records legal TableNormal inheritance")
+            if table_style.find("w:tblPr/w:tblLayout", NS) is not None:
+                errors.append("canonical three-line table style must not force fixed layout")
+            margins = table_style.find("w:tblPr/w:tblCellMar", NS)
+            expected_margins = {"top": "0", "left": "108", "bottom": "0", "right": "108"}
+            if margins is None or any(
+                attr(margins.find(f"w:{edge}", NS), "w") != value
+                for edge, value in expected_margins.items()
+            ):
+                errors.append("canonical three-line table cell margins regressed")
+        equation_style = style_elements.get("HFUTEquation")
+        if equation_style is not None:
+            equation_spacing = equation_style.find("w:pPr/w:spacing", NS)
+            expected_equation = {
+                "lineRule": "atLeast", "line": "480", "before": "80", "after": "80",
+            }
+            if equation_spacing is None or any(
+                attr(equation_spacing, key) != value
+                for key, value in expected_equation.items()
+            ):
+                errors.append("HFUTEquation differs from validated 480/80/80 atLeast contract")
     if numbering is not None:
         levels = numbering.findall(".//w:lvl", NS)
         if numbering.findall(".//w:lvl/w:rPr/w:rPr", NS):
@@ -181,6 +205,8 @@ def check(path: Path) -> tuple[bool, list[str]]:
         instructions += " " + " ".join(attr(node, "instr") or "" for node in footer.findall(".//w:fldSimple", NS))
         if "PAGE" not in instructions:
             errors.append("footer has no PAGE field")
+    if settings is not None and settings.find("w:updateFields", NS) is not None:
+        errors.append("open-time updateFields must remain intentionally disabled")
     all_text = ""
     for payload in raw.values():
         try:

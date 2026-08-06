@@ -89,9 +89,12 @@ Pandoc heading mapping require the later POC.
 
 ## 9. Formula Handling Boundary
 
-`HFUTEquation` exists as a centered paragraph style. No MathType formula,
-OMML formula, equation number, or space-aligned equation was created. MathType
-creation/editability and equation layout are not claimed.
+`HFUTEquation` exists as a centered paragraph style with
+`lineRule=atLeast`, `line=480` twips, and 80 twips before/after. This is a
+Microsoft Word POC-validated project-derived candidate, not journal-specified
+line spacing. It must not be reverted automatically to exact 16 pt and 0/0
+spacing. No MathType formula, OMML formula, equation number, or space-aligned
+equation was created, and the candidate does not replace final MathType work.
 
 ## 10. Figure and Caption Styles
 
@@ -106,6 +109,13 @@ lines. Cell margins are 108 twips left/right and zero top/bottom. The external
 specimen includes one small virtual table. Merged cells, continuation tables,
 and Word-specific border rendering remain pending.
 
+The canonical `HFUTThreeLineTable` may retain `basedOn=TableNormal`. The v7
+Pandoc/post-processing layer omits `basedOn` when the parent is absent. Its
+stable direct layout uses `tblW=4400`, grid columns `1400/1400/1600`, verified
+cell margins and the stated borders, with no `tblLayout=fixed`. These are
+project implementation contracts, not claims that the journal text requires
+TableNormal or fixed layout.
+
 ## 12. Reference Style
 
 `HFUTReferenceEntry` and `Bibliography` use 7.5 pt Songti/Times New Roman and
@@ -117,16 +127,17 @@ values as if they were one rule.
 ## 13. Page Number Field
 
 The footer uses a `PAGE` field and does not write a fixed page-number
-paragraph. The current canonical builder removes open-time `updateFields`; the
-field remains available for manual/F9 refresh. Microsoft Word behavior remains
-a manual check.
+paragraph. The current canonical builder intentionally omits open-time
+`updateFields`; the field remains available for controlled `Ctrl+A`/`F9`
+refresh. This policy avoids open-time external-field or automatic-update
+prompts. Microsoft Word behavior remains a manual check.
 
 ## 14. Deterministic Build Results
 
 Two consecutive builds produced identical bytes:
 
 ```text
-reference_sha256=c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6
+reference_sha256=416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7
 byte_determinism=PASS
 ```
 
@@ -138,6 +149,12 @@ three-line-table `w:tblPr` child order. The repaired builder emits one valid
 numbering `w:rPr`; the later Step 7E schema repair uses the validated
 table-style order `tblBorders, tblCellMar`. No candidate feature or formatting
 rule was removed.
+
+The former Step 7F canonical hash
+`c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6`
+was superseded in Step 7G solely to synchronize the canonical
+`HFUTEquation` spacing with the already Word-validated project-derived
+candidate and to remove the specimen's unused fixed-layout marker.
 
 The deterministic claim is limited to the builder's package output. Step 7E
 also repaired the canonical theme, font table, style-property ordering,

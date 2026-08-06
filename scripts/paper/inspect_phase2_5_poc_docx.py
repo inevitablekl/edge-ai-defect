@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect a Phase 2.5 Step 7C POC DOCX without claiming Word acceptance."""
+"""Inspect a Phase 2.5 Step 7G POC DOCX without claiming Word acceptance."""
 
 from __future__ import annotations
 
@@ -74,7 +74,9 @@ FORBIDDEN_ANONYMOUS = (
     "基金测试字段",
     "作者简介测试字段",
     "致谢测试字段",
+    "TOOLCHAIN TEST 虚拟作者简介，仅用于首页页脚能力验证",
 )
+FIRST_PAGE_BIOGRAPHY = "TOOLCHAIN TEST 虚拟作者简介，仅用于首页页脚能力验证"
 FORBIDDEN_EXTERNAL_FIELD_TYPES = {
     "INCLUDEPICTURE", "INCLUDETEXT", "LINK", "DDE", "DDEAUTO", "RD"
 }
@@ -355,6 +357,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         f"poc_{variant}.docx", f"poc_{variant}_v2.docx",
         f"poc_{variant}_v3.docx", f"poc_{variant}_v4.docx",
         f"poc_{variant}_v5.docx", f"poc_{variant}_v6.docx",
+        f"poc_{variant}_v7.docx",
     }:
         errors.append("unexpected output filename")
 
@@ -382,6 +385,9 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         errors.append("missing w:body")
         result["errors"] = errors
         return result, errors
+
+    footer_names = sorted(name for name in names if re.fullmatch(r"word/footer\d+\.xml", name))
+    footer_roots = {name: ET.fromstring(parts[name]) for name in footer_names}
 
     paragraphs = body.findall(".//w:p", NS)
     text = "\n".join(para_text(p) for p in paragraphs)
@@ -465,6 +471,11 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     style_counts = Counter(
         node.get(qn(W, "val"), "") for node in document.findall(".//w:pStyle", NS)
     )
+    style_counts.update(
+        node.get(qn(W, "val"), "")
+        for footer in footer_roots.values()
+        for node in footer.findall(".//w:pStyle", NS)
+    )
     required_used = set(COMMON_STYLES)
     if variant == "full":
         required_used |= FULL_ONLY_STYLES
@@ -487,6 +498,29 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         errors.append("style definition integrity failed")
     if missing_defined or missing_used:
         errors.append(f"required style definition/use missing: defined={missing_defined}, used={missing_used}")
+
+    reference_headings = [paragraph for paragraph in paragraphs if para_text(paragraph) == "参考文献"]
+    reference_heading_records = []
+    for paragraph in reference_headings:
+        pstyle = paragraph.find("w:pPr/w:pStyle", NS)
+        direct_num_pr = paragraph.find("w:pPr/w:numPr", NS)
+        record = {
+            "text": para_text(paragraph),
+            "style": attr(pstyle, "val"),
+            "direct_numPr": direct_num_pr is not None,
+        }
+        reference_heading_records.append(record)
+    result["reference_heading"] = {
+        "count": len(reference_headings),
+        "records": reference_heading_records,
+        "required_visible_text": "参考文献",
+        "numbering_contract": "NO_DIRECT_NUMPR",
+    }
+    if (len(reference_heading_records) != 1
+            or reference_heading_records[0]["style"] != "HFUTReferenceHeading"
+            or reference_heading_records[0]["direct_numPr"]
+            or reference_heading_records[0]["text"] != "参考文献"):
+        errors.append("REFERENCE_HEADING_NUMBERING_DRIFT")
 
     style_ppr_ordering = order_violations(
         [node for style in style_nodes for node in style.findall("w:pPr", NS)],
@@ -542,6 +576,12 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         errors.append("numbering numId/abstractNum relationship mismatch")
     if duplicate_abstract_ids or duplicate_num_ids or missing_abstract_refs:
         errors.append("numbering definition integrity failed")
+    heading_style_counts = Counter(item["style"] for item in headings)
+    if heading_style_counts != Counter({
+        "HFUTIntroHeading": 1, "HFUTHeading1": 1,
+        "HFUTHeading2": 1, "HFUTHeading3": 1,
+    }):
+        errors.append("body heading 0/1/1.1/1.1.1 structure regressed")
 
     math_inline = len(document.findall(".//m:oMath", NS))
     math_para = len(document.findall(".//m:oMathPara", NS))
@@ -574,12 +614,14 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         }
         equation_layout.append(detail)
         if has_display:
-            if pstyle != "HFUTEquation" or detail["lineRule"] not in {"auto", "atLeast"}:
-                errors.append("display equation uses an unsafe fixed line rule")
+            if (pstyle != "HFUTEquation" or detail["lineRule"] != "atLeast"
+                    or detail["line"] != "480" or detail["before"] != "80"
+                    or detail["after"] != "80"):
+                errors.append("display equation contract differs from approved 480/80/80 atLeast values")
         else:
             inline_formula_paragraphs.append(detail)
-            if detail["lineRule"] == "exact":
-                errors.append("inline equation paragraph retains exact line spacing")
+            if detail["lineRule"] != "atLeast" or detail["line"] != "360":
+                errors.append("inline equation contract differs from approved 360-twip atLeast value")
     result["formulas"] = {
         "oMath_count": math_inline,
         "oMathPara_count": math_para,
@@ -629,9 +671,21 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         errors.append("figure must use one embedded PNG with a valid caption and no orphan SVG")
 
     tables = body.findall("w:tbl", NS)
+    three_line_style = next(
+        (node for node in style_nodes if node.get(qn(W, "styleId"), "") == "HFUTThreeLineTable"),
+        None,
+    )
+    style_cell_margin = three_line_style.find("w:tblPr/w:tblCellMar", NS) if three_line_style is not None else None
+    style_cell_margins = {
+        edge: [attr(style_cell_margin.find(f"w:{edge}", NS) if style_cell_margin is not None else None, "type"),
+               attr(style_cell_margin.find(f"w:{edge}", NS) if style_cell_margin is not None else None, "w")]
+        for edge in ("top", "left", "bottom", "right")
+    }
     table_details = []
     for table in tables:
         tbl_style = table.find("w:tblPr/w:tblStyle", NS)
+        tbl_width = table.find("w:tblPr/w:tblW", NS)
+        tbl_layout = table.find("w:tblPr/w:tblLayout", NS)
         borders = table.find("w:tblPr/w:tblBorders", NS)
         detail = {
             "style": attr(tbl_style, "val"),
@@ -642,15 +696,23 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
             "bottom": [attr(borders.find("w:bottom", NS) if borders is not None else None, "val"), attr(borders.find("w:bottom", NS) if borders is not None else None, "sz")],
             "insideV": attr(borders.find("w:insideV", NS) if borders is not None else None, "val"),
             "header_bottom_sizes": [attr(node, "sz") for node in table.findall("w:tr[1]/w:tc/w:tcPr/w:tcBorders/w:bottom", NS)],
+            "tblW": [attr(tbl_width, "type"), attr(tbl_width, "w")],
+            "gridCol": [attr(node, "w") for node in table.findall("w:tblGrid/w:gridCol", NS)],
+            "tblLayout": "ABSENT" if tbl_layout is None else attr(tbl_layout, "type"),
         }
         table_details.append(detail)
         if detail["style"] != "HFUTThreeLineTable" or detail["top"] != ["single", "8"] or detail["bottom"] != ["single", "8"] or detail["insideV"] != "nil" or set(detail["header_bottom_sizes"]) != {"4"}:
             errors.append("three-line table direct formatting mismatch")
+        if (detail["tblW"] != ["dxa", "4400"]
+                or detail["gridCol"] != ["1400", "1400", "1600"]
+                or detail["tblLayout"] != "ABSENT"):
+            errors.append("table width/grid/fixed-layout contract regressed")
         if not all(token in detail["cell_text"] for token in ("1.20", "2.345", "3.0", "中文1", "English 2", "中英mix 3")):
             errors.append("synthetic table cell data missing")
     result["tables"] = {
         "count": len(tables),
         "details": table_details,
+        "style_cell_margins": style_cell_margins,
         "caption_style_count": style_counts["HFUTTableCaption"],
         "conclusion": "SUPPORTED_WITH_POSTPROCESS",
         "numbering": "STATIC_TEXT_ONLY",
@@ -658,21 +720,70 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     }
     if len(tables) != 1 or style_counts["HFUTTableCaption"] < 1:
         errors.append("expected one table and one table caption")
+    if style_cell_margins != {
+        "top": ["dxa", "0"], "left": ["dxa", "108"],
+        "bottom": ["dxa", "0"], "right": ["dxa", "108"],
+    }:
+        errors.append("three-line table cell-margin contract regressed")
 
-    footer_names = sorted(name for name in names if re.fullmatch(r"word/footer\d+\.xml", name))
     page_instructions = []
-    for name in footer_names:
-        footer_root = ET.fromstring(parts[name])
-        page_instructions.extend(
+    footer_details = {}
+    for name, footer_root in footer_roots.items():
+        instructions = [
             node.get(qn(W, "instr"), "") for node in footer_root.findall(".//w:fldSimple", NS)
-        )
-        page_instructions.extend(
-            node.text or "" for node in footer_root.findall(".//w:instrText", NS)
-        )
+        ] + [node.text or "" for node in footer_root.findall(".//w:instrText", NS)]
+        page_instructions.extend(instructions)
+        footer_details[name] = {
+            "text": "".join(node.text or "" for node in footer_root.findall(".//w:t", NS)),
+            "PAGE": any(re.search(r"\bPAGE\b", instruction) for instruction in instructions),
+            "styles": [attr(node, "val") for node in footer_root.findall(".//w:pStyle", NS)],
+        }
     page_field = any(re.search(r"\bPAGE\b", instruction) for instruction in page_instructions)
-    result["page_field"] = {"footer_parts": footer_names, "PAGE": page_field}
+    document_rels = ET.fromstring(parts["word/_rels/document.xml.rels"])
+    footer_targets = {
+        rel.get("Id", ""): "word/" + rel.get("Target", "")
+        for rel in document_rels
+        if rel.get("Type", "").endswith("/footer")
+    }
+    section_footer_refs = []
+    for section in section_nodes:
+        refs = {
+            attr(node, "type"): footer_targets.get(node.get(qn(R, "id"), ""), "MISSING")
+            for node in section.findall("w:footerReference", NS)
+        }
+        section_footer_refs.append({
+            "titlePg": section.find("w:titlePg", NS) is not None,
+            "references": refs,
+        })
+    first_footer_name = section_footer_refs[0]["references"].get("first", "MISSING")
+    default_footer_name = section_footer_refs[0]["references"].get("default", "MISSING")
+    biography_hits = {
+        name: detail["text"].count(FIRST_PAGE_BIOGRAPHY)
+        for name, detail in footer_details.items()
+    }
+    body_biography_count = text.count(FIRST_PAGE_BIOGRAPHY)
+    result["page_field"] = {
+        "footer_parts": footer_names, "PAGE": page_field,
+        "details": footer_details, "section_footer_references": section_footer_refs,
+        "first_footer": first_footer_name, "default_footer": default_footer_name,
+        "biography_hits": biography_hits, "body_biography_count": body_biography_count,
+    }
     if not page_field:
         errors.append("PAGE field missing")
+    if (len(footer_names) != 2 or not section_footer_refs[0]["titlePg"]
+            or first_footer_name not in footer_details
+            or default_footer_name not in footer_details
+            or not footer_details[first_footer_name]["PAGE"]
+            or not footer_details[default_footer_name]["PAGE"]):
+        errors.append("first/default footer PAGE contract failed")
+    if variant == "full":
+        if (sum(biography_hits.values()) != 1
+                or biography_hits.get(first_footer_name) != 1
+                or "HFUTAuthorBiography" not in footer_details[first_footer_name]["styles"]
+                or body_biography_count != 0):
+            errors.append("Full first-page footer biography contract failed")
+    elif sum(biography_hits.values()) != 0 or body_biography_count != 0:
+        errors.append("Anonymous first-page footer contains biography identity")
 
     unresolved = sorted(set(re.findall(r"@POC_[A-Za-z0-9_:-]+", text)))
     citation_numbers = sorted(set(re.findall(r"\[(\d+(?:[-–,]\s*\d+)*)\]", text)))

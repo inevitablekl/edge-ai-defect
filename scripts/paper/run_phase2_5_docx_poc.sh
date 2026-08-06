@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Paper Phase 2.5 Step 7C remediation candidate — TOOLCHAIN_POC_ONLY.
+# Paper Phase 2.5 Step 7G v7 remediation candidate — TOOLCHAIN_POC_ONLY.
 # Generates only synthetic Microsoft Word compatibility candidates outside Git.
 
 REPO_ROOT="${PHASE2_5_REPO_ROOT:-/home/orin/edge-ai/edge-ai-defect}"
-POC_ROOT="${PHASE2_5_POC_ROOT:-/home/orin/paper-external-inputs/hfut-journal/phase2_5_source_v1/derived/step6_markdown_docx_poc_v1}"
+POC_ROOT="${PHASE2_5_POC_ROOT:-/home/orin/paper-external-inputs/hfut-journal/phase2_5_source_v1/derived/step7g_journal_format_remediation_v1/poc}"
 PANDOC_BIN="${PHASE2_5_PANDOC:-/home/orin/.local/bin/pandoc}"
 REFERENCE_DOCX="$REPO_ROOT/docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
 CSL_URL="https://www.zotero.org/styles/china-national-standard-gb-t-7714-2025-numeric"
-EXPECTED_REFERENCE_SHA="c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6"
+EXPECTED_REFERENCE_SHA="416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7"
 
 SOURCE_DIR="$POC_ROOT/source"
 CSL_DIR="$POC_ROOT/csl"
@@ -90,7 +90,6 @@ poc-author-en: POC SYNTHETIC AUTHOR
 poc-affiliation-en: POC Synthetic Unit, Synthetic City 000000, China
 poc-contact: poc@example.invalid
 poc-funding: 基金测试字段：TOOLCHAIN TEST 虚拟基金 POC-000
-poc-biography: 作者简介测试字段：TOOLCHAIN TEST 虚拟简介
 poc-acknowledgement: 致谢测试字段：TOOLCHAIN TEST 虚拟致谢
 YAML
 
@@ -307,7 +306,7 @@ build_one() {
   local variant="$1"
   local metadata="$SOURCE_DIR/poc_$variant.yaml"
   local raw_docx="$TEMP_DIR/poc_"$variant"_raw.docx"
-  local final_docx="$OUTPUT_DIR/poc_${variant}_v6.docx"
+  local final_docx="$OUTPUT_DIR/poc_${variant}_v7.docx"
   local stdout_log="$LOG_DIR/pandoc_$variant.stdout.log"
   local stderr_log="$LOG_DIR/pandoc_$variant.stderr.log"
   local command_log="$LOG_DIR/pandoc_"$variant"_command.log"
@@ -357,11 +356,11 @@ build_one() {
     > "$LOG_DIR/postprocess_$variant.log" 2>&1
   python3 "$REPO_ROOT/scripts/paper/inspect_phase2_5_poc_docx.py" \
     "$final_docx" --variant "$variant" \
-    --json-output "$INSPECTION_DIR/poc_${variant}_v6_inspection.json" \
+    --json-output "$INSPECTION_DIR/poc_${variant}_v7_inspection.json" \
     > "$LOG_DIR/inspection_$variant.log" 2>&1
-  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v6_file.txt"
-  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v6_sha256.txt"
-  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v6_unzip_test.txt"
+  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v7_file.txt"
+  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v7_sha256.txt"
+  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v7_unzip_test.txt"
 }
 
 build_one full
@@ -371,25 +370,25 @@ for variant in full anonymous; do
   lo_profile="$TEMP_DIR/libreoffice_profile_$variant.$$.tmp"
   mkdir -p "$lo_profile"
   libreoffice "-env:UserInstallation=file://$lo_profile" --headless \
-    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v6.docx" \
+    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v7.docx" \
     > "$LOG_DIR/libreoffice_$variant.stdout.log" \
     2> "$LOG_DIR/libreoffice_$variant.stderr.log"
-  mv -f "$RENDERED_DIR/poc_${variant}_v6.pdf" "$RENDERED_DIR/poc_${variant}_v6_preview.pdf"
-  pdfinfo "$RENDERED_DIR/poc_${variant}_v6_preview.pdf" \
-    > "$INSPECTION_DIR/poc_${variant}_v6_preview_pdfinfo.txt"
-  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v6_preview_pdfinfo.txt")"
+  mv -f "$RENDERED_DIR/poc_${variant}_v7.pdf" "$RENDERED_DIR/poc_${variant}_v7_preview.pdf"
+  pdfinfo "$RENDERED_DIR/poc_${variant}_v7_preview.pdf" \
+    > "$INSPECTION_DIR/poc_${variant}_v7_preview_pdfinfo.txt"
+  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v7_preview_pdfinfo.txt")"
   if [[ "$page_count" -lt 2 || "$page_count" -gt 4 ]]; then
     echo "POC_FAILED: $variant preview has $page_count pages; expected 2-4" >&2
     exit 1
   fi
-  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v6_preview_pdfinfo.txt"; then
+  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v7_preview_pdfinfo.txt"; then
     echo "POC_FAILED: $variant preview is not reported as A4" >&2
     exit 1
   fi
 done
 
 if rg -n 'POC测试作者|POC测试单位|poc@example\.invalid|基金测试字段|作者简介测试字段|致谢测试字段' \
-  "$INSPECTION_DIR/poc_anonymous_v6_inspection.json" \
+  "$INSPECTION_DIR/poc_anonymous_v7_inspection.json" \
   "$LOG_DIR/pandoc_anonymous_command.log" \
   "$LOG_DIR/pandoc_anonymous.stdout.log" \
   "$LOG_DIR/pandoc_anonymous.stderr.log"; then
@@ -417,12 +416,12 @@ NOT_SUBMISSION_MANUSCRIPT
 PHASE_3_NOT_AUTHORIZED
 NON_AUTHORITATIVE_LIBREOFFICE_PREVIEW
 MICROSOFT_WORD_RENDERING_NOT_VERIFIED
-MICROSOFT_WORD_COMPATIBILITY_REMEDIATION_CANDIDATE
-MICROSOFT_WORD_RETEST_REQUIRED
-full_docx=$OUTPUT_DIR/poc_full_v6.docx
-anonymous_docx=$OUTPUT_DIR/poc_anonymous_v6.docx
-full_preview=$RENDERED_DIR/poc_full_v6_preview.pdf
-anonymous_preview=$RENDERED_DIR/poc_anonymous_v6_preview.pdf
+JOURNAL_FORMAT_REMEDIATION_V7_CANDIDATE
+MICROSOFT_WORD_V7_RETEST_REQUIRED
+full_docx=$OUTPUT_DIR/poc_full_v7.docx
+anonymous_docx=$OUTPUT_DIR/poc_anonymous_v7.docx
+full_preview=$RENDERED_DIR/poc_full_v7_preview.pdf
+anonymous_preview=$RENDERED_DIR/poc_anonymous_v7_preview.pdf
 EOF
 
 echo "POC_RUN_PASS"

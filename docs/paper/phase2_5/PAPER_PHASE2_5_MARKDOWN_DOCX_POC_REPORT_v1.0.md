@@ -403,3 +403,30 @@ solutions.
 ## 23. Next Executor
 
 `USER_MANUAL`
+
+## 24. Step 7G Contract Reconciliation Addendum
+
+This addendum does not rewrite the historical Step 6 results above. Step 7G
+produces separate v7 artifacts and synchronizes the current governance
+contract with already validated behavior:
+
+- display `HFUTEquation` uses `atLeast` 480 twips with 80 twips before/after;
+  the inline-formula paragraph remains `atLeast` 360 twips. This is a
+  Microsoft Word POC-validated project-derived candidate, not journal-text
+  line spacing and not a substitute for final MathType handling;
+- the canonical table style may retain `basedOn=TableNormal`, while v7 omits
+  the missing parent. v7 layout depends on direct `tblW=4400`, grid columns
+  `1400/1400/1600`, verified cell margins and 1/0.5/1-pt horizontal borders,
+  with no vertical borders and no `tblLayout=fixed`;
+- the unique `HFUTReferenceHeading` has no direct `numPr`, so its visible text
+  is only `参考文献`; body numbering 0/1/1.1/1.1.1 remains intact;
+- Full v7 places the exact synthetic biography in the first-page footer and
+  removes its body copy; Anonymous v7 contains no biography or identity in
+  that footer. First and default footers preserve `PAGE` fields;
+- open-time `w:updateFields` remains intentionally absent. Final field refresh
+  is a controlled Microsoft Word `Ctrl+A`/`F9` operation.
+
+The v7 packages, their hashes, schema results, and remaining Windows checks
+are governed by
+`PAPER_PHASE2_5_JOURNAL_FORMAT_REMEDIATION_REPORT_v1.0.md`, not by the
+historical Step 6 hashes recorded above.
