@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from inspect_phase2_5_poc_docx import inspect_content_types
+from inspect_phase2_5_poc_docx import inspect_content_types, inspect_theme_and_font_table
 
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -207,6 +207,8 @@ def check(path: Path) -> tuple[bool, list[str]]:
         errors.extend(f"content types: {error}" for error in content_type_errors)
     if content_type_result["default_after_override_count"] != 0:
         errors.append("content types: Default-after-Override violation")
+    _, theme_font_errors = inspect_theme_and_font_table(raw)
+    errors.extend(theme_font_errors)
     return not errors, errors
 
 

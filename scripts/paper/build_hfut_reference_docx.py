@@ -11,6 +11,7 @@ specimen; the specimen is never used as the reference template.
 from __future__ import annotations
 
 import argparse
+import base64
 import csv
 import hashlib
 import json
@@ -18,6 +19,7 @@ import os
 from pathlib import Path
 from xml.sax.saxutils import escape
 import zipfile
+import zlib
 
 from inspect_phase2_5_poc_docx import inspect_content_types
 
@@ -103,28 +105,31 @@ def ppr(
     tabs: str = "",
 ) -> str:
     bits: list[str] = []
-    if align:
-        bits.append(f'<w:jc w:val="{align}"/>')
-    ind_attrs = []
-    if first is not None:
-        ind_attrs.append(f'w:firstLine="{first}"')
-    if left is not None:
-        ind_attrs.append(f'w:left="{left}"')
-    if right is not None:
-        ind_attrs.append(f'w:right="{right}"')
-    if ind_attrs:
-        bits.append("<w:ind " + " ".join(ind_attrs) + "/>" )
-    bits.append(spacing(line, before, after, exact))
     if keep_next:
         bits.append("<w:keepNext/>")
     if keep_lines:
         bits.append("<w:keepLines/>")
     if page_break_before:
         bits.append("<w:pageBreakBefore/>")
-    if outline is not None:
-        bits.append(f'<w:outlineLvl w:val="{outline}"/>')
     if num_id is not None:
         bits.append(f'<w:numPr><w:ilvl w:val="{ilvl or 0}"/><w:numId w:val="{num_id}"/></w:numPr>')
+    bits.append(spacing(line, before, after, exact))
+    ind_attrs = []
+    if first is not None:
+        if first < 0:
+            ind_attrs.append(f'w:hanging="{-first}"')
+        else:
+            ind_attrs.append(f'w:firstLine="{first}"')
+    if left is not None:
+        ind_attrs.append(f'w:left="{left}"')
+    if right is not None:
+        ind_attrs.append(f'w:right="{right}"')
+    if ind_attrs:
+        bits.append("<w:ind " + " ".join(ind_attrs) + "/>" )
+    if align:
+        bits.append(f'<w:jc w:val="{align}"/>')
+    if outline is not None:
+        bits.append(f'<w:outlineLvl w:val="{outline}"/>')
     if tabs:
         bits.append(tabs)
     return "<w:pPr>" + "".join(bits) + "</w:pPr>"
@@ -196,7 +201,7 @@ def table_style() -> str:
     return (
         '<w:style w:type="table" w:styleId="HFUTThreeLineTable">'
         '<w:name w:val="HFUT Three Line Table"/><w:basedOn w:val="TableNormal"/><w:qFormat/>'
-        '<w:tblPr>' + borders + '<w:tblLayout w:type="fixed"/>' + margins + '</w:tblPr>'
+        '<w:tblPr>' + borders + margins + '</w:tblPr>'
         + first_row + '</w:style>'
     )
 
@@ -277,8 +282,6 @@ def numbering_xml() -> str:
 def settings_xml() -> str:
     return f'''<w:settings xmlns:w="{W}">
   <w:zoom w:percent="100"/>
-  <w:updateFields w:val="true"/>
-  <w:defaultTabStop w:val="720"/>
   <w:characterSpacingControl w:val="doNotCompress"/>
   <w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat>
 </w:settings>'''
@@ -398,16 +401,21 @@ def app_xml() -> str:
 
 def font_table_xml() -> str:
     return f'''<w:fonts xmlns:w="{W}">
-  <w:font w:name="宋体"><w:panose1 w:val="0201060003"/><w:charset w:val="86"/><w:family w:val="3"/></w:font>
-  <w:font w:name="黑体"><w:panose1 w:val="0201060904"/><w:charset w:val="86"/><w:family w:val="2"/></w:font>
-  <w:font w:name="楷体"><w:panose1 w:val="0201060101"/><w:charset w:val="86"/><w:family w:val="3"/></w:font>
-  <w:font w:name="Times New Roman"><w:panose1 w:val="02020603050405020304"/><w:family w:val="1"/></w:font>
+  <w:font w:name="宋体"><w:altName w:val="SimSun"/><w:panose1 w:val="02010600030101010101"/><w:charset w:val="86"/><w:family w:val="auto"/><w:pitch w:val="variable"/></w:font>
+  <w:font w:name="黑体"><w:altName w:val="SimHei"/><w:panose1 w:val="02010609060101010101"/><w:charset w:val="86"/><w:family w:val="modern"/><w:pitch w:val="fixed"/></w:font>
+  <w:font w:name="楷体"><w:panose1 w:val="02010609060101010101"/><w:charset w:val="86"/><w:family w:val="modern"/><w:pitch w:val="fixed"/></w:font>
+  <w:font w:name="Times New Roman"><w:panose1 w:val="02020603050405020304"/><w:charset w:val="00"/><w:family w:val="roman"/><w:pitch w:val="variable"/></w:font>
 </w:fonts>'''
 
 
 def theme_xml() -> str:
-    return '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Office Theme"><a:themeElements><a:clrScheme name="Office"><a:dk1><a:sysClr val="windowText" lastClr="000000"/></a:dk1><a:lt1><a:sysClr val="window" lastClr="FFFFFF"/></a:lt1><a:dk2><a:srgbClr val="1F497D"/></a:dk2><a:lt2><a:srgbClr val="EEECE1"/></a:lt2><a:accent1><a:srgbClr val="4F81BD"/></a:accent1><a:accent2><a:srgbClr val="C0504D"/></a:accent2><a:accent3><a:srgbClr val="9BBB59"/></a:accent3><a:accent4><a:srgbClr val="8064A2"/></a:accent4><a:accent5><a:srgbClr val="4BACC6"/></a:accent5><a:accent6><a:srgbClr val="F79646"/></a:accent6><a:hlink><a:srgbClr val="0000FF"/></a:hlink><a:folHlink><a:srgbClr val="800080"/></a:folHlink></a:clrScheme><a:fontScheme name="Office"><a:majorFont><a:latin typeface="Arial"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Arial"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="Office"><a:fillStyleLst/><a:lnStyleLst/><a:effectStyleLst/><a:bgFillStyleLst/></a:fmtScheme></a:themeElements></a:theme>'''
+    # This is the deterministic theme1.xml from Pandoc 3.10.1's built-in
+    # default reference.docx. Keeping its bytes embedded avoids making the
+    # canonical builder depend on a user's local Pandoc data directory.
+    compressed = (
+        "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"
+    )
+    return zlib.decompress(base64.b64decode(compressed)).decode("utf-8")
 
 
 def content_types_xml() -> str:

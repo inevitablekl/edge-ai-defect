@@ -99,6 +99,7 @@ TCPR_ORDER = (
     "noWrap", "tcMar", "textDirection", "tcFitText", "vAlign", "hideMark",
     "headers", "cellIns", "cellDel", "cellMerge", "tcPrChange",
 )
+TCBORDER_ORDER = ("top", "left", "bottom", "right", "insideH", "insideV")
 
 
 def set_paragraph_style(paragraph: ET.Element, style_id: str) -> ET.Element:
@@ -132,7 +133,14 @@ def set_border(parent: ET.Element, edge: str, value: str, size: int | None = Non
     attrs = {qn(W, "val"): value}
     if size is not None:
         attrs.update({qn(W, "sz"): str(size), qn(W, "space"): "0", qn(W, "color"): "000000"})
-    ET.SubElement(parent, qn(W, edge), attrs)
+    node = ET.Element(qn(W, edge), attrs)
+    desired = TCBORDER_ORDER.index(edge)
+    for index, child in enumerate(parent):
+        child_local = child.tag.rsplit("}", 1)[-1]
+        if child_local in TCBORDER_ORDER and TCBORDER_ORDER.index(child_local) > desired:
+            parent.insert(index, node)
+            return
+    parent.append(node)
 
 
 def apply_three_line_table(table: ET.Element) -> None:

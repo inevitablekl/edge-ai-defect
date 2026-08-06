@@ -106,6 +106,14 @@ TCPR_ORDER = (
     "noWrap", "tcMar", "textDirection", "tcFitText", "vAlign", "hideMark",
     "headers", "cellIns", "cellDel", "cellMerge", "tcPrChange",
 )
+TCBORDER_ORDER = ("top", "left", "bottom", "right", "insideH", "insideV")
+VALID_FONT_FAMILY_VALUES = {
+    "decorative", "modern", "roman", "script", "swiss", "auto",
+}
+FONT_CHILD_ORDER = (
+    "altName", "panose1", "charset", "family", "notTrueType", "pitch",
+    "sig", "embedRegular", "embedBold", "embedItalic", "embedBoldItalic",
+)
 RPR_ORDER = (
     "rStyle", "rFonts", "b", "bCs", "i", "iCs", "caps", "smallCaps",
     "strike", "dstrike", "outline", "shadow", "emboss", "imprint",
@@ -265,6 +273,68 @@ def inspect_content_types(parts: dict[str, bytes], package_parts: set[str]) -> t
     return result, errors
 
 
+def inspect_theme_and_font_table(parts: dict[str, bytes]) -> tuple[dict[str, object], list[str]]:
+    """Check the schema-sensitive theme matrix and font-family lexical values."""
+    errors: list[str] = []
+    result: dict[str, object] = {}
+    try:
+        theme = ET.fromstring(parts["word/theme/theme1.xml"])
+        theme_ns = {"a": A}
+        elements = theme.find("a:themeElements", theme_ns)
+        clr = elements.find("a:clrScheme", theme_ns) if elements is not None else None
+        fonts = elements.find("a:fontScheme", theme_ns) if elements is not None else None
+        fmt = elements.find("a:fmtScheme", theme_ns) if elements is not None else None
+        lists = {
+            name: len(fmt.find(f"a:{name}", theme_ns)) if fmt is not None and fmt.find(f"a:{name}", theme_ns) is not None else 0
+            for name in ("fillStyleLst", "lnStyleLst", "effectStyleLst", "bgFillStyleLst")
+        }
+        result["theme"] = {
+            "clrScheme_children": [] if clr is None else [local_name(node) for node in clr],
+            "fontScheme_children": [] if fonts is None else [local_name(node) for node in fonts],
+            "fmtScheme_children": [] if fmt is None else [local_name(node) for node in fmt],
+            "style_list_counts": lists,
+            "objectDefaults": theme.find("a:objectDefaults", theme_ns) is not None,
+            "extraClrSchemeLst": theme.find("a:extraClrSchemeLst", theme_ns) is not None,
+            "extLst": theme.find("a:extLst", theme_ns) is not None,
+        }
+        if elements is None or clr is None or fonts is None or fmt is None:
+            errors.append("theme schema matrix missing required theme elements")
+        if any(value < 3 for value in lists.values()):
+            errors.append("DRAWINGML_THEME_SCHEMA_INVALID")
+    except (KeyError, ET.ParseError) as exc:
+        errors.append(f"theme inspection failed: {exc}")
+
+    invalid_families: list[dict[str, str]] = []
+    family_order_violations: list[list[str]] = []
+    try:
+        fonts_root = ET.fromstring(parts["word/fontTable.xml"])
+        font_records = []
+        for font in fonts_root.findall("w:font", NS):
+            children = [local_name(node) for node in font]
+            known = [FONT_CHILD_ORDER.index(name) for name in children if name in FONT_CHILD_ORDER]
+            if known != sorted(known):
+                family_order_violations.append(children)
+            family = font.find("w:family", NS)
+            value = attr(family, "val")
+            name = attr(font, "name")
+            font_records.append({"name": name, "family": value})
+            if value not in VALID_FONT_FAMILY_VALUES:
+                invalid_families.append({"name": name, "value": value})
+        result["font_table"] = {
+            "fonts": font_records,
+            "valid_font_family_values": sorted(VALID_FONT_FAMILY_VALUES),
+            "invalid_family_values": invalid_families,
+            "child_order_violations": family_order_violations,
+        }
+        if invalid_families:
+            errors.append("WORDPROCESSINGML_FONT_FAMILY_ENUM_INVALID")
+        if family_order_violations:
+            errors.append("fontTable child ordering failed")
+    except (KeyError, ET.ParseError) as exc:
+        errors.append(f"fontTable inspection failed: {exc}")
+    return result, errors
+
+
 def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     errors: list[str] = []
     result: dict[str, object] = {
@@ -284,7 +354,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     if path.name not in {
         f"poc_{variant}.docx", f"poc_{variant}_v2.docx",
         f"poc_{variant}_v3.docx", f"poc_{variant}_v4.docx",
-        f"poc_{variant}_v5.docx",
+        f"poc_{variant}_v5.docx", f"poc_{variant}_v6.docx",
     }:
         errors.append("unexpected output filename")
 
@@ -759,6 +829,10 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
     result["content_types"] = content_type_result
     errors.extend(content_type_errors)
 
+    theme_font_result, theme_font_errors = inspect_theme_and_font_table(parts)
+    result["theme_font"] = theme_font_result
+    errors.extend(theme_font_errors)
+
     nested_numbering_run_properties = [
         [local_name(child) for child in node]
         for node in numbering.findall(".//w:lvl/w:rPr", NS)
@@ -776,6 +850,7 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "numbering_lvl": order_violations(numbering.findall(".//w:lvl", NS), LVL_ORDER),
         "numbering_num": order_violations(numbering.findall("w:num", NS), NUM_ORDER),
         "nested_numbering_rPr": nested_numbering_run_properties,
+        "tcBorders": order_violations(document.findall(".//w:tcBorders", NS), TCBORDER_ORDER),
     }
     result["schema_ordering"] = ordering
     if any(ordering.values()):

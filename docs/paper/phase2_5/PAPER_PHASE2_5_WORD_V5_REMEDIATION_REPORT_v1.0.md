@@ -73,11 +73,13 @@ baseline.
 
 ## 9. Canonical Reference Disposition
 
-The canonical reference already passed the same Content Types audit. Its
-content and SHA were preserved:
+The pre-Step-7E canonical reference passed the same Content Types audit. Step
+7E rebuilt it for full OOXML schema validity; the historical pre-Step-7E SHA
+was `98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e`.
+The current SHA is:
 
 ```text
-98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e
+c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6
 ```
 
 A temporary builder output independently reproduced the same SHA and passed

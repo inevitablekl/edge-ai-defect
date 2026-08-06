@@ -116,17 +116,17 @@ values as if they were one rule.
 
 ## 13. Page Number Field
 
-The footer uses a `PAGE` field and `updateFields=true`; it does not write a
-fixed page-number paragraph. LibreOffice rendered the test page number as
-`1`, confirming the field is usable in the headless conversion path. Microsoft
-Word update behavior remains a manual check.
+The footer uses a `PAGE` field and does not write a fixed page-number
+paragraph. The current canonical builder removes open-time `updateFields`; the
+field remains available for manual/F9 refresh. Microsoft Word behavior remains
+a manual check.
 
 ## 14. Deterministic Build Results
 
 Two consecutive builds produced identical bytes:
 
 ```text
-reference_sha256=98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e
+reference_sha256=c378063a04e18b8c1af261d00313fe58305636a5bc9833663644ce3e4d38a7c6
 byte_determinism=PASS
 ```
 
@@ -135,13 +135,15 @@ The earlier Step 4 hash
 was superseded during Step 7C after Microsoft Word evidence exposed two
 canonical OOXML defects: nested numbering-level `w:rPr` containers and invalid
 three-line-table `w:tblPr` child order. The repaired builder emits one valid
-numbering `w:rPr` and orders the table style as
-`tblBorders, tblLayout, tblCellMar`; no candidate feature or formatting rule
-was removed.
+numbering `w:rPr`; the later Step 7E schema repair uses the validated
+table-style order `tblBorders, tblCellMar`. No candidate feature or formatting
+rule was removed.
 
-The deterministic claim is limited to the builder's package output. Any Word
-or LibreOffice save can legitimately change package metadata and is not part
-of this claim.
+The deterministic claim is limited to the builder's package output. Step 7E
+also repaired the canonical theme, font table, style-property ordering,
+settings, and table-style schema findings; the current canonical SHA is
+recorded above. Any Word or LibreOffice save can legitimately change package
+metadata and is not part of this claim.
 
 ## 15. Inspection Results
 
