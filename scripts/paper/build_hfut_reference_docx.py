@@ -194,7 +194,7 @@ def table_style() -> str:
     return (
         '<w:style w:type="table" w:styleId="HFUTThreeLineTable">'
         '<w:name w:val="HFUT Three Line Table"/><w:basedOn w:val="TableNormal"/><w:qFormat/>'
-        '<w:tblPr><w:tblLayout w:type="fixed"/>' + borders + margins + '</w:tblPr>'
+        '<w:tblPr>' + borders + '<w:tblLayout w:type="fixed"/>' + margins + '</w:tblPr>'
         + first_row + '</w:style>'
     )
 
@@ -259,13 +259,13 @@ def numbering_xml() -> str:
     return f'''<w:numbering xmlns:w="{W}">
   <w:abstractNum w:abstractNumId="0">
     <w:multiLevelType w:val="multilevel"/>
-    <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1"/><w:lvlJc w:val="left"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="0"/></w:tabs><w:ind w:left="0" w:hanging="0"/></w:pPr><w:rPr>{rpr("黑体", "Times New Roman", "28", True)}</w:rPr></w:lvl>
-    <w:lvl w:ilvl="1"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1.%2"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr><w:rPr>{rpr("黑体", "Times New Roman", "21", True)}</w:rPr></w:lvl>
-    <w:lvl w:ilvl="2"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1.%2.%3"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr><w:rPr>{rpr("楷体", "Times New Roman", "21")}</w:rPr></w:lvl>
+    <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1"/><w:lvlJc w:val="left"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="0"/></w:tabs><w:ind w:left="0" w:hanging="0"/></w:pPr>{rpr("黑体", "Times New Roman", "28", True)}</w:lvl>
+    <w:lvl w:ilvl="1"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1.%2"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr>{rpr("黑体", "Times New Roman", "21", True)}</w:lvl>
+    <w:lvl w:ilvl="2"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1.%2.%3"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr>{rpr("楷体", "Times New Roman", "21")}</w:lvl>
   </w:abstractNum>
   <w:abstractNum w:abstractNumId="1">
     <w:multiLevelType w:val="singleLevel"/>
-    <w:lvl w:ilvl="0"><w:start w:val="0"/><w:numFmt w:val="decimal"/><w:lvlText w:val="0"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr><w:rPr>{rpr("黑体", "Times New Roman", "28", True)}</w:rPr></w:lvl>
+    <w:lvl w:ilvl="0"><w:start w:val="0"/><w:numFmt w:val="decimal"/><w:lvlText w:val="0"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="0" w:hanging="0"/></w:pPr>{rpr("黑体", "Times New Roman", "28", True)}</w:lvl>
   </w:abstractNum>
   <w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num>
   <w:num w:numId="2"><w:abstractNumId w:val="1"/></w:num>

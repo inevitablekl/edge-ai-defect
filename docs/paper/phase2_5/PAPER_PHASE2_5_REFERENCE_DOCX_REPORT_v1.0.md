@@ -126,9 +126,18 @@ Word update behavior remains a manual check.
 Two consecutive builds produced identical bytes:
 
 ```text
-reference_sha256=c3d78034b37c82d5cc2416fc85854a8a3960ad8999db1c56de9661adcb1d2d71
+reference_sha256=98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e
 byte_determinism=PASS
 ```
+
+The earlier Step 4 hash
+`c3d78034b37c82d5cc2416fc85854a8a3960ad8999db1c56de9661adcb1d2d71`
+was superseded during Step 7C after Microsoft Word evidence exposed two
+canonical OOXML defects: nested numbering-level `w:rPr` containers and invalid
+three-line-table `w:tblPr` child order. The repaired builder emits one valid
+numbering `w:rPr` and orders the table style as
+`tblBorders, tblLayout, tblCellMar`; no candidate feature or formatting rule
+was removed.
 
 The deterministic claim is limited to the builder's package output. Any Word
 or LibreOffice save can legitimately change package metadata and is not part
@@ -145,9 +154,11 @@ Passed checks:
 - required style IDs and Style Map IDs are present and unique;
 - body, heading, caption, and bibliography candidates are named styles;
 - `numbering.xml` contains `0`, `%1`, `%1.%2`, and `%1.%2.%3` candidates;
+- numbering levels contain no nested `w:rPr` container;
 - footer contains a `PAGE` field;
 - three-line border candidates are present with 1/0.5/1 pt values and no
   internal vertical border;
+- three-line-table properties follow WordprocessingML child order;
 - identity markers are present and forbidden source/real-content markers are
   absent;
 - LibreOffice headless PDF conversion succeeded for both DOCX files;

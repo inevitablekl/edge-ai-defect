@@ -61,10 +61,26 @@ FORBIDDEN_SOURCE_CONTENT = [
     "修回日期",
     "基金项目",
 ]
+TBLPR_ORDER = (
+    "tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
+    "tblStyleColBandSize", "tblW", "jc", "tblCellSpacing", "tblInd",
+    "tblBorders", "shd", "tblLayout", "tblCellMar", "tblLook", "tblCaption",
+    "tblDescription", "tblPrChange",
+)
 
 
 def attr(element: ET.Element, name: str) -> str | None:
     return element.attrib.get(f"{{{W}}}{name}") or element.attrib.get(name)
+
+
+def local_name(element: ET.Element) -> str:
+    return element.tag.rsplit("}", 1)[-1]
+
+
+def children_in_order(element: ET.Element, order: tuple[str, ...]) -> bool:
+    rank = {name: index for index, name in enumerate(order)}
+    known = [rank[local_name(child)] for child in element if local_name(child) in rank]
+    return known == sorted(known)
 
 
 def check(path: Path) -> tuple[bool, list[str]]:
@@ -134,6 +150,9 @@ def check(path: Path) -> tuple[bool, list[str]]:
                 errors.append(f"style {style_id} lacks paragraph alignment")
         table_style = style_elements.get("HFUTThreeLineTable")
         if table_style is not None:
+            if any(not children_in_order(node, TBLPR_ORDER)
+                   for node in table_style.findall(".//w:tblPr", NS)):
+                errors.append("three-line table style has invalid tblPr child order")
             border_nodes = table_style.findall(".//w:tblBorders", NS)
             border_values = []
             inside_v_values = []
@@ -149,6 +168,8 @@ def check(path: Path) -> tuple[bool, list[str]]:
                 errors.append("three-line table style does not explicitly disable inside vertical borders")
     if numbering is not None:
         levels = numbering.findall(".//w:lvl", NS)
+        if numbering.findall(".//w:lvl/w:rPr/w:rPr", NS):
+            errors.append("numbering level contains nested w:rPr")
         level_texts = [attr(level.find("w:lvlText", NS), "val") if level.find("w:lvlText", NS) is not None else None for level in levels]
         for expected in ("%1", "%1.%2", "%1.%2.%3", "0"):
             if expected not in level_texts:

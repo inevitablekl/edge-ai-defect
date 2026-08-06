@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect a Phase 2.5 Step 7B POC DOCX without claiming Word acceptance."""
+"""Inspect a Phase 2.5 Step 7C POC DOCX without claiming Word acceptance."""
 
 from __future__ import annotations
 
@@ -101,6 +101,11 @@ TBLPR_ORDER = (
     "tblBorders", "shd", "tblLayout", "tblCellMar", "tblLook", "tblCaption",
     "tblDescription", "tblPrChange",
 )
+TCPR_ORDER = (
+    "cnfStyle", "tcW", "gridSpan", "hMerge", "vMerge", "tcBorders", "shd",
+    "noWrap", "tcMar", "textDirection", "tcFitText", "vAlign", "hideMark",
+    "headers", "cellIns", "cellDel", "cellMerge", "tcPrChange",
+)
 RPR_ORDER = (
     "rStyle", "rFonts", "b", "bCs", "i", "iCs", "caps", "smallCaps",
     "strike", "dstrike", "outline", "shadow", "emboss", "imprint",
@@ -119,6 +124,10 @@ LVL_ORDER = (
     "start", "numFmt", "lvlRestart", "pStyle", "isLgl", "suff", "lvlText",
     "lvlPicBulletId", "legacy", "lvlJc", "pPr", "rPr",
 )
+ABSTRACT_NUM_ORDER = (
+    "nsid", "multiLevelType", "tmpl", "name", "styleLink", "numStyleLink", "lvl",
+)
+NUM_ORDER = ("abstractNumId", "lvlOverride")
 VALID_STYLE_TYPES = {"paragraph", "character", "table", "numbering"}
 
 
@@ -178,7 +187,10 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "size_bytes": path.stat().st_size,
     }
-    if path.name not in {f"poc_{variant}.docx", f"poc_{variant}_v2.docx", f"poc_{variant}_v3.docx"}:
+    if path.name not in {
+        f"poc_{variant}.docx", f"poc_{variant}_v2.docx",
+        f"poc_{variant}_v3.docx", f"poc_{variant}_v4.docx",
+    }:
         errors.append("unexpected output filename")
 
     try:
@@ -655,17 +667,39 @@ def inspect(path: Path, variant: str) -> tuple[dict[str, object], list[str]]:
         for node in content_types.findall("ct:Override", NS)
         if node.get("PartName", "").lstrip("/") not in present_parts
     )
-    result["content_types"] = {"missing_override_targets": missing_content_type_targets}
-    if missing_content_type_targets:
-        errors.append("content-type override targets missing")
+    default_extensions = [node.get("Extension", "").lower() for node in content_types.findall("ct:Default", NS)]
+    override_names = [node.get("PartName", "") for node in content_types.findall("ct:Override", NS)]
+    duplicate_default_extensions = sorted(
+        value for value, count in Counter(default_extensions).items() if count > 1
+    )
+    duplicate_override_names = sorted(
+        value for value, count in Counter(override_names).items() if count > 1
+    )
+    result["content_types"] = {
+        "missing_override_targets": missing_content_type_targets,
+        "duplicate_default_extensions": duplicate_default_extensions,
+        "duplicate_override_names": duplicate_override_names,
+    }
+    if missing_content_type_targets or duplicate_default_extensions or duplicate_override_names:
+        errors.append("content-type integrity failed")
 
+    nested_numbering_run_properties = [
+        [local_name(child) for child in node]
+        for node in numbering.findall(".//w:lvl/w:rPr", NS)
+        if node.find("w:rPr", NS) is not None
+    ]
     ordering = {
         "pPr": order_violations(document.findall(".//w:pPr", NS), PPR_ORDER),
         "rPr": order_violations(document.findall(".//w:rPr", NS), RPR_ORDER),
         "sectPr": order_violations(document.findall(".//w:sectPr", NS), SECTPR_ORDER),
         "tblPr": order_violations(document.findall(".//w:tblPr", NS), TBLPR_ORDER),
+        "tcPr": order_violations(document.findall(".//w:tcPr", NS), TCPR_ORDER),
+        "style_tblPr": order_violations(styles.findall(".//w:tblPr", NS), TBLPR_ORDER),
         "style": order_violations(style_nodes, STYLE_ORDER),
+        "abstractNum": order_violations(numbering.findall("w:abstractNum", NS), ABSTRACT_NUM_ORDER),
         "numbering_lvl": order_violations(numbering.findall(".//w:lvl", NS), LVL_ORDER),
+        "numbering_num": order_violations(numbering.findall("w:num", NS), NUM_ORDER),
+        "nested_numbering_rPr": nested_numbering_run_properties,
     }
     result["schema_ordering"] = ordering
     if any(ordering.values()):

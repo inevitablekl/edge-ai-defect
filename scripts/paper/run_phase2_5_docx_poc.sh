@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Paper Phase 2.5 Step 7B remediation candidate — TOOLCHAIN_POC_ONLY.
+# Paper Phase 2.5 Step 7C remediation candidate — TOOLCHAIN_POC_ONLY.
 # Generates only synthetic Microsoft Word compatibility candidates outside Git.
 
 REPO_ROOT="${PHASE2_5_REPO_ROOT:-/home/orin/edge-ai/edge-ai-defect}"
@@ -9,7 +9,7 @@ POC_ROOT="${PHASE2_5_POC_ROOT:-/home/orin/paper-external-inputs/hfut-journal/pha
 PANDOC_BIN="${PHASE2_5_PANDOC:-/home/orin/.local/bin/pandoc}"
 REFERENCE_DOCX="$REPO_ROOT/docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
 CSL_URL="https://www.zotero.org/styles/china-national-standard-gb-t-7714-2025-numeric"
-EXPECTED_REFERENCE_SHA="c3d78034b37c82d5cc2416fc85854a8a3960ad8999db1c56de9661adcb1d2d71"
+EXPECTED_REFERENCE_SHA="98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e"
 
 SOURCE_DIR="$POC_ROOT/source"
 CSL_DIR="$POC_ROOT/csl"
@@ -307,7 +307,7 @@ build_one() {
   local variant="$1"
   local metadata="$SOURCE_DIR/poc_$variant.yaml"
   local raw_docx="$TEMP_DIR/poc_"$variant"_raw.docx"
-  local final_docx="$OUTPUT_DIR/poc_${variant}_v3.docx"
+  local final_docx="$OUTPUT_DIR/poc_${variant}_v4.docx"
   local stdout_log="$LOG_DIR/pandoc_$variant.stdout.log"
   local stderr_log="$LOG_DIR/pandoc_$variant.stderr.log"
   local command_log="$LOG_DIR/pandoc_"$variant"_command.log"
@@ -357,11 +357,11 @@ build_one() {
     > "$LOG_DIR/postprocess_$variant.log" 2>&1
   python3 "$REPO_ROOT/scripts/paper/inspect_phase2_5_poc_docx.py" \
     "$final_docx" --variant "$variant" \
-    --json-output "$INSPECTION_DIR/poc_${variant}_v3_inspection.json" \
+    --json-output "$INSPECTION_DIR/poc_${variant}_v4_inspection.json" \
     > "$LOG_DIR/inspection_$variant.log" 2>&1
-  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_file.txt"
-  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_sha256.txt"
-  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v3_unzip_test.txt"
+  file "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v4_file.txt"
+  sha256sum "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v4_sha256.txt"
+  unzip -t "$final_docx" > "$INSPECTION_DIR/poc_${variant}_v4_unzip_test.txt"
 }
 
 build_one full
@@ -371,25 +371,25 @@ for variant in full anonymous; do
   lo_profile="$TEMP_DIR/libreoffice_profile_$variant.$$.tmp"
   mkdir -p "$lo_profile"
   libreoffice "-env:UserInstallation=file://$lo_profile" --headless \
-    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v3.docx" \
+    --convert-to pdf --outdir "$RENDERED_DIR" "$OUTPUT_DIR/poc_${variant}_v4.docx" \
     > "$LOG_DIR/libreoffice_$variant.stdout.log" \
     2> "$LOG_DIR/libreoffice_$variant.stderr.log"
-  mv -f "$RENDERED_DIR/poc_${variant}_v3.pdf" "$RENDERED_DIR/poc_${variant}_v3_preview.pdf"
-  pdfinfo "$RENDERED_DIR/poc_${variant}_v3_preview.pdf" \
-    > "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt"
-  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt")"
+  mv -f "$RENDERED_DIR/poc_${variant}_v4.pdf" "$RENDERED_DIR/poc_${variant}_v4_preview.pdf"
+  pdfinfo "$RENDERED_DIR/poc_${variant}_v4_preview.pdf" \
+    > "$INSPECTION_DIR/poc_${variant}_v4_preview_pdfinfo.txt"
+  page_count="$(awk '/^Pages:/{print $2}' "$INSPECTION_DIR/poc_${variant}_v4_preview_pdfinfo.txt")"
   if [[ "$page_count" -lt 2 || "$page_count" -gt 4 ]]; then
     echo "POC_FAILED: $variant preview has $page_count pages; expected 2-4" >&2
     exit 1
   fi
-  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v3_preview_pdfinfo.txt"; then
+  if ! rg -q '^Page size:.*A4' "$INSPECTION_DIR/poc_${variant}_v4_preview_pdfinfo.txt"; then
     echo "POC_FAILED: $variant preview is not reported as A4" >&2
     exit 1
   fi
 done
 
 if rg -n 'POC测试作者|POC测试单位|poc@example\.invalid|基金测试字段|作者简介测试字段|致谢测试字段' \
-  "$INSPECTION_DIR/poc_anonymous_v3_inspection.json" \
+  "$INSPECTION_DIR/poc_anonymous_v4_inspection.json" \
   "$LOG_DIR/pandoc_anonymous_command.log" \
   "$LOG_DIR/pandoc_anonymous.stdout.log" \
   "$LOG_DIR/pandoc_anonymous.stderr.log"; then
@@ -419,10 +419,10 @@ NON_AUTHORITATIVE_LIBREOFFICE_PREVIEW
 MICROSOFT_WORD_RENDERING_NOT_VERIFIED
 MICROSOFT_WORD_COMPATIBILITY_REMEDIATION_CANDIDATE
 MICROSOFT_WORD_RETEST_REQUIRED
-full_docx=$OUTPUT_DIR/poc_full_v3.docx
-anonymous_docx=$OUTPUT_DIR/poc_anonymous_v3.docx
-full_preview=$RENDERED_DIR/poc_full_v3_preview.pdf
-anonymous_preview=$RENDERED_DIR/poc_anonymous_v3_preview.pdf
+full_docx=$OUTPUT_DIR/poc_full_v4.docx
+anonymous_docx=$OUTPUT_DIR/poc_anonymous_v4.docx
+full_preview=$RENDERED_DIR/poc_full_v4_preview.pdf
+anonymous_preview=$RENDERED_DIR/poc_anonymous_v4_preview.pdf
 EOF
 
 echo "POC_RUN_PASS"

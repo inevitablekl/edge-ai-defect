@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 MANUSCRIPT = ROOT / "docs/paper/manuscript"
-EXPECTED_HASH = "c3d78034b37c82d5cc2416fc85854a8a3960ad8999db1c56de9661adcb1d2d71"
+EXPECTED_HASH = "98d96d4eafac104c0972bf4e90c2b97db89d8fb35f98f8570eb3ca2ef9024e1e"
 CHAPTERS = [
     ("00_title_abstract.md", "# 题名与摘要"),
     ("01_introduction.md", "# 0 引言"),

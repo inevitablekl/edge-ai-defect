@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic OOXML post-processing for the Phase 2.5 Step 7B POC only."""
+"""Deterministic OOXML post-processing for the Phase 2.5 Step 7C POC only."""
 
 from __future__ import annotations
 
