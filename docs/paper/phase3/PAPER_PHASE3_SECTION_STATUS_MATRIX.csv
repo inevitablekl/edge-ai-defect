@@ -1,6 +1,6 @@
 section_id,section_title,status,preflight_status,literature_status,artifact_status,draft_status,user_review_status,integration_status,notes
 0,引言,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,Phase 3 drafting not started
-1,系统对象与问题定义,PREFLIGHT_COMPLETE,COMPLETE,COMPLETE,FIGURE1_PROTOTYPE_READY,NOT_STARTED,NOT_STARTED,NOT_STARTED,Fact packet and deterministic Figure 1 prototype ready; prose not written
+1,系统对象与问题定义,DRAFTING,COMPLETE,COMPLETE,FIGURE1_PROTOTYPE_READY,INTEGRATED,INDEPENDENT_REVIEW_PASS_WITH_MINOR_REVISIONS_APPLIED,COMPLETE_PENDING_MAIN_AI_ACCEPTANCE,Independent review F1-F4 closed; final section acceptance pending Phase 3 Main AI review of integration report.
 2,数据路径优化方法,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,Phase 3 drafting not started
 3,实验设计与正确性,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,Phase 3 drafting not started
 4,结果与分析,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,NOT_STARTED,Phase 3 drafting not started
