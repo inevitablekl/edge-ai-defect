@@ -31,3 +31,24 @@ F1 note: Formal Type-7 authority retained at Phase 1 Metric Provenance; historic
 F2 note: FPS measured process-wall and per-frame source-to-pre-sink boundaries explicitly separated.
 Further verification: NONE
 Integration: THIS_COMMIT
+
+Section: 4 结果与分析
+Review type: Independent academic review
+Input version: USER_PROVIDED_PRE_INTEGRATION_DRAFT
+Reviewer verification reference: 23292d34909b1291bda656f20f707e5f57777986
+Current Phase 3 artifact baseline: 0c72eaf905916b6c0e72b59bfa4bc3eecbf2188b
+Verdict: PASS_WITH_MINOR_REVISIONS
+Findings: F1-F3
+Disposition:
+F1 CLOSED
+Table 2 title narrowed to V0/V2R task-level correctness;
+V3R remains companion identity prose.
+F2 CLOSED
+FPS and latency wording corrected to performance-favorable
+but numerically opposite directions.
+F3 CLOSED
+“明显小于” removed; no significance wording.
+Further verification: NONE
+Artifact note: F2/F3 Phase 3 SVG previews exist at current baseline;
+figure manifest stale status reconciled during integration.
+Integration: THIS_COMMIT
