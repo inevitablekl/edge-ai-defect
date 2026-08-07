@@ -19,3 +19,15 @@ Findings: F1-F2
 Disposition: F1 CLOSED; F2 CLOSED
 Further verification: NONE
 Integration: THIS_COMMIT
+
+Section: 3 实验设计
+Review type: Independent academic review
+Input version: USER_PROVIDED_PRE_INTEGRATION_DRAFT
+Reference baseline: 74c8443b99fe36ea57a427462114245fd56007b6
+Verdict: PASS_WITH_MINOR_REVISIONS
+Findings: F1-F2
+Disposition: F1 CLOSED; F2 CLOSED
+F1 note: Formal Type-7 authority retained at Phase 1 Metric Provenance; historical R3 helper not promoted as timing-aligned implementation provenance.
+F2 note: FPS measured process-wall and per-frame source-to-pre-sink boundaries explicitly separated.
+Further verification: NONE
+Integration: THIS_COMMIT
