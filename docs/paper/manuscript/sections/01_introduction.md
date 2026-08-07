@@ -1,12 +1,17 @@
-<!--
-STATUS: STRUCTURE_ONLY
-NO_MANUSCRIPT_PROSE
-PHASE_3_NOT_AUTHORIZED
-WRITING_PACKET: WP_INTRODUCTION
-CLAIMS: C1;C2;C3;C4;C8;C9
-FIGURES_TABLES: NONE
--->
+<!-- MANUSCRIPT_SECTION: 0; INTRODUCTION -->
 
 # 0 引言
 
-<!-- CONTENT_PENDING_PHASE_3 -->
+工业产品表面缺陷会直接影响产品质量与后续制造过程，利用机器视觉实现自动缺陷检测已成为工业视觉的重要应用方向。东北大学钢材表面缺陷数据库包含开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷，为相关研究提供了常用的实验基础 [@song_yan_2013_neu_surface_defects]。近年来，面向细小缺陷和复杂表面特征的检测网络仍在持续改进，NEU-DET 等数据集也被广泛用于算法性能评价 [@shao_et_al_2024_td_net; @lema_et_al_2025_surface_defect_benchmark]。YOLOv8 是 Ultralytics 发布的目标检测模型系列，具有多种规模模型及训练、推理和模型导出能力 [@ultralytics_2023_yolov8_docs]。然而，在工业现场将检测模型部署到资源受限的边缘计算设备时，研究目标不仅包括模型精度，还需要考虑输入处理、推理执行及结果处理形成的完整运行链路。
+
+将视觉计算靠近生产设备部署能够减少对远端计算链路的依赖，并满足部分工业任务对实时处理的要求。已有电子元件检测研究将深度学习推理从远端处理方式转移至靠近设备的边缘侧，以适应生产过程中的时间约束 [@weiss_et_al_2024_realtime_component_inspection]。在 Jetson 平台上，也已有研究围绕 YOLO 检测模型、推理框架和 TensorRT 部署开展性能评价 [@shin_kim_2022_jetson_yolo_frameworks]；Tang 等针对 Jetson AGX Orin 上的 YOLOv8 部署，将系统处理过程划分为预处理、模型推理和后处理，并指出预处理与后处理同样可能影响完整检测系统的执行效率 [@tang_qian_2024_yolov8_jetson_orin]。国内工程应用研究也已将目标检测模型与具体智能装备场景结合，通过模型改进和嵌入式实现验证实际应用效果 [@liu_zhang_ruan_2024_hfut_yolov5_embedded]。这些工作说明，在边缘端评价目标检测系统时，仅考察网络本身的单次推理时间并不足以描述完整部署路径。
+
+在确定网络和推理精度后，主机—设备数据路径仍可能影响端侧执行效率。TensorRT 可利用低精度推理降低神经网络执行开销，后训练量化（post-training quantization，PTQ）是在已有模型基础上实施低比特量化而无需重新进行量化感知训练的一类方法 [@kim_lee_kim_2024_hyq]。本文采用 TensorRT 10.3 环境下的校准式 INT8 路线作为固定推理前提，而不研究新的量化算法；该版本中的传统隐式 INT8 量化和 calibrator 接口已被标记为弃用，因此本文只讨论冻结软件环境下的实验结果 [@nvidia_tensorrt_10_3_release_notes]。在此基础上，CUDA（Compute Unified Device Architecture）允许将像素级预处理移至 GPU，并涉及普通可分页主机内存（pageable host memory）与锁页主机内存（pinned host memory）等不同的数据暂存方式。CUDA 官方资料指出，pinned memory 可提高特定主机—设备传输场景下的带宽，但其为有限资源，实际应用收益仍应通过具体工作负载测量 [@nvidia_cuda_best_practices_12_6]。
+
+现有研究分别覆盖了缺陷检测算法、边缘推理框架、TensorRT 部署和运行流水线优化，但不同研究常采用不同数据划分、硬件平台和测试协议，跨论文的绝对性能值并不适合直接比较 [@lema_et_al_2025_surface_defect_benchmark]。同时，推理系统中的吞吐率、平均延迟和尾延迟具有不同含义，性能结论需要与明确的测量场景和统计边界对应；MLPerf Inference 等基准工作也分别定义不同场景下的延迟和吞吐指标 [@reddi_et_al_2019_mlperf_inference]。在本文检索和准入的相关研究范围内，已有工作更多关注检测模型改进、推理框架选择或完整流水线加速，而在固定模型、固定 INT8 Engine、固定工作负载和统一正确性及计时边界下，对 CPU 预处理、CUDA 预处理以及主机暂存内存类型进行逐级受控比较，并同时区分平均性能和 P95/P99 尾延迟的证据仍相对有限。因此，有必要在统一实验合同下进一步分析端侧数据路径本身的性能影响。
+
+针对上述问题，本文以部署于 NVIDIA Jetson Orin Nano Super 的 YOLOv8n INT8 工业缺陷检测系统为研究对象，在固定模型、Engine 和离线测试工作负载下构建 V0、V2R 和 V3R 三条受控数据路径，分别对应 CPU/OpenCV 预处理、pageable host staging 与 CUDA 预处理，以及 pinned host staging 与相同 CUDA 预处理语义。为保证比较边界一致，本文采用统一的 source-to-pre-sink 外部逐帧计时区间，并使用帧率、平均延迟以及 P95、P99 尾延迟评价不同数据路径。具体平台配置、输入规格及测量边界在后文进一步定义。
+
+本文围绕上述统一实验对象研究：在保持模型、INT8 Engine、测试数据、正确性合同和测量边界不变时，CPU预处理、pageable暂存下的CUDA预处理以及pinned暂存下的CUDA预处理对帧率、平均延迟和尾延迟产生何种影响。主要贡献包括两点：1）建立统一平台、模型、INT8 Engine、测试工作负载、正确性判据和外部计时边界下的V0/V2R/V3R受控数据路径比较，使预处理执行位置和主机暂存方式的实验差异能够在同一证据合同内评价；2）从平均性能与尾延迟两个层面分析数据路径优化效果，表明采用 pageable 主机暂存与 CUDA 预处理的 V2R 完整受测路径承担主要观测性能收益，并进一步表明pinned暂存仅提供有限的平均性能增量，其P95与P99变化方向不一致，因而不能得到一致的尾延迟改善结论。本文的贡献属于端侧部署数据路径的工程测量与优化分析，不涉及新的目标检测网络、量化方法或CUDA图像处理算法。
+
+全文后续首先定义系统对象、数据路径和统一测量边界，然后给出CPU、CUDA及pinned暂存路径的实现方法和正确性控制，进一步说明实验协议和指标定义，在此基础上分析不同数据路径的正确性、平均性能及尾延迟结果，最后总结本文结论及适用范围。

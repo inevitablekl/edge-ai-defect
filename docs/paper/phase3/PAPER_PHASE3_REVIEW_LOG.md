@@ -52,3 +52,19 @@ Further verification: NONE
 Artifact note: F2/F3 Phase 3 SVG previews exist at current baseline;
 figure manifest stale status reconciled during integration.
 Integration: THIS_COMMIT
+
+Section: 0 引言
+Review type: Independent academic review
+Input version: USER_PROVIDED_PRE_INTEGRATION_DRAFT
+Current integration baseline: a0e7959250e7b90d74c21eeb02190138325a8b79
+Verdict: PASS_WITH_MINOR_REVISIONS
+Findings:
+F1
+Contribution 2 causal boundary
+Disposition:
+F1 CLOSED
+Final wording: V2R complete tested path carries main observed benefit; no single CUDA kernel / H2D causal attribution.
+Editorial: Section 1 duplication compressed.
+Literature: 12 admitted citations retained; no new literature required.
+Further verification: NONE
+Integration: THIS_COMMIT
