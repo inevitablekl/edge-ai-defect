@@ -1,12 +1,9 @@
-<!--
-STATUS: STRUCTURE_ONLY
-NO_MANUSCRIPT_PROSE
-PHASE_3_NOT_AUTHORIZED
-WRITING_PACKET: WP_CONCLUSION
-CLAIMS: C1;C2;C3;C9
-FIGURES_TABLES: NONE
--->
+<!-- MANUSCRIPT_SECTION: 5; CONCLUSION -->
 
 # 5 结论
 
-<!-- CONTENT_PENDING_PHASE_3 -->
+针对 Jetson 边缘端 INT8 工业缺陷检测中预处理执行位置与主机暂存方式对系统性能的影响，本文在固定 YOLOv8n 模型、TensorRT INT8 Engine、测试工作负载、正确性判据和统一计时边界下，对 V0、V2R 和 V3R 三条数据路径进行了受控比较。结果表明，在满足既定任务级正确性判据的前提下，采用 pageable 主机暂存与 CUDA 预处理的 V2R 完整受测路径承担了主要观测性能收益：相对于 CPU/OpenCV 基线路径 V0，其帧率比达到 2.236671×，平均延迟降低 55.4519%。该结果说明，在本文受测配置下，仅考察神经网络推理本身不足以反映完整部署性能，预处理及其相关主机—设备数据路径是需要纳入统一测量边界的系统环节。
+
+在保持 V2R CUDA 预处理语义和后续推理过程不变的基础上，将 pageable host staging 替换为 pinned host staging 后，V3R 的 FPS 进一步提高 4.0738%，平均延迟降低 4.0349%，表现为有限的平均性能增量。与此同时，V3R 相对于 V2R 的 P95 增加 0.1514%，P99 降低 0.1184%，两个尾延迟指标的变化方向相反。因此，本文证据支持 pinned 暂存在当前数据路径中的平均性能增量，但不能据此得到其能够一致改善尾延迟的结论。
+
+上述结论限定于本文实际测试的 Jetson Orin Nano Super、固定 YOLOv8n INT8 Engine、640×640 输入、batch size 为 1 以及 180 幅图像离线回放工作负载。本文未对功耗、资源占用、长期运行稳定性和真实相机输入进行评价，也未建立跨平台或跨模型的普适性能结论。后续可在保持明确正确性与计时边界的前提下，进一步验证不同模型、边缘平台和真实输入场景中的数据路径表现，并补充资源消耗等系统级评价。
