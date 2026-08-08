@@ -137,6 +137,41 @@ def span_figure1(root: ET.Element) -> None:
         insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
 
 
+def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
+    body = root.find("w:body", NS)
+    if body is None:
+        raise ValueError("word/document.xml has no w:body")
+    paragraphs = [
+        paragraph for paragraph in body.findall("w:p", NS)
+        if paragraph.find(".//w:drawing", NS) is not None
+    ]
+    if len(paragraphs) != 3:
+        raise ValueError(f"expected three publication drawing paragraphs, found {len(paragraphs)}")
+    for paragraph in paragraphs:
+        ppr = ensure_first(paragraph, "pPr")
+        spacing = ppr.find("w:spacing", NS)
+        if spacing is None:
+            spacing = ET.Element(qn("spacing"))
+            insert_in_schema_order(ppr, spacing, PPR_ORDER)
+        spacing.set(qn("before"), "0")
+        spacing.set(qn("after"), "0")
+        spacing.set(qn("line"), "320")
+        spacing.set(qn("lineRule"), "atLeast")
+
+        indent = ppr.find("w:ind", NS)
+        if indent is None:
+            indent = ET.Element(qn("ind"))
+            insert_in_schema_order(ppr, indent, PPR_ORDER)
+        indent.attrib.pop(qn("hanging"), None)
+        indent.set(qn("firstLine"), "0")
+
+        alignment = ppr.find("w:jc", NS)
+        if alignment is None:
+            alignment = ET.Element(qn("jc"))
+            insert_in_schema_order(ppr, alignment, PPR_ORDER)
+        alignment.set(qn("val"), "center")
+
+
 def first_footer_xml(biography: str | None) -> bytes:
     footer = ET.Element(qn("ftr"))
     if biography is not None:
@@ -291,6 +326,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     set_body_columns(root)
     insert_continuous_boundary(root)
     span_figure1(root)
+    normalize_publication_drawing_paragraphs(root)
     move_biography_to_first_footer(root, parts)
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 

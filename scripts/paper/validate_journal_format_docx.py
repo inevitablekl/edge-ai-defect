@@ -179,9 +179,38 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     for caption in captions:
         if body_text.count(caption) != 1:
             errors.append(f"accepted figure caption missing/duplicated: {caption}")
+    drawing_paragraphs = [
+        paragraph for paragraph in body.findall("w:p", NS)
+        if paragraph.find(".//w:drawing", NS) is not None
+    ]
     drawings = document.findall(".//w:drawing", NS)
     if len(drawings) != 3:
         errors.append(f"expected three drawings, found {len(drawings)}")
+    inline_count = sum(len(paragraph.findall(".//wp:inline", NS)) for paragraph in drawing_paragraphs)
+    anchor_count = sum(len(paragraph.findall(".//wp:anchor", NS)) for paragraph in drawing_paragraphs)
+    out["drawing_paragraphs"] = len(drawing_paragraphs)
+    out["wp_inline"] = inline_count
+    out["wp_anchor"] = anchor_count
+    if len(drawing_paragraphs) != 3 or inline_count != 3 or anchor_count != 0:
+        errors.append(
+            f"publication drawing representation mismatch: paragraphs={len(drawing_paragraphs)} "
+            f"inline={inline_count} anchor={anchor_count}"
+        )
+    for index, paragraph in enumerate(drawing_paragraphs, start=1):
+        spacing = paragraph.find("w:pPr/w:spacing", NS)
+        indent = paragraph.find("w:pPr/w:ind", NS)
+        alignment = paragraph.find("w:pPr/w:jc", NS)
+        if spacing is None or attr(spacing, "lineRule") == "exact":
+            errors.append(f"FIGURE_INLINE_EXACT_LINE_SPACING_FORBIDDEN: F{index}")
+        if (
+            attr(spacing, "before"), attr(spacing, "after"),
+            attr(spacing, "line"), attr(spacing, "lineRule")
+        ) != ("0", "0", "320", "atLeast"):
+            errors.append(f"figure paragraph spacing contract mismatch: F{index}")
+        if attr(indent, "firstLine") != "0":
+            errors.append(f"figure paragraph first-line indent is not zero: F{index}")
+        if attr(alignment, "val") != "center":
+            errors.append(f"figure paragraph alignment is not centered: F{index}")
     image_rels = {rel.get("Id"): rel.get("Target") for rel in rels if rel.get("Type", "").endswith("/image")}
     figures = []
     for drawing in drawings:
