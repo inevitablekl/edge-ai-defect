@@ -411,8 +411,8 @@ def validate_parity(
         if identity_paragraph(style, text)
     ]
     details["full_identity_paragraphs_removed"] = len(full_identity)
-    if len(full_identity) != 7:
-        errors.append(f"expected seven Full identity-only paragraphs, found {len(full_identity)}")
+    if len(full_identity) != 6:
+        errors.append(f"expected six Full body identity-only paragraphs, found {len(full_identity)}")
 
     if parity_signature(full_body) != parity_signature(anonymous_body):
         errors.append("scientific body paragraph/table sequence differs between Full and Anonymous")

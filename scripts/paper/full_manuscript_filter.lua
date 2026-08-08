@@ -66,12 +66,12 @@ local function add_final_front_matter(output, meta, anonymous)
   end
 end
 
-local function figure_block(path)
+local function figure_block(path, width)
   local image = pandoc.Image(
     {},
     path,
     "",
-    pandoc.Attr("", {}, {{"width", "7.5cm"}})
+    pandoc.Attr("", {}, {{"width", width}})
   )
   return pandoc.Para({image})
 end
@@ -157,7 +157,8 @@ function Pandoc(doc)
     elseif not front_matter and block.t == "Para" then
       local figure = figure_for_caption(text)
       if figure ~= nil then
-        output:insert(figure_block(figure))
+        local width = text:match("^图1　") and "16cm" or "7.5cm"
+        output:insert(figure_block(figure, width))
         output:insert(styled_block(block, "HFUTFigureCaption"))
       elseif text:match("^表[12]　") then
         output:insert(styled_block(block, "HFUTTableCaption"))

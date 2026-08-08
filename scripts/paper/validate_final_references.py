@@ -111,13 +111,26 @@ METADATA_STATUS = {
 
 FIGURE_TABLE_CAPTIONS = OrderedDict(
     (
-        ("图1", "图1　V0、V2R和V3R数据路径及统一计时边界"),
+        ("图1", ""),
         ("表1", "表1　平台、模型、数据集和统一运行协议"),
         ("表2", "表2　V0与V2R任务级正确性验证结果"),
         ("图2", "图2　V0、V2R和V3R平均帧率比较"),
         ("图3", "图3　V0、V2R和V3R平均及尾延迟比较"),
     )
 )
+
+
+def load_f1_caption_authority() -> str:
+    manifest = MANUSCRIPT / "figures/figure_manifest.csv"
+    with manifest.open(encoding="utf-8", newline="") as handle:
+        rows = {row["figure_id"]: row for row in csv.DictReader(handle)}
+    caption = rows.get("F1", {}).get("word_caption", "")
+    if not caption:
+        raise ValueError("Figure manifest has no F1 word_caption authority.")
+    return caption
+
+
+FIGURE_TABLE_CAPTIONS["图1"] = load_f1_caption_authority()
 
 
 def fail(errors: list[str], message: str) -> None:
