@@ -7,7 +7,9 @@
 - Structure: two columns, `项目 | 配置`
 - Scientific content authority:
   `docs/paper/manuscript/sections/04_experiment.md`
-- Final DOCX assembly: USER_MANUAL / PENDING
+- Final DOCX assembly: VSCODE_CODEX / BUILD_PIPELINE_READY
+- Three-line-table rendering: VALIDATED_BY_ISOLATED_T1_T2_ARTIFACT
+- Manual visual inspection: DEFERRED_TO_PHASE_4_9
 
 ## 2. Frozen table source
 

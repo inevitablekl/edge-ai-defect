@@ -26,12 +26,15 @@ def check_manifest(path, id_field, expected_ids):
     rows = read_csv(path)
     ids = [row[id_field] for row in rows]
     ok = True
+    allowed_statuses = {"PLANNED_FROM_PHASE2"}
+    if path.name == "table_manifest.csv":
+        allowed_statuses.add("PUBLICATION_STRUCTURE_READY")
     if ids != expected_ids:
         ok = fail(f"{path.name} IDs/order mismatch: {ids!r}")
     if len(ids) != len(set(ids)):
         ok = fail(f"{path.name} contains duplicate IDs")
     for row in rows:
-        if row.get("status") != "PLANNED_FROM_PHASE2":
+        if row.get("status") not in allowed_statuses:
             ok = fail(f"{path.name} row {row.get(id_field)} has invalid status")
     return ok, rows
 
