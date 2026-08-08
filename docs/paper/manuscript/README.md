@@ -1,8 +1,7 @@
-# Manuscript Source Skeleton
+# Manuscript Source
 
-This directory is the Paper Phase 2.5 Step 5 authoring-toolchain skeleton.
-It contains structure and source-governance assets only. Phase 3 is not
-authorized.
+This directory contains the Markdown manuscript authority and the derived
+authoring/publication assets established through Paper Phases 2.5 and 3.
 
 ## Source contract
 
@@ -21,10 +20,14 @@ authorized.
 
 ## Current boundary
 
-All section files are `STRUCTURE_ONLY`, `NO_MANUSCRIPT_PROSE`, and
-`PHASE_3_NOT_AUTHORIZED`. The bibliography and literature matrix are empty
-until a later, verified literature workflow. No DOCX/PDF build is authorized
-by this step.
+Sections 0-5 body prose have completed section-level review and integration.
+The body is undergoing final content-freeze closure after cross-section
+consistency review. `sections/00_title_abstract.md` remains pending
+title/abstract/keyword production. `references.bib` and
+`literature_matrix.csv` are populated verified manuscript assets. Final
+DOCX/publication formatting, final Visio/Origin figures, three-line tables,
+cross-references, pagination, and Word inspection remain publication-stage
+work.
 
 ## Fixed section order
 

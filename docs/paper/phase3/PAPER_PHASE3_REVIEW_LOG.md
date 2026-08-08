@@ -87,3 +87,62 @@ Verified boundaries:
 - no new statistics/citations
 Further verification: NONE
 Integration: THIS_COMMIT
+
+Review type:
+FULL_MANUSCRIPT_CROSS_SECTION_CONSISTENCY_REVIEW
+
+Baseline:
+a90d8c0136423305003476ec3c9aff7e16bb7e91
+
+Verdict:
+PASS_WITH_MINOR_REVISIONS
+
+Scientific consistency:
+PASS
+
+Findings:
+F1-F4
+
+Disposition:
+
+F1 CLOSED
+Residual “统一端到端服务区间”
+replaced with
+“统一 source-to-pre-sink 外部逐帧计时区间”.
+
+F2 CLOSED
+Section 3 metadata title synchronized to 实验设计;
+Section 5 synchronized to ACCEPTED / COMPLETE.
+
+F3 CLOSED
+Current T2 manifest synchronized to accepted
+V0/V2R task-level correctness table.
+
+T2 current claim_ids = A2.
+
+Historical Phase 2 T2 plan remains unchanged at A1;A2;A3
+because it represented the earlier broader artifact plan
+including V3R identity/lifecycle row group.
+
+V3R companion identity remains surrounding manuscript prose.
+
+F4 CLOSED
+README historical Phase 2.5 skeleton state updated.
+
+New experiment:
+NONE
+
+New statistic:
+NONE
+
+New literature:
+NONE
+
+Scientific numeric change:
+NONE
+
+Next disposition:
+PATCH_LEVEL_CLOSURE_PENDING_MAIN_AI
+
+Integration:
+THIS_COMMIT
