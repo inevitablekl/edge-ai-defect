@@ -174,6 +174,11 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     for caption in ("图1　", "图2　", "图3　"):
         if sum(text.startswith(caption) for text in (text_of(p) for p in body_paragraphs)) != 1:
             fail(errors, f"missing or duplicated figure caption: {caption}")
+    t1_captions = [paragraph for paragraph in body_paragraphs if text_of(paragraph) == T1_TITLE]
+    if len(t1_captions) != 1:
+        fail(errors, f"Table 1 caption count is {len(t1_captions)}, expected 1")
+    elif t1_captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None:
+        fail(errors, "Full Table 1 caption has unauthorized pageBreakBefore")
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)

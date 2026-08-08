@@ -23,6 +23,11 @@ TBLPR_ORDER = (
     "tblDescription", "tblPrChange",
 )
 TCBORDER_ORDER = ("top", "left", "bottom", "right", "insideH", "insideV")
+PPR_ORDER = (
+    "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
+    "widowControl", "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs",
+    "spacing", "ind", "jc", "sectPr", "pPrChange",
+)
 
 
 def qn(local: str) -> str:
@@ -40,6 +45,17 @@ def ensure_first(parent: ET.Element, local: str) -> ET.Element:
         node = ET.Element(tag)
         parent.insert(0, node)
     return node
+
+
+def insert_in_schema_order(parent: ET.Element, node: ET.Element, order: tuple[str, ...]) -> None:
+    local = node.tag.rsplit("}", 1)[-1]
+    desired = order.index(local)
+    for index, child in enumerate(parent):
+        child_local = child.tag.rsplit("}", 1)[-1]
+        if child_local in order and order.index(child_local) > desired:
+            parent.insert(index, node)
+            return
+    parent.append(node)
 
 
 def set_border(parent: ET.Element, edge: str, value: str, size: int | None = None) -> None:
@@ -225,7 +241,9 @@ def apply_table(table: ET.Element, table_id: str) -> None:
                 )
 
 
-def locate_captioned_tables(root: ET.Element) -> dict[str, ET.Element]:
+def locate_captioned_tables(
+    root: ET.Element, anonymous_t1_page_break: bool
+) -> dict[str, ET.Element]:
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no w:body")
@@ -247,16 +265,22 @@ def locate_captioned_tables(root: ET.Element) -> dict[str, ET.Element]:
         set_paragraph_style_and_alignment(child, "center")
         pstyle = child.find("w:pPr/w:pStyle", NS)
         pstyle.set(qn("val"), "HFUTTableCaption")
+        if table_id == "T1" and anonymous_t1_page_break:
+            ppr = ensure_first(child, "pPr")
+            if ppr.find("w:pageBreakBefore", NS) is None:
+                insert_in_schema_order(ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER)
     if set(found) != {"T1", "T2"}:
         raise ValueError(f"expected T1 and T2 captions, found {sorted(found)}")
     return found
 
 
-def rewrite(input_path: Path, output_path: Path) -> None:
+def rewrite(
+    input_path: Path, output_path: Path, anonymous_t1_page_break: bool = False
+) -> None:
     with zipfile.ZipFile(input_path) as archive:
         parts = {name: archive.read(name) for name in archive.namelist()}
     root = ET.fromstring(parts["word/document.xml"])
-    tables = locate_captioned_tables(root)
+    tables = locate_captioned_tables(root, anonymous_t1_page_break)
     apply_table(tables["T1"], "T1")
     apply_table(tables["T2"], "T2")
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
@@ -280,8 +304,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--anonymous-t1-page-break", action="store_true")
     args = parser.parse_args()
-    rewrite(args.input, args.output)
+    rewrite(args.input, args.output, args.anonymous_t1_page_break)
     print(f"publication_tables=PASS output={args.output}")
     return 0
 

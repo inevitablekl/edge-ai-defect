@@ -347,6 +347,11 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         count = sum(text_of(node).startswith(caption) for node in body_paragraphs)
         if count != 1:
             errors.append(f"missing or duplicated figure caption: {caption}")
+    t1_captions = [node for node in body_paragraphs if text_of(node) == T1_TITLE]
+    if len(t1_captions) != 1:
+        errors.append(f"Table 1 caption count is {len(t1_captions)}, expected 1")
+    elif t1_captions[0].find("w:pPr/w:pageBreakBefore", NS) is None:
+        errors.append("Anonymous Table 1 caption has no pageBreakBefore")
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)

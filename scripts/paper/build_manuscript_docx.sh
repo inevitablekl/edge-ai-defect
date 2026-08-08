@@ -150,7 +150,8 @@ build_anonymous() {
   python3 scripts/paper/postprocess_full_manuscript_docx.py \
     --input "$raw_docx" --output "$section_docx"
   python3 scripts/paper/postprocess_publication_tables.py \
-    --input "$section_docx" --output "$table_docx"
+    --input "$section_docx" --output "$table_docx" \
+    --anonymous-t1-page-break
   python3 scripts/paper/sanitize_anonymous_manuscript_docx.py \
     --input "$table_docx" --output "$anonymous_docx"
   unzip -t "$anonymous_docx" > /dev/null
