@@ -20,3 +20,15 @@ Jetson端工业缺陷检测的INT8推理数据路径优化
 ## 中文关键词
 
 Jetson；工业缺陷检测；INT8推理；CUDA预处理；数据路径优化
+
+## English Title
+
+Data-Path Optimization for INT8 Inference in Jetson-Based Industrial Defect Detection
+
+## English Abstract
+
+To evaluate how complete data-path configurations differ in deployment performance for INT8 inference in Jetson-based industrial defect detection, three controlled configurations were constructed under a fixed YOLOv8n model, TensorRT INT8 Engine, 640×640 input, batch size of 1, test workload, correctness criteria, and timing boundary: V0 with CPU/OpenCV preprocessing, V2R with pageable host-memory staging and CUDA preprocessing, and V3R with pinned host-memory staging and the same CUDA preprocessing semantics. Each configuration was evaluated in five independent process-level runs. FPS was summarized from the five process-level FPS samples, whereas mean latency, P95, and P99 were computed from 5,400 pooled per-frame latency samples across those runs. V2R satisfied the predefined task-level correctness criteria. Relative to V0, its FPS was 2.236671× that of V0 and its mean latency decreased by 55.4519%, with the primary observed performance gain corresponding to the complete V2R configuration as tested. Relative to V2R, V3R further increased FPS by 4.0738% and reduced mean latency by 4.0349%; however, P95 increased by 0.1514%, whereas P99 decreased by 0.1184%, indicating opposite directions in the two tail-latency metrics. Therefore, under the fixed Jetson Orin Nano Super platform and offline file-replay workload used in this study, the evidence supports performance differences among the evaluated complete data-path configurations: V2R exhibits the primary observed performance gain, whereas V3R provides only a limited improvement in average performance under the same CUDA preprocessing semantics and does not support a conclusion of consistent tail-latency improvement.
+
+## English Keywords
+
+Jetson; industrial defect detection; INT8 inference; CUDA preprocessing; data-path optimization
