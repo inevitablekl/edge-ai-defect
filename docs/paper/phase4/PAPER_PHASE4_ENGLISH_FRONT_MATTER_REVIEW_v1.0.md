@@ -40,4 +40,5 @@ PHASE_4_2_ENGLISH_FRONT_MATTER_INTEGRATED
 
 ## 6. Phase 4 Status
 
-Phase 4.3 Front-Matter Integration: not yet executed
+Phase 4.3 Front-Matter Integration: integrated with metadata pending; see
+`PAPER_PHASE4_FRONT_MATTER_INTEGRATION_v1.0.md`.
