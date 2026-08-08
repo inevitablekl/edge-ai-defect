@@ -1,5 +1,7 @@
-# Anonymous-review metadata boundary; no claim is made about Word Inspector.
-# ANONYMOUS boundary: HIDDEN identity fields are omitted from the manuscript.
+# Phase 4.6 anonymous-review metadata authority.
+# This file is self-contained and does not inherit or combine private metadata.
+# The filter flag suppresses identity-only publication paragraphs.
+anonymous-review: true
 authors: ""
 affiliations: ""
 corresponding-author: ""

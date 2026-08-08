@@ -85,13 +85,79 @@ show_order() {
 show_command() {
   printf '%s\n' 'Full build command (authorized):'
   printf '%s\n' 'scripts/paper/build_manuscript_docx.sh --build-full'
-  printf '%s\n' 'Anonymous build: NOT_AUTHORIZED_IN_PHASE_4_5'
+  printf '%s\n' 'Anonymous build command (authorized):'
+  printf '%s\n' 'scripts/paper/build_manuscript_docx.sh --build-anonymous'
   printf '%s\n' 'CSL_STATUS: STRUCTURAL_DEFAULT_RENDERING; PHASE_4_7_REVIEW_REQUIRED'
+}
+
+build_anonymous() {
+  local pandoc_bin="${PAPER_PANDOC_BIN:-/home/orin/.local/bin/pandoc}"
+  local output_dir="docs/paper/manuscript/output"
+  local asset_dir="$output_dir/phase4_5_assets"
+  local raw_docx="$output_dir/draft_anonymous_raw.docx"
+  local section_docx="$output_dir/draft_anonymous_raw.docx.anonymous"
+  local table_docx="$output_dir/draft_anonymous_raw.docx.tables"
+  local anonymous_docx="$output_dir/draft_anonymous.docx"
+  local f1_source="docs/paper/manuscript/figures/fig1_v0_v2r_v3r_data_paths_final.svg"
+  local f1_png="$asset_dir/fig1_v0_v2r_v3r_data_paths_final.png"
+  local figure_profile
+
+  if [[ ! -x "$pandoc_bin" ]]; then
+    printf 'ANONYMOUS_BUILD_FAILED: Pandoc executable unavailable: %s\n' "$pandoc_bin" >&2
+    return 1
+  fi
+  mkdir -p "$output_dir" "$asset_dir"
+
+  if [[ ! -s "$f1_png" ]]; then
+    figure_profile="$(mktemp -d /tmp/phase46_anonymous_figures.XXXXXX)"
+    libreoffice "-env:UserInstallation=file://$figure_profile" --headless \
+      --convert-to png --outdir "$asset_dir" "$f1_source" \
+      > "$asset_dir/figure1_conversion.stdout.log" \
+      2> "$asset_dir/figure1_conversion.stderr.log"
+    rm -rf "$figure_profile"
+  fi
+  if [[ ! -s "$f1_png" ]]; then
+    printf 'ANONYMOUS_BUILD_FAILED: Figure 1 conversion did not produce %s\n' "$f1_png" >&2
+    return 1
+  fi
+
+  "$pandoc_bin" \
+    --from=markdown \
+    --to=docx \
+    --standalone \
+    --reference-doc=docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx \
+    --bibliography=docs/paper/manuscript/references/references.bib \
+    --citeproc \
+    --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables \
+    --metadata-file=docs/paper/manuscript/metadata/metadata_anonymous.yaml \
+    --lua-filter=scripts/paper/full_manuscript_filter.lua \
+    --output="$raw_docx" \
+    "${full_sections[@]}"
+
+  python3 scripts/paper/postprocess_full_manuscript_docx.py \
+    --input "$raw_docx" --output "$section_docx"
+  python3 scripts/paper/postprocess_publication_tables.py \
+    --input "$section_docx" --output "$table_docx"
+  python3 scripts/paper/sanitize_anonymous_manuscript_docx.py \
+    --input "$table_docx" --output "$anonymous_docx"
+  unzip -t "$anonymous_docx" > /dev/null
+  python3 scripts/paper/validate_citations.py
+  if [[ -s "$output_dir/draft_full.docx" ]]; then
+    python3 scripts/paper/validate_anonymous_manuscript_docx.py \
+      "$anonymous_docx" --full "$output_dir/draft_full.docx"
+  else
+    python3 scripts/paper/validate_anonymous_manuscript_docx.py "$anonymous_docx"
+  fi
+  printf 'ANONYMOUS_BUILD_OUTPUT=%s\n' "$anonymous_docx"
+  sha256sum "$anonymous_docx"
 }
 
 case "${1-}" in
   --build-full)
     build_full
+    ;;
+  --build-anonymous)
+    build_anonymous
     ;;
   --check)
     if [[ ! -s docs/paper/manuscript/output/draft_full.docx ]]; then
@@ -113,7 +179,7 @@ case "${1-}" in
     exit 2
     ;;
   *)
-    printf 'Usage: %s [--build-full|--check|--show-order|--show-command]\n' "$0" >&2
+    printf 'Usage: %s [--build-full|--build-anonymous|--check|--show-order|--show-command]\n' "$0" >&2
     exit 2
     ;;
 esac

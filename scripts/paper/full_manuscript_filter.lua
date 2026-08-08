@@ -10,6 +10,14 @@ local function meta_text(meta, key)
   return pandoc.utils.stringify(value)
 end
 
+local function meta_flag(meta, key)
+  local value = meta[key]
+  if value == nil then
+    return false
+  end
+  return string.lower(pandoc.utils.stringify(value)) == "true"
+end
+
 local function style_attr(style)
   return pandoc.Attr("", {}, {{"custom-style", style}})
 end
@@ -36,7 +44,10 @@ local function styled_block(block, style)
   return pandoc.Div({pandoc.Para(block.content)}, style_attr(style))
 end
 
-local function add_full_identity(output, meta, language)
+local function add_full_identity(output, meta, language, anonymous)
+  if anonymous then
+    return
+  end
   if language == "cn" then
     output:insert(styled_text(meta_text(meta, "authors-cn"), "HFUTAuthorsCN"))
     output:insert(styled_text(meta_text(meta, "affiliation-cn"), "HFUTAffiliationCN"))
@@ -48,9 +59,11 @@ local function add_full_identity(output, meta, language)
   end
 end
 
-local function add_final_front_matter(output, meta)
+local function add_final_front_matter(output, meta, anonymous)
   output:insert(styled_text("中图分类号：" .. meta_text(meta, "classification"), "HFUTClassification"))
-  output:insert(styled_text(meta_text(meta, "author-biography"), "HFUTAuthorBiography"))
+  if not anonymous and meta_text(meta, "author-biography") ~= "" then
+    output:insert(styled_text(meta_text(meta, "author-biography"), "HFUTAuthorBiography"))
+  end
 end
 
 local function figure_block(path)
@@ -76,6 +89,7 @@ end
 
 function Pandoc(doc)
   local output = pandoc.Blocks{}
+  local anonymous = meta_flag(doc.meta, "anonymous-review")
   local front_matter = true
   local pending = nil
   local final_front_matter_added = false
@@ -110,7 +124,7 @@ function Pandoc(doc)
       output:insert(styled_inlines(block.content, "HFUTHeading1"))
     elseif front_matter and pending == "cn_title" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTTitleCN"))
-      add_full_identity(output, doc.meta, "cn")
+      add_full_identity(output, doc.meta, "cn", anonymous)
       pending = nil
     elseif front_matter and pending == "cn_abstract" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTAbstractBodyCN"))
@@ -120,7 +134,7 @@ function Pandoc(doc)
       pending = nil
     elseif front_matter and pending == "en_title" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTTitleEN"))
-      add_full_identity(output, doc.meta, "en")
+      add_full_identity(output, doc.meta, "en", anonymous)
       pending = nil
     elseif front_matter and pending == "en_abstract" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTAbstractBodyEN"))
@@ -129,7 +143,7 @@ function Pandoc(doc)
       output:insert(styled_block(block, "HFUTKeywordsBodyEN"))
       pending = nil
       if not final_front_matter_added then
-        add_final_front_matter(output, doc.meta)
+        add_final_front_matter(output, doc.meta, anonymous)
         final_front_matter_added = true
       end
     elseif not front_matter and block.t == "Header" then
