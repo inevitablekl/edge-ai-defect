@@ -20,6 +20,7 @@ build_full() {
   local asset_dir="$output_dir/phase4_5_assets"
   local raw_docx="$output_dir/draft_full_raw.docx"
   local full_docx="$output_dir/draft_full.docx"
+  local csl_path="docs/paper/manuscript/csl/hfut_gbt7714_2025_numeric_v1.0.csl"
   local f1_source="docs/paper/manuscript/figures/fig1_v0_v2r_v3r_data_paths_final.svg"
   local f1_png="$asset_dir/fig1_v0_v2r_v3r_data_paths_final.png"
   local figure_profile
@@ -30,6 +31,10 @@ build_full() {
   fi
   if [[ ! -s docs/paper/manuscript/metadata/metadata_private.yaml ]]; then
     printf '%s\n' 'FULL_BUILD_FAILED: local private metadata is missing' >&2
+    return 1
+  fi
+  if [[ ! -s "$csl_path" ]]; then
+    printf 'FULL_BUILD_FAILED: final CSL is missing: %s\n' "$csl_path" >&2
     return 1
   fi
   mkdir -p "$output_dir" "$asset_dir"
@@ -53,6 +58,7 @@ build_full() {
     --standalone \
     --reference-doc=docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx \
     --bibliography=docs/paper/manuscript/references/references.bib \
+    --csl="$csl_path" \
     --citeproc \
     --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables \
     --metadata-file=docs/paper/manuscript/metadata/metadata_private.yaml \
@@ -66,6 +72,7 @@ build_full() {
     --input "$raw_docx.full" --output "$full_docx"
   unzip -t "$full_docx" > /dev/null
   python3 scripts/paper/validate_citations.py
+  python3 scripts/paper/validate_final_references.py --docx "$full_docx" --write-audit
   python3 scripts/paper/validate_full_manuscript_docx.py "$full_docx"
   printf 'FULL_BUILD_OUTPUT=%s\n' "$full_docx"
   sha256sum "$full_docx"
@@ -87,7 +94,7 @@ show_command() {
   printf '%s\n' 'scripts/paper/build_manuscript_docx.sh --build-full'
   printf '%s\n' 'Anonymous build command (authorized):'
   printf '%s\n' 'scripts/paper/build_manuscript_docx.sh --build-anonymous'
-  printf '%s\n' 'CSL_STATUS: STRUCTURAL_DEFAULT_RENDERING; PHASE_4_7_REVIEW_REQUIRED'
+  printf '%s\n' 'CSL_STATUS: PHASE_4_7_LOCAL_DERIVATIVE_VALIDATED; SEE_PAPER_PHASE4_CSL_DECISION_v1.0.md'
 }
 
 build_anonymous() {
@@ -98,12 +105,17 @@ build_anonymous() {
   local section_docx="$output_dir/draft_anonymous_raw.docx.anonymous"
   local table_docx="$output_dir/draft_anonymous_raw.docx.tables"
   local anonymous_docx="$output_dir/draft_anonymous.docx"
+  local csl_path="docs/paper/manuscript/csl/hfut_gbt7714_2025_numeric_v1.0.csl"
   local f1_source="docs/paper/manuscript/figures/fig1_v0_v2r_v3r_data_paths_final.svg"
   local f1_png="$asset_dir/fig1_v0_v2r_v3r_data_paths_final.png"
   local figure_profile
 
   if [[ ! -x "$pandoc_bin" ]]; then
     printf 'ANONYMOUS_BUILD_FAILED: Pandoc executable unavailable: %s\n' "$pandoc_bin" >&2
+    return 1
+  fi
+  if [[ ! -s "$csl_path" ]]; then
+    printf 'ANONYMOUS_BUILD_FAILED: final CSL is missing: %s\n' "$csl_path" >&2
     return 1
   fi
   mkdir -p "$output_dir" "$asset_dir"
@@ -127,6 +139,7 @@ build_anonymous() {
     --standalone \
     --reference-doc=docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx \
     --bibliography=docs/paper/manuscript/references/references.bib \
+    --csl="$csl_path" \
     --citeproc \
     --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables \
     --metadata-file=docs/paper/manuscript/metadata/metadata_anonymous.yaml \
@@ -143,9 +156,12 @@ build_anonymous() {
   unzip -t "$anonymous_docx" > /dev/null
   python3 scripts/paper/validate_citations.py
   if [[ -s "$output_dir/draft_full.docx" ]]; then
+    python3 scripts/paper/validate_final_references.py \
+      --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py \
       "$anonymous_docx" --full "$output_dir/draft_full.docx"
   else
+    python3 scripts/paper/validate_final_references.py --docx "$anonymous_docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py "$anonymous_docx"
   fi
   printf 'ANONYMOUS_BUILD_OUTPUT=%s\n' "$anonymous_docx"
@@ -166,6 +182,8 @@ case "${1-}" in
     fi
     unzip -t docs/paper/manuscript/output/draft_full.docx > /dev/null
     python3 scripts/paper/validate_citations.py
+    python3 scripts/paper/validate_final_references.py \
+      --docx docs/paper/manuscript/output/draft_full.docx --write-audit
     python3 scripts/paper/validate_full_manuscript_docx.py docs/paper/manuscript/output/draft_full.docx
     ;;
   --show-order)

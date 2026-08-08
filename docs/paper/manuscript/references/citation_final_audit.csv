@@ -1,0 +1,16 @@
+citation_key,cited_yes_no,first_occurrence_index,first_occurrence_section,source_type,current_bib_type,expected_rendered_type,metadata_status,render_status,final_disposition,notes
+song_yan_2013_neu_surface_defects,YES,1,01_introduction.md,research_paper,article,[J],REMEDIATED,PASS_RENDERED_[J],CITED_AND_RENDERED,Added locally verified final volume and pages (285:858--864).
+shao_et_al_2024_td_net,YES,2,01_introduction.md,research_paper,article,[J],REMEDIATED,PASS_RENDERED_[J],CITED_AND_RENDERED,Added locally verified final volume and pages (10:3943--3954).
+lema_et_al_2025_surface_defect_benchmark,YES,3,01_introduction.md,research_paper,article,[J/OL],PASS,PASS_RENDERED_[J/OL],CITED_AND_RENDERED,"Local article is online-first; no unverified final volume, issue, or pages were added."
+ultralytics_2023_yolov8_docs,YES,4,01_introduction.md,official_documentation,online,[EB/OL],REMEDIATED,PASS_RENDERED_[EB/OL],CITED_AND_RENDERED,Converted to official webpage metadata with locally captured URL and access date.
+weiss_et_al_2024_realtime_component_inspection,YES,5,01_introduction.md,research_paper,article,[J],REMEDIATED,PASS_RENDERED_[J],CITED_AND_RENDERED,"Added locally verified volume, issue, and article number (13(8):1551)."
+shin_kim_2022_jetson_yolo_frameworks,YES,6,01_introduction.md,research_paper,article,[J],REMEDIATED,PASS_RENDERED_[J],CITED_AND_RENDERED,Added locally verified article number (12(8):3734).
+tang_qian_2024_yolov8_jetson_orin,YES,7,01_introduction.md,research_paper,article,[J],PASS,PASS_RENDERED_[J],CITED_AND_RENDERED,Local full text confirms existing volume and pagination.
+liu_zhang_ruan_2024_hfut_yolov5_embedded,YES,8,01_introduction.md,target_journal_paper,article,[J],REMEDIATED,PASS_RENDERED_[J],CITED_AND_RENDERED,Added locally verified final pagination (47(7):879--887).
+kim_lee_kim_2024_hyq,YES,9,01_introduction.md,research_paper,inproceedings,[C],PASS,PASS_RENDERED_[C],CITED_AND_RENDERED,Local full text and admitted BibTeX metadata confirm conference fields.
+nvidia_tensorrt_10_3_release_notes,YES,10,01_introduction.md,official_documentation,manual,[M],PASS,PASS_RENDERED_[M],CITED_AND_RENDERED,Phase 3 admitted limitation retained: no approved publication year is available.
+nvidia_cuda_best_practices_12_6,YES,11,01_introduction.md,official_documentation,manual,[M],PASS,PASS_RENDERED_[M],CITED_AND_RENDERED,Local official PDF confirms 2024 Release 12.6 manual metadata.
+reddi_et_al_2019_mlperf_inference,YES,12,01_introduction.md,research_paper,article,[PP/OL],REMEDIATED,PASS_RENDERED_[PP/OL],CITED_AND_RENDERED,Explicit preprint metadata and canonical arXiv URL permit [PP/OL] rendering.
+nvidia_jetpack_6_2_2,YES,13,02_problem_definition.md,official_documentation,online,[EB/OL],REMEDIATED,PASS_RENDERED_[EB/OL],CITED_AND_RENDERED,Converted to official webpage metadata with locally captured URL and access date; no publication year invented.
+nvidia_cuda_programming_guide_12_6,YES,14,02_problem_definition.md,official_documentation,manual,[M],PASS,PASS_RENDERED_[M],CITED_AND_RENDERED,Local official PDF confirms 2024 Release 12.6 manual metadata.
+reddi_et_al_2022_mlperf_mobile,NO,,,research_paper,inproceedings,NOT_RENDERED,PASS,NOT_RENDERED_BY_DESIGN,PRE_DRAFT_ADMITTED_SOURCE_RETAINED,A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered.
