@@ -74,6 +74,11 @@ def set_body_columns(root: ET.Element) -> None:
     final_sect = body.find("w:sectPr", NS)
     if final_sect is None:
         raise ValueError("word/document.xml has no final w:sectPr")
+    section_type = final_sect.find("w:type", NS)
+    if section_type is None:
+        section_type = ET.Element(qn("type"))
+        insert_in_schema_order(final_sect, section_type, SECTPR_ORDER)
+    section_type.set(qn("val"), "continuous")
     columns = final_sect.find("w:cols", NS)
     if columns is None:
         columns = ET.Element(qn("cols"))

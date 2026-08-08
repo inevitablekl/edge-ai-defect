@@ -145,6 +145,56 @@ def identity_paragraph(style: str, text: str) -> bool:
     )
 
 
+def validate_t1_layout(errors: list[str], table: ET.Element) -> None:
+    rows = table.findall("w:tr", NS)
+    exact_measurement = "1080 帧，即 180 幅图像完整回放 6 个周期"
+    exact_matches = 0
+    table_borders = table.find("w:tblPr/w:tblBorders", NS)
+    for edge in ("insideH", "insideV"):
+        if attr(table_borders.find(f"w:{edge}", NS) if table_borders is not None else None, "val") != "nil":
+            errors.append(f"Table 1 {edge} border is not nil")
+    for row_index, row in enumerate(rows):
+        for column_index, cell in enumerate(row.findall("w:tc", NS)):
+            label = f"Table 1 row {row_index} column {column_index}"
+            if text_of(cell) == exact_measurement:
+                exact_matches += 1
+            borders = cell.find("w:tcPr/w:tcBorders", NS)
+            if borders is None:
+                errors.append(f"{label} has no direct cell borders")
+            else:
+                expected_top = ("single", "8") if row_index == 0 else ("nil", None)
+                expected_bottom = (
+                    ("single", "4") if row_index == 0
+                    else (("single", "8") if row_index == len(rows) - 1 else ("nil", None))
+                )
+                for edge, expected in (("top", expected_top), ("bottom", expected_bottom)):
+                    node = borders.find(f"w:{edge}", NS)
+                    actual = (attr(node, "val"), attr(node, "sz"))
+                    if actual != expected:
+                        errors.append(f"{label} {edge} border mismatch: {actual}")
+                for edge in ("left", "right"):
+                    if attr(borders.find(f"w:{edge}", NS), "val") != "nil":
+                        errors.append(f"{label} {edge} border is not nil")
+            expected_alignment = "center" if row_index == 0 else "left"
+            for paragraph in cell.findall("w:p", NS):
+                ppr = paragraph.find("w:pPr", NS)
+                if attr(ppr.find("w:pStyle", NS) if ppr is not None else None, "val") != "HFUTTableContent":
+                    errors.append(f"{label} paragraph style is not HFUTTableContent")
+                indent = ppr.find("w:ind", NS) if ppr is not None else None
+                actual_indent = (attr(indent, "left"), attr(indent, "right"), attr(indent, "firstLine"))
+                forbidden_indents = ("hanging", "hangingChars", "leftChars", "rightChars", "firstLineChars")
+                if actual_indent != ("0", "0", "0") or any(
+                    attr(indent, name) is not None for name in forbidden_indents
+                ):
+                    errors.append(f"{label} paragraph direct indent mismatch: {actual_indent}")
+                if ppr is not None and ppr.find("w:tabs", NS) is not None:
+                    errors.append(f"{label} paragraph contains unexpected tabs")
+                if attr(ppr.find("w:jc", NS) if ppr is not None else None, "val") != expected_alignment:
+                    errors.append(f"{label} paragraph alignment is not {expected_alignment}")
+    if exact_matches != 1:
+        errors.append(f"Table 1 exact single-measurement text count is {exact_matches}, expected 1")
+
+
 def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], dict[str, bytes], dict[str, ET.Element]]:
     errors: list[str] = []
     details: dict[str, object] = {}
@@ -330,6 +380,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
                 errors.append(f"Table 2 missing frozen value: {value}")
         if "V3R" in t2_values:
             errors.append("V3R appears in Table 2")
+        validate_t1_layout(errors, tables[0])
 
     for value in FROZEN_VALUES:
         if value not in all_text:

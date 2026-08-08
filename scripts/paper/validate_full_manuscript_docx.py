@@ -33,6 +33,54 @@ def fail(errors: list[str], message: str) -> None:
     errors.append(message)
 
 
+def validate_cell_border(
+    errors: list[str], cell: ET.Element, expected_top: tuple[str, str | None],
+    expected_bottom: tuple[str, str | None], label: str,
+) -> None:
+    borders = cell.find("w:tcPr/w:tcBorders", NS)
+    if borders is None:
+        fail(errors, f"{label} has no direct cell borders")
+        return
+    for edge in ("left", "right"):
+        if attr(borders.find(f"w:{edge}", NS), "val") != "nil":
+            fail(errors, f"{label} {edge} border is not nil")
+    for edge, expected in (("top", expected_top), ("bottom", expected_bottom)):
+        node = borders.find(f"w:{edge}", NS)
+        actual = (attr(node, "val"), attr(node, "sz"))
+        if actual != expected:
+            fail(errors, f"{label} {edge} border mismatch: {actual}")
+
+
+def validate_t1_paragraphs(errors: list[str], rows: list[ET.Element]) -> None:
+    exact_measurement = "1080 帧，即 180 幅图像完整回放 6 个周期"
+    matching_cells = []
+    for row_index, row in enumerate(rows):
+        for column_index, cell in enumerate(row.findall("w:tc", NS)):
+            if text_of(cell) == exact_measurement:
+                matching_cells.append(cell)
+            expected_alignment = "center" if row_index == 0 else "left"
+            for paragraph in cell.findall("w:p", NS):
+                label = f"Table 1 row {row_index} column {column_index} paragraph"
+                ppr = paragraph.find("w:pPr", NS)
+                if attr(ppr.find("w:pStyle", NS) if ppr is not None else None, "val") != "HFUTTableContent":
+                    fail(errors, f"{label} style is not HFUTTableContent")
+                indent = ppr.find("w:ind", NS) if ppr is not None else None
+                actual_indent = (
+                    attr(indent, "left"), attr(indent, "right"), attr(indent, "firstLine")
+                )
+                forbidden_indents = ("hanging", "hangingChars", "leftChars", "rightChars", "firstLineChars")
+                if actual_indent != ("0", "0", "0") or any(
+                    attr(indent, name) is not None for name in forbidden_indents
+                ):
+                    fail(errors, f"{label} direct indent mismatch: {actual_indent}")
+                if ppr is not None and ppr.find("w:tabs", NS) is not None:
+                    fail(errors, f"{label} contains unexpected paragraph tabs")
+                if attr(ppr.find("w:jc", NS) if ppr is not None else None, "val") != expected_alignment:
+                    fail(errors, f"{label} alignment is not {expected_alignment}")
+    if len(matching_cells) != 1:
+        fail(errors, f"Table 1 exact single-measurement text count is {len(matching_cells)}, expected 1")
+
+
 def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     errors: list[str] = []
     details: dict[str, object] = {}
@@ -160,7 +208,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         if "V3R" in t2_values:
             fail(errors, "V3R appears in Table 2")
 
-        for table in tables:
+        for table_index, table in enumerate(tables, start=1):
             borders = table.find("w:tblPr/w:tblBorders", NS)
             expected = {"top": "single", "left": "nil", "bottom": "single", "right": "nil", "insideH": "nil", "insideV": "nil"}
             actual = {node.tag.rsplit("}", 1)[-1]: attr(node, "val") for node in borders} if borders is not None else {}
@@ -169,15 +217,18 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
             if attr(borders.find("w:top", NS), "sz") != "8" or attr(borders.find("w:bottom", NS), "sz") != "8":
                 fail(errors, "table top/bottom rule width is not 1 pt")
             rows = table.findall("w:tr", NS)
-            for cell in rows[0].findall("w:tc", NS):
-                border = cell.find("w:tcPr/w:tcBorders/w:bottom", NS)
-                if attr(border, "val") != "single" or attr(border, "sz") != "4":
-                    fail(errors, "table header rule is not 0.5 pt")
-            for row in rows[1:]:
-                for cell in row.findall("w:tc", NS):
-                    border = cell.find("w:tcPr/w:tcBorders", NS)
-                    if attr(border.find("w:top", NS), "val") != "nil" or attr(border.find("w:bottom", NS), "val") != "nil":
-                        fail(errors, "internal body gridline is present")
+            for row_index, row in enumerate(rows):
+                top = ("single", "8") if row_index == 0 else ("nil", None)
+                bottom = (
+                    ("single", "4") if row_index == 0
+                    else (("single", "8") if row_index == len(rows) - 1 else ("nil", None))
+                )
+                for column_index, cell in enumerate(row.findall("w:tc", NS)):
+                    validate_cell_border(
+                        errors, cell, top, bottom,
+                        f"Table {table_index} row {row_index} column {column_index}",
+                    )
+        validate_t1_paragraphs(errors, t1_rows)
 
     reference_heading_index = next((index for index, p in enumerate(body_paragraphs) if text_of(p) == "参考文献"), None)
     rendered_references = 0

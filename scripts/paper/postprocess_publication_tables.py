@@ -59,7 +59,9 @@ def set_border(parent: ET.Element, edge: str, value: str, size: int | None = Non
     parent.append(node)
 
 
-def set_paragraph_style_and_alignment(paragraph: ET.Element, alignment: str) -> None:
+def set_paragraph_style_and_alignment(
+    paragraph: ET.Element, alignment: str, neutralize_indentation: bool = False
+) -> None:
     ppr = ensure_first(paragraph, "pPr")
     pstyle = ppr.find("w:pStyle", NS)
     if pstyle is None:
@@ -73,10 +75,30 @@ def set_paragraph_style_and_alignment(paragraph: ET.Element, alignment: str) -> 
         ppr.insert(1, jc)
     else:
         jc.set(qn("val"), alignment)
+    if neutralize_indentation:
+        tabs = ppr.find("w:tabs", NS)
+        if tabs is not None:
+            ppr.remove(tabs)
+        indent = ppr.find("w:ind", NS)
+        if indent is None:
+            indent = ET.Element(qn("ind"))
+            ppr.insert(1, indent)
+        indent.attrib.pop(qn("hanging"), None)
+        indent.attrib.pop(qn("hangingChars"), None)
+        indent.attrib.pop(qn("leftChars"), None)
+        indent.attrib.pop(qn("rightChars"), None)
+        indent.attrib.pop(qn("firstLineChars"), None)
+        indent.set(qn("left"), "0")
+        indent.set(qn("right"), "0")
+        indent.set(qn("firstLine"), "0")
 
 
 def set_cell_width_and_borders(
-    cell: ET.Element, width: int, header: bool, compact: bool
+    cell: ET.Element,
+    width: int,
+    row_index: int,
+    last_row_index: int,
+    compact: bool,
 ) -> None:
     tc_pr = ensure_first(cell, "tcPr")
     tc_width = tc_pr.find("w:tcW", NS)
@@ -90,9 +112,16 @@ def set_cell_width_and_borders(
     if borders is None:
         borders = ET.Element(qn("tcBorders"))
         tc_pr.insert(1, borders)
-    set_border(borders, "top", "nil")
+    first_row = row_index == 0
+    last_row = row_index == last_row_index
+    set_border(borders, "top", "single" if first_row else "nil", 8 if first_row else None)
     set_border(borders, "left", "nil")
-    set_border(borders, "bottom", "single" if header else "nil", 4 if header else None)
+    set_border(
+        borders,
+        "bottom",
+        "single" if first_row or last_row else "nil",
+        4 if first_row else (8 if last_row else None),
+    )
     set_border(borders, "right", "nil")
     if compact:
         margins = tc_pr.find("w:tcMar", NS)
@@ -178,7 +207,7 @@ def apply_table(table: ET.Element, table_id: str) -> None:
             raise ValueError(f"{table_id} row {row_index} column count mismatch")
         for column_index, cell in enumerate(cells):
             set_cell_width_and_borders(
-                cell, widths[column_index], row_index == 0, table_id == "T2"
+                cell, widths[column_index], row_index, len(rows) - 1, table_id == "T2"
             )
             if table_id == "T1":
                 alignment = "center" if row_index == 0 else "left"
@@ -191,7 +220,9 @@ def apply_table(table: ET.Element, table_id: str) -> None:
             else:
                 alignment = "right"
             for paragraph in cell.findall("w:p", NS):
-                set_paragraph_style_and_alignment(paragraph, alignment)
+                set_paragraph_style_and_alignment(
+                    paragraph, alignment, neutralize_indentation=table_id == "T1"
+                )
 
 
 def locate_captioned_tables(root: ET.Element) -> dict[str, ET.Element]:
