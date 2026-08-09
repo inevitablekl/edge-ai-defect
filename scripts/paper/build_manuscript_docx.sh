@@ -53,7 +53,7 @@ build_full() {
   fi
 
   "$pandoc_bin" \
-    --from=markdown \
+    --from=markdown+tex_math_single_backslash \
     --to=docx \
     --standalone \
     --reference-doc=docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx \
@@ -134,7 +134,7 @@ build_anonymous() {
   fi
 
   "$pandoc_bin" \
-    --from=markdown \
+    --from=markdown+tex_math_single_backslash \
     --to=docx \
     --standalone \
     --reference-doc=docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx \
