@@ -13,10 +13,11 @@ from xml.etree import ElementTree as ET
 
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PR = "http://schemas.openxmlformats.org/package/2006/relationships"
 CT = "http://schemas.openxmlformats.org/package/2006/content-types"
-NS = {"w": W}
+NS = {"w": W, "m": M}
 ET.register_namespace("w", W)
 ET.register_namespace("r", R)
 
@@ -65,6 +66,51 @@ def ensure_first(parent: ET.Element, local: str) -> ET.Element:
         node = ET.Element(qn(local))
         parent.insert(0, node)
     return node
+
+
+def set_paragraph_style(paragraph: ET.Element, style_id: str) -> ET.Element:
+    ppr = ensure_first(paragraph, "pPr")
+    pstyle = ppr.find("w:pStyle", NS)
+    if pstyle is None:
+        pstyle = ET.Element(qn("pStyle"))
+        ppr.insert(0, pstyle)
+    pstyle.set(qn("val"), style_id)
+    return ppr
+
+
+def normalize_equation_paragraphs(root: ET.Element) -> None:
+    """Restore the validated display and inline OMML paragraph contract."""
+    body = root.find("w:body", NS)
+    if body is None:
+        raise ValueError("word/document.xml has no w:body")
+
+    for paragraph in body.findall("w:p", NS):
+        has_display_math = paragraph.find(".//m:oMathPara", NS) is not None
+        has_inline_math = paragraph.find(".//m:oMath", NS) is not None and not has_display_math
+
+        if has_display_math:
+            # Use the existing named style so its complete validated contract
+            # remains authoritative for display equations.
+            set_paragraph_style(paragraph, "HFUTEquation")
+            continue
+
+        pstyle = paragraph.find("w:pPr/w:pStyle", NS)
+        is_body_paragraph = pstyle is not None and pstyle.get(qn("val")) == "HFUTBody"
+        if not has_inline_math or not is_body_paragraph:
+            continue
+
+        # Preserve HFUTBody's font, alignment, and indentation while giving an
+        # inline OMML run the narrow minimum-height exception validated in
+        # Phase 2.5.
+        ppr = set_paragraph_style(paragraph, "HFUTBody")
+        spacing = ppr.find("w:spacing", NS)
+        if spacing is None:
+            spacing = ET.Element(qn("spacing"))
+            insert_in_schema_order(ppr, spacing, PPR_ORDER)
+        spacing.set(qn("before"), "0")
+        spacing.set(qn("after"), "0")
+        spacing.set(qn("line"), "360")
+        spacing.set(qn("lineRule"), "atLeast")
 
 
 def set_body_columns(root: ET.Element) -> None:
@@ -332,6 +378,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     insert_continuous_boundary(root)
     span_figure1(root)
     normalize_publication_drawing_paragraphs(root)
+    normalize_equation_paragraphs(root)
     move_biography_to_first_footer(root, parts)
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
