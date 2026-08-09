@@ -254,6 +254,30 @@ def deduplicate_styles(parts: dict[str, bytes]) -> None:
     parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
+def apply_phase5_equation_style(parts: dict[str, bytes]) -> None:
+    """Apply the accepted adaptive display contract to production output only."""
+    root = ET.fromstring(parts["word/styles.xml"])
+    style = next(
+        (node for node in root.findall("w:style", NS)
+         if node.get(qn("styleId")) == "HFUTEquation"),
+        None,
+    )
+    if style is None:
+        raise ValueError("HFUTEquation style is missing")
+    ppr = style.find("w:pPr", NS)
+    if ppr is None:
+        ppr = ET.SubElement(style, qn("pPr"))
+    spacing = ppr.find("w:spacing", NS)
+    if spacing is None:
+        spacing = ET.Element(qn("spacing"))
+        insert_in_schema_order(ppr, spacing, PPR_ORDER)
+    spacing.set(qn("before"), "0")
+    spacing.set(qn("after"), "0")
+    spacing.set(qn("line"), "320")
+    spacing.set(qn("lineRule"), "atLeast")
+    parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
 def remove_biography_custom_property(parts: dict[str, bytes]) -> None:
     name = "docProps/custom.xml"
     if name not in parts:
@@ -373,6 +397,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
         parts = {name: archive.read(name) for name in archive.namelist()}
     root = ET.fromstring(parts["word/document.xml"])
     deduplicate_styles(parts)
+    apply_phase5_equation_style(parts)
     remove_biography_custom_property(parts)
     set_body_columns(root)
     insert_continuous_boundary(root)
