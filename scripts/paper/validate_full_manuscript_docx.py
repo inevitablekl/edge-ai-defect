@@ -248,8 +248,8 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     details["source_references"] = source_references
     if rendered_references == 0:
         fail(errors, "no rendered bibliography entries found")
-    if source_references != 15:
-        fail(errors, f"expected 15 bibliography source entries, found {source_references}")
+    if source_references != 27:
+        fail(errors, f"expected 27 bibliography source entries, found {source_references}")
 
     for value in ("2.236671×", "55.4519%", "4.0738%", "4.0349%", "0.1514%", "0.1184%"):
         if value not in all_text:

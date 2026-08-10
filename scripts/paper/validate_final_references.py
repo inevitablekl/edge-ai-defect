@@ -40,72 +40,120 @@ SECTION_PATHS = (
 # bibliography file order. The final unused entry is deliberately retained under the
 # Phase 3 PRE_DRAFT_ADMITTED_SOURCE decision.
 EXPECTED_CITED_ORDER = (
+    "lv_et_al_2020_metallic_defects",
     "song_yan_2013_neu_surface_defects",
     "shao_et_al_2024_td_net",
-    "lema_et_al_2025_surface_defect_benchmark",
+    "chu_yu_rong_2024_strip_steel_yolov8",
+    "zhang_pang_jiang_2024_gdm_yolo",
     "ultralytics_2023_yolov8_docs",
+    "stacker_et_al_2021_edge_runtime",
+    "lee_han_kim_2025_presto",
     "weiss_et_al_2024_realtime_component_inspection",
-    "shin_kim_2022_jetson_yolo_frameworks",
-    "tang_qian_2024_yolov8_jetson_orin",
-    "liu_zhang_ruan_2024_hfut_yolov5_embedded",
-    "kim_lee_kim_2024_hyq",
+    "jacob_et_al_2018_integer_inference",
+    "nagel_et_al_2020_adaround",
     "nvidia_tensorrt_10_3_release_notes",
-    "nvidia_cuda_best_practices_12_6",
-    "reddi_et_al_2019_mlperf_inference",
     "nvidia_jetpack_6_2_2",
+    "kim_lee_kim_2024_hyq",
+    "tang_qian_2024_yolov8_jetson_orin",
+    "nvidia_cuda_best_practices_12_6",
+    "bateni_et_al_2020_integrated_memory",
+    "rodriguez_et_al_2025_gpu_memory_allocation",
     "nvidia_cuda_programming_guide_12_6",
+    "kim_et_al_2025_concurrent_edge_detection",
+    "hill_marty_2008_amdahl",
+    "dean_barroso_2013_tail_scale",
+    "reddi_et_al_2019_mlperf_inference",
+    "archet_et_al_2023_embedded_soc",
+    "shin_kim_2022_jetson_yolo_frameworks",
+    "lema_et_al_2025_surface_defect_benchmark",
 )
 UNUSED_ADMITTED_KEY = "reddi_et_al_2022_mlperf_mobile"
 
 EXPECTED_TYPE = {
+    "lv_et_al_2020_metallic_defects": "J",
     "song_yan_2013_neu_surface_defects": "J",
     "shao_et_al_2024_td_net": "J",
+    "chu_yu_rong_2024_strip_steel_yolov8": "J",
+    "zhang_pang_jiang_2024_gdm_yolo": "J",
     "lema_et_al_2025_surface_defect_benchmark": "J/OL",
     "ultralytics_2023_yolov8_docs": "EB/OL",
+    "stacker_et_al_2021_edge_runtime": "C",
+    "kim_et_al_2025_concurrent_edge_detection": "J",
+    "lee_han_kim_2025_presto": "C",
     "weiss_et_al_2024_realtime_component_inspection": "J",
     "shin_kim_2022_jetson_yolo_frameworks": "J",
     "tang_qian_2024_yolov8_jetson_orin": "J",
-    "liu_zhang_ruan_2024_hfut_yolov5_embedded": "J",
+    "jacob_et_al_2018_integer_inference": "C",
+    "nagel_et_al_2020_adaround": "C",
     "kim_lee_kim_2024_hyq": "C",
     "nvidia_tensorrt_10_3_release_notes": "M",
     "nvidia_cuda_best_practices_12_6": "M",
-    "reddi_et_al_2019_mlperf_inference": "PP/OL",
+    "dean_barroso_2013_tail_scale": "J",
+    "reddi_et_al_2019_mlperf_inference": "C",
     "nvidia_jetpack_6_2_2": "EB/OL",
+    "bateni_et_al_2020_integrated_memory": "C",
+    "rodriguez_et_al_2025_gpu_memory_allocation": "C",
     "nvidia_cuda_programming_guide_12_6": "M",
+    "hill_marty_2008_amdahl": "J",
+    "archet_et_al_2023_embedded_soc": "C",
 }
 
 TITLE_NEEDLES = {
+    "lv_et_al_2020_metallic_defects": "Deep Metallic Surface Defect Detection",
     "song_yan_2013_neu_surface_defects": "hot-rolled steel strip",
     "shao_et_al_2024_td_net": "TD-Net",
+    "chu_yu_rong_2024_strip_steel_yolov8": "Lightweight Strip Steel Surface Defect",
+    "zhang_pang_jiang_2024_gdm_yolo": "GDM-YOLO",
     "lema_et_al_2025_surface_defect_benchmark": "Benchmarking deep learning models",
     "ultralytics_2023_yolov8_docs": "Explore Ultralytics YOLOv8",
+    "stacker_et_al_2021_edge_runtime": "Deployment of Deep Neural Networks",
+    "kim_et_al_2025_concurrent_edge_detection": "Concurrent Multi-Frame Processing",
+    "lee_han_kim_2025_presto": "Hybrid CPU-GPU Preprocessing",
     "weiss_et_al_2024_realtime_component_inspection": "Real-Time Defect Detection",
     "shin_kim_2022_jetson_yolo_frameworks": "Deep Learning Framework Performance",
     "tang_qian_2024_yolov8_jetson_orin": "High-speed railway track components",
-    "liu_zhang_ruan_2024_hfut_yolov5_embedded": "Improved YOLOv5 staircase",
+    "jacob_et_al_2018_integer_inference": "Integer-Arithmetic-Only Inference",
+    "nagel_et_al_2020_adaround": "Adaptive Rounding",
     "kim_lee_kim_2024_hyq": "HyQ:",
     "nvidia_tensorrt_10_3_release_notes": "TensorRT 10.3 Release Notes",
     "nvidia_cuda_best_practices_12_6": "CUDA C++ Best Practices Guide",
+    "dean_barroso_2013_tail_scale": "The Tail at Scale",
     "reddi_et_al_2019_mlperf_inference": "MLPerf Inference Benchmark",
     "nvidia_jetpack_6_2_2": "JetPack SDK",
+    "bateni_et_al_2020_integrated_memory": "Co-Optimizing Performance and Memory Footprint",
+    "rodriguez_et_al_2025_gpu_memory_allocation": "GPU Memory Allocation Characteristics",
     "nvidia_cuda_programming_guide_12_6": "CUDA C++ Programming Guide",
+    "hill_marty_2008_amdahl": "Law in the Multicore Era",
+    "archet_et_al_2023_embedded_soc": "Embedded Heterogeneous SoC",
 }
 
 METADATA_STATUS = {
+    "lv_et_al_2020_metallic_defects": ("PASS", "Publisher and DOI metadata confirm Sensors 20(6), article 1562."),
     "song_yan_2013_neu_surface_defects": ("REMEDIATED", "Added locally verified final volume and pages (285:858--864)."),
     "shao_et_al_2024_td_net": ("REMEDIATED", "Added locally verified final volume and pages (10:3943--3954)."),
+    "chu_yu_rong_2024_strip_steel_yolov8": ("PASS", "Publisher and DOI metadata confirm Sensors 24(19), article 6495."),
+    "zhang_pang_jiang_2024_gdm_yolo": ("PASS", "DOI metadata confirm IEEE Access 12:148817--148825."),
     "lema_et_al_2025_surface_defect_benchmark": ("PASS", "Local article is online-first; no unverified final volume, issue, or pages were added."),
     "ultralytics_2023_yolov8_docs": ("REMEDIATED", "Converted to official webpage metadata with locally captured URL and access date."),
+    "stacker_et_al_2021_edge_runtime": ("PASS", "CVF and DOI metadata confirm ICCVW 2021:1015--1022."),
+    "kim_et_al_2025_concurrent_edge_detection": ("PASS", "DOI and DBLP metadata confirm IEEE Access 13:1522--1533."),
+    "lee_han_kim_2025_presto": ("PASS", "ACM DOI metadata confirm MobiSys 2025:735--740."),
     "weiss_et_al_2024_realtime_component_inspection": ("REMEDIATED", "Added locally verified volume, issue, and article number (13(8):1551)."),
     "shin_kim_2022_jetson_yolo_frameworks": ("REMEDIATED", "Added locally verified article number (12(8):3734)."),
     "tang_qian_2024_yolov8_jetson_orin": ("PASS", "Local full text confirms existing volume and pagination."),
-    "liu_zhang_ruan_2024_hfut_yolov5_embedded": ("REMEDIATED", "Added locally verified final pagination (47(7):879--887)."),
+    "jacob_et_al_2018_integer_inference": ("PASS", "CVF publication metadata confirm CVPR 2018:2704--2713."),
+    "nagel_et_al_2020_adaround": ("PASS", "PMLR metadata confirm ICML/PMLR 119:7197--7206."),
     "kim_lee_kim_2024_hyq": ("PASS", "Local full text and admitted BibTeX metadata confirm conference fields."),
     "nvidia_tensorrt_10_3_release_notes": ("PASS", "Phase 3 admitted limitation retained: no approved publication year is available."),
     "nvidia_cuda_best_practices_12_6": ("PASS", "Local official PDF confirms 2024 Release 12.6 manual metadata."),
-    "reddi_et_al_2019_mlperf_inference": ("REMEDIATED", "Explicit preprint metadata and canonical arXiv URL permit [PP/OL] rendering."),
+    "dean_barroso_2013_tail_scale": ("PASS", "ACM DOI metadata confirm Communications of the ACM 56(2):74--80."),
+    "reddi_et_al_2019_mlperf_inference": ("UPGRADE_METADATA", "Same logical source upgraded from the 2019 preprint to ISCA 2020:446--459."),
     "nvidia_jetpack_6_2_2": ("REMEDIATED", "Converted to official webpage metadata with locally captured URL and access date; no publication year invented."),
+    "bateni_et_al_2020_integrated_memory": ("PASS", "DOI registration, IEEE document 9113098, and DBLP confirm RTAS 2020:310--323."),
+    "rodriguez_et_al_2025_gpu_memory_allocation": ("PASS", "Dagstuhl/DROPS metadata confirm OASIcs 127:1:1--1:15."),
     "nvidia_cuda_programming_guide_12_6": ("PASS", "Local official PDF confirms 2024 Release 12.6 manual metadata."),
+    "hill_marty_2008_amdahl": ("PASS", "IEEE DOI metadata confirm Computer 41(7):33--38."),
+    "archet_et_al_2023_embedded_soc": ("PASS", "IEEE DOI metadata confirm DSD 2023:30--38."),
     UNUSED_ADMITTED_KEY: ("PASS", "A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered."),
 }
 
@@ -191,8 +239,8 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
         fail(errors, f"first-occurrence order mismatch: {cited_order!r}")
     if manual_numbers:
         fail(errors, f"manual numeric citation patterns in Markdown: {manual_numbers!r}")
-    if set(entries) != expected_all or len(entries) != 15:
-        fail(errors, f"bibliography library must contain exactly the admitted 15 keys; got {list(entries)!r}")
+    if set(entries) != expected_all or len(entries) != 27:
+        fail(errors, f"bibliography library must contain exactly the admitted 27 keys; got {list(entries)!r}")
     unresolved = sorted(set(cited_order) - set(entries))
     if unresolved:
         fail(errors, f"unresolved citation keys: {unresolved!r}")
@@ -215,28 +263,40 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
             for required in ("journal", "year", "doi"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing journal metadata {required}")
-        if key in {"song_yan_2013_neu_surface_defects", "shao_et_al_2024_td_net", "weiss_et_al_2024_realtime_component_inspection", "shin_kim_2022_jetson_yolo_frameworks", "tang_qian_2024_yolov8_jetson_orin", "liu_zhang_ruan_2024_hfut_yolov5_embedded"}:
+        if key in {"lv_et_al_2020_metallic_defects", "song_yan_2013_neu_surface_defects", "shao_et_al_2024_td_net", "chu_yu_rong_2024_strip_steel_yolov8", "zhang_pang_jiang_2024_gdm_yolo", "kim_et_al_2025_concurrent_edge_detection", "weiss_et_al_2024_realtime_component_inspection", "shin_kim_2022_jetson_yolo_frameworks", "tang_qian_2024_yolov8_jetson_orin", "dean_barroso_2013_tail_scale", "hill_marty_2008_amdahl"}:
             for required in ("volume", "pages"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing final article metadata {required}")
-        if key == "kim_lee_kim_2024_hyq":
-            for required in ("booktitle", "publisher", "year", "pages", "doi"):
+        if EXPECTED_TYPE.get(key) == "C":
+            for required in ("booktitle", "year", "pages"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing conference metadata {required}")
         if key in {"ultralytics_2023_yolov8_docs", "nvidia_jetpack_6_2_2"}:
             for required in ("url", "urldate"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing official webpage metadata {required}")
-        if key == "reddi_et_al_2019_mlperf_inference":
-            for required in ("year", "note", "url"):
-                if not fields.get(required):
-                    fail(errors, f"{key}: missing preprint metadata {required}")
         doi = fields.get("doi")
         if doi and not re.fullmatch(r"10\.\S+/.+", doi):
             fail(errors, f"{key}: malformed DOI {doi!r}")
         url = fields.get("url")
         if url and not re.fullmatch(r"https://[^\s]+", url):
             fail(errors, f"{key}: malformed URL {url!r}")
+    doi_owners: dict[str, str] = {}
+    title_owners: dict[str, str] = {}
+    for key, entry in entries.items():
+        fields = entry["fields"]
+        if not isinstance(fields, dict):
+            continue
+        doi = fields.get("doi", "").casefold().strip()
+        if doi:
+            if doi in doi_owners:
+                fail(errors, f"duplicate DOI for {doi_owners[doi]} and {key}: {doi}")
+            doi_owners[doi] = key
+        title = re.sub(r"[^a-z0-9]+", "", fields.get("title", "").casefold())
+        if title:
+            if title in title_owners:
+                fail(errors, f"duplicate normalized title for {title_owners[title]} and {key}")
+            title_owners[title] = key
     return errors, first_sections, cited_order
 
 

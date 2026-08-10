@@ -20,7 +20,7 @@ CUDA preprocessor 在进入帧循环前建立，并复用 TensorRT Engine 持有
 
 V3R 在 V2R 的 CUDA 预处理基础上进一步改变主机侧原始图像暂存方式。与 V2R 使用可分页主机缓冲区不同，V3R 在进入帧循环前通过 CUDA 主机内存分配接口建立锁页主机内存（pinned host memory）缓冲区，并在整个运行期间复用该缓冲区；运行结束后统一释放。每帧解码得到的 BGR 图像仍按行复制为紧凑的原始图像数据，其 letterbox 几何计算、CUDA resize、填充、颜色转换、张量布局转换和归一化过程均与 V2R 保持相同。
 
-因此，V2R 与 V3R 之间的正式隔离变量仅为原始图像主机暂存区的内存分配类型，即 pageable host staging 与 pinned host staging 的区别。V3R 保留相同的 CUDA 预处理语义、模型、Engine、后处理及执行拓扑，故在第1.3节抽象中属于覆盖范围更窄的主机暂存干预。CUDA 官方资料指出，锁页主机内存可为主机与设备之间的数据传输提供较高带宽，同时也强调锁页内存属于有限系统资源，其使用成本和实际收益需要结合具体应用进行测量 [@nvidia_cuda_best_practices_12_6]。基于这一边界，本文不将 pinned memory 本身视为理论上必然有效的优化，而仅将其作为受控实验变量；其作用也不能仅依据桌面独立 GPU 的 PCIe 数据路径作类比推断。
+因此，V2R 与 V3R 之间的正式隔离变量仅为原始图像主机暂存区的内存分配类型，即 pageable host staging 与 pinned host staging 的区别。V3R 保留相同的 CUDA 预处理语义、模型、Engine、后处理及执行拓扑，故在第1.3节抽象中属于覆盖范围更窄的主机暂存干预。CUDA 官方资料指出，锁页主机内存可为主机与设备之间的数据传输提供较高带宽，同时也强调锁页内存属于有限系统资源，其使用成本和实际收益需要结合具体应用进行测量 [@nvidia_cuda_best_practices_12_6]。集成 CPU/GPU 内存管理、GPU 分配策略和嵌入式异构 SoC 部署研究均表明，内存与运行配置的表现具有平台和工作负载依赖性 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation; @archet_et_al_2023_embedded_soc]。基于这一边界，本文不将 pinned memory 本身视为理论上必然有效的优化，而仅将其作为受控实验变量；上述研究中的 Host-Pinned、Zero-Copy 或其他配置也不等同于本文 V3R，不能仅依据桌面独立 GPU 的 PCIe 数据路径作类比推断。
 
 V3R 不改变 TensorRT Engine，不改变 CUDA preprocessing semantic，也不增加第二套预处理算法。其运行仍采用单帧顺序执行路径，不引入双缓冲、映射零拷贝、多 inference stream、显式计算—传输重叠或跨帧 pipeline。这样可以避免在比较 pageable 与 pinned staging 时同时改变并发拓扑，使后续性能差异对应于受控的数据路径变化，而不是多个优化机制的叠加。
 
