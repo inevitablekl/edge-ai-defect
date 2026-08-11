@@ -2,6 +2,12 @@
 
 Status: `PHASE5_PREPARATION_ONLY`. This map does not change current manuscript numbering or cross-reference authority.
 
+Production-route addendum: Figure 1 and Figure 2 remain `USER_MANUAL`; Figure 3
+and Figure 4 candidates are now produced by `VSCODE_CODEX` deterministic
+scripts. This route change does not accept or integrate the candidates. Current
+accepted publication figures and current manuscript callouts remain authority
+until a later explicitly authorized integration task.
+
 ## Figure migration
 
 | Current authority | Target identity | Target caption |
