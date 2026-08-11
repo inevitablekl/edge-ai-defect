@@ -89,6 +89,7 @@ build_full() {
   python3 scripts/paper/postprocess_publication_tables.py \
     --input "$raw_docx.full" --output "$full_docx"
   unzip -t "$full_docx" > /dev/null
+  python3 scripts/paper/validate_word_heading_numbering_docx.py "$full_docx"
   python3 scripts/paper/validate_citations.py
   python3 scripts/paper/validate_final_references.py --docx "$full_docx" --write-audit
   python3 scripts/paper/validate_full_manuscript_docx.py "$full_docx"
@@ -156,6 +157,7 @@ build_anonymous() {
   python3 scripts/paper/sanitize_anonymous_manuscript_docx.py \
     --input "$table_docx" --output "$anonymous_docx"
   unzip -t "$anonymous_docx" > /dev/null
+  python3 scripts/paper/validate_word_heading_numbering_docx.py "$anonymous_docx"
   python3 scripts/paper/validate_citations.py
   if [[ -s "$output_dir/draft_full.docx" ]]; then
     python3 scripts/paper/validate_final_references.py \
@@ -183,6 +185,8 @@ case "${1-}" in
       exit 1
     fi
     unzip -t docs/paper/manuscript/output/draft_full.docx > /dev/null
+    python3 scripts/paper/validate_word_heading_numbering_docx.py \
+      docs/paper/manuscript/output/draft_full.docx
     python3 scripts/paper/validate_citations.py
     python3 scripts/paper/validate_final_references.py \
       --docx docs/paper/manuscript/output/draft_full.docx --write-audit

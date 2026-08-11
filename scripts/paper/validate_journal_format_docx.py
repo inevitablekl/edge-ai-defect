@@ -12,11 +12,13 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from validate_word_heading_numbering_docx import audit_heading_numbering_roots
+
 
 ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = ROOT / "docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
 MANIFEST = ROOT / "docs/paper/manuscript/figures/figure_manifest.csv"
-REFERENCE_SHA256 = "416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7"
+REFERENCE_SHA256 = "483183514a2521592d50ecb7f7a2b2f24a88981c4abba3824aa487a8e054d7b9"
 BIOGRAPHY = "王凯伦（1999—），男，山东潍坊人，工学学士，硕士研究生，主要研究方向为端侧人工智能推理部署与优化。"
 TITLE_CN = "Jetson端工业缺陷检测的INT8推理数据路径优化"
 TITLE_EN = "Data-Path Optimization for INT8 Inference in Jetson-Based Industrial Defect Detection"
@@ -109,6 +111,15 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     package_text = "\n".join(payload.decode("utf-8", "ignore") for name, payload in parts.items() if name.endswith((".xml", ".rels")))
     styles = parsed["word/styles.xml"]
     style_contract(styles, errors)
+    heading_errors, heading_rows = audit_heading_numbering_roots(
+        document,
+        styles,
+        parsed.get("word/numbering.xml"),
+        require_explicit_headings=True,
+    )
+    errors.extend(heading_errors)
+    out["word_heading_numbering"] = "PASS" if not heading_errors else "FAIL"
+    out["heading_paragraphs"] = len(heading_rows)
 
     sections = document.findall(".//w:sectPr", NS)
     section_columns = [attr(node.find("w:cols", NS), "num") for node in sections]
