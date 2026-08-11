@@ -1,12 +1,12 @@
 # Phase 5 Target Caption and Renumbering Map v1.0
 
-Status: `PHASE5_PREPARATION_ONLY`. This map does not change current manuscript numbering or cross-reference authority.
+Status: `PHASE5_INTEGRATED`. The target numbering and captions in this map are
+now current manuscript authority.
 
-Production-route addendum: Figure 1 and Figure 2 remain `USER_MANUAL`; Figure 3
-and Figure 4 candidates are now produced by `VSCODE_CODEX` deterministic
-scripts. This route change does not accept or integrate the candidates. Current
-accepted publication figures and current manuscript callouts remain authority
-until a later explicitly authorized integration task.
+Production route: Figure 1 and Figure 2 are accepted `USER_MANUAL` Visio
+assets; Figure 3 and Figure 4 are accepted `VSCODE_CODEX` deterministic assets.
+All four figures are integrated. Table 1 is integrated from its governed
+specification, and the former Tables 1 and 2 are current Tables 2 and 3.
 
 ## Figure migration
 
@@ -32,13 +32,10 @@ English source captions:
 | Current Table 1 | Table 2 | `表2　平台、模型、数据集和统一运行协议` |
 | Current Table 2 | Table 3 | `表3　V0与V2R任务级正确性验证结果` |
 
-## Future cross-reference operations
+## Completed cross-reference operations
 
-After manual figures are accepted, and only in the later integration step:
-
-1. Insert target Figure 2 in Section 1.3 and target Table 1 near the start of Section 2.
-2. Replace Figure 1 source with its accepted Phase 5 export while retaining identity.
-3. Replace/renumber current Figures 2 and 3 as target Figures 3 and 4.
-4. Renumber current Tables 1 and 2 as Tables 2 and 3.
-5. Update first callouts, captions, alt/source metadata, manifests, DOCX postprocessing expectations, and cross-reference validators in one atomic migration.
-6. Rebuild Full and Anonymous outputs and re-run all parity, citation, figure/table, OMML, numerical-freeze, and anonymity checks.
+1. Target Figure 2 was inserted in Section 1.3 and target Table 1 near the start of Section 2.
+2. Figure 1 publication authority migrated to the accepted Phase 5 manual export while retaining its Section 1.2 implementation-path role.
+3. The former Figures 2 and 3 were replaced and renumbered as Figures 3 and 4.
+4. The former Tables 1 and 2 were renumbered as Tables 2 and 3 without content changes.
+5. Callouts, captions, metadata, manifests, DOCX assembly, postprocessing, and validators were migrated atomically.

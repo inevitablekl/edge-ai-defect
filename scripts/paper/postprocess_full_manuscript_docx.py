@@ -22,7 +22,17 @@ ET.register_namespace("w", W)
 ET.register_namespace("r", R)
 
 MARKER = "FULL_BODY_SECTION_START"
-F1_CAPTION = "图1　V0、V2R和V3R数据路径示意"
+WIDE_FIGURE_CAPTIONS = {
+    "图1": "图1　V0、V2R和V3R数据路径示意",
+    "图2": "图2　端到端执行概念组成与受控干预范围",
+    "图4": (
+        "图4　V0、V2R和V3R平均及尾延迟比较。（a）各路径绝对延迟；"
+        "（b）V3R相对V2R的冻结变化，其中负值表示降低/更快，"
+        "正值表示升高/更慢。Mean、P95和P99均基于每种路径合并后的"
+        "5400个逐帧延迟样本统计。"
+    ),
+}
+T1_CAPTION = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
 PPR_ORDER = (
     "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
     "widowControl", "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs",
@@ -160,7 +170,7 @@ def set_paragraph_section(paragraph: ET.Element, section: ET.Element) -> None:
     insert_in_schema_order(ppr, section, PPR_ORDER)
 
 
-def span_figure1(root: ET.Element) -> None:
+def span_wide_figures(root: ET.Element) -> None:
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no w:body")
@@ -168,24 +178,72 @@ def span_figure1(root: ET.Element) -> None:
     if final_section is None:
         raise ValueError("word/document.xml has no final w:sectPr")
     children = list(body)
-    captions = [node for node in children if node.tag == qn("p") and paragraph_text(node) == F1_CAPTION]
+    for label, expected_caption in WIDE_FIGURE_CAPTIONS.items():
+        captions = [
+            node
+            for node in children
+            if node.tag == qn("p") and paragraph_text(node) == expected_caption
+        ]
+        if len(captions) != 1:
+            raise ValueError(f"expected one {label} caption, found {len(captions)}")
+        caption = captions[0]
+        caption_index = children.index(caption)
+        if caption_index < 2:
+            raise ValueError(f"{label} caption has no preceding callout and drawing")
+        drawing = children[caption_index - 1]
+        callout = children[caption_index - 2]
+        if drawing.tag != qn("p") or drawing.find(".//w:drawing", NS) is None:
+            raise ValueError(f"{label} caption is not immediately preceded by its drawing")
+        if callout.tag != qn("p") or label not in paragraph_text(callout):
+            raise ValueError(f"{label} drawing is not preceded by its callout paragraph")
+        set_paragraph_section(callout, section_copy(final_section, "2"))
+        set_paragraph_section(caption, section_copy(final_section, "1"))
+        drawing_ppr = ensure_first(drawing, "pPr")
+        if drawing_ppr.find("w:keepNext", NS) is None:
+            insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
+
+
+def span_table1(root: ET.Element) -> None:
+    """Place the five-column controlled-path matrix across the full text width."""
+
+    body = root.find("w:body", NS)
+    if body is None:
+        raise ValueError("word/document.xml has no w:body")
+    final_section = body.find("w:sectPr", NS)
+    if final_section is None:
+        raise ValueError("word/document.xml has no final w:sectPr")
+    children = list(body)
+    captions = [
+        node
+        for node in children
+        if node.tag == qn("p") and paragraph_text(node) == T1_CAPTION
+    ]
     if len(captions) != 1:
-        raise ValueError(f"expected one F1 caption, found {len(captions)}")
+        raise ValueError(f"expected one Table 1 caption, found {len(captions)}")
     caption = captions[0]
     caption_index = children.index(caption)
-    if caption_index < 2:
-        raise ValueError("F1 caption has no preceding callout and drawing")
-    drawing = children[caption_index - 1]
-    callout = children[caption_index - 2]
-    if drawing.tag != qn("p") or drawing.find(".//w:drawing", NS) is None:
-        raise ValueError("F1 caption is not immediately preceded by its drawing")
-    if callout.tag != qn("p") or "图1" not in paragraph_text(callout):
-        raise ValueError("F1 drawing is not preceded by its callout paragraph")
+    if caption_index < 1:
+        raise ValueError("Table 1 caption has no preceding callout")
+    callout = children[caption_index - 1]
+    if callout.tag != qn("p") or "表1" not in paragraph_text(callout):
+        raise ValueError("Table 1 caption is not preceded by its callout paragraph")
+    table = next(
+        (node for node in children[caption_index + 1 :] if node.tag == qn("tbl")),
+        None,
+    )
+    if table is None:
+        raise ValueError("Table 1 caption is not followed by a table")
+
     set_paragraph_section(callout, section_copy(final_section, "2"))
-    set_paragraph_section(caption, section_copy(final_section, "1"))
-    drawing_ppr = ensure_first(drawing, "pPr")
-    if drawing_ppr.find("w:keepNext", NS) is None:
-        insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
+    section_break = ET.Element(qn("p"))
+    set_paragraph_section(section_break, section_copy(final_section, "1"))
+    ppr = ensure_first(section_break, "pPr")
+    spacing = ET.Element(
+        qn("spacing"),
+        {qn("before"): "0", qn("after"): "0", qn("line"): "1", qn("lineRule"): "exact"},
+    )
+    insert_in_schema_order(ppr, spacing, PPR_ORDER)
+    body.insert(list(body).index(table) + 1, section_break)
 
 
 def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
@@ -196,8 +254,8 @@ def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
         paragraph for paragraph in body.findall("w:p", NS)
         if paragraph.find(".//w:drawing", NS) is not None
     ]
-    if len(paragraphs) != 3:
-        raise ValueError(f"expected three publication drawing paragraphs, found {len(paragraphs)}")
+    if len(paragraphs) != 4:
+        raise ValueError(f"expected four publication drawing paragraphs, found {len(paragraphs)}")
     for paragraph in paragraphs:
         ppr = ensure_first(paragraph, "pPr")
         spacing = ppr.find("w:spacing", NS)
@@ -401,7 +459,8 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     remove_biography_custom_property(parts)
     set_body_columns(root)
     insert_continuous_boundary(root)
-    span_figure1(root)
+    span_wide_figures(root)
+    span_table1(root)
     normalize_publication_drawing_paragraphs(root)
     normalize_equation_paragraphs(root)
     move_biography_to_first_footer(root, parts)

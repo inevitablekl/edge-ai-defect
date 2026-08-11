@@ -160,10 +160,12 @@ METADATA_STATUS = {
 FIGURE_TABLE_CAPTIONS = OrderedDict(
     (
         ("图1", ""),
-        ("表1", "表1　平台、模型、数据集和统一运行协议"),
-        ("表2", "表2　V0与V2R任务级正确性验证结果"),
-        ("图2", "图2　V0、V2R和V3R平均帧率比较"),
-        ("图3", "图3　V0、V2R和V3R平均及尾延迟比较"),
+        ("图2", "图2　端到端执行概念组成与受控干预范围"),
+        ("表1", "表1　V0、V2R和V3R受控数据路径配置与比较变量"),
+        ("表2", "表2　平台、模型、数据集和统一运行协议"),
+        ("表3", "表3　V0与V2R任务级正确性验证结果"),
+        ("图3", "图3　V0、V2R和V3R平均帧率比较。误差棒表示5次独立进程级运行FPS的样本标准差。"),
+        ("图4", "图4　V0、V2R和V3R平均及尾延迟比较。（a）各路径绝对延迟；（b）V3R相对V2R的冻结变化，其中负值表示降低/更快，正值表示升高/更慢。Mean、P95和P99均基于每种路径合并后的5400个逐帧延迟样本统计。"),
     )
 )
 
@@ -367,13 +369,13 @@ def markdown_cross_reference_errors() -> list[str]:
         callouts = [match.start() for match in callout_pattern.finditer(text) if match.start() < matches[0]]
         if not callouts:
             fail(errors, f"{label}: no body callout precedes its caption")
-    figures = [positions.get(label, -1) for label in ("图1", "图2", "图3")]
-    tables = [positions.get(label, -1) for label in ("表1", "表2")]
+    figures = [positions.get(label, -1) for label in ("图1", "图2", "图3", "图4")]
+    tables = [positions.get(label, -1) for label in ("表1", "表2", "表3")]
     if figures != sorted(figures) or -1 in figures:
-        fail(errors, "figure captions are not sequential F1--F3")
+        fail(errors, "figure captions are not sequential F1--F4")
     if tables != sorted(tables) or -1 in tables:
-        fail(errors, "table captions are not sequential T1--T2")
-    stale = re.findall(r"(?:图|Fig(?:ure)?\.?\s*)[4-9]|(?:表|Table\s*)[3-9]", text, flags=re.I)
+        fail(errors, "table captions are not sequential T1--T3")
+    stale = re.findall(r"(?:图|Fig(?:ure)?\.?\s*)[5-9]|(?:表|Table\s*)[4-9]", text, flags=re.I)
     if stale:
         fail(errors, f"stale figure/table prototype labels found: {stale!r}")
     return errors
@@ -486,7 +488,7 @@ def main() -> int:
         "PASS: CITATION_SOURCE_VALIDATED "
         f"bibliography_entries={len(entries)} cited={len(cited_order)} uncited=1 unresolved=0"
     )
-    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3 tables=T1,T2")
+    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3,F4 tables=T1,T2,T3")
     if args.docx:
         print(f"PASS: RENDERED_BIBLIOGRAPHY_VALIDATED docx={','.join(str(path) for path in args.docx)}")
         print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt")

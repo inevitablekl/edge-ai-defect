@@ -113,7 +113,7 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     sections = document.findall(".//w:sectPr", NS)
     section_columns = [attr(node.find("w:cols", NS), "num") for node in sections]
     out["section_columns"] = section_columns
-    if section_columns != ["1", "2", "1", "2"]:
+    if section_columns != ["1", "2", "1", "2", "1", "2", "1", "2", "1", "2"]:
         errors.append(f"section transition mismatch: {section_columns}")
     for section in sections:
         size, margins, cols = section.find("w:pgSz", NS), section.find("w:pgMar", NS), section.find("w:cols", NS)
@@ -184,14 +184,14 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         if paragraph.find(".//w:drawing", NS) is not None
     ]
     drawings = document.findall(".//w:drawing", NS)
-    if len(drawings) != 3:
-        errors.append(f"expected three drawings, found {len(drawings)}")
+    if len(drawings) != 4:
+        errors.append(f"expected four drawings, found {len(drawings)}")
     inline_count = sum(len(paragraph.findall(".//wp:inline", NS)) for paragraph in drawing_paragraphs)
     anchor_count = sum(len(paragraph.findall(".//wp:anchor", NS)) for paragraph in drawing_paragraphs)
     out["drawing_paragraphs"] = len(drawing_paragraphs)
     out["wp_inline"] = inline_count
     out["wp_anchor"] = anchor_count
-    if len(drawing_paragraphs) != 3 or inline_count != 3 or anchor_count != 0:
+    if len(drawing_paragraphs) != 4 or inline_count != 4 or anchor_count != 0:
         errors.append(
             f"publication drawing representation mismatch: paragraphs={len(drawing_paragraphs)} "
             f"inline={inline_count} anchor={anchor_count}"
@@ -221,13 +221,13 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         pixels = png_size(payload)
         figures.append({"target": target, "cx": int(extent.get("cx", "0")), "cy": int(extent.get("cy", "0")), "pixels": pixels})
     out["figures"] = figures
-    expected_widths = [5760000, 2700000, 2700000]
+    expected_widths = [5760000, 5760000, 2700000, 5760000]
     if any(abs(item["cx"] - expected) > 1 for item, expected in zip(figures, expected_widths)):
         errors.append(f"figure width contract mismatch: {[item['cx'] for item in figures]}")
 
     tables = body.findall("w:tbl", NS)
-    if len(tables) != 2 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [17, 4]:
-        errors.append("T1/T2 row contract failed")
+    if len(tables) != 3 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [3, 17, 4]:
+        errors.append("T1/T2/T3 row contract failed")
     for table in tables:
         borders = table.find("w:tblPr/w:tblBorders", NS)
         actual = {node.tag.rsplit("}", 1)[-1]: (attr(node, "val"), attr(node, "sz")) for node in borders} if borders is not None else {}

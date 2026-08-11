@@ -18,8 +18,9 @@ DC = "http://purl.org/dc/elements/1.1/"
 CP = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
 NS = {"w": W, "a": A, "r": R, "dc": DC, "cp": CP}
 
-T1_TITLE = "表1　平台、模型、数据集和统一运行协议"
-T2_TITLE = "表2　V0与V2R任务级正确性验证结果"
+T1_TITLE = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
+T2_TITLE = "表2　平台、模型、数据集和统一运行协议"
+T3_TITLE = "表3　V0与V2R任务级正确性验证结果"
 IDENTITY_TOKENS = (
     "王凯伦",
     "王琦",
@@ -145,17 +146,17 @@ def identity_paragraph(style: str, text: str) -> bool:
     )
 
 
-def validate_t1_layout(errors: list[str], table: ET.Element) -> None:
+def validate_t2_layout(errors: list[str], table: ET.Element) -> None:
     rows = table.findall("w:tr", NS)
     exact_measurement = "1080 帧，即 180 幅图像完整回放 6 个周期"
     exact_matches = 0
     table_borders = table.find("w:tblPr/w:tblBorders", NS)
     for edge in ("insideH", "insideV"):
         if attr(table_borders.find(f"w:{edge}", NS) if table_borders is not None else None, "val") != "nil":
-            errors.append(f"Table 1 {edge} border is not nil")
+            errors.append(f"Table 2 {edge} border is not nil")
     for row_index, row in enumerate(rows):
         for column_index, cell in enumerate(row.findall("w:tc", NS)):
-            label = f"Table 1 row {row_index} column {column_index}"
+            label = f"Table 2 row {row_index} column {column_index}"
             if text_of(cell) == exact_measurement:
                 exact_matches += 1
             borders = cell.find("w:tcPr/w:tcBorders", NS)
@@ -192,7 +193,7 @@ def validate_t1_layout(errors: list[str], table: ET.Element) -> None:
                 if attr(ppr.find("w:jc", NS) if ppr is not None else None, "val") != expected_alignment:
                     errors.append(f"{label} paragraph alignment is not {expected_alignment}")
     if exact_matches != 1:
-        errors.append(f"Table 1 exact single-measurement text count is {exact_matches}, expected 1")
+        errors.append(f"Table 2 exact single-measurement text count is {exact_matches}, expected 1")
 
 
 def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], dict[str, bytes], dict[str, ET.Element]]:
@@ -340,33 +341,48 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
     document = parsed["word/document.xml"]
     drawings = document.findall(".//w:drawing", NS)
     details["figure_count"] = len(drawings)
-    if len(drawings) != 3:
-        errors.append(f"expected three figure drawings, found {len(drawings)}")
+    if len(drawings) != 4:
+        errors.append(f"expected four figure drawings, found {len(drawings)}")
     body_paragraphs = body.findall("w:p", NS)
-    for caption in ("图1　", "图2　", "图3　"):
+    for caption in ("图1　", "图2　", "图3　", "图4　"):
         count = sum(text_of(node).startswith(caption) for node in body_paragraphs)
         if count != 1:
             errors.append(f"missing or duplicated figure caption: {caption}")
-    t1_captions = [node for node in body_paragraphs if text_of(node) == T1_TITLE]
-    if len(t1_captions) != 1:
-        errors.append(f"Table 1 caption count is {len(t1_captions)}, expected 1")
-    elif t1_captions[0].find("w:pPr/w:pageBreakBefore", NS) is None:
-        errors.append("Anonymous Table 1 caption has no pageBreakBefore")
+    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
+        captions = [node for node in body_paragraphs if text_of(node) == title]
+        if len(captions) != 1:
+            errors.append(f"{label} caption count is {len(captions)}, expected 1")
+            continue
+        has_page_break = captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None
+        if has_page_break:
+            errors.append(f"Anonymous {label} caption has unauthorized pageBreakBefore")
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)
-    if len(tables) != 2:
-        errors.append(f"expected two manuscript tables, found {len(tables)}")
+    if len(tables) != 3:
+        errors.append(f"expected three manuscript tables, found {len(tables)}")
     else:
         t1_rows = tables[0].findall("w:tr", NS)
         t2_rows = tables[1].findall("w:tr", NS)
+        t3_rows = tables[2].findall("w:tr", NS)
         details["table1_rows"] = len(t1_rows) - 1
         details["table2_rows"] = len(t2_rows) - 1
-        if len(t1_rows) != 18 or any(len(row.findall("w:tc", NS)) != 2 for row in t1_rows):
-            errors.append("Table 1 is not 17 data rows by 2 columns")
-        if len(t2_rows) != 5 or any(len(row.findall("w:tc", NS)) != 6 for row in t2_rows):
-            errors.append("Table 2 is not 4 data rows by 6 columns")
+        details["table3_rows"] = len(t3_rows) - 1
+        if len(t1_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t1_rows):
+            errors.append("Table 1 is not 3 data rows by 5 columns")
+        if len(t2_rows) != 18 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
+            errors.append("Table 2 is not 17 data rows by 2 columns")
+        if len(t3_rows) != 5 or any(len(row.findall("w:tc", NS)) != 6 for row in t3_rows):
+            errors.append("Table 3 is not 4 data rows by 6 columns")
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
+        for value in (
+            "CPU/OpenCV", "CUDA/GPU", "pageable host raw-image staging",
+            "pinned host raw-image staging", "未将其分配类型定义为V2R/V3R同类原始图像暂存变量",
+            "相对V2R仅改变主机原始图像暂存分配类型", "受控基线",
+        ):
+            if value not in t1_values:
+                errors.append(f"Table 1 missing controlled-path value: {value}")
+        t2_values = "\n".join(text_of(cell) for row in t2_rows for cell in row.findall("w:tc", NS))
         for value in (
             "NVIDIA Jetson Orin Nano Super", "R36.5", "12.6.11，runtime 12.6.68",
             "10.3.0.30", "4.5.4", "YOLOv8n", "冻结 TensorRT INT8 混合精度 Engine",
@@ -374,18 +390,18 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
             "60 帧", "1080 帧，即 180 幅图像完整回放 6 个周期",
             "每种路径 5 次，共 15 个独立进程", "内部诊断计时", "Profiling",
         ):
-            if value not in t1_values:
-                errors.append(f"Table 1 missing frozen value: {value}")
-        t2_values = "\n".join(text_of(cell) for row in t2_rows for cell in row.findall("w:tc", NS))
+            if value not in t2_values:
+                errors.append(f"Table 2 missing frozen value: {value}")
+        t3_values = "\n".join(text_of(cell) for row in t3_rows for cell in row.findall("w:tc", NS))
         for value in (
             "Precision", "Recall", "mAP50", "mAP50-95", "0.6913", "0.6991",
             "0.6476", "0.3523", "0.010", "0.005",
         ):
-            if value not in t2_values:
-                errors.append(f"Table 2 missing frozen value: {value}")
-        if "V3R" in t2_values:
-            errors.append("V3R appears in Table 2")
-        validate_t1_layout(errors, tables[0])
+            if value not in t3_values:
+                errors.append(f"Table 3 missing frozen value: {value}")
+        if "V3R" in t3_values:
+            errors.append("V3R appears in Table 3")
+        validate_t2_layout(errors, tables[1])
 
     for value in FROZEN_VALUES:
         if value not in all_text:
@@ -418,8 +434,8 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
             node.get(qn("embed", R))
             for node in document.findall(".//a:blip", NS)
         }
-        if len(image_relationships & used_relationships) != 3:
-            errors.append("three embedded figure image relationships are not all used")
+        if len(image_relationships & used_relationships) != 4:
+            errors.append("four embedded figure image relationships are not all used")
 
     section_columns = [attr(node, "num") for node in document.findall(".//w:sectPr/w:cols", NS)]
     details["section_columns"] = section_columns

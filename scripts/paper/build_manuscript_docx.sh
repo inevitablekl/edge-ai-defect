@@ -14,16 +14,46 @@ full_sections=(
   docs/paper/manuscript/sections/06_conclusion.md
 )
 
+prepare_phase5_figure_assets() {
+  local asset_dir="docs/paper/manuscript/output/phase5_4c_assets"
+  local figure_dir="docs/paper/manuscript/figures"
+  local f1_pdf="$figure_dir/fig1_v0_v2r_v3r_data_paths_phase5_final.pdf"
+  local f2_pdf="$figure_dir/fig2_e2e_intervention_scope_final.pdf"
+
+  if ! command -v pdftoppm > /dev/null; then
+    printf '%s\n' 'FIGURE_ASSET_PREPARATION_FAILED: pdftoppm is unavailable' >&2
+    return 1
+  fi
+  for source in "$f1_pdf" "$f2_pdf"; do
+    if [[ ! -s "$source" ]]; then
+      printf 'FIGURE_ASSET_PREPARATION_FAILED: source is missing: %s\n' "$source" >&2
+      return 1
+    fi
+  done
+
+  mkdir -p "$asset_dir"
+  pdftoppm -png -f 1 -singlefile -r 150 "$f1_pdf" \
+    "$asset_dir/fig1_v0_v2r_v3r_data_paths_phase5_final"
+  pdftoppm -png -f 1 -singlefile -r 150 "$f2_pdf" \
+    "$asset_dir/fig2_e2e_intervention_scope_final"
+
+  for output in \
+    "$asset_dir/fig1_v0_v2r_v3r_data_paths_phase5_final.png" \
+    "$asset_dir/fig2_e2e_intervention_scope_final.png"; do
+    if [[ ! -s "$output" ]]; then
+      printf 'FIGURE_ASSET_PREPARATION_FAILED: output is missing: %s\n' "$output" >&2
+      return 1
+    fi
+  done
+  printf '%s\n' 'PHASE5_FIGURE_COMPATIBILITY_ASSETS=PASS converter=pdftoppm dpi=150'
+}
+
 build_full() {
   local pandoc_bin="${PAPER_PANDOC_BIN:-/home/orin/.local/bin/pandoc}"
   local output_dir="docs/paper/manuscript/output"
-  local asset_dir="$output_dir/phase4_5_assets"
   local raw_docx="$output_dir/draft_full_raw.docx"
   local full_docx="$output_dir/draft_full.docx"
   local csl_path="docs/paper/manuscript/csl/hfut_gbt7714_2025_numeric_v1.0.csl"
-  local f1_source="docs/paper/manuscript/figures/fig1_v0_v2r_v3r_data_paths_final.svg"
-  local f1_png="$asset_dir/fig1_v0_v2r_v3r_data_paths_final.png"
-  local figure_profile
 
   if [[ ! -x "$pandoc_bin" ]]; then
     printf 'FULL_BUILD_FAILED: Pandoc executable unavailable: %s\n' "$pandoc_bin" >&2
@@ -37,20 +67,8 @@ build_full() {
     printf 'FULL_BUILD_FAILED: final CSL is missing: %s\n' "$csl_path" >&2
     return 1
   fi
-  mkdir -p "$output_dir" "$asset_dir"
-
-  if [[ ! -s "$f1_png" ]]; then
-    figure_profile="$(mktemp -d /tmp/phase45_full_figures.XXXXXX)"
-    libreoffice "-env:UserInstallation=file://$figure_profile" --headless \
-      --convert-to png --outdir "$asset_dir" "$f1_source" \
-      > "$asset_dir/figure1_conversion.stdout.log" \
-      2> "$asset_dir/figure1_conversion.stderr.log"
-    rm -rf "$figure_profile"
-  fi
-  if [[ ! -s "$f1_png" ]]; then
-    printf 'FULL_BUILD_FAILED: Figure 1 conversion did not produce %s\n' "$f1_png" >&2
-    return 1
-  fi
+  mkdir -p "$output_dir"
+  prepare_phase5_figure_assets
 
   "$pandoc_bin" \
     --from=markdown+tex_math_single_backslash \
@@ -100,15 +118,11 @@ show_command() {
 build_anonymous() {
   local pandoc_bin="${PAPER_PANDOC_BIN:-/home/orin/.local/bin/pandoc}"
   local output_dir="docs/paper/manuscript/output"
-  local asset_dir="$output_dir/phase4_5_assets"
   local raw_docx="$output_dir/draft_anonymous_raw.docx"
   local section_docx="$output_dir/draft_anonymous_raw.docx.anonymous"
   local table_docx="$output_dir/draft_anonymous_raw.docx.tables"
   local anonymous_docx="$output_dir/draft_anonymous.docx"
   local csl_path="docs/paper/manuscript/csl/hfut_gbt7714_2025_numeric_v1.0.csl"
-  local f1_source="docs/paper/manuscript/figures/fig1_v0_v2r_v3r_data_paths_final.svg"
-  local f1_png="$asset_dir/fig1_v0_v2r_v3r_data_paths_final.png"
-  local figure_profile
 
   if [[ ! -x "$pandoc_bin" ]]; then
     printf 'ANONYMOUS_BUILD_FAILED: Pandoc executable unavailable: %s\n' "$pandoc_bin" >&2
@@ -118,20 +132,8 @@ build_anonymous() {
     printf 'ANONYMOUS_BUILD_FAILED: final CSL is missing: %s\n' "$csl_path" >&2
     return 1
   fi
-  mkdir -p "$output_dir" "$asset_dir"
-
-  if [[ ! -s "$f1_png" ]]; then
-    figure_profile="$(mktemp -d /tmp/phase46_anonymous_figures.XXXXXX)"
-    libreoffice "-env:UserInstallation=file://$figure_profile" --headless \
-      --convert-to png --outdir "$asset_dir" "$f1_source" \
-      > "$asset_dir/figure1_conversion.stdout.log" \
-      2> "$asset_dir/figure1_conversion.stderr.log"
-    rm -rf "$figure_profile"
-  fi
-  if [[ ! -s "$f1_png" ]]; then
-    printf 'ANONYMOUS_BUILD_FAILED: Figure 1 conversion did not produce %s\n' "$f1_png" >&2
-    return 1
-  fi
+  mkdir -p "$output_dir"
+  prepare_phase5_figure_assets
 
   "$pandoc_bin" \
     --from=markdown+tex_math_single_backslash \
@@ -150,8 +152,7 @@ build_anonymous() {
   python3 scripts/paper/postprocess_full_manuscript_docx.py \
     --input "$raw_docx" --output "$section_docx"
   python3 scripts/paper/postprocess_publication_tables.py \
-    --input "$section_docx" --output "$table_docx" \
-    --anonymous-t1-page-break
+    --input "$section_docx" --output "$table_docx"
   python3 scripts/paper/sanitize_anonymous_manuscript_docx.py \
     --input "$table_docx" --output "$anonymous_docx"
   unzip -t "$anonymous_docx" > /dev/null

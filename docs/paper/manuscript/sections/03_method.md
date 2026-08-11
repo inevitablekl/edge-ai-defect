@@ -1,6 +1,16 @@
-<!-- MANUSCRIPT_SECTION: 2; REUSES_FIGURE: fig1_v0_v2r_v3r_data_paths.svg -->
+<!-- MANUSCRIPT_SECTION: 2; TABLE: T1 -->
 
 # 2 数据路径优化方法
+
+三条受控路径的主要配置及比较变量见表1。
+
+**表1　V0、V2R和V3R受控数据路径配置与比较变量**
+
+| 路径 | 主要像素级预处理位置 | 原始图像主机暂存 | 与前级路径相比的受控变化 | 比较角色 |
+|---|---|---|---|---|
+| V0 | CPU/OpenCV | 主机图像及主机FP32张量路径；未将其分配类型定义为V2R/V3R同类原始图像暂存变量 | － | 受控基线 |
+| V2R | CUDA/GPU | pageable host raw-image staging | 相对V0改变预处理执行位置及相关输入准备/数据路径 | 较宽的结构/配置干预终点；V2R→V3R参照 |
+| V3R | CUDA/GPU（与V2R相同语义） | pinned host raw-image staging | 相对V2R仅改变主机原始图像暂存分配类型 | 较窄的结构/配置干预终点 |
 
 ## 2.1 CPU/OpenCV基线路径
 

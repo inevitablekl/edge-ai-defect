@@ -78,13 +78,22 @@ end
 
 local function figure_for_caption(text)
   if text:match("^图1　") then
-    return "output/phase4_5_assets/fig1_v0_v2r_v3r_data_paths_final.png"
+    return "output/phase5_4c_assets/fig1_v0_v2r_v3r_data_paths_phase5_final.png"
   elseif text:match("^图2　") then
-    return "figures/fig2_mean_fps_final.png"
+    return "output/phase5_4c_assets/fig2_e2e_intervention_scope_final.png"
   elseif text:match("^图3　") then
-    return "figures/fig3_mean_tail_latency_final.png"
+    return "figures/fig3_mean_fps_phase5_final.png"
+  elseif text:match("^图4　") then
+    return "figures/fig4_mean_tail_latency_phase5_final.png"
   end
   return nil
+end
+
+local function figure_width(text)
+  if text:match("^图3　") then
+    return "7.5cm"
+  end
+  return "16cm"
 end
 
 function Pandoc(doc)
@@ -157,10 +166,9 @@ function Pandoc(doc)
     elseif not front_matter and block.t == "Para" then
       local figure = figure_for_caption(text)
       if figure ~= nil then
-        local width = text:match("^图1　") and "16cm" or "7.5cm"
-        output:insert(figure_block(figure, width))
+        output:insert(figure_block(figure, figure_width(text)))
         output:insert(styled_block(block, "HFUTFigureCaption"))
-      elseif text:match("^表[12]　") then
+      elseif text:match("^表[123]　") then
         output:insert(styled_block(block, "HFUTTableCaption"))
       else
         output:insert(styled_block(block, "HFUTBody"))
