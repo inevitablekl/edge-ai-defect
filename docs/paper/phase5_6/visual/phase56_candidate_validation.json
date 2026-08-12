@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56d_a_candidate_validation",
+  "verdict": "PASS",
+  "baseline": "fa3697e2bcfd36e7a99764bfe21900b22db55b91",
+  "candidate_authority": "CANDIDATE / SPECIFICATION",
+  "checks": [
+    {
+      "check": "source_hash:phase56b_run_level_metrics.csv",
+      "status": "PASS",
+      "details": "f6b22f6b5574d957d3b3d600a637e0033d1f43a5afd77dca4e4a518f89d60e31"
+    },
+    {
+      "check": "source_hash:phase56b_publication_display_values.json",
+      "status": "PASS",
+      "details": "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655"
+    },
+    {
+      "check": "source_hash:phase56b_correctness_table_source.csv",
+      "status": "PASS",
+      "details": "d5424cb940db58eff7c826e9d99236c98ff444b37b7f45bedc993a8b70c9cf39"
+    },
+    {
+      "check": "source_hash:phase56b_nominal_payload.json",
+      "status": "PASS",
+      "details": "706f441da5df4720b3361a9001f0a6d7c1dbb8e8e85b17c62b8ff4db38833bd8"
+    },
+    {
+      "check": "candidate_triplet:fig1_hero_data_path_phase56_candidate",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "candidate_mark:fig1_hero_data_path_phase56_candidate",
+      "status": "PASS",
+      "details": "candidate watermark present"
+    },
+    {
+      "check": "no_embedded_caption:fig1_hero_data_path_phase56_candidate",
+      "status": "PASS",
+      "details": "no Figure-number caption in image"
+    },
+    {
+      "check": "fig1_causality_payload_labels",
+      "status": "PASS",
+      "details": "required values and guards present"
+    },
+    {
+      "check": "pdf_geometry:fig1_hero_data_path_phase56_candidate",
+      "status": "PASS",
+      "details": "pdfinfo page size resolved"
+    },
+    {
+      "check": "candidate_triplet:fig2_technical_implementation_phase56_candidate",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "candidate_mark:fig2_technical_implementation_phase56_candidate",
+      "status": "PASS",
+      "details": "candidate watermark present"
+    },
+    {
+      "check": "no_embedded_caption:fig2_technical_implementation_phase56_candidate",
+      "status": "PASS",
+      "details": "no Figure-number caption in image"
+    },
+    {
+      "check": "fig2_no_performance_numbers",
+      "status": "PASS",
+      "details": "forbidden performance tokens absent"
+    },
+    {
+      "check": "pdf_geometry:fig2_technical_implementation_phase56_candidate",
+      "status": "PASS",
+      "details": "pdfinfo page size resolved"
+    },
+    {
+      "check": "candidate_triplet:fig3_main_e2e_phase56_candidate",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "candidate_mark:fig3_main_e2e_phase56_candidate",
+      "status": "PASS",
+      "details": "candidate watermark present"
+    },
+    {
+      "check": "no_embedded_caption:fig3_main_e2e_phase56_candidate",
+      "status": "PASS",
+      "details": "no Figure-number caption in image"
+    },
+    {
+      "check": "pdf_geometry:fig3_main_e2e_phase56_candidate",
+      "status": "PASS",
+      "details": "pdfinfo page size resolved"
+    },
+    {
+      "check": "candidate_triplet:fig4_run_level_distribution_phase56_candidate",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "candidate_mark:fig4_run_level_distribution_phase56_candidate",
+      "status": "PASS",
+      "details": "candidate watermark present"
+    },
+    {
+      "check": "no_embedded_caption:fig4_run_level_distribution_phase56_candidate",
+      "status": "PASS",
+      "details": "no Figure-number caption in image"
+    },
+    {
+      "check": "pdf_geometry:fig4_run_level_distribution_phase56_candidate",
+      "status": "PASS",
+      "details": "pdfinfo page size resolved"
+    },
+    {
+      "check": "candidate_mark:table1_path_feature_matrix_candidate.md",
+      "status": "PASS",
+      "details": "candidate authority warning present"
+    },
+    {
+      "check": "candidate_mark:table2_platform_protocol_candidate.md",
+      "status": "PASS",
+      "details": "candidate authority warning present"
+    },
+    {
+      "check": "candidate_mark:table3_correctness_candidate.md",
+      "status": "PASS",
+      "details": "candidate authority warning present"
+    },
+    {
+      "check": "candidate_mark:table4_related_work_candidate.md",
+      "status": "PASS",
+      "details": "candidate authority warning present"
+    },
+    {
+      "check": "related_work_cell_count",
+      "status": "PASS",
+      "details": "42 rows"
+    },
+    {
+      "check": "related_work_vocabulary",
+      "status": "PASS",
+      "details": "only allowed internal vocabulary"
+    },
+    {
+      "check": "related_work_matrix_shape",
+      "status": "PASS",
+      "details": "6 works × 7 unique attributes"
+    },
+    {
+      "check": "visual_evidence_map_density",
+      "status": "PASS",
+      "details": "83 trace rows"
+    },
+    {
+      "check": "visual_evidence_asset_coverage",
+      "status": "PASS",
+      "details": "F1-F4 and T1-T4 covered"
+    },
+    {
+      "check": "protected_manuscript_assets_unchanged",
+      "status": "PASS",
+      "details": "no diff from frozen baseline in authoritative sections/figures/tables"
+    },
+    {
+      "check": "docx_unchanged",
+      "status": "PASS",
+      "details": "no tracked DOCX diff from baseline"
+    },
+    {
+      "check": "figure_deterministic_regeneration",
+      "status": "PASS",
+      "details": "all 12 figure hashes reproduced"
+    }
+  ],
+  "figure_metadata": {
+    "fig1_hero_data_path_phase56_candidate": {
+      "svg_width": "1600",
+      "svg_height": "930",
+      "png_width_px": 5004,
+      "png_height_px": 2910,
+      "pdf_page_points": [
+        1200.76,
+        698.258
+      ],
+      "sha256": {
+        "svg": "772905a0ebdafb1ebc668607f9d60b0d448ef5cbfe0c6d97d91b62103d75effe",
+        "pdf": "5b9d8592dafb2a52621d5a93c9868e653860162458b3124d8108b40735edc47c",
+        "png": "29905148f96f96a0caf83b6fe3a359493f4a3fcc522f47e4a124e1d55636267a"
+      }
+    },
+    "fig2_technical_implementation_phase56_candidate": {
+      "svg_width": "1600",
+      "svg_height": "820",
+      "png_width_px": 5004,
+      "png_height_px": 2566,
+      "pdf_page_points": [
+        1200.76,
+        615.742
+      ],
+      "sha256": {
+        "svg": "fa2cfdf8c6e2fa31771b9b37d893c4dd3d048d74dd3623a6cbf7061f8f619c97",
+        "pdf": "14fe21dbac2646bc1841991f07b7fa218c0412d70edc2bc832aae9382db24ee2",
+        "png": "20f816e54b0dcc879e866b4d3ee4918d1991568fdb929079dd710066962d8c77"
+      }
+    },
+    "fig3_main_e2e_phase56_candidate": {
+      "svg_width": "453.6pt",
+      "svg_height": "174.24pt",
+      "png_width_px": 1890,
+      "png_height_px": 726,
+      "pdf_page_points": [
+        453.6,
+        174.24
+      ],
+      "sha256": {
+        "svg": "53ae4a80cb46cbdd3e4439eed6ea13a92ac2285782bbedab25d99dc5bce8c319",
+        "pdf": "8f1363a1852c9f0ab5e9d34f4b8f0e7b37cf6167b79f0362dcf68f033e636d1c",
+        "png": "83af0e67fe4144f2d6e07cd75e5e968ab3124dd0fc44ba54339341013db92e77"
+      }
+    },
+    "fig4_run_level_distribution_phase56_candidate": {
+      "svg_width": "453.6pt",
+      "svg_height": "203.04pt",
+      "png_width_px": 1890,
+      "png_height_px": 846,
+      "pdf_page_points": [
+        453.6,
+        203.04
+      ],
+      "sha256": {
+        "svg": "5fbc8b910e6d3cf9352e903750ec1eed071e8a5b70deb5c896672c2ff8c0002c",
+        "pdf": "e9cfc8235f4c74d8daf1486bf16f5c508a74f5c872a99bc667b34afedf1c2918",
+        "png": "e856f2011bd88d69b843146abb50d24b47237856c3cdd19f4f175c56ee154800"
+      }
+    }
+  },
+  "manual_raster_inspection": {
+    "fig1_hero_data_path_phase56_candidate": "PASS — original-resolution PNG inspected for clipping, glyphs, overlap, line/marker visibility, grayscale redundancy, and absence of embedded caption",
+    "fig2_technical_implementation_phase56_candidate": "PASS — original-resolution PNG inspected for clipping, glyphs, overlap, line/marker visibility, grayscale redundancy, and absence of embedded caption",
+    "fig3_main_e2e_phase56_candidate": "PASS — original-resolution PNG inspected for clipping, glyphs, overlap, line/marker visibility, grayscale redundancy, and absence of embedded caption",
+    "fig4_run_level_distribution_phase56_candidate": "PASS — original-resolution PNG inspected for clipping, glyphs, overlap, line/marker visibility, grayscale redundancy, and absence of embedded caption"
+  }
+}
