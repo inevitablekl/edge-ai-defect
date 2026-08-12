@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_publication_display_values",
+  "authority_level": "Level B verification/display mapping; Level A unchanged",
+  "authority_precision": {
+    "v2r_v0_fps_ratio": 2.236671,
+    "v2r_v0_mean_latency_reduction_percent": 55.4519,
+    "v3r_v2r_fps_change_percent": 4.0738,
+    "v3r_v2r_mean_latency_change_percent": -4.0349,
+    "v3r_v2r_p95_change_percent": 0.1514,
+    "v3r_v2r_p99_change_percent": -0.1184
+  },
+  "publication_display_precision": {
+    "v2r_v0_fps_ratio": "2.24×",
+    "v2r_v0_mean_latency_reduction": "55.45%",
+    "v3r_v2r_fps": "+4.07%",
+    "v3r_v2r_mean_latency": "-4.03%",
+    "v3r_v2r_p95": "+0.15%",
+    "v3r_v2r_p99": "-0.12%",
+    "absolute_fps_decimals": 3,
+    "absolute_latency_ms_decimals": 3
+  },
+  "aggregate_verification": {
+    "V0": {
+      "accepted_independent_processes": 5,
+      "latency_samples": 5400,
+      "mean_fps": 54.59997635740052,
+      "sample_sd_fps": 0.2233775769280029,
+      "min_fps": 54.28899541493442,
+      "max_fps": 54.84622939492851,
+      "pooled_mean_latency_ms": 18.272991810925923,
+      "pooled_p95_ms": 18.8541178,
+      "pooled_p99_ms": 19.06830438
+    },
+    "V2R": {
+      "accepted_independent_processes": 5,
+      "latency_samples": 5400,
+      "mean_fps": 122.12219222215381,
+      "sample_sd_fps": 0.4918299468125864,
+      "min_fps": 121.44322822062475,
+      "max_fps": 122.7587700748495,
+      "pooled_mean_latency_ms": 8.14027878962963,
+      "pooled_p95_ms": 9.82713435,
+      "pooled_p99_ms": 11.52898548
+    },
+    "V3R": {
+      "accepted_independent_processes": 5,
+      "latency_samples": 5400,
+      "mean_fps": 127.09725845097027,
+      "sample_sd_fps": 1.2792256600642773,
+      "min_fps": 125.59541982995546,
+      "max_fps": 128.30103402003988,
+      "pooled_mean_latency_ms": 7.8118285627777775,
+      "pooled_p95_ms": 9.842011300000001,
+      "pooled_p99_ms": 11.5153358
+    }
+  },
+  "recomputed_for_verification_only": {
+    "v2r_v0_fps_ratio": 2.236671155730295,
+    "v2r_v0_mean_latency_reduction_percent": 55.45185553707558,
+    "v3r_v2r_fps_change_percent": 4.0738428767854495,
+    "v3r_v2r_mean_latency_change_percent": -4.034876880018945,
+    "v3r_v2r_p95_change_percent": 0.15138645173811138,
+    "v3r_v2r_p99_change_percent": -0.11839445911071556
+  },
+  "process_semantics": "15 independent processes; not paired or matched repeated measures",
+  "tail": {
+    "verdict": "MIXED",
+    "interpretation": "P95 and P99 relative changes are both below 0.2% and have opposite directions."
+  },
+  "aggregation": {
+    "processes_per_variant": 5,
+    "samples_per_process": 1080,
+    "pooled_samples_per_variant": 5400,
+    "total_samples": 16200,
+    "p95_p99": "pooled variant-level latency samples; not mean(process-level percentile)"
+  },
+  "alters_level_a_authority": false
+}

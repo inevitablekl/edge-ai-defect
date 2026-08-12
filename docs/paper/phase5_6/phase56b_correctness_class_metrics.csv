@@ -1,0 +1,19 @@
+Path,Class,AP50,Recall,AuthorityType
+V0,crazing,0.2037064778274966,0.3108108108108108,Existing formal correctness authority
+V0,inclusion,0.6287516497993013,0.7079646017699115,Existing formal correctness authority
+V0,patches,0.8462547740623322,0.8625,Existing formal correctness authority
+V0,pitted_surface,0.769864959184994,0.8181818181818182,Existing formal correctness authority
+V0,rolled-in_scale,0.563851931912887,0.6666666666666666,Existing formal correctness authority
+V0,scratches,0.8733229899741927,0.8955223880597015,Existing formal correctness authority
+V2R,crazing,0.2037064778274966,0.3108108108108108,Existing formal correctness authority
+V2R,inclusion,0.6287516497993013,0.7079646017699115,Existing formal correctness authority
+V2R,patches,0.8462547740623322,0.8625,Existing formal correctness authority
+V2R,pitted_surface,0.769864959184994,0.8181818181818182,Existing formal correctness authority
+V2R,rolled-in_scale,0.563851931912887,0.6666666666666666,Existing formal correctness authority
+V2R,scratches,0.8733229899741927,0.8955223880597015,Existing formal correctness authority
+V3R,crazing,0.2037064778274966,0.3108108108108108,Phase56 deterministic evaluation of frozen predictions
+V3R,inclusion,0.6287516497993013,0.7079646017699115,Phase56 deterministic evaluation of frozen predictions
+V3R,patches,0.8462547740623322,0.8625,Phase56 deterministic evaluation of frozen predictions
+V3R,pitted_surface,0.769864959184994,0.8181818181818182,Phase56 deterministic evaluation of frozen predictions
+V3R,rolled-in_scale,0.563851931912887,0.6666666666666666,Phase56 deterministic evaluation of frozen predictions
+V3R,scratches,0.8733229899741927,0.8955223880597015,Phase56 deterministic evaluation of frozen predictions

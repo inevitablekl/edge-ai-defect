@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_runtime_state",
+  "authority_level": "Level B — Derived Evidence",
+  "proven": {
+    "platform": "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+    "architecture": "aarch64",
+    "power_mode": "MAXN_SUPER",
+    "nvpmodel_mode": 2,
+    "clock_setting_command_invoked": false,
+    "jetson_clocks_show": "unavailable as non-root",
+    "independently_archived_clock_frequency_evidence": false,
+    "pre_run_temperature_c_approx": "46.8–47.1",
+    "post_run_temperature_c_approx": "48.7–49.6",
+    "temperature_observation": "non-continuous pre/post observations"
+  },
+  "not_proven": [
+    "no throttling",
+    "fixed GPU frequency",
+    "fixed CPU frequency",
+    "fixed EMC frequency",
+    "fixed fan speed",
+    "continuous thermal stability",
+    "stable power state"
+  ],
+  "sources": [
+    {
+      "path": "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
+      "sha256": "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec"
+    },
+    {
+      "path": "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json",
+      "sha256": "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872"
+    }
+  ],
+  "alters_level_a_authority": false
+}

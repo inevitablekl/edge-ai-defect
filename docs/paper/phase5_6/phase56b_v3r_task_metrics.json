@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_v3r_deterministic_task_metrics",
+  "authority_level": "Level B — Derived Evidence",
+  "governance": "new deterministic analysis of frozen predictions",
+  "not_new_inference": true,
+  "not_new_benchmark": true,
+  "not_second_parameter_selection_gate": true,
+  "not_new_gate_d": true,
+  "prediction": {
+    "path": "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v3r_result.json",
+    "sha256": "3e04478c181a697ccffbf63f5405ab8eecfce61a8fe2db885b2ce81045514678",
+    "schema": 4,
+    "images": 180,
+    "detections": 447
+  },
+  "workload": {
+    "path": "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+    "sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+    "images": 180
+  },
+  "ground_truth": {
+    "path": "results/validation/stage_k_task_eval_v2/ground_truth/test_ground_truth.json",
+    "sha256": "c874bacb25a8bc6d43c6c147d69440c5fc479b2604cebcd021b9d77e350e9314"
+  },
+  "evaluator": {
+    "wrapper_path": "tools/validation/stage_r_v2_task_accuracy.py",
+    "wrapper_sha256": "2b9b488ea6256137437df7421fb468e0546fda746e7f2cf950bd5f073b31bcae",
+    "module_path": "tools/validation/evaluate_stage_k_task_metrics.py",
+    "module_sha256": "9489b9ff51d2b8c66292532902340d766132b24c6a780d63af6057078811cdc4",
+    "iou_thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ],
+    "matching": "class-aware one-to-one; highest-IoU eligible ground truth after confidence sorting",
+    "ap": "101-point interpolated precision envelope",
+    "confidence": "predictions already filtered by frozen 0.25 threshold; no additional filtering"
+  },
+  "metrics": {
+    "precision": 0.6912751677852349,
+    "recall": 0.6990950226244343,
+    "mAP50": 0.647625463793534,
+    "mAP50_95": 0.3523443910494967,
+    "tp": 309,
+    "fp": 138,
+    "fn": 133,
+    "prediction_count": 447,
+    "gt_count": 442,
+    "iou50": {
+      "precision": 0.6912751677852349,
+      "recall": 0.6990950226244343,
+      "tp": 309,
+      "fp": 138,
+      "fn": 133,
+      "prediction_count": 447,
+      "gt_count": 442,
+      "matched_iou_count": 309
+    },
+    "iou_thresholds": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95
+    ]
+  },
+  "class_metrics": {
+    "crazing": {
+      "AP50": 0.2037064778274966,
+      "AP50_95": 0.09592932835963826,
+      "precision": 0.3709677419354839,
+      "recall": 0.3108108108108108,
+      "tp": 23,
+      "fp": 39,
+      "fn": 51,
+      "prediction_count": 62,
+      "gt_count": 74
+    },
+    "inclusion": {
+      "AP50": 0.6287516497993013,
+      "AP50_95": 0.3269146814991847,
+      "precision": 0.6611570247933884,
+      "recall": 0.7079646017699115,
+      "tp": 80,
+      "fp": 41,
+      "fn": 33,
+      "prediction_count": 121,
+      "gt_count": 113
+    },
+    "patches": {
+      "AP50": 0.8462547740623322,
+      "AP50_95": 0.4944760015335111,
+      "precision": 0.8734177215189873,
+      "recall": 0.8625,
+      "tp": 69,
+      "fp": 10,
+      "fn": 11,
+      "prediction_count": 79,
+      "gt_count": 80
+    },
+    "pitted_surface": {
+      "AP50": 0.769864959184994,
+      "AP50_95": 0.49114547631010763,
+      "precision": 0.7714285714285715,
+      "recall": 0.8181818181818182,
+      "tp": 27,
+      "fp": 8,
+      "fn": 6,
+      "prediction_count": 35,
+      "gt_count": 33
+    },
+    "rolled-in_scale": {
+      "AP50": 0.563851931912887,
+      "AP50_95": 0.2341098045887708,
+      "precision": 0.5882352941176471,
+      "recall": 0.6666666666666666,
+      "tp": 50,
+      "fp": 35,
+      "fn": 25,
+      "prediction_count": 85,
+      "gt_count": 75
+    },
+    "scratches": {
+      "AP50": 0.8733229899741927,
+      "AP50_95": 0.471491054005768,
+      "precision": 0.9230769230769231,
+      "recall": 0.8955223880597015,
+      "tp": 60,
+      "fp": 5,
+      "fn": 7,
+      "prediction_count": 65,
+      "gt_count": 67
+    }
+  },
+  "comparisons": {
+    "V0": {
+      "max_absolute_class_AP50_difference": 0.0,
+      "max_absolute_class_Recall_difference": 0.0
+    },
+    "V2R": {
+      "max_absolute_class_AP50_difference": 0.0,
+      "max_absolute_class_Recall_difference": 0.0
+    }
+  },
+  "alters_level_a_authority": false
+}

@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_level_b_evidence_manifest",
+  "starting_head": "9002c5ece26d93b54b89bffc88fa9fb361bf2d00",
+  "scope": "EVIDENCE_REANALYSIS_WITHOUT_NEW_RUNS",
+  "d01": {
+    "status": "CLOSED",
+    "resolution": "precise forced-cache-miss wording adopted"
+  },
+  "generator": {
+    "path": "scripts/paper/derive_phase56b_evidence.py",
+    "sha256": "798137315771eb5474e5c41c28852cebfb6659d149d59094f0085123c7eaaf01"
+  },
+  "items": [
+    {
+      "claim": "PAPER_PHASE56B_MATERIAL_DISCREPANCY_REPORT.md",
+      "frozen_sources": [
+        "src/stage_q_int8_builder.cpp",
+        "docs/personal/STAGE_Q3_FORMAL_CALIBRATION_REPORT.md",
+        "/home/orin/edge-ai-local-models/stage_q/formal/calibration_cache.meta.json"
+      ],
+      "deterministic_transformation": "governance synthesis from generated machine-readable evidence",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/PAPER_PHASE56B_MATERIAL_DISCREPANCY_REPORT.md",
+      "output_sha256": "7383143cc90173a0764aa932f580c34a7bc8176415c561448e94f7cf5e472456",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "PAPER_PHASE56B_CONTROLLED_EVIDENCE_PROMOTION_REPORT.md",
+      "frozen_sources": [
+        "docs/paper/phase5_6/phase56b_v3r_task_metrics.json",
+        "docs/paper/phase5_6/phase56b_correctness_table_source.csv",
+        "docs/paper/phase5_6/phase56b_correctness_class_metrics.csv",
+        "docs/paper/phase5_6/phase56b_nominal_payload.json",
+        "docs/paper/phase5_6/phase56b_run_level_metrics.csv",
+        "docs/paper/phase5_6/phase56b_publication_display_values.json",
+        "docs/paper/phase5_6/phase56b_runtime_state.json",
+        "docs/paper/phase5_6/phase56b_calibration_provenance.json"
+      ],
+      "deterministic_transformation": "governance synthesis from generated machine-readable evidence",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/PAPER_PHASE56B_CONTROLLED_EVIDENCE_PROMOTION_REPORT.md",
+      "output_sha256": "676bde6ce6397d5b3177668614403e418feb8efab9b1fbf3ec24cf2ce295cc04",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "PAPER_PHASE56_LEVEL_B_EVIDENCE_ADDENDUM_v1.0.md",
+      "frozen_sources": [
+        "docs/paper/phase5_6/phase56b_v3r_task_metrics.json",
+        "docs/paper/phase5_6/phase56b_correctness_table_source.csv",
+        "docs/paper/phase5_6/phase56b_correctness_class_metrics.csv",
+        "docs/paper/phase5_6/phase56b_nominal_payload.json",
+        "docs/paper/phase5_6/phase56b_run_level_metrics.csv",
+        "docs/paper/phase5_6/phase56b_publication_display_values.json",
+        "docs/paper/phase5_6/phase56b_runtime_state.json",
+        "docs/paper/phase5_6/phase56b_calibration_provenance.json"
+      ],
+      "deterministic_transformation": "governance synthesis from generated machine-readable evidence",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/PAPER_PHASE56_LEVEL_B_EVIDENCE_ADDENDUM_v1.0.md",
+      "output_sha256": "85a2d73ddca71728d5bcfa9b7c8eaa27091c405f92e9054272fc68682ff51637",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_v3r_task_metrics.json",
+      "frozen_sources": [
+        "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v3r_result.json",
+        "results/validation/stage_k_task_eval_v2/ground_truth/test_ground_truth.json",
+        "tools/validation/stage_r_v2_task_accuracy.py",
+        "tools/validation/evaluate_stage_k_task_metrics.py"
+      ],
+      "deterministic_transformation": "governed evaluator execution over frozen V3R predictions",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_v3r_task_metrics.json",
+      "output_sha256": "90847e96245c743c9171d08986a0141438f801bddf1c9452a230a51096beca06",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_correctness_table_source.csv",
+      "frozen_sources": [
+        "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v2r_task_metrics.json",
+        "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v3r_result.json",
+        "results/validation/stage_q/q5_accuracy_v1/int8_result.json"
+      ],
+      "deterministic_transformation": "selection of governed V0/V2R/V3R task metrics",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_correctness_table_source.csv",
+      "output_sha256": "d5424cb940db58eff7c826e9d99236c98ff444b37b7f45bedc993a8b70c9cf39",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_correctness_class_metrics.csv",
+      "frozen_sources": [
+        "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v2r_task_metrics.json",
+        "docs/paper/phase0_5/evidence/v2r_gate_d_v1/v3r_result.json",
+        "results/validation/stage_q/q5_accuracy_v1/int8_result.json"
+      ],
+      "deterministic_transformation": "selection of governed per-class AP50 and Recall",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_correctness_class_metrics.csv",
+      "output_sha256": "0486f59be2cb25b7118d0a6e429626cdca85d13c9efc8ec14258b56d4d723487",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_nominal_payload.json",
+      "frozen_sources": [
+        "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+        "configs/model_contracts/yolov8n_neudet_frozen.yaml",
+        "src/tensorrt_engine.cpp",
+        "backend_tensorrt/cuda_preprocessor.cu",
+        "backend_tensorrt/pageable_raw_staging.cpp",
+        "backend_tensorrt/pinned_raw_staging.cpp"
+      ],
+      "deterministic_transformation": "integer arithmetic over frozen shapes and implementation copy geometry",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_nominal_payload.json",
+      "output_sha256": "706f441da5df4720b3361a9001f0a6d7c1dbb8e8e85b17c62b8ff4db38833bd8",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_run_level_metrics.csv",
+      "frozen_sources": [
+        "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_v0_v2r_v3r_timing_aligned_v1/formal_runs",
+        "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md"
+      ],
+      "deterministic_transformation": "per-process descriptive statistics from frozen raw latency arrays",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_run_level_metrics.csv",
+      "output_sha256": "f6b22f6b5574d957d3b3d600a637e0033d1f43a5afd77dca4e4a518f89d60e31",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_publication_display_values.json",
+      "frozen_sources": [
+        "/home/orin/edge-ai-local-evidence/stage_r/phase0_5d_v0_v2r_v3r_timing_aligned_v1/formal_runs",
+        "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md"
+      ],
+      "deterministic_transformation": "verification-only aggregation and explicit display rounding",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_publication_display_values.json",
+      "output_sha256": "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_runtime_state.json",
+      "frozen_sources": [
+        "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
+        "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json"
+      ],
+      "deterministic_transformation": "structured extraction from frozen environment/report provenance",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_runtime_state.json",
+      "output_sha256": "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17",
+      "alters_level_a_authority": false
+    },
+    {
+      "claim": "phase56b_calibration_provenance.json",
+      "frozen_sources": [
+        "results/build/tensorrt/q3_int8_engine_v1/formal_calibration_manifest.json",
+        "results/validation/stage_q/split_v2_deduplicated/train_manifest_v2.json",
+        "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+        "src/stage_q_int8_builder.cpp",
+        "src/preprocessor.cpp",
+        "/home/orin/edge-ai-local-models/stage_q/formal/calibration_cache.meta.json",
+        "/home/orin/edge-ai-local-models/stage_q/formal/engine_manifest_v2.json"
+      ],
+      "deterministic_transformation": "structured extraction and split-identity checks over frozen calibration provenance",
+      "tool": "scripts/paper/derive_phase56b_evidence.py",
+      "output": "docs/paper/phase5_6/phase56b_calibration_provenance.json",
+      "output_sha256": "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042",
+      "alters_level_a_authority": false
+    }
+  ],
+  "prohibitions_observed": {
+    "inference_rerun": false,
+    "benchmark_rerun": false,
+    "new_timing": false,
+    "new_telemetry": false,
+    "manuscript_mutation": false
+  }
+}

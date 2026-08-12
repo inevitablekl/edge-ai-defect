@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_calibration_provenance",
+  "authority_level": "Level B — Derived Evidence",
+  "calibration": {
+    "images": 1260,
+    "source": "deduplicated training split",
+    "test_split_excluded": true,
+    "calibrator": "IInt8EntropyCalibrator2",
+    "batch_size": 1,
+    "input_size": [
+      640,
+      640
+    ],
+    "preprocessing_identity": "production_Preprocessor:BGR-LetterBox640-RGB-NCHW-FP32/255",
+    "production_equivalent_preprocessing": true,
+    "same_cuda_implementation_as_v2r_v3r": false,
+    "builder_flags": [
+      "INT8",
+      "FP16"
+    ],
+    "tensorrt": "10.3",
+    "host_input_io": "FP32",
+    "engine_terminology_en": "TensorRT INT8 mixed-precision Engine",
+    "engine_terminology_zh": "TensorRT INT8混合精度Engine"
+  },
+  "cache": {
+    "mode": "force-miss",
+    "successful_calibration_batches": 1260,
+    "images_consumed": 1260,
+    "generated_after_calibration": true,
+    "archived": true,
+    "sha256": "05bc8175bbbf3d01d8dcf8250c94c4dd90f03cd632c3112a5a98d41c5470a0ba",
+    "pre_existing_cache_reused_as_formal_build_input": false,
+    "wording": "calibration cache generated and archived after forced cache miss; not reused as formal-build input"
+  },
+  "engine": {
+    "sha256": "8d96eabd182df392db08bb0f15e1c9ffc9941276965090b0cdebfb4e8c25a8ee",
+    "precision_mode": "INT8 + FP16 fallback",
+    "int8_enabled": true,
+    "fp16_fallback_enabled": true,
+    "host_io_dtype": "FP32"
+  },
+  "sources": [
+    {
+      "path": "results/build/tensorrt/q3_int8_engine_v1/formal_calibration_manifest.json",
+      "sha256": "f436fd9d82267174f71c2afaf575b9beef09763aa9e4fed12f054eaedefb69d9"
+    },
+    {
+      "path": "results/validation/stage_q/split_v2_deduplicated/train_manifest_v2.json",
+      "sha256": "4e937507e0663ff76740b3fc6dd00552d82a3392a07a99fab17d816b7bc062b6"
+    },
+    {
+      "path": "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+      "sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194"
+    },
+    {
+      "path": "src/stage_q_int8_builder.cpp",
+      "sha256": "0ad26b57ee00ebac4399dd0ce3fcb93192b4e4645cfd125f8684bdbdbe740f41"
+    },
+    {
+      "path": "src/preprocessor.cpp",
+      "sha256": "e3d11127b446df18115d486041141d6a76439da08048b56825373320f65b4bc8"
+    },
+    {
+      "path": "/home/orin/edge-ai-local-models/stage_q/formal/calibration_cache.meta.json",
+      "sha256": "587c285326864f6eeaefe1eb67505a9d893c0eb725a3519eedfea93e7fa6eb1f"
+    },
+    {
+      "path": "/home/orin/edge-ai-local-models/stage_q/formal/engine_manifest_v2.json",
+      "sha256": "67f6ce3337d9c28c4aa2b32ba62554eaaa028f096c448041c063ec695f3b981c"
+    }
+  ],
+  "alters_level_a_authority": false
+}

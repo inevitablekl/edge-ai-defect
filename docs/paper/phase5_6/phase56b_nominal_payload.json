@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56b_nominal_input_copy_payload",
+  "authority_level": "Level B — Derived Evidence",
+  "V0": {
+    "representation": "FP32 host NCHW tensor",
+    "N": 1,
+    "C": 3,
+    "H": 640,
+    "W": 640,
+    "bytes_per_element": 4,
+    "payload_bytes": 4915200,
+    "payload_MB_decimal": 4.9152
+  },
+  "V2R_V3R": {
+    "representation": "packed BGR uint8",
+    "width": 200,
+    "height": 200,
+    "channels": 3,
+    "bytes_per_element": 1,
+    "source_pointer": "PageableRawStaging::data or PinnedRawStaging::data",
+    "source_pitch": 600,
+    "copy_width_bytes": 600,
+    "copy_height": 200,
+    "destination_pitch": 12288,
+    "payload_bytes": 120000,
+    "payload_MB_decimal": 0.12
+  },
+  "ratio": {
+    "formula": "4915200 / 120000",
+    "nominal_input_copy_payload_ratio": 40.96
+  },
+  "implementation_sources": [
+    {
+      "path": "configs/model_contracts/yolov8n_neudet_frozen.yaml",
+      "sha256": "9dd74f8420d832d6fdad77057a2ae282c260e0be9b4be80b16bbf00bc6ddd190"
+    },
+    {
+      "path": "src/tensorrt_engine.cpp",
+      "sha256": "ce05c49bbef48ae8a2d17f64da78f73c9d56a0311af17c631194b1754265402e"
+    },
+    {
+      "path": "backend_tensorrt/cuda_preprocessor.cu",
+      "sha256": "5649528fa8293a2a10878d8f3d553a46e2279550008fff5787993e258ad3a091"
+    },
+    {
+      "path": "backend_tensorrt/pageable_raw_staging.cpp",
+      "sha256": "637f099918ad55de2eabc46ab5e898d0f9f4e3102f94cebe15e0815ddaf5f43a"
+    },
+    {
+      "path": "backend_tensorrt/pinned_raw_staging.cpp",
+      "sha256": "2f5599e6a579756af4e03cd05d302ac50af245e7941876ea40d4073d54003099"
+    }
+  ],
+  "workload_source": {
+    "path": "results/validation/stage_q/split_v2_deduplicated/test_manifest_v2.json",
+    "sha256": "ea7616df7d59a8389c2afff4ba50cf43a6a5f683860f67e68a8d79d57101b194",
+    "images": 180,
+    "all_observed_geometry": "200x200x3"
+  },
+  "boundary": "This is a deterministic representation/copy-size derivation from the frozen workload and implementation. It is not measured bus traffic.",
+  "not_measured": [
+    "total DRAM traffic",
+    "PCIe traffic",
+    "bandwidth",
+    "H2D duration",
+    "transfer acceleration",
+    "E2E acceleration factor"
+  ],
+  "alters_level_a_authority": false
+}
