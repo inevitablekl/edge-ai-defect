@@ -126,10 +126,10 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     details["body_text"] = body_text
 
     required_text = {
-        "CN title": "Jetson端工业缺陷检测的INT8推理数据路径优化",
-        "EN title": "Data-Path Optimization for INT8 Inference in Jetson-Based Industrial Defect Detection",
-        "CN keywords": "Jetson；工业缺陷检测；INT8推理；CUDA预处理；数据路径优化",
-        "EN keywords": "Jetson; industrial defect detection; INT8 inference; CUDA preprocessing; data-path optimization",
+        "CN title": "Jetson端工业缺陷检测的INT8输入数据路径重构",
+        "EN title": "INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection",
+        "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
+        "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
         "authors CN": "王凯伦，王琦",
         "authors EN": "WANG Kailun, WANG Qi",
         "affiliation CN": "合肥工业大学数学学院，安徽 合肥 230601",
@@ -149,9 +149,9 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     if re.search(r"@[A-Za-z][A-Za-z0-9_.:-]*", all_text):
         fail(errors, "unresolved citation key remains in DOCX text")
 
-    if body_text.count("Jetson端工业缺陷检测的INT8推理数据路径优化") != 1:
+    if body_text.count("Jetson端工业缺陷检测的INT8输入数据路径重构") != 1:
         fail(errors, "CN title is duplicated or missing")
-    if body_text.count("Data-Path Optimization for INT8 Inference in Jetson-Based Industrial Defect Detection") != 1:
+    if body_text.count("INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection") != 1:
         fail(errors, "EN title is duplicated or missing")
     if body_text.count("参考文献") != 1:
         fail(errors, "reference heading is duplicated or missing")
@@ -266,9 +266,9 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     if source_references != 27:
         fail(errors, f"expected 27 bibliography source entries, found {source_references}")
 
-    for value in ("2.236671×", "55.4519%", "4.0738%", "4.0349%", "0.1514%", "0.1184%"):
+    for value in ("2.24×", "55.45%", "+4.07%", "−4.03%", "+0.15%", "−0.12%"):
         if value not in all_text:
-            fail(errors, f"scientific freeze value missing: {value}")
+            fail(errors, f"publication display value missing: {value}")
     if "主要贡献包括两点" not in all_text or "1）" not in all_text or "2）" not in all_text:
         fail(errors, "contribution count of two is not preserved")
     for value in ("V4", "Attempt 2", "cross-stage acceleration multiplication", "Gate D"):

@@ -41,18 +41,18 @@ IDENTITY_PROPERTY_NAMES = (
 REQUIRED_SECTIONS = (
     "0 引言",
     "1 系统对象与问题定义",
-    "2 数据路径优化方法",
+    "2 数据路径工程方法",
     "3 实验设计",
     "4 结果与分析",
     "5 结论",
 )
 FROZEN_VALUES = (
-    "2.236671×",
-    "55.4519%",
-    "4.0738%",
-    "4.0349%",
-    "0.1514%",
-    "0.1184%",
+    "2.24×",
+    "55.45%",
+    "+4.07%",
+    "−4.03%",
+    "+0.15%",
+    "−0.12%",
 )
 FORBIDDEN_SCIENTIFIC_ADDITIONS = (
     "V4",
@@ -316,10 +316,10 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         errors.append("comments, tracked changes, or revision authors found")
 
     required_text = {
-        "CN title": "Jetson端工业缺陷检测的INT8推理数据路径优化",
-        "EN title": "Data-Path Optimization for INT8 Inference in Jetson-Based Industrial Defect Detection",
-        "CN keywords": "Jetson；工业缺陷检测；INT8推理；CUDA预处理；数据路径优化",
-        "EN keywords": "Jetson; industrial defect detection; INT8 inference; CUDA preprocessing; data-path optimization",
+        "CN title": "Jetson端工业缺陷检测的INT8输入数据路径重构",
+        "EN title": "INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection",
+        "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
+        "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
         "CLC": "TP391.41",
         "CN abstract label": "摘要",
         "EN abstract label": "Abstract",
@@ -407,10 +407,10 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         if value not in all_text:
             errors.append(f"scientific freeze value missing: {value}")
     directionality = {
-        "FPS increase": "FPS 提高4.0738%",
-        "mean latency decrease": "平均延迟降低4.0349%",
-        "P95 increase": "P95 增加0.1514%",
-        "P99 decrease": "P99 降低0.1184%",
+        "FPS increase": "FPS变化为+4.07%",
+        "mean latency decrease": "平均latency变化为−4.03%",
+        "P95 increase": "P95为+0.15%",
+        "P99 decrease": "P99为−0.12%",
     }
     compact_text = all_text.replace(" ", "")
     for label, value in directionality.items():

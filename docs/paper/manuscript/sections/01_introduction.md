@@ -2,18 +2,16 @@
 
 # 0 引言
 
-工业产品表面缺陷会影响产品质量与后续制造过程，金属表面缺陷自动检测已成为工业视觉的重要应用方向 [@lv_et_al_2020_metallic_defects]。东北大学钢材表面缺陷数据库包含开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷，为相关研究提供了常用实验基础 [@song_yan_2013_neu_surface_defects]。
+工业产品表面缺陷会影响产品质量与后续制造过程，金属表面缺陷自动检测已成为工业视觉的重要应用方向 [@lv_et_al_2020_metallic_defects]。东北大学钢材表面缺陷数据库包含开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷，为工业缺陷检测研究提供了常用实验基础 [@song_yan_2013_neu_surface_defects]。
 
-现有表面缺陷检测研究多围绕检测器结构展开，通过轻量化骨干、注意力或多尺度特征融合等方法改善缺陷表征，并讨论检测精度与模型复杂度之间的权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]。YOLOv8 是 Ultralytics 发布的目标检测模型系列，具有多种规模模型及训练、推理和模型导出能力 [@ultralytics_2023_yolov8_docs]。与上述算法改进取向不同，本文不提出新的 YOLO 结构、特征融合模块或损失函数，而是在检测器及其推理对象确定后，研究完整部署执行路径中的系统性能问题。
+现有表面缺陷检测研究多围绕检测器结构展开，通过轻量化骨干、注意力或多尺度特征融合改善缺陷表征，并讨论检测精度与模型复杂度之间的权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]。YOLOv8模型系列提供多种规模的检测模型以及训练、推理和导出能力 [@ultralytics_2023_yolov8_docs]。当检测器转移到资源受限的边缘平台后，研究对象还包括模型之外的部署执行过程。已有工作将边缘DNN运行时作为独立系统问题，并把预处理、推理和后处理纳入完整检测路径 [@stacker_et_al_2021_edge_runtime]；其他AI工作负载中的研究也表明，CPU预处理及其数据管理可能限制加速器利用率和端到端（end-to-end，E2E）性能 [@lee_han_kim_2025_presto]。工业现场附近的边缘部署则进一步要求系统在受限计算条件下完成完整处理流程 [@weiss_et_al_2024_realtime_component_inspection]。
 
-边缘部署并非只有神经网络模型执行。输入图像从数据源进入系统后，还要经历解码与暂存、预处理、必要的数据移动、推理与同步、后处理和结果构造等环节，这些环节共同形成端到端（end-to-end，E2E）执行路径。相关研究已将边缘 DNN 部署与运行时优化作为独立系统问题，并把预处理、推理和后处理纳入完整检测执行过程 [@stacker_et_al_2021_edge_runtime]。在其他 AI 推理工作负载中，CPU 预处理滞后还可能限制加速器利用率和端到端性能，说明预处理放置及相关数据管理本身可以成为系统变量 [@lee_han_kim_2025_presto]。已有研究也将深度学习推理部署到靠近生产设备的边缘侧，以适应工业过程中的时间约束 [@weiss_et_al_2024_realtime_component_inspection]。因此，仅报告网络本身的推理时间，不能完整描述部署系统对一帧输入的处理代价。
+TensorRT INT8混合精度部署可减少网络侧计算开销，后训练量化能够在既有模型基础上实施低比特近似，但量化扰动仍需通过任务正确性评价加以约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。本文采用TensorRT 10.3中的校准式INT8路线作为固定推理前提；该版本的传统隐式INT8量化和calibrator接口已被标记为弃用，因而实验结论限定于本文的软件栈 [@nvidia_tensorrt_10_3_release_notes]。网络低精度化并不会自动重组图像解码后的host representation、输入张量形成位置或主机—设备数据移动，完整E2E性能仍取决于这些阶段在实际部署路径中的组织方式。
 
-TensorRT 低精度推理能够降低神经网络计算开销，后训练量化（post-training quantization，PTQ）则可在既有模型基础上实施低比特近似；量化扰动可能影响任务性能，因此性能收益不能替代量化后精度验证 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。本文采用 TensorRT 10.3 环境下的校准式 INT8 路线作为固定推理前提，不研究新的量化算法；该版本中的传统隐式 INT8 量化和 calibrator 接口已被标记为弃用，故相关实验结论限于本文固定软件环境 [@nvidia_tensorrt_10_3_release_notes]。需要指出的是，INT8 主要作用于模型计算，并不会自动优化解码、原始图像暂存、像素级预处理、数据移动和后处理等非网络环节。网络低精度化之后，完整 E2E 路径中仍可能存在需要单独识别和控制的数据路径问题。
+现有工作通常以检测模型结构、量化方法、推理框架或整体系统性能为主要对象。对于固定detector与Engine条件下，输入形成位置、host representation、主机到设备的输入复制载荷以及pageable/pinned暂存如何通过隔离式路径重构影响完整E2E行为，仍缺少足够明确的受控工程证据。本文据此将研究重点放在Jetson TensorRT INT8输入形成与host-device数据路径工程：基线路径V0在主机侧通过CPU/OpenCV形成FP32 NCHW张量并复制至设备；V2R将其重构为packed raw-image staging、异步二维H2D复制和GPU侧融合CUDA预处理，直接形成TensorRT设备输入；V3R保持相同CUDA预处理、TensorRT stream和下游拓扑，仅将pageable raw-image staging替换为pinned staging。
 
-现有工作更多关注检测模型改进、推理框架选择或完整流水线加速；在固定检测器、固定 TensorRT INT8 Engine、固定工作负载、固定正确性条件和固定计时边界下，将预处理执行位置与主机暂存方式作为受控数据路径变量，并同时考察平均性能与 P95/P99 尾延迟的证据仍相对有限。该问题的关键不在于再次改变检测网络，而在于明确一次局部优化覆盖完整执行路径的哪些部分，以及该作用范围与实际 E2E 观测之间的关系。
+本文的主要贡献包括两点：1）在固定YOLOv8n和TensorRT INT8混合精度Engine的条件下，将CPU/OpenCV主机侧FP32张量输入形成路径重构为packed raw-image staging、`cudaMemcpy2DAsync`和融合CUDA预处理，使device kernel直接形成TensorRT-owned FP32 NCHW设备输入，并通过pageable/pinned配置隔离主机暂存内存类型；2）建立统一的任务正确性、E2E latency、process-level FPS与pooled P95/P99评价协议，通过V0→V2R和V2R→V3R两级受控比较，区分完整输入路径重构的主要性能收益与pinned staging的有限平均增量，并利用5次独立进程考察运行级分布和尾延迟行为。
 
-为此，本文从 E2E 执行视角构建 V0、V2R 和 V3R 三条受控路径。V0 保留 CPU/OpenCV 像素级预处理；V2R 采用 pageable host staging 与 CUDA 预处理，相对于 V0 形成涉及预处理执行位置及相关输入准备数据路径的较宽范围干预；V3R 保持 V2R 的 CUDA 预处理语义和下游检测执行不变，仅将主机原始图像暂存改为 pinned host staging，形成较窄范围干预。三者使用统一的 source-to-pre-sink 外部逐帧计时边界，并分别以 FPS、平均延迟及 P95、P99 描述平均和尾部行为。
+<!-- PHASE56D_F1_HERO_POSITION: preserve the semantic position after the two contributions; no Phase 5.6C asset production. -->
 
-本文的主要贡献包括两点：1）在平台、检测器、TensorRT INT8 Engine、工作负载、正确性条件和计时边界均固定的条件下，建立 V0/V2R/V3R 受控数据路径比较，使较宽范围的 V0→V2R 干预与较窄范围的 V2R→V3R 干预能够在统一实验条件内评价；2）从平均性能与尾延迟两个层面给出分层、有限的工程结论：V2R 相对 V0 的 FPS 比为 2.236671×、平均延迟降低 55.4519%，承担主要观测性能收益；V3R 相对 V2R 的 FPS 提高 4.0738%、平均延迟降低 4.0349%，仅提供有限的平均性能增量，同时其 P95 增加 0.1514%、P99 降低 0.1184%，尾延迟表现为混合变化，不能据此得到一致改善结论。后文引入的端到端分解与优化覆盖关系仅作为解释这两项既有贡献的概念框架，不构成第三项理论贡献，也不用于由公式预测实测数值。
-
-全文首先定义系统对象、受控路径、端到端执行概念分解和统一测量边界；随后从基线路径、较宽范围干预和较窄范围干预两个层级说明实现方法与正确性控制；继而给出统一基准协议和指标定义；最后按照分析前提、观测结果、工程解释与证据边界分析平均及尾延迟结果，并总结结论的适用范围。
+全文首先定义模型、数据集、部署环境、E2E数据路径和研究问题；随后说明V0、V2R和V3R的输入形成实现及正确性控制；继而给出统一实验协议；最后从正确性、整体E2E性能、名义输入复制载荷、运行级稳定性、相关工作定位和适用边界六个方面讨论结果。

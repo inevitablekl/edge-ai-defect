@@ -1,6 +1,6 @@
 <!-- MANUSCRIPT_SECTION: 2; TABLE: T1 -->
 
-# 2 数据路径优化方法
+# 2 数据路径工程方法
 
 三条受控路径的主要配置及比较变量见表1。
 
@@ -9,37 +9,33 @@
 | 路径 | 主要像素级预处理位置 | 原始图像主机暂存 | 与前级路径相比的受控变化 | 比较角色 |
 |---|---|---|---|---|
 | V0 | CPU/OpenCV | 主机图像及主机FP32张量路径；未将其分配类型定义为V2R/V3R同类原始图像暂存变量 | － | 受控基线 |
-| V2R | CUDA/GPU | pageable host raw-image staging | 相对V0改变预处理执行位置及相关输入准备/数据路径 | 较宽的结构/配置干预终点；V2R→V3R参照 |
-| V3R | CUDA/GPU（与V2R相同语义） | pinned host raw-image staging | 相对V2R仅改变主机原始图像暂存分配类型 | 较窄的结构/配置干预终点 |
+| V2R | CUDA/GPU | pageable host raw-image staging | 相对V0改变预处理执行位置及相关输入准备/数据路径 | 完整输入形成路径重构终点；V2R→V3R参照 |
+| V3R | CUDA/GPU（与V2R相同语义） | pinned host raw-image staging | 相对V2R仅改变主机原始图像暂存分配类型 | 主机暂存分配类型干预终点 |
 
-## 2.1 CPU/OpenCV基线路径
+## 2.1 V0：主机侧FP32张量形成
 
-V0 采用串行 CPU/OpenCV 预处理作为基线路径。输入图像首先由数据源模块解码为 BGR 格式的主机图像，随后按照固定的模型输入规范完成 640×640 letterbox 变换，其中图像缩放采用 OpenCV `INTER_LINEAR`，填充采用常数 114。之后在主机侧完成 BGR→RGB 通道转换、HWC→CHW 布局转换以及 `1/255` 归一化，并形成 FP32 输入张量。该主机张量随后作为 TensorRT INT8 Engine 的输入，推理输出返回主机侧后再执行检测框解码、置信度筛选和非极大值抑制等后处理操作。
+V0首先将数据源图像解码为主机侧`CV_8UC3` BGR图像。CPU/OpenCV随后执行640×640 letterbox：使用`INTER_LINEAR`完成resize，以常数114填充，并依次进行BGR→RGB、HWC→CHW和`1/255`归一化，最终在主机侧形成FP32 NCHW张量。该`1×3×640×640`张量再通过TensorRT backend复制到设备输入缓冲区，Engine完成推理后将输出复制回主机并执行检测框解码、置信度筛选和NMS。
 
-该路径按照“数据源读取—CPU预处理—TensorRT推理—后处理—结果构造”的顺序逐帧执行，不引入跨帧流水并行。V0 使主要像素级预处理工作保留在 CPU/host 侧，其作用是提供保留既有 OpenCV letterbox 及主机侧张量构造语义的受控基线，而不是论证该路径在所有场景中均低效。按照第1.3节的路径抽象，后续 CUDA 路径保持模型、Engine、输入尺寸、测试数据、后处理参数和结果对象合同不变，使比较集中于路径相关执行部分。
+V0的关键系统属性不是笼统的“CPU preprocessing”，而是host-side FP32 tensor formation：像素变换、布局转换和浮点张量构造均在主机完成，H2D输入对象也是完整FP32 NCHW张量。该路径保留既有OpenCV语义，作为后续输入形成位置和host representation重构的受控基线。
 
-## 2.2 基于可分页主机内存的CUDA预处理
+## 2.2 V2R：pageable raw staging与GPU输入形成
 
-V2R 将缩放、填充、通道转换、布局转换和归一化等主要像素级预处理操作由 CPU/OpenCV 迁移至 CUDA/GPU 执行。数据源仍在主机侧完成图像读取与解码，解码后的 `CV_8UC3` BGR 图像按行复制到连续的可分页主机内存（pageable host memory）暂存区。暂存数据采用紧凑的三通道字节布局，使后续 CUDA 路径使用确定的原始图像行跨度。相对于 V0，该设计不仅改变像素变换的执行位置，也改变与设备输入形成相关的原始图像暂存和准备路径，因而在第1.3节的抽象中扩大了优化作用于端到端执行路径的范围。
+V2R保留主机侧图像读取与解码，并将解码后的`CV_8UC3` BGR图像逐行复制到可复用的`std::vector<uint8_t>`，形成连续packed raw BGR暂存。对冻结工作负载中的200×200图像，暂存区的有效row width为600 B。Letterbox几何参数仍由主机按照统一模型合同计算，不在GPU端重新决定缩放比例或padding位置。
 
-Letterbox 几何参数仍在主机侧按照统一模型输入规范计算，CUDA 路径不重新决定输入缩放比例或填充几何。原始图像数据传输至设备后，由固定 CUDA kernel 完成图像缩放、填充、通道转换、张量布局转换和归一化。为保持与 CPU 基线一致的输入语义，本文采用的是针对固定 Jetson 平台、`CV_8UC3` 输入以及 OpenCV 4.5.4 `INTER_LINEAR` 行为建立的对齐实现，而非通用 OpenCV resize 的 GPU 等价实现。填充值保持为 114，随后完成 BGR→RGB、HWC→CHW 和 `1/255` 归一化，最终直接写入 TensorRT Engine 的设备输入缓冲区。
+packed raw图像通过`cudaMemcpy2DAsync`复制到持久化device raw buffer。随后，一个融合CUDA preprocessing kernel在同一launch内完成resize、padding、BGR→RGB、`1/255`归一化和HWC→NCHW layout conversion，并直接写入TensorRT-owned FP32 NCHW device input。该resize实现针对固定Jetson平台、`CV_8UC3`输入和OpenCV 4.5.4 `INTER_LINEAR`行为建立对齐合同，不构成通用OpenCV GPU实现。
 
-CUDA preprocessor 在进入帧循环前建立，并复用 TensorRT Engine 持有的 CUDA stream 和 device input buffer。因此每帧的执行顺序保持为原始图像暂存、CUDA预处理、TensorRT推理、后处理和结果构造，不在帧循环中创建新的 CUDA 预处理资源。这里使用同一 stream 的目的在于维持当前单帧数据依赖和资源生命周期，并不表示实现了跨帧计算与数据传输重叠。CUDA stream、异步执行和同步机制的通用语义参照 NVIDIA CUDA 官方文档 [@nvidia_cuda_programming_guide_12_6]，本文实际执行行为以当前实现为准。由于本文未对 resize、颜色转换、布局转换、归一化和数据传输分别计时，V0→V2R 只能作为较宽范围的完整路径干预评价，不能为其中任一操作分配独立性能收益。
+CUDA preprocessor在帧循环前建立，复用TensorRT Engine的CUDA stream及其持久化device input buffer；TensorRT inference沿用同一stream和单一execution context。V2R由此把V0的主机FP32张量形成与FP32 H2D路径，重构为raw-image staging、二维异步H2D和device-side input formation。该实现是输入数据路径工程，不引入新的检测、量化或TensorRT算法。
 
-## 2.3 基于锁页主机内存的暂存路径
+## 2.3 V3R：pinned raw staging隔离变量
 
-V3R 在 V2R 的 CUDA 预处理基础上进一步改变主机侧原始图像暂存方式。与 V2R 使用可分页主机缓冲区不同，V3R 在进入帧循环前通过 CUDA 主机内存分配接口建立锁页主机内存（pinned host memory）缓冲区，并在整个运行期间复用该缓冲区；运行结束后统一释放。每帧解码得到的 BGR 图像仍按行复制为紧凑的原始图像数据，其 letterbox 几何计算、CUDA resize、填充、颜色转换、张量布局转换和归一化过程均与 V2R 保持相同。
+V3R与V2R共享相同的packed BGR语义、`cudaMemcpy2DAsync`、融合CUDA preprocessing kernel、TensorRT CUDA stream、Engine、后处理和下游执行拓扑。差异仅在于主机raw-image staging：V3R在帧循环前通过`cudaHostAlloc(..., cudaHostAllocDefault)`分配一个长生命周期锁页缓冲区，在全部帧之间复用，并在runner生命周期结束时通过`cudaFreeHost`释放。每帧仍按行复制`width×3`字节，不发生逐帧锁页内存分配，也不存在失败后静默回退到pageable暂存。
 
-因此，V2R 与 V3R 之间的正式隔离变量仅为原始图像主机暂存区的内存分配类型，即 pageable host staging 与 pinned host staging 的区别。V3R 保留相同的 CUDA 预处理语义、模型、Engine、后处理及执行拓扑，故在第1.3节抽象中属于覆盖范围更窄的主机暂存干预。CUDA 官方资料指出，锁页主机内存可为主机与设备之间的数据传输提供较高带宽，同时也强调锁页内存属于有限系统资源，其使用成本和实际收益需要结合具体应用进行测量 [@nvidia_cuda_best_practices_12_6]。集成 CPU/GPU 内存管理、GPU 分配策略和嵌入式异构 SoC 部署研究均表明，内存与运行配置的表现具有平台和工作负载依赖性 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation; @archet_et_al_2023_embedded_soc]。基于这一边界，本文不将 pinned memory 本身视为理论上必然有效的优化，而仅将其作为受控实验变量；上述研究中的 Host-Pinned、Zero-Copy 或其他配置也不等同于本文 V3R，不能仅依据桌面独立 GPU 的 PCIe 数据路径作类比推断。
+因此，V3R相对V2R的唯一隔离变量为raw-image host staging的allocation type。该受控关系使pageable与pinned暂存的观测差异不与第二套CUDA preprocessing、不同Engine或并发拓扑混合。既有嵌入式异构SoC研究同样说明内存与运行配置效果具有平台和负载依赖性 [@archet_et_al_2023_embedded_soc]，本文据此只评价当前固定实现中的边际变化。
 
-V3R 不改变 TensorRT Engine，不改变 CUDA preprocessing semantic，也不增加第二套预处理算法。其运行仍采用单帧顺序执行路径，不引入双缓冲、映射零拷贝、多 inference stream、显式计算—传输重叠或跨帧 pipeline。这样可以避免在比较 pageable 与 pinned staging 时同时改变并发拓扑，使后续性能差异对应于受控的数据路径变化，而不是多个优化机制的叠加。
+三条正式路径均不使用zero-copy、double buffering、multi-stream、cross-frame pipeline、显式transfer/compute overlap或GPU NMS。上述共同排除项只用于界定当前单帧顺序实现，不用于推断未测机制的性能。
 
 ## 2.4 正确性与生命周期控制
 
-数据路径优化不仅需要保持模型输入的几何与数值语义，还需要保证检测结果和运行生命周期在比较路径之间具有一致的判定依据。为此，V2R 首先以固定的 180 幅测试图像和 V0 任务级结果作为参考，在相同的输入尺寸、batch、置信度阈值、IoU 阈值和 NMS 配置下进行任务级正确性验证。检测配置固定为置信度阈值 0.25、IoU 阈值 0.45、`max_nms=30000`、`max_det=300`，并保持 class-agnostic 和 multi-label 模式关闭。
+三条路径使用同一180幅测试图像、模型、Engine、输入尺寸、置信度阈值0.25、IoU阈值0.45、`max_nms=30000`、`max_det=300`和class-aware单标签后处理。V0提供既有任务正确性基线；V2R沿用正式任务级评价，指标包括precision、recall、mAP50、mAP50-95以及类别级AP50和recall。总体mAP50-95、mAP50、precision和recall的允许绝对差异分别为0.005、0.005、0.010和0.010，类别级最大AP50和recall差异阈值分别为0.020和0.030。
 
-正确性评价同时考察 precision、recall、mAP50 和 mAP50-95 等总体指标以及类别级差异。总体 mAP50-95 和 mAP50 的允许绝对差异均为 0.005，precision 和 recall 的允许绝对差异均为 0.010；类别级最大 AP50 和 recall 绝对差异阈值分别为 0.020 和 0.030。上述阈值用于判定 CUDA 预处理路径是否满足预设的任务语义与正确性条件，其实际验证结果在后续结果章节中报告，而不在本节提前作为性能结论展开。
-
-在 V2R 的预处理语义确定后，V3R 不再作为第二次独立的任务级参数选择过程，而是将验证重点放在 V2R 与 V3R 的实现身份和生命周期一致性上。两条 CUDA 路径使用相同的图像序列、几何参数、预处理语义、TensorRT Engine、后处理配置和结果结构，并通过预处理张量摘要、检测结果摘要、帧顺序、处理数量、丢帧计数及流结束状态等信息检查执行一致性。该验证用于确认 V3R 的变化局限于主机暂存内存分配方式，不能扩展解释为任意输入、任意平台或原始张量层面的普适等价。
-
-上述设计形成了分层验证关系：V0 提供 CPU/OpenCV 基线，V2R 建立 CUDA 预处理路径的任务级正确性依据，V3R 在相同 CUDA 预处理语义下进一步隔离主机内存类型。只有先满足相应语义与正确性控制，后续性能差异才可在统一实验条件内解释为路径配置间的观测差异；性能提升本身不能替代正确性验收。由此，性能测试能够在固定模型、固定 Engine、固定推理语义和固定结果合同下比较 3 条路径，而不会把算法修改、量化修改或并发拓扑变化混入同一数据路径消融实验。V3R 的伴随一致性验证仍不等同于一次独立的任务级准确率验证。
+V3R的任务指标来自对冻结prediction artifact的确定性统一评价，而非新的inference或第二次参数选择。该评价与V0/V2R使用相同的冻结工作负载和evaluator；V2R/V3R之间的tensor digest、detection digest、帧顺序、处理数量、丢帧计数和EOS状态进一步验证了唯一隔离变量身份。由此，三条路径均具有manuscript-visible任务级结果，同时生命周期证据继续约束V3R的实现身份。正确性相等只针对本文冻结工作负载及评价协议，不扩展为任意未来输入上的普适等价。
