@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "artifact_kind": "paper_phase56d_b_visual_asset_manifest",
-  "baseline": "dfdceea772e2083adbb5809be4c3ba619a276357",
-  "verdict": "PHASE56_VISUAL_ASSETS_READY",
+  "artifact_kind": "paper_phase56d_b_r1_visual_asset_manifest",
+  "baseline": "e9e906dc2bbb1fc1ee74965fd149aac02dd0250f",
+  "verdict": "PHASE56_VISUAL_ASSETS_READY_R1",
   "figure_assets": [
     {
       "asset": "fig1_hero_data_path_phase56",
@@ -18,7 +18,7 @@
         },
         {
           "path": "docs/paper/phase5_6/visual/phase56_visual_evidence_map.csv",
-          "sha256": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee"
+          "sha256": "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb"
         }
       ],
       "script": {
@@ -64,7 +64,7 @@
       "source_data": [
         {
           "path": "docs/paper/phase5_6/visual/phase56_visual_evidence_map.csv",
-          "sha256": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee"
+          "sha256": "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb"
         }
       ],
       "script": {
@@ -212,12 +212,12 @@
       "source_data": [
         {
           "path": "docs/paper/phase5_6/visual/phase56_visual_evidence_map.csv",
-          "sha256": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee"
+          "sha256": "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb"
         }
       ],
       "script": {
         "path": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py",
-        "sha256": "969c4b08471a8099699bd11fbde768e54d8283770acf5bd964cb19a676070e5d"
+        "sha256": "5aef69b5c937df57a71a8e72651ead78be91b9c5b41aba7ecc6909e18ae3f161"
       },
       "spec": {
         "path": "docs/paper/phase5_6/visual/table1_path_feature_matrix_spec.md",
@@ -238,6 +238,18 @@
       "role": "Platform / Model / Benchmark Protocol",
       "source_data": [
         {
+          "path": "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
+          "sha256": "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec"
+        },
+        {
+          "path": "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json",
+          "sha256": "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872"
+        },
+        {
+          "path": "docs/paper/manuscript/sections/04_experiment.md",
+          "sha256": "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484"
+        },
+        {
           "path": "docs/paper/phase5_6/phase56b_runtime_state.json",
           "sha256": "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17"
         },
@@ -248,19 +260,23 @@
         {
           "path": "docs/paper/phase5_6/phase56b_run_level_metrics.csv",
           "sha256": "f6b22f6b5574d957d3b3d600a637e0033d1f43a5afd77dca4e4a518f89d60e31"
+        },
+        {
+          "path": "docs/paper/phase5_6/visual/phase56_visual_evidence_map.csv",
+          "sha256": "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb"
         }
       ],
       "script": {
         "path": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py",
-        "sha256": "969c4b08471a8099699bd11fbde768e54d8283770acf5bd964cb19a676070e5d"
+        "sha256": "5aef69b5c937df57a71a8e72651ead78be91b9c5b41aba7ecc6909e18ae3f161"
       },
       "spec": {
         "path": "docs/paper/phase5_6/visual/table2_platform_protocol_spec.md",
-        "sha256": "505943ec2578867501eb1f22b7f6587311825a8a90c8f48ab0ed22aa88f15297"
+        "sha256": "d1427d958a70acf06baf8d9255f3a337e75a727584e4cf2f20aca7f361adaf6c"
       },
       "file": {
         "path": "docs/paper/phase5_6/visual/production/tables/table2_platform_protocol_phase56.md",
-        "sha256": "5a019055782b0337a9ffbe29aafc7033c107bea3e946c9ef22218f4ba9b68538"
+        "sha256": "41ea42c945ca60be8b6e957d019fd7a914c117b9ce155478ea94189c5874f309"
       },
       "dimensions": {
         "format": "Markdown publication source",
@@ -279,7 +295,7 @@
       ],
       "script": {
         "path": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py",
-        "sha256": "969c4b08471a8099699bd11fbde768e54d8283770acf5bd964cb19a676070e5d"
+        "sha256": "5aef69b5c937df57a71a8e72651ead78be91b9c5b41aba7ecc6909e18ae3f161"
       },
       "spec": {
         "path": "docs/paper/phase5_6/visual/table3_correctness_spec.md",
@@ -306,7 +322,7 @@
       ],
       "script": {
         "path": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py",
-        "sha256": "969c4b08471a8099699bd11fbde768e54d8283770acf5bd964cb19a676070e5d"
+        "sha256": "5aef69b5c937df57a71a8e72651ead78be91b9c5b41aba7ecc6909e18ae3f161"
       },
       "spec": {
         "path": "docs/paper/phase5_6/visual/table4_related_work_spec.md",

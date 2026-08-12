@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "artifact_kind": "paper_phase56d_b_visual_asset_validation",
-  "baseline": "dfdceea772e2083adbb5809be4c3ba619a276357",
-  "verdict": "PHASE56_VISUAL_ASSETS_READY",
+  "artifact_kind": "paper_phase56d_b_r1_visual_asset_validation",
+  "baseline": "e9e906dc2bbb1fc1ee74965fd149aac02dd0250f",
+  "verdict": "PHASE56_VISUAL_ASSETS_READY_R1",
   "checks": [
     {
       "check": "source_exists:phase56b_run_level_metrics.csv",
@@ -72,7 +72,7 @@
     {
       "check": "source_hash:phase56_visual_evidence_map.csv",
       "status": "PASS",
-      "details": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee"
+      "details": "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb"
     },
     {
       "check": "source_exists:phase56_related_work_attribute_evidence.csv",
@@ -85,9 +85,74 @@
       "details": "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b"
     },
     {
+      "check": "source_exists:PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
+      "status": "PASS",
+      "details": "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md"
+    },
+    {
+      "check": "source_hash:PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
+      "status": "PASS",
+      "details": "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec"
+    },
+    {
+      "check": "source_exists:environment.json",
+      "status": "PASS",
+      "details": "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json"
+    },
+    {
+      "check": "source_hash:environment.json",
+      "status": "PASS",
+      "details": "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872"
+    },
+    {
+      "check": "source_exists:04_experiment.md",
+      "status": "PASS",
+      "details": "docs/paper/manuscript/sections/04_experiment.md"
+    },
+    {
+      "check": "source_hash:04_experiment.md",
+      "status": "PASS",
+      "details": "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484"
+    },
+    {
+      "check": "t2_l4t_formal_report",
+      "status": "PASS",
+      "details": "formal execution report records L4T R36.5"
+    },
+    {
+      "check": "t2_l4t_raw_environment",
+      "status": "PASS",
+      "details": "raw l4t_release records R36 release revision 5.0"
+    },
+    {
+      "check": "t2_l4t_manuscript_authority",
+      "status": "PASS",
+      "details": "current experiment section records L4T R36.5"
+    },
+    {
+      "check": "t2_l4t_generator_authority",
+      "status": "PASS",
+      "details": "production generator is fixed to formal R36.5 wording"
+    },
+    {
+      "check": "t2_l4t_evidence_mapping",
+      "status": "PASS",
+      "details": "T2 L4T cell maps to the formal report and raw environment record"
+    },
+    {
+      "check": "stale_l4t_36_4_3_in_active_production_absent",
+      "status": "PASS",
+      "details": "active T2 production/spec/generator/evidence/manuscript contain no stale L4T 36.4.3"
+    },
+    {
       "check": "figure_triplet:fig1_hero_data_path_phase56",
       "status": "PASS",
       "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "r1_figure_svg_unchanged:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887"
     },
     {
       "check": "no_internal_status:fig1_hero_data_path_phase56",
@@ -115,6 +180,11 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
+      "check": "r1_figure_svg_unchanged:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605"
+    },
+    {
       "check": "no_internal_status:fig2_technical_implementation_phase56",
       "status": "PASS",
       "details": "no internal status term in formal SVG"
@@ -140,6 +210,11 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
+      "check": "r1_figure_svg_unchanged:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1"
+    },
+    {
       "check": "no_internal_status:fig3_main_e2e_phase56",
       "status": "PASS",
       "details": "no internal status term in formal SVG"
@@ -163,6 +238,11 @@
       "check": "figure_triplet:fig4_run_level_distribution_phase56",
       "status": "PASS",
       "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "r1_figure_svg_unchanged:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e"
     },
     {
       "check": "no_internal_status:fig4_run_level_distribution_phase56",
@@ -285,9 +365,19 @@
       "details": "30 traced implementation cells and 10 publication rows"
     },
     {
+      "check": "r1_table1_unchanged",
+      "status": "PASS",
+      "details": "789205d35cbccc1463eb0bc97b4b7208b33b44b2ee5717d2a6e42d3e84d5766e"
+    },
+    {
       "check": "table2_provenance",
       "status": "PASS",
       "details": "compact platform/model/calibration/workload/protocol facts exact"
+    },
+    {
+      "check": "t2_l4t_stale_value_rejected",
+      "status": "PASS",
+      "details": "active Table 2 rejects the superseded L4T 36.4.3 value"
     },
     {
       "check": "table3_correctness_values",
@@ -298,6 +388,11 @@
       "check": "table3_no_gate_governance",
       "status": "PASS",
       "details": "gate-style columns absent"
+    },
+    {
+      "check": "r1_table3_unchanged",
+      "status": "PASS",
+      "details": "6d5e028fd2e48edd9de9dc5a8cd8823a6748b37ea7e3801b280497a4f5ebf1d0"
     },
     {
       "check": "table4_traceable_cells",
@@ -313,6 +408,11 @@
       "check": "table4_positioning_boundary",
       "status": "PASS",
       "details": "no novelty, uniqueness, rank, or YES-count claim"
+    },
+    {
+      "check": "r1_table4_unchanged",
+      "status": "PASS",
+      "details": "6710b9ac7018eadebcd543d4bd892c7d1e3ba60f4e6963d139295badf52287a9"
     },
     {
       "check": "caption_semantics",
@@ -462,6 +562,12 @@
     "journal_formatting_modified": false,
     "historical_phase54_assets_deleted": false,
     "level_a_modified": false,
-    "level_b_modified": false
+    "level_b_modified": false,
+    "production_f1_f4_modified": false,
+    "table1_modified": false,
+    "table2_modified": true,
+    "table2_modification_reason": "formal L4T authority correction",
+    "table3_modified": false,
+    "table4_modified": false
   }
 }

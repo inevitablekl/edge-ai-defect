@@ -30,7 +30,14 @@ VALIDATION = PRODUCTION / "phase56_visual_asset_validation.json"
 MANIFEST = PRODUCTION / "phase56_visual_asset_manifest.json"
 SHA_FILE = PRODUCTION / "phase56_visual_asset_sha256.txt"
 PHASE_REPORT = VISUAL / "PAPER_PHASE56D_B_AUTOMATED_VISUAL_PRODUCTION_REPORT.md"
-BASELINE = "dfdceea772e2083adbb5809be4c3ba619a276357"
+R1_REPORT = VISUAL / "PAPER_PHASE56D_B_R1_T2_AUTHORITY_REMEDIATION_REPORT.md"
+FORMAL_EXECUTION = ROOT / "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md"
+RAW_ENVIRONMENT = ROOT / "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json"
+MANUSCRIPT_EXPERIMENT = ROOT / "docs/paper/manuscript/sections/04_experiment.md"
+T2_SPEC = VISUAL / "table2_platform_protocol_spec.md"
+EVIDENCE_MAP = VISUAL / "phase56_visual_evidence_map.csv"
+BASELINE = "e9e906dc2bbb1fc1ee74965fd149aac02dd0250f"
+VERDICT = "PHASE56_VISUAL_ASSETS_READY_R1"
 
 STRUCTURAL_SCRIPT = SCRIPTS / "generate_phase56d_production_structural.py"
 STATISTICAL_SCRIPT = SCRIPTS / "generate_phase56d_production_statistical.py"
@@ -44,8 +51,11 @@ INPUT_HASHES = {
     PHASE56 / "phase56b_nominal_payload.json": "706f441da5df4720b3361a9001f0a6d7c1dbb8e8e85b17c62b8ff4db38833bd8",
     PHASE56 / "phase56b_runtime_state.json": "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17",
     PHASE56 / "phase56b_calibration_provenance.json": "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042",
-    VISUAL / "phase56_visual_evidence_map.csv": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee",
+    EVIDENCE_MAP: "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb",
     VISUAL / "phase56_related_work_attribute_evidence.csv": "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b",
+    FORMAL_EXECUTION: "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec",
+    RAW_ENVIRONMENT: "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872",
+    MANUSCRIPT_EXPERIMENT: "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484",
 }
 
 FIGURE_STEMS = (
@@ -61,6 +71,17 @@ TABLE_NAMES = (
     "table4_related_work_phase56.md",
 )
 FORBIDDEN_VISIBLE_STATUS = ("candidate", "specification", "draft", "preview")
+FROZEN_FIGURE_SVG_HASHES = {
+    "fig1_hero_data_path_phase56": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887",
+    "fig2_technical_implementation_phase56": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605",
+    "fig3_main_e2e_phase56": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1",
+    "fig4_run_level_distribution_phase56": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e",
+}
+FROZEN_TABLE_HASHES = {
+    "table1_path_feature_matrix_phase56.md": "789205d35cbccc1463eb0bc97b4b7208b33b44b2ee5717d2a6e42d3e84d5766e",
+    "table3_correctness_phase56.md": "6d5e028fd2e48edd9de9dc5a8cd8823a6748b37ea7e3801b280497a4f5ebf1d0",
+    "table4_related_work_phase56.md": "6710b9ac7018eadebcd543d4bd892c7d1e3ba60f4e6963d139295badf52287a9",
+}
 
 
 def sha256(path: Path) -> str:
@@ -140,6 +161,46 @@ def validate_sources(checks: list[dict[str, str]]) -> tuple[dict, dict]:
     return summary, payload
 
 
+def validate_l4t_authority(checks: list[dict[str, str]]) -> None:
+    formal_report = FORMAL_EXECUTION.read_text(encoding="utf-8")
+    check("| L4T | R36.5 |" in formal_report, "t2_l4t_formal_report",
+          "formal execution report records L4T R36.5", checks)
+
+    raw_environment = json.loads(RAW_ENVIRONMENT.read_text(encoding="utf-8"))
+    raw_release = raw_environment.get("l4t_release", "")
+    check("# R36 (release), REVISION: 5.0" in raw_release, "t2_l4t_raw_environment",
+          "raw l4t_release records R36 release revision 5.0", checks)
+
+    manuscript = MANUSCRIPT_EXPERIMENT.read_text(encoding="utf-8")
+    check("实际记录的软件环境为L4T R36.5" in manuscript, "t2_l4t_manuscript_authority",
+          "current experiment section records L4T R36.5", checks)
+
+    generator = TABLE_SCRIPT.read_text(encoding="utf-8")
+    check('L4T_PUBLICATION_VALUE = "R36.5"' in generator,
+          "t2_l4t_generator_authority", "production generator is fixed to formal R36.5 wording", checks)
+
+    with EVIDENCE_MAP.open(encoding="utf-8", newline="") as handle:
+        evidence_rows = {row["element_id"]: row for row in csv.DictReader(handle)}
+    l4t_row = evidence_rows.get("T2_L4T", {})
+    expected_sources = {
+        rel(FORMAL_EXECUTION),
+        rel(RAW_ENVIRONMENT),
+    }
+    mapped_sources = set(l4t_row.get("source_file", "").split(";"))
+    check(l4t_row.get("claim_or_cell") == "L4T publication value=R36.5"
+          and mapped_sources == expected_sources,
+          "t2_l4t_evidence_mapping",
+          "T2 L4T cell maps to the formal report and raw environment record", checks)
+
+    active_paths = (
+        TABLES / TABLE_NAMES[1], T2_SPEC, TABLE_SCRIPT, EVIDENCE_MAP, MANUSCRIPT_EXPERIMENT,
+    )
+    stale = [rel(path) for path in active_paths if "L4T 36.4.3" in path.read_text(encoding="utf-8")]
+    check(not stale, "stale_l4t_36_4_3_in_active_production_absent",
+          "active T2 production/spec/generator/evidence/manuscript contain no stale L4T 36.4.3"
+          if not stale else ", ".join(stale), checks)
+
+
 def validate_figures(summary: dict, payload: dict,
                      checks: list[dict[str, str]]) -> dict[str, dict]:
     metadata: dict[str, dict] = {}
@@ -147,6 +208,9 @@ def validate_figures(summary: dict, payload: dict,
         paths = {suffix: FIGURES / f"{stem}.{suffix}" for suffix in ("svg", "pdf", "png")}
         check(all(path.is_file() and path.stat().st_size > 0 for path in paths.values()),
               f"figure_triplet:{stem}", "SVG/PDF/PNG present and nonempty", checks)
+        svg_hash = sha256(paths["svg"])
+        check(svg_hash == FROZEN_FIGURE_SVG_HASHES[stem],
+              f"r1_figure_svg_unchanged:{stem}", svg_hash, checks)
         root, visible = visible_svg(paths["svg"])
         raw_lower = paths["svg"].read_text(encoding="utf-8").lower()
         check(not any(token in raw_lower for token in FORBIDDEN_VISIBLE_STATUS),
@@ -257,12 +321,16 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
         t1_rows = [row for row in csv.DictReader(handle) if row["asset"] == "T1"]
     check(len(t1_rows) == 30 and table1.count("\n| ") >= 11, "table1_exact_matrix",
           "30 traced implementation cells and 10 publication rows", checks)
+    check(sha256(TABLES / TABLE_NAMES[0]) == FROZEN_TABLE_HASHES[TABLE_NAMES[0]],
+          "r1_table1_unchanged", sha256(TABLES / TABLE_NAMES[0]), checks)
 
     table2 = (TABLES / TABLE_NAMES[1]).read_text(encoding="utf-8")
-    t2_required = ("L4T 36.4.3", "CUDA 12.6", "TensorRT 10.3", "OpenCV 4.5.4",
+    t2_required = ("L4T R36.5", "CUDA 12.6", "TensorRT 10.3", "OpenCV 4.5.4",
                    "1260张", "180张", "60帧预热", "1080帧", "5个独立进程")
     check(all(token in table2 for token in t2_required), "table2_provenance",
           "compact platform/model/calibration/workload/protocol facts exact", checks)
+    check("L4T 36.4.3" not in table2, "t2_l4t_stale_value_rejected",
+          "active Table 2 rejects the superseded L4T 36.4.3 value", checks)
 
     table3 = (TABLES / TABLE_NAMES[2]).read_text(encoding="utf-8")
     with (PHASE56 / "phase56b_correctness_table_source.csv").open(encoding="utf-8", newline="") as handle:
@@ -273,6 +341,8 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
           "table3_correctness_values", "all 12 displayed metric cells match frozen CSV", checks)
     check("允许差异" not in table3 and "结果=通过" not in table3,
           "table3_no_gate_governance", "gate-style columns absent", checks)
+    check(sha256(TABLES / TABLE_NAMES[2]) == FROZEN_TABLE_HASHES[TABLE_NAMES[2]],
+          "r1_table3_unchanged", sha256(TABLES / TABLE_NAMES[2]), checks)
 
     table4 = (TABLES / TABLE_NAMES[3]).read_text(encoding="utf-8")
     with (VISUAL / "phase56_related_work_attribute_evidence.csv").open(
@@ -287,6 +357,8 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
     check(not any(token in table4.lower() for token in forbidden_claims)
           and "不构成首次性、唯一性或优越性结论" in table4,
           "table4_positioning_boundary", "no novelty, uniqueness, rank, or YES-count claim", checks)
+    check(sha256(TABLES / TABLE_NAMES[3]) == FROZEN_TABLE_HASHES[TABLE_NAMES[3]],
+          "r1_table4_unchanged", sha256(TABLES / TABLE_NAMES[3]), checks)
 
     captions = CAPTIONS.read_text(encoding="utf-8")
     caption_required = (
@@ -416,8 +488,9 @@ def write_manifest(figure_metadata: dict[str, dict]) -> None:
         ("T1", TABLE_NAMES[0], "Path Feature Matrix", VISUAL / "table1_path_feature_matrix_spec.md",
          [VISUAL / "phase56_visual_evidence_map.csv"]),
         ("T2", TABLE_NAMES[1], "Platform / Model / Benchmark Protocol", VISUAL / "table2_platform_protocol_spec.md",
-         [PHASE56 / "phase56b_runtime_state.json", PHASE56 / "phase56b_calibration_provenance.json",
-          PHASE56 / "phase56b_run_level_metrics.csv"]),
+         [FORMAL_EXECUTION, RAW_ENVIRONMENT, MANUSCRIPT_EXPERIMENT,
+          PHASE56 / "phase56b_runtime_state.json", PHASE56 / "phase56b_calibration_provenance.json",
+          PHASE56 / "phase56b_run_level_metrics.csv", EVIDENCE_MAP]),
         ("T3", TABLE_NAMES[2], "Task-Level Correctness", VISUAL / "table3_correctness_spec.md",
          [PHASE56 / "phase56b_correctness_table_source.csv"]),
         ("T4", TABLE_NAMES[3], "Related-Work Qualitative Comparison", VISUAL / "table4_related_work_spec.md",
@@ -438,9 +511,9 @@ def write_manifest(figure_metadata: dict[str, dict]) -> None:
         })
     manifest = {
         "schema_version": 1,
-        "artifact_kind": "paper_phase56d_b_visual_asset_manifest",
+        "artifact_kind": "paper_phase56d_b_r1_visual_asset_manifest",
         "baseline": BASELINE,
-        "verdict": "PHASE56_VISUAL_ASSETS_READY",
+        "verdict": VERDICT,
         "figure_assets": figure_assets,
         "table_assets": table_assets,
         "caption_freeze": source_record(CAPTIONS),
@@ -456,6 +529,8 @@ def write_sha_file() -> None:
     files.extend([STRUCTURAL_SCRIPT, STATISTICAL_SCRIPT, TABLE_SCRIPT, VALIDATOR_SCRIPT])
     if PHASE_REPORT.is_file():
         files.append(PHASE_REPORT)
+    if R1_REPORT.is_file():
+        files.append(R1_REPORT)
     unique = sorted(set(files), key=rel)
     SHA_FILE.write_text("\n".join(f"{sha256(path)}  {rel(path)}" for path in unique) + "\n",
                         encoding="utf-8", newline="\n")
@@ -464,6 +539,7 @@ def write_sha_file() -> None:
 def main() -> int:
     checks: list[dict[str, str]] = []
     summary, payload = validate_sources(checks)
+    validate_l4t_authority(checks)
     metadata = validate_figures(summary, payload, checks)
     validate_tables(checks)
     make_inspection_rasters(checks)
@@ -471,9 +547,9 @@ def main() -> int:
     validate_determinism(checks)
     result = {
         "schema_version": 1,
-        "artifact_kind": "paper_phase56d_b_visual_asset_validation",
+        "artifact_kind": "paper_phase56d_b_r1_visual_asset_validation",
         "baseline": BASELINE,
-        "verdict": "PHASE56_VISUAL_ASSETS_READY",
+        "verdict": VERDICT,
         "checks": checks,
         "figure_metadata": metadata,
         "manual_raster_inspection": {
@@ -491,6 +567,12 @@ def main() -> int:
             "historical_phase54_assets_deleted": False,
             "level_a_modified": False,
             "level_b_modified": False,
+            "production_f1_f4_modified": False,
+            "table1_modified": False,
+            "table2_modified": True,
+            "table2_modification_reason": "formal L4T authority correction",
+            "table3_modified": False,
+            "table4_modified": False,
         },
     }
     VALIDATION.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",

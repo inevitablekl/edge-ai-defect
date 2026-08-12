@@ -8,7 +8,7 @@ Scientific role: a compact reproduction envelope, not a provenance dump. Target 
 ### KEEP_IN_TABLE
 
 - Platform: NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super.
-- Software: L4T 36.4.3, CUDA 12.6, TensorRT 10.3, OpenCV 4.5.4.
+- Software: L4T R36.5, CUDA 12.6, TensorRT 10.3, OpenCV 4.5.4.
 - Detector/input: YOLOv8n, `640 × 640`, batch 1.
 - Engine: frozen TensorRT INT8 mixed-precision Engine (`INT8 + FP16 fallback`, host input FP32).
 - Calibration, compact: 1260 deduplicated training images, `IInt8EntropyCalibrator2`, batch 1, test split excluded.
@@ -35,6 +35,8 @@ The existing T2 body remains the conceptual starting point, but D-B may only add
 
 ## Evidence sources
 
+- `docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md`
+- `docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json`
 - `docs/paper/phase5_6/phase56b_runtime_state.json`
 - `docs/paper/phase5_6/phase56b_calibration_provenance.json`
 - `docs/paper/phase5_6/phase56b_run_level_metrics.csv`

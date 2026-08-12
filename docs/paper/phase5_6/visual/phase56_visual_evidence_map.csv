@@ -78,6 +78,7 @@ T1,T1_PIPE_V0,Cross-frame pipeline V0=No,Implementation,src/serial_runner.cpp,se
 T1,T1_PIPE_V2,Cross-frame pipeline V2R=No,Implementation,stage_r/pageable_runner.cpp,serial frame loop,"No cross-frame queue or threads"
 T1,T1_PIPE_V3,Cross-frame pipeline V3R=No,Implementation,stage_r/pinned_runner.cpp,serial frame loop,"No cross-frame queue or threads"
 T2,T2_PLATFORM,Platform and runtime-state rows,Frozen derived evidence,docs/paper/phase5_6/phase56b_runtime_state.json,proven,"Only proven facts enter candidate table"
+T2,T2_L4T,L4T publication value=R36.5,Formal execution authority,docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md;docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json,§3 Environment L4T row; l4t_release,"Formal report fixes publication wording; raw record states R36 release revision 5.0"
 T2,T2_ENGINE,Model Engine and calibration rows,Frozen derived evidence,docs/paper/phase5_6/phase56b_calibration_provenance.json,calibration/cache/engine,"Compact reproduction facts only"
 T2,T2_PROTOCOL,Run count warm-up and measurement protocol,Frozen evidence,docs/paper/phase5_6/phase56b_run_level_metrics.csv,row population and measured_frames,"Five processes/path and 1080 frames/process"
 T3,T3_ALL_CELLS,All 12 task-metric cells,Frozen derived evidence,docs/paper/phase5_6/phase56b_correctness_table_source.csv,three path rows × four metrics,"Generator reads and formats values; no gate columns"

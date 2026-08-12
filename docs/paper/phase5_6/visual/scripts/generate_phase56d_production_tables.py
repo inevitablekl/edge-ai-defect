@@ -24,6 +24,10 @@ CALIBRATION = PHASE56 / "phase56b_calibration_provenance.json"
 SUMMARY = PHASE56 / "phase56b_publication_display_values.json"
 EVIDENCE_MAP = VISUAL / "phase56_visual_evidence_map.csv"
 RELATED = VISUAL / "phase56_related_work_attribute_evidence.csv"
+FORMAL_EXECUTION = ROOT / "docs/paper/phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md"
+RAW_ENVIRONMENT = ROOT / "docs/paper/phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json"
+MANUSCRIPT_EXPERIMENT = ROOT / "docs/paper/manuscript/sections/04_experiment.md"
+L4T_PUBLICATION_VALUE = "R36.5"
 
 EXPECTED_HASHES = {
     CORRECTNESS: "d5424cb940db58eff7c826e9d99236c98ff444b37b7f45bedc993a8b70c9cf39",
@@ -31,8 +35,11 @@ EXPECTED_HASHES = {
     RUNTIME: "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17",
     CALIBRATION: "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042",
     SUMMARY: "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655",
-    EVIDENCE_MAP: "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee",
+    EVIDENCE_MAP: "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb",
     RELATED: "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b",
+    FORMAL_EXECUTION: "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec",
+    RAW_ENVIRONMENT: "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872",
+    MANUSCRIPT_EXPERIMENT: "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484",
 }
 
 
@@ -45,6 +52,19 @@ def validate_hashes() -> None:
         actual = sha256(path)
         if actual != expected:
             raise ValueError(f"frozen source hash mismatch: {path}: {actual}")
+
+
+def resolve_l4t_publication_value() -> str:
+    formal_report = FORMAL_EXECUTION.read_text(encoding="utf-8")
+    if "| L4T | R36.5 |" not in formal_report:
+        raise ValueError("formal execution report does not fix L4T at R36.5")
+    raw_environment = json.loads(RAW_ENVIRONMENT.read_text(encoding="utf-8"))
+    if "# R36 (release), REVISION: 5.0" not in raw_environment.get("l4t_release", ""):
+        raise ValueError("raw environment record is inconsistent with L4T R36.5")
+    manuscript = MANUSCRIPT_EXPERIMENT.read_text(encoding="utf-8")
+    if "实际记录的软件环境为L4T R36.5" not in manuscript:
+        raise ValueError("current manuscript experiment section is inconsistent with L4T R36.5")
+    return L4T_PUBLICATION_VALUE
 
 
 def write(path: Path, title: str, body: str, source_note: str) -> None:
@@ -122,9 +142,10 @@ def table2(output: Path) -> None:
         raise ValueError("formal protocol measured-frame count mismatch")
     if len({row["variant"] for row in runs}) != 3:
         raise ValueError("formal protocol path population mismatch")
+    l4t = resolve_l4t_publication_value()
     rows = [
         ("平台", proven["platform"]),
-        ("软件栈", "L4T 36.4.3；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4"),
+        ("软件栈", f"L4T {l4t}；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4"),
         ("Detector / 输入", "YOLOv8n；640 × 640；batch 1"),
         ("Engine", f"TensorRT INT8混合精度（{engine['precision_mode']}）；host input {engine['host_io_dtype']}"),
         ("校准", f"{cal['images']}张去重训练图像；{cal['calibrator']}；batch {cal['batch_size']}；排除test split"),
@@ -140,7 +161,9 @@ def table2(output: Path) -> None:
         "平台、模型与统一基准协议",
         "\n".join(lines),
         "`../../../phase56b_runtime_state.json`、`../../../phase56b_calibration_provenance.json`、"
-        "`../../../phase56b_run_level_metrics.csv`与`../../table2_platform_protocol_spec.md`。",
+        "`../../../phase56b_run_level_metrics.csv`、`../../../../phase0_5/PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md`、"
+        "`../../../../phase0_5/evidence/timing_aligned_harness_preflight_v1/environment.json`与"
+        "`../../table2_platform_protocol_spec.md`。",
     )
 
 
