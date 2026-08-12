@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="160mm" height="93.000mm"
+     viewBox="0 0 1600 930" role="img">
+  <title>受控输入数据路径工程总览</title>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6"
+            orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#38434d"/>
+    </marker>
+    <marker id="stream-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6"
+            orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#315c76"/>
+    </marker>
+    <pattern id="hatch-v2" width="12" height="12" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#cfe5f3"/>
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#688ca3" stroke-width="2.4"/>
+    </pattern>
+    <pattern id="hatch-v3" width="12" height="12" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(-45)">
+      <rect width="12" height="12" fill="#f6dcc6"/>
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#9f6e47" stroke-width="2.4"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="930" fill="white"/>
+  <text x="55" y="52" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="34" font-weight="700" fill="#20252b" >受控输入数据路径工程总览</text>
+<rect x="55" y="82" width="710" height="515" rx="12" fill="#f5f6f7" stroke="#38434d" stroke-width="3"/>
+<rect x="805" y="82" width="740" height="515" rx="12" fill="#eef4f8" stroke="#38434d" stroke-width="3"/>
+<text x="410" y="122" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="30" font-weight="700" fill="#20252b" >主机 / CPU</text>
+<text x="1175" y="122" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="30" font-weight="700" fill="#20252b" >设备 / GPU</text>
+<line x1="785" y1="95" x2="785" y2="580" stroke="#5f6973" stroke-width="3" stroke-dasharray="10 8" />
+<text x="785" y="75" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >主机/设备内存域边界</text>
+<rect x="78" y="160" width="88" height="82" rx="10" fill="#d9dde1" stroke="#38434d" stroke-width="3" /><text x="122.0" y="210.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="30" font-weight="700" fill="#20252b"><tspan x="122.0" dy="0">V0</tspan></text>
+<rect x="190" y="160" width="155" height="82" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="267.5" y="195.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b"><tspan x="267.5" dy="0">Decoded</tspan><tspan x="267.5" dy="30">BGR</tspan></text>
+<line x1="345" y1="201" x2="375" y2="201" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="380" y="150" width="175" height="102" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="467.5" y="195.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b"><tspan x="467.5" dy="0">CPU/OpenCV</tspan><tspan x="467.5" dy="30">预处理</tspan></text>
+<line x1="555" y1="201" x2="585" y2="201" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="590" y="150" width="165" height="102" rx="10" fill="#d9dde1" stroke="#38434d" stroke-width="3" /><text x="672.5" y="195.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="672.5" dy="0">FP32 NCHW</tspan><tspan x="672.5" dy="30">host tensor</tspan></text>
+<line x1="755" y1="201" x2="840" y2="201" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<text x="797" y="184" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >FP32 H2D</text>
+<rect x="850" y="150" width="190" height="102" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="945.0" y="195.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="945.0" dy="0">TensorRT-owned</tspan><tspan x="945.0" dy="30">device input</tspan></text>
+<line x1="1040" y1="201" x2="1080" y2="201" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="1085" y="150" width="430" height="102" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="1300.0" y="195.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="700" fill="#20252b"><tspan x="1300.0" dy="0">TensorRT INT8</tspan><tspan x="1300.0" dy="30">混合精度 Engine（同一）</tspan></text>
+<rect x="78" y="326" width="88" height="82" rx="10" fill="url(#hatch-v2)" stroke="#38434d" stroke-width="3" /><text x="122.0" y="376.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="28" font-weight="700" fill="#20252b"><tspan x="122.0" dy="0">V2R</tspan></text>
+<rect x="78" y="456" width="88" height="82" rx="10" fill="url(#hatch-v3)" stroke="#38434d" stroke-width="3" /><text x="122.0" y="506.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="28" font-weight="700" fill="#20252b"><tspan x="122.0" dy="0">V3R</tspan></text>
+<rect x="190" y="326" width="155" height="82" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="267.5" y="361.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b"><tspan x="267.5" dy="0">Decoded</tspan><tspan x="267.5" dy="30">BGR</tspan></text>
+<rect x="190" y="456" width="155" height="82" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="267.5" y="491.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b"><tspan x="267.5" dy="0">Decoded</tspan><tspan x="267.5" dy="30">BGR</tspan></text>
+<line x1="345" y1="367" x2="375" y2="367" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<line x1="345" y1="497" x2="375" y2="497" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="380" y="316" width="250" height="102" rx="10" fill="url(#hatch-v2)" stroke="#38434d" stroke-width="3" /><text x="505.0" y="361.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="505.0" dy="0">Pageable</tspan><tspan x="505.0" dy="30">raw-image staging</tspan></text>
+<rect x="380" y="446" width="250" height="102" rx="10" fill="url(#hatch-v3)" stroke="#38434d" stroke-width="3" /><text x="505.0" y="491.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="505.0" dy="0">Pinned</tspan><tspan x="505.0" dy="30">raw-image staging</tspan></text>
+<line x1="630" y1="367" x2="840" y2="367" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<line x1="630" y1="497" x2="840" y2="497" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<text x="735" y="348" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >raw-image H2D</text>
+<text x="735" y="478" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >raw-image H2D</text>
+<rect x="850" y="326" width="155" height="82" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="927.5" y="361.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="927.5" dy="0">device raw</tspan><tspan x="927.5" dy="30">buffer</tspan></text>
+<rect x="850" y="456" width="155" height="82" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="927.5" y="491.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="927.5" dy="0">device raw</tspan><tspan x="927.5" dy="30">buffer</tspan></text>
+<line x1="1005" y1="367" x2="1060" y2="419" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<line x1="1005" y1="497" x2="1060" y2="445" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="1065" y="381" width="205" height="102" rx="10" fill="#e6f1e8" stroke="#38434d" stroke-width="3" /><text x="1167.5" y="426.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="700" fill="#20252b"><tspan x="1167.5" dy="0">融合 CUDA</tspan><tspan x="1167.5" dy="30">预处理</tspan></text>
+<line x1="1270" y1="432" x2="1300" y2="432" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="1305" y="381" width="215" height="102" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="1412.5" y="426.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="1412.5" dy="0">TensorRT-owned</tspan><tspan x="1412.5" dy="30">FP32 NCHW input</tspan></text>
+<line x1="1412" y1="381" x2="1412" y2="260" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<text x="1295" y="560" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="700" fill="#20252b" >V2R / V3R：后半路径相同</text>
+<line x1="1055" y1="565" x2="1515" y2="565" stroke="#38434d" stroke-width="3"  />
+<rect x="55" y="625" width="1490" height="270" rx="14" fill="#faf7ea" stroke="#38434d" stroke-width="3"/>
+<text x="80" y="666" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="28" font-weight="700" fill="#20252b" >完整路径 E2E 观察（非组件因果测量）</text>
+<line x1="1015" y1="646" x2="1015" y2="875" stroke="#5f6973" stroke-width="2"/>
+<rect x="90" y="700" width="395" height="145" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="287.5" y="751.5" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="25" font-weight="700" fill="#20252b"><tspan x="287.5" dy="0">V0 → V2R</tspan><tspan x="287.5" dy="30">2.24× FPS</tspan><tspan x="287.5" dy="30">平均延迟降低 55.45%</tspan></text>
+<rect x="535" y="700" width="395" height="145" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="732.5" y="751.5" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="25" font-weight="700" fill="#20252b"><tspan x="732.5" dy="0">V2R → V3R</tspan><tspan x="732.5" dy="30">+4.07% FPS</tspan><tspan x="732.5" dy="30">平均延迟降低 4.03%</tspan></text>
+<text x="510" y="872" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >P95 / P99 变化均 &lt;0.2%，且方向相反</text>
+<text x="1045" y="690" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="27" font-weight="700" fill="#20252b" >名义输入复制载荷</text>
+<text x="1045" y="735" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b" >V0：4.915 MB/frame</text>
+<text x="1045" y="773" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b" >V2R/V3R：0.120 MB/frame</text>
+<text x="1045" y="811" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="700" fill="#20252b" >名义输入复制载荷比：40.96×</text>
+<text x="1045" y="852" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#5f6973" >名义值；非实测总线流量</text>
+</svg>

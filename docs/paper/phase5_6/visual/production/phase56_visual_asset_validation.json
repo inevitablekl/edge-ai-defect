@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "paper_phase56d_b_visual_asset_validation",
+  "baseline": "dfdceea772e2083adbb5809be4c3ba619a276357",
+  "verdict": "PHASE56_VISUAL_ASSETS_READY",
+  "checks": [
+    {
+      "check": "source_exists:phase56b_run_level_metrics.csv",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_run_level_metrics.csv"
+    },
+    {
+      "check": "source_hash:phase56b_run_level_metrics.csv",
+      "status": "PASS",
+      "details": "f6b22f6b5574d957d3b3d600a637e0033d1f43a5afd77dca4e4a518f89d60e31"
+    },
+    {
+      "check": "source_exists:phase56b_publication_display_values.json",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_publication_display_values.json"
+    },
+    {
+      "check": "source_hash:phase56b_publication_display_values.json",
+      "status": "PASS",
+      "details": "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655"
+    },
+    {
+      "check": "source_exists:phase56b_correctness_table_source.csv",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_correctness_table_source.csv"
+    },
+    {
+      "check": "source_hash:phase56b_correctness_table_source.csv",
+      "status": "PASS",
+      "details": "d5424cb940db58eff7c826e9d99236c98ff444b37b7f45bedc993a8b70c9cf39"
+    },
+    {
+      "check": "source_exists:phase56b_nominal_payload.json",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_nominal_payload.json"
+    },
+    {
+      "check": "source_hash:phase56b_nominal_payload.json",
+      "status": "PASS",
+      "details": "706f441da5df4720b3361a9001f0a6d7c1dbb8e8e85b17c62b8ff4db38833bd8"
+    },
+    {
+      "check": "source_exists:phase56b_runtime_state.json",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_runtime_state.json"
+    },
+    {
+      "check": "source_hash:phase56b_runtime_state.json",
+      "status": "PASS",
+      "details": "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17"
+    },
+    {
+      "check": "source_exists:phase56b_calibration_provenance.json",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/phase56b_calibration_provenance.json"
+    },
+    {
+      "check": "source_hash:phase56b_calibration_provenance.json",
+      "status": "PASS",
+      "details": "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042"
+    },
+    {
+      "check": "source_exists:phase56_visual_evidence_map.csv",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/phase56_visual_evidence_map.csv"
+    },
+    {
+      "check": "source_hash:phase56_visual_evidence_map.csv",
+      "status": "PASS",
+      "details": "2d37191c59f9ef957cd56dfd0327ce8e3f3e077b2c18e18e9db7c270adfed5ee"
+    },
+    {
+      "check": "source_exists:phase56_related_work_attribute_evidence.csv",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/phase56_related_work_attribute_evidence.csv"
+    },
+    {
+      "check": "source_hash:phase56_related_work_attribute_evidence.csv",
+      "status": "PASS",
+      "details": "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b"
+    },
+    {
+      "check": "figure_triplet:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "no_internal_status:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "no internal status term in formal SVG"
+    },
+    {
+      "check": "no_embedded_figure_number:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "caption numbering remains external"
+    },
+    {
+      "check": "png_300dpi_width:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "1893×1102px at 16 cm target"
+    },
+    {
+      "check": "pdf_vector_width:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "454.280×264.359 pt; insertion target 16.0 cm"
+    },
+    {
+      "check": "figure_triplet:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "no_internal_status:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "no internal status term in formal SVG"
+    },
+    {
+      "check": "no_embedded_figure_number:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "caption numbering remains external"
+    },
+    {
+      "check": "png_300dpi_width:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "1893×972px at 16 cm target"
+    },
+    {
+      "check": "pdf_vector_width:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "454.280×233.178 pt; insertion target 16.0 cm"
+    },
+    {
+      "check": "figure_triplet:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "no_internal_status:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "no internal status term in formal SVG"
+    },
+    {
+      "check": "no_embedded_figure_number:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "caption numbering remains external"
+    },
+    {
+      "check": "png_300dpi_width:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "1890×726px at 16 cm target"
+    },
+    {
+      "check": "pdf_vector_width:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "453.600×174.240 pt; insertion target 16.0 cm"
+    },
+    {
+      "check": "figure_triplet:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "SVG/PDF/PNG present and nonempty"
+    },
+    {
+      "check": "no_internal_status:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "no internal status term in formal SVG"
+    },
+    {
+      "check": "no_embedded_figure_number:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "caption numbering remains external"
+    },
+    {
+      "check": "png_300dpi_width:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "1890×846px at 16 cm target"
+    },
+    {
+      "check": "pdf_vector_width:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "453.600×203.040 pt; insertion target 16.0 cm"
+    },
+    {
+      "check": "fig1_scientific_display",
+      "status": "PASS",
+      "details": "payload, terminology, complete-path comparisons, boundary, and guards exact"
+    },
+    {
+      "check": "fig1_payload_wording_guard",
+      "status": "PASS",
+      "details": "forbidden transfer/bandwidth/size-ratio wording absent"
+    },
+    {
+      "check": "fig1_complete_path_attachment",
+      "status": "PASS",
+      "details": "performance values occur only in detached comparison footer at y=[751.5, 751.5]"
+    },
+    {
+      "check": "fig2_no_performance_numbers",
+      "status": "PASS",
+      "details": "no performance or payload values"
+    },
+    {
+      "check": "fig2_stream_operation_links",
+      "status": "PASS",
+      "details": "stream rail targets copy, fused-kernel, and enqueue operation nodes—not buffers"
+    },
+    {
+      "check": "fig2_stream_and_lifecycle_semantics",
+      "status": "PASS",
+      "details": "single-stream sequential implementation labels present"
+    },
+    {
+      "check": "fig3_absolute_values",
+      "status": "PASS",
+      "details": "all FPS mean, pooled mean, P95, and P99 displays match frozen authority"
+    },
+    {
+      "check": "fig3_aggregation_terminology",
+      "status": "PASS",
+      "details": "five-process sample SD and 5400 latency-sample semantics are explicit"
+    },
+    {
+      "check": "fig3_no_relative_tail_magnification",
+      "status": "PASS",
+      "details": "F3 keeps absolute P95/P99 architecture"
+    },
+    {
+      "check": "fig4_semantics_and_pooled_annotation",
+      "status": "PASS",
+      "details": "process descriptors and compact pooled-tail authority present"
+    },
+    {
+      "check": "fig4_no_pairing_or_randomness",
+      "status": "PASS",
+      "details": "fixed jitter; no line plot or randomness"
+    },
+    {
+      "check": "table_source:table1_path_feature_matrix_phase56.md",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/production/tables/table1_path_feature_matrix_phase56.md"
+    },
+    {
+      "check": "table_formal_status:table1_path_feature_matrix_phase56.md",
+      "status": "PASS",
+      "details": "publication-facing source has no internal status warning"
+    },
+    {
+      "check": "table_source:table2_platform_protocol_phase56.md",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/production/tables/table2_platform_protocol_phase56.md"
+    },
+    {
+      "check": "table_formal_status:table2_platform_protocol_phase56.md",
+      "status": "PASS",
+      "details": "publication-facing source has no internal status warning"
+    },
+    {
+      "check": "table_source:table3_correctness_phase56.md",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/production/tables/table3_correctness_phase56.md"
+    },
+    {
+      "check": "table_formal_status:table3_correctness_phase56.md",
+      "status": "PASS",
+      "details": "publication-facing source has no internal status warning"
+    },
+    {
+      "check": "table_source:table4_related_work_phase56.md",
+      "status": "PASS",
+      "details": "docs/paper/phase5_6/visual/production/tables/table4_related_work_phase56.md"
+    },
+    {
+      "check": "table_formal_status:table4_related_work_phase56.md",
+      "status": "PASS",
+      "details": "publication-facing source has no internal status warning"
+    },
+    {
+      "check": "table1_exact_matrix",
+      "status": "PASS",
+      "details": "30 traced implementation cells and 10 publication rows"
+    },
+    {
+      "check": "table2_provenance",
+      "status": "PASS",
+      "details": "compact platform/model/calibration/workload/protocol facts exact"
+    },
+    {
+      "check": "table3_correctness_values",
+      "status": "PASS",
+      "details": "all 12 displayed metric cells match frozen CSV"
+    },
+    {
+      "check": "table3_no_gate_governance",
+      "status": "PASS",
+      "details": "gate-style columns absent"
+    },
+    {
+      "check": "table4_traceable_cells",
+      "status": "PASS",
+      "details": "6 works × 7 cells use only frozen classification vocabulary"
+    },
+    {
+      "check": "table4_not_reported_semantics",
+      "status": "PASS",
+      "details": "NOT_REPORTED remains distinct from no"
+    },
+    {
+      "check": "table4_positioning_boundary",
+      "status": "PASS",
+      "details": "no novelty, uniqueness, rank, or YES-count claim"
+    },
+    {
+      "check": "caption_semantics",
+      "status": "PASS",
+      "details": "F3/F4 aggregation and T4 positioning guards frozen"
+    },
+    {
+      "check": "grayscale_dynamic_range:fig1_hero_data_path_phase56",
+      "status": "PASS",
+      "details": "16 cm proof 945×550px retains dark ink and white background"
+    },
+    {
+      "check": "grayscale_dynamic_range:fig2_technical_implementation_phase56",
+      "status": "PASS",
+      "details": "16 cm proof 945×485px retains dark ink and white background"
+    },
+    {
+      "check": "grayscale_dynamic_range:fig3_main_e2e_phase56",
+      "status": "PASS",
+      "details": "16 cm proof 945×363px retains dark ink and white background"
+    },
+    {
+      "check": "grayscale_dynamic_range:fig4_run_level_distribution_phase56",
+      "status": "PASS",
+      "details": "16 cm proof 945×423px retains dark ink and white background"
+    },
+    {
+      "check": "protected_authority_unchanged",
+      "status": "PASS",
+      "details": "authoritative manuscript, historical figures/tables, Level-A evidence, and results unchanged"
+    },
+    {
+      "check": "level_b_unchanged",
+      "status": "PASS",
+      "details": "all frozen Phase56B files unchanged"
+    },
+    {
+      "check": "docx_unchanged",
+      "status": "PASS",
+      "details": "no tracked or untracked DOCX mutation"
+    },
+    {
+      "check": "historical_assets_preserved",
+      "status": "PASS",
+      "details": "no Phase 5.4 figure deletion"
+    },
+    {
+      "check": "no_candidate_filename",
+      "status": "PASS",
+      "details": "formal output names do not collide with D-A candidates"
+    },
+    {
+      "check": "deterministic_regeneration",
+      "status": "PASS",
+      "details": "all 12 figure files, four table sources, and caption freeze are byte-identical"
+    }
+  ],
+  "figure_metadata": {
+    "fig1_hero_data_path_phase56": {
+      "svg_width": "160mm",
+      "svg_height": "93.000mm",
+      "pdf_page_points": [
+        454.28,
+        264.359
+      ],
+      "png_pixels": [
+        1893,
+        1102
+      ],
+      "target_insertion_width_cm": 16.0,
+      "sha256": {
+        "svg": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887",
+        "pdf": "61d5a6f2d18d2c8579e1cecbc86da4c974a9d373a09167fc543ec60650cb8b99",
+        "png": "9fcd9388b6d12bfc027adfb7c0a1aac8690a324f7b987efe6229b7109e4fcb05"
+      }
+    },
+    "fig2_technical_implementation_phase56": {
+      "svg_width": "160mm",
+      "svg_height": "82.000mm",
+      "pdf_page_points": [
+        454.28,
+        233.178
+      ],
+      "png_pixels": [
+        1893,
+        972
+      ],
+      "target_insertion_width_cm": 16.0,
+      "sha256": {
+        "svg": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605",
+        "pdf": "40b36f859e693f0084952283b1f9354802c8b05c3c3dfd5b8b2cfac4c8a88a90",
+        "png": "935e17fcb1ace1166b586af56adde8ad026e0a9689501f4affed0f08fe13fdc3"
+      }
+    },
+    "fig3_main_e2e_phase56": {
+      "svg_width": "453.6pt",
+      "svg_height": "174.24pt",
+      "pdf_page_points": [
+        453.6,
+        174.24
+      ],
+      "png_pixels": [
+        1890,
+        726
+      ],
+      "target_insertion_width_cm": 16.0,
+      "sha256": {
+        "svg": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1",
+        "pdf": "9562323f0228c494e12e378ded74cf7dbcdfb5a4802894658a1232bc07ff0815",
+        "png": "dfa125e8d20c28c93cb8a210417d72103988057cfd2bca371f2bd1c17a802ea9"
+      }
+    },
+    "fig4_run_level_distribution_phase56": {
+      "svg_width": "453.6pt",
+      "svg_height": "203.04pt",
+      "pdf_page_points": [
+        453.6,
+        203.04
+      ],
+      "png_pixels": [
+        1890,
+        846
+      ],
+      "target_insertion_width_cm": 16.0,
+      "sha256": {
+        "svg": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e",
+        "pdf": "dfab0533ab4c7e0ddb04e36544c72929cafdf456886099353f3964c24e7c24aa",
+        "png": "04159ed81757a4451a177a05acbdf7e9aa0680b3508153eeee23d7512abe518d"
+      }
+    }
+  },
+  "manual_raster_inspection": {
+    "fig1_hero_data_path_phase56": "PASS — original 300-DPI and 16-cm/150-DPI proof inspected for clipping, glyphs, labels, arrowheads, markers, hatches, and numeric readability",
+    "fig2_technical_implementation_phase56": "PASS — original 300-DPI and 16-cm/150-DPI proof inspected for clipping, glyphs, labels, arrowheads, markers, hatches, and numeric readability",
+    "fig3_main_e2e_phase56": "PASS — original 300-DPI and 16-cm/150-DPI proof inspected for clipping, glyphs, labels, arrowheads, markers, hatches, and numeric readability",
+    "fig4_run_level_distribution_phase56": "PASS — original 300-DPI and 16-cm/150-DPI proof inspected for clipping, glyphs, labels, arrowheads, markers, hatches, and numeric readability"
+  },
+  "manual_grayscale_inspection": {
+    "fig1_hero_data_path_phase56": "PASS — explicit labels plus hatch/marker/outline redundancy remain distinguishable without color",
+    "fig2_technical_implementation_phase56": "PASS — explicit labels plus hatch/marker/outline redundancy remain distinguishable without color",
+    "fig3_main_e2e_phase56": "PASS — explicit labels plus hatch/marker/outline redundancy remain distinguishable without color",
+    "fig4_run_level_distribution_phase56": "PASS — explicit labels plus hatch/marker/outline redundancy remain distinguishable without color"
+  },
+  "mutation_check": {
+    "authoritative_manuscript_markdown_modified": false,
+    "docx_modified": false,
+    "journal_formatting_modified": false,
+    "historical_phase54_assets_deleted": false,
+    "level_a_modified": false,
+    "level_b_modified": false
+  }
+}

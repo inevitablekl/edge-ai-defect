@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="160mm" height="82.000mm"
+     viewBox="0 0 1600 820" role="img">
+  <title>GPU 路径实现与内存域</title>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6"
+            orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#38434d"/>
+    </marker>
+    <marker id="stream-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6"
+            orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#315c76"/>
+    </marker>
+    <pattern id="hatch-v2" width="12" height="12" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#cfe5f3"/>
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#688ca3" stroke-width="2.4"/>
+    </pattern>
+    <pattern id="hatch-v3" width="12" height="12" patternUnits="userSpaceOnUse"
+             patternTransform="rotate(-45)">
+      <rect width="12" height="12" fill="#f6dcc6"/>
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#9f6e47" stroke-width="2.4"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="820" fill="white"/>
+  <text x="55" y="52" text-anchor="start" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="34" font-weight="700" fill="#20252b" >GPU 路径实现与内存域</text>
+<rect x="55" y="85" width="470" height="650" rx="12" fill="#f5f6f7" stroke="#38434d" stroke-width="3"/>
+<rect x="565" y="85" width="980" height="650" rx="12" fill="#eef4f8" stroke="#38434d" stroke-width="3"/>
+<text x="290" y="126" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="30" font-weight="700" fill="#20252b" >主机 / CPU</text>
+<text x="1055" y="126" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="30" font-weight="700" fill="#20252b" >设备 / GPU</text>
+<line x1="545" y1="100" x2="545" y2="720" stroke="#5f6973" stroke-width="3" stroke-dasharray="10 8" />
+<rect x="90" y="170" width="360" height="88" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="270.0" y="223.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="25" font-weight="400" fill="#20252b"><tspan x="270.0" dy="0">Decoded CV_8UC3 BGR</tspan></text>
+<line x1="270" y1="258" x2="270" y2="292" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="90" y="300" width="360" height="108" rx="10" fill="#f3e8dc" stroke="#38434d" stroke-width="3" /><text x="270.0" y="348.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="25" font-weight="400" fill="#20252b"><tspan x="270.0" dy="0">Pageable / pinned</tspan><tspan x="270.0" dy="30">packed staging</tspan></text>
+<line x1="450" y1="354" x2="625" y2="354" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="420" y="265" width="345" height="52" rx="7" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="592.5" y="300.0" text-anchor="middle" font-family="Liberation Mono, monospace" font-size="24" font-weight="400" fill="#20252b"><tspan x="592.5" dy="0">cudaMemcpy2DAsync</tspan></text>
+<rect x="635" y="300" width="205" height="108" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="737.5" y="348.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="737.5" dy="0">persistent</tspan><tspan x="737.5" dy="30">device raw buffer</tspan></text>
+<line x1="840" y1="354" x2="880" y2="354" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="890" y="290" width="220" height="128" rx="10" fill="#e6f1e8" stroke="#38434d" stroke-width="3" /><text x="1000.0" y="333.0" text-anchor="middle" font-family="Liberation Mono, monospace" font-size="23" font-weight="400" fill="#20252b"><tspan x="1000.0" dy="0">fused CUDA</tspan><tspan x="1000.0" dy="30">preprocessing</tspan><tspan x="1000.0" dy="30">kernel</tspan></text>
+<line x1="1110" y1="354" x2="1150" y2="354" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="1160" y="288" width="330" height="132" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="1325.0" y="333.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="1325.0" dy="0">TensorRT-owned</tspan><tspan x="1325.0" dy="30">FP32 NCHW device input</tspan><tspan x="1325.0" dy="30">persistent / reused</tspan></text>
+<line x1="1325" y1="420" x2="1325" y2="465" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="1160" y="475" width="330" height="92" rx="10" fill="#e8edf2" stroke="#38434d" stroke-width="3" /><text x="1325.0" y="530.0" text-anchor="middle" font-family="Liberation Mono, monospace" font-size="26" font-weight="700" fill="#20252b"><tspan x="1325.0" dy="0">enqueueV3</tspan></text>
+<line x1="1160" y1="521" x2="1105" y2="521" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<rect x="855" y="475" width="240" height="92" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="975.0" y="515.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="975.0" dy="0">device output</tspan><tspan x="975.0" dy="30">buffer</tspan></text>
+<line x1="855" y1="521" x2="650" y2="521" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<text x="752" y="500" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#315c76" >output D2H（同一 stream）</text>
+<rect x="90" y="475" width="360" height="112" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3" /><text x="270.0" y="525.0" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="24" font-weight="400" fill="#20252b"><tspan x="270.0" dy="0">CPU decode / confidence</tspan><tspan x="270.0" dy="30">filtering / NMS</tspan></text>
+<line x1="650" y1="521" x2="450" y2="531" stroke="#38434d" stroke-width="4"  marker-end="url(#arrow)"/>
+<g id="same-stream-operation-links" aria-label="same stream operation links">
+<path d="M575,242 L1510,242" fill="none" stroke="#315c76" stroke-width="7"/>
+<line data-target-operation="cudaMemcpy2DAsync" x1="592" y1="242" x2="592" y2="257" stroke="#315c76" stroke-width="4" marker-end="url(#arrow)"/>
+<line data-target-operation="fused-cuda-preprocessing" x1="1000" y1="242" x2="1000" y2="280" stroke="#315c76" stroke-width="4" marker-end="url(#arrow)"/>
+<path data-target-operation="enqueueV3" d="M1510,242 L1520,242 L1520,521 L1500,521" fill="none" stroke="#315c76" stroke-width="4" marker-end="url(#stream-arrow)"/>
+</g>
+<text x="1040" y="215" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="25" font-weight="700" fill="#315c76" >同一 TensorRT CUDA stream（单帧顺序）</text>
+<rect x="90" y="625" width="470" height="85" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="325" y="657" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="325" dy="0">staging：帧循环前分配，跨帧复用</tspan><tspan x="325" dy="29">V2R/V3R 仅 allocation type 不同</tspan></text>
+<rect x="600" y="625" width="500" height="85" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="850" y="657" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="400" fill="#20252b"><tspan x="850" dy="0">device raw 与 TensorRT input 持久化</tspan><tspan x="850" dy="29">backend owns / reuses input buffer</tspan></text>
+<rect x="1140" y="625" width="350" height="85" rx="10" fill="#faf7ea" stroke="#38434d" stroke-width="2"/>
+<text x="1315" y="657" text-anchor="middle" font-family="Noto Serif CJK SC, Liberation Serif, serif" font-size="23" font-weight="700" fill="#20252b"><tspan x="1315" dy="0">single-stream, single-frame</tspan><tspan x="1315" dy="29">无 cross-frame overlap</tspan></text>
+</svg>
