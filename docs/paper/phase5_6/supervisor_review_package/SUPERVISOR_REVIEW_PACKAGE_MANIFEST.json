@@ -1,0 +1,33 @@
+{
+  "status": "SUPERVISOR_REVIEW_MANUSCRIPT",
+  "frozen_commit": "59a5b57dc867185217c61b985e79d2990233140c",
+  "package_production_date": "2026-08-13",
+  "chinese_title": "Jetson端工业缺陷检测的输入数据路径重构",
+  "english_title": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
+  "docx": {
+    "filename": "Jetson端工业缺陷检测的输入数据路径重构_导师审阅稿.docx",
+    "sha256": "7595ac410d8f554db18c97a2699b04b4838bbc7dd8c2aec1787dd7905e1f256d",
+    "source": "docs/paper/manuscript/output/draft_full.docx",
+    "byte_identical_to_source": true
+  },
+  "pdf": {
+    "filename": "Jetson端工业缺陷检测的输入数据路径重构_导师审阅稿.pdf",
+    "sha256": "997956417b1ddce24e483cc827bd4fe237355ec7001c04ce31ad86805b76fd40",
+    "source": "docs/paper/manuscript/output/pdf/draft_full.pdf",
+    "byte_identical_to_source": true
+  },
+  "inventory": {
+    "pages": 10,
+    "figures": 4,
+    "tables": 4,
+    "display_equations": 5,
+    "references": 26,
+    "contributions": 2
+  },
+  "submission_production_exceptions": {
+    "SUBMISSION_EXCEPTION_MATHTYPE": "OPEN",
+    "SUBMISSION_EXCEPTION_VISIO_ORIGIN": "OPEN"
+  },
+  "scientific_content_frozen": true,
+  "anonymous_manuscript_included": false
+}
