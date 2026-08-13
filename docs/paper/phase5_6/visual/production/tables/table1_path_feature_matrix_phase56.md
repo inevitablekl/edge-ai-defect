@@ -13,4 +13,4 @@
 | 复用TRT CUDA stream | — | 是 | 是 |
 | 跨帧流水线 | 否 | 否 | 否 |
 
-Source trace: `../../phase56_visual_evidence_map.csv`；30个数据单元分别映射到当前实现 authority。
+Source trace: `../../phase56_visual_evidence_map.csv`；30个数据单元分别映射到当前实现证据。

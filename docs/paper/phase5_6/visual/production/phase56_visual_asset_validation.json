@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "artifact_kind": "paper_phase56d_b_r1_visual_asset_validation",
-  "baseline": "e9e906dc2bbb1fc1ee74965fd149aac02dd0250f",
-  "verdict": "PHASE56_VISUAL_ASSETS_READY_R1",
+  "artifact_kind": "paper_phase56g_visual_asset_validation",
+  "baseline": "332fabdf34ac377b7242193872fb9b9029ac937e",
+  "verdict": "PHASE56G_VISUAL_ASSETS_PASS",
   "checks": [
     {
       "check": "source_exists:phase56b_run_level_metrics.csv",
@@ -82,7 +82,7 @@
     {
       "check": "source_hash:phase56_related_work_attribute_evidence.csv",
       "status": "PASS",
-      "details": "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b"
+      "details": "955fec74af8078a528cb296375e8bf5a70d0d0e5859c1edd7628a40b57f42f63"
     },
     {
       "check": "source_exists:PAPER_PHASE0_5D_I2_FORMAL_EXECUTION_REPORT.md",
@@ -112,7 +112,7 @@
     {
       "check": "source_hash:04_experiment.md",
       "status": "PASS",
-      "details": "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484"
+      "details": "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689"
     },
     {
       "check": "t2_l4t_formal_report",
@@ -150,7 +150,7 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
-      "check": "r1_figure_svg_unchanged:fig1_hero_data_path_phase56",
+      "check": "approved_figure_svg:fig1_hero_data_path_phase56",
       "status": "PASS",
       "details": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887"
     },
@@ -180,7 +180,7 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
-      "check": "r1_figure_svg_unchanged:fig2_technical_implementation_phase56",
+      "check": "approved_figure_svg:fig2_technical_implementation_phase56",
       "status": "PASS",
       "details": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605"
     },
@@ -210,7 +210,7 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
-      "check": "r1_figure_svg_unchanged:fig3_main_e2e_phase56",
+      "check": "approved_figure_svg:fig3_main_e2e_phase56",
       "status": "PASS",
       "details": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1"
     },
@@ -240,9 +240,9 @@
       "details": "SVG/PDF/PNG present and nonempty"
     },
     {
-      "check": "r1_figure_svg_unchanged:fig4_run_level_distribution_phase56",
+      "check": "approved_figure_svg:fig4_run_level_distribution_phase56",
       "status": "PASS",
-      "details": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e"
+      "details": "9f975e880d220b73b80fcd4ed4b1aecb7969a143eb55192b6d9f363e6a718570"
     },
     {
       "check": "no_internal_status:fig4_run_level_distribution_phase56",
@@ -312,7 +312,7 @@
     {
       "check": "fig4_semantics_and_pooled_annotation",
       "status": "PASS",
-      "details": "process descriptors and compact pooled-tail authority present"
+      "details": "process descriptors and publication-safe opposite-direction annotation present"
     },
     {
       "check": "fig4_no_pairing_or_randomness",
@@ -365,9 +365,9 @@
       "details": "30 traced implementation cells and 10 publication rows"
     },
     {
-      "check": "r1_table1_unchanged",
+      "check": "approved_table1",
       "status": "PASS",
-      "details": "789205d35cbccc1463eb0bc97b4b7208b33b44b2ee5717d2a6e42d3e84d5766e"
+      "details": "a565530b8007357855f83954487aa56c5e4bcdf94d660331c084788f78c79f11"
     },
     {
       "check": "table2_provenance",
@@ -410,9 +410,9 @@
       "details": "no novelty, uniqueness, rank, or YES-count claim"
     },
     {
-      "check": "r1_table4_unchanged",
+      "check": "phase56g_table4_conservative_audit",
       "status": "PASS",
-      "details": "6710b9ac7018eadebcd543d4bd892c7d1e3ba60f4e6963d139295badf52287a9"
+      "details": "1f1c94e7e88cb316959d04014dc734bfeab7fe08f1336c6f08664524e71862b9"
     },
     {
       "check": "caption_semantics",
@@ -538,9 +538,9 @@
       ],
       "target_insertion_width_cm": 16.0,
       "sha256": {
-        "svg": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e",
-        "pdf": "dfab0533ab4c7e0ddb04e36544c72929cafdf456886099353f3964c24e7c24aa",
-        "png": "04159ed81757a4451a177a05acbdf7e9aa0680b3508153eeee23d7512abe518d"
+        "svg": "9f975e880d220b73b80fcd4ed4b1aecb7969a143eb55192b6d9f363e6a718570",
+        "pdf": "fccd8310b045abd00fc2b0b531d8b802f33a062092d7fd5c68b40973ae3fcace",
+        "png": "c30ee465b6707064819504994c569d48a01067602b19c5a4c79b4b90fe296e96"
       }
     }
   },
@@ -557,17 +557,19 @@
     "fig4_run_level_distribution_phase56": "PASS — explicit labels plus hatch/marker/outline redundancy remain distinguishable without color"
   },
   "mutation_check": {
-    "authoritative_manuscript_markdown_modified": false,
+    "authoritative_manuscript_markdown_modified": true,
     "docx_modified": false,
     "journal_formatting_modified": false,
     "historical_phase54_assets_deleted": false,
     "level_a_modified": false,
     "level_b_modified": false,
-    "production_f1_f4_modified": false,
-    "table1_modified": false,
+    "production_f1_f3_modified": false,
+    "production_f4_text_only_modified": true,
+    "table1_source_note_modified": true,
     "table2_modified": true,
     "table2_modification_reason": "formal L4T authority correction",
     "table3_modified": false,
-    "table4_modified": false
+    "table4_modified": true,
+    "table4_modification_reason": "PRESTO complete E2E conservatively downgraded to NOT_REPORTED"
   }
 }

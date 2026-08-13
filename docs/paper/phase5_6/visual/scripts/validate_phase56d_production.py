@@ -36,8 +36,8 @@ RAW_ENVIRONMENT = ROOT / "docs/paper/phase0_5/evidence/timing_aligned_harness_pr
 MANUSCRIPT_EXPERIMENT = ROOT / "docs/paper/manuscript/sections/04_experiment.md"
 T2_SPEC = VISUAL / "table2_platform_protocol_spec.md"
 EVIDENCE_MAP = VISUAL / "phase56_visual_evidence_map.csv"
-BASELINE = "e9e906dc2bbb1fc1ee74965fd149aac02dd0250f"
-VERDICT = "PHASE56_VISUAL_ASSETS_READY_R1"
+BASELINE = "332fabdf34ac377b7242193872fb9b9029ac937e"
+VERDICT = "PHASE56G_VISUAL_ASSETS_PASS"
 
 STRUCTURAL_SCRIPT = SCRIPTS / "generate_phase56d_production_structural.py"
 STATISTICAL_SCRIPT = SCRIPTS / "generate_phase56d_production_statistical.py"
@@ -52,10 +52,10 @@ INPUT_HASHES = {
     PHASE56 / "phase56b_runtime_state.json": "ffcc1fad184bef828417201b96484ee734ef5d21ee1b61c048879a93866fdb17",
     PHASE56 / "phase56b_calibration_provenance.json": "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042",
     EVIDENCE_MAP: "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb",
-    VISUAL / "phase56_related_work_attribute_evidence.csv": "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b",
+    VISUAL / "phase56_related_work_attribute_evidence.csv": "955fec74af8078a528cb296375e8bf5a70d0d0e5859c1edd7628a40b57f42f63",
     FORMAL_EXECUTION: "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec",
     RAW_ENVIRONMENT: "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872",
-    MANUSCRIPT_EXPERIMENT: "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484",
+    MANUSCRIPT_EXPERIMENT: "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689",
 }
 
 FIGURE_STEMS = (
@@ -75,12 +75,12 @@ FROZEN_FIGURE_SVG_HASHES = {
     "fig1_hero_data_path_phase56": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887",
     "fig2_technical_implementation_phase56": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605",
     "fig3_main_e2e_phase56": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1",
-    "fig4_run_level_distribution_phase56": "8d2cb04c771c56b0fe7438cfbae07c4767b64db8553bf10c89ed6d9d67463a5e",
+    "fig4_run_level_distribution_phase56": "9f975e880d220b73b80fcd4ed4b1aecb7969a143eb55192b6d9f363e6a718570",
 }
 FROZEN_TABLE_HASHES = {
-    "table1_path_feature_matrix_phase56.md": "789205d35cbccc1463eb0bc97b4b7208b33b44b2ee5717d2a6e42d3e84d5766e",
+    "table1_path_feature_matrix_phase56.md": "a565530b8007357855f83954487aa56c5e4bcdf94d660331c084788f78c79f11",
     "table3_correctness_phase56.md": "6d5e028fd2e48edd9de9dc5a8cd8823a6748b37ea7e3801b280497a4f5ebf1d0",
-    "table4_related_work_phase56.md": "6710b9ac7018eadebcd543d4bd892c7d1e3ba60f4e6963d139295badf52287a9",
+    "table4_related_work_phase56.md": "1f1c94e7e88cb316959d04014dc734bfeab7fe08f1336c6f08664524e71862b9",
 }
 
 
@@ -210,7 +210,7 @@ def validate_figures(summary: dict, payload: dict,
               f"figure_triplet:{stem}", "SVG/PDF/PNG present and nonempty", checks)
         svg_hash = sha256(paths["svg"])
         check(svg_hash == FROZEN_FIGURE_SVG_HASHES[stem],
-              f"r1_figure_svg_unchanged:{stem}", svg_hash, checks)
+              f"approved_figure_svg:{stem}", svg_hash, checks)
         root, visible = visible_svg(paths["svg"])
         raw_lower = paths["svg"].read_text(encoding="utf-8").lower()
         check(not any(token in raw_lower for token in FORBIDDEN_VISIBLE_STATUS),
@@ -299,9 +299,10 @@ def validate_figures(summary: dict, payload: dict,
 
     f4_text = visible_svg(FIGURES / "fig4_run_level_distribution_phase56.svg")[1]
     check(all(token in f4_text for token in ("5 次独立进程 FPS", "process-level latency / ms",
-                                             "P95 +0.15%", "P99 −0.12%", "MIXED")),
+                                             "P95 +0.15%", "P99 −0.12%", "变化方向相反"))
+          and "MIXED" not in f4_text and "Level-A" not in f4_text,
           "fig4_semantics_and_pooled_annotation",
-          "process descriptors and compact pooled-tail authority present", checks)
+          "process descriptors and publication-safe opposite-direction annotation present", checks)
     stat_code = STATISTICAL_SCRIPT.read_text(encoding="utf-8")
     check("FIXED_JITTER" in stat_code and ".plot(" not in stat_code and "random" not in stat_code.lower(),
           "fig4_no_pairing_or_randomness", "fixed jitter; no line plot or randomness", checks)
@@ -322,7 +323,7 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
     check(len(t1_rows) == 30 and table1.count("\n| ") >= 11, "table1_exact_matrix",
           "30 traced implementation cells and 10 publication rows", checks)
     check(sha256(TABLES / TABLE_NAMES[0]) == FROZEN_TABLE_HASHES[TABLE_NAMES[0]],
-          "r1_table1_unchanged", sha256(TABLES / TABLE_NAMES[0]), checks)
+          "approved_table1", sha256(TABLES / TABLE_NAMES[0]), checks)
 
     table2 = (TABLES / TABLE_NAMES[1]).read_text(encoding="utf-8")
     t2_required = ("L4T R36.5", "CUDA 12.6", "TensorRT 10.3", "OpenCV 4.5.4",
@@ -358,12 +359,13 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
           and "不构成首次性、唯一性或优越性结论" in table4,
           "table4_positioning_boundary", "no novelty, uniqueness, rank, or YES-count claim", checks)
     check(sha256(TABLES / TABLE_NAMES[3]) == FROZEN_TABLE_HASHES[TABLE_NAMES[3]],
-          "r1_table4_unchanged", sha256(TABLES / TABLE_NAMES[3]), checks)
+          "phase56g_table4_conservative_audit", sha256(TABLES / TABLE_NAMES[3]), checks)
 
     captions = CAPTIONS.read_text(encoding="utf-8")
     caption_required = (
         "误差棒为5个进程级FPS值的样本标准差", "每条路径合并5400个延迟样本",
-        "横向偏移仅用于区分且不表示配对", "正式pooled P95/P99仍为Level-A aggregate metrics",
+        "横向偏移仅用于区分且不表示配对", "正式合并样本P95/P99来自每条路径5400个延迟样本",
+        "方向相反，未形成一致的尾延迟改善证据",
         "不表示优越性、首次性或唯一性",
     )
     check(all(token in captions for token in caption_required), "caption_semantics",
@@ -372,8 +374,7 @@ def validate_tables(checks: list[dict[str, str]]) -> None:
 
 def validate_mutations(checks: list[dict[str, str]]) -> None:
     protected = [
-        "docs/paper/manuscript/sections", "docs/paper/manuscript/figures",
-        "docs/paper/manuscript/tables", "docs/paper/phase0_5", "results",
+        "docs/paper/phase0_5", "results",
     ]
     status = subprocess.run(
         ["git", "status", "--porcelain", "--", *protected], cwd=ROOT,
@@ -511,7 +512,7 @@ def write_manifest(figure_metadata: dict[str, dict]) -> None:
         })
     manifest = {
         "schema_version": 1,
-        "artifact_kind": "paper_phase56d_b_r1_visual_asset_manifest",
+        "artifact_kind": "paper_phase56g_visual_asset_manifest",
         "baseline": BASELINE,
         "verdict": VERDICT,
         "figure_assets": figure_assets,
@@ -547,7 +548,7 @@ def main() -> int:
     validate_determinism(checks)
     result = {
         "schema_version": 1,
-        "artifact_kind": "paper_phase56d_b_r1_visual_asset_validation",
+        "artifact_kind": "paper_phase56g_visual_asset_validation",
         "baseline": BASELINE,
         "verdict": VERDICT,
         "checks": checks,
@@ -561,18 +562,20 @@ def main() -> int:
             for stem in FIGURE_STEMS
         },
         "mutation_check": {
-            "authoritative_manuscript_markdown_modified": False,
+            "authoritative_manuscript_markdown_modified": True,
             "docx_modified": False,
             "journal_formatting_modified": False,
             "historical_phase54_assets_deleted": False,
             "level_a_modified": False,
             "level_b_modified": False,
-            "production_f1_f4_modified": False,
-            "table1_modified": False,
+            "production_f1_f3_modified": False,
+            "production_f4_text_only_modified": True,
+            "table1_source_note_modified": True,
             "table2_modified": True,
             "table2_modification_reason": "formal L4T authority correction",
             "table3_modified": False,
-            "table4_modified": False,
+            "table4_modified": True,
+            "table4_modification_reason": "PRESTO complete E2E conservatively downgraded to NOT_REPORTED",
         },
     }
     VALIDATION.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n",

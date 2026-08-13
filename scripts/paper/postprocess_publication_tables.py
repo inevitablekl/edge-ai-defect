@@ -14,7 +14,7 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W}
 ET.register_namespace("w", W)
 
-T1_TITLE = "表1　V0、V2R和V3R受控数据路径的特征矩阵。三条路径使用相同detector和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。"
+T1_TITLE = "表1　V0、V2R和V3R受控数据路径的特征矩阵。三条路径使用相同检测器和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。"
 T2_TITLE = "表2　平台、模型与统一基准协议。三条路径在相同Jetson平台、YOLOv8n、冻结TensorRT INT8混合精度Engine、固定测试工作负载和统一预热/测量协议下执行；表内仅保留复现实验所需的紧凑条件。"
 T3_TITLE = "表3　V0、V2R和V3R的任务级正确性。Precision、Recall、mAP50和mAP50-95均由冻结预测证据按统一评估口径获得；各路径的汇总指标一致，类别级AP50与Recall的最大路径间差异均为0。"
 T4_TITLE = "表4　相关工作的研究属性定性比较。表中汇总所审阅工作明确报告的研究属性；“明确否”仅用于原文明确排除的情形，“未报告”不等同于“否”。该比较用于定性定位，不表示优越性、首次性或唯一性。"

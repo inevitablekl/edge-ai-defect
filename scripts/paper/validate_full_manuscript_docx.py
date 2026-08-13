@@ -128,8 +128,8 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     details["body_text"] = body_text
 
     required_text = {
-        "CN title": "Jetson端工业缺陷检测的INT8输入数据路径重构",
-        "EN title": "INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection",
+        "CN title": "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构",
+        "EN title": "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson",
         "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
         "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
         "authors CN": "王凯伦，王琦",
@@ -151,9 +151,9 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     if re.search(r"@[A-Za-z][A-Za-z0-9_.:-]*", all_text):
         fail(errors, "unresolved citation key remains in DOCX text")
 
-    if body_text.count("Jetson端工业缺陷检测的INT8输入数据路径重构") != 1:
+    if body_text.count("面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构") != 1:
         fail(errors, "CN title is duplicated or missing")
-    if body_text.count("INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection") != 1:
+    if body_text.count("Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson") != 1:
         fail(errors, "EN title is duplicated or missing")
     if body_text.count("参考文献") != 1:
         fail(errors, "reference heading is duplicated or missing")

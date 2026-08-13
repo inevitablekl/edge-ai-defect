@@ -14,29 +14,29 @@ Scientific role: position the controlled data-path study using independently rel
 | `bateni_et_al_2020_integrated_memory` | Soroush Bateni et al., “Co-Optimizing Performance and Memory Footprint Via Integrated CPU/GPU Memory Management, an Implementation on Autonomous Driving Platform,” 2020 | available |
 | — | This work | repository implementation and frozen Phase 5.6 evidence |
 
-Exact paths, page locators, paraphrases, and confidence for all 42 cells are authority in `phase56_related_work_attribute_evidence.csv`.
+Exact paths, page locators, paraphrases, and confidence for all 42 cells are recorded in `phase56_related_work_attribute_evidence.csv`.
 
-## Seven columns and fairness rationale
+## Seven columns and final classification criteria
 
-| Attribute | Independent scientific relevance |
+| Attribute | Final criterion |
 |---|---|
-| Edge deployment | distinguishes deployment conditions from server-only evaluation |
-| Detector/model fixed within comparison | controls whether runtime differences are confounded by model changes |
-| GPU preprocessing | locates tensor/image transformation work |
-| Explicit host-memory strategy | identifies deliberate pageable/pinned/unified host-memory handling |
-| Complete E2E evaluation | determines whether preprocessing, inference, and postprocessing are included |
-| Task correctness | checks whether deployment changes preserve task output quality |
-| Tail latency | exposes behavior not captured by means/throughput |
+| Edge deployment | The work is actually deployed and experimentally evaluated on an embedded or edge device. |
+| Detector/model fixed within comparison | The compared system configurations do not vary the detection-network structure, weights, or model parameters. |
+| GPU preprocessing | The paper explicitly performs pre-inference image preprocessing with GPU/CUDA. |
+| Explicit host-memory strategy | The paper explicitly studies or configures host allocation, pageable/pinned memory, managed memory, or an equivalent host-memory policy. |
+| Complete E2E evaluation | The performance boundary covers preprocessing, model execution, and postprocessing or result handling, rather than network inference alone. |
+| Task correctness | The paper reports task-level detection correctness for the compared deployment or system configurations. |
+| Tail latency | The paper reports P95, P99, or another explicit percentile tail-latency metric, rather than only a mean or maximum. |
 
 These dimensions are useful for evaluating deployment studies independently of whether this work scores “是.” Optional “quantized deployment” and “explicit controlled path comparison” were rejected to limit width and avoid a taxonomy optimized for this paper.
 
 ## Classification contract
 
-Internal vocabulary is exactly `YES`, `NO_IF_EXPLICIT`, `NOT_REPORTED`, `NOT_APPLICABLE`. D-B display mapping: `是`, `明确否`, `未报告`, `不适用`. A `NO_IF_EXPLICIT` cell requires explicit full-text exclusion or an evaluation boundary that excludes the attribute. `NOT_REPORTED` is never silently converted to “no.”
+Internal vocabulary is exactly `YES`, `NO_IF_EXPLICIT`, `NOT_REPORTED`, `NOT_APPLICABLE`. Display mapping: `是`, `明确否`, `未报告`, `不适用`. A `NO_IF_EXPLICIT` cell requires explicit full-text exclusion or an implementation configuration that excludes the attribute. Absence, silence, or failure to find a statement is `NOT_REPORTED`, never “no.”
 
 ## Full-text audit result
 
-All five external full texts are locally available and all seven attributes are resolved. None reports the complete combination of fixed detector/Engine, isolated input-formation location, host representation, nominal input-copy payload, pageable/pinned staging, unified task correctness, and complete E2E evaluation. The audited set contains partial precedents, not a direct match.
+All five external full texts are locally available and all 42 cells were re-audited under the final criteria. PRESTO's complete-E2E cell was conservatively downgraded from `YES` to `NOT_REPORTED` because its stated total-latency boundary covers preprocessing and model execution but does not establish postprocessing or result handling. The other 41 cells are unchanged.
 
 ```text
 LITERATURE_GAP_AUDIT = PARTIAL_PRECEDENT_ONLY

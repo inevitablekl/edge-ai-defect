@@ -36,10 +36,10 @@ EXPECTED_HASHES = {
     CALIBRATION: "10c673ce3ee3d721db053698d1570208144b5a27baccf8b07e43dbace07f5042",
     SUMMARY: "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655",
     EVIDENCE_MAP: "4c54ba28facbc35c1753766e70b600c5c3c33d51e88255296a7eed626990a3cb",
-    RELATED: "fbef3e8bff6bd38ee51417d28ff5a407932ac5a7a628b1970fac2efa9321650b",
+    RELATED: "955fec74af8078a528cb296375e8bf5a70d0d0e5859c1edd7628a40b57f42f63",
     FORMAL_EXECUTION: "3d9ea96fc430a94b090bcd2f9241313df81d5cd82bc7f7bcb7b05f47c95a85ec",
     RAW_ENVIRONMENT: "c0451d380c21ba304bfc40165e370d9ca0f3aafd3c750fd017bb581c745f5872",
-    MANUSCRIPT_EXPERIMENT: "59c12c838d2512912754f92fe16c9e2fb8bb5eff9b19fa0fed926e32da049484",
+    MANUSCRIPT_EXPERIMENT: "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689",
 }
 
 
@@ -124,7 +124,7 @@ def table1(output: Path) -> None:
         output / "table1_path_feature_matrix_phase56.md",
         "V0、V2R和V3R路径特征矩阵",
         "\n".join(lines),
-        "`../../phase56_visual_evidence_map.csv`；30个数据单元分别映射到当前实现 authority。",
+        "`../../phase56_visual_evidence_map.csv`；30个数据单元分别映射到当前实现证据。",
     )
 
 
@@ -240,9 +240,9 @@ def captions(path: Path) -> None:
     display = summary["publication_display_precision"]
     if summary["aggregation"]["pooled_samples_per_variant"] != 5400:
         raise ValueError("caption aggregation authority mismatch")
-    payload = f"""# Phase 5.6 Figure and Table Caption Freeze
+    payload = f"""# Phase 5.6 Figure and Table Caption Freeze Candidate
 
-Scope: caption text frozen for later Phase 5.6E integration. This file does not modify or integrate the manuscript.
+Scope: publication caption text aligned with the Phase 5.6G freeze candidate.
 
 ## Figures
 
@@ -256,17 +256,17 @@ Scope: caption text frozen for later Phase 5.6E integration. This file does not 
 
 ### F3
 
-**三条受控路径的端到端性能。** (a) 柱高为每条路径5个独立进程FPS的均值，误差棒为5个进程级FPS值的样本标准差；(b) 为每条路径合并5400个延迟样本得到的平均端到端延迟；(c) 为相同5400个pooled延迟样本的P95和P99。比较值描述完整路径差异，不构成对单一组件的因果归因。
+**三条受控路径的端到端性能。** (a) 柱高为每条路径5个独立进程FPS的均值，误差棒为5个进程级FPS值的样本标准差；(b) 为每条路径合并5400个延迟样本得到的平均端到端延迟；(c) 为相同5400个合并延迟样本的P95和P99。比较值描述完整路径差异，不构成对单一组件的因果归因。
 
 ### F4
 
-**运行级分布与尾延迟。** (a) 展示每条路径5个独立进程的FPS及描述性均值与样本标准差；(b) 展示V2R/V3R各进程的平均、P95和P99延迟。各点为独立进程级描述量，横向偏移仅用于区分且不表示配对。正式pooled P95/P99仍为Level-A aggregate metrics，来自每路径5400个延迟样本；P95变化{display['v3r_v2r_p95'].replace('-', '−')}、P99变化{display['v3r_v2r_p99'].replace('-', '−')}，方向相反，判定为MIXED。
+**运行级分布与尾延迟。** (a) 展示每条路径5个独立进程的FPS及描述性均值与样本标准差；(b) 展示V2R/V3R各进程的平均、P95和P99延迟。各点为独立进程级描述量，横向偏移仅用于区分且不表示配对。正式合并样本P95/P99来自每条路径5400个延迟样本；P95变化{display['v3r_v2r_p95'].replace('-', '−')}、P99变化{display['v3r_v2r_p99'].replace('-', '−')}，方向相反，未形成一致的尾延迟改善证据。
 
 ## Tables
 
 ### T1
 
-**V0、V2R和V3R受控数据路径的特征矩阵。** 三条路径使用相同detector和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。
+**V0、V2R和V3R受控数据路径的特征矩阵。** 三条路径使用相同检测器和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。
 
 ### T2
 

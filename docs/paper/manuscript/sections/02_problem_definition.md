@@ -20,18 +20,18 @@ T_{\mathrm{E2E}}
 \sum_{k=1}^{m}T_k .
 \]
 
-该式只说明本文统计完整pipeline，而非network-only TensorRT inference time；各个\(T_k\)未被独立插桩或测量。
+该式只说明本文统计完整处理路径，而非仅包含TensorRT网络推理时间；各个\(T_k\)未被独立插桩或测量。
 
-V0将解码后的BGR图像在主机侧形成640×640 FP32 RGB/NCHW张量，再把该张量复制到TensorRT设备输入。V2R/V3R先暂存packed BGR `uint8`原始图像，通过`cudaMemcpy2DAsync`复制到device raw buffer，再由一个融合CUDA kernel完成resize、padding、BGR→RGB、归一化和layout conversion，并直接写入TensorRT-owned FP32 NCHW设备输入。V2R与V3R复用同一TensorRT stream、相同CUDA预处理和相同下游拓扑；两者之间唯一隔离变量是raw-image host staging的allocation type。
+V0将解码后的BGR图像在主机侧形成640×640 FP32 RGB/NCHW张量，再把该张量复制到TensorRT设备输入。V2R/V3R先暂存packed BGR `uint8`原始图像，通过`cudaMemcpy2DAsync`执行二维H2D复制，写入设备原始图像缓冲区，再由一个融合CUDA核函数完成resize、padding、BGR→RGB、归一化和布局转换，并直接写入TensorRT管理的FP32 NCHW设备输入。V2R与V3R复用同一CUDA stream、相同CUDA预处理和相同下游拓扑；两者之间唯一隔离变量是原始图像主机暂存的分配类型。
 
-锁页内存能够支持更直接的异步主机—设备复制，但它是有限资源，实际收益需要在具体实现中测量 [@nvidia_cuda_best_practices_12_6]。集成CPU/GPU和GPU内存分配研究也表明，内存策略的表现取决于平台、工作负载和访问特征 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]。本文因此把pageable→pinned暂存作为独立变量，而不预设其收益。CUDA stream与异步复制的通用语义参照CUDA官方文档 [@nvidia_cuda_programming_guide_12_6]；当前实现仍为单帧顺序路径，不包含跨帧重叠。
+锁页内存可为满足条件的主机—设备异步传输与计算重叠提供支持，但它是有限资源，实际收益取决于具体实现 [@nvidia_cuda_best_practices_12_6]。集成CPU/GPU和GPU内存分配研究也表明，内存策略的表现取决于平台、工作负载和访问特征 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]。本文因此把pageable→pinned暂存作为独立变量，而不预设其收益。CUDA stream与异步复制的通用语义参照CUDA官方文档 [@nvidia_cuda_programming_guide_12_6]；当前实现仍为单帧顺序路径，不使用跨帧传输/计算重叠。
 
-V0→V2R覆盖主机FP32张量形成到raw-image H2D与GPU输入形成的完整重构；V2R→V3R仅替换主机暂存分配类型。完整检测系统与GPU预处理研究均提示，局部数据路径变化必须放回E2E执行边界评价 [@kim_et_al_2025_concurrent_edge_detection]。局部优化对E2E性能的实际贡献取决于其在完整执行路径中的占比及瓶颈位置，因此组件级变化不能直接等价为完整系统加速 [@hill_marty_2008_amdahl]。
+V0→V2R覆盖主机FP32张量形成到原始图像H2D与GPU输入形成的完整重构；V2R→V3R仅替换主机暂存分配类型。完整检测系统与GPU预处理研究均提示，局部数据路径变化必须放回E2E执行边界评价 [@kim_et_al_2025_concurrent_edge_detection]。局部优化对E2E性能的实际贡献取决于其在完整执行路径中的占比及瓶颈位置，因此组件级变化不能直接等价为完整系统加速 [@hill_marty_2008_amdahl]。
 
 ## 1.3 统一计时边界与研究问题
 
 推理系统的延迟、吞吐率与尾延迟描述不同性能属性，平均延迟不能替代分布尾部 [@dean_barroso_2013_tail_scale]。系统基准也需要针对具体场景分别定义延迟和吞吐率边界 [@reddi_et_al_2019_mlperf_inference]。本文采用固定离线回放协议，不采用MLPerf的查询生成、样本数或统计推断规则。
 
-逐帧latency采用统一的source-to-pre-sink外部边界：计时从获取数据源帧之前开始，包含图像获取与解码、路径对应的主机暂存和输入形成、H2D、TensorRT推理与同步、必要的D2H、CPU后处理/NMS及结果对象构造，在结果序列化和写文件之前结束。process-wall FPS则以每个独立进程的1080个测量帧除以完整measured-run wall time得到，包含协议中统一的sink/output processing。两类指标采用不同边界，FPS不由逐帧latency取倒数获得。
+逐帧延迟采用统一的源读取至结果写出前（source-to-pre-sink）外部边界：计时从获取数据源帧之前开始，包含图像获取与解码、路径对应的主机暂存和输入形成、H2D、TensorRT推理与同步、必要的D2H、CPU后处理/NMS及结果对象构造，在结果序列化和写文件之前结束。进程级FPS则以每个独立进程的1080个测量帧除以完整测量阶段的wall time得到，包含协议中统一的结果输出处理。两类指标采用不同边界，FPS不由逐帧延迟取倒数获得。
 
-基于上述定义，本文只回答两个研究问题。RQ1：在固定模型、Engine和工作负载下，将主机FP32张量形成路径重构为raw-image H2D与GPU融合预处理，对完整E2E性能产生多大影响？RQ2：在GPU预处理、CUDA stream和下游拓扑保持不变时，将pageable raw staging替换为pinned staging，是否进一步带来稳定的平均性能和tail-latency收益？
+基于上述定义，本文只回答两个研究问题。RQ1：在固定模型、Engine和工作负载下，将主机FP32张量形成路径重构为原始图像H2D与GPU融合预处理，对完整E2E性能产生多大影响？RQ2：在GPU预处理、CUDA stream和下游拓扑保持不变时，将pageable原始图像暂存替换为pinned暂存，是否进一步改善平均性能，以及P95/P99是否呈现一致的尾延迟改善？

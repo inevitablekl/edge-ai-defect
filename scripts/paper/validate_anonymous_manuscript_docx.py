@@ -318,8 +318,8 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         errors.append("comments, tracked changes, or revision authors found")
 
     required_text = {
-        "CN title": "Jetson端工业缺陷检测的INT8输入数据路径重构",
-        "EN title": "INT8 Input Data-Path Reconstruction for Jetson-Based Industrial Defect Detection",
+        "CN title": "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构",
+        "EN title": "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson",
         "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
         "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
         "CLC": "TP391.41",
@@ -416,7 +416,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
             errors.append(f"scientific freeze value missing: {value}")
     directionality = {
         "FPS increase": "FPS变化为+4.07%",
-        "mean latency decrease": "平均latency变化为−4.03%",
+        "mean latency decrease": "平均延迟变化为−4.03%",
         "P95 increase": "P95为+0.15%",
         "P99 decrease": "P99为−0.12%",
     }

@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "phase": "Paper Phase 5.6G",
+  "verdict": "PHASE56_MANUSCRIPT_FREEZE_CANDIDATE",
+  "generated_on": "2026-08-13",
+  "commit": {
+    "starting": "332fabdf34ac377b7242193872fb9b9029ac937e",
+    "final": "COMMIT_CONTAINING_THIS_MANIFEST",
+    "final_resolution": "The exact final commit is reported after the single local commit; embedding that commit SHA here would be self-referential."
+  },
+  "titles": {
+    "chinese": "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构",
+    "english": "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson"
+  },
+  "inventory": {
+    "figures": 4,
+    "tables": 4,
+    "display_equations": 5,
+    "contributions": 2,
+    "rendered_references": 26,
+    "bibliography_entries": 27
+  },
+  "frozen_values": {
+    "relative": {
+      "v0_to_v2r_fps_multiple": "2.24x",
+      "v0_to_v2r_mean_latency_reduction_percent": "55.45%",
+      "v2r_to_v3r_fps_change_percent": "+4.07%",
+      "v2r_to_v3r_mean_latency_change_percent": "-4.03%",
+      "v2r_to_v3r_p95_change_percent": "+0.15%",
+      "v2r_to_v3r_p99_change_percent": "-0.12%"
+    },
+    "absolute": {
+      "fps": {"V0": "54.600", "V2R": "122.122", "V3R": "127.097"},
+      "mean_latency_ms": {"V0": "18.273", "V2R": "8.140", "V3R": "7.812"},
+      "nominal_input_copy_payload_mb_per_frame": {"V0": "4.9152", "V2R": "0.1200", "V3R": "0.1200"},
+      "nominal_input_copy_payload_ratio": "40.96x",
+      "task_metrics": {"precision": "0.6913", "recall": "0.6991", "mAP50": "0.6476", "mAP50_95": "0.3523"}
+    }
+  },
+  "sha256": {
+    "manuscript_sections": {
+      "docs/paper/manuscript/sections/00_title_abstract.md": "ffa8484a95587261a20e413c331be9abed17295ee0c0e05d75284ea8375fd7ce",
+      "docs/paper/manuscript/sections/01_introduction.md": "f817d15d24b4b2b62014b76987c6bb7129d886905e1de09db712e7ad4dc08679",
+      "docs/paper/manuscript/sections/02_problem_definition.md": "8fc825e9badcb20a768c2b56fa76fc29e2c5aa4f73fee8eff8b60dd2bd2d78e1",
+      "docs/paper/manuscript/sections/03_method.md": "df4737f7bebd619a1024484798f46156271bc7d9a32373b089cb7c4e4fe6e77c",
+      "docs/paper/manuscript/sections/04_experiment.md": "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689",
+      "docs/paper/manuscript/sections/05_results.md": "bf4861781e549bff0b1b37ddce0e495243b832e80cba5c433d9ad629e04725d8",
+      "docs/paper/manuscript/sections/06_conclusion.md": "c9fbf9387839014bb5b595755af12e1bf1d1e831c6e9337789a7cb508f9bb740"
+    },
+    "bibliography": {
+      "docs/paper/manuscript/references/references.bib": "2bc023d477412d11666a9f4bb7d5c7b9b358552e2c547ff3720e646c3f6f2328"
+    },
+    "figure_production": {
+      "fig1.svg": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887",
+      "fig1.pdf": "61d5a6f2d18d2c8579e1cecbc86da4c974a9d373a09167fc543ec60650cb8b99",
+      "fig1.png": "9fcd9388b6d12bfc027adfb7c0a1aac8690a324f7b987efe6229b7109e4fcb05",
+      "fig2.svg": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605",
+      "fig2.pdf": "40b36f859e693f0084952283b1f9354802c8b05c3c3dfd5b8b2cfac4c8a88a90",
+      "fig2.png": "935e17fcb1ace1166b586af56adde8ad026e0a9689501f4affed0f08fe13fdc3",
+      "fig3.svg": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1",
+      "fig3.pdf": "9562323f0228c494e12e378ded74cf7dbcdfb5a4802894658a1232bc07ff0815",
+      "fig3.png": "dfa125e8d20c28c93cb8a210417d72103988057cfd2bca371f2bd1c17a802ea9",
+      "fig4.svg": "9f975e880d220b73b80fcd4ed4b1aecb7969a143eb55192b6d9f363e6a718570",
+      "fig4.pdf": "fccd8310b045abd00fc2b0b531d8b802f33a062092d7fd5c68b40973ae3fcace",
+      "fig4.png": "c30ee465b6707064819504994c569d48a01067602b19c5a4c79b4b90fe296e96"
+    },
+    "table_sources": {
+      "table1": "a565530b8007357855f83954487aa56c5e4bcdf94d660331c084788f78c79f11",
+      "table2": "41ea42c945ca60be8b6e957d019fd7a914c117b9ce155478ea94189c5874f309",
+      "table3": "6d5e028fd2e48edd9de9dc5a8cd8823a6748b37ea7e3801b280497a4f5ebf1d0",
+      "table4": "1f1c94e7e88cb316959d04014dc734bfeab7fe08f1336c6f08664524e71862b9"
+    },
+    "captions": {
+      "docs/paper/phase5_6/visual/production/phase56_figure_table_captions.md": "d820f50b8feb881eec46f368f5fa43817e7e86446586abad9514796f14262e86"
+    },
+    "visual_evidence_and_validation": {
+      "docs/paper/phase5_6/visual/phase56_related_work_attribute_evidence.csv": "955fec74af8078a528cb296375e8bf5a70d0d0e5859c1edd7628a40b57f42f63",
+      "docs/paper/phase5_6/visual/table4_related_work_spec.md": "482967ae3840d7dbda4d3a386c2adec0821e3a6159b96b1f74733d51788e274b",
+      "docs/paper/phase5_6/visual/production/phase56_visual_asset_manifest.json": "ad15bf71e31b54cca2a73ca4bbf84a7a919b045b44376f2baf2f21b60ce9ea10",
+      "docs/paper/phase5_6/visual/production/phase56_visual_asset_validation.json": "030b4074b9b5872e0a5a71c3c31fa8c970fed6adf070fcda2c540ccf15145bd7",
+      "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_statistical.py": "2bbf0e2141e1e0bb5bfc59169e49e3f0e0ca2248f21c476cf7aef8547ed819c1",
+      "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py": "b0b8d2af7cf3d44d1fe348f8248c675eed37b7dca63dbb12b692958d5521700f",
+      "docs/paper/phase5_6/visual/scripts/validate_phase56d_production.py": "2b30f7e2f5fbb094718013bb4d7f60831397e72eb9916a3a633fe3cee093be9f"
+    },
+    "build_and_validation_scripts": {
+      "scripts/paper/build_manuscript_docx.sh": "814413392b8cadf27138f9c41ca29610fb4f13b93e7888e2e9ba099c19723011",
+      "scripts/paper/postprocess_full_manuscript_docx.py": "1caf067b6e96b7c5ae14bddf787840a15488a6e635a7ace366dd6ccf657aeccb",
+      "scripts/paper/postprocess_publication_tables.py": "788b4775711d6479c6e10501e8e10a51dea3fb99aa8006df9e6100929f631661",
+      "scripts/paper/validate_full_manuscript_docx.py": "bd7d0c64a49897eb92530fc6767618a24eff66c60a49034e4e1d668c50866a7d",
+      "scripts/paper/validate_anonymous_manuscript_docx.py": "d8067c6692ad54714d9dee4375aa859c2fdf885eb9fa44804046eea51d6572e0",
+      "scripts/paper/validate_journal_format_docx.py": "e4abf8fc965836af910c4fe98b6946dfb8bf88de5ad4a0fdc0e8af7f78b4c6fa",
+      "scripts/paper/validate_phase56e_integration.py": "f0ad58972ce582c201cd037e2f47bdc4a0f34b16836f1358fae20cfaa4cabc85",
+      "scripts/paper/validate_word_heading_numbering_docx.py": "e4cfd6a9e97be611e711fcac328165694d33a5c11a7f24b3ba03e9a4deaa81a5"
+    },
+    "build_outputs": {
+      "docs/paper/manuscript/output/draft_full.docx": "b5fb54d144c12df3ef14bd34686aece91ed3ff8a1b0cd7e08af8b268dd0a7367",
+      "docs/paper/manuscript/output/draft_anonymous.docx": "3cd2343be084affb3145f931ef7397785a50858289db01283e2a85b6232079d4",
+      "docs/paper/manuscript/output/pdf/draft_full.pdf": "d2774dd37609d62d1992b1eea2406c7887d5716eb91e67d2d977b77f780a98eb",
+      "docs/paper/manuscript/output/pdf/draft_anonymous.pdf": "6caf13eb402ec874b840b48ac10ae44e21058384444cda3b74701f7c7bbe6c4e"
+    }
+  },
+  "validators": {
+    "full_build": "PASS",
+    "anonymous_build": "PASS",
+    "anonymous_identity_scan": "PASS",
+    "full_anonymous_scientific_parity": "PASS",
+    "phase56g_freeze_candidate": "PASS",
+    "journal_format": "PASS",
+    "citation_source": "PASS",
+    "rendered_bibliography": "PASS",
+    "static_cross_reference": "PASS",
+    "word_heading_numbering": "PASS",
+    "visual_assets": "PHASE56G_VISUAL_ASSETS_PASS (93 checks)",
+    "sha256_manifest_check": "PASS",
+    "python_compile": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "mechanical_pdf_qa": {
+    "renderer": "LibreOffice 7.3.7.2",
+    "full_pages": 10,
+    "anonymous_pages": 10,
+    "page_size": "A4",
+    "all_pages_inspected": true,
+    "result": "PASS"
+  },
+  "reference_type_audit": {
+    "nvidia_tensorrt_10_3_release_notes": "[M]",
+    "nvidia_cuda_best_practices_12_6": "[M]",
+    "nvidia_cuda_programming_guide_12_6": "[M]",
+    "local_rule_basis": "Archived official manual PDFs render as [M]; no unsupported TensorRT publication year was invented."
+  },
+  "execution_constraints": {
+    "new_experiment": false,
+    "new_benchmark": false,
+    "new_inference": false,
+    "new_profiling": false,
+    "phase56x": "SKIPPED",
+    "push": false,
+    "merge": false,
+    "tag": false
+  },
+  "remaining_human_action": "Open the final DOCX in Microsoft Word Desktop for the last application-specific visual check."
+}

@@ -268,8 +268,8 @@ def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[1].legend(frameon=False, loc="upper left", fontsize=7.0, ncol=2)
     fig.text(
         0.75, 0.045,
-        f'pooled：P95 {typographic_sign(display["v3r_v2r_p95"])}，'
-        f'P99 {typographic_sign(display["v3r_v2r_p99"])} → MIXED',
+        f'P95 {typographic_sign(display["v3r_v2r_p95"])}，'
+        f'P99 {typographic_sign(display["v3r_v2r_p99"])}\n变化方向相反',
         ha="center", va="bottom", fontsize=6.5,
         bbox={"boxstyle": "round,pad=0.16", "facecolor": "#faf7ea",
               "edgecolor": "#6b7280", "linewidth": 0.7},
