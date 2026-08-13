@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the publication three-line treatment to manuscript Tables 1--3."""
+"""Apply the publication three-line treatment to manuscript Tables 1--4."""
 
 from __future__ import annotations
 
@@ -14,9 +14,10 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W}
 ET.register_namespace("w", W)
 
-T1_TITLE = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
-T2_TITLE = "表2　平台、模型、数据集和统一运行协议"
-T3_TITLE = "表3　V0与V2R任务级正确性验证结果"
+T1_TITLE = "表1　V0、V2R和V3R受控数据路径的特征矩阵。三条路径使用相同detector和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。"
+T2_TITLE = "表2　平台、模型与统一基准协议。三条路径在相同Jetson平台、YOLOv8n、冻结TensorRT INT8混合精度Engine、固定测试工作负载和统一预热/测量协议下执行；表内仅保留复现实验所需的紧凑条件。"
+T3_TITLE = "表3　V0、V2R和V3R的任务级正确性。Precision、Recall、mAP50和mAP50-95均由冻结预测证据按统一评估口径获得；各路径的汇总指标一致，类别级AP50与Recall的最大路径间差异均为0。"
+T4_TITLE = "表4　相关工作的研究属性定性比较。表中汇总所审阅工作明确报告的研究属性；“明确否”仅用于原文明确排除的情形，“未报告”不等同于“否”。该比较用于定性定位，不表示优越性、首次性或唯一性。"
 TBLPR_ORDER = (
     "tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
     "tblStyleColBandSize", "tblW", "jc", "tblCellSpacing", "tblInd",
@@ -159,17 +160,21 @@ def apply_table(table: ET.Element, table_id: str) -> None:
         raise ValueError(f"{table_id} has no rows")
     column_count = len(rows[0].findall("w:tc", NS))
     if table_id == "T1":
-        widths = (650, 1500, 2350, 2750, 1822)
-        if column_count != 5:
-            raise ValueError(f"T1 expected 5 columns, found {column_count}")
+        widths = (3200, 1957, 1957, 1958)
+        if column_count != 4:
+            raise ValueError(f"T1 expected 4 columns, found {column_count}")
     elif table_id == "T2":
         widths = (1500, 2900)
         if column_count != 2:
             raise ValueError(f"T2 expected 2 columns, found {column_count}")
+    elif table_id == "T3":
+        widths = (800, 900, 900, 900, 900)
+        if column_count != 5:
+            raise ValueError(f"T3 expected 5 columns, found {column_count}")
     else:
-        widths = (1050, 700, 700, 650, 700, 600)
-        if column_count != 6:
-            raise ValueError(f"T3 expected 6 columns, found {column_count}")
+        widths = (1800, 1039, 1039, 1039, 1039, 1039, 1039, 1038)
+        if column_count != 8:
+            raise ValueError(f"T4 expected 8 columns, found {column_count}")
 
     tbl_pr = ensure_first(table, "tblPr")
     tbl_style = tbl_pr.find("w:tblStyle", NS)
@@ -228,12 +233,14 @@ def apply_table(table: ET.Element, table_id: str) -> None:
             raise ValueError(f"{table_id} row {row_index} column count mismatch")
         for column_index, cell in enumerate(cells):
             set_cell_width_and_borders(
-                cell, widths[column_index], row_index, len(rows) - 1, table_id == "T3"
+                cell, widths[column_index], row_index, len(rows) - 1, table_id in {"T3", "T4"}
             )
             if table_id == "T1":
-                alignment = "center" if row_index == 0 or column_index == 0 else "left"
+                alignment = "center" if row_index == 0 or column_index > 0 else "left"
             elif table_id == "T2":
                 alignment = "center" if row_index == 0 else "left"
+            elif table_id == "T4":
+                alignment = "center" if row_index == 0 or column_index > 0 else "left"
             elif row_index == 0:
                 alignment = "center"
             elif column_index == 0:
@@ -244,7 +251,7 @@ def apply_table(table: ET.Element, table_id: str) -> None:
                 alignment = "right"
             for paragraph in cell.findall("w:p", NS):
                 set_paragraph_style_and_alignment(
-                    paragraph, alignment, neutralize_indentation=table_id in {"T1", "T2"}
+                    paragraph, alignment, neutralize_indentation=table_id in {"T1", "T2", "T4"}
                 )
 
 
@@ -255,7 +262,7 @@ def locate_captioned_tables(
     if body is None:
         raise ValueError("word/document.xml has no w:body")
     children = list(body)
-    titles = {T1_TITLE: "T1", T2_TITLE: "T2", T3_TITLE: "T3"}
+    titles = {T1_TITLE: "T1", T2_TITLE: "T2", T3_TITLE: "T3", T4_TITLE: "T4"}
     found: dict[str, ET.Element] = {}
     for index, child in enumerate(children):
         if child.tag != qn("p"):
@@ -276,8 +283,8 @@ def locate_captioned_tables(
             ppr = ensure_first(child, "pPr")
             if ppr.find("w:pageBreakBefore", NS) is None:
                 insert_in_schema_order(ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER)
-    if set(found) != {"T1", "T2", "T3"}:
-        raise ValueError(f"expected T1, T2 and T3 captions, found {sorted(found)}")
+    if set(found) != {"T1", "T2", "T3", "T4"}:
+        raise ValueError(f"expected T1, T2, T3 and T4 captions, found {sorted(found)}")
     return found
 
 
@@ -291,6 +298,7 @@ def rewrite(
     apply_table(tables["T1"], "T1")
     apply_table(tables["T2"], "T2")
     apply_table(tables["T3"], "T3")
+    apply_table(tables["T4"], "T4")
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

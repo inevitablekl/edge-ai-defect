@@ -8,10 +8,12 @@
 
 TensorRT INT8混合精度部署可减少网络侧计算开销，后训练量化能够在既有模型基础上实施低比特近似，但量化扰动仍需通过任务正确性评价加以约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。本文采用TensorRT 10.3中的校准式INT8路线作为固定推理前提；该版本的传统隐式INT8量化和calibrator接口已被标记为弃用，因而实验结论限定于本文的软件栈 [@nvidia_tensorrt_10_3_release_notes]。网络低精度化并不会自动重组图像解码后的host representation、输入张量形成位置或主机—设备数据移动，完整E2E性能仍取决于这些阶段在实际部署路径中的组织方式。
 
-现有工作通常以检测模型结构、量化方法、推理框架或整体系统性能为主要对象。对于固定detector与Engine条件下，输入形成位置、host representation、主机到设备的输入复制载荷以及pageable/pinned暂存如何通过隔离式路径重构影响完整E2E行为，仍缺少足够明确的受控工程证据。本文据此将研究重点放在Jetson TensorRT INT8输入形成与host-device数据路径工程：基线路径V0在主机侧通过CPU/OpenCV形成FP32 NCHW张量并复制至设备；V2R将其重构为packed raw-image staging、异步二维H2D复制和GPU侧融合CUDA预处理，直接形成TensorRT设备输入；V3R保持相同CUDA预处理、TensorRT stream和下游拓扑，仅将pageable raw-image staging替换为pinned staging。
+现有相关工作分别从检测模型、量化与推理、边缘运行时、GPU预处理或系统级部署等角度讨论边缘检测性能。为减少模型和推理后端差异带来的混杂，本文进一步将研究范围收敛到固定detector与Engine条件下的输入形成位置、host representation、输入复制载荷以及pageable/pinned staging，并通过两级受控路径比较评价其完整E2E行为。本文据此将研究重点放在Jetson TensorRT INT8输入形成与host-device数据路径工程：基线路径V0在主机侧通过CPU/OpenCV形成FP32 NCHW张量并复制至设备；V2R将其重构为packed raw-image staging、异步二维H2D复制和GPU侧融合CUDA预处理，直接形成TensorRT设备输入；V3R保持相同CUDA预处理、TensorRT stream和下游拓扑，仅将pageable raw-image staging替换为pinned staging。
 
 本文的主要贡献包括两点：1）在固定YOLOv8n和TensorRT INT8混合精度Engine的条件下，将CPU/OpenCV主机侧FP32张量输入形成路径重构为packed raw-image staging、`cudaMemcpy2DAsync`和融合CUDA预处理，使device kernel直接形成TensorRT-owned FP32 NCHW设备输入，并通过pageable/pinned配置隔离主机暂存内存类型；2）建立统一的任务正确性、E2E latency、process-level FPS与pooled P95/P99评价协议，通过V0→V2R和V2R→V3R两级受控比较，区分完整输入路径重构的主要性能收益与pinned staging的有限平均增量，并利用5次独立进程考察运行级分布和尾延迟行为。
 
-<!-- PHASE56D_F1_HERO_POSITION: preserve the semantic position after the two contributions; no Phase 5.6C asset production. -->
+两级受控路径及其完整E2E观测关系见图1。
 
-全文首先定义模型、数据集、部署环境、E2E数据路径和研究问题；随后说明V0、V2R和V3R的输入形成实现及正确性控制；继而给出统一实验协议；最后从正确性、整体E2E性能、名义输入复制载荷、运行级稳定性、相关工作定位和适用边界六个方面讨论结果。
+**图1　V0、V2R和V3R受控数据路径及完整路径观测。V0在主机侧形成FP32 NCHW输入张量，V2R/V3R将打包原始图像复制到设备并在GPU侧形成TensorRT输入；V3R仅将V2R的pageable暂存替换为pinned暂存。性能数字表示完整端到端路径比较，不归因于单一组件。输入复制载荷为名义值，不等同于实测总线流量。**
+
+全文首先定义模型、数据集、部署环境、E2E数据路径和研究问题；随后说明V0、V2R和V3R的输入形成实现及正确性控制；继而给出统一实验协议；最后从正确性、整体E2E性能、名义输入复制载荷、运行级分布、相关工作定位和适用边界六个方面讨论结果。

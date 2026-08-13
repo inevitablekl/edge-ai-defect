@@ -14,11 +14,13 @@ from xml.etree import ElementTree as ET
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-NS = {"w": W, "a": A, "r": R}
+ASVG = "http://schemas.microsoft.com/office/drawing/2016/SVG/main"
+NS = {"w": W, "a": A, "r": R, "asvg": ASVG}
 
-T1_TITLE = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
-T2_TITLE = "表2　平台、模型、数据集和统一运行协议"
-T3_TITLE = "表3　V0与V2R任务级正确性验证结果"
+T1_TITLE = "表1　"
+T2_TITLE = "表2　"
+T3_TITLE = "表3　"
+T4_TITLE = "表4　"
 MARKER = "FULL_BODY_SECTION_START"
 
 
@@ -27,7 +29,7 @@ def attr(node: ET.Element | None, local: str, namespace: str = W) -> str | None:
 
 
 def text_of(node: ET.Element) -> str:
-    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).strip()
+    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).replace("\u00a0", " ").strip()
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -53,7 +55,7 @@ def validate_cell_border(
 
 
 def validate_t2_paragraphs(errors: list[str], rows: list[ET.Element]) -> None:
-    exact_measurement = "1080 帧，即 180 幅图像完整回放 6 个周期"
+    exact_measurement = "60帧预热；每进程1080帧；每路径5个独立进程"
     matching_cells = []
     for row_index, row in enumerate(rows):
         for column_index, cell in enumerate(row.findall("w:tc", NS)):
@@ -168,15 +170,15 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         }
         used_relationships = {
             node.get(f"{{{R}}}embed")
-            for node in document.findall(".//a:blip", NS)
+            for node in document.findall(".//a:blip", NS) + document.findall(".//asvg:svgBlip", NS)
         }
         if len(used_relationships & image_relationships) != 4:
             fail(errors, "four embedded figure image relationships are not all used")
     for caption in ("图1　", "图2　", "图3　", "图4　"):
         if sum(text.startswith(caption) for text in (text_of(p) for p in body_paragraphs)) != 1:
             fail(errors, f"missing or duplicated figure caption: {caption}")
-    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
-        captions = [paragraph for paragraph in body_paragraphs if text_of(paragraph) == title]
+    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3"), (T4_TITLE, "Table 4")):
+        captions = [paragraph for paragraph in body_paragraphs if text_of(paragraph).startswith(title)]
         if len(captions) != 1:
             fail(errors, f"{label} caption count is {len(captions)}, expected 1")
         elif captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None:
@@ -184,49 +186,56 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)
-    if len(tables) != 3:
-        fail(errors, f"expected three manuscript tables, found {len(tables)}")
+    if len(tables) != 4:
+        fail(errors, f"expected four manuscript tables, found {len(tables)}")
     else:
-        t1, t2, t3 = tables
+        t1, t2, t3, t4 = tables
         t1_rows = t1.findall("w:tr", NS)
         t2_rows = t2.findall("w:tr", NS)
         t3_rows = t3.findall("w:tr", NS)
+        t4_rows = t4.findall("w:tr", NS)
         details["table1_rows"] = len(t1_rows) - 1
         details["table2_rows"] = len(t2_rows) - 1
         details["table3_rows"] = len(t3_rows) - 1
-        if len(t1_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t1_rows):
-            fail(errors, "Table 1 is not 3 data rows by 5 columns")
-        if len(t2_rows) != 18 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
-            fail(errors, "Table 2 is not 17 data rows by 2 columns")
-        if len(t3_rows) != 5 or any(len(row.findall("w:tc", NS)) != 6 for row in t3_rows):
-            fail(errors, "Table 3 is not 4 data rows by 6 columns")
+        details["table4_rows"] = len(t4_rows) - 1
+        if len(t1_rows) != 11 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
+            fail(errors, "Table 1 is not 10 data rows by 4 columns")
+        if len(t2_rows) != 10 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
+            fail(errors, "Table 2 is not 9 data rows by 2 columns")
+        if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t3_rows):
+            fail(errors, "Table 3 is not 3 data rows by 5 columns")
+        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 8 for row in t4_rows):
+            fail(errors, "Table 4 is not 6 works by 7 attributes")
 
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "CPU/OpenCV", "CUDA/GPU", "pageable host raw-image staging",
-            "pinned host raw-image staging", "未将其分配类型定义为V2R/V3R同类原始图像暂存变量",
-            "相对V2R仅改变主机原始图像暂存分配类型", "受控基线",
+            "Detector / Engine", "CPU像素预处理", "CUDA预处理",
+            "打包原始图像暂存", "Pageable", "Pinned", "复用TRT CUDA stream",
         ):
             if value not in t1_values:
                 fail(errors, f"Table 1 missing controlled-path value: {value}")
 
         t2_values = "\n".join(text_of(cell) for row in t2_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "NVIDIA Jetson Orin Nano Super", "R36.5", "12.6.11，runtime 12.6.68",
-            "10.3.0.30", "4.5.4", "YOLOv8n", "冻结 TensorRT INT8 混合精度 Engine",
-            "640×640", "NEU-DET，去重后的 split-v2", "固定 180 幅图像", "V0、V2R、V3R",
-            "60 帧", "1080 帧，即 180 幅图像完整回放 6 个周期",
-            "每种路径 5 次，共 15 个独立进程", "内部诊断计时", "Profiling",
+            "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+            "L4T R36.5；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4", "YOLOv8n",
+            "TensorRT INT8混合精度（INT8 + FP16 fallback）；host input FP32",
+            "1260张去重训练图像；IInt8EntropyCalibrator2；batch 1；排除test split",
+            "固定180张test图像", "V0 / V2R / V3R；单帧顺序执行",
+            "60帧预热；每进程1080帧；每路径5个独立进程", "关闭diagnostics与profiling",
         ):
             if value not in t2_values:
                 fail(errors, f"Table 2 missing frozen value: {value}")
 
         t3_values = "\n".join(text_of(cell) for row in t3_rows for cell in row.findall("w:tc", NS))
-        for value in ("Precision", "Recall", "mAP50", "mAP50-95", "0.6913", "0.6991", "0.6476", "0.3523", "0.010", "0.005"):
+        for value in ("V0", "V2R", "V3R", "Precision", "Recall", "mAP50", "mAP50-95", "0.6913", "0.6991", "0.6476", "0.3523"):
             if value not in t3_values:
                 fail(errors, f"Table 3 missing frozen value: {value}")
-        if "V3R" in t3_values:
-            fail(errors, "V3R appears in Table 3")
+
+        t4_values = "\n".join(text_of(cell) for row in t4_rows for cell in row.findall("w:tc", NS))
+        for value in ("Kim et al. (2025)", "PRESTO (2025)", "Tang & Qian (2024)", "Shin & Kim (2022)", "Bateni et al. (2020)", "本文", "明确否", "未报告"):
+            if value not in t4_values:
+                fail(errors, f"Table 4 missing governed value: {value}")
 
         for table_index, table in enumerate(tables, start=1):
             borders = table.find("w:tblPr/w:tblBorders", NS)

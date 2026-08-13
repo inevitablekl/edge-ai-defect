@@ -4,13 +4,20 @@
 
 三条受控路径的主要配置及比较变量见表1。
 
-**表1　V0、V2R和V3R受控数据路径配置与比较变量**
+**表1　V0、V2R和V3R受控数据路径的特征矩阵。三条路径使用相同detector和TensorRT Engine；V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。**
 
-| 路径 | 主要像素级预处理位置 | 原始图像主机暂存 | 与前级路径相比的受控变化 | 比较角色 |
-|---|---|---|---|---|
-| V0 | CPU/OpenCV | 主机图像及主机FP32张量路径；未将其分配类型定义为V2R/V3R同类原始图像暂存变量 | － | 受控基线 |
-| V2R | CUDA/GPU | pageable host raw-image staging | 相对V0改变预处理执行位置及相关输入准备/数据路径 | 完整输入形成路径重构终点；V2R→V3R参照 |
-| V3R | CUDA/GPU（与V2R相同语义） | pinned host raw-image staging | 相对V2R仅改变主机原始图像暂存分配类型 | 主机暂存分配类型干预终点 |
+| 路径特征 | V0 | V2R | V3R |
+|---|---:|---:|---:|
+| Detector / Engine | 相同 | 相同 | 相同 |
+| CPU像素预处理 | 是 | 否 | 否 |
+| CUDA预处理 | 否 | 是 | 是 |
+| 主机FP32输入张量 | 是 | 否 | 否 |
+| 打包原始图像暂存 | 否 | Pageable | Pinned |
+| 原始图像H2D | 否 | 是 | 是 |
+| 张量形成位置 | 主机 | 设备 | 设备 |
+| 直接形成TRT设备输入 | 否 | 是 | 是 |
+| 复用TRT CUDA stream | — | 是 | 是 |
+| 跨帧流水线 | 否 | 否 | 否 |
 
 ## 2.1 V0：主机侧FP32张量形成
 
@@ -25,6 +32,10 @@ V2R保留主机侧图像读取与解码，并将解码后的`CV_8UC3` BGR图像�
 packed raw图像通过`cudaMemcpy2DAsync`复制到持久化device raw buffer。随后，一个融合CUDA preprocessing kernel在同一launch内完成resize、padding、BGR→RGB、`1/255`归一化和HWC→NCHW layout conversion，并直接写入TensorRT-owned FP32 NCHW device input。该resize实现针对固定Jetson平台、`CV_8UC3`输入和OpenCV 4.5.4 `INTER_LINEAR`行为建立对齐合同，不构成通用OpenCV GPU实现。
 
 CUDA preprocessor在帧循环前建立，复用TensorRT Engine的CUDA stream及其持久化device input buffer；TensorRT inference沿用同一stream和单一execution context。V2R由此把V0的主机FP32张量形成与FP32 H2D路径，重构为raw-image staging、二维异步H2D和device-side input formation。该实现是输入数据路径工程，不引入新的检测、量化或TensorRT算法。
+
+V2R/V3R的主机—设备内存域、缓冲区生命周期与单流执行语义见图2。
+
+**图2　V2R/V3R的主机—设备内存域、缓冲区生命周期与单流执行语义。两条路径仅在主机侧pageable/pinned暂存类型上不同；`cudaMemcpy2DAsync`、融合CUDA预处理、`enqueueV3`及输出D2H沿同一TensorRT CUDA stream顺序执行，暂存区、设备原始图像缓冲区和后端输入缓冲区跨帧复用。图中不表示跨帧重叠或流水线。**
 
 ## 2.3 V3R：pinned raw staging隔离变量
 

@@ -35,7 +35,7 @@ REQUIRED_HEADINGS = {
     "4.1 正确性": "HFUTHeading2",
     "4.2 整体E2E性能": "HFUTHeading2",
     "4.3 数据路径分析": "HFUTHeading2",
-    "4.4 运行级稳定性与尾延迟": "HFUTHeading2",
+    "4.4 运行级分布与尾延迟": "HFUTHeading2",
     "4.5 相关工作定位": "HFUTHeading2",
     "4.6 局限性": "HFUTHeading2",
     "5 结论": "HFUTHeading1",

@@ -124,7 +124,8 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     sections = document.findall(".//w:sectPr", NS)
     section_columns = [attr(node.find("w:cols", NS), "num") for node in sections]
     out["section_columns"] = section_columns
-    if section_columns != ["1", "2", "1", "2", "1", "2", "1", "2", "1", "2"]:
+    expected_columns = ["1", "2"] * 7
+    if section_columns != expected_columns:
         errors.append(f"section transition mismatch: {section_columns}")
     for section in sections:
         size, margins, cols = section.find("w:pgSz", NS), section.find("w:pgMar", NS), section.find("w:cols", NS)
@@ -232,13 +233,13 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         pixels = png_size(payload)
         figures.append({"target": target, "cx": int(extent.get("cx", "0")), "cy": int(extent.get("cy", "0")), "pixels": pixels})
     out["figures"] = figures
-    expected_widths = [5760000, 5760000, 2700000, 5760000]
+    expected_widths = [5760000, 5760000, 5760000, 5760000]
     if any(abs(item["cx"] - expected) > 1 for item, expected in zip(figures, expected_widths)):
         errors.append(f"figure width contract mismatch: {[item['cx'] for item in figures]}")
 
     tables = body.findall("w:tbl", NS)
-    if len(tables) != 3 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [3, 17, 4]:
-        errors.append("T1/T2/T3 row contract failed")
+    if len(tables) != 4 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [10, 9, 3, 6]:
+        errors.append("T1/T2/T3/T4 row contract failed")
     for table in tables:
         borders = table.find("w:tblPr/w:tblBorders", NS)
         actual = {node.tag.rsplit("}", 1)[-1]: (attr(node, "val"), attr(node, "sz")) for node in borders} if borders is not None else {}

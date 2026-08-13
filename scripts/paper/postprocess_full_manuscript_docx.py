@@ -23,16 +23,41 @@ ET.register_namespace("r", R)
 
 MARKER = "FULL_BODY_SECTION_START"
 WIDE_FIGURE_CAPTIONS = {
-    "图1": "图1　V0、V2R和V3R数据路径示意",
-    "图2": "图2　端到端执行概念组成与受控干预范围",
+    "图1": (
+        "图1　V0、V2R和V3R受控数据路径及完整路径观测。V0在主机侧形成FP32 NCHW输入张量，"
+        "V2R/V3R将打包原始图像复制到设备并在GPU侧形成TensorRT输入；V3R仅将V2R的pageable暂存"
+        "替换为pinned暂存。性能数字表示完整端到端路径比较，不归因于单一组件。输入复制载荷为名义值，"
+        "不等同于实测总线流量。"
+    ),
+    "图2": (
+        "图2　V2R/V3R的主机—设备内存域、缓冲区生命周期与单流执行语义。两条路径仅在主机侧"
+        "pageable/pinned暂存类型上不同；cudaMemcpy2DAsync、融合CUDA预处理、enqueueV3及输出D2H沿同一"
+        "TensorRT CUDA stream顺序执行，暂存区、设备原始图像缓冲区和后端输入缓冲区跨帧复用。图中不表示跨帧"
+        "重叠或流水线。"
+    ),
+    "图3": (
+        "图3　三条受控路径的端到端性能。(a) 柱高为每条路径5个独立进程FPS的均值，误差棒为5个进程级"
+        "FPS值的样本标准差；(b) 为每条路径合并5400个延迟样本得到的平均端到端延迟；(c) 为相同5400个"
+        "pooled延迟样本的P95和P99。比较值描述完整路径差异，不构成对单一组件的因果归因。"
+    ),
     "图4": (
-        "图4　V0、V2R和V3R平均及尾延迟比较。（a）各路径绝对延迟；"
-        "（b）V3R相对V2R的冻结变化，其中负值表示降低/更快，"
-        "正值表示升高/更慢。Mean、P95和P99均基于每种路径合并后的"
-        "5400个逐帧延迟样本统计。"
+        "图4　运行级分布与尾延迟。(a) 展示每条路径5个独立进程的FPS及描述性均值与样本标准差；(b) 展示"
+        "V2R/V3R各进程的平均、P95和P99延迟。各点为独立进程级描述量，横向偏移仅用于区分且不表示配对。正式"
+        "pooled P95/P99仍为Level-A aggregate metrics，来自每路径5400个延迟样本；P95变化+0.15%、P99变化−0.12%，"
+        "方向相反，判定为MIXED。"
     ),
 }
-T1_CAPTION = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
+WIDE_TABLE_CAPTIONS = {
+    "表1": (
+        "表1　V0、V2R和V3R受控数据路径的特征矩阵。三条路径使用相同detector和TensorRT Engine；"
+        "V0在主机侧形成FP32输入张量，V2R/V3R在设备侧形成输入张量，且后两者仅在pageable与pinned"
+        "原始图像暂存类型上不同。三条路径均为单帧顺序执行，无跨帧流水线。"
+    ),
+    "表4": (
+        "表4　相关工作的研究属性定性比较。表中汇总所审阅工作明确报告的研究属性；“明确否”仅用于"
+        "原文明确排除的情形，“未报告”不等同于“否”。该比较用于定性定位，不表示优越性、首次性或唯一性。"
+    ),
+}
 PPR_ORDER = (
     "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
     "widowControl", "numPr", "suppressLineNumbers", "pBdr", "shd", "tabs",
@@ -203,8 +228,8 @@ def span_wide_figures(root: ET.Element) -> None:
             insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
 
 
-def span_table1(root: ET.Element) -> None:
-    """Place the five-column controlled-path matrix across the full text width."""
+def span_wide_tables(root: ET.Element) -> None:
+    """Place the governed full-width tables across the complete text width."""
 
     body = root.find("w:body", NS)
     if body is None:
@@ -213,37 +238,39 @@ def span_table1(root: ET.Element) -> None:
     if final_section is None:
         raise ValueError("word/document.xml has no final w:sectPr")
     children = list(body)
-    captions = [
-        node
-        for node in children
-        if node.tag == qn("p") and paragraph_text(node) == T1_CAPTION
-    ]
-    if len(captions) != 1:
-        raise ValueError(f"expected one Table 1 caption, found {len(captions)}")
-    caption = captions[0]
-    caption_index = children.index(caption)
-    if caption_index < 1:
-        raise ValueError("Table 1 caption has no preceding callout")
-    callout = children[caption_index - 1]
-    if callout.tag != qn("p") or "表1" not in paragraph_text(callout):
-        raise ValueError("Table 1 caption is not preceded by its callout paragraph")
-    table = next(
-        (node for node in children[caption_index + 1 :] if node.tag == qn("tbl")),
-        None,
-    )
-    if table is None:
-        raise ValueError("Table 1 caption is not followed by a table")
+    for label, expected_caption in WIDE_TABLE_CAPTIONS.items():
+        children = list(body)
+        captions = [
+            node
+            for node in children
+            if node.tag == qn("p") and paragraph_text(node) == expected_caption
+        ]
+        if len(captions) != 1:
+            raise ValueError(f"expected one {label} caption, found {len(captions)}")
+        caption = captions[0]
+        caption_index = children.index(caption)
+        if caption_index < 1:
+            raise ValueError(f"{label} caption has no preceding callout")
+        callout = children[caption_index - 1]
+        if callout.tag != qn("p") or label not in paragraph_text(callout):
+            raise ValueError(f"{label} caption is not preceded by its callout paragraph")
+        table = next(
+            (node for node in children[caption_index + 1 :] if node.tag == qn("tbl")),
+            None,
+        )
+        if table is None:
+            raise ValueError(f"{label} caption is not followed by a table")
 
-    set_paragraph_section(callout, section_copy(final_section, "2"))
-    section_break = ET.Element(qn("p"))
-    set_paragraph_section(section_break, section_copy(final_section, "1"))
-    ppr = ensure_first(section_break, "pPr")
-    spacing = ET.Element(
-        qn("spacing"),
-        {qn("before"): "0", qn("after"): "0", qn("line"): "1", qn("lineRule"): "exact"},
-    )
-    insert_in_schema_order(ppr, spacing, PPR_ORDER)
-    body.insert(list(body).index(table) + 1, section_break)
+        set_paragraph_section(callout, section_copy(final_section, "2"))
+        section_break = ET.Element(qn("p"))
+        set_paragraph_section(section_break, section_copy(final_section, "1"))
+        ppr = ensure_first(section_break, "pPr")
+        spacing = ET.Element(
+            qn("spacing"),
+            {qn("before"): "0", qn("after"): "0", qn("line"): "1", qn("lineRule"): "exact"},
+        )
+        insert_in_schema_order(ppr, spacing, PPR_ORDER)
+        body.insert(list(body).index(table) + 1, section_break)
 
 
 def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
@@ -460,7 +487,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     set_body_columns(root)
     insert_continuous_boundary(root)
     span_wide_figures(root)
-    span_table1(root)
+    span_wide_tables(root)
     normalize_publication_drawing_paragraphs(root)
     normalize_equation_paragraphs(root)
     move_biography_to_first_footer(root, parts)

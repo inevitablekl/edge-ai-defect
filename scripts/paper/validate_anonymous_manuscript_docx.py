@@ -14,13 +14,15 @@ from xml.etree import ElementTree as ET
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+ASVG = "http://schemas.microsoft.com/office/drawing/2016/SVG/main"
 DC = "http://purl.org/dc/elements/1.1/"
 CP = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
-NS = {"w": W, "a": A, "r": R, "dc": DC, "cp": CP}
+NS = {"w": W, "a": A, "r": R, "asvg": ASVG, "dc": DC, "cp": CP}
 
-T1_TITLE = "表1　V0、V2R和V3R受控数据路径配置与比较变量"
-T2_TITLE = "表2　平台、模型、数据集和统一运行协议"
-T3_TITLE = "表3　V0与V2R任务级正确性验证结果"
+T1_TITLE = "表1　"
+T2_TITLE = "表2　"
+T3_TITLE = "表3　"
+T4_TITLE = "表4　"
 IDENTITY_TOKENS = (
     "王凯伦",
     "王琦",
@@ -71,7 +73,7 @@ def attr(node: ET.Element | None, local: str, namespace: str = W) -> str | None:
 
 
 def text_of(node: ET.Element) -> str:
-    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).strip()
+    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).replace("\u00a0", " ").strip()
 
 
 def paragraph_style(node: ET.Element) -> str:
@@ -148,7 +150,7 @@ def identity_paragraph(style: str, text: str) -> bool:
 
 def validate_t2_layout(errors: list[str], table: ET.Element) -> None:
     rows = table.findall("w:tr", NS)
-    exact_measurement = "1080 帧，即 180 幅图像完整回放 6 个周期"
+    exact_measurement = "60帧预热；每进程1080帧；每路径5个独立进程"
     exact_matches = 0
     table_borders = table.find("w:tblPr/w:tblBorders", NS)
     for edge in ("insideH", "insideV"):
@@ -348,8 +350,8 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         count = sum(text_of(node).startswith(caption) for node in body_paragraphs)
         if count != 1:
             errors.append(f"missing or duplicated figure caption: {caption}")
-    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
-        captions = [node for node in body_paragraphs if text_of(node) == title]
+    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3"), (T4_TITLE, "Table 4")):
+        captions = [node for node in body_paragraphs if text_of(node).startswith(title)]
         if len(captions) != 1:
             errors.append(f"{label} caption count is {len(captions)}, expected 1")
             continue
@@ -359,48 +361,54 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)
-    if len(tables) != 3:
-        errors.append(f"expected three manuscript tables, found {len(tables)}")
+    if len(tables) != 4:
+        errors.append(f"expected four manuscript tables, found {len(tables)}")
     else:
         t1_rows = tables[0].findall("w:tr", NS)
         t2_rows = tables[1].findall("w:tr", NS)
         t3_rows = tables[2].findall("w:tr", NS)
+        t4_rows = tables[3].findall("w:tr", NS)
         details["table1_rows"] = len(t1_rows) - 1
         details["table2_rows"] = len(t2_rows) - 1
         details["table3_rows"] = len(t3_rows) - 1
-        if len(t1_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t1_rows):
-            errors.append("Table 1 is not 3 data rows by 5 columns")
-        if len(t2_rows) != 18 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
-            errors.append("Table 2 is not 17 data rows by 2 columns")
-        if len(t3_rows) != 5 or any(len(row.findall("w:tc", NS)) != 6 for row in t3_rows):
-            errors.append("Table 3 is not 4 data rows by 6 columns")
+        details["table4_rows"] = len(t4_rows) - 1
+        if len(t1_rows) != 11 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
+            errors.append("Table 1 is not 10 data rows by 4 columns")
+        if len(t2_rows) != 10 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
+            errors.append("Table 2 is not 9 data rows by 2 columns")
+        if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t3_rows):
+            errors.append("Table 3 is not 3 data rows by 5 columns")
+        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 8 for row in t4_rows):
+            errors.append("Table 4 is not 6 works by 7 attributes")
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "CPU/OpenCV", "CUDA/GPU", "pageable host raw-image staging",
-            "pinned host raw-image staging", "未将其分配类型定义为V2R/V3R同类原始图像暂存变量",
-            "相对V2R仅改变主机原始图像暂存分配类型", "受控基线",
+            "Detector / Engine", "CPU像素预处理", "CUDA预处理",
+            "打包原始图像暂存", "Pageable", "Pinned", "复用TRT CUDA stream",
         ):
             if value not in t1_values:
                 errors.append(f"Table 1 missing controlled-path value: {value}")
         t2_values = "\n".join(text_of(cell) for row in t2_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "NVIDIA Jetson Orin Nano Super", "R36.5", "12.6.11，runtime 12.6.68",
-            "10.3.0.30", "4.5.4", "YOLOv8n", "冻结 TensorRT INT8 混合精度 Engine",
-            "640×640", "NEU-DET，去重后的 split-v2", "固定 180 幅图像", "V0、V2R、V3R",
-            "60 帧", "1080 帧，即 180 幅图像完整回放 6 个周期",
-            "每种路径 5 次，共 15 个独立进程", "内部诊断计时", "Profiling",
+            "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
+            "L4T R36.5；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4", "YOLOv8n",
+            "TensorRT INT8混合精度（INT8 + FP16 fallback）；host input FP32",
+            "1260张去重训练图像；IInt8EntropyCalibrator2；batch 1；排除test split",
+            "固定180张test图像", "V0 / V2R / V3R；单帧顺序执行",
+            "60帧预热；每进程1080帧；每路径5个独立进程", "关闭diagnostics与profiling",
         ):
             if value not in t2_values:
                 errors.append(f"Table 2 missing frozen value: {value}")
         t3_values = "\n".join(text_of(cell) for row in t3_rows for cell in row.findall("w:tc", NS))
         for value in (
             "Precision", "Recall", "mAP50", "mAP50-95", "0.6913", "0.6991",
-            "0.6476", "0.3523", "0.010", "0.005",
+            "0.6476", "0.3523", "V3R",
         ):
             if value not in t3_values:
                 errors.append(f"Table 3 missing frozen value: {value}")
-        if "V3R" in t3_values:
-            errors.append("V3R appears in Table 3")
+        t4_values = "\n".join(text_of(cell) for row in t4_rows for cell in row.findall("w:tc", NS))
+        for value in ("Kim et al. (2025)", "PRESTO (2025)", "Tang & Qian (2024)", "Shin & Kim (2022)", "Bateni et al. (2020)", "本文", "明确否", "未报告"):
+            if value not in t4_values:
+                errors.append(f"Table 4 missing governed value: {value}")
         validate_t2_layout(errors, tables[1])
 
     for value in FROZEN_VALUES:
@@ -432,7 +440,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         }
         used_relationships = {
             node.get(qn("embed", R))
-            for node in document.findall(".//a:blip", NS)
+            for node in document.findall(".//a:blip", NS) + document.findall(".//asvg:svgBlip", NS)
         }
         if len(image_relationships & used_relationships) != 4:
             errors.append("four embedded figure image relationships are not all used")

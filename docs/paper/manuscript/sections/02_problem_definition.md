@@ -22,15 +22,11 @@ T_{\mathrm{E2E}}
 
 该式只说明本文统计完整pipeline，而非network-only TensorRT inference time；各个\(T_k\)未被独立插桩或测量。
 
-如图1所示，V0将解码后的BGR图像在主机侧形成640×640 FP32 RGB/NCHW张量，再把该张量复制到TensorRT设备输入。V2R/V3R先暂存packed BGR `uint8`原始图像，通过`cudaMemcpy2DAsync`复制到device raw buffer，再由一个融合CUDA kernel完成resize、padding、BGR→RGB、归一化和layout conversion，并直接写入TensorRT-owned FP32 NCHW设备输入。V2R与V3R复用同一TensorRT stream、相同CUDA预处理和相同下游拓扑；两者之间唯一隔离变量是raw-image host staging的allocation type。
-
-**图1　V0、V2R和V3R数据路径示意**
+V0将解码后的BGR图像在主机侧形成640×640 FP32 RGB/NCHW张量，再把该张量复制到TensorRT设备输入。V2R/V3R先暂存packed BGR `uint8`原始图像，通过`cudaMemcpy2DAsync`复制到device raw buffer，再由一个融合CUDA kernel完成resize、padding、BGR→RGB、归一化和layout conversion，并直接写入TensorRT-owned FP32 NCHW设备输入。V2R与V3R复用同一TensorRT stream、相同CUDA预处理和相同下游拓扑；两者之间唯一隔离变量是raw-image host staging的allocation type。
 
 锁页内存能够支持更直接的异步主机—设备复制，但它是有限资源，实际收益需要在具体实现中测量 [@nvidia_cuda_best_practices_12_6]。集成CPU/GPU和GPU内存分配研究也表明，内存策略的表现取决于平台、工作负载和访问特征 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]。本文因此把pageable→pinned暂存作为独立变量，而不预设其收益。CUDA stream与异步复制的通用语义参照CUDA官方文档 [@nvidia_cuda_programming_guide_12_6]；当前实现仍为单帧顺序路径，不包含跨帧重叠。
 
-两级比较的结构关系见图2。V0→V2R覆盖主机FP32张量形成到raw-image H2D与GPU输入形成的完整重构；V2R→V3R仅替换主机暂存分配类型。完整检测系统与GPU预处理研究均提示，局部数据路径变化必须放回E2E执行边界评价 [@kim_et_al_2025_concurrent_edge_detection]。局部优化对E2E性能的实际贡献取决于其在完整执行路径中的占比及瓶颈位置，因此组件级变化不能直接等价为完整系统加速 [@hill_marty_2008_amdahl]。
-
-**图2　端到端执行概念组成与受控干预范围**
+V0→V2R覆盖主机FP32张量形成到raw-image H2D与GPU输入形成的完整重构；V2R→V3R仅替换主机暂存分配类型。完整检测系统与GPU预处理研究均提示，局部数据路径变化必须放回E2E执行边界评价 [@kim_et_al_2025_concurrent_edge_detection]。局部优化对E2E性能的实际贡献取决于其在完整执行路径中的占比及瓶颈位置，因此组件级变化不能直接等价为完整系统加速 [@hill_marty_2008_amdahl]。
 
 ## 1.3 统一计时边界与研究问题
 

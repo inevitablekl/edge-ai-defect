@@ -157,30 +157,25 @@ METADATA_STATUS = {
     UNUSED_ADMITTED_KEY: ("PASS", "A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered."),
 }
 
-FIGURE_TABLE_CAPTIONS = OrderedDict(
-    (
-        ("图1", ""),
-        ("图2", "图2　端到端执行概念组成与受控干预范围"),
-        ("表1", "表1　V0、V2R和V3R受控数据路径配置与比较变量"),
-        ("表2", "表2　平台、模型、数据集和统一运行协议"),
-        ("表3", "表3　V0与V2R任务级正确性验证结果"),
-        ("图3", "图3　V0、V2R和V3R平均帧率比较。误差棒表示5次独立进程级运行FPS的样本标准差。"),
-        ("图4", "图4　V0、V2R和V3R平均及尾延迟比较。（a）各路径绝对延迟；（b）V3R相对V2R的冻结变化，其中负值表示降低/更快，正值表示升高/更慢。Mean、P95和P99均基于每种路径合并后的5400个逐帧延迟样本统计。"),
-    )
-)
+def load_caption_authority() -> OrderedDict[str, str]:
+    captions: OrderedDict[str, str] = OrderedDict()
+    for directory, filename, id_field, prefix in (
+        ("figures", "figure_manifest.csv", "figure_id", "图"),
+        ("tables", "table_manifest.csv", "table_id", "表"),
+    ):
+        manifest = MANUSCRIPT / directory / filename
+        with manifest.open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        for row in rows:
+            label = prefix + row[id_field][1:]
+            caption = row.get("word_caption", "")
+            if not caption:
+                raise ValueError(f"{filename} has no caption for {row[id_field]}.")
+            captions[label] = caption
+    return captions
 
 
-def load_f1_caption_authority() -> str:
-    manifest = MANUSCRIPT / "figures/figure_manifest.csv"
-    with manifest.open(encoding="utf-8", newline="") as handle:
-        rows = {row["figure_id"]: row for row in csv.DictReader(handle)}
-    caption = rows.get("F1", {}).get("word_caption", "")
-    if not caption:
-        raise ValueError("Figure manifest has no F1 word_caption authority.")
-    return caption
-
-
-FIGURE_TABLE_CAPTIONS["图1"] = load_f1_caption_authority()
+FIGURE_TABLE_CAPTIONS = load_caption_authority()
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -358,24 +353,25 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
 def markdown_cross_reference_errors() -> list[str]:
     errors: list[str] = []
     text = "\n".join((MANUSCRIPT / "sections" / name).read_text(encoding="utf-8") for name in SECTION_PATHS)
+    normalized_text = text.replace("`", "")
     positions: dict[str, int] = {}
     for label, caption in FIGURE_TABLE_CAPTIONS.items():
-        matches = [match.start() for match in re.finditer(re.escape(caption), text)]
+        matches = [match.start() for match in re.finditer(re.escape(caption), normalized_text)]
         if len(matches) != 1:
             fail(errors, f"{label}: expected exactly one accepted caption, found {len(matches)}")
             continue
         positions[label] = matches[0]
         callout_pattern = re.compile(rf"{re.escape(label)}(?!　)")
-        callouts = [match.start() for match in callout_pattern.finditer(text) if match.start() < matches[0]]
+        callouts = [match.start() for match in callout_pattern.finditer(normalized_text) if match.start() < matches[0]]
         if not callouts:
             fail(errors, f"{label}: no body callout precedes its caption")
     figures = [positions.get(label, -1) for label in ("图1", "图2", "图3", "图4")]
-    tables = [positions.get(label, -1) for label in ("表1", "表2", "表3")]
+    tables = [positions.get(label, -1) for label in ("表1", "表2", "表3", "表4")]
     if figures != sorted(figures) or -1 in figures:
         fail(errors, "figure captions are not sequential F1--F4")
     if tables != sorted(tables) or -1 in tables:
-        fail(errors, "table captions are not sequential T1--T3")
-    stale = re.findall(r"(?:图|Fig(?:ure)?\.?\s*)[5-9]|(?:表|Table\s*)[4-9]", text, flags=re.I)
+        fail(errors, "table captions are not sequential T1--T4")
+    stale = re.findall(r"(?:图|Fig(?:ure)?\.?\s*)[5-9]|(?:表|Table\s*)[5-9]", text, flags=re.I)
     if stale:
         fail(errors, f"stale figure/table prototype labels found: {stale!r}")
     return errors
@@ -488,7 +484,7 @@ def main() -> int:
         "PASS: CITATION_SOURCE_VALIDATED "
         f"bibliography_entries={len(entries)} cited={len(cited_order)} uncited=1 unresolved=0"
     )
-    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3,F4 tables=T1,T2,T3")
+    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3,F4 tables=T1,T2,T3,T4")
     if args.docx:
         print(f"PASS: RENDERED_BIBLIOGRAPHY_VALIDATED docx={','.join(str(path) for path in args.docx)}")
         print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt")

@@ -8,27 +8,19 @@
 
 实验将工作负载、正确性条件、计时边界和统计口径作为统一条件。该设计与表面缺陷基准研究强调明确数据和评价边界的取向一致 [@lema_et_al_2025_surface_defect_benchmark]，但不声称遵循其他基准的正式规范。平台、模型和协议见表2。
 
-**表2　平台、模型、数据集和统一运行协议**
+**表2　平台、模型与统一基准协议。三条路径在相同Jetson平台、YOLOv8n、冻结TensorRT INT8混合精度Engine、固定测试工作负载和统一预热/测量协议下执行；表内仅保留复现实验所需的紧凑条件。**
 
-| 项目 | 配置 |
+| 项目 | 设置 |
 |---|---|
-| 边缘平台 | NVIDIA Jetson Orin Nano Super |
-| L4T | R36.5 |
-| CUDA | 12.6.11，runtime 12.6.68 |
-| TensorRT | 10.3.0.30 |
-| OpenCV | 4.5.4 |
-| 检测模型 | YOLOv8n |
-| 推理对象 | 冻结 TensorRT INT8 混合精度 Engine |
-| 输入尺寸 | 640×640 |
-| Batch size | 1 |
-| 数据集 | NEU-DET，去重后的 split-v2 |
-| 测试集 | 固定 180 幅图像 |
-| 正式比较路径 | V0、V2R、V3R |
-| 单次预热 | 60 帧 |
-| 单次测量 | 1080 帧，即 180 幅图像完整回放 6 个周期 |
-| 独立运行次数 | 每种路径 5 次，共 15 个独立进程 |
-| 内部诊断计时 | 关闭 |
-| Profiling | 关闭 |
+| 平台 | NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super |
+| 软件栈 | L4T R36.5；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4 |
+| Detector / 输入 | YOLOv8n；640 × 640；batch 1 |
+| Engine | TensorRT INT8混合精度（INT8 + FP16 fallback）；host input FP32 |
+| 校准 | 1260张去重训练图像；IInt8EntropyCalibrator2；batch 1；排除test split |
+| 工作负载 | 固定180张test图像 |
+| 路径 | V0 / V2R / V3R；单帧顺序执行 |
+| 计时协议 | 60帧预热；每进程1080帧；每路径5个独立进程 |
+| 正式计时 | 关闭diagnostics与profiling |
 
 正式运行使用`MAXN_SUPER`电源模式（`nvpmodel` mode 2），未调用`jetson_clocks`。时钟频率没有独立归档，因而不作为固定频率条件。运行前温度约为46.8–47.1 ℃，运行后约为48.7–49.6 ℃；这些仅是非连续的前后观察，不用于判断持续温度、运行时降频或功耗状态。
 
