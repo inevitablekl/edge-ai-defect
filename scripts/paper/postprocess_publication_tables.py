@@ -146,12 +146,26 @@ def set_cell_width_and_borders(
         if margins is None:
             margins = ET.Element(qn("tcMar"))
             tc_pr.insert(2, margins)
-        for edge, margin in (("top", 0), ("left", 0), ("bottom", 0), ("right", 0)):
+        for edge, margin in (("top", 0), ("left", 108), ("bottom", 0), ("right", 108)):
             node = margins.find(f"w:{edge}", NS)
             if node is None:
                 node = ET.SubElement(margins, qn(edge))
             node.set(qn("w"), str(margin))
             node.set(qn("type"), "dxa")
+
+
+def set_row_pagination(row: ET.Element, repeat_header: bool) -> None:
+    tr_pr = row.find("w:trPr", NS)
+    if tr_pr is None:
+        tr_pr = ET.Element(qn("trPr"))
+        row.insert(0, tr_pr)
+    if tr_pr.find("w:cantSplit", NS) is None:
+        ET.SubElement(tr_pr, qn("cantSplit"))
+    header = tr_pr.find("w:tblHeader", NS)
+    if repeat_header and header is None:
+        ET.SubElement(tr_pr, qn("tblHeader"))
+    elif not repeat_header and header is not None:
+        tr_pr.remove(header)
 
 
 def apply_table(table: ET.Element, table_id: str) -> None:
@@ -228,6 +242,7 @@ def apply_table(table: ET.Element, table_id: str) -> None:
         grid_col.set(qn("w"), str(width))
 
     for row_index, row in enumerate(rows):
+        set_row_pagination(row, repeat_header=row_index == 0)
         cells = row.findall("w:tc", NS)
         if len(cells) != len(widths):
             raise ValueError(f"{table_id} row {row_index} column count mismatch")

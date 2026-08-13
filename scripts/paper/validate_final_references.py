@@ -86,14 +86,14 @@ EXPECTED_TYPE = {
     "jacob_et_al_2018_integer_inference": "C",
     "nagel_et_al_2020_adaround": "C",
     "kim_lee_kim_2024_hyq": "C",
-    "nvidia_tensorrt_10_3_release_notes": "M",
-    "nvidia_cuda_best_practices_12_6": "M",
+    "nvidia_tensorrt_10_3_release_notes": "EB/OL",
+    "nvidia_cuda_best_practices_12_6": "EB/OL",
     "dean_barroso_2013_tail_scale": "J",
     "reddi_et_al_2019_mlperf_inference": "C",
     "nvidia_jetpack_6_2_2": "EB/OL",
     "bateni_et_al_2020_integrated_memory": "C",
     "rodriguez_et_al_2025_gpu_memory_allocation": "C",
-    "nvidia_cuda_programming_guide_12_6": "M",
+    "nvidia_cuda_programming_guide_12_6": "EB/OL",
     "hill_marty_2008_amdahl": "J",
     "archet_et_al_2023_embedded_soc": "C",
 }
@@ -144,14 +144,14 @@ METADATA_STATUS = {
     "jacob_et_al_2018_integer_inference": ("PASS", "CVF publication metadata confirm CVPR 2018:2704--2713."),
     "nagel_et_al_2020_adaround": ("PASS", "PMLR metadata confirm ICML/PMLR 119:7197--7206."),
     "kim_lee_kim_2024_hyq": ("PASS", "Local full text and admitted BibTeX metadata confirm conference fields."),
-    "nvidia_tensorrt_10_3_release_notes": ("PASS", "Phase 3 admitted limitation retained: no approved publication year is available."),
-    "nvidia_cuda_best_practices_12_6": ("PASS", "Local official PDF confirms 2024 Release 12.6 manual metadata."),
+    "nvidia_tensorrt_10_3_release_notes": ("REMEDIATED", "Official online PDF carrier, release year, URL, and governed access date verified; rendered as EB/OL."),
+    "nvidia_cuda_best_practices_12_6": ("REMEDIATED", "Official NVIDIA archive page, Release 12.6 year, URL, and governed access date verified; rendered as EB/OL."),
     "dean_barroso_2013_tail_scale": ("PASS", "ACM DOI metadata confirm Communications of the ACM 56(2):74--80."),
     "reddi_et_al_2019_mlperf_inference": ("UPGRADE_METADATA", "Same logical source upgraded from the 2019 preprint to ISCA 2020:446--459."),
     "nvidia_jetpack_6_2_2": ("REMEDIATED", "Converted to official webpage metadata with locally captured URL and access date; no publication year invented."),
     "bateni_et_al_2020_integrated_memory": ("PASS", "DOI registration, IEEE document 9113098, and DBLP confirm RTAS 2020:310--323."),
     "rodriguez_et_al_2025_gpu_memory_allocation": ("PASS", "Dagstuhl/DROPS metadata confirm OASIcs 127:1:1--1:15."),
-    "nvidia_cuda_programming_guide_12_6": ("PASS", "Local official PDF confirms 2024 Release 12.6 manual metadata."),
+    "nvidia_cuda_programming_guide_12_6": ("REMEDIATED", "Official NVIDIA archive page, Release 12.6 year, URL, and governed access date verified; rendered as EB/OL."),
     "hill_marty_2008_amdahl": ("PASS", "IEEE DOI metadata confirm Computer 41(7):33--38."),
     "archet_et_al_2023_embedded_soc": ("PASS", "IEEE DOI metadata confirm DSD 2023:30--38."),
     UNUSED_ADMITTED_KEY: ("PASS", "A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered."),
@@ -268,10 +268,16 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
             for required in ("booktitle", "year", "pages"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing conference metadata {required}")
-        if key in {"ultralytics_2023_yolov8_docs", "nvidia_jetpack_6_2_2"}:
+        if EXPECTED_TYPE.get(key) == "EB/OL":
             for required in ("url", "urldate"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing official webpage metadata {required}")
+        if key in {
+            "nvidia_tensorrt_10_3_release_notes",
+            "nvidia_cuda_best_practices_12_6",
+            "nvidia_cuda_programming_guide_12_6",
+        } and not fields.get("year"):
+            fail(errors, f"{key}: missing verified release year")
         doi = fields.get("doi")
         if doi and not re.fullmatch(r"10\.\S+/.+", doi):
             fail(errors, f"{key}: malformed DOI {doi!r}")
@@ -422,7 +428,7 @@ def rendered_docx_errors(path: Path) -> tuple[list[str], list[str]]:
     paragraphs = docx_paragraphs(path)
     bibliography = [text for style, text in paragraphs if style == "Bibliography"]
     if len(bibliography) != len(EXPECTED_CITED_ORDER):
-        fail(errors, f"{path.name}: expected 14 bibliography entries, found {len(bibliography)}")
+        fail(errors, f"{path.name}: expected {len(EXPECTED_CITED_ORDER)} bibliography entries, found {len(bibliography)}")
     for number, (key, entry) in enumerate(zip(EXPECTED_CITED_ORDER, bibliography), start=1):
         prefix = f"[{number}]"
         if not entry.startswith(prefix):

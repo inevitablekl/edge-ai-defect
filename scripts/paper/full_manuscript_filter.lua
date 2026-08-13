@@ -30,6 +30,17 @@ local function styled_text(text, style)
   return styled_inlines({pandoc.Str(text)}, style)
 end
 
+local function mixed_front_matter(block, body_style, label, label_style, add_space)
+  local inlines = pandoc.Inlines{
+    pandoc.Span({pandoc.Str(label)}, style_attr(label_style))
+  }
+  if add_space then
+    inlines:insert(pandoc.Space())
+  end
+  inlines:extend(block.content)
+  return styled_inlines(inlines, body_style)
+end
+
 local function block_text(block)
   if block.t == "Para" or block.t == "Plain" or block.t == "Header" then
     return pandoc.utils.stringify(block.content)
@@ -115,15 +126,6 @@ function Pandoc(doc)
         ["English Keywords"] = "en_keywords",
       }
       pending = labels[text]
-      if pending == "cn_abstract" then
-        output:insert(styled_text("摘要", "HFUTAbstractLabelCN"))
-      elseif pending == "cn_keywords" then
-        output:insert(styled_text("关键词", "HFUTKeywordsLabelCN"))
-      elseif pending == "en_abstract" then
-        output:insert(styled_text("Abstract", "HFUTAbstractLabelEN"))
-      elseif pending == "en_keywords" then
-        output:insert(styled_text("Keywords", "HFUTKeywordsLabelEN"))
-      end
     elseif front_matter and block.t == "Header" and block.level == 1 and text == "0 引言" then
       front_matter = false
       output:insert(styled_text("FULL_BODY_SECTION_START", "HFUTSpecimenNotice"))
@@ -133,20 +135,20 @@ function Pandoc(doc)
       add_full_identity(output, doc.meta, "cn", anonymous)
       pending = nil
     elseif front_matter and pending == "cn_abstract" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(styled_block(block, "HFUTAbstractBodyCN"))
+      output:insert(mixed_front_matter(block, "HFUTAbstractBodyCN", "摘要：", "HFUTAbstractLabelCNChar", false))
       pending = nil
     elseif front_matter and pending == "cn_keywords" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(styled_block(block, "HFUTKeywordsBodyCN"))
+      output:insert(mixed_front_matter(block, "HFUTKeywordsBodyCN", "关键词：", "HFUTKeywordsLabelCNChar", false))
       pending = nil
     elseif front_matter and pending == "en_title" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTTitleEN"))
       add_full_identity(output, doc.meta, "en", anonymous)
       pending = nil
     elseif front_matter and pending == "en_abstract" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(styled_block(block, "HFUTAbstractBodyEN"))
+      output:insert(mixed_front_matter(block, "HFUTAbstractBodyEN", "Abstract:", "HFUTAbstractLabelENChar", true))
       pending = nil
     elseif front_matter and pending == "en_keywords" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(styled_block(block, "HFUTKeywordsBodyEN"))
+      output:insert(mixed_front_matter(block, "HFUTKeywordsBodyEN", "Keywords:", "HFUTKeywordsLabelENChar", true))
       pending = nil
       if not final_front_matter_added then
         add_final_front_matter(output, doc.meta, anonymous)

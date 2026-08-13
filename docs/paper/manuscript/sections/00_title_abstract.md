@@ -4,7 +4,7 @@
 
 ## 中文题名
 
-面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构
+Jetson端工业缺陷检测的输入数据路径重构
 
 ## 中文摘要
 
@@ -16,7 +16,7 @@ Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—
 
 ## English Title
 
-Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson
+Input Data-Path Reconstruction for Industrial Defect Detection on Jetson
 
 ## English Abstract
 

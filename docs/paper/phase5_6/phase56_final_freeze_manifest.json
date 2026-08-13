@@ -1,16 +1,61 @@
 {
-  "schema_version": "1.0",
-  "phase": "Paper Phase 5.6G",
-  "verdict": "PHASE56_MANUSCRIPT_FREEZE_CANDIDATE",
+  "schema_version": "1.1",
+  "phase": "Paper Phase 5.6G-FMT-R1A",
+  "verdict": "PHASE56_SUPERVISOR_REVIEW_FREEZE_CANDIDATE",
   "generated_on": "2026-08-13",
   "commit": {
-    "starting": "332fabdf34ac377b7242193872fb9b9029ac937e",
+    "starting": "1fde334f44e11e7aa355efd275a56e41f70426b8",
     "final": "COMMIT_CONTAINING_THIS_MANIFEST",
-    "final_resolution": "The exact final commit is reported after the single local commit; embedding that commit SHA here would be self-referential."
+    "final_resolution": "The exact local commit is reported after creation; embedding it here would be self-referential.",
+    "push": false,
+    "merge": false,
+    "tag": false
+  },
+  "freeze_scope": {
+    "scientific_content_frozen": true,
+    "supervisor_review_format": "READY",
+    "strict_submission_format": "NOT_YET_CLAIMED",
+    "title_change_class": "TITLE_POSITIONING_REFINEMENT"
   },
   "titles": {
-    "chinese": "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构",
-    "english": "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson"
+    "chinese": "Jetson端工业缺陷检测的输入数据路径重构",
+    "chinese_character_count": 16,
+    "english": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
+    "superseded_chinese": "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构",
+    "superseded_english": "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson"
+  },
+  "official_format_authority_sha256": {
+    "reference_requirements_doc": "5ef440b270b73bad6a57ade6a68e35032c6a5e9829dbd45c05b4574dabb0f651",
+    "format_requirements_doc": "e29119e21dfd567f79a018049d95193f409229fd1470322554aa2492f1d0594d",
+    "figure_requirements_doc": "160960cdfcc73896cb443a1b7eeec91e9ad419febc4710bafff5b1882636138a",
+    "table_requirements_doc": "1764dd6bb74e4ea850aad2fd71f87a1a92badfd7d6854edd8ff9db7d09a0f009",
+    "converted_format_requirements_docx": "e26cbd73c866a1cd37469036c1581bd8899a84674877e1246740cf11e4c5445d"
+  },
+  "format_contract": {
+    "chinese_title": "22 pt bold SimSun centered",
+    "chinese_authors": "14 pt KaiTi centered",
+    "english_title": "14 pt bold Times New Roman centered",
+    "english_authors": "10.5 pt bold Times New Roman centered",
+    "body_first_line_indent_twips": 438,
+    "footer_distance_twips": 907,
+    "page": "A4; margins top/bottom/left/right = 1361/1134/1304/1304 twips",
+    "abstract_keywords": "label and body in the same paragraph with run-level label character styles",
+    "table_3_4_cell_margin_twips": {"left": 108, "right": 108},
+    "table_pagination": "all rows cantSplit; first row repeats as header"
+  },
+  "mechanical_pdf_qa": {
+    "renderer": "LibreOffice 7.3.7.2",
+    "font_substitution": {"SimSun": "Noto Serif CJK SC", "Times New Roman": "Liberation Serif"},
+    "available_title_width_cm": 16.401,
+    "chinese_title": {"line_count": 1, "actual_break": false, "rendered_width_cm": 14.686, "result": "PASS"},
+    "english_title": {"line_count": 1, "actual_break": false, "rendered_width_cm": 15.486, "result": "PASS"},
+    "rendered_heading_count_including_reference_heading": 23,
+    "wrapped_headings": [],
+    "full_pages": 10,
+    "anonymous_pages": 10,
+    "page_size": "A4",
+    "all_20_pages_inspected": true,
+    "result": "PASS"
   },
   "inventory": {
     "figures": 4,
@@ -37,66 +82,31 @@
       "task_metrics": {"precision": "0.6913", "recall": "0.6991", "mAP50": "0.6476", "mAP50_95": "0.3523"}
     }
   },
+  "nvidia_reference_carriers": {
+    "nvidia_tensorrt_10_3_release_notes": {"type": "EB/OL", "year": 2024, "access_date": "2026-08-07", "url": "https://docs.nvidia.com/deeplearning/tensorrt/archives/tensorrt-1030/pdf/TensorRT-Release-Notes.pdf"},
+    "nvidia_cuda_best_practices_12_6": {"type": "EB/OL", "year": 2024, "access_date": "2026-08-07", "url": "https://docs.nvidia.com/cuda/archive/12.6.0/cuda-c-best-practices-guide/index.html"},
+    "nvidia_cuda_programming_guide_12_6": {"type": "EB/OL", "year": 2024, "access_date": "2026-08-07", "url": "https://docs.nvidia.com/cuda/archive/12.6.0/cuda-c-programming-guide/index.html"}
+  },
   "sha256": {
+    "template": "abb24745a345e21c69e5d3a4c1fb1763c5eaeb8093adc699a4455be100cd1d2e",
+    "full_docx": "a018a6eca35b7c36fb52ec64744b4263edb403f920f28961882ce0917b87fb0c",
+    "anonymous_docx": "5a001f2c3fe87bc3401e07ca43b04794fc85815e1a31e4483299fd9ce185cc6c",
+    "full_mechanical_pdf": "fe65d8f2b958bbd11e384e096dcdcad6ef45c2ddc84e281d85d2825a7d84e843",
+    "anonymous_mechanical_pdf": "17908a4c028c97a35198747a79545dd8bb71a1be066950db9c2409f7c3b8d4f9",
     "manuscript_sections": {
-      "docs/paper/manuscript/sections/00_title_abstract.md": "ffa8484a95587261a20e413c331be9abed17295ee0c0e05d75284ea8375fd7ce",
-      "docs/paper/manuscript/sections/01_introduction.md": "f817d15d24b4b2b62014b76987c6bb7129d886905e1de09db712e7ad4dc08679",
-      "docs/paper/manuscript/sections/02_problem_definition.md": "8fc825e9badcb20a768c2b56fa76fc29e2c5aa4f73fee8eff8b60dd2bd2d78e1",
-      "docs/paper/manuscript/sections/03_method.md": "df4737f7bebd619a1024484798f46156271bc7d9a32373b089cb7c4e4fe6e77c",
-      "docs/paper/manuscript/sections/04_experiment.md": "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689",
-      "docs/paper/manuscript/sections/05_results.md": "bf4861781e549bff0b1b37ddce0e495243b832e80cba5c433d9ad629e04725d8",
-      "docs/paper/manuscript/sections/06_conclusion.md": "c9fbf9387839014bb5b595755af12e1bf1d1e831c6e9337789a7cb508f9bb740"
+      "00_title_abstract.md": "079669e648813c38ae9ec424e982bbdefdedbad9e2c177f4f3c603a09a61754c",
+      "01_introduction.md": "f817d15d24b4b2b62014b76987c6bb7129d886905e1de09db712e7ad4dc08679",
+      "02_problem_definition.md": "8fc825e9badcb20a768c2b56fa76fc29e2c5aa4f73fee8eff8b60dd2bd2d78e1",
+      "03_method.md": "a4eaf4ba390e6c01ea3c31f3fb55da240ecaf6cf9d931619a34c675ba26beb7d",
+      "04_experiment.md": "ac8f5e9e2982ec5b7e02233eff604b4efaffb31fcb94f37c80eb28c81874d689",
+      "05_results.md": "bf4861781e549bff0b1b37ddce0e495243b832e80cba5c433d9ad629e04725d8",
+      "06_conclusion.md": "c9fbf9387839014bb5b595755af12e1bf1d1e831c6e9337789a7cb508f9bb740"
     },
-    "bibliography": {
-      "docs/paper/manuscript/references/references.bib": "2bc023d477412d11666a9f4bb7d5c7b9b358552e2c547ff3720e646c3f6f2328"
-    },
-    "figure_production": {
-      "fig1.svg": "d5f449ecc1c174d4315876bb2faf38e5f09d1c0bf675861466e413184cb5a887",
-      "fig1.pdf": "61d5a6f2d18d2c8579e1cecbc86da4c974a9d373a09167fc543ec60650cb8b99",
-      "fig1.png": "9fcd9388b6d12bfc027adfb7c0a1aac8690a324f7b987efe6229b7109e4fcb05",
-      "fig2.svg": "8e81ed1d50322d75c9170e99e6aa54bca9e180c79d2d8bfd947fbb81d045e605",
-      "fig2.pdf": "40b36f859e693f0084952283b1f9354802c8b05c3c3dfd5b8b2cfac4c8a88a90",
-      "fig2.png": "935e17fcb1ace1166b586af56adde8ad026e0a9689501f4affed0f08fe13fdc3",
-      "fig3.svg": "881532ab226d72de92735892950d6dd97fef75e51ad390a1223c9827b0ddbdb1",
-      "fig3.pdf": "9562323f0228c494e12e378ded74cf7dbcdfb5a4802894658a1232bc07ff0815",
-      "fig3.png": "dfa125e8d20c28c93cb8a210417d72103988057cfd2bca371f2bd1c17a802ea9",
-      "fig4.svg": "9f975e880d220b73b80fcd4ed4b1aecb7969a143eb55192b6d9f363e6a718570",
-      "fig4.pdf": "fccd8310b045abd00fc2b0b531d8b802f33a062092d7fd5c68b40973ae3fcace",
-      "fig4.png": "c30ee465b6707064819504994c569d48a01067602b19c5a4c79b4b90fe296e96"
-    },
-    "table_sources": {
-      "table1": "a565530b8007357855f83954487aa56c5e4bcdf94d660331c084788f78c79f11",
-      "table2": "41ea42c945ca60be8b6e957d019fd7a914c117b9ce155478ea94189c5874f309",
-      "table3": "6d5e028fd2e48edd9de9dc5a8cd8823a6748b37ea7e3801b280497a4f5ebf1d0",
-      "table4": "1f1c94e7e88cb316959d04014dc734bfeab7fe08f1336c6f08664524e71862b9"
-    },
-    "captions": {
-      "docs/paper/phase5_6/visual/production/phase56_figure_table_captions.md": "d820f50b8feb881eec46f368f5fa43817e7e86446586abad9514796f14262e86"
-    },
-    "visual_evidence_and_validation": {
-      "docs/paper/phase5_6/visual/phase56_related_work_attribute_evidence.csv": "955fec74af8078a528cb296375e8bf5a70d0d0e5859c1edd7628a40b57f42f63",
-      "docs/paper/phase5_6/visual/table4_related_work_spec.md": "482967ae3840d7dbda4d3a386c2adec0821e3a6159b96b1f74733d51788e274b",
-      "docs/paper/phase5_6/visual/production/phase56_visual_asset_manifest.json": "ad15bf71e31b54cca2a73ca4bbf84a7a919b045b44376f2baf2f21b60ce9ea10",
-      "docs/paper/phase5_6/visual/production/phase56_visual_asset_validation.json": "030b4074b9b5872e0a5a71c3c31fa8c970fed6adf070fcda2c540ccf15145bd7",
-      "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_statistical.py": "2bbf0e2141e1e0bb5bfc59169e49e3f0e0ca2248f21c476cf7aef8547ed819c1",
-      "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_tables.py": "b0b8d2af7cf3d44d1fe348f8248c675eed37b7dca63dbb12b692958d5521700f",
-      "docs/paper/phase5_6/visual/scripts/validate_phase56d_production.py": "2b30f7e2f5fbb094718013bb4d7f60831397e72eb9916a3a633fe3cee093be9f"
-    },
-    "build_and_validation_scripts": {
-      "scripts/paper/build_manuscript_docx.sh": "814413392b8cadf27138f9c41ca29610fb4f13b93e7888e2e9ba099c19723011",
-      "scripts/paper/postprocess_full_manuscript_docx.py": "1caf067b6e96b7c5ae14bddf787840a15488a6e635a7ace366dd6ccf657aeccb",
-      "scripts/paper/postprocess_publication_tables.py": "788b4775711d6479c6e10501e8e10a51dea3fb99aa8006df9e6100929f631661",
-      "scripts/paper/validate_full_manuscript_docx.py": "bd7d0c64a49897eb92530fc6767618a24eff66c60a49034e4e1d668c50866a7d",
-      "scripts/paper/validate_anonymous_manuscript_docx.py": "d8067c6692ad54714d9dee4375aa859c2fdf885eb9fa44804046eea51d6572e0",
-      "scripts/paper/validate_journal_format_docx.py": "e4abf8fc965836af910c4fe98b6946dfb8bf88de5ad4a0fdc0e8af7f78b4c6fa",
-      "scripts/paper/validate_phase56e_integration.py": "f0ad58972ce582c201cd037e2f47bdc4a0f34b16836f1358fae20cfaa4cabc85",
-      "scripts/paper/validate_word_heading_numbering_docx.py": "e4cfd6a9e97be611e711fcac328165694d33a5c11a7f24b3ba03e9a4deaa81a5"
-    },
-    "build_outputs": {
-      "docs/paper/manuscript/output/draft_full.docx": "b5fb54d144c12df3ef14bd34686aece91ed3ff8a1b0cd7e08af8b268dd0a7367",
-      "docs/paper/manuscript/output/draft_anonymous.docx": "3cd2343be084affb3145f931ef7397785a50858289db01283e2a85b6232079d4",
-      "docs/paper/manuscript/output/pdf/draft_full.pdf": "d2774dd37609d62d1992b1eea2406c7887d5716eb91e67d2d977b77f780a98eb",
-      "docs/paper/manuscript/output/pdf/draft_anonymous.pdf": "6caf13eb402ec874b840b48ac10ae44e21058384444cda3b74701f7c7bbe6c4e"
+    "references_bib": "3f7dbb8101698c0ca358a998f5cd206103b847cd306500f980dbe1c5bc733a99",
+    "nvidia_local_evidence": {
+      "cuda_programming_guide_12_6_pdf": "b663837878e1df3d394014f12e6312080938f6adfe30db33703d87c3de823603",
+      "cuda_best_practices_12_6_pdf": "920bf9fae435cdf8b65ab3e9c0cafaac9914a11abce0de4e98c6509a1a06723d",
+      "tensorrt_10_3_release_notes_pdf": "ac4b5b4d1e5f5b78df89445b3707fae11e464c6d13b32e08ab772c47bfce18c5"
     }
   },
   "validators": {
@@ -104,40 +114,27 @@
     "anonymous_build": "PASS",
     "anonymous_identity_scan": "PASS",
     "full_anonymous_scientific_parity": "PASS",
-    "phase56g_freeze_candidate": "PASS",
-    "journal_format": "PASS",
+    "journal_format_source_and_render": "PASS",
     "citation_source": "PASS",
     "rendered_bibliography": "PASS",
     "static_cross_reference": "PASS",
     "word_heading_numbering": "PASS",
-    "visual_assets": "PHASE56G_VISUAL_ASSETS_PASS (93 checks)",
-    "sha256_manifest_check": "PASS",
     "python_compile": "PASS",
     "git_diff_check": "PASS"
   },
-  "mechanical_pdf_qa": {
-    "renderer": "LibreOffice 7.3.7.2",
-    "full_pages": 10,
-    "anonymous_pages": 10,
-    "page_size": "A4",
-    "all_pages_inspected": true,
-    "result": "PASS"
+  "submission_exceptions": {
+    "SUBMISSION_EXCEPTION_MATHTYPE": "OPEN; DOCUMENTED_SUBMISSION_EXCEPTION; five equations remain visually correct OMML",
+    "SUBMISSION_EXCEPTION_VISIO_ORIGIN": "OPEN; DOCUMENTED_SUBMISSION_EXCEPTION; deterministic SVG/PDF authorities and frozen high-resolution PNG DOCX payloads retained"
   },
-  "reference_type_audit": {
-    "nvidia_tensorrt_10_3_release_notes": "[M]",
-    "nvidia_cuda_best_practices_12_6": "[M]",
-    "nvidia_cuda_programming_guide_12_6": "[M]",
-    "local_rule_basis": "Archived official manual PDFs render as [M]; no unsupported TensorRT publication year was invented."
-  },
+  "open_findings": [
+    "Microsoft Word Desktop human QA pending",
+    "MathType literal-object submission-production exception",
+    "Visio/Origin literal-software submission-production exception"
+  ],
   "execution_constraints": {
     "new_experiment": false,
     "new_benchmark": false,
     "new_inference": false,
-    "new_profiling": false,
-    "phase56x": "SKIPPED",
-    "push": false,
-    "merge": false,
-    "tag": false
-  },
-  "remaining_human_action": "Open the final DOCX in Microsoft Word Desktop for the last application-specific visual check."
+    "new_profiling": false
+  }
 }

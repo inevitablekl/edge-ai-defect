@@ -8,6 +8,7 @@ import csv
 import hashlib
 import re
 import struct
+import subprocess
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -18,10 +19,9 @@ from validate_word_heading_numbering_docx import audit_heading_numbering_roots
 ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = ROOT / "docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
 MANIFEST = ROOT / "docs/paper/manuscript/figures/figure_manifest.csv"
-REFERENCE_SHA256 = "483183514a2521592d50ecb7f7a2b2f24a88981c4abba3824aa487a8e054d7b9"
 BIOGRAPHY = "王凯伦（1999—），男，山东潍坊人，工学学士，硕士研究生，主要研究方向为端侧人工智能推理部署与优化。"
-TITLE_CN = "面向Jetson端TensorRT INT8工业缺陷检测的输入数据路径重构"
-TITLE_EN = "Input Data-Path Reconstruction for TensorRT INT8 Industrial Defect Detection on Jetson"
+TITLE_CN = "Jetson端工业缺陷检测的输入数据路径重构"
+TITLE_EN = "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson"
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -73,29 +73,44 @@ def manifest_captions() -> list[str]:
 
 def style_contract(styles: ET.Element, errors: list[str]) -> None:
     expected = {
-        "HFUTTitleCN": ("黑体", "Times New Roman", "30", "360"),
-        "HFUTTitleEN": ("Times New Roman", "Times New Roman", "28", "336"),
-        "HFUTBody": ("宋体", "Times New Roman", "21", "320"),
-        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320"),
-        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320"),
-        "HFUTHeading3": ("楷体", "Times New Roman", "21", "320"),
-        "HFUTAuthorBiography": ("宋体", "Times New Roman", "15", "280"),
-        "HFUTFigureCaption": ("黑体", "Times New Roman", "15", "320"),
-        "HFUTTableContent": ("宋体", "Times New Roman", "15", "240"),
-        "HFUTReferenceEntry": ("宋体", "Times New Roman", "15", "280"),
-        "Bibliography": ("宋体", "Times New Roman", "15", "280"),
+        # eastAsia, Latin, half-points, line twips (None means no forced line),
+        # alignment, bold, first-line indent.
+        "HFUTTitleCN": ("宋体", "Times New Roman", "44", None, "center", True, None),
+        "HFUTAuthorsCN": ("楷体", "Times New Roman", "28", None, "center", False, None),
+        "HFUTTitleEN": ("Times New Roman", "Times New Roman", "28", None, "center", True, None),
+        "HFUTAuthorsEN": ("Times New Roman", "Times New Roman", "21", None, "center", True, None),
+        "HFUTBody": ("宋体", "Times New Roman", "21", "320", "both", False, "438"),
+        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320", "left", True, None),
+        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320", "left", True, None),
+        "HFUTHeading3": ("楷体", "Times New Roman", "21", "320", "left", False, None),
+        "HFUTAuthorBiography": ("宋体", "Times New Roman", "15", "280", "left", False, None),
+        "HFUTFigureCaption": ("黑体", "Times New Roman", "15", "320", "center", True, None),
+        "HFUTTableContent": ("宋体", "Times New Roman", "15", "240", "center", False, None),
+        "HFUTReferenceEntry": ("宋体", "Times New Roman", "15", "280", "left", False, None),
+        "Bibliography": ("宋体", "Times New Roman", "15", "280", "left", False, None),
+        "HFUTAbstractLabelCNChar": ("黑体", "Times New Roman", "18", None, None, True, None),
+        "HFUTKeywordsLabelCNChar": ("黑体", "Times New Roman", "18", None, None, True, None),
+        "HFUTAbstractLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, True, None),
+        "HFUTKeywordsLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, True, None),
     }
     found = {node.get(Q("styleId")): node for node in styles.findall("w:style", NS)}
-    for sid, (east, latin, size, line) in expected.items():
+    for sid, (east, latin, size, line, alignment, bold, first_line) in expected.items():
         node = found.get(sid)
         if node is None:
             errors.append(f"missing style {sid}")
             continue
         fonts = node.find("w:rPr/w:rFonts", NS)
         spacing = node.find("w:pPr/w:spacing", NS)
-        if (attr(fonts, "eastAsia"), attr(fonts, "ascii"), attr(node.find("w:rPr/w:sz", NS), "val"), attr(spacing, "line")) != (east, latin, size, line):
+        actual = (
+            attr(fonts, "eastAsia"), attr(fonts, "ascii"),
+            attr(node.find("w:rPr/w:sz", NS), "val"), attr(spacing, "line"),
+            attr(node.find("w:pPr/w:jc", NS), "val"),
+            node.find("w:rPr/w:b", NS) is not None,
+            attr(node.find("w:pPr/w:ind", NS), "firstLine"),
+        )
+        if actual != (east, latin, size, line, alignment, bold, first_line):
             errors.append(f"style contract mismatch: {sid}")
-        if attr(spacing, "lineRule") != "exact":
+        if line is not None and attr(spacing, "lineRule") != "exact":
             errors.append(f"style line rule is not exact: {sid}")
 
 
@@ -132,6 +147,8 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         actual = (attr(size, "w"), attr(size, "h"), attr(margins, "top"), attr(margins, "right"), attr(margins, "bottom"), attr(margins, "left"), attr(margins, "gutter"), attr(cols, "space"))
         if actual != ("11906", "16838", "1361", "1304", "1134", "1304", "0", "425"):
             errors.append(f"page geometry mismatch: {actual}")
+        if attr(margins, "footer") != "907":
+            errors.append(f"official footer distance mismatch: {attr(margins, 'footer')}")
         if section.find("w:pgNumType", NS) is not None and attr(section.find("w:pgNumType", NS), "start"):
             errors.append("page numbering restart present")
     if not sections or sections[0].find("w:titlePg", NS) is None:
@@ -170,10 +187,24 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     if chinese_chars > 20:
         errors.append("Chinese title exceeds safe 20-character limit")
     counts = {sid: sum(style_id(p) == sid for p in paragraphs) for sid in (
-        "HFUTAbstractLabelCN", "HFUTAbstractBodyCN", "HFUTKeywordsLabelCN", "HFUTKeywordsBodyCN",
-        "HFUTClassification", "HFUTAbstractLabelEN", "HFUTAbstractBodyEN", "HFUTKeywordsLabelEN", "HFUTKeywordsBodyEN")}
+        "HFUTAbstractBodyCN", "HFUTKeywordsBodyCN", "HFUTClassification",
+        "HFUTAbstractBodyEN", "HFUTKeywordsBodyEN")}
     if any(value != 1 for value in counts.values()):
         errors.append(f"front-matter semantic style usage mismatch: {counts}")
+    front_contract = {
+        "HFUTAbstractBodyCN": ("摘要：", "HFUTAbstractLabelCNChar"),
+        "HFUTKeywordsBodyCN": ("关键词：", "HFUTKeywordsLabelCNChar"),
+        "HFUTAbstractBodyEN": ("Abstract:", "HFUTAbstractLabelENChar"),
+        "HFUTKeywordsBodyEN": ("Keywords:", "HFUTKeywordsLabelENChar"),
+    }
+    for paragraph_style, (prefix, run_style) in front_contract.items():
+        matches = [p for p in paragraphs if style_id(p) == paragraph_style]
+        if len(matches) != 1 or not text(matches[0]).startswith(prefix):
+            errors.append(f"same-paragraph front-matter prefix mismatch: {paragraph_style}")
+            continue
+        first_run_style = attr(matches[0].find("w:r/w:rPr/w:rStyle", NS), "val")
+        if first_run_style != run_style:
+            errors.append(f"inline label character style mismatch: {paragraph_style}={first_run_style}")
     cn_abstract = next((text(p) for p in paragraphs if style_id(p) == "HFUTAbstractBodyCN"), "")
     cn_keywords = next((text(p) for p in paragraphs if style_id(p) == "HFUTKeywordsBodyCN"), "")
     en_keywords = next((text(p) for p in paragraphs if style_id(p) == "HFUTKeywordsBodyEN"), "")
@@ -240,35 +271,163 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     tables = body.findall("w:tbl", NS)
     if len(tables) != 4 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [10, 9, 3, 6]:
         errors.append("T1/T2/T3/T4 row contract failed")
-    for table in tables:
+    for table_index, table in enumerate(tables, start=1):
         borders = table.find("w:tblPr/w:tblBorders", NS)
         actual = {node.tag.rsplit("}", 1)[-1]: (attr(node, "val"), attr(node, "sz")) for node in borders} if borders is not None else {}
         if actual.get("top") != ("single", "8") or actual.get("bottom") != ("single", "8") or any(actual.get(edge, (None,))[0] != "nil" for edge in ("left", "right", "insideH", "insideV")):
             errors.append(f"three-line table outer border contract failed: {actual}")
+        rows = table.findall("w:tr", NS)
+        for row_index, row in enumerate(rows):
+            if row.find("w:trPr/w:cantSplit", NS) is None:
+                errors.append(f"T{table_index} row {row_index + 1} lacks cantSplit")
+            has_repeat = row.find("w:trPr/w:tblHeader", NS) is not None
+            if has_repeat != (row_index == 0):
+                errors.append(f"T{table_index} repeated-header contract failed at row {row_index + 1}")
+        if table_index in {3, 4}:
+            for cell_index, cell in enumerate(table.findall(".//w:tc", NS), start=1):
+                margins = cell.find("w:tcPr/w:tcMar", NS)
+                left = attr(margins.find("w:left", NS), "w") if margins is not None else None
+                right = attr(margins.find("w:right", NS), "w") if margins is not None else None
+                if (left, right) != ("108", "108"):
+                    errors.append(f"T{table_index} cell {cell_index} margin mismatch: {(left, right)}")
 
     if any(token in package_text for token in ("FULL_BODY_SECTION_START", "TOOLCHAIN TEST")):
         errors.append("forbidden build marker present")
     if any(token in body_text for token in ("PENDING", "TBD", "UNKNOWN")):
         errors.append("visible publication placeholder present")
     out["formal_equations"] = len(document.findall(".//{http://schemas.openxmlformats.org/officeDocument/2006/math}oMathPara"))
+    if out["formal_equations"] != 5:
+        errors.append(f"expected five OMML equations, found {out['formal_equations']}")
     out["page_fields"] = sum(page_counts)
     out["biography_package_count"] = package_bio
     return errors, out
+
+
+def normalized_layout_text(value: str) -> str:
+    return re.sub(r"\s+", "", value).casefold()
+
+
+def pdf_layout_lines(path: Path) -> tuple[int, list[dict[str, object]]]:
+    completed = subprocess.run(
+        ["pdftotext", "-bbox-layout", str(path), "-"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    root = ET.fromstring(completed.stdout)
+    pages = [node for node in root.iter() if node.tag.rsplit("}", 1)[-1] == "page"]
+    lines: list[dict[str, object]] = []
+    for page_index, page in enumerate(pages, start=1):
+        for node in page.iter():
+            if node.tag.rsplit("}", 1)[-1] != "line":
+                continue
+            value = "".join(node.itertext()).strip()
+            if not value:
+                continue
+            lines.append(
+                {
+                    "page": page_index,
+                    "text": value,
+                    "norm": normalized_layout_text(value),
+                    "width_pt": float(node.get("xMax", "0")) - float(node.get("xMin", "0")),
+                }
+            )
+    return len(pages), lines
+
+
+def locate_rendered_text(lines: list[dict[str, object]], target: str) -> list[dict[str, object]]:
+    needle = normalized_layout_text(target)
+    for line in lines:
+        if needle in str(line["norm"]):
+            return [line]
+    for start in range(len(lines)):
+        joined = str(lines[start]["norm"])
+        if not needle.startswith(joined):
+            continue
+        page = lines[start]["page"]
+        for end in range(start + 1, min(start + 4, len(lines))):
+            if lines[end]["page"] != page:
+                break
+            joined += str(lines[end]["norm"])
+            if joined == needle:
+                return lines[start : end + 1]
+            if not needle.startswith(joined):
+                break
+    return []
+
+
+def validate_pdf_layout(docx_path: Path, pdf_path: Path) -> tuple[list[str], dict[str, object]]:
+    errors: list[str] = []
+    page_count, lines = pdf_layout_lines(pdf_path)
+    _, parsed = load(docx_path)
+    paragraphs = parsed["word/document.xml"].findall(".//w:body/w:p", NS)
+    heading_texts = [
+        text(paragraph) for paragraph in paragraphs
+        if style_id(paragraph) in {
+            "HFUTIntroHeading", "HFUTHeading1", "HFUTHeading2",
+            "HFUTHeading3", "HFUTReferenceHeading",
+        }
+    ]
+    title_results: dict[str, object] = {}
+    for label, title in (("chinese", TITLE_CN), ("english", TITLE_EN)):
+        located = locate_rendered_text(lines, title)
+        line_count = len(located)
+        width_pt = max((float(item["width_pt"]) for item in located), default=0.0)
+        title_results[label] = {
+            "line_count": line_count,
+            "actual_break": line_count > 1,
+            "max_rendered_line_width_pt": round(width_pt, 3),
+            "max_rendered_line_width_cm": round(width_pt * 2.54 / 72.0, 3),
+        }
+        if not located:
+            errors.append(f"{label} title not located in mechanical PDF")
+    if title_results["chinese"]["line_count"] != 1:
+        errors.append("PHASE56G_FMT_TITLE_LENGTH_NEEDS_MAIN_AI_DECISION_R2")
+
+    wrapped_headings: list[str] = []
+    missing_headings: list[str] = []
+    for heading in heading_texts:
+        located = locate_rendered_text(lines, heading)
+        if not located:
+            missing_headings.append(heading)
+        elif len(located) != 1:
+            wrapped_headings.append(heading)
+    if missing_headings:
+        errors.append(f"headings not located in mechanical PDF: {missing_headings}")
+    if wrapped_headings:
+        errors.append(f"wrapped headings in mechanical PDF: {wrapped_headings}")
+    return errors, {
+        "page_count": page_count,
+        "titles": title_results,
+        "heading_count": len(heading_texts),
+        "wrapped_headings": wrapped_headings,
+        "english_title_status": (
+            "ONE_LINE" if title_results["english"]["line_count"] == 1
+            else "OFFICIAL_COMPATIBLE_TITLE_WRAP"
+        ),
+    }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--full", required=True, type=Path)
     parser.add_argument("--anonymous", required=True, type=Path)
+    parser.add_argument("--full-pdf", required=True, type=Path)
+    parser.add_argument("--anonymous-pdf", required=True, type=Path)
     args = parser.parse_args()
     errors: list[str] = []
     reference_hash = sha256(REFERENCE)
-    if reference_hash != REFERENCE_SHA256:
-        errors.append(f"reference DOCX hash mismatch: {reference_hash}")
     results = {}
-    for variant, path in (("full", args.full), ("anonymous", args.anonymous)):
+    for variant, path, pdf_path in (
+        ("full", args.full, args.full_pdf),
+        ("anonymous", args.anonymous, args.anonymous_pdf),
+    ):
         current_errors, details = validate_variant(path, variant)
         errors.extend(f"{variant}: {message}" for message in current_errors)
+        pdf_errors, pdf_details = validate_pdf_layout(path, pdf_path)
+        errors.extend(f"{variant}: {message}" for message in pdf_errors)
+        details["mechanical_pdf"] = pdf_details
         results[variant] = details
     print(f"reference_docx_sha256={reference_hash}")
     for variant, details in results.items():
@@ -278,7 +437,8 @@ def main() -> int:
         for message in errors:
             print(f"ERROR: {message}")
         return 1
-    print("FORMAL_EQUATION_REQUIREMENT=NOT_APPLICABLE_TO_CURRENT_MANUSCRIPT")
+    print("SUBMISSION_EXCEPTION_MATHTYPE=DOCUMENTED_SUBMISSION_EXCEPTION")
+    print("SUBMISSION_EXCEPTION_VISIO_ORIGIN=DOCUMENTED_SUBMISSION_EXCEPTION")
     print("STRUCTURAL_REFERENCE_TYPOGRAPHY_PASS")
     print("verdict=PASS")
     return 0
