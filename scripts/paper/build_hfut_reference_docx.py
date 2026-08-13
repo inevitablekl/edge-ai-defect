@@ -114,6 +114,7 @@ def ppr(
     ilvl: int | None = None,
     tabs: str = "",
     line_rule: str | None = None,
+    snap_to_grid: bool | None = None,
 ) -> str:
     bits: list[str] = []
     if keep_next:
@@ -124,6 +125,8 @@ def ppr(
         bits.append("<w:pageBreakBefore/>")
     if num_id is not None:
         bits.append(f'<w:numPr><w:ilvl w:val="{ilvl or 0}"/><w:numId w:val="{num_id}"/></w:numPr>')
+    if snap_to_grid is not None:
+        bits.append(f'<w:snapToGrid w:val="{str(snap_to_grid).lower()}"/>')
     bits.append(spacing(line, before, after, exact, line_rule))
     ind_attrs = []
     if first is not None:
@@ -172,6 +175,7 @@ def para_style(
     ilvl: int | None = None,
     qformat: bool = True,
     line_rule: str | None = None,
+    snap_to_grid: bool | None = None,
 ) -> str:
     qfmt = "<w:qFormat/>" if qformat else ""
     based = f'<w:basedOn w:val="{based_on}"/>' if based_on else ""
@@ -183,7 +187,7 @@ def para_style(
             before=before, after=after, exact=exact, keep_next=keep_next,
             keep_lines=keep_lines, page_break_before=page_break_before,
             outline=outline, num_id=num_id, ilvl=ilvl,
-            line_rule=line_rule,
+            line_rule=line_rule, snap_to_grid=snap_to_grid,
         )
         + rpr(east, ascii_font, size, bold, italic)
         + "</w:style>"
@@ -225,7 +229,10 @@ def styles_xml() -> str:
         para_style("PageNumber", "Page Number", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="18", align="center", first=0, line=240, exact=True, qformat=False),
         para_style("HFUTSpecimenNotice", "HFUT Specimen Notice", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="18", bold=True, align="center", line=240, exact=True, keep_next=True),
         para_style("HFUTBody", "HFUT Body", based_on="Normal", east="宋体", size="21", align="both", first=438, line=320, exact=True),
-        para_style("HFUTTitleCN", "HFUT Title CN", based_on="Normal", east="宋体", ascii_font="Times New Roman", size="44", bold=True, align="center", keep_next=True),
+        # The official title paragraph uses automatic line-height semantics and
+        # explicitly opts out of the document grid.  Override Normal's exact
+        # 320-twip body line box so Word never clips 22 pt SimSun glyphs.
+        para_style("HFUTTitleCN", "HFUT Title CN", based_on="Normal", east="宋体", ascii_font="Times New Roman", size="44", bold=True, align="center", line=240, line_rule="auto", keep_next=True, snap_to_grid=False),
         para_style("HFUTTitleEN", "HFUT Title EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="28", bold=True, align="center", keep_next=True),
         para_style("HFUTAuthorsCN", "HFUT Authors CN", based_on="Normal", east="楷体", size="28", align="center"),
         para_style("HFUTAuthorsEN", "HFUT Authors EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="21", bold=True, align="center"),
@@ -516,7 +523,7 @@ def style_map_rows() -> list[dict[str, str]]:
             "step3_evidence": evidence, "authority_status": authority, "poc_status": poc, "windows_check_required": windows, "notes": notes,
         })
 
-    add("HFUTTitleCN", "HFUT Title CN", "Chinese title", "title", "Normal", "宋体", "Times New Roman", "22", "TRUE", "center", "0", "0", "", "", "TRUE", "", "OOXML named style", "HFUT-FMT-001", "official attachment P001: 44 half-points, bold, centered; Main AI requires SimSun", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "official title typography; final content separately length-checked")
+    add("HFUTTitleCN", "HFUT Title CN", "Chinese title", "title", "Normal", "宋体", "Times New Roman", "22", "TRUE", "center", "0", "0", "auto", "240", "TRUE", "", "OOXML named style", "HFUT-FMT-001", "official title: 44 half-points, bold, centered, no exact line constraint, snapToGrid=false", "OFFICIAL_SOURCE_IMPLEMENTATION", "WORD_DESKTOP_RECHECK_REQUIRED", "YES", "explicit auto single-line override prevents inheritance of Normal's exact 320-twip body line box; 240 is an auto-line multiplier, not a 12 pt exact height")
     add("HFUTTitleEN", "HFUT Title EN", "English title", "title", "Normal", "Times New Roman", "Times New Roman", "14", "TRUE", "center", "0", "0", "", "", "TRUE", "", "OOXML named style", "HFUT-FMT-008", "official attachment P010: 28 half-points, bold, centered", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "sentence-initial/proper-noun capitalization remains source-writing rule")
     add("HFUTAuthorsCN", "HFUT Authors CN", "Chinese authors", "author", "Normal", "楷体", "Times New Roman", "14", "FALSE", "center", "0", "0", "", "", "FALSE", "", "OOXML named style", "HFUT-FMT-002", "official attachment P003: Kaiti, 28 half-points, centered, non-bold", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "no real author information")
     add("HFUTAuthorsEN", "HFUT Authors EN", "English authors", "author", "Normal", "Times New Roman", "Times New Roman", "10.5", "TRUE", "center", "0", "0", "", "", "FALSE", "", "OOXML named style", "HFUT-FMT-009", "official attachment P012: centered, bold, effective Normal 10.5 pt TNR", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "no real author information")

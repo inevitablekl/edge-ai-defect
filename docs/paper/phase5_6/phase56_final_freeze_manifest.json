@@ -1,10 +1,10 @@
 {
-  "schema_version": "1.1",
-  "phase": "Paper Phase 5.6G-FMT-R1A",
-  "verdict": "PHASE56_SUPERVISOR_REVIEW_FREEZE_CANDIDATE",
+  "schema_version": "1.2",
+  "phase": "Paper Phase 5.6G-FMT-R2",
+  "verdict": "PHASE56_WORD_TITLE_RENDER_FIX_CANDIDATE",
   "generated_on": "2026-08-13",
   "commit": {
-    "starting": "1fde334f44e11e7aa355efd275a56e41f70426b8",
+    "starting": "c32651950727afa0010bc0e119bfcb936feb370b",
     "final": "COMMIT_CONTAINING_THIS_MANIFEST",
     "final_resolution": "The exact local commit is reported after creation; embedding it here would be self-referential.",
     "push": false,
@@ -15,7 +15,8 @@
     "scientific_content_frozen": true,
     "supervisor_review_format": "READY",
     "strict_submission_format": "NOT_YET_CLAIMED",
-    "title_change_class": "TITLE_POSITIONING_REFINEMENT"
+    "title_change_class": "NONE_IN_R2",
+    "word_desktop_recheck_required": true
   },
   "titles": {
     "chinese": "Jetson端工业缺陷检测的输入数据路径重构",
@@ -33,6 +34,10 @@
   },
   "format_contract": {
     "chinese_title": "22 pt bold SimSun centered",
+    "chinese_title_line_rule": "auto",
+    "chinese_title_line_value": 240,
+    "chinese_title_line_value_semantics": "single-line multiplier; not an exact 12 pt height",
+    "chinese_title_snap_to_grid": false,
     "chinese_authors": "14 pt KaiTi centered",
     "english_title": "14 pt bold Times New Roman centered",
     "english_authors": "10.5 pt bold Times New Roman centered",
@@ -42,6 +47,25 @@
     "abstract_keywords": "label and body in the same paragraph with run-level label character styles",
     "table_3_4_cell_margin_twips": {"left": 108, "right": 108},
     "table_pagination": "all rows cantSplit; first row repeats as header"
+  },
+  "word_title_vertical_clipping_remediation": {
+    "trigger": "WORD_TITLE_VERTICAL_CLIPPING_REAL_DEFECT",
+    "root_cause": "TITLE_CLIPPING_ROOT_CAUSE_STYLE_INHERITANCE",
+    "old_effective_font_size_half_points": 44,
+    "old_effective_font_size_twips": 440,
+    "old_effective_line_rule": "exact",
+    "old_effective_line_height_twips": 320,
+    "old_spacing_source": "HFUTTitleCN basedOn Normal; title style omitted line/lineRule, so Normal's exact body line box remained effective",
+    "official_line_rule": "implicit automatic line spacing; no explicit line constraint",
+    "official_snap_to_grid": false,
+    "corrected_line_rule": "auto",
+    "corrected_line_value": 240,
+    "corrected_line_value_semantics": "single-line multiplier",
+    "corrected_snap_to_grid": false,
+    "line_box_smaller_than_font": false,
+    "vertical_clipping_risk": false,
+    "english_title_style_mutation": false,
+    "word_desktop_recheck_required": true
   },
   "mechanical_pdf_qa": {
     "renderer": "LibreOffice 7.3.7.2",
@@ -55,7 +79,10 @@
     "anonymous_pages": 10,
     "page_size": "A4",
     "all_20_pages_inspected": true,
-    "result": "PASS"
+    "inspection_basis": "R2 pages 1-4 inspected in both variants; pages 5-10 raster-identical to the fully inspected R1 proof",
+    "first_page_overlap": false,
+    "first_page_abnormal_pagination": false,
+    "result": "PASS_LIBREOFFICE_ONLY_WORD_RECHECK_REQUIRED"
   },
   "inventory": {
     "figures": 4,
@@ -88,11 +115,16 @@
     "nvidia_cuda_programming_guide_12_6": {"type": "EB/OL", "year": 2024, "access_date": "2026-08-07", "url": "https://docs.nvidia.com/cuda/archive/12.6.0/cuda-c-programming-guide/index.html"}
   },
   "sha256": {
-    "template": "abb24745a345e21c69e5d3a4c1fb1763c5eaeb8093adc699a4455be100cd1d2e",
-    "full_docx": "a018a6eca35b7c36fb52ec64744b4263edb403f920f28961882ce0917b87fb0c",
-    "anonymous_docx": "5a001f2c3fe87bc3401e07ca43b04794fc85815e1a31e4483299fd9ce185cc6c",
-    "full_mechanical_pdf": "fe65d8f2b958bbd11e384e096dcdcad6ef45c2ddc84e281d85d2825a7d84e843",
-    "anonymous_mechanical_pdf": "17908a4c028c97a35198747a79545dd8bb71a1be066950db9c2409f7c3b8d4f9",
+    "template": "31b65361f50262240630d1453637218e2455b150dadc653edfa8e535439c55c0",
+    "full_docx": "7595ac410d8f554db18c97a2699b04b4838bbc7dd8c2aec1787dd7905e1f256d",
+    "anonymous_docx": "7ed7c671968514b6b983668b73d485c5ba4b28d816c41164077ba8c744ae9bc2",
+    "full_mechanical_pdf": "997956417b1ddce24e483cc827bd4fe237355ec7001c04ce31ad86805b76fd40",
+    "anonymous_mechanical_pdf": "49277fc2fd39fef12f150e9c267b6b8415594e3faaccabc485312eb0ec32a6b5",
+    "r2_source_files": {
+      "scripts/paper/build_hfut_reference_docx.py": "06392b70086ef271dd351fd8c3897923184e61942c42f412210ef11ce77ea973",
+      "scripts/paper/validate_journal_format_docx.py": "bbed8ea9a2a136da278c00b69e98a0e406ac67be072d0ed6b81cce2161a78de4",
+      "docs/paper/phase2_5/PAPER_PHASE2_5_REFERENCE_STYLE_MAP_v1.0.csv": "a794c6f1eff09924f3eafea58ecc2e0de0bbd987e7cf552cd638c00fb75f15e9"
+    },
     "manuscript_sections": {
       "00_title_abstract.md": "079669e648813c38ae9ec424e982bbdefdedbad9e2c177f4f3c603a09a61754c",
       "01_introduction.md": "f817d15d24b4b2b62014b76987c6bb7129d886905e1de09db712e7ad4dc08679",
@@ -119,6 +151,9 @@
     "rendered_bibliography": "PASS",
     "static_cross_reference": "PASS",
     "word_heading_numbering": "PASS",
+    "chinese_title_line_box": "PASS; auto/240 multiplier; snapToGrid=false; exact-box-smaller-than-font=NO",
+    "title_vertical_clipping_risk": "NO_BY_OOXML_CONTRACT; WORD_DESKTOP_RECHECK_REQUIRED",
+    "r1_dangerous_exact_box_regression_probe": "PASS; old exact 320 twips < effective 440-twip font was detected as failure",
     "python_compile": "PASS",
     "git_diff_check": "PASS"
   },
@@ -127,7 +162,7 @@
     "SUBMISSION_EXCEPTION_VISIO_ORIGIN": "OPEN; DOCUMENTED_SUBMISSION_EXCEPTION; deterministic SVG/PDF authorities and frozen high-resolution PNG DOCX payloads retained"
   },
   "open_findings": [
-    "Microsoft Word Desktop human QA pending",
+    "Microsoft Word Desktop Chinese-title recheck pending",
     "MathType literal-object submission-production exception",
     "Visio/Origin literal-software submission-production exception"
   ],

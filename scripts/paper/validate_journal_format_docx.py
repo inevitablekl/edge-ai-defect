@@ -73,28 +73,29 @@ def manifest_captions() -> list[str]:
 
 def style_contract(styles: ET.Element, errors: list[str]) -> None:
     expected = {
-        # eastAsia, Latin, half-points, line twips (None means no forced line),
-        # alignment, bold, first-line indent.
-        "HFUTTitleCN": ("宋体", "Times New Roman", "44", None, "center", True, None),
-        "HFUTAuthorsCN": ("楷体", "Times New Roman", "28", None, "center", False, None),
-        "HFUTTitleEN": ("Times New Roman", "Times New Roman", "28", None, "center", True, None),
-        "HFUTAuthorsEN": ("Times New Roman", "Times New Roman", "21", None, "center", True, None),
-        "HFUTBody": ("宋体", "Times New Roman", "21", "320", "both", False, "438"),
-        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320", "left", True, None),
-        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320", "left", True, None),
-        "HFUTHeading3": ("楷体", "Times New Roman", "21", "320", "left", False, None),
-        "HFUTAuthorBiography": ("宋体", "Times New Roman", "15", "280", "left", False, None),
-        "HFUTFigureCaption": ("黑体", "Times New Roman", "15", "320", "center", True, None),
-        "HFUTTableContent": ("宋体", "Times New Roman", "15", "240", "center", False, None),
-        "HFUTReferenceEntry": ("宋体", "Times New Roman", "15", "280", "left", False, None),
-        "Bibliography": ("宋体", "Times New Roman", "15", "280", "left", False, None),
-        "HFUTAbstractLabelCNChar": ("黑体", "Times New Roman", "18", None, None, True, None),
-        "HFUTKeywordsLabelCNChar": ("黑体", "Times New Roman", "18", None, None, True, None),
-        "HFUTAbstractLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, True, None),
-        "HFUTKeywordsLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, True, None),
+        # eastAsia, Latin, half-points, line, lineRule, alignment, bold,
+        # first-line indent. For lineRule=auto, w:line=240 is a single-line
+        # multiplier rather than an exact 12 pt line box.
+        "HFUTTitleCN": ("宋体", "Times New Roman", "44", "240", "auto", "center", True, None),
+        "HFUTAuthorsCN": ("楷体", "Times New Roman", "28", None, None, "center", False, None),
+        "HFUTTitleEN": ("Times New Roman", "Times New Roman", "28", None, None, "center", True, None),
+        "HFUTAuthorsEN": ("Times New Roman", "Times New Roman", "21", None, None, "center", True, None),
+        "HFUTBody": ("宋体", "Times New Roman", "21", "320", "exact", "both", False, "438"),
+        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320", "exact", "left", True, None),
+        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320", "exact", "left", True, None),
+        "HFUTHeading3": ("楷体", "Times New Roman", "21", "320", "exact", "left", False, None),
+        "HFUTAuthorBiography": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
+        "HFUTFigureCaption": ("黑体", "Times New Roman", "15", "320", "exact", "center", True, None),
+        "HFUTTableContent": ("宋体", "Times New Roman", "15", "240", "exact", "center", False, None),
+        "HFUTReferenceEntry": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
+        "Bibliography": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
+        "HFUTAbstractLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, True, None),
+        "HFUTKeywordsLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, True, None),
+        "HFUTAbstractLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, None, True, None),
+        "HFUTKeywordsLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, None, True, None),
     }
     found = {node.get(Q("styleId")): node for node in styles.findall("w:style", NS)}
-    for sid, (east, latin, size, line, alignment, bold, first_line) in expected.items():
+    for sid, (east, latin, size, line, line_rule, alignment, bold, first_line) in expected.items():
         node = found.get(sid)
         if node is None:
             errors.append(f"missing style {sid}")
@@ -103,15 +104,107 @@ def style_contract(styles: ET.Element, errors: list[str]) -> None:
         spacing = node.find("w:pPr/w:spacing", NS)
         actual = (
             attr(fonts, "eastAsia"), attr(fonts, "ascii"),
-            attr(node.find("w:rPr/w:sz", NS), "val"), attr(spacing, "line"),
+            attr(node.find("w:rPr/w:sz", NS), "val"),
+            attr(spacing, "line"), attr(spacing, "lineRule"),
             attr(node.find("w:pPr/w:jc", NS), "val"),
             node.find("w:rPr/w:b", NS) is not None,
             attr(node.find("w:pPr/w:ind", NS), "firstLine"),
         )
-        if actual != (east, latin, size, line, alignment, bold, first_line):
+        if actual != (east, latin, size, line, line_rule, alignment, bold, first_line):
             errors.append(f"style contract mismatch: {sid}")
-        if line is not None and attr(spacing, "lineRule") != "exact":
-            errors.append(f"style line rule is not exact: {sid}")
+
+
+def title_line_box_contract(
+    paragraphs: list[ET.Element], styles: ET.Element, errors: list[str]
+) -> dict[str, object]:
+    style_nodes = {
+        node.get(Q("styleId")): node for node in styles.findall("w:style", NS)
+    }
+    style = style_nodes.get("HFUTTitleCN")
+    title_paragraphs = [p for p in paragraphs if style_id(p) == "HFUTTitleCN"]
+    if style is None or len(title_paragraphs) != 1:
+        errors.append("Chinese title line-box inputs are missing")
+        return {"status": "FAIL"}
+
+    title = title_paragraphs[0]
+    def chain(style_id_value: str) -> list[ET.Element]:
+        result: list[ET.Element] = []
+        seen: set[str] = set()
+        while style_id_value and style_id_value not in seen:
+            seen.add(style_id_value)
+            node = style_nodes.get(style_id_value)
+            if node is None:
+                break
+            result.append(node)
+            based_on = node.find("w:basedOn", NS)
+            style_id_value = attr(based_on, "val") or ""
+        return result
+
+    title_chain = chain("HFUTTitleCN")
+    default_spacing = styles.find("w:docDefaults/w:pPrDefault/w:pPr/w:spacing", NS)
+    spacing_sources = [title.find("w:pPr/w:spacing", NS)] + [
+        node.find("w:pPr/w:spacing", NS) for node in title_chain
+    ] + [default_spacing]
+
+    def first_value(nodes: list[ET.Element | None], name: str) -> str | None:
+        return next((value for node in nodes if (value := attr(node, name)) is not None), None)
+
+    line_rule = first_value(spacing_sources, "lineRule")
+    line = first_value(spacing_sources, "line")
+    title_style_size = first_value(
+        [node.find("w:rPr/w:sz", NS) for node in title_chain]
+        + [styles.find("w:docDefaults/w:rPrDefault/w:rPr/w:sz", NS)],
+        "val",
+    )
+    effective_run_sizes: list[int] = []
+    for run in title.findall("w:r", NS):
+        run_style_id = attr(run.find("w:rPr/w:rStyle", NS), "val") or ""
+        run_sources = [run.find("w:rPr/w:sz", NS)]
+        run_sources.extend(node.find("w:rPr/w:sz", NS) for node in chain(run_style_id))
+        run_sources.extend(node.find("w:rPr/w:sz", NS) for node in title_chain)
+        run_sources.append(styles.find("w:docDefaults/w:rPrDefault/w:rPr/w:sz", NS))
+        effective_run_sizes.append(int(first_value(run_sources, "val") or "0"))
+    max_size_half_points = max(effective_run_sizes or [int(title_style_size or "0")])
+    font_size_twips = max_size_half_points * 10
+    line_twips = int(line or "0")
+    exact_too_small = line_rule == "exact" and line_twips < font_size_twips
+    direct_spacing = title.find("w:pPr/w:spacing", NS)
+    snap_to_grid = first_value(
+        [title.find("w:pPr/w:snapToGrid", NS)]
+        + [node.find("w:pPr/w:snapToGrid", NS) for node in title_chain]
+        + [styles.find("w:docDefaults/w:pPrDefault/w:pPr/w:snapToGrid", NS)],
+        "val",
+    )
+    run_positioning = [
+        (attr(run.find("w:rPr/w:position", NS), "val"),
+         attr(run.find("w:rPr/w:vertAlign", NS), "val"))
+        for run in title.findall("w:r", NS)
+    ]
+
+    if (line_rule, line) != ("auto", "240"):
+        errors.append(f"Chinese title automatic line-box override mismatch: {(line_rule, line)}")
+    if snap_to_grid != "false":
+        errors.append(f"Chinese title snapToGrid must be false: {snap_to_grid}")
+    if direct_spacing is not None:
+        errors.append("Chinese title has an unexpected direct paragraph spacing override")
+    if any(position is not None or vertical is not None for position, vertical in run_positioning):
+        errors.append(f"Chinese title uses forbidden run positioning: {run_positioning}")
+    if exact_too_small:
+        errors.append(
+            "TITLE_VERTICAL_CLIPPING_RISK: exact line box is smaller than effective title font"
+        )
+    return {
+        "font_size_half_points": max_size_half_points,
+        "font_size_twips": font_size_twips,
+        "line_rule": line_rule,
+        "line_value": line_twips,
+        "line_value_semantics": "single-line multiplier" if line_rule == "auto" else "twips",
+        "snap_to_grid": snap_to_grid,
+        "direct_paragraph_spacing": direct_spacing is not None,
+        "line_box_smaller_than_font": exact_too_small,
+        "vertical_clipping_risk": exact_too_small,
+        "status": "PASS" if not exact_too_small else "FAIL",
+    }
 
 
 def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, object]]:
@@ -126,6 +219,7 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     package_text = "\n".join(payload.decode("utf-8", "ignore") for name, payload in parts.items() if name.endswith((".xml", ".rels")))
     styles = parsed["word/styles.xml"]
     style_contract(styles, errors)
+    out["chinese_title_line_box"] = title_line_box_contract(paragraphs, styles, errors)
     heading_errors, heading_rows = audit_heading_numbering_roots(
         document,
         styles,
@@ -432,6 +526,24 @@ def main() -> int:
     print(f"reference_docx_sha256={reference_hash}")
     for variant, details in results.items():
         print(f"{variant}={details}")
+    full_line_box = results.get("full", {}).get("chinese_title_line_box", {})
+    full_render = results.get("full", {}).get("mechanical_pdf", {}).get("titles", {}).get("chinese", {})
+    print("CHINESE_TITLE_FONT=SimSun")
+    print("CHINESE_TITLE_SIZE=22_pt")
+    print("CHINESE_TITLE_BOLD=YES")
+    print("CHINESE_TITLE_ALIGNMENT=CENTER")
+    print(f"CHINESE_TITLE_RENDERED_LINES={full_render.get('line_count', 'UNKNOWN')}")
+    print(f"TITLE_LINE_RULE={full_line_box.get('line_rule', 'UNKNOWN')}")
+    print("TITLE_LINE_HEIGHT=240_AUTO_SINGLE_LINE_MULTIPLIER")
+    print(
+        "TITLE_LINE_BOX_SMALLER_THAN_FONT="
+        + ("YES" if full_line_box.get("line_box_smaller_than_font") else "NO")
+    )
+    print(
+        "TITLE_VERTICAL_CLIPPING_RISK="
+        + ("YES" if full_line_box.get("vertical_clipping_risk") else "NO")
+    )
+    print("ENGLISH_TITLE_STYLE_MUTATION=NO")
     if errors:
         print("verdict=FAIL")
         for message in errors:
