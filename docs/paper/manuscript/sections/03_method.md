@@ -11,7 +11,7 @@
 | CPU像素预处理 | 是 | 否 | 否 |
 | CUDA预处理 | 否 | 是 | 是 |
 | 主机FP32输入张量 | 是 | 否 | 否 |
-| 原始图像暂存 | 否 | Pageable | Pinned |
+| 额外打包原始图像暂存 | 否 | Pageable | Pinned |
 | 原始图像H2D | 否 | 是 | 是 |
 | 输入形成位置 / TRT直接输入 | 主机 / 否 | 设备 / 是 | 设备 / 是 |
 | 执行拓扑 | 单帧顺序 | 同一TRT stream；单帧顺序 | 同一TRT stream；单帧顺序 |
@@ -28,7 +28,7 @@ packed BGR图像通过`cudaMemcpy2DAsync`写入持久化设备原始图像缓冲
 
 ## 2.3 V3R：pinned原始图像暂存隔离变量
 
-V3R与V2R共享packed BGR语义、`cudaMemcpy2DAsync`、融合CUDA预处理、TensorRT CUDA stream、Engine和下游拓扑，仅将主机暂存改为帧循环前由`cudaHostAlloc(..., cudaHostAllocDefault)`分配的长生命周期pinned缓冲区。该缓冲区在全部帧之间复用，运行器结束时由`cudaFreeHost`释放；每帧仍逐行复制`width×3`字节，不逐帧分配，也不静默回退到pageable暂存。内存配置效果具有平台和负载依赖性 [@archet_et_al_2023_embedded_soc]。
+V3R与V2R共享packed BGR语义、`cudaMemcpy2DAsync`、融合CUDA预处理、TensorRT CUDA stream、Engine和下游拓扑，仅将主机暂存改为帧循环前由`cudaHostAlloc(..., cudaHostAllocDefault)`分配的长生命周期pinned缓冲区。该缓冲区在全部帧之间复用，运行器结束时由`cudaFreeHost`释放；每帧仍逐行复制`width×3`字节，不逐帧分配，也不静默回退到pageable暂存。内存配置效果具有平台和负载依赖性 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]。
 
 三条正式路径均为单帧顺序执行，不使用zero-copy、double buffering、multi-stream、跨帧流水线、显式传输/计算重叠或GPU NMS；这些边界仅限定本文受测实现，两条GPU路径关系见图2。
 

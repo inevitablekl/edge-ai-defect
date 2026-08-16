@@ -60,11 +60,11 @@ EXPECTED_CITED_ORDER = (
     "nvidia_cuda_programming_guide_12_6",
     "kim_et_al_2025_concurrent_edge_detection",
     "dean_barroso_2013_tail_scale",
-    "archet_et_al_2023_embedded_soc",
     "shin_kim_2022_jetson_yolo_frameworks",
     "lema_et_al_2025_surface_defect_benchmark",
 )
 UNUSED_KEYS = (
+    "archet_et_al_2023_embedded_soc",
     "nvidia_jetpack_6_2_2",
     "hill_marty_2008_amdahl",
     "reddi_et_al_2019_mlperf_inference",
@@ -343,6 +343,7 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
         for key in UNUSED_KEYS:
             status, note = METADATA_STATUS[key]
             phase57_removed = key != "reddi_et_al_2022_mlperf_mobile"
+            phase57g_orphaned = key == "archet_et_al_2023_embedded_soc"
             writer.writerow(
                 {
                     "citation_key": key,
@@ -355,12 +356,18 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
                     "metadata_status": status,
                     "render_status": "NOT_RENDERED_BY_DESIGN",
                     "final_disposition": (
+                        "PHASE57G_CITATION_CORRECTED"
+                        if phase57g_orphaned else
                         "PHASE57B_PROSE_AND_CITATION_REMOVED"
-                        if phase57_removed else "PRE_DRAFT_ADMITTED_SOURCE_RETAINED"
+                        if phase57_removed else
+                        "PRE_DRAFT_ADMITTED_SOURCE_RETAINED"
                     ),
                     "notes": (
+                        "Phase 5.7G replaced the sole citation with two directly supporting memory-management sources."
+                        if phase57g_orphaned else
                         "Phase 5.7B primary compression removed the associated prose and rendered citation."
-                        if phase57_removed else note
+                        if phase57_removed else
+                        note
                     ),
                 }
             )

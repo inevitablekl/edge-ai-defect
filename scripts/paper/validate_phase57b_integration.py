@@ -65,7 +65,7 @@ def table_signature(table: ET.Element) -> tuple[tuple[str, ...], ...]:
     )
 
 
-def source_validation(errors: list[str], phase57e: bool = False) -> None:
+def source_validation(errors: list[str], phase57e: bool = False, phase57g: bool = False) -> None:
     source = "\n".join(path.read_text(encoding="utf-8") for path in SECTIONS)
     visible = source.replace("`", "")
     if source.count(TITLE_CN) != 1 or source.count(TITLE_EN) != 1:
@@ -87,7 +87,7 @@ def source_validation(errors: list[str], phase57e: bool = False) -> None:
         "@reddi_et_al_2019_mlperf_inference", "全文首先",
         "强制cache miss", "\\mu_f=",
     ]
-    if not phase57e:
+    if not (phase57e or phase57g):
         removed_tokens.extend(("Q_p=", "h=1+(n-1)p"))
     for removed in removed_tokens:
         if removed in source:
@@ -109,7 +109,7 @@ def source_validation(errors: list[str], phase57e: bool = False) -> None:
     if "未报告信息不视为否定" not in visible:
         errors.append("NOT_REPORTED semantic rule missing")
 
-    if phase57e:
+    if phase57e or phase57g:
         restoration_tokens = (
             "按V0的OpenCV 4.5.4 INTER_LINEAR预处理语义建立受控对齐合同",
             "不构成通用CUDA/OpenCV等价性声明",
@@ -130,6 +130,19 @@ def source_validation(errors: list[str], phase57e: bool = False) -> None:
         for hidden_gate in ("0.005", "0.010", "0.020", "0.030"):
             if hidden_gate in visible:
                 errors.append(f"internal correctness-gate value was restored: {hidden_gate}")
+
+    if phase57g:
+        required_minor_remediations = (
+            "额外打包原始图像暂存",
+            "TensorRT INT8混合精度（INT8 + FP16 fallback）；Engine输入张量：FP32",
+            "[@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]",
+        )
+        for token in required_minor_remediations:
+            if token not in source:
+                errors.append(f"Phase 5.7G remediation token missing: {token}")
+        for superseded in ("host input FP32", "[@archet_et_al_2023_embedded_soc]"):
+            if superseded in source:
+                errors.append(f"Phase 5.7G superseded wording remains: {superseded}")
 
     with (MANUSCRIPT / "tables/table_manifest.csv").open(encoding="utf-8", newline="") as handle:
         manifest = {row["table_id"]: row for row in csv.DictReader(handle)}
@@ -210,9 +223,15 @@ def main() -> int:
         "--phase57e", action="store_true",
         help="validate the approved Phase 5.7E targeted-restoration contract",
     )
+    parser.add_argument(
+        "--phase57g", action="store_true",
+        help="validate the approved Phase 5.7G final minor-remediation contract",
+    )
     args = parser.parse_args()
+    if args.phase57e and args.phase57g:
+        parser.error("--phase57e and --phase57g are mutually exclusive")
     errors: list[str] = []
-    source_validation(errors, phase57e=args.phase57e)
+    source_validation(errors, phase57e=args.phase57e, phase57g=args.phase57g)
     paragraphs, tables = docx_validation(args.docx, errors)
     if args.compare_full:
         full_paragraphs, full_tables = docx_validation(args.compare_full, errors)
@@ -230,9 +249,17 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    phase = "PHASE57E_TARGETED_RESTORATION" if args.phase57e else "PHASE57B_INTEGRATION"
+    if args.phase57g:
+        phase = "PHASE57G_FINAL_MINOR_REMEDIATION"
+        reference_count = 22
+    elif args.phase57e:
+        phase = "PHASE57E_TARGETED_RESTORATION"
+        reference_count = 23
+    else:
+        phase = "PHASE57B_INTEGRATION"
+        reference_count = 23
     print(f"{phase}_VALIDATION=PASS")
-    print("figures=4 tables=4 display_equations=2 contributions=2 references=23")
+    print(f"figures=4 tables=4 display_equations=2 contributions=2 references={reference_count}")
     print("t1_rows=7 t4_attributes=5 f2_mm=160x62 frozen_f1_f3_f4_hashes=PASS")
     print("tail=OPPOSITE_DIRECTION_NO_CONSISTENT_IMPROVEMENT nominal_payload_ratio=40.96x")
     return 0

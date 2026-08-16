@@ -385,7 +385,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
             "CPU像素预处理", "CUDA预处理", "主机FP32输入张量",
-            "原始图像暂存", "Pageable", "Pinned", "原始图像H2D",
+            "额外打包原始图像暂存", "Pageable", "Pinned", "原始图像H2D",
             "输入形成位置 / TRT直接输入", "执行拓扑", "同一TRT stream；单帧顺序",
         ):
             if value not in t1_values:
@@ -394,7 +394,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         for value in (
             "NVIDIA Jetson Orin Nano Engineering Reference Developer Kit Super",
             "L4T R36.5；CUDA 12.6；TensorRT 10.3；OpenCV 4.5.4", "YOLOv8n",
-            "TensorRT INT8混合精度（INT8 + FP16 fallback）；host input FP32",
+            "TensorRT INT8混合精度（INT8 + FP16 fallback）；Engine输入张量：FP32",
             "1260张去重训练图像；IInt8EntropyCalibrator2；batch 1；排除test split",
             "固定180张test图像", "V0 / V2R / V3R；单帧顺序执行",
             "60帧预热；每进程1080帧；每路径5个独立进程", "关闭diagnostics与profiling",

@@ -76,7 +76,7 @@ build_full() {
   python3 scripts/paper/validate_citations.py
   python3 scripts/paper/validate_final_references.py --docx "$full_docx" --write-audit
   python3 scripts/paper/validate_full_manuscript_docx.py "$full_docx"
-  python3 scripts/paper/validate_phase57b_integration.py --phase57e --docx "$full_docx"
+  python3 scripts/paper/validate_phase57b_integration.py --phase57g --docx "$full_docx"
   printf 'FULL_BUILD_OUTPUT=%s\n' "$full_docx"
   sha256sum "$full_docx"
 }
@@ -149,12 +149,12 @@ build_anonymous() {
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py \
       "$anonymous_docx" --full "$output_dir/draft_full.docx"
-    python3 scripts/paper/validate_phase57b_integration.py --phase57e \
+    python3 scripts/paper/validate_phase57b_integration.py --phase57g \
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx"
   else
     python3 scripts/paper/validate_final_references.py --docx "$anonymous_docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py "$anonymous_docx"
-    python3 scripts/paper/validate_phase57b_integration.py --phase57e --docx "$anonymous_docx"
+    python3 scripts/paper/validate_phase57b_integration.py --phase57g --docx "$anonymous_docx"
   fi
   printf 'ANONYMOUS_BUILD_OUTPUT=%s\n' "$anonymous_docx"
   sha256sum "$anonymous_docx"
