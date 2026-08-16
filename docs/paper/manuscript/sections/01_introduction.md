@@ -2,18 +2,12 @@
 
 # 0 引言
 
-工业产品表面缺陷会影响产品质量与后续制造过程，金属表面缺陷自动检测已成为工业视觉的重要应用方向 [@lv_et_al_2020_metallic_defects]。东北大学钢材表面缺陷数据库包含开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷，为工业缺陷检测研究提供了常用实验基础 [@song_yan_2013_neu_surface_defects]。
+金属表面缺陷自动检测是工业视觉的重要应用，NEU-DET提供开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷数据 [@lv_et_al_2020_metallic_defects; @song_yan_2013_neu_surface_defects]。现有研究通过轻量化骨干、注意力和多尺度特征融合改善检测精度与复杂度权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]，YOLOv8提供多尺度检测模型及训练、推理和导出能力 [@ultralytics_2023_yolov8_docs]。面向资源受限边缘平台时，完整检测还包括预处理、推理、后处理和数据管理 [@stacker_et_al_2021_edge_runtime; @lee_han_kim_2025_presto]，并需在现场附近完成完整处理流程 [@weiss_et_al_2024_realtime_component_inspection]。
 
-现有表面缺陷检测研究多围绕检测器结构展开，通过轻量化骨干、注意力或多尺度特征融合改善缺陷表征，并讨论检测精度与模型复杂度之间的权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]。YOLOv8模型系列提供多种规模的检测模型以及训练、推理和导出能力 [@ultralytics_2023_yolov8_docs]。当检测器转移到资源受限的边缘平台后，研究对象还包括模型之外的部署执行过程。已有工作将边缘DNN运行时作为独立系统问题，并把预处理、推理和后处理纳入完整检测路径 [@stacker_et_al_2021_edge_runtime]；其他AI工作负载中的研究也表明，CPU预处理及其数据管理可能限制加速器利用率和端到端（end-to-end，E2E）性能 [@lee_han_kim_2025_presto]。工业现场附近的边缘部署则进一步要求系统在受限计算条件下完成完整处理流程 [@weiss_et_al_2024_realtime_component_inspection]。
+INT8部署可降低网络侧计算开销，但量化扰动仍需任务正确性约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]，且网络低精度化不会自动消除图像解码后的主机侧输入形成和主机—设备数据移动。本文以TensorRT 10.3校准式INT8混合精度推理为固定前提；该版本传统隐式INT8量化和calibrator接口已标记为弃用，结论因而限定于本文软件栈 [@nvidia_tensorrt_10_3_release_notes]。研究范围收敛到固定检测器与Engine条件下的输入形成位置、主机数据表示、输入复制载荷和pageable/pinned暂存。
 
-TensorRT INT8混合精度部署可减少网络侧计算开销，后训练量化能够在既有模型基础上实施低比特近似，但量化扰动仍需通过任务正确性评价加以约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。本文采用TensorRT 10.3中的校准式INT8路线作为固定推理前提；该版本的传统隐式INT8量化和calibrator接口已被标记为弃用，因而实验结论限定于本文的软件栈 [@nvidia_tensorrt_10_3_release_notes]。网络低精度化并不会自动重组图像解码后的主机侧数据表示、输入张量形成位置或主机—设备数据移动，完整E2E性能仍取决于这些阶段在实际部署路径中的组织方式。
+本文设置三条受控路径：V0在主机侧形成FP32 NCHW张量并复制至设备；V2R改为packed BGR原始图像暂存、`cudaMemcpy2DAsync`二维H2D复制和GPU融合预处理，直接形成TensorRT设备输入；V3R保持CUDA预处理、CUDA stream和下游拓扑不变，仅将pageable暂存替换为pinned暂存。
 
-现有相关工作分别从检测模型、量化与推理、边缘运行时、GPU预处理或系统级部署等角度讨论边缘检测性能。为减少模型和推理后端差异带来的混杂，本文进一步将研究范围收敛到固定检测器与Engine条件下的输入形成位置、主机侧数据表示、输入复制载荷以及可分页（pageable）/锁页（pinned）暂存，并通过两级受控路径比较评价其完整E2E行为。本文据此将研究重点放在Jetson TensorRT INT8输入形成与主机—设备数据路径工程：基线路径V0在主机侧通过CPU/OpenCV形成FP32 NCHW张量并复制至设备；V2R将其重构为packed BGR原始图像暂存、通过`cudaMemcpy2DAsync`执行二维H2D复制和GPU侧融合CUDA预处理，直接形成TensorRT设备输入；V3R保持相同CUDA预处理、CUDA stream和下游拓扑，仅将pageable原始图像暂存替换为pinned暂存。
+本文的主要贡献包括两点：1）在固定YOLOv8n和TensorRT INT8混合精度Engine条件下，将主机FP32张量输入路径重构为原始图像H2D与GPU融合预处理，并通过pageable/pinned配置隔离主机暂存类型；2）在统一的任务正确性、E2E延迟、进程级FPS和合并样本P95/P99口径下，通过V0→V2R与V2R→V3R两级受控比较，区分完整输入路径重构的主要收益与pinned暂存的有限平均增量，并以每条路径5个独立进程考察运行级分布和尾延迟。受控路径见图1。
 
-本文的主要贡献包括两点：1）在固定YOLOv8n和TensorRT INT8混合精度Engine的条件下，将CPU/OpenCV主机侧FP32张量输入形成路径重构为packed BGR原始图像暂存、`cudaMemcpy2DAsync`和融合CUDA预处理，使CUDA核函数直接形成TensorRT管理的FP32 NCHW设备输入，并通过pageable/pinned配置隔离主机暂存内存类型；2）在统一的任务正确性、E2E延迟、进程级FPS与合并样本P95/P99评价口径下，通过V0→V2R和V2R→V3R两级受控比较，区分完整输入路径重构的主要性能收益与pinned暂存的有限平均增量，并利用5次独立进程考察运行级分布和尾延迟行为。
-
-两级受控路径及其完整E2E观测关系见图1。
-
-**图1　V0、V2R和V3R受控数据路径及完整路径观测。V0在主机侧形成FP32 NCHW输入张量，V2R/V3R将打包原始图像复制到设备并在GPU侧形成TensorRT输入；V3R仅将V2R的pageable暂存替换为pinned暂存。性能数字表示完整端到端路径比较，不归因于单一组件。输入复制载荷为名义值，不等同于实测总线流量。**
-
-全文首先定义模型、数据集、部署环境、E2E数据路径和研究问题；随后说明V0、V2R和V3R的输入形成实现及正确性控制；继而给出统一实验协议；最后从正确性、整体E2E性能、名义输入复制载荷、运行级分布、相关工作定位和适用边界六个方面讨论结果。
+**图1　V0、V2R和V3R三条受控数据路径。图中数值为完整路径E2E观测，输入复制载荷为名义值。**

@@ -14,20 +14,21 @@ full_sections=(
   docs/paper/manuscript/sections/06_conclusion.md
 )
 
-validate_phase56_figure_assets() {
-  local figure_dir="docs/paper/phase5_6/visual/production/figures"
+validate_current_figure_assets() {
+  local phase56_dir="docs/paper/phase5_6/visual/production/figures"
+  local phase57_dir="docs/paper/phase5_7/visual/production/figures"
   local source
   for source in \
-    "$figure_dir/fig1_hero_data_path_phase56.png" \
-    "$figure_dir/fig2_technical_implementation_phase56.png" \
-    "$figure_dir/fig3_main_e2e_phase56.png" \
-    "$figure_dir/fig4_run_level_distribution_phase56.png"; do
+    "$phase56_dir/fig1_hero_data_path_phase56.png" \
+    "$phase57_dir/fig2_technical_implementation_phase57b.png" \
+    "$phase56_dir/fig3_main_e2e_phase56.png" \
+    "$phase56_dir/fig4_run_level_distribution_phase56.png"; do
     if [[ ! -s "$source" ]]; then
       printf 'PHASE56_FIGURE_ASSET_VALIDATION_FAILED: source is missing: %s\n' "$source" >&2
       return 1
     fi
   done
-  printf '%s\n' 'PHASE56_DOCX_FIGURE_PAYLOADS=PNG reason=LibreOffice_SVG_blank_render'
+  printf '%s\n' 'PHASE57B_DOCX_FIGURE_PAYLOADS=PNG reason=LibreOffice_SVG_blank_render'
 }
 
 build_full() {
@@ -50,7 +51,7 @@ build_full() {
     return 1
   fi
   mkdir -p "$output_dir"
-  validate_phase56_figure_assets
+  validate_current_figure_assets
 
   "$pandoc_bin" \
     --from=markdown+tex_math_single_backslash \
@@ -60,7 +61,7 @@ build_full() {
     --bibliography=docs/paper/manuscript/references/references.bib \
     --csl="$csl_path" \
     --citeproc \
-    --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables:docs/paper/phase5_6/visual/production/figures \
+    --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables:docs/paper/phase5_6/visual/production/figures:docs/paper/phase5_7/visual/production/figures \
     --metadata-file=docs/paper/manuscript/metadata/metadata_private.yaml \
     --lua-filter=scripts/paper/full_manuscript_filter.lua \
     --output="$raw_docx" \
@@ -75,7 +76,7 @@ build_full() {
   python3 scripts/paper/validate_citations.py
   python3 scripts/paper/validate_final_references.py --docx "$full_docx" --write-audit
   python3 scripts/paper/validate_full_manuscript_docx.py "$full_docx"
-  python3 scripts/paper/validate_phase56e_integration.py --docx "$full_docx"
+  python3 scripts/paper/validate_phase57b_integration.py --docx "$full_docx"
   printf 'FULL_BUILD_OUTPUT=%s\n' "$full_docx"
   sha256sum "$full_docx"
 }
@@ -117,7 +118,7 @@ build_anonymous() {
     return 1
   fi
   mkdir -p "$output_dir"
-  validate_phase56_figure_assets
+  validate_current_figure_assets
 
   "$pandoc_bin" \
     --from=markdown+tex_math_single_backslash \
@@ -127,7 +128,7 @@ build_anonymous() {
     --bibliography=docs/paper/manuscript/references/references.bib \
     --csl="$csl_path" \
     --citeproc \
-    --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables:docs/paper/phase5_6/visual/production/figures \
+    --resource-path=docs/paper/manuscript:docs/paper/manuscript/figures:docs/paper/manuscript/tables:docs/paper/phase5_6/visual/production/figures:docs/paper/phase5_7/visual/production/figures \
     --metadata-file=docs/paper/manuscript/metadata/metadata_anonymous.yaml \
     --lua-filter=scripts/paper/full_manuscript_filter.lua \
     --output="$raw_docx" \
@@ -136,7 +137,8 @@ build_anonymous() {
   python3 scripts/paper/postprocess_full_manuscript_docx.py \
     --input "$raw_docx" --output "$section_docx"
   python3 scripts/paper/postprocess_publication_tables.py \
-    --input "$section_docx" --output "$table_docx"
+    --input "$section_docx" --output "$table_docx" \
+    --anonymous-t4-page-break
   python3 scripts/paper/sanitize_anonymous_manuscript_docx.py \
     --input "$table_docx" --output "$anonymous_docx"
   unzip -t "$anonymous_docx" > /dev/null
@@ -147,12 +149,12 @@ build_anonymous() {
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py \
       "$anonymous_docx" --full "$output_dir/draft_full.docx"
-    python3 scripts/paper/validate_phase56e_integration.py \
+    python3 scripts/paper/validate_phase57b_integration.py \
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx"
   else
     python3 scripts/paper/validate_final_references.py --docx "$anonymous_docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py "$anonymous_docx"
-    python3 scripts/paper/validate_phase56e_integration.py --docx "$anonymous_docx"
+    python3 scripts/paper/validate_phase57b_integration.py --docx "$anonymous_docx"
   fi
   printf 'ANONYMOUS_BUILD_OUTPUT=%s\n' "$anonymous_docx"
   sha256sum "$anonymous_docx"

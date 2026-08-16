@@ -363,7 +363,7 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         errors.append(f"figure width contract mismatch: {[item['cx'] for item in figures]}")
 
     tables = body.findall("w:tbl", NS)
-    if len(tables) != 4 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [10, 9, 3, 6]:
+    if len(tables) != 4 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [7, 9, 3, 6]:
         errors.append("T1/T2/T3/T4 row contract failed")
     for table_index, table in enumerate(tables, start=1):
         borders = table.find("w:tblPr/w:tblBorders", NS)
@@ -390,8 +390,8 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     if any(token in body_text for token in ("PENDING", "TBD", "UNKNOWN")):
         errors.append("visible publication placeholder present")
     out["formal_equations"] = len(document.findall(".//{http://schemas.openxmlformats.org/officeDocument/2006/math}oMathPara"))
-    if out["formal_equations"] != 5:
-        errors.append(f"expected five OMML equations, found {out['formal_equations']}")
+    if out["formal_equations"] != 2:
+        errors.append(f"expected two OMML equations, found {out['formal_equations']}")
     out["page_fields"] = sum(page_counts)
     out["biography_package_count"] = package_bio
     return errors, out

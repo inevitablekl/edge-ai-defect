@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="160mm" height="62mm" viewBox="0 0 1600 620" role="img">
+<title>V2R/V3R host-device input path</title>
+<defs>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L12,6 L0,12 z" fill="#38434d"/></marker>
+<marker id="stream-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L12,6 L0,12 z" fill="#315c76"/></marker>
+</defs>
+<rect width="1600" height="620" fill="#ffffff"/>
+<rect x="45" y="45" width="405" height="500" rx="12" fill="#f5f6f7" stroke="#38434d" stroke-width="3"/>
+<rect x="495" y="45" width="1060" height="500" rx="12" fill="#eef4f8" stroke="#38434d" stroke-width="3"/>
+<text x="248" y="88" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="31" font-weight="700" fill="#20252b">主机 / CPU</text>
+<text x="1025" y="88" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="31" font-weight="700" fill="#20252b">设备 / GPU</text>
+<line x1="473" y1="58" x2="473" y2="532" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8"/>
+<rect x="95" y="135" width="305" height="88" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3"/>
+<text x="247" y="189" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">Decoded CV_8UC3 BGR</text>
+<line x1="248" y1="223" x2="248" y2="268" stroke="#38434d" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="95" y="278" width="305" height="120" rx="10" fill="#f3e8dc" stroke="#38434d" stroke-width="3"/>
+<text x="247" y="314" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">Pageable / pinned</text>
+<text x="247" y="348" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">packed staging</text>
+<text x="247" y="382" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">跨帧复用</text>
+<line x1="400" y1="338" x2="590" y2="338" stroke="#38434d" stroke-width="4" marker-end="url(#arrow)"/>
+<text x="500" y="447" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="700" fill="#20252b">cudaMemcpy2DAsync</text>
+<rect x="600" y="283" width="185" height="110" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3"/>
+<text x="692" y="331" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">device raw</text>
+<text x="692" y="365" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">buffer</text>
+<line x1="785" y1="338" x2="830" y2="338" stroke="#38434d" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="840" y="268" width="220" height="140" rx="10" fill="#e6f1e8" stroke="#38434d" stroke-width="3"/>
+<text x="950" y="331" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="700" fill="#20252b">fused CUDA</text>
+<text x="950" y="365" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="700" fill="#20252b">preprocessing</text>
+<line x1="1060" y1="338" x2="1105" y2="338" stroke="#38434d" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="1115" y="268" width="255" height="140" rx="10" fill="#ffffff" stroke="#38434d" stroke-width="3"/>
+<text x="1242" y="314" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">TensorRT-owned</text>
+<text x="1242" y="348" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">FP32 NCHW</text>
+<text x="1242" y="382" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="400" fill="#20252b">device input</text>
+<line x1="1370" y1="338" x2="1380" y2="338" stroke="#38434d" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="1390" y="288" width="145" height="100" rx="10" fill="#e8edf2" stroke="#38434d" stroke-width="3"/>
+<text x="1462" y="348" text-anchor="middle" font-family="Liberation Mono,monospace" font-size="27" font-weight="700" fill="#20252b">enqueueV3</text>
+<path d="M500,145 L1515,145" fill="none" stroke="#315c76" stroke-width="7"/>
+<text x="1008" y="127" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="28" font-weight="700" fill="#315c76">同一 TensorRT CUDA stream（单帧顺序）</text>
+<line x1="520" y1="145" x2="520" y2="284" stroke="#315c76" stroke-width="4" marker-end="url(#stream-arrow)"/>
+<line x1="950" y1="145" x2="950" y2="258" stroke="#315c76" stroke-width="4" marker-end="url(#stream-arrow)"/>
+<path d="M1515,145 L1540,145 L1540,338" fill="none" stroke="#315c76" stroke-width="4" marker-end="url(#stream-arrow)"/>
+<text x="800" y="505" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="27" font-weight="700" fill="#4b5563">V2R / V3R仅主机暂存分配类型不同；无跨帧重叠</text>
+</svg>

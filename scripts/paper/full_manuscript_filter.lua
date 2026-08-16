@@ -91,7 +91,7 @@ local function figure_for_caption(text)
   if text:match("^图1　") then
     return "fig1_hero_data_path_phase56.png"
   elseif text:match("^图2　") then
-    return "fig2_technical_implementation_phase56.png"
+    return "fig2_technical_implementation_phase57b.png"
   elseif text:match("^图3　") then
     return "fig3_main_e2e_phase56.png"
   elseif text:match("^图4　") then

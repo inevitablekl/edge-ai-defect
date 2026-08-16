@@ -37,7 +37,7 @@ SECTION_PATHS = (
 )
 
 # Citation order is a manuscript fact: it is checked rather than regenerated from
-# bibliography file order. The final unused entry is deliberately retained under the
+# bibliography file order. Unused library entries are deliberately retained under the
 # Phase 3 PRE_DRAFT_ADMITTED_SOURCE decision.
 EXPECTED_CITED_ORDER = (
     "lv_et_al_2020_metallic_defects",
@@ -52,7 +52,6 @@ EXPECTED_CITED_ORDER = (
     "jacob_et_al_2018_integer_inference",
     "nagel_et_al_2020_adaround",
     "nvidia_tensorrt_10_3_release_notes",
-    "nvidia_jetpack_6_2_2",
     "kim_lee_kim_2024_hyq",
     "tang_qian_2024_yolov8_jetson_orin",
     "nvidia_cuda_best_practices_12_6",
@@ -60,14 +59,17 @@ EXPECTED_CITED_ORDER = (
     "rodriguez_et_al_2025_gpu_memory_allocation",
     "nvidia_cuda_programming_guide_12_6",
     "kim_et_al_2025_concurrent_edge_detection",
-    "hill_marty_2008_amdahl",
     "dean_barroso_2013_tail_scale",
-    "reddi_et_al_2019_mlperf_inference",
     "archet_et_al_2023_embedded_soc",
     "shin_kim_2022_jetson_yolo_frameworks",
     "lema_et_al_2025_surface_defect_benchmark",
 )
-UNUSED_ADMITTED_KEY = "reddi_et_al_2022_mlperf_mobile"
+UNUSED_KEYS = (
+    "nvidia_jetpack_6_2_2",
+    "hill_marty_2008_amdahl",
+    "reddi_et_al_2019_mlperf_inference",
+    "reddi_et_al_2022_mlperf_mobile",
+)
 
 EXPECTED_TYPE = {
     "lv_et_al_2020_metallic_defects": "J",
@@ -154,7 +156,7 @@ METADATA_STATUS = {
     "nvidia_cuda_programming_guide_12_6": ("REMEDIATED", "Official NVIDIA archive page, Release 12.6 year, URL, and governed access date verified; rendered as EB/OL."),
     "hill_marty_2008_amdahl": ("PASS", "IEEE DOI metadata confirm Computer 41(7):33--38."),
     "archet_et_al_2023_embedded_soc": ("PASS", "IEEE DOI metadata confirm DSD 2023:30--38."),
-    UNUSED_ADMITTED_KEY: ("PASS", "A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered."),
+    "reddi_et_al_2022_mlperf_mobile": ("PASS", "A15 remains PRE_DRAFT_ADMITTED_SOURCE under the Phase 3 admission decision; it is intentionally not cited or rendered."),
 }
 
 def load_caption_authority() -> OrderedDict[str, str]:
@@ -230,7 +232,7 @@ def matrix_rows() -> dict[str, dict[str, str]]:
 def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple[list[str], dict[str, str], list[str]]:
     errors: list[str] = []
     cited_order, first_sections, manual_numbers = citation_occurrences()
-    expected_all = set(EXPECTED_CITED_ORDER) | {UNUSED_ADMITTED_KEY}
+    expected_all = set(EXPECTED_CITED_ORDER) | set(UNUSED_KEYS)
 
     if tuple(cited_order) != EXPECTED_CITED_ORDER:
         fail(errors, f"first-occurrence order mismatch: {cited_order!r}")
@@ -242,7 +244,7 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
     if unresolved:
         fail(errors, f"unresolved citation keys: {unresolved!r}")
     uncited = sorted(set(entries) - set(cited_order))
-    if uncited != [UNUSED_ADMITTED_KEY]:
+    if uncited != sorted(UNUSED_KEYS):
         fail(errors, f"unexpected uncited entries: {uncited!r}")
 
     matrix = matrix_rows()
@@ -338,22 +340,30 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
                     "notes": note,
                 }
             )
-        status, note = METADATA_STATUS[UNUSED_ADMITTED_KEY]
-        writer.writerow(
-            {
-                "citation_key": UNUSED_ADMITTED_KEY,
-                "cited_yes_no": "NO",
-                "first_occurrence_index": "",
-                "first_occurrence_section": "",
-                "source_type": matrix[UNUSED_ADMITTED_KEY]["source_type"],
-                "current_bib_type": entries[UNUSED_ADMITTED_KEY]["type"],
-                "expected_rendered_type": "NOT_RENDERED",
-                "metadata_status": status,
-                "render_status": "NOT_RENDERED_BY_DESIGN",
-                "final_disposition": "PRE_DRAFT_ADMITTED_SOURCE_RETAINED",
-                "notes": note,
-            }
-        )
+        for key in UNUSED_KEYS:
+            status, note = METADATA_STATUS[key]
+            phase57_removed = key != "reddi_et_al_2022_mlperf_mobile"
+            writer.writerow(
+                {
+                    "citation_key": key,
+                    "cited_yes_no": "NO",
+                    "first_occurrence_index": "",
+                    "first_occurrence_section": "",
+                    "source_type": matrix[key]["source_type"],
+                    "current_bib_type": entries[key]["type"],
+                    "expected_rendered_type": "NOT_RENDERED",
+                    "metadata_status": status,
+                    "render_status": "NOT_RENDERED_BY_DESIGN",
+                    "final_disposition": (
+                        "PHASE57B_PROSE_AND_CITATION_REMOVED"
+                        if phase57_removed else "PRE_DRAFT_ADMITTED_SOURCE_RETAINED"
+                    ),
+                    "notes": (
+                        "Phase 5.7B primary compression removed the associated prose and rendered citation."
+                        if phase57_removed else note
+                    ),
+                }
+            )
 
 
 def markdown_cross_reference_errors() -> list[str]:
@@ -488,7 +498,8 @@ def main() -> int:
         return 1
     print(
         "PASS: CITATION_SOURCE_VALIDATED "
-        f"bibliography_entries={len(entries)} cited={len(cited_order)} uncited=1 unresolved=0"
+        f"bibliography_entries={len(entries)} cited={len(cited_order)} "
+        f"uncited={len(UNUSED_KEYS)} unresolved=0"
     )
     print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3,F4 tables=T1,T2,T3,T4")
     if args.docx:

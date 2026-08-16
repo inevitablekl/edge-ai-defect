@@ -356,7 +356,9 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
             errors.append(f"{label} caption count is {len(captions)}, expected 1")
             continue
         has_page_break = captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None
-        if has_page_break:
+        if label == "Table 4" and not has_page_break:
+            errors.append("Anonymous Table 4 caption is missing the required pageBreakBefore")
+        elif label != "Table 4" and has_page_break:
             errors.append(f"Anonymous {label} caption has unauthorized pageBreakBefore")
 
     tables = body.findall("w:tbl", NS)
@@ -372,18 +374,19 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         details["table2_rows"] = len(t2_rows) - 1
         details["table3_rows"] = len(t3_rows) - 1
         details["table4_rows"] = len(t4_rows) - 1
-        if len(t1_rows) != 11 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
-            errors.append("Table 1 is not 10 data rows by 4 columns")
+        if len(t1_rows) != 8 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
+            errors.append("Table 1 is not 7 data rows by 4 columns")
         if len(t2_rows) != 10 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
             errors.append("Table 2 is not 9 data rows by 2 columns")
-        if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 5 for row in t3_rows):
-            errors.append("Table 3 is not 3 data rows by 5 columns")
-        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 8 for row in t4_rows):
-            errors.append("Table 4 is not 6 works by 7 attributes")
+        if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 2 for row in t3_rows):
+            errors.append("Table 3 is not 3 data rows by 2 columns")
+        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 6 for row in t4_rows):
+            errors.append("Table 4 is not 6 works by 5 attributes")
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "Detector / Engine", "CPU像素预处理", "CUDA预处理",
-            "打包原始图像暂存", "Pageable", "Pinned", "复用TRT CUDA stream",
+            "CPU像素预处理", "CUDA预处理", "主机FP32输入张量",
+            "原始图像暂存", "Pageable", "Pinned", "原始图像H2D",
+            "输入形成位置 / TRT直接输入", "执行拓扑", "同一TRT stream；单帧顺序",
         ):
             if value not in t1_values:
                 errors.append(f"Table 1 missing controlled-path value: {value}")
@@ -400,7 +403,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
                 errors.append(f"Table 2 missing frozen value: {value}")
         t3_values = "\n".join(text_of(cell) for row in t3_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "Precision", "Recall", "mAP50", "mAP50-95", "0.6913", "0.6991",
+            "P", "R", "mAP50", "mAP50-95", "0.6913", "0.6991",
             "0.6476", "0.3523", "V3R",
         ):
             if value not in t3_values:
