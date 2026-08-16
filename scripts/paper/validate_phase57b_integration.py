@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Phase 5.7B primary-compression scientific contract."""
+"""Validate the Phase 5.7B contract or its approved Phase 5.7E restoration."""
 
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ def table_signature(table: ET.Element) -> tuple[tuple[str, ...], ...]:
     )
 
 
-def source_validation(errors: list[str]) -> None:
+def source_validation(errors: list[str], phase57e: bool = False) -> None:
     source = "\n".join(path.read_text(encoding="utf-8") for path in SECTIONS)
     visible = source.replace("`", "")
     if source.count(TITLE_CN) != 1 or source.count(TITLE_EN) != 1:
@@ -82,11 +82,14 @@ def source_validation(errors: list[str]) -> None:
     for caption in CAPTIONS:
         if source.replace("`", "").count(caption) != 1:
             errors.append(f"caption authority mismatch: {caption}")
-    for removed in (
+    removed_tokens = [
         "@nvidia_jetpack_6_2_2", "@hill_marty_2008_amdahl",
         "@reddi_et_al_2019_mlperf_inference", "全文首先",
-        "强制cache miss", "Q_p=", "h=1+(n-1)p", "\\mu_f=",
-    ):
+        "强制cache miss", "\\mu_f=",
+    ]
+    if not phase57e:
+        removed_tokens.extend(("Q_p=", "h=1+(n-1)p"))
+    for removed in removed_tokens:
         if removed in source:
             errors.append(f"primary-cut residue remains: {removed}")
     required = (
@@ -105,6 +108,28 @@ def source_validation(errors: list[str]) -> None:
         errors.append("compact complete-E2E classification rule missing")
     if "未报告信息不视为否定" not in visible:
         errors.append("NOT_REPORTED semantic rule missing")
+
+    if phase57e:
+        restoration_tokens = (
+            "按V0的OpenCV 4.5.4 INTER_LINEAR预处理语义建立受控对齐合同",
+            "不构成通用CUDA/OpenCV等价性声明",
+            "置信度阈值0.25", "IoU阈值0.45", "max_nms=30000", "max_det=300",
+            "class-aware单标签后处理", "V2R在预设任务级差异门限下通过",
+            "x_{(1)}\\leq\\cdots\\leq x_{(n)}", "p=0.95", "p=0.99",
+            "h=1+(n-1)p", "j=\\lfloor h\\rfloor", "\\gamma=h-j",
+            "Q_p=(1-\\gamma)x_{(j)}+\\gamma x_{(j+1)}",
+            "运行级分布中重复观察到", "单一异常进程产生", "独立且不配对",
+            "预处理是否移至GPU", "host暂存是否成为变量",
+            "完整E2E是否覆盖预处理—模型执行—后处理/结果处理",
+            "路径比较是否验证任务正确性", "报告均值外的百分位尾延迟",
+            "不作首次性、唯一性或跨论文性能排名",
+        )
+        for token in restoration_tokens:
+            if token not in visible:
+                errors.append(f"Phase 5.7E restoration token missing: {token}")
+        for hidden_gate in ("0.005", "0.010", "0.020", "0.030"):
+            if hidden_gate in visible:
+                errors.append(f"internal correctness-gate value was restored: {hidden_gate}")
 
     with (MANUSCRIPT / "tables/table_manifest.csv").open(encoding="utf-8", newline="") as handle:
         manifest = {row["table_id"]: row for row in csv.DictReader(handle)}
@@ -181,9 +206,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--docx", required=True, type=Path)
     parser.add_argument("--compare-full", type=Path)
+    parser.add_argument(
+        "--phase57e", action="store_true",
+        help="validate the approved Phase 5.7E targeted-restoration contract",
+    )
     args = parser.parse_args()
     errors: list[str] = []
-    source_validation(errors)
+    source_validation(errors, phase57e=args.phase57e)
     paragraphs, tables = docx_validation(args.docx, errors)
     if args.compare_full:
         full_paragraphs, full_tables = docx_validation(args.compare_full, errors)
@@ -201,7 +230,8 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("PHASE57B_INTEGRATION_VALIDATION=PASS")
+    phase = "PHASE57E_TARGETED_RESTORATION" if args.phase57e else "PHASE57B_INTEGRATION"
+    print(f"{phase}_VALIDATION=PASS")
     print("figures=4 tables=4 display_equations=2 contributions=2 references=23")
     print("t1_rows=7 t4_attributes=5 f2_mm=160x62 frozen_f1_f3_f4_hashes=PASS")
     print("tail=OPPOSITE_DIRECTION_NO_CONSISTENT_IMPROVEMENT nominal_payload_ratio=40.96x")
