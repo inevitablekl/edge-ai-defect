@@ -14,7 +14,7 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W}
 ET.register_namespace("w", W)
 
-T1_TITLE = "表1　三条路径的结构变量矩阵。名义输入复制载荷由跨边界表示推导，非实测流量。"
+T1_TITLE = "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。"
 T2_TITLE = "表2　平台、模型与统一基准协议。"
 T3_TITLE = "表3　三条路径在冻结工作负载和统一评价程序下的任务级正确性。"
 TBLPR_ORDER = (

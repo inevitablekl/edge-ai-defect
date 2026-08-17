@@ -55,7 +55,7 @@
 <path d="M88,272 L88,320" fill="none" stroke="#315c76" stroke-width="5" marker-end="url(#blue-arrow)"/>
 <rect x="170" y="638" width="585" height="100" rx="10" fill="#e8f1f7" stroke="#315c76" stroke-width="3"/>
 <text x="462" y="682" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="24" font-weight="700" fill="#20252b">P₀ → P₂：路径级重构</text>
-<text x="462" y="713" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="24" font-weight="700" fill="#20252b">联合改变 R、F 及相应输入组织</text>
+<text x="462" y="713" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="24" font-weight="700" fill="#20252b">改变 R、F、M；E 保持不变</text>
 <path d="M88,427 L88,475" fill="none" stroke="#8a5a35" stroke-width="5" marker-end="url(#arrow)"/>
 <rect x="845" y="638" width="585" height="100" rx="10" fill="#f8eadf" stroke="#8a5a35" stroke-width="3"/>
 <text x="1137" y="682" text-anchor="middle" font-family="Noto Serif CJK SC,Liberation Serif,serif" font-size="24" font-weight="700" fill="#20252b">P₂ → P₃：暂存策略级细化</text>

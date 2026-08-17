@@ -33,7 +33,7 @@ WIDE_FIGURE_CAPTIONS = {
     "图3": "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
 }
 WIDE_TABLE_CAPTIONS = {
-    "表1": "表1　三条路径的结构变量矩阵。名义输入复制载荷由跨边界表示推导，非实测流量。",
+    "表1": "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
 }
 PPR_ORDER = (
     "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",

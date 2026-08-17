@@ -99,7 +99,7 @@ def svg_payload() -> str:
 
     parts.extend((
         '<path d="M88,272 L88,320" fill="none" stroke="#315c76" stroke-width="5" marker-end="url(#blue-arrow)"/>',
-        box(170, 638, 585, 100, ["P₀ → P₂：路径级重构", "联合改变 R、F 及相应输入组织"], fill="#e8f1f7", stroke="#315c76", size=24, weight="700"),
+        box(170, 638, 585, 100, ["P₀ → P₂：路径级重构", "改变 R、F、M；E 保持不变"], fill="#e8f1f7", stroke="#315c76", size=24, weight="700"),
         '<path d="M88,427 L88,475" fill="none" stroke="#8a5a35" stroke-width="5" marker-end="url(#arrow)"/>',
         box(845, 638, 585, 100, ["P₂ → P₃：暂存策略级细化", "仅改变 M：Pageable → Pinned"], fill="#f8eadf", stroke="#8a5a35", size=24, weight="700"),
         text(800, 774, "干预层级表示结构变量范围，不表示收益大小或组件级因果关系", size=22, fill="#5f6973"),

@@ -9,7 +9,7 @@ Figure 1 is the conceptual authority for the fixed-object input data-path model 
 - Host and device domains separated by an explicit boundary.
 - Three path instances: `P0/V0`, `P2/V2R`, and `P3/V3R`.
 - For each path: H2D representation `R`, TensorRT-input formation location `F`, additional packed raw-image staging policy `M`, and common sequential topology `E`.
-- `P0 -> P2` identified as path-level reconstruction.
+- `P0 -> P2` identified as path-level reconstruction that changes `R`, `F`, and `M` while holding `E` fixed.
 - `P2 -> P3` identified as staging-policy-level refinement.
 - A note that intervention scope does not imply gain size or component-level causality.
 
