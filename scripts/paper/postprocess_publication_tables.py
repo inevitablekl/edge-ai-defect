@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the publication three-line treatment to manuscript Tables 1--4."""
+"""Apply the publication three-line treatment to manuscript Tables 1--3."""
 
 from __future__ import annotations
 
@@ -14,10 +14,9 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W}
 ET.register_namespace("w", W)
 
-T1_TITLE = "表1　三条受控路径的特征矩阵。检测器和TensorRT Engine相同；三条路径均为单帧顺序执行，无跨帧流水线。"
+T1_TITLE = "表1　三条路径的结构变量矩阵。名义输入复制载荷由跨边界表示推导，非实测流量。"
 T2_TITLE = "表2　平台、模型与统一基准协议。"
 T3_TITLE = "表3　三条路径在冻结工作负载和统一评价程序下的任务级正确性。"
-T4_TITLE = "表4　相关工作的定性定位。“未报告”不等同于“否”。"
 TBLPR_ORDER = (
     "tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize",
     "tblStyleColBandSize", "tblW", "jc", "tblCellSpacing", "tblInd",
@@ -186,9 +185,7 @@ def apply_table(table: ET.Element, table_id: str) -> None:
         if column_count != 2:
             raise ValueError(f"T3 expected 2 columns, found {column_count}")
     else:
-        widths = (2100, 1414, 1414, 1414, 1414, 1416)
-        if column_count != 6:
-            raise ValueError(f"T4 expected 6 columns, found {column_count}")
+        raise ValueError(f"unsupported table id: {table_id}")
 
     tbl_pr = ensure_first(table, "tblPr")
     tbl_style = tbl_pr.find("w:tblStyle", NS)
@@ -252,14 +249,12 @@ def apply_table(table: ET.Element, table_id: str) -> None:
                 widths[column_index],
                 row_index,
                 len(rows) - 1,
-                table_id in {"T3", "T4"},
+                table_id == "T3",
             )
             if table_id == "T1":
                 alignment = "center" if row_index == 0 or column_index > 0 else "left"
             elif table_id == "T2":
                 alignment = "center" if row_index == 0 else "left"
-            elif table_id == "T4":
-                alignment = "center" if row_index == 0 or column_index > 0 else "left"
             elif row_index == 0:
                 alignment = "center"
             elif column_index == 0:
@@ -270,20 +265,19 @@ def apply_table(table: ET.Element, table_id: str) -> None:
                 alignment = "right"
             for paragraph in cell.findall("w:p", NS):
                 set_paragraph_style_and_alignment(
-                    paragraph, alignment, neutralize_indentation=table_id in {"T1", "T2", "T4"}
+                    paragraph, alignment, neutralize_indentation=table_id in {"T1", "T2"}
                 )
 
 
 def locate_captioned_tables(
     root: ET.Element,
     anonymous_t2_page_break: bool,
-    anonymous_t4_page_break: bool,
 ) -> dict[str, ET.Element]:
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no w:body")
     children = list(body)
-    titles = {T1_TITLE: "T1", T2_TITLE: "T2", T3_TITLE: "T3", T4_TITLE: "T4"}
+    titles = {T1_TITLE: "T1", T2_TITLE: "T2", T3_TITLE: "T3"}
     found: dict[str, ET.Element] = {}
     for index, child in enumerate(children):
         if child.tag != qn("p"):
@@ -300,15 +294,12 @@ def locate_captioned_tables(
         set_paragraph_style_and_alignment(child, "center")
         pstyle = child.find("w:pPr/w:pStyle", NS)
         pstyle.set(qn("val"), "HFUTTableCaption")
-        if (
-            (table_id == "T2" and anonymous_t2_page_break)
-            or (table_id == "T4" and anonymous_t4_page_break)
-        ):
+        if table_id == "T2" and anonymous_t2_page_break:
             ppr = ensure_first(child, "pPr")
             if ppr.find("w:pageBreakBefore", NS) is None:
                 insert_in_schema_order(ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER)
-    if set(found) != {"T1", "T2", "T3", "T4"}:
-        raise ValueError(f"expected T1, T2, T3 and T4 captions, found {sorted(found)}")
+    if set(found) != {"T1", "T2", "T3"}:
+        raise ValueError(f"expected T1, T2 and T3 captions, found {sorted(found)}")
     return found
 
 
@@ -316,18 +307,16 @@ def rewrite(
     input_path: Path,
     output_path: Path,
     anonymous_t2_page_break: bool = False,
-    anonymous_t4_page_break: bool = False,
 ) -> None:
     with zipfile.ZipFile(input_path) as archive:
         parts = {name: archive.read(name) for name in archive.namelist()}
     root = ET.fromstring(parts["word/document.xml"])
     tables = locate_captioned_tables(
-        root, anonymous_t2_page_break, anonymous_t4_page_break
+        root, anonymous_t2_page_break
     )
     apply_table(tables["T1"], "T1")
     apply_table(tables["T2"], "T2")
     apply_table(tables["T3"], "T3")
-    apply_table(tables["T4"], "T4")
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -350,13 +339,11 @@ def main() -> int:
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--anonymous-t2-page-break", action="store_true")
-    parser.add_argument("--anonymous-t4-page-break", action="store_true")
     args = parser.parse_args()
     rewrite(
         args.input,
         args.output,
         args.anonymous_t2_page_break,
-        args.anonymous_t4_page_break,
     )
     print(f"publication_tables=PASS output={args.output}")
     return 0

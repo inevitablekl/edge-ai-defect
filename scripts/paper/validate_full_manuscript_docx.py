@@ -20,7 +20,6 @@ NS = {"w": W, "a": A, "r": R, "asvg": ASVG}
 T1_TITLE = "表1　"
 T2_TITLE = "表2　"
 T3_TITLE = "表3　"
-T4_TITLE = "表4　"
 MARKER = "FULL_BODY_SECTION_START"
 
 
@@ -130,8 +129,8 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
     required_text = {
         "CN title": "Jetson端工业缺陷检测的输入数据路径重构",
         "EN title": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
-        "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
-        "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
+        "CN keywords": "Jetson；工业缺陷检测；输入数据路径；端到端推理；受控比较",
+        "EN keywords": "Jetson; industrial defect detection; input data path; end-to-end inference; controlled comparison",
         "authors CN": "王凯伦，王琦",
         "authors EN": "WANG Kailun, WANG Qi",
         "affiliation CN": "合肥工业大学数学学院，安徽 合肥 230601",
@@ -160,8 +159,8 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
 
     drawings = document.findall(".//w:drawing", NS)
     details["figure_count"] = len(drawings)
-    if len(drawings) != 4:
-        fail(errors, f"expected four figure drawings, found {len(drawings)}")
+    if len(drawings) != 3:
+        fail(errors, f"expected three figure drawings, found {len(drawings)}")
     if relationships is not None:
         image_relationships = {
             rel.get("Id")
@@ -172,12 +171,12 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
             node.get(f"{{{R}}}embed")
             for node in document.findall(".//a:blip", NS) + document.findall(".//asvg:svgBlip", NS)
         }
-        if len(used_relationships & image_relationships) != 4:
-            fail(errors, "four embedded figure image relationships are not all used")
-    for caption in ("图1　", "图2　", "图3　", "图4　"):
+        if len(used_relationships & image_relationships) != 3:
+            fail(errors, "three embedded figure image relationships are not all used")
+    for caption in ("图1　", "图2　", "图3　"):
         if sum(text.startswith(caption) for text in (text_of(p) for p in body_paragraphs)) != 1:
             fail(errors, f"missing or duplicated figure caption: {caption}")
-    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3"), (T4_TITLE, "Table 4")):
+    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
         captions = [paragraph for paragraph in body_paragraphs if text_of(paragraph).startswith(title)]
         if len(captions) != 1:
             fail(errors, f"{label} caption count is {len(captions)}, expected 1")
@@ -186,32 +185,28 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)
-    if len(tables) != 4:
-        fail(errors, f"expected four manuscript tables, found {len(tables)}")
+    if len(tables) != 3:
+        fail(errors, f"expected three manuscript tables, found {len(tables)}")
     else:
-        t1, t2, t3, t4 = tables
+        t1, t2, t3 = tables
         t1_rows = t1.findall("w:tr", NS)
         t2_rows = t2.findall("w:tr", NS)
         t3_rows = t3.findall("w:tr", NS)
-        t4_rows = t4.findall("w:tr", NS)
         details["table1_rows"] = len(t1_rows) - 1
         details["table2_rows"] = len(t2_rows) - 1
         details["table3_rows"] = len(t3_rows) - 1
-        details["table4_rows"] = len(t4_rows) - 1
-        if len(t1_rows) != 8 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
-            fail(errors, "Table 1 is not 7 data rows by 4 columns")
+        if len(t1_rows) != 7 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
+            fail(errors, "Table 1 is not 6 data rows by 4 columns")
         if len(t2_rows) != 10 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
             fail(errors, "Table 2 is not 9 data rows by 2 columns")
         if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 2 for row in t3_rows):
             fail(errors, "Table 3 is not 3 data rows by 2 columns")
-        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 6 for row in t4_rows):
-            fail(errors, "Table 4 is not 6 works by 5 attributes")
-
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "CPU像素预处理", "CUDA预处理", "主机FP32输入张量",
-            "额外打包原始图像暂存", "Pageable", "Pinned", "原始图像H2D",
-            "输入形成位置 / TRT直接输入", "执行拓扑", "同一TRT stream；单帧顺序",
+            "H2D数据表示", "FP32 NCHW张量", "packed BGR uint8",
+            "输入张量形成位置", "预处理位置", "GPU融合处理",
+            "额外打包原始图像暂存策略", "Pageable", "Pinned",
+            "名义输入复制载荷", "4.9152 MB/frame", "0.1200 MB/frame", "执行拓扑",
         ):
             if value not in t1_values:
                 fail(errors, f"Table 1 missing controlled-path value: {value}")
@@ -232,11 +227,6 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         for value in ("V0", "V2R", "V3R", "P", "R", "mAP50", "mAP50-95", "0.6913", "0.6991", "0.6476", "0.3523"):
             if value not in t3_values:
                 fail(errors, f"Table 3 missing frozen value: {value}")
-
-        t4_values = "\n".join(text_of(cell) for row in t4_rows for cell in row.findall("w:tc", NS))
-        for value in ("Kim et al. (2025)", "PRESTO (2025)", "Tang & Qian (2024)", "Shin & Kim (2022)", "Bateni et al. (2020)", "本文", "明确否", "未报告"):
-            if value not in t4_values:
-                fail(errors, f"Table 4 missing governed value: {value}")
 
         for table_index, table in enumerate(tables, start=1):
             borders = table.find("w:tblPr/w:tblBorders", NS)

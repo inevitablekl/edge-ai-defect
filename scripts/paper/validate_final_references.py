@@ -388,12 +388,12 @@ def markdown_cross_reference_errors() -> list[str]:
         callouts = [match.start() for match in callout_pattern.finditer(normalized_text) if match.start() < matches[0]]
         if not callouts:
             fail(errors, f"{label}: no body callout precedes its caption")
-    figures = [positions.get(label, -1) for label in ("图1", "图2", "图3", "图4")]
-    tables = [positions.get(label, -1) for label in ("表1", "表2", "表3", "表4")]
+    figures = [positions.get(label, -1) for label in ("图1", "图2", "图3")]
+    tables = [positions.get(label, -1) for label in ("表1", "表2", "表3")]
     if figures != sorted(figures) or -1 in figures:
-        fail(errors, "figure captions are not sequential F1--F4")
+        fail(errors, "figure captions are not sequential F1--F3")
     if tables != sorted(tables) or -1 in tables:
-        fail(errors, "table captions are not sequential T1--T4")
+        fail(errors, "table captions are not sequential T1--T3")
     stale = re.findall(r"(?:图|Fig(?:ure)?\.?\s*)[5-9]|(?:表|Table\s*)[5-9]", text, flags=re.I)
     if stale:
         fail(errors, f"stale figure/table prototype labels found: {stale!r}")
@@ -508,7 +508,7 @@ def main() -> int:
         f"bibliography_entries={len(entries)} cited={len(cited_order)} "
         f"uncited={len(UNUSED_KEYS)} unresolved=0"
     )
-    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3,F4 tables=T1,T2,T3,T4")
+    print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3 tables=T1,T2,T3")
     if args.docx:
         print(f"PASS: RENDERED_BIBLIOGRAPHY_VALIDATED docx={','.join(str(path) for path in args.docx)}")
         print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt")

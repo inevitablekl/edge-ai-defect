@@ -89,12 +89,10 @@ end
 
 local function figure_for_caption(text)
   if text:match("^图1　") then
-    return "fig1_hero_data_path_phase56.png"
+    return "fig1_input_data_path_model_phase59c.png"
   elseif text:match("^图2　") then
-    return "fig2_technical_implementation_phase57b.png"
-  elseif text:match("^图3　") then
     return "fig3_main_e2e_phase56.png"
-  elseif text:match("^图4　") then
+  elseif text:match("^图3　") then
     return "fig4_run_level_distribution_phase56.png"
   end
   return nil
@@ -167,7 +165,7 @@ function Pandoc(doc)
       if figure ~= nil then
         output:insert(figure_block(figure, figure_width(text)))
         output:insert(styled_block(block, "HFUTFigureCaption"))
-      elseif text:match("^表[1234]　") then
+      elseif text:match("^表[123]　") then
         output:insert(styled_block(block, "HFUTTableCaption"))
       else
         output:insert(styled_block(block, "HFUTBody"))

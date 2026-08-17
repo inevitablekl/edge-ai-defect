@@ -1,39 +1,21 @@
-<!-- MANUSCRIPT_SECTION: 2; TABLE: T1 -->
+<!-- MANUSCRIPT_SECTION: 2 -->
 
-# 2 数据路径工程方法
+# 2 受控输入数据路径重构
 
-三条受控路径的主要配置见表1。
+## 2.1 V0基线路径
 
-**表1　三条受控路径的特征矩阵。检测器和TensorRT Engine相同；三条路径均为单帧顺序执行，无跨帧流水线。**
+V0实现\(P_0\)的主机张量路径。数据源解码为BGR图像后，CPU/OpenCV采用`INTER_LINEAR`完成640×640 letterbox与常数114填充，并完成BGR→RGB、HWC→CHW及\(1/255\)归一化，在主机侧形成`1×3×640×640` FP32 NCHW张量后执行FP32 H2D复制。其科学语义是“主机形成模型输入、张量表示跨越边界”，具体操作仅用于复现该路径实例。
 
-| 路径特征 | V0 | V2R | V3R |
-|---|---:|---:|---:|
-| CPU像素预处理 | 是 | 否 | 否 |
-| CUDA预处理 | 否 | 是 | 是 |
-| 主机FP32输入张量 | 是 | 否 | 否 |
-| 额外打包原始图像暂存 | 否 | Pageable | Pinned |
-| 原始图像H2D | 否 | 是 | 是 |
-| 输入形成位置 / TRT直接输入 | 主机 / 否 | 设备 / 是 | 设备 / 是 |
-| 执行拓扑 | 单帧顺序 | 同一TRT stream；单帧顺序 | 同一TRT stream；单帧顺序 |
+## 2.2 V2R路径级重构
 
-## 2.1 V0：主机侧FP32张量形成
+V2R实现\(P_2\)，将跨边界表示由FP32 NCHW张量改为packed BGR uint8，并将输入张量形成位置由主机移至设备。冻结工作负载的源图像为200×200，因此主机侧只额外形成连续的600 B行宽packed BGR pageable暂存；该表示经二维H2D复制后，由设备侧融合预处理直接写入TensorRT管理的FP32 NCHW输入。实现中二维复制映射为`cudaMemcpy2DAsync`，融合处理完成resize、padding、BGR→RGB、归一化与布局变换。
 
-V0将数据源解码为主机侧`CV_8UC3` BGR图像，CPU/OpenCV使用`INTER_LINEAR`执行640×640 letterbox和常数114填充，再完成BGR→RGB、HWC→CHW与`1/255`归一化，在主机侧形成`1×3×640×640` FP32 NCHW输入并复制至设备；Engine推理后，输出回到主机进行检测框解码、置信度筛选和NMS。
+GPU resize按V0的OpenCV 4.5.4 `INTER_LINEAR`语义建立受控对齐，letterbox几何和填充值保持一致。该约束服务于三条路径的输入语义一致性，不构成通用CUDA/OpenCV等价性声明。设备原始图像缓冲区、TensorRT输入和执行上下文跨帧复用，但这些生命周期细节不改变\(P_2\)的结构定义。
 
-## 2.2 V2R：pageable暂存与GPU输入形成
+## 2.3 V3R暂存策略细化
 
-V2R保留主机图像读取与解码，将`CV_8UC3` BGR图像逐行复制到可复用的`std::vector<uint8_t>`，形成连续packed BGR暂存。冻结工作负载图像为200×200，有效行宽600 B；letterbox几何仍由主机按统一模型合同计算。
+V3R实现\(P_3\)，在V2R基础上只将额外打包原始图像的主机暂存策略由pageable改为pinned。跨边界表示、设备侧张量形成、GPU融合预处理、二维复制拓扑、CUDA stream、Engine和全部下游处理均保持不变。实现上使用`cudaHostAlloc`建立跨帧复用的pinned暂存；其分配方式只是\(M\)的实现映射，不改变复制内容和每帧有效几何。
 
-packed BGR图像通过`cudaMemcpy2DAsync`写入持久化设备原始图像缓冲区，随后一个融合CUDA核函数完成resize、padding、BGR→RGB、`1/255`归一化和HWC→NCHW布局转换，直接写入TensorRT管理的FP32 NCHW设备输入。该resize按V0的OpenCV 4.5.4 `INTER_LINEAR`预处理语义建立受控对齐合同，仅适用于本文冻结实现和工作负载，不构成通用CUDA/OpenCV等价性声明。CUDA预处理器、设备缓冲区、同一TensorRT CUDA stream和execution context均跨帧复用。
+## 2.4 共同控制与正确性约束
 
-## 2.3 V3R：pinned原始图像暂存隔离变量
-
-V3R与V2R共享packed BGR语义、`cudaMemcpy2DAsync`、融合CUDA预处理、TensorRT CUDA stream、Engine和下游拓扑，仅将主机暂存改为帧循环前由`cudaHostAlloc(..., cudaHostAllocDefault)`分配的长生命周期pinned缓冲区。该缓冲区在全部帧之间复用，运行器结束时由`cudaFreeHost`释放；每帧仍逐行复制`width×3`字节，不逐帧分配，也不静默回退到pageable暂存。内存配置效果具有平台和负载依赖性 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]。
-
-三条正式路径均为单帧顺序执行，不使用zero-copy、double buffering、multi-stream、跨帧流水线、显式传输/计算重叠或GPU NMS；这些边界仅限定本文受测实现，两条GPU路径关系见图2。
-
-**图2　V2R/V3R主机—设备输入路径。两者仅pageable/pinned暂存不同；复制、融合CUDA预处理与`enqueueV3`沿同一TensorRT CUDA stream单帧顺序执行，不表示跨帧重叠。**
-
-## 2.4 正确性与生命周期控制
-
-三条路径使用相同的冻结180幅测试图像、模型、Engine、输入尺寸、置信度阈值0.25、IoU阈值0.45、`max_nms=30000`、`max_det=300`和class-aware单标签后处理。V2R在预设任务级差异门限下通过与V0的核验；V3R由同一评价程序对冻结预测结果确定性重算，并以张量与检测摘要、帧顺序、处理数量、丢帧、EOS和生命周期检查约束隔离变量身份。该正确性结论仅适用于本文冻结工作负载和评价口径。
+三条路径共用同一Engine、CUDA stream语义、推理同步、输出回传以及CPU检测框解码、置信度筛选和NMS，执行拓扑均为单帧顺序。后处理配置固定为置信度阈值0.25、IoU阈值0.45、`max_nms=30000`、`max_det=300`和class-aware单标签语义。V2R通过预定义任务级核验；V3R由相同评价程序对冻结预测结果确定性重算，并结合输入顺序、处理数量、丢帧和EOS检查确认比较身份。内部数值门限和缓冲区释放过程不进入公开方法描述。

@@ -22,7 +22,6 @@ NS = {"w": W, "a": A, "r": R, "asvg": ASVG, "dc": DC, "cp": CP}
 T1_TITLE = "表1　"
 T2_TITLE = "表2　"
 T3_TITLE = "表3　"
-T4_TITLE = "表4　"
 IDENTITY_TOKENS = (
     "王凯伦",
     "王琦",
@@ -42,9 +41,9 @@ IDENTITY_PROPERTY_NAMES = (
 )
 REQUIRED_SECTIONS = (
     "0 引言",
-    "1 系统对象与问题定义",
-    "2 数据路径工程方法",
-    "3 实验设计",
+    "1 输入数据路径模型与问题表述",
+    "2 受控输入数据路径重构",
+    "3 实验协议",
     "4 结果与分析",
     "5 结论",
 )
@@ -320,8 +319,8 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
     required_text = {
         "CN title": "Jetson端工业缺陷检测的输入数据路径重构",
         "EN title": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
-        "CN keywords": "Jetson；工业缺陷检测；INT8混合精度推理；CUDA预处理；主机—设备数据路径",
-        "EN keywords": "Jetson; industrial defect detection; INT8 mixed-precision inference; CUDA preprocessing; host-device data path",
+        "CN keywords": "Jetson；工业缺陷检测；输入数据路径；端到端推理；受控比较",
+        "EN keywords": "Jetson; industrial defect detection; input data path; end-to-end inference; controlled comparison",
         "CLC": "TP391.41",
         "CN abstract label": "摘要",
         "EN abstract label": "Abstract",
@@ -343,50 +342,45 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
     document = parsed["word/document.xml"]
     drawings = document.findall(".//w:drawing", NS)
     details["figure_count"] = len(drawings)
-    if len(drawings) != 4:
-        errors.append(f"expected four figure drawings, found {len(drawings)}")
+    if len(drawings) != 3:
+        errors.append(f"expected three figure drawings, found {len(drawings)}")
     body_paragraphs = body.findall("w:p", NS)
-    for caption in ("图1　", "图2　", "图3　", "图4　"):
+    for caption in ("图1　", "图2　", "图3　"):
         count = sum(text_of(node).startswith(caption) for node in body_paragraphs)
         if count != 1:
             errors.append(f"missing or duplicated figure caption: {caption}")
-    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3"), (T4_TITLE, "Table 4")):
+    for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
         captions = [node for node in body_paragraphs if text_of(node).startswith(title)]
         if len(captions) != 1:
             errors.append(f"{label} caption count is {len(captions)}, expected 1")
             continue
         has_page_break = captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None
-        if label == "Table 4" and not has_page_break:
-            errors.append("Anonymous Table 4 caption is missing the required pageBreakBefore")
-        elif label != "Table 4" and has_page_break:
+        if has_page_break:
             errors.append(f"Anonymous {label} caption has unauthorized pageBreakBefore")
 
     tables = body.findall("w:tbl", NS)
     details["table_count"] = len(tables)
-    if len(tables) != 4:
-        errors.append(f"expected four manuscript tables, found {len(tables)}")
+    if len(tables) != 3:
+        errors.append(f"expected three manuscript tables, found {len(tables)}")
     else:
         t1_rows = tables[0].findall("w:tr", NS)
         t2_rows = tables[1].findall("w:tr", NS)
         t3_rows = tables[2].findall("w:tr", NS)
-        t4_rows = tables[3].findall("w:tr", NS)
         details["table1_rows"] = len(t1_rows) - 1
         details["table2_rows"] = len(t2_rows) - 1
         details["table3_rows"] = len(t3_rows) - 1
-        details["table4_rows"] = len(t4_rows) - 1
-        if len(t1_rows) != 8 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
-            errors.append("Table 1 is not 7 data rows by 4 columns")
+        if len(t1_rows) != 7 or any(len(row.findall("w:tc", NS)) != 4 for row in t1_rows):
+            errors.append("Table 1 is not 6 data rows by 4 columns")
         if len(t2_rows) != 10 or any(len(row.findall("w:tc", NS)) != 2 for row in t2_rows):
             errors.append("Table 2 is not 9 data rows by 2 columns")
         if len(t3_rows) != 4 or any(len(row.findall("w:tc", NS)) != 2 for row in t3_rows):
             errors.append("Table 3 is not 3 data rows by 2 columns")
-        if len(t4_rows) != 7 or any(len(row.findall("w:tc", NS)) != 6 for row in t4_rows):
-            errors.append("Table 4 is not 6 works by 5 attributes")
         t1_values = "\n".join(text_of(cell) for row in t1_rows for cell in row.findall("w:tc", NS))
         for value in (
-            "CPU像素预处理", "CUDA预处理", "主机FP32输入张量",
-            "额外打包原始图像暂存", "Pageable", "Pinned", "原始图像H2D",
-            "输入形成位置 / TRT直接输入", "执行拓扑", "同一TRT stream；单帧顺序",
+            "H2D数据表示", "FP32 NCHW张量", "packed BGR uint8",
+            "输入张量形成位置", "预处理位置", "GPU融合处理",
+            "额外打包原始图像暂存策略", "Pageable", "Pinned",
+            "名义输入复制载荷", "4.9152 MB/frame", "0.1200 MB/frame", "执行拓扑",
         ):
             if value not in t1_values:
                 errors.append(f"Table 1 missing controlled-path value: {value}")
@@ -408,20 +402,16 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         ):
             if value not in t3_values:
                 errors.append(f"Table 3 missing frozen value: {value}")
-        t4_values = "\n".join(text_of(cell) for row in t4_rows for cell in row.findall("w:tc", NS))
-        for value in ("Kim et al. (2025)", "PRESTO (2025)", "Tang & Qian (2024)", "Shin & Kim (2022)", "Bateni et al. (2020)", "本文", "明确否", "未报告"):
-            if value not in t4_values:
-                errors.append(f"Table 4 missing governed value: {value}")
         validate_t2_layout(errors, tables[1])
 
     for value in FROZEN_VALUES:
         if value not in all_text:
             errors.append(f"scientific freeze value missing: {value}")
     directionality = {
-        "FPS increase": "FPS变化为+4.07%",
-        "mean latency decrease": "平均延迟变化为−4.03%",
-        "P95 increase": "P95为+0.15%",
-        "P99 decrease": "P99为−0.12%",
+        "FPS increase": "FPS提高4.07%",
+        "mean latency decrease": "平均延迟降低4.03%",
+        "P95 increase": "P95增加0.15%",
+        "P99 decrease": "P99降低0.12%",
     }
     compact_text = all_text.replace(" ", "")
     for label, value in directionality.items():
@@ -445,8 +435,8 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
             node.get(qn("embed", R))
             for node in document.findall(".//a:blip", NS) + document.findall(".//asvg:svgBlip", NS)
         }
-        if len(image_relationships & used_relationships) != 4:
-            errors.append("four embedded figure image relationships are not all used")
+        if len(image_relationships & used_relationships) != 3:
+            errors.append("three embedded figure image relationships are not all used")
 
     section_columns = [attr(node, "num") for node in document.findall(".//w:sectPr/w:cols", NS)]
     details["section_columns"] = section_columns

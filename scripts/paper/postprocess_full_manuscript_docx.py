@@ -23,20 +23,17 @@ ET.register_namespace("r", R)
 
 MARKER = "FULL_BODY_SECTION_START"
 WIDE_FIGURE_CAPTIONS = {
-    "图1": "图1　V0、V2R和V3R三条受控数据路径。图中数值为完整路径E2E观测，输入复制载荷为名义值。",
-    "图2": (
-        "图2　V2R/V3R主机—设备输入路径。两者仅pageable/pinned暂存不同；复制、融合CUDA预处理与"
-        "enqueueV3沿同一TensorRT CUDA stream单帧顺序执行，不表示跨帧重叠。"
+    "图1": (
+        "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
     ),
-    "图3": (
-        "图3　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并"
+    "图2": (
+        "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并"
         "5400个延迟样本的均值、P95和P99。"
     ),
-    "图4": "图4　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
+    "图3": "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
 }
 WIDE_TABLE_CAPTIONS = {
-    "表1": "表1　三条受控路径的特征矩阵。检测器和TensorRT Engine相同；三条路径均为单帧顺序执行，无跨帧流水线。",
-    "表4": "表4　相关工作的定性定位。“未报告”不等同于“否”。",
+    "表1": "表1　三条路径的结构变量矩阵。名义输入复制载荷由跨边界表示推导，非实测流量。",
 }
 PPR_ORDER = (
     "pStyle", "keepNext", "keepLines", "pageBreakBefore", "framePr",
@@ -261,8 +258,8 @@ def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
         paragraph for paragraph in body.findall("w:p", NS)
         if paragraph.find(".//w:drawing", NS) is not None
     ]
-    if len(paragraphs) != 4:
-        raise ValueError(f"expected four publication drawing paragraphs, found {len(paragraphs)}")
+    if len(paragraphs) != 3:
+        raise ValueError(f"expected three publication drawing paragraphs, found {len(paragraphs)}")
     for paragraph in paragraphs:
         ppr = ensure_first(paragraph, "pPr")
         spacing = ppr.find("w:spacing", NS)

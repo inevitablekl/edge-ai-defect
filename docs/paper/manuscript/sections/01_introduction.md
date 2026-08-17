@@ -2,12 +2,16 @@
 
 # 0 引言
 
-金属表面缺陷自动检测是工业视觉的重要应用，NEU-DET提供开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型缺陷数据 [@lv_et_al_2020_metallic_defects; @song_yan_2013_neu_surface_defects]。现有研究通过轻量化骨干、注意力和多尺度特征融合改善检测精度与复杂度权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]，YOLOv8提供多尺度检测模型及训练、推理和导出能力 [@ultralytics_2023_yolov8_docs]。面向资源受限边缘平台时，完整检测还包括预处理、推理、后处理和数据管理 [@stacker_et_al_2021_edge_runtime; @lee_han_kim_2025_presto]，并需在现场附近完成完整处理流程 [@weiss_et_al_2024_realtime_component_inspection]。
+金属表面缺陷会影响产品质量与后续制造过程，因而需要在生产现场及时完成视觉检测。NEU-DET覆盖开裂、夹杂、斑块、点蚀表面、轧制氧化皮和划痕等典型热轧钢带缺陷，为这一任务提供了公开研究对象 [@lv_et_al_2020_metallic_defects; @song_yan_2013_neu_surface_defects]。当检测过程部署到靠近数据源的边缘设备时，评价目标不仅是模型精度，还包括固定任务语义下的完整处理响应。
 
-INT8部署可降低网络侧计算开销，但量化扰动仍需任务正确性约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]，且网络低精度化不会自动消除图像解码后的主机侧输入形成和主机—设备数据移动。本文以TensorRT 10.3校准式INT8混合精度推理为固定前提；该版本传统隐式INT8量化和calibrator接口已标记为弃用，结论因而限定于本文软件栈 [@nvidia_tensorrt_10_3_release_notes]。研究范围收敛到固定检测器与Engine条件下的输入形成位置、主机数据表示、输入复制载荷和pageable/pinned暂存。
+围绕检测模型本身，已有研究通过轻量化骨干、注意力机制和多尺度特征融合改善精度与复杂度权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]，YOLOv8则提供多尺度检测模型及训练、推理和导出链路 [@ultralytics_2023_yolov8_docs]。这类工作主要回答“采用何种检测器及网络结构”，为边缘部署提供模型基础，但不能单独描述模型执行前后的系统数据组织。
 
-本文设置三条受控路径：V0在主机侧形成FP32 NCHW张量并复制至设备；V2R改为packed BGR原始图像暂存、`cudaMemcpy2DAsync`二维H2D复制和GPU融合预处理，直接形成TensorRT设备输入；V3R保持CUDA预处理、CUDA stream和下游拓扑不变，仅将pageable暂存替换为pinned暂存。
+另一类工作把研究范围扩展到边缘推理运行时。完整检测链通常同时包含数据获取、预处理、模型执行、后处理与数据管理 [@stacker_et_al_2021_edge_runtime]；CPU与GPU之间的预处理调度会改变运行时路径 [@lee_han_kim_2025_presto]，工业现场应用也要求在设备附近完成端到端处理 [@weiss_et_al_2024_realtime_component_inspection]。因此，仅报告网络推理时间不足以刻画输入形成方式变化对完整系统响应的影响。
 
-本文的主要贡献包括两点：1）在固定YOLOv8n和TensorRT INT8混合精度Engine条件下，将主机FP32张量输入路径重构为原始图像H2D与GPU融合预处理，并通过pageable/pinned配置隔离主机暂存类型；2）在统一的任务正确性、E2E延迟、进程级FPS和合并样本P95/P99口径下，通过V0→V2R与V2R→V3R两级受控比较，区分完整输入路径重构的主要收益与pinned暂存的有限平均增量，并以每条路径5个独立进程考察运行级分布和尾延迟。受控路径见图1。
+模型低精度化进一步降低网络侧计算与存储开销，但量化误差仍须受到任务正确性约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。本文固定采用TensorRT 10.3校准式INT8混合精度Engine；该版本的传统隐式INT8量化与calibrator接口具有明确的软件版本边界 [@nvidia_tensorrt_10_3_release_notes]。量化部署研究同样表明，性能比较需要同时维持任务行为 [@kim_lee_kim_2024_hyq]。然而，网络精度降低并不会自动决定图像以何种表示跨越主机—设备边界，也不会决定输入张量在主机还是设备侧形成。
 
-**图1　V0、V2R和V3R三条受控数据路径。图中数值为完整路径E2E观测，输入复制载荷为名义值。**
+在Jetson检测部署中，预处理、推理与后处理可形成不同的端到端组织 [@tang_qian_2024_yolov8_jetson_orin]。CUDA文档指出主机内存类型与异步复制具有特定适用条件 [@nvidia_cuda_best_practices_12_6]；集成CPU-GPU系统和GPU内存分配研究也说明内存策略的响应依赖平台、工作负载与访问方式 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]，其执行语义还受流与复制规则约束 [@nvidia_cuda_programming_guide_12_6]。已有完整边缘处理研究关注并发或流水化组织 [@kim_et_al_2025_concurrent_edge_detection]，但对于固定检测器与Engine，跨边界表示、输入张量形成位置和主机暂存策略仍常作为实现细节并置，缺少可用于区分“路径级联合变化”与“局部策略变化”的统一研究对象。
+
+为此，本文将输入数据路径定义为固定推理对象下的结构描述，并以任务正确性保持为比较准入条件。考虑到平均响应与尾部响应反映不同性能维度 [@dean_barroso_2013_tail_scale]，同时结合Jetson平台比较的配置依赖性 [@shin_kim_2022_jetson_yolo_frameworks]及缺陷检测基准对数据和评价边界的要求 [@lema_et_al_2025_surface_defect_benchmark]，本文提出两个研究问题：路径级重构对完整端到端平均响应有何影响；在其余结构变量固定时，暂存策略变化是否产生额外平均响应并带来同方向的P95/P99变化。
+
+本文的主要贡献包括两点：1）面向固定推理对象，建立由跨主机—设备边界表示、输入张量形成位置、额外打包原始图像暂存策略和执行拓扑构成的输入数据路径抽象，并据此形成V0、V2R和V3R的层级受控重构关系；2）在任务正确性保持条件下，分别评价路径级重构和暂存策略级细化，联合给出E2E均值、吞吐率及P95/P99响应，并在受测平台与配置边界内解释两级干预的不同响应。

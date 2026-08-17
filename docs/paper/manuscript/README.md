@@ -20,22 +20,22 @@ authoring/publication assets established through Paper Phases 2.5 and 3.
 
 ## Current boundary
 
-Sections 0-5 body prose have completed section-level review and integration.
-The body is undergoing final content-freeze closure after cross-section
-consistency review. `sections/00_title_abstract.md` remains pending
-title/abstract/keyword production. `references.bib` and
-`literature_matrix.csv` are populated verified manuscript assets. Final
-DOCX/publication formatting, final Visio/Origin figures, three-line tables,
-cross-references, pagination, and Word inspection remain publication-stage
-work.
+Paper Phase 5.9C reconstructs the integrated manuscript around a fixed-object
+input data-path model. The seven section files, three display equations, three
+figures, three tables, and 22 rendered citations form the current scientific
+source inventory. Full and Anonymous DOCX/PDF candidates are generated from
+these Markdown sources through the existing HFUT format pipeline. MathType and
+Visio/Origin submission conversions remain deferred until scientific approval;
+the deterministic SVG/PNG and native Word-table route remains authoritative in
+the interim.
 
 ## Fixed section order
 
 1. `sections/00_title_abstract.md` — 题名与摘要
 2. `sections/01_introduction.md` — 0 引言
-3. `sections/02_problem_definition.md` — 1 系统对象与问题定义
-4. `sections/03_method.md` — 2 数据路径优化方法
-5. `sections/04_experiment.md` — 3 实验设计
+3. `sections/02_problem_definition.md` — 1 输入数据路径模型与问题表述
+4. `sections/03_method.md` — 2 受控输入数据路径重构
+5. `sections/04_experiment.md` — 3 实验协议
 6. `sections/05_results.md` — 4 结果与分析
 7. `sections/06_conclusion.md` — 5 结论
 
