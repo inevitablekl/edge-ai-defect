@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Validate the Phase 4.7 citation, bibliography, and static cross-reference layer.
+"""Validate the citation, bibliography, and static cross-reference layer.
 
 This validator intentionally checks only source citation order, bibliography rendering,
-reference style structure, and the accepted static figure/table callouts. It does not
-evaluate scientific prose, experimental values, or visual Word rendering.
+verified reference metadata, reference style structure, and the accepted static
+figure/table callouts. It does not evaluate scientific prose, experimental values, or
+visual Word rendering.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -23,6 +25,9 @@ MANUSCRIPT = ROOT / "docs/paper/manuscript"
 BIB_PATH = MANUSCRIPT / "references/references.bib"
 MATRIX_PATH = MANUSCRIPT / "references/literature_matrix.csv"
 AUDIT_PATH = MANUSCRIPT / "references/citation_final_audit.csv"
+CONFERENCE_AUTHORITY_PATH = (
+    ROOT / "docs/paper/phase6_3/phase6_3r1_conference_metadata_audit.json"
+)
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W_NS}
 
@@ -77,7 +82,7 @@ EXPECTED_TYPE = {
     "shao_et_al_2024_td_net": "J",
     "chu_yu_rong_2024_strip_steel_yolov8": "J",
     "zhang_pang_jiang_2024_gdm_yolo": "J",
-    "lema_et_al_2025_surface_defect_benchmark": "J/OL",
+    "lema_et_al_2025_surface_defect_benchmark": "J",
     "ultralytics_2023_yolov8_docs": "EB/OL",
     "stacker_et_al_2021_edge_runtime": "C",
     "kim_et_al_2025_concurrent_edge_detection": "J",
@@ -98,6 +103,26 @@ EXPECTED_TYPE = {
     "nvidia_cuda_programming_guide_12_6": "EB/OL",
     "hill_marty_2008_amdahl": "J",
     "archet_et_al_2023_embedded_soc": "C",
+}
+
+EXPECTED_CITED_CONFERENCE_KEYS = tuple(
+    key for key in EXPECTED_CITED_ORDER if EXPECTED_TYPE[key] == "C"
+)
+
+PUBLICATION_CLASS_BY_TYPE = {
+    "J": "FINAL_JOURNAL",
+    "C": "FINAL_CONFERENCE",
+    "J/OL": "ONLINE_FIRST_JOURNAL",
+    "EB/OL": "OFFICIAL_WEB_RESOURCE",
+}
+
+LEMA_FINAL_METADATA = {
+    "journal": "Journal of Intelligent Manufacturing",
+    "volume": "37",
+    "number": "7",
+    "pages": "3001--3018",
+    "year": "2026",
+    "doi": "10.1007/s10845-025-02672-8",
 }
 
 TITLE_NEEDLES = {
@@ -135,24 +160,24 @@ METADATA_STATUS = {
     "shao_et_al_2024_td_net": ("REMEDIATED", "Added locally verified final volume and pages (10:3943--3954)."),
     "chu_yu_rong_2024_strip_steel_yolov8": ("PASS", "Publisher and DOI metadata confirm Sensors 24(19), article 6495."),
     "zhang_pang_jiang_2024_gdm_yolo": ("PASS", "DOI metadata confirm IEEE Access 12:148817--148825."),
-    "lema_et_al_2025_surface_defect_benchmark": ("PASS", "Local article is online-first; no unverified final volume, issue, or pages were added."),
+    "lema_et_al_2025_surface_defect_benchmark": ("REMEDIATED", "Official Springer final metadata confirm Journal of Intelligent Manufacturing 37(7):3001--3018 (2026); source DOI retained and rendered DOI suppressed."),
     "ultralytics_2023_yolov8_docs": ("REMEDIATED", "Converted to official webpage metadata with locally captured URL and access date."),
-    "stacker_et_al_2021_edge_runtime": ("PASS", "CVF and DOI metadata confirm ICCVW 2021:1015--1022."),
+    "stacker_et_al_2021_edge_runtime": ("REMEDIATED", "Phase 6.3R1 authority confirms ICCVW 2021:1015--1022 and IEEE publisher place Piscataway, NJ, USA; Online is retained only as event traceability."),
     "kim_et_al_2025_concurrent_edge_detection": ("PASS", "DOI and DBLP metadata confirm IEEE Access 13:1522--1533."),
-    "lee_han_kim_2025_presto": ("PASS", "ACM DOI metadata confirm MobiSys 2025:735--740."),
+    "lee_han_kim_2025_presto": ("REMEDIATED", "Phase 6.3R1 authority confirms MobiSys 2025:735--740 and Association for Computing Machinery publisher place New York, NY, USA; Anaheim remains event traceability only."),
     "weiss_et_al_2024_realtime_component_inspection": ("REMEDIATED", "Added locally verified volume, issue, and article number (13(8):1551)."),
     "shin_kim_2022_jetson_yolo_frameworks": ("REMEDIATED", "Added locally verified article number (12(8):3734)."),
     "tang_qian_2024_yolov8_jetson_orin": ("PASS", "Local full text confirms existing volume and pagination."),
-    "jacob_et_al_2018_integer_inference": ("PASS", "CVF publication metadata confirm CVPR 2018:2704--2713."),
-    "nagel_et_al_2020_adaround": ("PASS", "PMLR metadata confirm ICML/PMLR 119:7197--7206."),
-    "kim_lee_kim_2024_hyq": ("PASS", "Local full text and admitted BibTeX metadata confirm conference fields."),
+    "jacob_et_al_2018_integer_inference": ("REMEDIATED", "Phase 6.3R1 authority confirms CVPR 2018:2704--2713 and IEEE publisher place Piscataway, NJ, USA; Salt Lake City remains event traceability only."),
+    "nagel_et_al_2020_adaround": ("REMEDIATED", "Phase 6.3R1 authority confirms ICML/PMLR 119:7197--7206 and PMLR/JMLR publication place Cambridge, MA, USA; Virtual remains event traceability only."),
+    "kim_lee_kim_2024_hyq": ("REMEDIATED", "Phase 6.3R1 authority confirms IJCAI-24:4291--4299 and the publisher's official principal place Menlo Park, CA, USA; Jeju remains event traceability only."),
     "nvidia_tensorrt_10_3_release_notes": ("REMEDIATED", "Official online PDF carrier, release year, URL, and governed access date verified; rendered as EB/OL."),
     "nvidia_cuda_best_practices_12_6": ("REMEDIATED", "Official NVIDIA archive page, Release 12.6 year, URL, and governed access date verified; rendered as EB/OL."),
     "dean_barroso_2013_tail_scale": ("PASS", "ACM DOI metadata confirm Communications of the ACM 56(2):74--80."),
     "reddi_et_al_2019_mlperf_inference": ("UPGRADE_METADATA", "Same logical source upgraded from the 2019 preprint to ISCA 2020:446--459."),
     "nvidia_jetpack_6_2_2": ("REMEDIATED", "Converted to official webpage metadata with locally captured URL and access date; no publication year invented."),
-    "bateni_et_al_2020_integrated_memory": ("PASS", "DOI registration, IEEE document 9113098, and DBLP confirm RTAS 2020:310--323."),
-    "rodriguez_et_al_2025_gpu_memory_allocation": ("PASS", "Dagstuhl/DROPS metadata confirm OASIcs 127:1:1--1:15."),
+    "bateni_et_al_2020_integrated_memory": ("REMEDIATED", "Phase 6.3R1 authority confirms RTAS 2020:310--323 and IEEE publisher place Piscataway, NJ, USA; Sydney remains event traceability only."),
+    "rodriguez_et_al_2025_gpu_memory_allocation": ("PASS", "Phase 6.3R1 authority confirms OASIcs 127:1:1--1:15 and unchanged Schloss Dagstuhl publisher place Dagstuhl, Germany; Barcelona is event traceability only."),
     "nvidia_cuda_programming_guide_12_6": ("REMEDIATED", "Official NVIDIA archive page, Release 12.6 year, URL, and governed access date verified; rendered as EB/OL."),
     "hill_marty_2008_amdahl": ("PASS", "IEEE DOI metadata confirm Computer 41(7):33--38."),
     "archet_et_al_2023_embedded_soc": ("PASS", "IEEE DOI metadata confirm DSD 2023:30--38."),
@@ -244,6 +269,91 @@ def matrix_rows() -> dict[str, dict[str, str]]:
         return {row["citation_key"]: row for row in csv.DictReader(handle)}
 
 
+def conference_authority_errors(entries: OrderedDict[str, dict[str, object]]) -> list[str]:
+    """Validate cited conference metadata against the Phase 6.3R1 authority artifact."""
+    errors: list[str] = []
+    if not CONFERENCE_AUTHORITY_PATH.is_file():
+        return [f"conference metadata authority missing: {CONFERENCE_AUTHORITY_PATH}"]
+    try:
+        authority = json.loads(CONFERENCE_AUTHORITY_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as error:
+        return [f"conference metadata authority is unreadable: {error}"]
+
+    allowed_statuses = {
+        "VERIFIED",
+        "UNCHANGED_VERIFIED",
+        "CORRECTED_VERIFIED",
+        "UNRESOLVED",
+    }
+    if set(authority.get("allowed_verification_statuses", [])) != allowed_statuses:
+        fail(errors, "conference metadata authority has an invalid status vocabulary")
+    records = authority.get("records")
+    if not isinstance(records, list):
+        return errors + ["conference metadata authority records must be a list"]
+    records_by_key = {
+        record.get("citation_key"): record for record in records if isinstance(record, dict)
+    }
+    if set(records_by_key) != set(EXPECTED_CITED_CONFERENCE_KEYS) or len(records_by_key) != len(
+        EXPECTED_CITED_CONFERENCE_KEYS
+    ):
+        fail(
+            errors,
+            "conference metadata authority set does not match the cited conference set: "
+            f"{tuple(records_by_key)!r}",
+        )
+
+    field_map = {
+        "proceedings_title": "booktitle",
+        "publisher": "publisher",
+        "publisher_place": "address",
+        "year": "year",
+        "pages": "pages",
+    }
+    for key in EXPECTED_CITED_CONFERENCE_KEYS:
+        record = records_by_key.get(key)
+        if not isinstance(record, dict):
+            fail(errors, f"{key}: missing per-record conference metadata authority")
+            continue
+        status = record.get("verification_status")
+        if status not in allowed_statuses:
+            fail(errors, f"{key}: invalid conference verification status {status!r}")
+        if status == "UNRESOLVED":
+            fail(errors, f"{key}: publisher place remains UNRESOLVED")
+        sources = record.get("official_evidence_sources")
+        if not isinstance(sources, list) or not sources or any(
+            not isinstance(source, str) or not source.startswith("https://") for source in sources
+        ):
+            fail(errors, f"{key}: official evidence sources are missing or malformed")
+        event_location = record.get("event_location")
+        publisher_place = record.get("publisher_place")
+        if not event_location or not publisher_place:
+            fail(errors, f"{key}: event location or publisher place is empty")
+        elif normalized_metadata_text(str(event_location)) == normalized_metadata_text(str(publisher_place)):
+            fail(errors, f"{key}: event location is still equated with publisher place")
+
+        entry = entries.get(key)
+        fields = None if entry is None else entry.get("fields")
+        if not isinstance(fields, dict):
+            fail(errors, f"{key}: conference BibTeX entry is missing")
+            continue
+        for authority_field, bib_field in field_map.items():
+            expected = record.get(authority_field)
+            actual = fields.get(bib_field)
+            if not expected or actual != expected:
+                fail(
+                    errors,
+                    f"{key}: {bib_field} does not match verified authority; "
+                    f"expected {expected!r}, got {actual!r}",
+                )
+        after = record.get("repository_value_after")
+        before = record.get("repository_value_before")
+        if not isinstance(before, dict) or not isinstance(after, dict):
+            fail(errors, f"{key}: before/after repository traceability is missing")
+        elif after.get("publisher") != fields.get("publisher") or after.get("address") != fields.get("address"):
+            fail(errors, f"{key}: repository_value_after does not match references.bib")
+    return errors
+
+
 def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple[list[str], dict[str, str], list[str]]:
     errors: list[str] = []
     cited_order, first_sections, manual_numbers = citation_occurrences()
@@ -279,7 +389,7 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
             for required in ("journal", "year", "doi"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing journal metadata {required}")
-        if key in {"lv_et_al_2020_metallic_defects", "song_yan_2013_neu_surface_defects", "shao_et_al_2024_td_net", "chu_yu_rong_2024_strip_steel_yolov8", "zhang_pang_jiang_2024_gdm_yolo", "kim_et_al_2025_concurrent_edge_detection", "weiss_et_al_2024_realtime_component_inspection", "shin_kim_2022_jetson_yolo_frameworks", "tang_qian_2024_yolov8_jetson_orin", "dean_barroso_2013_tail_scale", "hill_marty_2008_amdahl"}:
+        if EXPECTED_TYPE.get(key) == "J":
             for required in ("volume", "pages"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing final article metadata {required}")
@@ -303,6 +413,15 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
         url = fields.get("url")
         if url and not re.fullmatch(r"https://[^\s]+", url):
             fail(errors, f"{key}: malformed URL {url!r}")
+    lema_fields = entries["lema_et_al_2025_surface_defect_benchmark"]["fields"]
+    if isinstance(lema_fields, dict):
+        for field, expected in LEMA_FINAL_METADATA.items():
+            if lema_fields.get(field) != expected:
+                fail(
+                    errors,
+                    f"lema_et_al_2025_surface_defect_benchmark: {field} must match "
+                    f"official Springer final metadata {expected!r}",
+                )
     doi_owners: dict[str, str] = {}
     title_owners: dict[str, str] = {}
     for key, entry in entries.items():
@@ -319,6 +438,7 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
             if title in title_owners:
                 fail(errors, f"duplicate normalized title for {title_owners[title]} and {key}")
             title_owners[title] = key
+    errors.extend(conference_authority_errors(entries))
     return errors, first_sections, cited_order
 
 
@@ -331,6 +451,7 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
         "source_type",
         "current_bib_type",
         "expected_rendered_type",
+        "publication_class",
         "metadata_status",
         "render_status",
         "final_disposition",
@@ -351,6 +472,7 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
                     "source_type": matrix[key]["source_type"],
                     "current_bib_type": entries[key]["type"],
                     "expected_rendered_type": f"[{EXPECTED_TYPE[key]}]",
+                    "publication_class": PUBLICATION_CLASS_BY_TYPE[EXPECTED_TYPE[key]],
                     "metadata_status": status,
                     "render_status": f"PASS_RENDERED_[{EXPECTED_TYPE[key]}]",
                     "final_disposition": "CITED_AND_RENDERED",
@@ -370,6 +492,7 @@ def write_audit(entries: OrderedDict[str, dict[str, object]], first_sections: di
                     "source_type": matrix[key]["source_type"],
                     "current_bib_type": entries[key]["type"],
                     "expected_rendered_type": "NOT_RENDERED",
+                    "publication_class": "NOT_RENDERED_BY_DESIGN",
                     "metadata_status": status,
                     "render_status": "NOT_RENDERED_BY_DESIGN",
                     "final_disposition": (
@@ -488,6 +611,11 @@ def rendered_docx_errors(path: Path) -> tuple[list[str], list[str]]:
             fail(errors, f"{path.name}: final publication entry {number} incorrectly renders DOI")
         if EXPECTED_TYPE[key] == "J/OL" and "DOI:" not in entry:
             fail(errors, f"{path.name}: online-first entry {number} does not retain DOI")
+        if key == "lema_et_al_2025_surface_defect_benchmark":
+            for field in ("year", "volume", "number", "pages"):
+                value = LEMA_FINAL_METADATA[field]
+                if normalized_metadata_text(value) not in normalized_metadata_text(entry):
+                    fail(errors, f"{path.name}: final Lema entry omits {field}: {value}")
         if EXPECTED_TYPE[key] == "C":
             for field in ("booktitle", "publisher", "address", "year", "pages"):
                 value = source_fields[field]
@@ -552,6 +680,11 @@ def main() -> int:
         print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt; justified")
         print("PASS: LANGUAGE_AWARE_REFERENCE_TERMS_VALIDATED English=et al.; Chinese=等_if_present")
         print("PASS: DOI_POLICY_VALIDATED final_J_C=suppressed; online_first=retained")
+        print(
+            "PASS: CONFERENCE_METADATA_AUTHORITY_VALIDATED "
+            f"records={len(EXPECTED_CITED_CONFERENCE_KEYS)} unresolved=0 "
+            f"path={CONFERENCE_AUTHORITY_PATH}"
+        )
         print("PASS: CONFERENCE_METADATA_VALIDATED title+publisher+place+year+pages")
     if args.compare_full:
         print("PASS: FULL_ANONYMOUS_BIBLIOGRAPHY_IDENTITY_VALIDATED")

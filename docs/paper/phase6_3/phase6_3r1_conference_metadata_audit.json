@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "phase": "PAPER_PHASE_6_3R1",
+  "purpose": "Per-record authority for cited conference publisher-place metadata; event_location is traceability metadata and is not rendered as publisher-place.",
+  "allowed_verification_statuses": [
+    "VERIFIED",
+    "UNCHANGED_VERIFIED",
+    "CORRECTED_VERIFIED",
+    "UNRESOLVED"
+  ],
+  "records": [
+    {
+      "citation_key": "stacker_et_al_2021_edge_runtime",
+      "paper_title": "Deployment of Deep Neural Networks for Object Detection on Edge AI Devices With Runtime Optimization",
+      "proceedings_title": "2021 IEEE/CVF International Conference on Computer Vision Workshops (ICCVW)",
+      "event_location": "Online / virtual",
+      "publisher": "IEEE",
+      "publisher_place": "Piscataway, NJ, USA",
+      "year": "2021",
+      "pages": "1015--1022",
+      "official_evidence_sources": [
+        "https://doi.org/10.1109/ICCVW54120.2021.00118",
+        "https://openaccess.thecvf.com/content/ICCV2021W/ERCVAD/html/Stacker_Deployment_of_Deep_Neural_Networks_for_Object_Detection_on_Edge_ICCVW_2021_paper.html",
+        "https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "IEEE",
+        "address": "Online"
+      },
+      "repository_value_after": {
+        "publisher": "IEEE",
+        "address": "Piscataway, NJ, USA"
+      }
+    },
+    {
+      "citation_key": "lee_han_kim_2025_presto",
+      "paper_title": "PRESTO: Hybrid CPU-GPU Preprocessing Framework for Video-based AI Inference System",
+      "proceedings_title": "Proceedings of the 23rd Annual International Conference on Mobile Systems, Applications and Services",
+      "event_location": "Anaheim, CA, USA",
+      "publisher": "Association for Computing Machinery",
+      "publisher_place": "New York, NY, USA",
+      "year": "2025",
+      "pages": "735--740",
+      "official_evidence_sources": [
+        "https://doi.org/10.1145/3711875.3736688",
+        "https://ina.kaist.ac.kr/assets/bibliography/Presto.pdf",
+        "https://ht.acm.org/ht2026/open-calls/submission-instructions/reference-styles-for-acm-papers/"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "ACM",
+        "address": "Anaheim, CA, USA"
+      },
+      "repository_value_after": {
+        "publisher": "Association for Computing Machinery",
+        "address": "New York, NY, USA"
+      }
+    },
+    {
+      "citation_key": "kim_lee_kim_2024_hyq",
+      "paper_title": "HyQ: Hardware-Friendly Post-Training Quantization for CNN-Transformer Hybrid Networks",
+      "proceedings_title": "Proceedings of the Thirty-Third International Joint Conference on Artificial Intelligence, IJCAI-24",
+      "event_location": "Jeju, Korea",
+      "publisher": "International Joint Conferences on Artificial Intelligence Organization",
+      "publisher_place": "Menlo Park, CA, USA",
+      "year": "2024",
+      "pages": "4291--4299",
+      "official_evidence_sources": [
+        "https://www.ijcai.org/proceedings/2024/0474",
+        "https://www.ijcai.org/proceedings/2024/bibtex/0474",
+        "https://www.ijcai.org/sites/default/files/IJCAI_ByLAWS_Aug_2013.pdf"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "International Joint Conferences on Artificial Intelligence Organization",
+        "address": "Jeju, Korea"
+      },
+      "repository_value_after": {
+        "publisher": "International Joint Conferences on Artificial Intelligence Organization",
+        "address": "Menlo Park, CA, USA"
+      }
+    },
+    {
+      "citation_key": "bateni_et_al_2020_integrated_memory",
+      "paper_title": "Co-Optimizing Performance and Memory Footprint Via Integrated CPU/GPU Memory Management, an Implementation on Autonomous Driving Platform",
+      "proceedings_title": "2020 IEEE Real-Time and Embedded Technology and Applications Symposium (RTAS)",
+      "event_location": "Sydney, NSW, Australia",
+      "publisher": "IEEE",
+      "publisher_place": "Piscataway, NJ, USA",
+      "year": "2020",
+      "pages": "310--323",
+      "official_evidence_sources": [
+        "https://ieeexplore.ieee.org/document/9113098/",
+        "https://doi.org/10.1109/RTAS48715.2020.00007",
+        "https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "IEEE",
+        "address": "Sydney, Australia"
+      },
+      "repository_value_after": {
+        "publisher": "IEEE",
+        "address": "Piscataway, NJ, USA"
+      }
+    },
+    {
+      "citation_key": "jacob_et_al_2018_integer_inference",
+      "paper_title": "Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference",
+      "proceedings_title": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+      "event_location": "Salt Lake City, UT, USA",
+      "publisher": "IEEE",
+      "publisher_place": "Piscataway, NJ, USA",
+      "year": "2018",
+      "pages": "2704--2713",
+      "official_evidence_sources": [
+        "https://openaccess.thecvf.com/content_cvpr_2018/html/Jacob_Quantization_and_Training_CVPR_2018_paper.html",
+        "https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "IEEE",
+        "address": "Salt Lake City, UT, USA"
+      },
+      "repository_value_after": {
+        "publisher": "IEEE",
+        "address": "Piscataway, NJ, USA"
+      }
+    },
+    {
+      "citation_key": "nagel_et_al_2020_adaround",
+      "paper_title": "Up or Down? Adaptive Rounding for Post-Training Quantization",
+      "proceedings_title": "Proceedings of the 37th International Conference on Machine Learning",
+      "event_location": "Virtual / online",
+      "publisher": "PMLR",
+      "publisher_place": "Cambridge, MA, USA",
+      "year": "2020",
+      "pages": "7197--7206",
+      "official_evidence_sources": [
+        "https://proceedings.mlr.press/v119/nagel20a.html",
+        "https://proceedings.mlr.press/v119/",
+        "https://portal.issn.org/resource/ISSN-L/2640-3498"
+      ],
+      "verification_status": "CORRECTED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "PMLR",
+        "address": "Online"
+      },
+      "repository_value_after": {
+        "publisher": "PMLR",
+        "address": "Cambridge, MA, USA"
+      }
+    },
+    {
+      "citation_key": "rodriguez_et_al_2025_gpu_memory_allocation",
+      "paper_title": "Analysis of GPU Memory Allocation Characteristics",
+      "proceedings_title": "16th Workshop on Parallel Programming and Run-Time Management Techniques for Many-Core Architectures and 14th Workshop on Design Tools and Architectures for Multicore Embedded Computing Platforms (PARMA-DITAM 2025)",
+      "event_location": "Barcelona, Spain",
+      "publisher": "Schloss Dagstuhl -- Leibniz-Zentrum f{\\\"u}r Informatik",
+      "publisher_place": "Dagstuhl, Germany",
+      "year": "2025",
+      "pages": "1:1--1:15",
+      "official_evidence_sources": [
+        "https://drops.dagstuhl.de/entities/document/10.4230/OASIcs.PARMA-DITAM.2025.1",
+        "https://drops.dagstuhl.de/entities/volume/OASIcs-volume-127"
+      ],
+      "verification_status": "UNCHANGED_VERIFIED",
+      "repository_value_before": {
+        "publisher": "Schloss Dagstuhl -- Leibniz-Zentrum f{\\\"u}r Informatik",
+        "address": "Dagstuhl, Germany"
+      },
+      "repository_value_after": {
+        "publisher": "Schloss Dagstuhl -- Leibniz-Zentrum f{\\\"u}r Informatik",
+        "address": "Dagstuhl, Germany"
+      }
+    }
+  ]
+}
