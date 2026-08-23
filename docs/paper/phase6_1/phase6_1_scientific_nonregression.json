@@ -1,0 +1,177 @@
+{
+  "phase": "PAPER_PHASE_6_1",
+  "verdict": "PASS",
+  "scientific_nonregression": "PASS",
+  "source_details": {
+    "experiment_source_sha256": "20f45e645dce7f76c47aa7369e69b580ff64a6ceb8a09b5b67074d173afef5aa",
+    "figure2_figure3_hashes": {
+      "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png": "dfa125e8d20c28c93cb8a210417d72103988057cfd2bca371f2bd1c17a802ea9",
+      "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.png": "c30ee465b6707064819504994c569d48a01067602b19c5a4c79b4b90fe296e96"
+    },
+    "display_equations": 3,
+    "formal_rqs": {
+      "RQ1": 1,
+      "RQ2": 1
+    },
+    "correctness_metric_rows": 3
+  },
+  "docx_details": {
+    "docs/paper/manuscript/output/draft_full.docx": {
+      "figure1_callout_section": {
+        "columns": "2",
+        "type": "continuous"
+      },
+      "figure1_section": {
+        "columns": "1",
+        "type": "nextPage",
+        "width_emu": "5759999"
+      },
+      "drawing_count": 3,
+      "table_count": 3,
+      "display_equation_count": 3
+    },
+    "docs/paper/manuscript/output/draft_anonymous.docx": {
+      "figure1_callout_section": {
+        "columns": "2",
+        "type": "continuous"
+      },
+      "figure1_section": {
+        "columns": "1",
+        "type": "nextPage",
+        "width_emu": "5759999"
+      },
+      "drawing_count": 3,
+      "table_count": 3,
+      "display_equation_count": 3
+    }
+  },
+  "overclaim_matches": [
+    {
+      "file": "docs/paper/manuscript/sections/01_introduction.md",
+      "line": 13,
+      "term": "组件",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "上述工作为具体结构选择提供了实现与评价依据，但如果缺少统一的路径描述，不同改变容易被组织为彼此孤立的优化技巧：表示变化、张量形成位置迁移、暂存策略调整和执行拓扑变化可能在一次比较中同时发生，也可能只有一个变量改变。由此产生的知识组织问题不是若干技术“组合得不够”，而是缺少一个能够在正确性保持和统一E2E边界下区分耦合路径级干预与单变量局部细化的评价对象。平均响应之外，尾部响应还是独立的系统性能维度 [@dean_barroso_2013_tail_scale]；Jetson平台比较具有配置依赖性 [@shin_kim_2022_jetson_yolo_frameworks]，缺陷检测基准也要求明确数据和评价边界 [@lema_et_al_2025_surface_defect_benchmark]。因此，结构变量的干预范围和响应维度均需被显式控制，而不能事后由某个API或组件名称代替。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/02_problem_definition.md",
+      "line": 27,
+      "term": "带宽",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "其中，\\(H_R,W_R,C_R,s_R\\)分别为跨边界表示的高、宽、通道数与单元素字节数。实例化后，\\(B(P_0)=640\\times640\\times3\\times4=4.9152\\ \\mathrm{MB/frame}\\)，\\(B(P_2)=B(P_3)=200\\times200\\times3\\times1=0.1200\\ \\mathrm{MB/frame}\\)，因而\\(B(P_0)/B(P_2)=40.96\\)。该比值是由表示结构得到的名义载荷对比，不是实测总线或DRAM流量、带宽、H2D时间或传输加速比。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/02_problem_definition.md",
+      "line": 27,
+      "term": "传输加速",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "其中，\\(H_R,W_R,C_R,s_R\\)分别为跨边界表示的高、宽、通道数与单元素字节数。实例化后，\\(B(P_0)=640\\times640\\times3\\times4=4.9152\\ \\mathrm{MB/frame}\\)，\\(B(P_2)=B(P_3)=200\\times200\\times3\\times1=0.1200\\ \\mathrm{MB/frame}\\)，因而\\(B(P_0)/B(P_2)=40.96\\)。该比值是由表示结构得到的名义载荷对比，不是实测总线或DRAM流量、带宽、H2D时间或传输加速比。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/02_problem_definition.md",
+      "line": 44,
+      "term": "瓶颈",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "如图1所示，干预层级依据受控结构变量的范围划分：\\(P_0\\rightarrow P_2\\)同时改变跨边界表示和张量形成位置，并引入相应的原始图像暂存，即\\(R,F,M\\)发生变化而\\(E\\)保持不变，属于耦合的路径级重构；\\(P_2\\rightarrow P_3\\)在\\(R,F,E\\)保持不变时只改变\\(M\\)，属于局部暂存策略细化。该层级不预设收益大小、组件重要性或瓶颈关系，也不构成阶段级因果分解。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/02_problem_definition.md",
+      "line": 44,
+      "term": "组件",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "如图1所示，干预层级依据受控结构变量的范围划分：\\(P_0\\rightarrow P_2\\)同时改变跨边界表示和张量形成位置，并引入相应的原始图像暂存，即\\(R,F,M\\)发生变化而\\(E\\)保持不变，属于耦合的路径级重构；\\(P_2\\rightarrow P_3\\)在\\(R,F,E\\)保持不变时只改变\\(M\\)，属于局部暂存策略细化。该层级不预设收益大小、组件重要性或瓶颈关系，也不构成阶段级因果分解。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/02_problem_definition.md",
+      "line": 46,
+      "term": "组件",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "**图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。**"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/04_experiment.md",
+      "line": 33,
+      "term": "统计显著",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "正确性采用冻结测试集和统一评价器，报告Precision、Recall、mAP50、mAP50-95及类别级AP50/Recall。性能指标沿用式（3）的source-to-pre-sink边界；第\\(i\\)个独立进程的FPS按\\(f_i=N/T_i\\)计算，其中\\(N=1080\\)，\\(T_i\\)为完整测量阶段wall time，故FPS不是逐帧延迟的倒数。每条路径报告5个进程级FPS的均值与样本标准差，并合并5400个逐帧样本计算平均延迟、P95和P99；百分位采用Type-7线性插值。所有统计均为描述性结果，不进行置信区间、假设检验或统计显著性推断。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 25,
+      "term": "带宽",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "式（2）给出的名义输入复制载荷由4.9152 MB/frame降至0.1200 MB/frame，形成40.96×结构对比；该量只是重构路径的一项表示派生属性，不是实测带宽、流量、H2D时间或独立控制变量。由于未进行阶段插桩或总线/DRAM流量测量，2.24× E2E响应只能归属于完整\\(P_0\\rightarrow P_2\\)路径，不能分解为GPU预处理、H2D、CUDA核函数或表示变化的贡献，也不能解释为40.96×传输加速。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 25,
+      "term": "传输加速",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "式（2）给出的名义输入复制载荷由4.9152 MB/frame降至0.1200 MB/frame，形成40.96×结构对比；该量只是重构路径的一项表示派生属性，不是实测带宽、流量、H2D时间或独立控制变量。由于未进行阶段插桩或总线/DRAM流量测量，2.24× E2E响应只能归属于完整\\(P_0\\rightarrow P_2\\)路径，不能分解为GPU预处理、H2D、CUDA核函数或表示变化的贡献，也不能解释为40.96×传输加速。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 33,
+      "term": "组件",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "上述幅度差异仅描述本文受控系统内两种干预范围的响应，不表示组件重要性，也不推出约4%的改善是pinned内存在其他平台、模型或负载下的普遍收益。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 43,
+      "term": "pinned改善稳定性",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "不同路径的进程独立且不配对，本文不据此进行显著性推断；现有数据也不支持“pinned改善稳定性”的结论。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 49,
+      "term": "组件",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "本文只评价单一Jetson平台、YOLOv8n TensorRT INT8混合精度Engine、NEU-DET固定180幅离线回放工作负载和单帧顺序拓扑，未覆盖真实相机、跨平台、跨模型或跨数据集泛化。运行状态只有非连续温度观察，没有连续遥测、功耗或能耗测量，也没有独立归档的频率证据。实验未测量阶段级H2D、预处理或CUDA核函数时间，也未测量实际总线或DRAM流量，因而不能进行组件级因果分配。每条路径5个独立进程仅支持描述性解释，不支持统计显著性推断。上述限制将结论约束为受测系统中的路径结构—E2E响应关系。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 49,
+      "term": "统计显著",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "本文只评价单一Jetson平台、YOLOv8n TensorRT INT8混合精度Engine、NEU-DET固定180幅离线回放工作负载和单帧顺序拓扑，未覆盖真实相机、跨平台、跨模型或跨数据集泛化。运行状态只有非连续温度观察，没有连续遥测、功耗或能耗测量，也没有独立归档的频率证据。实验未测量阶段级H2D、预处理或CUDA核函数时间，也未测量实际总线或DRAM流量，因而不能进行组件级因果分配。每条路径5个独立进程仅支持描述性解释，不支持统计显著性推断。上述限制将结论约束为受测系统中的路径结构—E2E响应关系。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 49,
+      "term": "跨平台",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "本文只评价单一Jetson平台、YOLOv8n TensorRT INT8混合精度Engine、NEU-DET固定180幅离线回放工作负载和单帧顺序拓扑，未覆盖真实相机、跨平台、跨模型或跨数据集泛化。运行状态只有非连续温度观察，没有连续遥测、功耗或能耗测量，也没有独立归档的频率证据。实验未测量阶段级H2D、预处理或CUDA核函数时间，也未测量实际总线或DRAM流量，因而不能进行组件级因果分配。每条路径5个独立进程仅支持描述性解释，不支持统计显著性推断。上述限制将结论约束为受测系统中的路径结构—E2E响应关系。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/05_results.md",
+      "line": 49,
+      "term": "跨模型",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "本文只评价单一Jetson平台、YOLOv8n TensorRT INT8混合精度Engine、NEU-DET固定180幅离线回放工作负载和单帧顺序拓扑，未覆盖真实相机、跨平台、跨模型或跨数据集泛化。运行状态只有非连续温度观察，没有连续遥测、功耗或能耗测量，也没有独立归档的频率证据。实验未测量阶段级H2D、预处理或CUDA核函数时间，也未测量实际总线或DRAM流量，因而不能进行组件级因果分配。每条路径5个独立进程仅支持描述性解释，不支持统计显著性推断。上述限制将结论约束为受测系统中的路径结构—E2E响应关系。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/06_conclusion.md",
+      "line": 9,
+      "term": "统计显著",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "上述数值和认识仅适用于本文单一Jetson平台、检测器/Engine、数据集、离线回放与单帧顺序配置。完整E2E响应不能由单个API或名义载荷直接解释，本文也不作阶段级因果、统计显著性或跨平台、跨模型普适推断。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/06_conclusion.md",
+      "line": 9,
+      "term": "跨平台",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "上述数值和认识仅适用于本文单一Jetson平台、检测器/Engine、数据集、离线回放与单帧顺序配置。完整E2E响应不能由单个API或名义载荷直接解释，本文也不作阶段级因果、统计显著性或跨平台、跨模型普适推断。"
+    },
+    {
+      "file": "docs/paper/manuscript/sections/06_conclusion.md",
+      "line": 9,
+      "term": "跨模型",
+      "classification": "LEGITIMATE_NEGATION_OR_BOUNDARY",
+      "text": "上述数值和认识仅适用于本文单一Jetson平台、检测器/Engine、数据集、离线回放与单帧顺序配置。完整E2E响应不能由单个API或名义载荷直接解释，本文也不作阶段级因果、统计显著性或跨平台、跨模型普适推断。"
+    }
+  ],
+  "errors": []
+}

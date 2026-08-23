@@ -72,7 +72,6 @@ def svg_payload() -> str:
         'orient="auto" markerUnits="strokeWidth"><path d="M0,0 L12,6 L0,12 z" fill="#315c76"/></marker>',
         '</defs>',
         '<rect width="1600" height="790" fill="#ffffff"/>',
-        text(800, 42, "固定推理对象：同一检测器 / Engine / 工作负载 / 后处理语义", size=29, weight="700"),
         '<rect x="170" y="78" width="585" height="540" rx="12" fill="#f5f6f7" stroke="#38434d" stroke-width="3"/>',
         '<rect x="845" y="78" width="585" height="540" rx="12" fill="#eef4f8" stroke="#38434d" stroke-width="3"/>',
         text(462, 116, "主机域", size=30, weight="700"),

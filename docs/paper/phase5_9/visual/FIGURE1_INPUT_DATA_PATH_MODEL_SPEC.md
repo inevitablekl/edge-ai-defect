@@ -4,6 +4,8 @@
 
 Figure 1 is the conceptual authority for the fixed-object input data-path model and hierarchical controlled interventions. It is not an implementation lifecycle diagram and contains no performance result.
 
+The fixed inference object is defined in manuscript Section 1.1 before the figure. Figure 1 therefore contains no floating sentence that repeats that definition; every visible label belongs to the path structure, boundary, intervention, or scope warning.
+
 ## Required content
 
 - Host and device domains separated by an explicit boundary.
@@ -15,7 +17,7 @@ Figure 1 is the conceptual authority for the fixed-object input data-path model 
 
 ## Exclusions
 
-No API lifecycle, allocator release, execution-context lifecycle, output D2H detail, result number, bandwidth, transfer-speed, overlap, or pipeline claim is shown.
+No floating fixed-inference-object sentence, API lifecycle, allocator release, execution-context lifecycle, output D2H detail, result number, bandwidth, transfer-speed, overlap, or pipeline claim is shown.
 
 ## Production
 

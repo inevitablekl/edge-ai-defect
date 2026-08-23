@@ -145,13 +145,17 @@ def set_body_columns(root: ET.Element) -> None:
     columns.set(qn("space"), "425")
 
 
-def section_copy(final_section: ET.Element, columns: str) -> ET.Element:
+def section_copy(
+    final_section: ET.Element,
+    columns: str,
+    section_type_value: str = "continuous",
+) -> ET.Element:
     section = copy.deepcopy(final_section)
     section_type = section.find("w:type", NS)
     if section_type is None:
         section_type = ET.Element(qn("type"))
         insert_in_schema_order(section, section_type, SECTPR_ORDER)
-    section_type.set(qn("val"), "continuous")
+    section_type.set(qn("val"), section_type_value)
     cols = section.find("w:cols", NS)
     if cols is None:
         cols = ET.Element(qn("cols"))
@@ -199,7 +203,11 @@ def span_wide_figures(root: ET.Element) -> None:
         if callout.tag != qn("p") or label not in paragraph_text(callout):
             raise ValueError(f"{label} drawing is not preceded by its callout paragraph")
         set_paragraph_section(callout, section_copy(final_section, "2"))
-        set_paragraph_section(caption, section_copy(final_section, "1"))
+        # Section properties on the caption govern the one-column figure
+        # section. Starting that section on the next page keeps Figure 1 at
+        # page top; the following continuous two-column section resumes below.
+        break_type = "nextPage" if label == "图1" else "continuous"
+        set_paragraph_section(caption, section_copy(final_section, "1", break_type))
         drawing_ppr = ensure_first(drawing, "pPr")
         if drawing_ppr.find("w:keepNext", NS) is None:
             insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
