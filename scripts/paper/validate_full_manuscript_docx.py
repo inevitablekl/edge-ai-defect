@@ -206,7 +206,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
             "H2D数据表示", "FP32 NCHW张量", "packed BGR uint8",
             "输入张量形成位置", "预处理位置", "GPU融合处理",
             "额外打包原始图像暂存策略", "Pageable", "Pinned",
-            "名义输入复制载荷", "4.9152 MB/frame", "0.1200 MB/frame", "执行拓扑",
+            "名义输入复制载荷", "MB/frame", "4.9152", "0.1200", "执行拓扑",
         ):
             if value not in t1_values:
                 fail(errors, f"Table 1 missing controlled-path value: {value}")

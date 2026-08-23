@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="never" name-as-sort-order="all" sort-separator=" " initialize-with=" " page-range-format="expanded" default-locale="zh-CN">
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="never" name-as-sort-order="all" sort-separator=" " initialize-with=" " page-range-format="expanded" default-locale="en-US">
   <info>
     <title>HFUT GB/T 7714-2025 (numeric, Phase 4.7 local derivative)</title>
     <id>https://edge-ai-defect.invalid/styles/hfut-gbt7714-2025-numeric-phase4-7</id>
@@ -14,12 +14,13 @@
     <category citation-format="numeric"/>
     <category field="generic-base"/>
     <updated>2026-08-09T00:00:00+00:00</updated>
-    <summary>Project-local derivative of the official Zotero GB/T 7714-2025 numeric style. It suppresses DOI-only /OL media labels for final journal and conference records; explicit medium values and online resources retain their upstream behavior.</summary>
+    <summary>Project-local HFUT derivative. It applies language-aware et al./等 terms, suppresses DOI output for final journal and conference records, preserves DOI for online-first records, and renders verified conference publication metadata.</summary>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
     <terms>
       <term name="volume" form="short">v.</term>
+      <term name="et-al">et al.</term>
     </terms>
   </locale>
   <locale xml:lang="zh">
@@ -30,6 +31,7 @@
       <term name="close-quote">”</term>
       <term name="open-inner-quote">‘</term>
       <term name="close-inner-quote">’</term>
+      <term name="et-al">等</term>
     </terms>
   </locale>
   <locale>
@@ -401,10 +403,24 @@
   </macro>
   <!-- 7.8 获取和访问路径 7.9 永久标识符 -->
   <macro name="access">
-    <group delimiter=". ">
-      <text variable="URL"/>
-      <text variable="DOI" prefix="DOI:"/>
-    </group>
+    <choose>
+      <if type="article-journal article-magazine" match="any">
+        <choose>
+          <if variable="volume issue page number" match="none">
+            <text variable="DOI" prefix="DOI:"/>
+          </if>
+        </choose>
+      </if>
+      <else-if type="paper-conference">
+        <!-- Final conference records use verified proceedings metadata, not DOI output. -->
+      </else-if>
+      <else>
+        <group delimiter=". ">
+          <text variable="URL"/>
+          <text variable="DOI" prefix="DOI:"/>
+        </group>
+      </else>
+    </choose>
   </macro>
   <!-- 参考文献表格式 -->
   <macro name="entry-layout">
@@ -451,14 +467,12 @@
             <group delimiter=". ">
               <text macro="title"/>
             </group>
-            <group delimiter="：">
-              <group delimiter="，">
-                <text variable="event-title"/>
-                <text macro="date"/>
-              </group>
-              <text variable="page"/>
+            <group delimiter=". ">
+              <text macro="container-contributors"/>
+              <text variable="container-title"/>
             </group>
           </group>
+          <text macro="publisher"/>
         </else-if>
         <else-if type="standard">
           <!-- 8.9 标准 -->

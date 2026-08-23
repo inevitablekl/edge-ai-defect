@@ -20,15 +20,16 @@ FIGURE1_SVG = (
 )
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
-NS = {"w": W, "wp": WP}
+M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+NS = {"w": W, "wp": WP, "m": M}
 
 EXPERIMENT_SHA256 = "20f45e645dce7f76c47aa7369e69b580ff64a6ceb8a09b5b67074d173afef5aa"
-FROZEN_FIGURE_HASHES = {
-    "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png": (
-        "dfa125e8d20c28c93cb8a210417d72103988057cfd2bca371f2bd1c17a802ea9"
+FROZEN_FIGURE_DATA_HASHES = {
+    "docs/paper/phase5_6/phase56b_run_level_metrics.csv": (
+        "f6b22f6b5574d957d3b3d600a637e0033d1f43a5afd77dca4e4a518f89d60e31"
     ),
-    "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.png": (
-        "c30ee465b6707064819504994c569d48a01067602b19c5a4c79b4b90fe296e96"
+    "docs/paper/phase5_6/phase56b_publication_display_values.json": (
+        "0468d9ed640e8e3ed55089b3e90945a61f577422c8e3dfa63297454f55408655"
     ),
 }
 
@@ -190,10 +191,10 @@ def validate_source() -> tuple[list[str], list[dict[str, object]], dict[str, obj
         errors.append("correctness table must contain exactly three identical metric rows")
     if sha256(SECTIONS / "04_experiment.md") != EXPERIMENT_SHA256:
         errors.append("Section 3 experiment source changed from the frozen Phase 6.1 baseline")
-    for relative, expected in FROZEN_FIGURE_HASHES.items():
+    for relative, expected in FROZEN_FIGURE_DATA_HASHES.items():
         actual = sha256(ROOT / relative)
         if actual != expected:
-            errors.append(f"frozen Figure 2/3 asset changed: {relative}")
+            errors.append(f"frozen Figure 2/3 scientific data changed: {relative}")
 
     display_equations = re.findall(r"\\\[(.*?)\\\]", source, re.S)
     if len(display_equations) != 3:
@@ -234,8 +235,8 @@ def validate_source() -> tuple[list[str], list[dict[str, object]], dict[str, obj
 
     details = {
         "experiment_source_sha256": sha256(SECTIONS / "04_experiment.md"),
-        "figure2_figure3_hashes": {
-            relative: sha256(ROOT / relative) for relative in FROZEN_FIGURE_HASHES
+        "figure2_figure3_data_hashes": {
+            relative: sha256(ROOT / relative) for relative in FROZEN_FIGURE_DATA_HASHES
         },
         "display_equations": len(display_equations),
         "formal_rqs": {
@@ -307,7 +308,12 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         },
         "drawing_count": len(root.findall(".//w:drawing", NS)),
         "table_count": len(root.findall(".//w:tbl", NS)),
-        "display_equation_count": len(root.findall(".//m:oMathPara", {"m": "http://schemas.openxmlformats.org/officeDocument/2006/math"})),
+        "display_equation_count": sum(
+            1
+            for paragraph in root.findall(".//w:p", NS)
+            if paragraph.find("w:pPr/w:pStyle[@w:val='HFUTEquation']", NS) is not None
+            and paragraph.find("m:oMath", NS) is not None
+        ),
     }
     return errors, details
 
@@ -317,6 +323,7 @@ def main() -> int:
     parser.add_argument("--full-docx", required=True, type=Path)
     parser.add_argument("--anonymous-docx", required=True, type=Path)
     parser.add_argument("--output-json", type=Path)
+    parser.add_argument("--report-phase", default="PAPER_PHASE_6_1")
     args = parser.parse_args()
 
     errors, overclaim_matches, source_details = validate_source()
@@ -327,7 +334,7 @@ def main() -> int:
         docx_details[str(path)] = details
 
     report = {
-        "phase": "PAPER_PHASE_6_1",
+        "phase": args.report_phase,
         "verdict": "PASS" if not errors else "FAIL",
         "scientific_nonregression": "PASS" if not errors else "FAIL",
         "source_details": source_details,

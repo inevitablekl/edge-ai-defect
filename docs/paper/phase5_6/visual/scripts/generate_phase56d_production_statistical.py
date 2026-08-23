@@ -63,8 +63,11 @@ def configure() -> tuple[FontProperties, FontProperties]:
     mpl.font_manager.fontManager.addfont(cjk.get_file())
     mpl.font_manager.fontManager.addfont(latin.get_file())
     mpl.rcParams.update({
-        "font.family": [cjk.get_name()],
-        "font.size": 8.5,
+        # Times New Roman and SimSun are not installed in the Linux review
+        # environment. Liberation Serif and Noto Serif CJK SC are the metric-
+        # compatible review fallbacks; final Origin objects remain deferred.
+        "font.family": [latin.get_name(), cjk.get_name()],
+        "font.size": 7.5,
         "axes.linewidth": 0.8,
         "axes.unicode_minus": False,
         "pdf.fonttype": 3,
@@ -132,9 +135,14 @@ def load_sources() -> tuple[dict[str, list[dict[str, float]]], dict]:
 def style_axis(ax: plt.Axes) -> None:
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="y", color="#d8dde2", linewidth=0.55, zorder=0)
-    ax.tick_params(direction="out", width=0.8, length=3)
-    for label in [*ax.get_xticklabels(), *ax.get_yticklabels()]:
-        label.set_fontfamily("Liberation Serif")
+    ax.tick_params(direction="in", width=0.8, length=3, labelsize=7.5)
+
+
+def panel_label(ax: plt.Axes, label: str, y: float) -> None:
+    ax.text(
+        0.5, y, label, transform=ax.transAxes, ha="center", va="top",
+        fontsize=7.5, fontfamily="Liberation Serif", clip_on=False,
+    )
 
 
 def save(fig: plt.Figure, output: Path) -> None:
@@ -154,8 +162,8 @@ def save(fig: plt.Figure, output: Path) -> None:
 
 def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
             output: Path) -> None:
-    fig, axes = plt.subplots(1, 3, figsize=(6.30, 2.42), constrained_layout=False)
-    fig.subplots_adjust(left=0.075, right=0.985, bottom=0.20, top=0.88, wspace=0.38)
+    fig, axes = plt.subplots(3, 1, figsize=(2.95, 7.15), constrained_layout=False)
+    fig.subplots_adjust(left=0.25, right=0.97, bottom=0.13, top=0.985, hspace=0.76)
     agg = summary["aggregate_verification"]
     display = summary["publication_display_precision"]
 
@@ -169,15 +177,15 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[0].set_ylim(0, 170)
     axes[0].set_ylabel("FPS")
     axes[0].set_xticks(range(3), VARIANTS)
-    axes[0].set_title("(a) 进程级 FPS", loc="left", fontsize=9.2, weight="bold")
     for bar, value in zip(bars, means):
         axes[0].text(bar.get_x() + bar.get_width() / 2, value + 5.0, f"{value:.3f}",
-                     ha="center", va="bottom", fontsize=6.8, fontfamily="Liberation Serif")
-    axes[0].text(0.98, 0.98, "mean ± sample SD；5 processes / path",
-                 transform=axes[0].transAxes, ha="right", va="top", fontsize=6.5)
-    axes[0].text(0.03, 0.88,
-                 f'V0→V2R  {display["v2r_v0_fps_ratio"]}；V2R→V3R  {display["v3r_v2r_fps"]}',
-                 transform=axes[0].transAxes, fontsize=6.5, va="top")
+                     ha="center", va="bottom", fontsize=7.5, fontfamily="Liberation Serif")
+    axes[0].text(0.98, 0.98, "mean ± sample SD; 5 processes / path",
+                 transform=axes[0].transAxes, ha="right", va="top", fontsize=7.5)
+    axes[0].text(0.03, 0.84,
+                 f'V0→V2R  {display["v2r_v0_fps_ratio"]}\nV2R→V3R  {display["v3r_v2r_fps"]}',
+                 transform=axes[0].transAxes, fontsize=7.5, va="top")
+    panel_label(axes[0], "(a)", -0.25)
 
     latency = [agg[v]["pooled_mean_latency_ms"] for v in VARIANTS]
     bars = axes[1].bar(
@@ -188,16 +196,16 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[1].set_ylim(0, 27)
     axes[1].set_ylabel("E2E latency / ms")
     axes[1].set_xticks(range(3), VARIANTS)
-    axes[1].set_title("(b) 平均 E2E 延迟", loc="left", fontsize=9.2, weight="bold")
     for bar, value in zip(bars, latency):
         axes[1].text(bar.get_x() + bar.get_width() / 2, value + 0.55, f"{value:.3f}",
-                     ha="center", va="bottom", fontsize=6.8, fontfamily="Liberation Serif")
-    axes[1].text(0.98, 0.98, "每路径合并5400个延迟样本",
-                 transform=axes[1].transAxes, ha="right", va="top", fontsize=6.5)
-    axes[1].text(0.05, 0.88,
+                     ha="center", va="bottom", fontsize=7.5, fontfamily="Liberation Serif")
+    axes[1].text(0.98, 0.73, "pooled n = 5400 / path",
+                 transform=axes[1].transAxes, ha="right", va="top", fontsize=7.5)
+    axes[1].text(0.05, 0.98,
                  f'V0→V2R  −{display["v2r_v0_mean_latency_reduction"]}\n'
                  f'V2R→V3R  {typographic_sign(display["v3r_v2r_mean_latency"])}',
-                 transform=axes[1].transAxes, fontsize=6.5, va="top")
+                 transform=axes[1].transAxes, fontsize=7.5, va="top")
+    panel_label(axes[1], "(b)", -0.25)
 
     x = [0, 1]
     width = 0.23
@@ -210,14 +218,14 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
         )
         for bar, value in zip(bars, values):
             axes[2].text(bar.get_x() + bar.get_width() / 2, value + 0.22, f"{value:.3f}",
-                         ha="center", va="bottom", fontsize=6.5, rotation=90,
+                         ha="center", va="bottom", fontsize=7.5, rotation=90,
                          fontfamily="Liberation Serif")
     axes[2].set_ylim(0, 21)
     axes[2].set_ylabel("latency / ms")
     axes[2].set_xticks(x, ["P95", "P99"])
-    axes[2].set_title("(c) 尾延迟", loc="left", fontsize=9.2, weight="bold")
-    axes[2].legend(frameon=False, ncol=3, loc="lower center", fontsize=6.7,
-                   bbox_to_anchor=(0.5, -0.33), handlelength=1.8, columnspacing=0.9)
+    axes[2].legend(frameon=False, ncol=3, loc="lower center", fontsize=7.5,
+                   bbox_to_anchor=(0.5, -0.29), handlelength=1.8, columnspacing=0.9)
+    panel_label(axes[2], "(c)", -0.40)
     for ax in axes:
         style_axis(ax)
     save(fig, output)
@@ -225,8 +233,8 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
 
 def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
             output: Path) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(6.30, 2.82), constrained_layout=False)
-    fig.subplots_adjust(left=0.085, right=0.985, bottom=0.25, top=0.88, wspace=0.31)
+    fig, axes = plt.subplots(2, 1, figsize=(2.95, 5.65), constrained_layout=False)
+    fig.subplots_adjust(left=0.28, right=0.97, bottom=0.15, top=0.985, hspace=0.70)
     agg = summary["aggregate_verification"]
     display = summary["publication_display_precision"]
 
@@ -244,9 +252,9 @@ def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[0].set_ylim(50, 132)
     axes[0].set_xticks(range(3), VARIANTS)
     axes[0].set_ylabel("process-level FPS")
-    axes[0].set_title("(a) 5 次独立进程 FPS", loc="left", fontsize=9.2, weight="bold")
-    axes[0].text(0.02, 0.70, "点：独立 process\n横线/误差棒：mean ± sample SD",
-                 transform=axes[0].transAxes, va="top", fontsize=6.8)
+    axes[0].text(0.02, 0.70, "points: independent processes\nbar/error: mean ± sample SD",
+                 transform=axes[0].transAxes, va="top", fontsize=7.5)
+    panel_label(axes[0], "(a)", -0.24)
 
     metric_keys = ("mean", "p95", "p99")
     metric_labels = ("Mean", "P95", "P99")
@@ -264,16 +272,16 @@ def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[1].set_ylim(7.45, 12.05)
     axes[1].set_xticks(list(centers), metric_labels)
     axes[1].set_ylabel("process-level latency / ms")
-    axes[1].set_title("(b) V2R / V3R 运行级延迟", loc="left", fontsize=9.2, weight="bold")
-    axes[1].legend(frameon=False, loc="upper left", fontsize=7.0, ncol=2)
-    fig.text(
-        0.75, 0.045,
-        f'P95 {typographic_sign(display["v3r_v2r_p95"])}，'
-        f'P99 {typographic_sign(display["v3r_v2r_p99"])}\n变化方向相反',
-        ha="center", va="bottom", fontsize=6.5,
+    axes[1].legend(frameon=False, loc="upper left", fontsize=7.5, ncol=2)
+    axes[1].text(
+        0.5, 0.04,
+        f'P95 {typographic_sign(display["v3r_v2r_p95"])}; '
+        f'P99 {typographic_sign(display["v3r_v2r_p99"])}\nopposite directions',
+        transform=axes[1].transAxes, ha="center", va="bottom", fontsize=7.5,
         bbox={"boxstyle": "round,pad=0.16", "facecolor": "#faf7ea",
               "edgecolor": "#6b7280", "linewidth": 0.7},
     )
+    panel_label(axes[1], "(b)", -0.24)
     for ax in axes:
         style_axis(ax)
     save(fig, output)

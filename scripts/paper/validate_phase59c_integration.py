@@ -154,7 +154,12 @@ def load_docx(path: Path) -> tuple[list[str], tuple[tuple[tuple[str, ...], ...],
     paragraphs = [text_of(node) for node in body.findall("w:p", NS)]
     drawings = root.findall(".//w:drawing", NS)
     tables = body.findall("w:tbl", NS)
-    equations = root.findall(".//m:oMathPara", NS)
+    equations = [
+        node for node in body.findall("w:p", NS)
+        if (node.find("w:pPr/w:pStyle", NS) is not None
+            and node.find("w:pPr/w:pStyle", NS).get(f"{{{W}}}val") == "HFUTEquation"
+            and node.find(".//m:oMath", NS) is not None)
+    ]
     if (len(drawings), len(tables), len(equations)) != (3, 3, 3):
         raise ValueError(
             f"inventory mismatch: figures={len(drawings)} tables={len(tables)} equations={len(equations)}"

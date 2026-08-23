@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import re
 import tempfile
 import zipfile
@@ -26,11 +27,6 @@ WIDE_FIGURE_CAPTIONS = {
     "图1": (
         "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
     ),
-    "图2": (
-        "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并"
-        "5400个延迟样本的均值、P95和P99。"
-    ),
-    "图3": "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
 }
 WIDE_TABLE_CAPTIONS = {
     "表1": "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
@@ -123,6 +119,96 @@ def normalize_equation_paragraphs(root: ET.Element) -> None:
         spacing.set(qn("after"), "0")
         spacing.set(qn("line"), "360")
         spacing.set(qn("lineRule"), "atLeast")
+
+
+def load_equation_numbers() -> list[tuple[str, str, str]]:
+    manifest = Path("docs/paper/manuscript/equations/equation_manifest.csv")
+    with manifest.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    expected_ids = ["E1", "E2", "E3"]
+    if [row["equation_id"] for row in rows] != expected_ids:
+        raise ValueError("equation manifest must contain E1, E2 and E3 in order")
+    result: list[tuple[str, str, str]] = []
+    for row in rows:
+        number = row["word_equation_number"].strip()
+        if not number.isdigit():
+            raise ValueError(f"invalid visible equation number for {row['equation_id']}: {number!r}")
+        result.append((row["equation_id"], row["semantic_name"], number))
+    return result
+
+
+def set_math_run_size(math: ET.Element, half_points: str) -> None:
+    for run in math.findall(".//m:r", NS):
+        run_properties = run.find("w:rPr", NS)
+        if run_properties is None:
+            run_properties = ET.Element(qn("rPr"))
+            math_properties = run.find("m:rPr", NS)
+            run.insert(1 if math_properties is not None else 0, run_properties)
+        fonts = run_properties.find("w:rFonts", NS)
+        if fonts is None:
+            fonts = ET.SubElement(run_properties, qn("rFonts"))
+        fonts.set(qn("ascii"), "Times New Roman")
+        fonts.set(qn("hAnsi"), "Times New Roman")
+        fonts.set(qn("eastAsia"), "宋体")
+        for local in ("sz", "szCs"):
+            size = run_properties.find(f"w:{local}", NS)
+            if size is None:
+                size = ET.SubElement(run_properties, qn(local))
+            size.set(qn("val"), half_points)
+
+
+def apply_visible_equation_numbers(root: ET.Element) -> None:
+    """Consume the equation manifest into centered OMML plus right-side numbers."""
+    body = root.find("w:body", NS)
+    if body is None:
+        raise ValueError("word/document.xml has no w:body")
+    paragraphs = [
+        paragraph for paragraph in body.findall("w:p", NS)
+        if paragraph.find(".//m:oMathPara", NS) is not None
+    ]
+    manifest = load_equation_numbers()
+    if len(paragraphs) != len(manifest):
+        raise ValueError(
+            f"equation manifest/display count mismatch: manifest={len(manifest)} display={len(paragraphs)}"
+        )
+    for paragraph, (equation_id, semantic_name, number) in zip(paragraphs, manifest):
+        math_paragraph = paragraph.find("m:oMathPara", NS)
+        equations = [] if math_paragraph is None else math_paragraph.findall("m:oMath", NS)
+        if len(equations) != 1:
+            raise ValueError(f"{equation_id} must contain exactly one OMML equation")
+        equation = equations[0]
+        math_paragraph.remove(equation)
+        paragraph.remove(math_paragraph)
+        set_math_run_size(equation, "21")
+
+        ppr = set_paragraph_style(paragraph, "HFUTEquation")
+        alignment = ppr.find("w:jc", NS)
+        if alignment is None:
+            alignment = ET.Element(qn("jc"))
+            insert_in_schema_order(ppr, alignment, PPR_ORDER)
+        alignment.set(qn("val"), "left")
+        tabs = ppr.find("w:tabs", NS)
+        if tabs is not None:
+            ppr.remove(tabs)
+        tabs = ET.Element(qn("tabs"))
+        ET.SubElement(tabs, qn("tab"), {qn("val"): "center", qn("pos"): "2205"})
+        ET.SubElement(tabs, qn("tab"), {qn("val"): "right", qn("pos"): "4410"})
+        insert_in_schema_order(ppr, tabs, PPR_ORDER)
+
+        leading_tab = ET.Element(qn("r"))
+        ET.SubElement(leading_tab, qn("tab"))
+        trailing_tab = ET.Element(qn("r"))
+        ET.SubElement(trailing_tab, qn("tab"))
+        number_run = ET.Element(qn("r"))
+        number_properties = ET.SubElement(number_run, qn("rPr"))
+        ET.SubElement(number_properties, qn("rFonts"), {
+            qn("ascii"): "Times New Roman", qn("hAnsi"): "Times New Roman",
+            qn("eastAsia"): "宋体",
+        })
+        ET.SubElement(number_properties, qn("sz"), {qn("val"): "21"})
+        ET.SubElement(number_properties, qn("szCs"), {qn("val"): "21"})
+        ET.SubElement(number_run, qn("t")).text = f"（{number}）"
+        paragraph.extend((leading_tab, equation, trailing_tab, number_run))
 
 
 def set_body_columns(root: ET.Element) -> None:
@@ -348,6 +434,27 @@ def apply_phase5_equation_style(parts: dict[str, bytes]) -> None:
     parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
+def justify_reference_styles(parts: dict[str, bytes]) -> None:
+    root = ET.fromstring(parts["word/styles.xml"])
+    for style_id in ("HFUTReferenceEntry", "Bibliography"):
+        style = next(
+            (node for node in root.findall("w:style", NS)
+             if node.get(qn("styleId")) == style_id),
+            None,
+        )
+        if style is None:
+            raise ValueError(f"{style_id} style is missing")
+        ppr = style.find("w:pPr", NS)
+        if ppr is None:
+            ppr = ET.SubElement(style, qn("pPr"))
+        alignment = ppr.find("w:jc", NS)
+        if alignment is None:
+            alignment = ET.Element(qn("jc"))
+            insert_in_schema_order(ppr, alignment, PPR_ORDER)
+        alignment.set(qn("val"), "both")
+    parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
 def remove_biography_custom_property(parts: dict[str, bytes]) -> None:
     name = "docProps/custom.xml"
     if name not in parts:
@@ -468,6 +575,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     root = ET.fromstring(parts["word/document.xml"])
     deduplicate_styles(parts)
     apply_phase5_equation_style(parts)
+    justify_reference_styles(parts)
     remove_biography_custom_property(parts)
     set_body_columns(root)
     insert_continuous_boundary(root)
@@ -475,6 +583,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     span_wide_tables(root)
     normalize_publication_drawing_paragraphs(root)
     normalize_equation_paragraphs(root)
+    apply_visible_equation_numbers(root)
     move_biography_to_first_footer(root, parts)
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 

@@ -11,7 +11,8 @@ from xml.etree import ElementTree as ET
 
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-NS = {"w": W}
+M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+NS = {"w": W, "m": M}
 ET.register_namespace("w", W)
 
 T1_TITLE = "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。"
@@ -108,6 +109,32 @@ def set_paragraph_style_and_alignment(
         indent.set(qn("left"), "0")
         indent.set(qn("right"), "0")
         indent.set(qn("firstLine"), "0")
+
+
+def set_math_run_size(paragraph: ET.Element, half_points: str = "15") -> None:
+    for run in paragraph.findall(".//m:r", NS):
+        run_properties = run.find("w:rPr", NS)
+        if run_properties is None:
+            run_properties = ET.Element(qn("rPr"))
+            math_properties = run.find("m:rPr", NS)
+            run.insert(1 if math_properties is not None else 0, run_properties)
+        fonts = run_properties.find("w:rFonts", NS)
+        if fonts is None:
+            fonts = ET.SubElement(run_properties, qn("rFonts"))
+        fonts.set(qn("ascii"), "Times New Roman")
+        fonts.set(qn("hAnsi"), "Times New Roman")
+        fonts.set(qn("eastAsia"), "宋体")
+        for local in ("sz", "szCs"):
+            size = run_properties.find(f"w:{local}", NS)
+            if size is None:
+                size = ET.SubElement(run_properties, qn(local))
+            size.set(qn("val"), half_points)
+
+
+def keep_with_next(paragraph: ET.Element) -> None:
+    ppr = ensure_first(paragraph, "pPr")
+    if ppr.find("w:keepNext", NS) is None:
+        insert_in_schema_order(ppr, ET.Element(qn("keepNext")), PPR_ORDER)
 
 
 def set_cell_width_and_borders(
@@ -267,6 +294,9 @@ def apply_table(table: ET.Element, table_id: str) -> None:
                 set_paragraph_style_and_alignment(
                     paragraph, alignment, neutralize_indentation=table_id in {"T1", "T2"}
                 )
+                set_math_run_size(paragraph)
+                if table_id == "T3" and row_index < len(rows) - 1:
+                    keep_with_next(paragraph)
 
 
 def locate_captioned_tables(
@@ -294,6 +324,7 @@ def locate_captioned_tables(
         set_paragraph_style_and_alignment(child, "center")
         pstyle = child.find("w:pPr/w:pStyle", NS)
         pstyle.set(qn("val"), "HFUTTableCaption")
+        keep_with_next(child)
         if table_id == "T2" and anonymous_t2_page_break:
             ppr = ensure_first(child, "pPr")
             if ppr.find("w:pageBreakBefore", NS) is None:

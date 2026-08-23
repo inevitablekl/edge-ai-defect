@@ -19,15 +19,32 @@ STEM = "fig1_input_data_path_model_phase59c"
 
 
 def esc(value: str) -> str:
-    return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return (value.replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+MATH_SYMBOL = re.compile(r"P[₀₂₃]|V(?:0|2R|3R)|(?<![A-Za-z0-9])(?:R|F|M|E)(?![A-Za-z0-9])")
+MATH_GLYPHS = {
+    "P₀": "𝑃₀", "P₂": "𝑃₂", "P₃": "𝑃₃",
+    "V0": "𝑉0", "V2R": "𝑉2𝑅", "V3R": "𝑉3𝑅",
+    "R": "𝑅", "F": "𝐹", "M": "𝑀", "E": "𝐸",
+}
+
+
+def typographic_text(value: str) -> tuple[str, str]:
+    """Italicize only path/model variables; keep prose, formats, and units upright."""
+    rendered = MATH_SYMBOL.sub(lambda match: MATH_GLYPHS[match.group()], value)
+    label = f' aria-label="{esc(value)}"' if rendered != value else ""
+    return esc(rendered), label
 
 
 def text(x: int, y: int, value: str, *, size: int = 27, weight: str = "400",
          anchor: str = "middle", fill: str = "#20252b") -> str:
+    rendered, label = typographic_text(value)
     return (
-        f'<text x="{x}" y="{y}" text-anchor="{anchor}" '
-        'font-family="Noto Serif CJK SC,Liberation Serif,serif" '
-        f'font-size="{size}" font-weight="{weight}" fill="{fill}">{esc(value)}</text>'
+        f'<text x="{x}" y="{y}" text-anchor="{anchor}"{label} '
+        'font-family="Times New Roman,Liberation Serif,SimSun,Noto Serif CJK SC,serif" '
+        f'font-size="{size}" font-weight="{weight}" fill="{fill}">{rendered}</text>'
     )
 
 
@@ -74,8 +91,8 @@ def svg_payload() -> str:
         '<rect width="1600" height="790" fill="#ffffff"/>',
         '<rect x="170" y="78" width="585" height="540" rx="12" fill="#f5f6f7" stroke="#38434d" stroke-width="3"/>',
         '<rect x="845" y="78" width="585" height="540" rx="12" fill="#eef4f8" stroke="#38434d" stroke-width="3"/>',
-        text(462, 116, "主机域", size=30, weight="700"),
-        text(1137, 116, "设备域", size=30, weight="700"),
+        text(462, 116, "主机域", size=28, weight="700"),
+        text(1137, 116, "设备域", size=28, weight="700"),
         '<line x1="800" y1="82" x2="800" y2="614" stroke="#6b7280" stroke-width="3" stroke-dasharray="10 8"/>',
         text(800, 70, "主机—设备边界", size=23, fill="#5f6973"),
     ]

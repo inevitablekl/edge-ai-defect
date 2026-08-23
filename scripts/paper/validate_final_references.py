@@ -184,6 +184,21 @@ def fail(errors: list[str], message: str) -> None:
     errors.append(message)
 
 
+def normalized_metadata_text(value: str) -> str:
+    """Normalize equivalent BibTeX/CSL spellings before rendered-field checks."""
+    replacements = {
+        r'{\"u}': "ü",
+        r'\"{u}': "ü",
+        "--": "-",
+        "–": "-",
+        "—": "-",
+        "−": "-",
+    }
+    for source, target in replacements.items():
+        value = value.replace(source, target)
+    return value.replace("{", "").replace("}", "").casefold()
+
+
 def parse_bib_entries(text: str) -> OrderedDict[str, dict[str, object]]:
     """Read the small project BibTeX library without adding a parser dependency."""
     entries: OrderedDict[str, dict[str, object]] = OrderedDict()
@@ -258,6 +273,8 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
         for required in ("author", "title"):
             if not fields.get(required):
                 fail(errors, f"{key}: missing required {required} metadata")
+        if fields.get("language") != "en":
+            fail(errors, f"{key}: accepted English reference lacks language=en metadata")
         if key in EXPECTED_TYPE and EXPECTED_TYPE[key] in {"J", "J/OL"}:
             for required in ("journal", "year", "doi"):
                 if not fields.get(required):
@@ -267,7 +284,7 @@ def validate_source_layer(entries: OrderedDict[str, dict[str, object]]) -> tuple
                 if not fields.get(required):
                     fail(errors, f"{key}: missing final article metadata {required}")
         if EXPECTED_TYPE.get(key) == "C":
-            for required in ("booktitle", "year", "pages"):
+            for required in ("booktitle", "publisher", "address", "year", "pages"):
                 if not fields.get(required):
                     fail(errors, f"{key}: missing conference metadata {required}")
         if EXPECTED_TYPE.get(key) == "EB/OL":
@@ -437,6 +454,9 @@ def structural_style_errors(path: Path) -> list[str]:
         spacing = style.find("w:pPr/w:spacing", NS)
         if element_attr(spacing, "line") != "280" or element_attr(spacing, "lineRule") != "exact":
             fail(errors, f"{path.name}: {style_id} line spacing is not exact 14 pt")
+        alignment = style.find("w:pPr/w:jc", NS)
+        if element_attr(alignment, "val") != "both":
+            fail(errors, f"{path.name}: {style_id} bibliography alignment is not justified")
     return errors
 
 
@@ -455,6 +475,24 @@ def rendered_docx_errors(path: Path) -> tuple[list[str], list[str]]:
             fail(errors, f"{path.name}: bibliography entry {number} lacks expected marker {marker}")
         if TITLE_NEEDLES[key].casefold() not in entry.casefold():
             fail(errors, f"{path.name}: bibliography entry {number} does not match {key}")
+        source_fields = parse_bib_entries(BIB_PATH.read_text(encoding="utf-8"))[key]["fields"]
+        if not isinstance(source_fields, dict):
+            fail(errors, f"{path.name}: internal source metadata failure for {key}")
+            continue
+        author_count = len(re.split(r"\s+and\s+", source_fields["author"], flags=re.I))
+        if author_count >= 4 and "et al." not in entry:
+            fail(errors, f"{path.name}: English multi-author entry {number} does not use et al.")
+        if "等" in entry:
+            fail(errors, f"{path.name}: English bibliography entry {number} incorrectly uses 等")
+        if EXPECTED_TYPE[key] in {"J", "C"} and "DOI:" in entry:
+            fail(errors, f"{path.name}: final publication entry {number} incorrectly renders DOI")
+        if EXPECTED_TYPE[key] == "J/OL" and "DOI:" not in entry:
+            fail(errors, f"{path.name}: online-first entry {number} does not retain DOI")
+        if EXPECTED_TYPE[key] == "C":
+            for field in ("booktitle", "publisher", "address", "year", "pages"):
+                value = source_fields[field]
+                if normalized_metadata_text(value) not in normalized_metadata_text(entry):
+                    fail(errors, f"{path.name}: conference entry {number} omits {field}: {value}")
     if any("[Z]" in entry for entry in bibliography):
         fail(errors, f"{path.name}: unexpected [Z] bibliography marker")
     full_text = "\n".join(text for _, text in paragraphs)
@@ -511,7 +549,10 @@ def main() -> int:
     print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3 tables=T1,T2,T3")
     if args.docx:
         print(f"PASS: RENDERED_BIBLIOGRAPHY_VALIDATED docx={','.join(str(path) for path in args.docx)}")
-        print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt")
+        print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt; justified")
+        print("PASS: LANGUAGE_AWARE_REFERENCE_TERMS_VALIDATED English=et al.; Chinese=等_if_present")
+        print("PASS: DOI_POLICY_VALIDATED final_J_C=suppressed; online_first=retained")
+        print("PASS: CONFERENCE_METADATA_VALIDATED title+publisher+place+year+pages")
     if args.compare_full:
         print("PASS: FULL_ANONYMOUS_BIBLIOGRAPHY_IDENTITY_VALIDATED")
     if args.write_audit:

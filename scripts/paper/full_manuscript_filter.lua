@@ -99,7 +99,10 @@ local function figure_for_caption(text)
 end
 
 local function figure_width(text)
-  return "16cm"
+  if text:match("^图1　") then
+    return "16cm"
+  end
+  return "7.5cm"
 end
 
 function Pandoc(doc)
