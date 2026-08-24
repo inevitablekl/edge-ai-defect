@@ -40,6 +40,23 @@ STATISTICAL_REVIEW_PNGS = {
     "图2": ROOT / "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png",
     "图3": ROOT / "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.png",
 }
+STATISTICAL_REVIEW_GEOMETRY = {
+    "图2": {
+        "canvas_pixels": [786, 1623],
+        "svg": ROOT / "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.svg",
+        "svg_view_box": "0 0 188.487562 389.492914",
+    },
+    "图3": {
+        "canvas_pixels": [768, 1246],
+        "svg": ROOT / "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.svg",
+        "svg_view_box": "0 0 184.239562 298.994344",
+    },
+}
+EXPECTED_WORD_DRAWING_EXTENTS = (
+    (5_760_000, 2_851_093),
+    (2_700_000, 5_575_190),
+    (2_700_000, 4_380_468),
+)
 # Project QA advisory, not an HFUT publication limit. Report it to help detect
 # unusually tall single-column figures, but never fail a build at this value.
 ADVISORY_SINGLE_COLUMN_HEIGHT_CM = 15.5
@@ -270,6 +287,7 @@ def image_content_geometry(path: Path) -> dict[str, object]:
     bottom_padding = height - bottom
     return {
         "canvas_pixels": [width, height],
+        "aspect_ratio": width / height,
         "content_bbox": [left, top, right, bottom],
         "padding_pixels": {
             "left": left_padding, "right": right_padding,
@@ -368,9 +386,15 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         width = int(extent.get("cx", "0") if extent is not None else 0)
         height = int(extent.get("cy", "0") if extent is not None else 0)
         drawing_widths.append(width)
-        expected = 5_760_000 if index == 0 else 2_700_000
-        if abs(width - expected) > 2:
-            errors.append(f"Figure {index + 1} width is {width}, expected {expected} EMU")
+        expected_width, expected_height = EXPECTED_WORD_DRAWING_EXTENTS[index]
+        if abs(width - expected_width) > 2:
+            errors.append(
+                f"Figure {index + 1} width is {width}, expected {expected_width} EMU"
+            )
+        if abs(height - expected_height) > 2:
+            errors.append(
+                f"Figure {index + 1} height is {height}, expected {expected_height} EMU"
+            )
         prior_callouts = [
             node for node in children[:float_position]
             if node.tag == qn(W, "p") and label in text_of(node)
@@ -525,6 +549,21 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             errors.append(f"{label} optical-centering measurement failed: {exc}")
             continue
         optical_geometry[label] = geometry
+        expected_geometry = STATISTICAL_REVIEW_GEOMETRY[label]
+        expected_canvas = expected_geometry["canvas_pixels"]
+        if geometry["canvas_pixels"] != expected_canvas:
+            errors.append(
+                f"{label} PNG canvas is {geometry['canvas_pixels']}, "
+                f"expected accepted R10 canvas {expected_canvas}"
+            )
+        svg_root = ET.parse(expected_geometry["svg"]).getroot()
+        svg_view_box = svg_root.get("viewBox")
+        geometry["svg_view_box"] = svg_view_box
+        if svg_view_box != expected_geometry["svg_view_box"]:
+            errors.append(
+                f"{label} SVG viewBox is {svg_view_box}, expected accepted R10 viewBox "
+                f"{expected_geometry['svg_view_box']}"
+            )
         asymmetry = float(geometry["horizontal_padding_asymmetry"])
         center_offset = float(geometry["bbox_center_offset"])
         if asymmetry > MAX_HORIZONTAL_PADDING_ASYMMETRY:

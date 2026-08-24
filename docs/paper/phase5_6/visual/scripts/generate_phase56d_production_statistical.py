@@ -19,6 +19,7 @@ import matplotlib as mpl
 mpl.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.font_manager import FontProperties  # noqa: E402
+from matplotlib.transforms import Bbox  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[5]
@@ -37,6 +38,19 @@ EDGES = {"V0": "#30363c", "V2R": "#356b8b", "V3R": "#9a5b2d"}
 HATCHES = {"V0": "..", "V2R": "///", "V3R": "\\\\"}
 MARKERS = {"V0": "s", "V2R": "o", "V3R": "^"}
 FIXED_JITTER = (-0.12, -0.06, 0.0, 0.06, 0.12)
+# Accepted Phase 6.3R10 artist-tight canvases, expressed in figure inches.
+# Keeping the absolute export boxes fixed prevents localized text metrics from
+# changing the Word drawing aspect ratio or its accepted pagination geometry.
+GOVERNED_EXPORT_BBOXES = {
+    "fig3_main_e2e_phase56": (0.2836171805555556, 0.1673761944444447,
+                               2.901499986111111, 5.577),
+    "fig4_run_level_distribution_phase56": (0.3426171805555555, 0.2483007777777777,
+                                              2.901499986111111, 4.401),
+}
+GOVERNED_PNG_CANVAS_PIXELS = {
+    "fig3_main_e2e_phase56": (786, 1623),
+    "fig4_run_level_distribution_phase56": (768, 1246),
+}
 
 
 def sha256(path: Path) -> str:
@@ -58,8 +72,12 @@ def configure() -> tuple[FontProperties, FontProperties]:
             raise RuntimeError(f"required font is unavailable: {family}")
         return path
 
-    cjk = FontProperties(fname=fc_path("Noto Serif CJK SC"))
-    latin = FontProperties(fname=fc_path("Liberation Serif"))
+    cjk = FontProperties(
+        family="Noto Serif CJK SC", fname=fc_path("Noto Serif CJK SC")
+    )
+    latin = FontProperties(
+        family="Liberation Serif", fname=fc_path("Liberation Serif")
+    )
     mpl.font_manager.fontManager.addfont(cjk.get_file())
     mpl.font_manager.fontManager.addfont(latin.get_file())
     mpl.rcParams.update({
@@ -150,19 +168,29 @@ def save(fig: plt.Figure, output: Path) -> None:
         "Creator": "Phase56D-B deterministic figure generator",
         "CreationDate": datetime(2000, 1, 1, tzinfo=timezone.utc),
     }
-    # Use the artists' actual extent plus symmetric publication padding. This
-    # removes the unequal blank canvas created by fixed left/right subplot
-    # coordinates while preserving every plotted artist and the governed
-    # 7.5-point typography.
-    save_options = {"bbox_inches": "tight", "pad_inches": 0.04}
+    # R10 used the artists' tight extent plus 0.04-inch padding. Freeze those
+    # accepted final boxes explicitly so later label localization cannot alter
+    # the exported aspect ratio and therefore the Word drawing extent.
+    try:
+        governed_bbox = Bbox.from_extents(*GOVERNED_EXPORT_BBOXES[output.name])
+    except KeyError as exc:
+        raise ValueError(f"no governed export bbox for {output.name}") from exc
+    vector_options = {"bbox_inches": governed_bbox, "pad_inches": 0}
     fig.savefig(
-        output.with_suffix(".svg"), metadata={"Date": "2000-01-01"}, **save_options
+        output.with_suffix(".svg"), metadata={"Date": "2000-01-01"}, **vector_options
     )
-    fig.savefig(output.with_suffix(".pdf"), metadata=metadata, **save_options)
+    fig.savefig(output.with_suffix(".pdf"), metadata=metadata, **vector_options)
+    png_width, png_height = GOVERNED_PNG_CANVAS_PIXELS[output.name]
+    png_bbox = Bbox.from_extents(
+        governed_bbox.x1 - png_width / 300,
+        governed_bbox.y1 - png_height / 300,
+        governed_bbox.x1,
+        governed_bbox.y1,
+    )
     fig.savefig(
         output.with_suffix(".png"), dpi=300,
         metadata={"Software": "Phase56D-B deterministic figure generator"},
-        **save_options,
+        bbox_inches=png_bbox, pad_inches=0,
     )
     plt.close(fig)
     svg = output.with_suffix(".svg")
@@ -171,7 +199,7 @@ def save(fig: plt.Figure, output: Path) -> None:
 
 
 def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
-            output: Path) -> None:
+            output: Path, cjk: FontProperties) -> None:
     fig, axes = plt.subplots(3, 1, figsize=(2.95, 5.65), constrained_layout=False)
     fig.subplots_adjust(left=0.23, right=0.97, bottom=0.13, top=0.98, hspace=0.72)
     agg = summary["aggregate_verification"]
@@ -190,8 +218,9 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
     for bar, value in zip(bars, means):
         axes[0].text(bar.get_x() + bar.get_width() / 2, value + 5.0, f"{value:.3f}",
                      ha="center", va="bottom", fontsize=7.5, fontfamily="Liberation Serif")
-    axes[0].text(0.98, 0.98, "mean ± sample SD; 5 processes / path",
-                 transform=axes[0].transAxes, ha="right", va="top", fontsize=7.5)
+    axes[0].text(0.98, 0.98, "均值±样本SD；每路径5进程",
+                 transform=axes[0].transAxes, ha="right", va="top", fontsize=7.5,
+                 fontproperties=cjk)
     axes[0].text(0.03, 0.84,
                  f'V0→V2R  {display["v2r_v0_fps_ratio"]}\nV2R→V3R  {display["v3r_v2r_fps"]}',
                  transform=axes[0].transAxes, fontsize=7.5, va="top")
@@ -204,13 +233,14 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
         linewidth=1.0, zorder=3,
     )
     axes[1].set_ylim(0, 27)
-    axes[1].set_ylabel("E2E latency / ms")
+    axes[1].set_ylabel("E2E 延迟 / ms", fontproperties=cjk)
     axes[1].set_xticks(range(3), VARIANTS)
     for bar, value in zip(bars, latency):
         axes[1].text(bar.get_x() + bar.get_width() / 2, value + 0.55, f"{value:.3f}",
                      ha="center", va="bottom", fontsize=7.5, fontfamily="Liberation Serif")
-    axes[1].text(0.98, 0.73, "pooled n = 5400 / path",
-                 transform=axes[1].transAxes, ha="right", va="top", fontsize=7.5)
+    axes[1].text(0.98, 0.73, "合并 n=5400/路径",
+                 transform=axes[1].transAxes, ha="right", va="top", fontsize=7.5,
+                 fontproperties=cjk)
     axes[1].text(0.05, 0.98,
                  f'V0→V2R  −{display["v2r_v0_mean_latency_reduction"]}\n'
                  f'V2R→V3R  {typographic_sign(display["v3r_v2r_mean_latency"])}',
@@ -231,7 +261,7 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
                          ha="center", va="bottom", fontsize=7.5, rotation=90,
                          fontfamily="Liberation Serif")
     axes[2].set_ylim(0, 21)
-    axes[2].set_ylabel("latency / ms")
+    axes[2].set_ylabel("延迟 / ms", fontproperties=cjk)
     axes[2].set_xticks(x, ["P95", "P99"])
     axes[2].legend(frameon=False, ncol=3, loc="lower center", fontsize=7.5,
                    bbox_to_anchor=(0.5, -0.29), handlelength=1.8, columnspacing=0.9)
@@ -242,7 +272,7 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
 
 
 def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
-            output: Path) -> None:
+            output: Path, cjk: FontProperties) -> None:
     fig, axes = plt.subplots(2, 1, figsize=(2.95, 4.45), constrained_layout=False)
     fig.subplots_adjust(left=0.25, right=0.97, bottom=0.16, top=0.98, hspace=0.66)
     agg = summary["aggregate_verification"]
@@ -261,13 +291,14 @@ def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
     axes[0].set_xlim(-0.45, 2.45)
     axes[0].set_ylim(50, 132)
     axes[0].set_xticks(range(3), VARIANTS)
-    axes[0].set_ylabel("process-level FPS")
-    axes[0].text(0.02, 0.70, "points: independent processes\nbar/error: mean ± sample SD",
-                 transform=axes[0].transAxes, va="top", fontsize=7.5)
+    axes[0].set_ylabel("进程级 FPS", fontproperties=cjk, labelpad=1)
+    axes[0].text(0.02, 0.70, "点：独立进程\n横线/误差：均值±样本SD",
+                 transform=axes[0].transAxes, va="top", fontsize=7.5,
+                 fontproperties=cjk)
     panel_label(axes[0], "(a)", -0.24)
 
     metric_keys = ("mean", "p95", "p99")
-    metric_labels = ("Mean", "P95", "P99")
+    metric_labels = ("均值", "P95", "P99")
     centers = range(3)
     for variant, shift in (("V2R", -0.16), ("V3R", 0.16)):
         for base, key in zip(centers, metric_keys):
@@ -280,14 +311,15 @@ def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
             )
     axes[1].set_xlim(-0.55, 2.55)
     axes[1].set_ylim(7.45, 12.05)
-    axes[1].set_xticks(list(centers), metric_labels)
-    axes[1].set_ylabel("process-level latency / ms")
+    axes[1].set_xticks(list(centers), metric_labels, fontproperties=cjk)
+    axes[1].set_ylabel("进程级延迟 / ms", fontproperties=cjk, labelpad=1)
     axes[1].legend(frameon=False, loc="upper left", fontsize=7.5, ncol=2)
     axes[1].text(
         0.5, 0.04,
         f'P95 {typographic_sign(display["v3r_v2r_p95"])}; '
-        f'P99 {typographic_sign(display["v3r_v2r_p99"])}\nopposite directions',
+        f'P99 {typographic_sign(display["v3r_v2r_p99"])}\n方向相反',
         transform=axes[1].transAxes, ha="center", va="bottom", fontsize=7.5,
+        fontproperties=cjk,
         bbox={"boxstyle": "round,pad=0.16", "facecolor": "#faf7ea",
               "edgecolor": "#6b7280", "linewidth": 0.7},
     )
@@ -302,10 +334,10 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    configure()
+    cjk, _latin = configure()
     grouped, summary = load_sources()
-    figure3(grouped, summary, args.output_dir / "fig3_main_e2e_phase56")
-    figure4(grouped, summary, args.output_dir / "fig4_run_level_distribution_phase56")
+    figure3(grouped, summary, args.output_dir / "fig3_main_e2e_phase56", cjk)
+    figure4(grouped, summary, args.output_dir / "fig4_run_level_distribution_phase56", cjk)
     print(f"RUN_SOURCE_SHA256={sha256(RUN_SOURCE)}")
     print(f"SUMMARY_SOURCE_SHA256={sha256(SUMMARY_SOURCE)}")
     for stem in ("fig3_main_e2e_phase56", "fig4_run_level_distribution_phase56"):
