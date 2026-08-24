@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Paper Phase 6.1 scientific and Figure 1 layout non-regression."""
+"""Validate Paper Phase 6.1 scientific and Figure 1 structural non-regression."""
 
 from __future__ import annotations
 
@@ -155,6 +155,7 @@ FIGURE1_CAPTION = (
     "图1　输入数据路径抽象及层级受控比较。"
     "图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
 )
+FIGURE1_FOLLOWING_HEADING = "2 受控输入数据路径重构"
 
 
 def sha256(path: Path) -> str:
@@ -270,24 +271,37 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     caption = captions[0]
     index = children.index(caption)
     if index < 2:
-        return [f"{path.name}: Figure 1 drawing/callout structure missing"], {}
+        return [f"{path.name}: Figure 1 drawing/section-boundary structure missing"], {}
     drawing = children[index - 1]
-    callout = children[index - 2]
+    boundary = children[index - 2]
     if drawing.find(".//w:drawing", NS) is None:
         errors.append(f"{path.name}: Figure 1 drawing is not immediately before caption")
+    drawing_ppr = drawing.find("w:pPr", NS)
+    if drawing_ppr is None or drawing_ppr.find("w:pageBreakBefore", NS) is None:
+        errors.append(f"{path.name}: Figure 1 drawing lacks its page-top paragraph break")
+    if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
+        errors.append(f"{path.name}: Figure 1 drawing is not kept with its caption")
+    prior_callouts = [
+        node for node in children[: index - 1]
+        if node.tag == qn(W, "p") and "图1" in paragraph_text(node)
+    ]
+    if not prior_callouts:
+        errors.append(f"{path.name}: Figure 1 first callout is not before its drawing")
+    if index + 1 >= len(children) or paragraph_text(children[index + 1]) != FIGURE1_FOLLOWING_HEADING:
+        errors.append(f"{path.name}: Figure 1 is not retained at the end of Section 1")
 
-    callout_columns = section_property(callout, "cols", "num")
-    callout_type = section_property(callout, "type", "val")
+    boundary_columns = section_property(boundary, "cols", "num")
+    boundary_type = section_property(boundary, "type", "val")
     caption_columns = section_property(caption, "cols", "num")
     caption_type = section_property(caption, "type", "val")
-    if (callout_columns, callout_type) != ("2", "continuous"):
+    if (boundary_columns, boundary_type) != ("2", "continuous"):
         errors.append(
             f"{path.name}: pre-Figure 1 section is not two-column continuous: "
-            f"{callout_columns}/{callout_type}"
+            f"{boundary_columns}/{boundary_type}"
         )
-    if (caption_columns, caption_type) != ("1", "nextPage"):
+    if (caption_columns, caption_type) != ("1", "continuous"):
         errors.append(
-            f"{path.name}: Figure 1 section is not one-column next-page: "
+            f"{path.name}: Figure 1 section is not one-column continuous: "
             f"{caption_columns}/{caption_type}"
         )
 
@@ -297,14 +311,23 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         errors.append(f"{path.name}: Figure 1 width is not 16 cm: {width_emu}")
 
     details = {
-        "figure1_callout_section": {
-            "columns": callout_columns,
-            "type": callout_type,
+        "figure1_boundary_section": {
+            "columns": boundary_columns,
+            "type": boundary_type,
         },
         "figure1_section": {
             "columns": caption_columns,
             "type": caption_type,
             "width_emu": width_emu,
+            "drawing_page_break_before": (
+                drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None
+            ),
+            "drawing_keep_next": (
+                drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
+            ),
+            "following_heading": (
+                paragraph_text(children[index + 1]) if index + 1 < len(children) else None
+            ),
         },
         "drawing_count": len(root.findall(".//w:drawing", NS)),
         "table_count": len(root.findall(".//w:tbl", NS)),

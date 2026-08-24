@@ -28,6 +28,9 @@ WIDE_FIGURE_CAPTIONS = {
         "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
     ),
 }
+WIDE_FIGURE_PLACEMENT_BEFORE = {
+    "图1": "2 受控输入数据路径重构",
+}
 WIDE_TABLE_CAPTIONS = {
     "表1": "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
 }
@@ -283,18 +286,50 @@ def span_wide_figures(root: ET.Element) -> None:
         if caption_index < 2:
             raise ValueError(f"{label} caption has no preceding callout and drawing")
         drawing = children[caption_index - 1]
-        callout = children[caption_index - 2]
         if drawing.tag != qn("p") or drawing.find(".//w:drawing", NS) is None:
             raise ValueError(f"{label} caption is not immediately preceded by its drawing")
-        if callout.tag != qn("p") or label not in paragraph_text(callout):
-            raise ValueError(f"{label} drawing is not preceded by its callout paragraph")
-        set_paragraph_section(callout, section_copy(final_section, "2"))
+        callouts = [
+            node for node in children[: caption_index - 1]
+            if node.tag == qn("p") and label in paragraph_text(node)
+        ]
+        if not callouts:
+            raise ValueError(f"{label} drawing has no preceding textual callout")
+
+        placement_text = WIDE_FIGURE_PLACEMENT_BEFORE.get(label)
+        if placement_text is not None:
+            anchors = [
+                node for node in children
+                if node.tag == qn("p") and paragraph_text(node) == placement_text
+            ]
+            if len(anchors) != 1:
+                raise ValueError(
+                    f"expected one placement anchor for {label}, found {len(anchors)}"
+                )
+            anchor = anchors[0]
+            if children.index(anchor) <= caption_index:
+                raise ValueError(f"{label} placement anchor must follow its first callout")
+            body.remove(drawing)
+            body.remove(caption)
+            anchor_index = list(body).index(anchor)
+            body.insert(anchor_index, drawing)
+            body.insert(anchor_index + 1, caption)
+            children = list(body)
+            caption_index = children.index(caption)
+
+        boundary = children[caption_index - 2]
+        if boundary.tag != qn("p"):
+            raise ValueError(f"{label} has no paragraph for its two-column section boundary")
+        set_paragraph_section(boundary, section_copy(final_section, "2"))
         # Section properties on the caption govern the one-column figure
-        # section. Starting that section on the next page keeps Figure 1 at
-        # page top; the following continuous two-column section resumes below.
-        break_type = "nextPage" if label == "图1" else "continuous"
-        set_paragraph_section(caption, section_copy(final_section, "1", break_type))
+        # section. Keep the transition continuous so Word can balance the
+        # preceding two-column material instead of abandoning the second
+        # column. A paragraph page break starts the drawing itself on the next
+        # page; the final continuous two-column section resumes below the
+        # caption.
+        set_paragraph_section(caption, section_copy(final_section, "1"))
         drawing_ppr = ensure_first(drawing, "pPr")
+        if label == "图1" and drawing_ppr.find("w:pageBreakBefore", NS) is None:
+            insert_in_schema_order(drawing_ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER)
         if drawing_ppr.find("w:keepNext", NS) is None:
             insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
 
@@ -434,7 +469,8 @@ def apply_phase5_equation_style(parts: dict[str, bytes]) -> None:
     parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
-def justify_reference_styles(parts: dict[str, bytes]) -> None:
+def configure_reference_styles(parts: dict[str, bytes]) -> None:
+    """Keep narrow-column references aligned without Word justification expansion."""
     root = ET.fromstring(parts["word/styles.xml"])
     for style_id in ("HFUTReferenceEntry", "Bibliography"):
         style = next(
@@ -451,7 +487,7 @@ def justify_reference_styles(parts: dict[str, bytes]) -> None:
         if alignment is None:
             alignment = ET.Element(qn("jc"))
             insert_in_schema_order(ppr, alignment, PPR_ORDER)
-        alignment.set(qn("val"), "both")
+        alignment.set(qn("val"), "left")
     parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
@@ -575,7 +611,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     root = ET.fromstring(parts["word/document.xml"])
     deduplicate_styles(parts)
     apply_phase5_equation_style(parts)
-    justify_reference_styles(parts)
+    configure_reference_styles(parts)
     remove_biography_custom_property(parts)
     set_body_columns(root)
     insert_continuous_boundary(root)

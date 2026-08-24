@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
+import re
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -29,6 +31,10 @@ TABLE_CAPTIONS = (
     "表2　平台、模型与统一基准协议。",
     "表3　三条路径在冻结工作负载和统一评价程序下的任务级正确性。",
 )
+REFERENCE_STYLE_IDS = ("HFUTReferenceEntry", "Bibliography")
+REFERENCE_TEXT_SHA256 = "cc271cc81cc89342ef7652d8a51f81f25c431617d1da6b235faa72cca0c5ccef"
+ACCENTED_SURNAME = "Sánchez-González"
+FIGURE1_FOLLOWING_HEADING = "2 受控输入数据路径重构"
 
 
 def qn(namespace: str, local: str) -> str:
@@ -85,6 +91,28 @@ def section_values(section: ET.Element) -> tuple[str | None, str | None]:
     )
 
 
+def style_contract(style: ET.Element | None) -> tuple[object, ...]:
+    if style is None:
+        return (None,) * 11
+    ppr = style.find("w:pPr", NS)
+    rpr = style.find("w:rPr", NS)
+    fonts = None if rpr is None else rpr.find("w:rFonts", NS)
+    spacing = None if ppr is None else ppr.find("w:spacing", NS)
+    indent = None if ppr is None else ppr.find("w:ind", NS)
+    return (
+        attr(fonts, "ascii"), attr(fonts, "hAnsi"), attr(fonts, "eastAsia"),
+        attr(None if rpr is None else rpr.find("w:sz", NS), "val"),
+        attr(None if rpr is None else rpr.find("w:szCs", NS), "val"),
+        attr(spacing, "before"), attr(spacing, "after"),
+        attr(spacing, "line"), attr(spacing, "lineRule"),
+        attr(indent, "left"), attr(indent, "hanging"),
+    )
+
+
+def paragraph_style_id(paragraph: ET.Element) -> str | None:
+    return attr(paragraph.find("w:pPr/w:pStyle", NS), "val")
+
+
 def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     errors: list[str] = []
     details: dict[str, object] = {}
@@ -134,14 +162,28 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             errors.append(f"Figure {index + 1} width is {width}, expected {expected} EMU")
         section = caption.find("w:pPr/w:sectPr", NS)
         if index == 0:
-            if section is None or section_values(section) != ("1", "nextPage"):
-                errors.append("Figure 1 is not in a next-page one-column section")
+            if section is None or section_values(section) != ("1", "continuous"):
+                errors.append("Figure 1 does not close a continuous one-column section")
             if position < 2:
-                errors.append("Figure 1 has no governed preceding callout")
+                errors.append("Figure 1 has no governed preceding section boundary")
             else:
-                callout_section = children[position - 2].find("w:pPr/w:sectPr", NS)
-                if callout_section is None or section_values(callout_section)[0] != "2":
-                    errors.append("Figure 1 callout does not close the preceding two-column section")
+                boundary = children[position - 2]
+                boundary_section = boundary.find("w:pPr/w:sectPr", NS)
+                if boundary_section is None or section_values(boundary_section) != ("2", "continuous"):
+                    errors.append("Figure 1 boundary does not close a continuous two-column section")
+                prior_callouts = [
+                    node for node in children[: position - 1]
+                    if node.tag == qn(W, "p") and "图1" in text_of(node)
+                ]
+                if not prior_callouts:
+                    errors.append("Figure 1 first callout is not before its drawing")
+            if position + 1 >= len(children) or text_of(children[position + 1]) != FIGURE1_FOLLOWING_HEADING:
+                errors.append("Figure 1 drawing/caption block is not retained at the end of Section 1")
+            drawing_ppr = drawing.find("w:pPr", NS)
+            if drawing_ppr is None or drawing_ppr.find("w:pageBreakBefore", NS) is None:
+                errors.append("Figure 1 drawing has no page-top paragraph break")
+            if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
+                errors.append("Figure 1 drawing is not kept with its caption")
         elif section is not None:
             errors.append(f"Figure {index + 1} incorrectly creates a full-width section")
     details["figure_widths_emu"] = drawing_widths
@@ -203,14 +245,90 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             errors.append(f"body reference 式（{number}） is missing")
 
     style_map = {attr(node, "styleId"): node for node in styles.findall("w:style", NS)}
-    for style_id in ("HFUTReferenceEntry", "Bibliography"):
+    expected_reference_contract = (
+        "Times New Roman", "Times New Roman", "宋体", "15", "15",
+        "0", "0", "280", "exact", "360", "360",
+    )
+    reference_contracts: dict[str, tuple[object, ...]] = {}
+    for style_id in REFERENCE_STYLE_IDS:
         style = style_map.get(style_id)
-        if style is None or attr(style.find("w:pPr/w:jc", NS), "val") != "both":
-            errors.append(f"{style_id} is not justified")
+        contract = style_contract(style)
+        reference_contracts[style_id] = contract
+        if contract != expected_reference_contract:
+            errors.append(f"{style_id} font/size/spacing/hanging-indent contract mismatch")
+        if style is None or attr(style.find("w:pPr/w:jc", NS), "val") != "left":
+            errors.append(f"{style_id} is not left-aligned for stable narrow-column rendering")
+
+    references = [
+        paragraph for paragraph in paragraphs
+        if paragraph_style_id(paragraph) in REFERENCE_STYLE_IDS
+    ]
+    reference_texts = [text_of(paragraph) for paragraph in references]
+    if len(reference_texts) != 22:
+        errors.append(f"rendered reference count is {len(reference_texts)}, expected 22")
+    numbers = []
+    for reference in reference_texts:
+        match = re.match(r"\[(\d+)\]", reference)
+        numbers.append(int(match.group(1)) if match else None)
+    if numbers != list(range(1, 23)):
+        errors.append("rendered reference numbering is not sequential [1]-[22]")
+    reference_hash = hashlib.sha256("\n".join(reference_texts).encode("utf-8")).hexdigest()
+    if reference_hash != REFERENCE_TEXT_SHA256:
+        errors.append("rendered reference metadata/content changed from the accepted Phase 6.3R1 set")
+    if any("等" in reference for reference in reference_texts) or sum(
+        "et al." in reference for reference in reference_texts
+    ) != 9:
+        errors.append("rendered et al./等 behavior changed")
+    surname_references = [reference for reference in reference_texts if ACCENTED_SURNAME in reference]
+    if len(surname_references) != 1:
+        errors.append("Sánchez-González is not preserved as one contiguous source-text surname")
+    surname_text_nodes = [
+        node for paragraph in references for node in paragraph.findall(".//w:t", NS)
+        if ACCENTED_SURNAME in (node.text or "")
+    ]
+    if len(surname_text_nodes) != 1:
+        errors.append("Sánchez-González is split across OOXML text nodes")
+    else:
+        parent_run = next(
+            (
+                run for paragraph in references for run in paragraph.findall(".//w:r", NS)
+                if surname_text_nodes[0] in list(run)
+            ),
+            None,
+        )
+        direct_fonts = None if parent_run is None else parent_run.find("w:rPr/w:rFonts", NS)
+        for font_slot, governed_font in (
+            ("ascii", "Times New Roman"), ("hAnsi", "Times New Roman"), ("eastAsia", "宋体")
+        ):
+            direct_value = attr(direct_fonts, font_slot)
+            if direct_value is not None and direct_value != governed_font:
+                errors.append(f"Sánchez-González has an incorrect direct {font_slot} font override")
 
     details["equation_numbers"] = [text_of(node) for node in equations]
     details["table_count"] = len(tables)
     details["a4"] = not any("A4" in error for error in errors)
+    details["figure1_section_contract"] = (
+        None if not paragraphs else next(
+            (
+                section_values(node.find("w:pPr/w:sectPr", NS))
+                for node in paragraphs if text_of(node) == FIGURE_CAPTIONS[0]
+                and node.find("w:pPr/w:sectPr", NS) is not None
+            ),
+            None,
+        )
+    )
+    figure1_caption = next(
+        (node for node in paragraphs if text_of(node) == FIGURE_CAPTIONS[0]),
+        None,
+    )
+    details["figure1_placement_context"] = (
+        None
+        if figure1_caption is None or children.index(figure1_caption) + 1 >= len(children)
+        else text_of(children[children.index(figure1_caption) + 1])
+    )
+    details["reference_contracts"] = reference_contracts
+    details["reference_texts"] = reference_texts
+    details["reference_text_sha256"] = reference_hash
     return errors, details
 
 
@@ -229,6 +347,14 @@ def main() -> int:
             errors.append("Full/Anonymous figure layout parity mismatch")
         if details.get("equation_numbers") != full_details.get("equation_numbers"):
             errors.append("Full/Anonymous equation-number parity mismatch")
+        if details.get("figure1_section_contract") != full_details.get("figure1_section_contract"):
+            errors.append("Full/Anonymous Figure 1 section-contract parity mismatch")
+        if details.get("figure1_placement_context") != full_details.get("figure1_placement_context"):
+            errors.append("Full/Anonymous Figure 1 placement-context parity mismatch")
+        if details.get("reference_contracts") != full_details.get("reference_contracts"):
+            errors.append("Full/Anonymous reference-style parity mismatch")
+        if details.get("reference_texts") != full_details.get("reference_texts"):
+            errors.append("Full/Anonymous rendered-reference parity mismatch")
     if errors:
         for error in errors:
             print(f"PHASE63_FORMAT_ERROR: {error}")
@@ -236,8 +362,11 @@ def main() -> int:
         print("HFUT_SUBMISSION_NOT_READY")
         return 1
     print(f"MANUSCRIPT_BUILD_PASS docx={args.docx}")
+    print("STRUCTURAL_FORMAT_VALIDATION=PASS")
     print("EQUATION_NUMBERING_COMPLETE E1=（1） E2=（2） E3=（3）")
     print("FIGURE_LIFECYCLE_VALID scientific=FROZEN review=PNG submission=OPEN")
+    print("MICROSOFT_WORD_VISUAL_QA=PENDING")
+    print("WORD_ARTIFACT_VISUAL_REVIEW_REQUIRED=YES")
     print("HFUT_SUBMISSION_NOT_READY VISIO=OPEN ORIGIN=OPEN MATHTYPE=OPEN WORD_DESKTOP_QA=OPEN ANONYMOUS_QA=OPEN DOCUMENT_INSPECTOR=OPEN")
     return 0
 

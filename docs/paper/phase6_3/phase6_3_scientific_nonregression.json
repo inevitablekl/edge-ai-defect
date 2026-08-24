@@ -1,5 +1,5 @@
 {
-  "phase": "PAPER_PHASE_6_3_SCIENTIFIC_NONREGRESSION",
+  "phase": "PAPER_PHASE_6_3R3",
   "verdict": "PASS",
   "scientific_nonregression": "PASS",
   "source_details": {
@@ -17,28 +17,34 @@
   },
   "docx_details": {
     "docs/paper/manuscript/output/draft_full.docx": {
-      "figure1_callout_section": {
+      "figure1_boundary_section": {
         "columns": "2",
         "type": "continuous"
       },
       "figure1_section": {
         "columns": "1",
-        "type": "nextPage",
-        "width_emu": "5759999"
+        "type": "continuous",
+        "width_emu": "5759999",
+        "drawing_page_break_before": true,
+        "drawing_keep_next": true,
+        "following_heading": "2 受控输入数据路径重构"
       },
       "drawing_count": 3,
       "table_count": 3,
       "display_equation_count": 3
     },
     "docs/paper/manuscript/output/draft_anonymous.docx": {
-      "figure1_callout_section": {
+      "figure1_boundary_section": {
         "columns": "2",
         "type": "continuous"
       },
       "figure1_section": {
         "columns": "1",
-        "type": "nextPage",
-        "width_emu": "5759999"
+        "type": "continuous",
+        "width_emu": "5759999",
+        "drawing_page_break_before": true,
+        "drawing_keep_next": true,
+        "following_heading": "2 受控输入数据路径重构"
       },
       "drawing_count": 3,
       "table_count": 3,

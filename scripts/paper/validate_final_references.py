@@ -578,8 +578,12 @@ def structural_style_errors(path: Path) -> list[str]:
         if element_attr(spacing, "line") != "280" or element_attr(spacing, "lineRule") != "exact":
             fail(errors, f"{path.name}: {style_id} line spacing is not exact 14 pt")
         alignment = style.find("w:pPr/w:jc", NS)
-        if element_attr(alignment, "val") != "both":
-            fail(errors, f"{path.name}: {style_id} bibliography alignment is not justified")
+        if element_attr(alignment, "val") != "left":
+            fail(
+                errors,
+                f"{path.name}: {style_id} bibliography alignment is not the stable "
+                "narrow-column left-aligned contract",
+            )
     return errors
 
 
@@ -677,7 +681,10 @@ def main() -> int:
     print("PASS: STATIC_CROSS_REFERENCE_VALIDATED figures=F1,F2,F3 tables=T1,T2,T3")
     if args.docx:
         print(f"PASS: RENDERED_BIBLIOGRAPHY_VALIDATED docx={','.join(str(path) for path in args.docx)}")
-        print("PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED Songti+Times; 7.5pt; exact14pt; justified")
+        print(
+            "PASS: STRUCTURAL_REFERENCE_TYPOGRAPHY_VALIDATED "
+            "Songti+Times; 7.5pt; exact14pt; left-aligned"
+        )
         print("PASS: LANGUAGE_AWARE_REFERENCE_TERMS_VALIDATED English=et al.; Chinese=等_if_present")
         print("PASS: DOI_POLICY_VALIDATED final_J_C=suppressed; online_first=retained")
         print(
