@@ -155,7 +155,6 @@ FIGURE1_CAPTION = (
     "图1　输入数据路径抽象及层级受控比较。"
     "图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
 )
-FIGURE1_FOLLOWING_HEADING = "2 受控输入数据路径重构"
 
 
 def sha256(path: Path) -> str:
@@ -287,9 +286,6 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     ]
     if not prior_callouts:
         errors.append(f"{path.name}: Figure 1 first callout is not before its drawing")
-    if index + 1 >= len(children) or paragraph_text(children[index + 1]) != FIGURE1_FOLLOWING_HEADING:
-        errors.append(f"{path.name}: Figure 1 is not retained at the end of Section 1")
-
     boundary_columns = section_property(boundary, "cols", "num")
     boundary_type = section_property(boundary, "type", "val")
     caption_columns = section_property(caption, "cols", "num")
@@ -325,9 +321,7 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             "drawing_keep_next": (
                 drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
             ),
-            "following_heading": (
-                paragraph_text(children[index + 1]) if index + 1 < len(children) else None
-            ),
+            "first_callout_precedes_drawing": bool(prior_callouts),
         },
         "drawing_count": len(root.findall(".//w:drawing", NS)),
         "table_count": len(root.findall(".//w:tbl", NS)),

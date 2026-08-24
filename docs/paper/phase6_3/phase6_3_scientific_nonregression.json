@@ -1,5 +1,5 @@
 {
-  "phase": "PAPER_PHASE_6_3R3",
+  "phase": "PAPER_PHASE_6_3R5",
   "verdict": "PASS",
   "scientific_nonregression": "PASS",
   "source_details": {
@@ -27,7 +27,7 @@
         "width_emu": "5759999",
         "drawing_page_break_before": true,
         "drawing_keep_next": true,
-        "following_heading": "2 受控输入数据路径重构"
+        "first_callout_precedes_drawing": true
       },
       "drawing_count": 3,
       "table_count": 3,
@@ -44,7 +44,7 @@
         "width_emu": "5759999",
         "drawing_page_break_before": true,
         "drawing_keep_next": true,
-        "following_heading": "2 受控输入数据路径重构"
+        "first_callout_precedes_drawing": true
       },
       "drawing_count": 3,
       "table_count": 3,

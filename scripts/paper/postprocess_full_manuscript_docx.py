@@ -23,13 +23,26 @@ ET.register_namespace("w", W)
 ET.register_namespace("r", R)
 
 MARKER = "FULL_BODY_SECTION_START"
-WIDE_FIGURE_CAPTIONS = {
+WORD_JOINER = "\u2060"
+FIGURE_CAPTIONS = {
     "图1": (
         "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。"
     ),
+    "图2": (
+        "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并5400个延迟样本的均值、P95和P99。"
+    ),
+    "图3": (
+        "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。"
+    ),
 }
-WIDE_FIGURE_PLACEMENT_BEFORE = {
-    "图1": "2 受控输入数据路径重构",
+FIGURE_PLACEMENT_BEFORE = {
+    # Figures become eligible at their first callout, but their inline
+    # drawing/caption blocks are deferred to the end of the related
+    # discussion. This lets normal prose use the remaining column when a
+    # figure cannot fit at its Markdown source position.
+    "图1": "3.3 E2E、FPS与尾延迟指标",
+    "图2": "4.3 暂存策略的增量响应",
+    "图3": "4.5 解释边界与局限性",
 }
 WIDE_TABLE_CAPTIONS = {
     "表1": "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
@@ -265,7 +278,9 @@ def set_paragraph_section(paragraph: ET.Element, section: ET.Element) -> None:
     insert_in_schema_order(ppr, section, PPR_ORDER)
 
 
-def span_wide_figures(root: ET.Element) -> None:
+def schedule_publication_figures(root: ET.Element) -> None:
+    """Defer eligible figures without weakening caption/width invariants."""
+
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no w:body")
@@ -273,7 +288,8 @@ def span_wide_figures(root: ET.Element) -> None:
     if final_section is None:
         raise ValueError("word/document.xml has no final w:sectPr")
     children = list(body)
-    for label, expected_caption in WIDE_FIGURE_CAPTIONS.items():
+    for label, expected_caption in FIGURE_CAPTIONS.items():
+        children = list(body)
         captions = [
             node
             for node in children
@@ -295,7 +311,7 @@ def span_wide_figures(root: ET.Element) -> None:
         if not callouts:
             raise ValueError(f"{label} drawing has no preceding textual callout")
 
-        placement_text = WIDE_FIGURE_PLACEMENT_BEFORE.get(label)
+        placement_text = FIGURE_PLACEMENT_BEFORE.get(label)
         if placement_text is not None:
             anchors = [
                 node for node in children
@@ -316,22 +332,23 @@ def span_wide_figures(root: ET.Element) -> None:
             children = list(body)
             caption_index = children.index(caption)
 
-        boundary = children[caption_index - 2]
-        if boundary.tag != qn("p"):
-            raise ValueError(f"{label} has no paragraph for its two-column section boundary")
-        set_paragraph_section(boundary, section_copy(final_section, "2"))
-        # Section properties on the caption govern the one-column figure
-        # section. Keep the transition continuous so Word can balance the
-        # preceding two-column material instead of abandoning the second
-        # column. A paragraph page break starts the drawing itself on the next
-        # page; the final continuous two-column section resumes below the
-        # caption.
-        set_paragraph_section(caption, section_copy(final_section, "1"))
         drawing_ppr = ensure_first(drawing, "pPr")
-        if label == "图1" and drawing_ppr.find("w:pageBreakBefore", NS) is None:
-            insert_in_schema_order(drawing_ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER)
         if drawing_ppr.find("w:keepNext", NS) is None:
             insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
+        if label == "图1":
+            boundary = children[caption_index - 2]
+            if boundary.tag != qn("p"):
+                raise ValueError(f"{label} has no paragraph for its two-column section boundary")
+            set_paragraph_section(boundary, section_copy(final_section, "2"))
+            # Section properties on the caption govern the one-column figure
+            # section. The page break keeps the accepted full-width Figure 1
+            # at a subsequent page top while Section 2 prose remains free to
+            # consume the preceding two-column page.
+            set_paragraph_section(caption, section_copy(final_section, "1"))
+            if drawing_ppr.find("w:pageBreakBefore", NS) is None:
+                insert_in_schema_order(
+                    drawing_ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER
+                )
 
 
 def span_wide_tables(root: ET.Element) -> None:
@@ -412,6 +429,20 @@ def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
             alignment = ET.Element(qn("jc"))
             insert_in_schema_order(ppr, alignment, PPR_ORDER)
         alignment.set(qn("val"), "center")
+
+
+def protect_cross_column_lexical_unit(root: ET.Element) -> None:
+    """Prevent the single observed 报|告 cross-column break invisibly."""
+
+    target = "每条路径报告5个进程级FPS"
+    replacement = f"每条路径报{WORD_JOINER}告5个进程级FPS"
+    matches = [
+        node for node in root.findall(".//w:t", NS)
+        if target in (node.text or "")
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"expected one governed 报告 lexical unit, found {len(matches)}")
+    matches[0].text = (matches[0].text or "").replace(target, replacement, 1)
 
 
 def first_footer_xml(biography: str | None) -> bytes:
@@ -615,9 +646,10 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     remove_biography_custom_property(parts)
     set_body_columns(root)
     insert_continuous_boundary(root)
-    span_wide_figures(root)
+    schedule_publication_figures(root)
     span_wide_tables(root)
     normalize_publication_drawing_paragraphs(root)
+    protect_cross_column_lexical_unit(root)
     normalize_equation_paragraphs(root)
     apply_visible_equation_numbers(root)
     move_biography_to_first_footer(root, parts)

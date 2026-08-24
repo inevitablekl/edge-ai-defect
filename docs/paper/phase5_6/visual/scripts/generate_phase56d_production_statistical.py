@@ -150,10 +150,20 @@ def save(fig: plt.Figure, output: Path) -> None:
         "Creator": "Phase56D-B deterministic figure generator",
         "CreationDate": datetime(2000, 1, 1, tzinfo=timezone.utc),
     }
-    fig.savefig(output.with_suffix(".svg"), metadata={"Date": "2000-01-01"})
-    fig.savefig(output.with_suffix(".pdf"), metadata=metadata)
-    fig.savefig(output.with_suffix(".png"), dpi=300,
-                metadata={"Software": "Phase56D-B deterministic figure generator"})
+    # Use the artists' actual extent plus symmetric publication padding. This
+    # removes the unequal blank canvas created by fixed left/right subplot
+    # coordinates while preserving every plotted artist and the governed
+    # 7.5-point typography.
+    save_options = {"bbox_inches": "tight", "pad_inches": 0.04}
+    fig.savefig(
+        output.with_suffix(".svg"), metadata={"Date": "2000-01-01"}, **save_options
+    )
+    fig.savefig(output.with_suffix(".pdf"), metadata=metadata, **save_options)
+    fig.savefig(
+        output.with_suffix(".png"), dpi=300,
+        metadata={"Software": "Phase56D-B deterministic figure generator"},
+        **save_options,
+    )
     plt.close(fig)
     svg = output.with_suffix(".svg")
     normalized = "\n".join(line.rstrip() for line in svg.read_text(encoding="utf-8").splitlines()) + "\n"
@@ -162,8 +172,8 @@ def save(fig: plt.Figure, output: Path) -> None:
 
 def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
             output: Path) -> None:
-    fig, axes = plt.subplots(3, 1, figsize=(2.95, 7.15), constrained_layout=False)
-    fig.subplots_adjust(left=0.25, right=0.97, bottom=0.13, top=0.985, hspace=0.76)
+    fig, axes = plt.subplots(3, 1, figsize=(2.95, 5.65), constrained_layout=False)
+    fig.subplots_adjust(left=0.23, right=0.97, bottom=0.13, top=0.98, hspace=0.72)
     agg = summary["aggregate_verification"]
     display = summary["publication_display_precision"]
 
@@ -233,8 +243,8 @@ def figure3(grouped: dict[str, list[dict[str, float]]], summary: dict,
 
 def figure4(grouped: dict[str, list[dict[str, float]]], summary: dict,
             output: Path) -> None:
-    fig, axes = plt.subplots(2, 1, figsize=(2.95, 5.65), constrained_layout=False)
-    fig.subplots_adjust(left=0.28, right=0.97, bottom=0.15, top=0.985, hspace=0.70)
+    fig, axes = plt.subplots(2, 1, figsize=(2.95, 4.45), constrained_layout=False)
+    fig.subplots_adjust(left=0.25, right=0.97, bottom=0.16, top=0.98, hspace=0.66)
     agg = summary["aggregate_verification"]
     display = summary["publication_display_precision"]
 

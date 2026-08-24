@@ -11,6 +11,8 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from PIL import Image
+
 
 ROOT = Path(__file__).resolve().parents[2]
 MANUSCRIPT = ROOT / "docs/paper/manuscript"
@@ -21,11 +23,26 @@ M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
 NS = {"w": W, "m": M, "wp": WP}
 
-FIGURE_CAPTIONS = (
-    "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。",
-    "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并5400个延迟样本的均值、P95和P99。",
-    "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
-)
+FIGURE_CAPTIONS = {
+    "图1": "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。",
+    "图2": "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并5400个延迟样本的均值、P95和P99。",
+    "图3": "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
+}
+STATISTICAL_REVIEW_PNGS = {
+    "图2": ROOT / "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png",
+    "图3": ROOT / "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.png",
+}
+# Project review threshold, not an HFUT universal height rule. At the governed
+# 7.5 cm width it keeps a statistical drawing below 15.5 cm so a caption and
+# ordinary prose can compose sanely within the 25.3 cm manuscript text height.
+MAX_SINGLE_COLUMN_HEIGHT_CM = 15.5
+# Artist-tight output should be close to symmetric, but raster antialiasing can
+# differ by a few pixels. Two percent rejects the 10–13% baseline asymmetry
+# without imposing a brittle zero-pixel rule.
+MAX_HORIZONTAL_PADDING_ASYMMETRY = 0.02
+MAX_BBOX_CENTER_OFFSET = 0.01
+WORD_JOINER = "\u2060"
+GOVERNED_NO_BREAK_PHRASE = f"每条路径报{WORD_JOINER}告5个进程级FPS"
 TABLE_CAPTIONS = (
     "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
     "表2　平台、模型与统一基准协议。",
@@ -34,7 +51,6 @@ TABLE_CAPTIONS = (
 REFERENCE_STYLE_IDS = ("HFUTReferenceEntry", "Bibliography")
 REFERENCE_TEXT_SHA256 = "cc271cc81cc89342ef7652d8a51f81f25c431617d1da6b235faa72cca0c5ccef"
 ACCENTED_SURNAME = "Sánchez-González"
-FIGURE1_FOLLOWING_HEADING = "2 受控输入数据路径重构"
 
 
 def qn(namespace: str, local: str) -> str:
@@ -113,6 +129,37 @@ def paragraph_style_id(paragraph: ET.Element) -> str | None:
     return attr(paragraph.find("w:pPr/w:pStyle", NS), "val")
 
 
+def image_content_geometry(path: Path) -> dict[str, object]:
+    """Measure non-background content with antialiasing noise suppressed."""
+
+    with Image.open(path) as source:
+        rgba = source.convert("RGBA")
+    composite = Image.new("RGBA", rgba.size, "white")
+    composite.alpha_composite(rgba)
+    rgb = composite.convert("RGB")
+    mask = rgb.point(lambda value: 255 if value < 245 else 0).convert("1")
+    bbox = mask.getbbox()
+    if bbox is None:
+        raise ValueError(f"review PNG contains no visible content: {path}")
+    left, top, right, bottom = bbox
+    width, height = rgb.size
+    left_padding = left
+    right_padding = width - right
+    top_padding = top
+    bottom_padding = height - bottom
+    return {
+        "canvas_pixels": [width, height],
+        "content_bbox": [left, top, right, bottom],
+        "padding_pixels": {
+            "left": left_padding, "right": right_padding,
+            "top": top_padding, "bottom": bottom_padding,
+        },
+        "horizontal_padding_asymmetry": abs(left_padding - right_padding) / width,
+        "bbox_center_offset": abs((left + right) / 2 - width / 2) / width,
+        "content_centroid_pixels": [(left + right) / 2, (top + bottom) / 2],
+    }
+
+
 def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     errors: list[str] = []
     details: dict[str, object] = {}
@@ -129,6 +176,13 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     paragraphs = body.findall("w:p", NS)
     text = "\n".join(text_of(node) for node in document.findall(".//w:p", NS))
 
+    no_break_count = text.count(GOVERNED_NO_BREAK_PHRASE)
+    if no_break_count != 1:
+        errors.append(
+            f"governed 报告 cross-column no-break count is {no_break_count}, expected 1"
+        )
+    details["governed_lexical_no_break_count"] = no_break_count
+
     final_section = body.find("w:sectPr", NS)
     if final_section is None:
         errors.append("document has no final section properties")
@@ -143,7 +197,8 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             errors.append("final manuscript body is not double-column")
 
     drawing_widths: list[int] = []
-    for index, caption_text in enumerate(FIGURE_CAPTIONS):
+    figure_layout_contract: list[dict[str, object]] = []
+    for index, (label, caption_text) in enumerate(FIGURE_CAPTIONS.items()):
         matches = [node for node in paragraphs if text_of(node) == caption_text]
         if len(matches) != 1:
             errors.append(f"Figure {index + 1} caption count mismatch")
@@ -156,10 +211,23 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         drawing = children[position - 1]
         extent = drawing.find(".//wp:extent", NS)
         width = int(extent.get("cx", "0") if extent is not None else 0)
+        height = int(extent.get("cy", "0") if extent is not None else 0)
         drawing_widths.append(width)
         expected = 5_760_000 if index == 0 else 2_700_000
         if abs(width - expected) > 2:
             errors.append(f"Figure {index + 1} width is {width}, expected {expected} EMU")
+        prior_callouts = [
+            node for node in children[: position - 1]
+            if node.tag == qn(W, "p") and label in text_of(node)
+        ]
+        if not prior_callouts:
+            errors.append(f"Figure {index + 1} first callout is not before its drawing")
+        drawing_ppr = drawing.find("w:pPr", NS)
+        if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
+            errors.append(f"Figure {index + 1} drawing is not kept with its caption")
+        caption_ppr = caption.find("w:pPr", NS)
+        if caption_ppr is not None and caption_ppr.find("w:keepNext", NS) is not None:
+            errors.append(f"Figure {index + 1} caption incorrectly blocks following prose")
         section = caption.find("w:pPr/w:sectPr", NS)
         if index == 0:
             if section is None or section_values(section) != ("1", "continuous"):
@@ -171,22 +239,69 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
                 boundary_section = boundary.find("w:pPr/w:sectPr", NS)
                 if boundary_section is None or section_values(boundary_section) != ("2", "continuous"):
                     errors.append("Figure 1 boundary does not close a continuous two-column section")
-                prior_callouts = [
-                    node for node in children[: position - 1]
-                    if node.tag == qn(W, "p") and "图1" in text_of(node)
-                ]
-                if not prior_callouts:
-                    errors.append("Figure 1 first callout is not before its drawing")
-            if position + 1 >= len(children) or text_of(children[position + 1]) != FIGURE1_FOLLOWING_HEADING:
-                errors.append("Figure 1 drawing/caption block is not retained at the end of Section 1")
-            drawing_ppr = drawing.find("w:pPr", NS)
             if drawing_ppr is None or drawing_ppr.find("w:pageBreakBefore", NS) is None:
                 errors.append("Figure 1 drawing has no page-top paragraph break")
-            if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
-                errors.append("Figure 1 drawing is not kept with its caption")
         elif section is not None:
             errors.append(f"Figure {index + 1} incorrectly creates a full-width section")
+        else:
+            if drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None:
+                errors.append(f"Figure {index + 1} has an unnecessary forced page break")
+            height_cm = height / 360_000
+            if height_cm > MAX_SINGLE_COLUMN_HEIGHT_CM:
+                errors.append(
+                    f"Figure {index + 1} publication height is {height_cm:.2f} cm, "
+                    f"above the {MAX_SINGLE_COLUMN_HEIGHT_CM:.1f} cm project review limit"
+                )
+            if prior_callouts:
+                callout_position = children.index(prior_callouts[0])
+                intervening_body = [
+                    node for node in children[callout_position + 1 : position - 1]
+                    if node.tag == qn(W, "p")
+                    and paragraph_style_id(node) == "HFUTBody"
+                    and text_of(node)
+                ]
+                if not intervening_body:
+                    errors.append(
+                        f"Figure {index + 1} placement does not permit post-callout prose flow"
+                    )
+        figure_layout_contract.append({
+            "label": label,
+            "width_emu": width,
+            "height_emu": height,
+            "callout_precedes": bool(prior_callouts),
+            "drawing_keep_next": (
+                drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
+            ),
+            "page_break_before": (
+                drawing_ppr is not None
+                and drawing_ppr.find("w:pageBreakBefore", NS) is not None
+            ),
+            "caption_section": None if section is None else section_values(section),
+        })
     details["figure_widths_emu"] = drawing_widths
+    details["figure_layout_contract"] = figure_layout_contract
+
+    optical_geometry: dict[str, dict[str, object]] = {}
+    for label, png_path in STATISTICAL_REVIEW_PNGS.items():
+        try:
+            geometry = image_content_geometry(png_path)
+        except (OSError, ValueError) as exc:
+            errors.append(f"{label} optical-centering measurement failed: {exc}")
+            continue
+        optical_geometry[label] = geometry
+        asymmetry = float(geometry["horizontal_padding_asymmetry"])
+        center_offset = float(geometry["bbox_center_offset"])
+        if asymmetry > MAX_HORIZONTAL_PADDING_ASYMMETRY:
+            errors.append(
+                f"{label} horizontal canvas-padding asymmetry is {asymmetry:.4f}, "
+                f"above {MAX_HORIZONTAL_PADDING_ASYMMETRY:.4f}"
+            )
+        if center_offset > MAX_BBOX_CENTER_OFFSET:
+            errors.append(
+                f"{label} visual-content center offset is {center_offset:.4f}, "
+                f"above {MAX_BBOX_CENTER_OFFSET:.4f}"
+            )
+    details["statistical_figure_optical_geometry"] = optical_geometry
 
     for caption_text in TABLE_CAPTIONS:
         matches = [node for node in paragraphs if text_of(node) == caption_text]
@@ -311,20 +426,11 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         None if not paragraphs else next(
             (
                 section_values(node.find("w:pPr/w:sectPr", NS))
-                for node in paragraphs if text_of(node) == FIGURE_CAPTIONS[0]
+                for node in paragraphs if text_of(node) == FIGURE_CAPTIONS["图1"]
                 and node.find("w:pPr/w:sectPr", NS) is not None
             ),
             None,
         )
-    )
-    figure1_caption = next(
-        (node for node in paragraphs if text_of(node) == FIGURE_CAPTIONS[0]),
-        None,
-    )
-    details["figure1_placement_context"] = (
-        None
-        if figure1_caption is None or children.index(figure1_caption) + 1 >= len(children)
-        else text_of(children[children.index(figure1_caption) + 1])
     )
     details["reference_contracts"] = reference_contracts
     details["reference_texts"] = reference_texts
@@ -349,8 +455,18 @@ def main() -> int:
             errors.append("Full/Anonymous equation-number parity mismatch")
         if details.get("figure1_section_contract") != full_details.get("figure1_section_contract"):
             errors.append("Full/Anonymous Figure 1 section-contract parity mismatch")
-        if details.get("figure1_placement_context") != full_details.get("figure1_placement_context"):
-            errors.append("Full/Anonymous Figure 1 placement-context parity mismatch")
+        if details.get("figure_layout_contract") != full_details.get("figure_layout_contract"):
+            errors.append("Full/Anonymous figure placement-contract parity mismatch")
+        if (
+            details.get("statistical_figure_optical_geometry")
+            != full_details.get("statistical_figure_optical_geometry")
+        ):
+            errors.append("Full/Anonymous statistical-figure optical-geometry parity mismatch")
+        if (
+            details.get("governed_lexical_no_break_count")
+            != full_details.get("governed_lexical_no_break_count")
+        ):
+            errors.append("Full/Anonymous governed lexical no-break parity mismatch")
         if details.get("reference_contracts") != full_details.get("reference_contracts"):
             errors.append("Full/Anonymous reference-style parity mismatch")
         if details.get("reference_texts") != full_details.get("reference_texts"):
