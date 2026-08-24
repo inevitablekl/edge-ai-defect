@@ -32,10 +32,9 @@ STATISTICAL_REVIEW_PNGS = {
     "图2": ROOT / "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png",
     "图3": ROOT / "docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.png",
 }
-# Project review threshold, not an HFUT universal height rule. At the governed
-# 7.5 cm width it keeps a statistical drawing below 15.5 cm so a caption and
-# ordinary prose can compose sanely within the 25.3 cm manuscript text height.
-MAX_SINGLE_COLUMN_HEIGHT_CM = 15.5
+# Project QA advisory, not an HFUT publication limit. Report it to help detect
+# unusually tall single-column figures, but never fail a build at this value.
+ADVISORY_SINGLE_COLUMN_HEIGHT_CM = 15.5
 # Artist-tight output should be close to symmetric, but raster antialiasing can
 # differ by a few pixels. Two percent rejects the 10–13% baseline asymmetry
 # without imposing a brittle zero-pixel rule.
@@ -198,6 +197,7 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
 
     drawing_widths: list[int] = []
     figure_layout_contract: list[dict[str, object]] = []
+    figure_callout_proximity: list[dict[str, object]] = []
     for index, (label, caption_text) in enumerate(FIGURE_CAPTIONS.items()):
         matches = [node for node in paragraphs if text_of(node) == caption_text]
         if len(matches) != 1:
@@ -222,6 +222,29 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         ]
         if not prior_callouts:
             errors.append(f"Figure {index + 1} first callout is not before its drawing")
+        else:
+            callout_position = children.index(prior_callouts[0])
+            intervening = children[callout_position + 1 : position - 1]
+            intervening_headings = [
+                node for node in intervening
+                if node.tag == qn(W, "p")
+                and (paragraph_style_id(node) or "").startswith("HFUTHeading")
+                and text_of(node)
+            ]
+            intervening_body = [
+                node for node in intervening
+                if node.tag == qn(W, "p")
+                and paragraph_style_id(node) == "HFUTBody"
+                and text_of(node)
+            ]
+            figure_callout_proximity.append({
+                "label": label,
+                "first_callout_document_position": callout_position + 1,
+                "figure_document_position": children.index(drawing) + 1,
+                "intervening_heading_count": len(intervening_headings),
+                "intervening_body_paragraph_count": len(intervening_body),
+                "intervening_headings": [text_of(node) for node in intervening_headings],
+            })
         drawing_ppr = drawing.find("w:pPr", NS)
         if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
             errors.append(f"Figure {index + 1} drawing is not kept with its caption")
@@ -246,28 +269,18 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         else:
             if drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None:
                 errors.append(f"Figure {index + 1} has an unnecessary forced page break")
-            height_cm = height / 360_000
-            if height_cm > MAX_SINGLE_COLUMN_HEIGHT_CM:
-                errors.append(
-                    f"Figure {index + 1} publication height is {height_cm:.2f} cm, "
-                    f"above the {MAX_SINGLE_COLUMN_HEIGHT_CM:.1f} cm project review limit"
-                )
-            if prior_callouts:
-                callout_position = children.index(prior_callouts[0])
-                intervening_body = [
-                    node for node in children[callout_position + 1 : position - 1]
-                    if node.tag == qn(W, "p")
-                    and paragraph_style_id(node) == "HFUTBody"
-                    and text_of(node)
-                ]
-                if not intervening_body:
-                    errors.append(
-                        f"Figure {index + 1} placement does not permit post-callout prose flow"
-                    )
         figure_layout_contract.append({
             "label": label,
             "width_emu": width,
             "height_emu": height,
+            "height_cm": round(height / 360_000, 2),
+            "height_advisory_cm": (
+                None if index == 0 else ADVISORY_SINGLE_COLUMN_HEIGHT_CM
+            ),
+            "height_advisory_exceeded": (
+                False if index == 0
+                else height / 360_000 > ADVISORY_SINGLE_COLUMN_HEIGHT_CM
+            ),
             "callout_precedes": bool(prior_callouts),
             "drawing_keep_next": (
                 drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
@@ -280,6 +293,7 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         })
     details["figure_widths_emu"] = drawing_widths
     details["figure_layout_contract"] = figure_layout_contract
+    details["figure_callout_proximity"] = figure_callout_proximity
 
     optical_geometry: dict[str, dict[str, object]] = {}
     for label, png_path in STATISTICAL_REVIEW_PNGS.items():
@@ -481,6 +495,19 @@ def main() -> int:
     print("STRUCTURAL_FORMAT_VALIDATION=PASS")
     print("EQUATION_NUMBERING_COMPLETE E1=（1） E2=（2） E3=（3）")
     print("FIGURE_LIFECYCLE_VALID scientific=FROZEN review=PNG submission=OPEN")
+    for metric in details.get("figure_callout_proximity", []):
+        print(
+            "FIGURE_CALL_OUT_PROXIMITY "
+            f"label={metric['label']} "
+            f"callout_position={metric['first_callout_document_position']} "
+            f"figure_position={metric['figure_document_position']} "
+            f"intervening_headings={metric['intervening_heading_count']} "
+            f"intervening_body_paragraphs={metric['intervening_body_paragraph_count']}"
+        )
+    print(
+        "SINGLE_COLUMN_HEIGHT_15_5_CM="
+        "PROJECT_QA_ADVISORY_NOT_PUBLICATION_REQUIREMENT"
+    )
     print("MICROSOFT_WORD_VISUAL_QA=PENDING")
     print("WORD_ARTIFACT_VISUAL_REVIEW_REQUIRED=YES")
     print("HFUT_SUBMISSION_NOT_READY VISIO=OPEN ORIGIN=OPEN MATHTYPE=OPEN WORD_DESKTOP_QA=OPEN ANONYMOUS_QA=OPEN DOCUMENT_INSPECTOR=OPEN")

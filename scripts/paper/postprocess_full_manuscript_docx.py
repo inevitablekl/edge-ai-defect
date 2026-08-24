@@ -35,15 +35,6 @@ FIGURE_CAPTIONS = {
         "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。"
     ),
 }
-FIGURE_PLACEMENT_BEFORE = {
-    # Figures become eligible at their first callout, but their inline
-    # drawing/caption blocks are deferred to the end of the related
-    # discussion. This lets normal prose use the remaining column when a
-    # figure cannot fit at its Markdown source position.
-    "图1": "3.3 E2E、FPS与尾延迟指标",
-    "图2": "4.3 暂存策略的增量响应",
-    "图3": "4.5 解释边界与局限性",
-}
 WIDE_TABLE_CAPTIONS = {
     "表1": "表1　三条输入数据路径的结构描述与派生量。名义输入复制载荷由跨边界表示推导，非实测流量。",
 }
@@ -278,8 +269,46 @@ def set_paragraph_section(paragraph: ET.Element, section: ET.Element) -> None:
     insert_in_schema_order(ppr, section, PPR_ORDER)
 
 
+def defer_page_top_figure_after_eligible_section_prose(
+    body: ET.Element,
+    drawing: ET.Element,
+    caption: ET.Element,
+) -> None:
+    """Let the current top-level section flow before a page-top figure.
+
+    This is a structural eligibility rule, not a semantic heading anchor: it
+    uses the next top-level section boundary regardless of heading wording.
+    The drawing remains after its first callout and can start the next page
+    without blocking the rest of its current section's ordinary prose.
+    """
+
+    children = list(body)
+    caption_index = children.index(caption)
+    next_sections = [
+        node for node in children[caption_index + 1 :]
+        if node.tag == qn("p")
+        and (node.find("w:pPr/w:pStyle", NS) is not None)
+        and node.find("w:pPr/w:pStyle", NS).get(qn("val")) == "HFUTHeading1"
+    ]
+    if not next_sections:
+        raise ValueError("page-top figure has no later top-level section boundary")
+    boundary = next_sections[0]
+    body.remove(drawing)
+    body.remove(caption)
+    insertion_index = list(body).index(boundary)
+    body.insert(insertion_index, drawing)
+    body.insert(insertion_index + 1, caption)
+
+
 def schedule_publication_figures(root: ET.Element) -> None:
-    """Defer eligible figures without weakening caption/width invariants."""
+    """Preserve source-order figure eligibility and enforce layout invariants.
+
+    The Markdown first makes each inline drawing/caption block eligible after
+    its first callout. Single-column figures stay in that source order so Word
+    can use the next feasible column/page. The governed page-top full-width
+    figure permits the rest of its current top-level section to flow first.
+    No figure is mapped to a named semantic heading.
+    """
 
     body = root.find("w:body", NS)
     if body is None:
@@ -311,24 +340,8 @@ def schedule_publication_figures(root: ET.Element) -> None:
         if not callouts:
             raise ValueError(f"{label} drawing has no preceding textual callout")
 
-        placement_text = FIGURE_PLACEMENT_BEFORE.get(label)
-        if placement_text is not None:
-            anchors = [
-                node for node in children
-                if node.tag == qn("p") and paragraph_text(node) == placement_text
-            ]
-            if len(anchors) != 1:
-                raise ValueError(
-                    f"expected one placement anchor for {label}, found {len(anchors)}"
-                )
-            anchor = anchors[0]
-            if children.index(anchor) <= caption_index:
-                raise ValueError(f"{label} placement anchor must follow its first callout")
-            body.remove(drawing)
-            body.remove(caption)
-            anchor_index = list(body).index(anchor)
-            body.insert(anchor_index, drawing)
-            body.insert(anchor_index + 1, caption)
+        if label == "图1":
+            defer_page_top_figure_after_eligible_section_prose(body, drawing, caption)
             children = list(body)
             caption_index = children.index(caption)
 
@@ -342,8 +355,7 @@ def schedule_publication_figures(root: ET.Element) -> None:
             set_paragraph_section(boundary, section_copy(final_section, "2"))
             # Section properties on the caption govern the one-column figure
             # section. The page break keeps the accepted full-width Figure 1
-            # at a subsequent page top while Section 2 prose remains free to
-            # consume the preceding two-column page.
+            # at the earliest feasible subsequent page top after its callout.
             set_paragraph_section(caption, section_copy(final_section, "1"))
             if drawing_ppr.find("w:pageBreakBefore", NS) is None:
                 insert_in_schema_order(
