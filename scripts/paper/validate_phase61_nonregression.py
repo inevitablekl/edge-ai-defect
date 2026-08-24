@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Paper Phase 6.1 scientific and Figure 1 structural non-regression."""
+"""Validate Phase 6.1 science and the current Figure 1 layout invariants."""
 
 from __future__ import annotations
 
@@ -260,46 +260,52 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         return [f"{path.name}: document body missing"], {}
 
     children = list(body)
-    captions = [
-        node
-        for node in children
-        if node.tag == qn(W, "p") and paragraph_text(node) == FIGURE1_CAPTION
+    floats = [
+        table for table in body.findall("w:tbl", NS)
+        if (
+            table.find("w:tblPr/w:tblCaption", NS) is not None
+            and table.find("w:tblPr/w:tblCaption", NS).get(qn(W, "val"))
+            == "HFUT_FIGURE_FLOAT_F1"
+        )
     ]
-    if len(captions) != 1:
-        return [f"{path.name}: expected one Figure 1 caption, found {len(captions)}"], {}
-    caption = captions[0]
-    index = children.index(caption)
-    if index < 2:
-        return [f"{path.name}: Figure 1 drawing/section-boundary structure missing"], {}
-    drawing = children[index - 1]
-    boundary = children[index - 2]
+    if len(floats) != 1:
+        return [f"{path.name}: expected one Figure 1 floating block, found {len(floats)}"], {}
+    figure_float = floats[0]
+    cell_paragraphs = figure_float.findall("w:tr/w:tc/w:p", NS)
+    if len(cell_paragraphs) != 2:
+        return [f"{path.name}: Figure 1 float does not contain drawing plus caption"], {}
+    drawing, caption = cell_paragraphs
+    if paragraph_text(caption) != FIGURE1_CAPTION:
+        errors.append(f"{path.name}: Figure 1 caption text changed")
     if drawing.find(".//w:drawing", NS) is None:
         errors.append(f"{path.name}: Figure 1 drawing is not immediately before caption")
     drawing_ppr = drawing.find("w:pPr", NS)
-    if drawing_ppr is None or drawing_ppr.find("w:pageBreakBefore", NS) is None:
-        errors.append(f"{path.name}: Figure 1 drawing lacks its page-top paragraph break")
+    if drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None:
+        errors.append(f"{path.name}: Figure 1 retains a forced page break")
     if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
         errors.append(f"{path.name}: Figure 1 drawing is not kept with its caption")
+    index = children.index(figure_float)
     prior_callouts = [
-        node for node in children[: index - 1]
+        node for node in children[:index]
         if node.tag == qn(W, "p") and "图1" in paragraph_text(node)
     ]
     if not prior_callouts:
         errors.append(f"{path.name}: Figure 1 first callout is not before its drawing")
-    boundary_columns = section_property(boundary, "cols", "num")
-    boundary_type = section_property(boundary, "type", "val")
-    caption_columns = section_property(caption, "cols", "num")
-    caption_type = section_property(caption, "type", "val")
-    if (boundary_columns, boundary_type) != ("2", "continuous"):
-        errors.append(
-            f"{path.name}: pre-Figure 1 section is not two-column continuous: "
-            f"{boundary_columns}/{boundary_type}"
-        )
-    if (caption_columns, caption_type) != ("1", "continuous"):
-        errors.append(
-            f"{path.name}: Figure 1 section is not one-column continuous: "
-            f"{caption_columns}/{caption_type}"
-        )
+
+    position = figure_float.find("w:tblPr/w:tblpPr", NS)
+    expected_position = ("margin", "margin", "center", "top")
+    actual_position = (
+        None if position is None else position.get(qn(W, "vertAnchor")),
+        None if position is None else position.get(qn(W, "horzAnchor")),
+        None if position is None else position.get(qn(W, "tblpXSpec")),
+        None if position is None else position.get(qn(W, "tblpYSpec")),
+    )
+    if actual_position != expected_position:
+        errors.append(f"{path.name}: Figure 1 page-top floating contract mismatch: {actual_position}")
+    if figure_float.find("w:tr/w:trPr/w:cantSplit", NS) is None:
+        errors.append(f"{path.name}: Figure 1 drawing/caption row can split")
+    if caption.find("w:pPr/w:sectPr", NS) is not None:
+        errors.append(f"{path.name}: Figure 1 retains a dedicated section transition")
 
     extent = drawing.find(".//wp:extent", NS)
     width_emu = None if extent is None else extent.get("cx")
@@ -307,13 +313,9 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         errors.append(f"{path.name}: Figure 1 width is not 16 cm: {width_emu}")
 
     details = {
-        "figure1_boundary_section": {
-            "columns": boundary_columns,
-            "type": boundary_type,
-        },
         "figure1_section": {
-            "columns": caption_columns,
-            "type": caption_type,
+            "columns": None,
+            "type": None,
             "width_emu": width_emu,
             "drawing_page_break_before": (
                 drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None
@@ -322,9 +324,19 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
                 drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
             ),
             "first_callout_precedes_drawing": bool(prior_callouts),
+            "placement_type": "FLOATING_TABLE",
+            "page_top_position": actual_position,
+            "caption_association": "SINGLE_CANT_SPLIT_ROW",
         },
         "drawing_count": len(root.findall(".//w:drawing", NS)),
-        "table_count": len(root.findall(".//w:tbl", NS)),
+        "figure_float_count": len(floats),
+        "manuscript_table_count": len([
+            table for table in body.findall("w:tbl", NS)
+            if not (
+                table.find("w:tblPr/w:tblCaption", NS) is not None
+                and (table.find("w:tblPr/w:tblCaption", NS).get(qn(W, "val")) or "").startswith("HFUT_FIGURE_FLOAT_")
+            )
+        ]),
         "display_equation_count": sum(
             1
             for paragraph in root.findall(".//w:p", NS)

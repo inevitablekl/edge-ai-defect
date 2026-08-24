@@ -544,7 +544,7 @@ def docx_paragraphs(path: Path) -> list[tuple[str, str]]:
     with ZipFile(path) as archive:
         root = ET.fromstring(archive.read("word/document.xml"))
     paragraphs: list[tuple[str, str]] = []
-    for paragraph in root.findall(".//w:body/w:p", NS):
+    for paragraph in root.findall(".//w:body//w:p", NS):
         text = "".join(node.text or "" for node in paragraph.findall(".//w:t", NS))
         style_node = paragraph.find("w:pPr/w:pStyle", NS)
         style = style_node.get(f"{{{W_NS}}}val") if style_node is not None else ""

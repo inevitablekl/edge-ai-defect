@@ -63,6 +63,11 @@ FORBIDDEN_SCIENTIFIC_ADDITIONS = (
 )
 
 
+def is_figure_float(table: ET.Element) -> bool:
+    marker = attr(table.find("w:tblPr/w:tblCaption", NS), "val") or ""
+    return marker.startswith("HFUT_FIGURE_FLOAT_")
+
+
 def qn(local: str, namespace: str = W) -> str:
     return f"{{{namespace}}}{local}"
 
@@ -346,7 +351,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         errors.append(f"expected three figure drawings, found {len(drawings)}")
     body_paragraphs = body.findall("w:p", NS)
     for caption in ("图1　", "图2　", "图3　"):
-        count = sum(text_of(node).startswith(caption) for node in body_paragraphs)
+        count = sum(text_of(node).startswith(caption) for node in document.findall(".//w:p", NS))
         if count != 1:
             errors.append(f"missing or duplicated figure caption: {caption}")
     for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
@@ -358,7 +363,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         if has_page_break:
             errors.append(f"Anonymous {label} caption has unauthorized pageBreakBefore")
 
-    tables = body.findall("w:tbl", NS)
+    tables = [table for table in body.findall("w:tbl", NS) if not is_figure_float(table)]
     details["table_count"] = len(tables)
     if len(tables) != 3:
         errors.append(f"expected three manuscript tables, found {len(tables)}")
@@ -512,8 +517,8 @@ def validate_parity(
     anonymous_tables = [table_signature(table) for table in anonymous_body.findall("w:tbl", NS)]
     if full_tables != anonymous_tables:
         errors.append("table content differs between Full and Anonymous")
-    full_figures = [text_of(node) for node in full_body.findall("w:p", NS) if text_of(node).startswith("图")]
-    anonymous_figures = [text_of(node) for node in anonymous_body.findall("w:p", NS) if text_of(node).startswith("图")]
+    full_figures = [text_of(node) for node in full_body.findall(".//w:p", NS) if text_of(node).startswith("图")]
+    anonymous_figures = [text_of(node) for node in anonymous_body.findall(".//w:p", NS) if text_of(node).startswith("图")]
     if full_figures != anonymous_figures:
         errors.append("figure captions differ between Full and Anonymous")
     details["scientific_body_parity"] = "PASS" if not errors else "FAIL"

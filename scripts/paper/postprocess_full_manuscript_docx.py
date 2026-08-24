@@ -54,6 +54,12 @@ SECTPR_ORDER = (
     "cols", "formProt", "vAlign", "noEndnote", "titlePg", "textDirection",
     "bidi", "rtlGutter", "docGrid", "printerSettings", "sectPrChange",
 )
+FIGURE_FLOAT_WIDTH_DXA = {"图1": 9071, "图2": 4252, "图3": 4252}
+FIGURE_FLOAT_MARKERS = {
+    "图1": "HFUT_FIGURE_FLOAT_F1",
+    "图2": "HFUT_FIGURE_FLOAT_F2",
+    "图3": "HFUT_FIGURE_FLOAT_F3",
+}
 
 
 def qn(local: str) -> str:
@@ -269,53 +275,83 @@ def set_paragraph_section(paragraph: ET.Element, section: ET.Element) -> None:
     insert_in_schema_order(ppr, section, PPR_ORDER)
 
 
-def defer_page_top_figure_after_eligible_section_prose(
-    body: ET.Element,
+def zero_cell_margins(parent: ET.Element) -> ET.Element:
+    margins = ET.SubElement(parent, qn("tcMar"))
+    for edge in ("top", "left", "bottom", "right"):
+        ET.SubElement(margins, qn(edge), {qn("w"): "0", qn("type"): "dxa"})
+    return margins
+
+
+def nil_table_borders(parent: ET.Element) -> ET.Element:
+    borders = ET.SubElement(parent, qn("tblBorders"))
+    for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        ET.SubElement(borders, qn(edge), {qn("val"): "nil"})
+    return borders
+
+
+def floating_figure_table(
+    label: str,
     drawing: ET.Element,
     caption: ET.Element,
-) -> None:
-    """Let the current top-level section flow before a page-top figure.
+) -> ET.Element:
+    """Keep editable drawing/caption text in one non-blocking Word float.
 
-    This is a structural eligibility rule, not a semantic heading anchor: it
-    uses the next top-level section boundary regardless of heading wording.
-    The drawing remains after its first callout and can start the next page
-    without blocking the rest of its current section's ordinary prose.
+    WordprocessingML floating tables are outside the main text flow while
+    retaining a logical document position.  A single non-splitting row keeps
+    the inline DrawingML payload and its editable caption as one visual unit.
+    Figure 1 is page-margin anchored at the top; Figures 2/3 move with their
+    text-column anchors.
     """
 
-    children = list(body)
-    caption_index = children.index(caption)
-    next_sections = [
-        node for node in children[caption_index + 1 :]
-        if node.tag == qn("p")
-        and (node.find("w:pPr/w:pStyle", NS) is not None)
-        and node.find("w:pPr/w:pStyle", NS).get(qn("val")) == "HFUTHeading1"
-    ]
-    if not next_sections:
-        raise ValueError("page-top figure has no later top-level section boundary")
-    boundary = next_sections[0]
-    body.remove(drawing)
-    body.remove(caption)
-    insertion_index = list(body).index(boundary)
-    body.insert(insertion_index, drawing)
-    body.insert(insertion_index + 1, caption)
+    width = FIGURE_FLOAT_WIDTH_DXA[label]
+    table = ET.Element(qn("tbl"))
+    table_properties = ET.SubElement(table, qn("tblPr"))
+    if label == "图1":
+        position_attrs = {
+            qn("leftFromText"): "0", qn("rightFromText"): "0",
+            qn("topFromText"): "0", qn("bottomFromText"): "0",
+            qn("vertAnchor"): "margin", qn("horzAnchor"): "margin",
+            qn("tblpXSpec"): "center", qn("tblpYSpec"): "top",
+        }
+    else:
+        position_attrs = {
+            qn("leftFromText"): "0", qn("rightFromText"): "0",
+            qn("topFromText"): "0", qn("bottomFromText"): "0",
+            qn("vertAnchor"): "text", qn("horzAnchor"): "text",
+            qn("tblpXSpec"): "center", qn("tblpY"): "1",
+        }
+    ET.SubElement(table_properties, qn("tblpPr"), position_attrs)
+    ET.SubElement(table_properties, qn("tblOverlap"), {qn("val"): "never"})
+    ET.SubElement(table_properties, qn("tblW"), {qn("w"): str(width), qn("type"): "dxa"})
+    nil_table_borders(table_properties)
+    ET.SubElement(table_properties, qn("tblLayout"), {qn("type"): "fixed"})
+    table_margins = ET.SubElement(table_properties, qn("tblCellMar"))
+    for edge in ("top", "left", "bottom", "right"):
+        ET.SubElement(table_margins, qn(edge), {qn("w"): "0", qn("type"): "dxa"})
+    ET.SubElement(
+        table_properties, qn("tblCaption"), {qn("val"): FIGURE_FLOAT_MARKERS[label]}
+    )
+
+    grid = ET.SubElement(table, qn("tblGrid"))
+    ET.SubElement(grid, qn("gridCol"), {qn("w"): str(width)})
+    row = ET.SubElement(table, qn("tr"))
+    row_properties = ET.SubElement(row, qn("trPr"))
+    ET.SubElement(row_properties, qn("cantSplit"))
+    cell = ET.SubElement(row, qn("tc"))
+    cell_properties = ET.SubElement(cell, qn("tcPr"))
+    ET.SubElement(cell_properties, qn("tcW"), {qn("w"): str(width), qn("type"): "dxa"})
+    zero_cell_margins(cell_properties)
+    ET.SubElement(cell_properties, qn("vAlign"), {qn("val"): "top"})
+    cell.extend((drawing, caption))
+    return table
 
 
 def schedule_publication_figures(root: ET.Element) -> None:
-    """Preserve source-order figure eligibility and enforce layout invariants.
-
-    The Markdown first makes each inline drawing/caption block eligible after
-    its first callout. Single-column figures stay in that source order so Word
-    can use the next feasible column/page. The governed page-top full-width
-    figure permits the rest of its current top-level section to flow first.
-    No figure is mapped to a named semantic heading.
-    """
+    """Replace top-level inline barriers with source-order floating blocks."""
 
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no w:body")
-    final_section = body.find("w:sectPr", NS)
-    if final_section is None:
-        raise ValueError("word/document.xml has no final w:sectPr")
     children = list(body)
     for label, expected_caption in FIGURE_CAPTIONS.items():
         children = list(body)
@@ -340,27 +376,21 @@ def schedule_publication_figures(root: ET.Element) -> None:
         if not callouts:
             raise ValueError(f"{label} drawing has no preceding textual callout")
 
-        if label == "图1":
-            defer_page_top_figure_after_eligible_section_prose(body, drawing, caption)
-            children = list(body)
-            caption_index = children.index(caption)
-
         drawing_ppr = ensure_first(drawing, "pPr")
         if drawing_ppr.find("w:keepNext", NS) is None:
             insert_in_schema_order(drawing_ppr, ET.Element(qn("keepNext")), PPR_ORDER)
-        if label == "图1":
-            boundary = children[caption_index - 2]
-            if boundary.tag != qn("p"):
-                raise ValueError(f"{label} has no paragraph for its two-column section boundary")
-            set_paragraph_section(boundary, section_copy(final_section, "2"))
-            # Section properties on the caption govern the one-column figure
-            # section. The page break keeps the accepted full-width Figure 1
-            # at the earliest feasible subsequent page top after its callout.
-            set_paragraph_section(caption, section_copy(final_section, "1"))
-            if drawing_ppr.find("w:pageBreakBefore", NS) is None:
-                insert_in_schema_order(
-                    drawing_ppr, ET.Element(qn("pageBreakBefore")), PPR_ORDER
-                )
+        page_break = drawing_ppr.find("w:pageBreakBefore", NS)
+        if page_break is not None:
+            drawing_ppr.remove(page_break)
+        caption_ppr = ensure_first(caption, "pPr")
+        caption_section = caption_ppr.find("w:sectPr", NS)
+        if caption_section is not None:
+            caption_ppr.remove(caption_section)
+
+        insertion_index = list(body).index(drawing)
+        body.remove(drawing)
+        body.remove(caption)
+        body.insert(insertion_index, floating_figure_table(label, drawing, caption))
 
 
 def span_wide_tables(root: ET.Element) -> None:
@@ -413,7 +443,7 @@ def normalize_publication_drawing_paragraphs(root: ET.Element) -> None:
     if body is None:
         raise ValueError("word/document.xml has no w:body")
     paragraphs = [
-        paragraph for paragraph in body.findall("w:p", NS)
+        paragraph for paragraph in body.findall(".//w:p", NS)
         if paragraph.find(".//w:drawing", NS) is not None
     ]
     if len(paragraphs) != 3:

@@ -21,12 +21,20 @@ EQUATION_MANIFEST = MANUSCRIPT / "equations/equation_manifest.csv"
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
-NS = {"w": W, "m": M, "wp": WP}
+A = "http://schemas.openxmlformats.org/drawingml/2006/main"
+R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+PR = "http://schemas.openxmlformats.org/package/2006/relationships"
+NS = {"w": W, "m": M, "wp": WP, "a": A, "r": R, "pr": PR}
 
 FIGURE_CAPTIONS = {
     "图1": "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。",
     "图2": "图2　三条路径的端到端性能。(a) 为5个独立进程FPS的均值±样本标准差；(b)(c) 为每条路径合并5400个延迟样本的均值、P95和P99。",
     "图3": "图3　运行级分布与尾延迟。各点为独立进程级描述量，横向偏移仅用于区分，不表示运行配对。",
+}
+FIGURE_FLOAT_MARKERS = {
+    "图1": "HFUT_FIGURE_FLOAT_F1",
+    "图2": "HFUT_FIGURE_FLOAT_F2",
+    "图3": "HFUT_FIGURE_FLOAT_F3",
 }
 STATISTICAL_REVIEW_PNGS = {
     "图2": ROOT / "docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.png",
@@ -168,12 +176,17 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             return [f"ZIP CRC failure: {bad}"], details
         document = ET.fromstring(archive.read("word/document.xml"))
         styles = ET.fromstring(archive.read("word/styles.xml"))
+        relationships = ET.fromstring(archive.read("word/_rels/document.xml.rels"))
     body = document.find("w:body", NS)
     if body is None:
         return ["document.xml has no body"], details
     children = list(body)
-    paragraphs = body.findall("w:p", NS)
+    paragraphs = document.findall(".//w:p", NS)
     text = "\n".join(text_of(node) for node in document.findall(".//w:p", NS))
+    image_relationships = {
+        rel.get("Id"): rel.get("Target") for rel in relationships
+        if rel.get("Type", "").endswith("/image")
+    }
 
     no_break_count = text.count(GOVERNED_NO_BREAK_PHRASE)
     if no_break_count != 1:
@@ -199,16 +212,29 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     figure_layout_contract: list[dict[str, object]] = []
     figure_callout_proximity: list[dict[str, object]] = []
     for index, (label, caption_text) in enumerate(FIGURE_CAPTIONS.items()):
-        matches = [node for node in paragraphs if text_of(node) == caption_text]
+        marker = FIGURE_FLOAT_MARKERS[label]
+        float_tables = [
+            node for node in body.findall("w:tbl", NS)
+            if attr(node.find("w:tblPr/w:tblCaption", NS), "val") == marker
+        ]
+        if len(float_tables) != 1:
+            errors.append(f"Figure {index + 1} floating-container count is {len(float_tables)}, expected 1")
+            continue
+        float_table = float_tables[0]
+        matches = [node for node in float_table.findall(".//w:p", NS) if text_of(node) == caption_text]
         if len(matches) != 1:
             errors.append(f"Figure {index + 1} caption count mismatch")
             continue
         caption = matches[0]
-        position = children.index(caption)
-        if position == 0 or children[position - 1].find(".//w:drawing", NS) is None:
+        float_position = children.index(float_table)
+        cell_paragraphs = float_table.findall("w:tr/w:tc/w:p", NS)
+        if len(cell_paragraphs) != 2 or cell_paragraphs[1] is not caption:
             errors.append(f"Figure {index + 1} caption is not immediately below its drawing")
             continue
-        drawing = children[position - 1]
+        drawing = cell_paragraphs[0]
+        if drawing.find(".//w:drawing", NS) is None:
+            errors.append(f"Figure {index + 1} floating container has no drawing before caption")
+            continue
         extent = drawing.find(".//wp:extent", NS)
         width = int(extent.get("cx", "0") if extent is not None else 0)
         height = int(extent.get("cy", "0") if extent is not None else 0)
@@ -217,14 +243,14 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         if abs(width - expected) > 2:
             errors.append(f"Figure {index + 1} width is {width}, expected {expected} EMU")
         prior_callouts = [
-            node for node in children[: position - 1]
+            node for node in children[:float_position]
             if node.tag == qn(W, "p") and label in text_of(node)
         ]
         if not prior_callouts:
             errors.append(f"Figure {index + 1} first callout is not before its drawing")
         else:
             callout_position = children.index(prior_callouts[0])
-            intervening = children[callout_position + 1 : position - 1]
+            intervening = children[callout_position + 1:float_position]
             intervening_headings = [
                 node for node in intervening
                 if node.tag == qn(W, "p")
@@ -240,7 +266,7 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             figure_callout_proximity.append({
                 "label": label,
                 "first_callout_document_position": callout_position + 1,
-                "figure_document_position": children.index(drawing) + 1,
+                "figure_document_position": float_position + 1,
                 "intervening_heading_count": len(intervening_headings),
                 "intervening_body_paragraph_count": len(intervening_body),
                 "intervening_headings": [text_of(node) for node in intervening_headings],
@@ -252,25 +278,51 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         if caption_ppr is not None and caption_ppr.find("w:keepNext", NS) is not None:
             errors.append(f"Figure {index + 1} caption incorrectly blocks following prose")
         section = caption.find("w:pPr/w:sectPr", NS)
-        if index == 0:
-            if section is None or section_values(section) != ("1", "continuous"):
-                errors.append("Figure 1 does not close a continuous one-column section")
-            if position < 2:
-                errors.append("Figure 1 has no governed preceding section boundary")
-            else:
-                boundary = children[position - 2]
-                boundary_section = boundary.find("w:pPr/w:sectPr", NS)
-                if boundary_section is None or section_values(boundary_section) != ("2", "continuous"):
-                    errors.append("Figure 1 boundary does not close a continuous two-column section")
-            if drawing_ppr is None or drawing_ppr.find("w:pageBreakBefore", NS) is None:
-                errors.append("Figure 1 drawing has no page-top paragraph break")
-        elif section is not None:
-            errors.append(f"Figure {index + 1} incorrectly creates a full-width section")
-        else:
-            if drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None:
-                errors.append(f"Figure {index + 1} has an unnecessary forced page break")
+        if section is not None:
+            errors.append(f"Figure {index + 1} floating container incorrectly carries a section break")
+        if drawing_ppr is not None and drawing_ppr.find("w:pageBreakBefore", NS) is not None:
+            errors.append(f"Figure {index + 1} floating container has an unnecessary forced page break")
+
+        table_position = float_table.find("w:tblPr/w:tblpPr", NS)
+        overlap = float_table.find("w:tblPr/w:tblOverlap", NS)
+        row = float_table.find("w:tr", NS)
+        inline_count = len(float_table.findall(".//wp:inline", NS))
+        anchor_count = len(float_table.findall(".//wp:anchor", NS))
+        blips = float_table.findall(".//a:blip", NS)
+        relationship_id = attr(blips[0], "embed", R) if len(blips) == 1 else None
+        image_target = image_relationships.get(relationship_id or "")
+        if table_position is None:
+            errors.append(f"INLINE_FIGURE_FLOW_BARRIER: Figure {index + 1} has no floating-table positioning")
+        if inline_count != 1 or anchor_count != 0:
+            errors.append(
+                f"Figure {index + 1} drawing representation mismatch inside float: "
+                f"inline={inline_count} anchor={anchor_count}"
+            )
+        if image_target is None:
+            errors.append(f"Figure {index + 1} floating drawing relationship is invalid")
+        if attr(overlap, "val") != "never":
+            errors.append(f"Figure {index + 1} floating container permits overlap")
+        if row is None or row.find("w:trPr/w:cantSplit", NS) is None:
+            errors.append(f"Figure {index + 1} drawing/caption row can split")
+        expected_position = (
+            ("margin", "margin", "center", "top", None)
+            if index == 0 else ("text", "text", "center", None, "1")
+        )
+        actual_position = (
+            attr(table_position, "vertAnchor"),
+            attr(table_position, "horzAnchor"),
+            attr(table_position, "tblpXSpec"),
+            attr(table_position, "tblpYSpec"),
+            attr(table_position, "tblpY"),
+        )
+        if actual_position != expected_position:
+            errors.append(
+                f"Figure {index + 1} floating positioning contract mismatch: {actual_position}"
+            )
         figure_layout_contract.append({
             "label": label,
+            "placement_type": "FLOATING",
+            "floating_container": "WORD_TABLE",
             "width_emu": width,
             "height_emu": height,
             "height_cm": round(height / 360_000, 2),
@@ -282,6 +334,19 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
                 else height / 360_000 > ADVISORY_SINGLE_COLUMN_HEIGHT_CM
             ),
             "callout_precedes": bool(prior_callouts),
+            "inline_inside_floating_container": inline_count == 1,
+            "wp_anchor_count": anchor_count,
+            "later_prose_can_structurally_pass": table_position is not None,
+            "horizontal_reference": attr(table_position, "horzAnchor"),
+            "horizontal_centered": attr(table_position, "tblpXSpec") == "center",
+            "vertical_reference": attr(table_position, "vertAnchor"),
+            "vertical_page_top": attr(table_position, "tblpYSpec") == "top",
+            "wrap_type": "FLOATING_TABLE_AROUND",
+            "allow_overlap": attr(overlap, "val") != "never",
+            "move_with_text": attr(table_position, "vertAnchor") == "text",
+            "caption_association": "SINGLE_CANT_SPLIT_ROW",
+            "relationship_id": relationship_id,
+            "image_target": image_target,
             "drawing_keep_next": (
                 drawing_ppr is not None and drawing_ppr.find("w:keepNext", NS) is not None
             ),
@@ -327,7 +392,10 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         if following is None or following.tag != qn(W, "tbl"):
             errors.append(f"table caption is not above its native Word table: {caption_text}")
 
-    tables = body.findall("w:tbl", NS)
+    tables = [
+        table for table in body.findall("w:tbl", NS)
+        if not (attr(table.find("w:tblPr/w:tblCaption", NS), "val") or "").startswith("HFUT_FIGURE_FLOAT_")
+    ]
     if len(tables) != 3:
         errors.append(f"native manuscript table count is {len(tables)}, expected 3")
     else:
@@ -436,16 +504,7 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
     details["equation_numbers"] = [text_of(node) for node in equations]
     details["table_count"] = len(tables)
     details["a4"] = not any("A4" in error for error in errors)
-    details["figure1_section_contract"] = (
-        None if not paragraphs else next(
-            (
-                section_values(node.find("w:pPr/w:sectPr", NS))
-                for node in paragraphs if text_of(node) == FIGURE_CAPTIONS["图1"]
-                and node.find("w:pPr/w:sectPr", NS) is not None
-            ),
-            None,
-        )
-    )
+    details["figure1_section_contract"] = None
     details["reference_contracts"] = reference_contracts
     details["reference_texts"] = reference_texts
     details["reference_text_sha256"] = reference_hash
@@ -495,6 +554,14 @@ def main() -> int:
     print("STRUCTURAL_FORMAT_VALIDATION=PASS")
     print("EQUATION_NUMBERING_COMPLETE E1=（1） E2=（2） E3=（3）")
     print("FIGURE_LIFECYCLE_VALID scientific=FROZEN review=PNG submission=OPEN")
+    for contract in details.get("figure_layout_contract", []):
+        print(
+            "FIGURE_FLOW "
+            f"label={contract['label']} placement_type={contract['placement_type']} "
+            f"container={contract['floating_container']} "
+            f"later_prose_can_pass={contract['later_prose_can_structurally_pass']} "
+            f"caption_association={contract['caption_association']}"
+        )
     for metric in details.get("figure_callout_proximity", []):
         print(
             "FIGURE_CALL_OUT_PROXIMITY "
@@ -510,6 +577,9 @@ def main() -> int:
     )
     print("MICROSOFT_WORD_VISUAL_QA=PENDING")
     print("WORD_ARTIFACT_VISUAL_REVIEW_REQUIRED=YES")
+    print("PAGE3_FLOW=IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW")
+    print("PAGE5_FLOW=IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW")
+    print("PAGE6_FLOW=IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW")
     print("HFUT_SUBMISSION_NOT_READY VISIO=OPEN ORIGIN=OPEN MATHTYPE=OPEN WORD_DESKTOP_QA=OPEN ANONYMOUS_QA=OPEN DOCUMENT_INSPECTOR=OPEN")
     return 0
 

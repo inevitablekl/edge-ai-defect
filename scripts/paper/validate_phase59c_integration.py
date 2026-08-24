@@ -151,9 +151,15 @@ def load_docx(path: Path) -> tuple[list[str], tuple[tuple[tuple[str, ...], ...],
     body = root.find("w:body", NS)
     if body is None:
         raise ValueError("word/document.xml has no body")
-    paragraphs = [text_of(node) for node in body.findall("w:p", NS)]
+    paragraphs = [text_of(node) for node in root.findall(".//w:p", NS)]
     drawings = root.findall(".//w:drawing", NS)
-    tables = body.findall("w:tbl", NS)
+    tables = [
+        table for table in body.findall("w:tbl", NS)
+        if not (
+            (table.find("w:tblPr/w:tblCaption", NS) is not None)
+            and table.find("w:tblPr/w:tblCaption", NS).get(f"{{{W}}}val", "").startswith("HFUT_FIGURE_FLOAT_")
+        )
+    ]
     equations = [
         node for node in body.findall("w:p", NS)
         if (node.find("w:pPr/w:pStyle", NS) is not None

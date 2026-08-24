@@ -22,11 +22,25 @@ or supervisor requirement without new recorded authority.
 | Single-column figure height must not exceed 15.5 cm | Project Phase 6.3 QA heuristic | ADVISORY_NOT_MANDATORY |
 | Statistical-figure optical bounding-box and centering thresholds | Project Phase 6.3 QA heuristic | DIAGNOSTIC |
 | Report callout/drawing positions and intervening headings/body paragraphs | Project Phase 6.3 QA diagnostic | DIAGNOSTIC |
-| Allow remaining prose in the current top-level section to flow before a governed page-top full-width figure | Project implementation mechanism; derived from page-top and natural-flow invariants | ACTIVE_NOT_PUBLICATION_RULE |
+| `wp:inline` figure block as a publication float | Retired project implementation assumption | RETIRED_INCORRECT_IMPLEMENTATION_ASSUMPTION |
+| Word floating figure/container | Project implementation used to satisfy natural-flow and caption-association invariants | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| One-row `w:tblpPr` floating table containing editable drawing plus caption | Paper Phase 6.3R7 production implementation | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| Figure 1 page-margin-top floating-table position | Supervisor page-top invariant implemented by the project | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| Figure 2/3 text-column-relative floating-table position | Project implementation | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| Figure 1 placement before the next `HFUTHeading1` | Retired project structural heuristic | REMOVED |
+| Figure 1 `pageBreakBefore` | Retired project implementation mechanism | REMOVED |
+| Figure-only continuous two-column → one-column section transition | Retired project implementation mechanism | REMOVED |
 
-The active placement model is source-order eligibility plus governed layout
-invariants: after the first callout, an inline drawing/caption block is eligible
-for Word's next feasible layout location. A governed page-top full-width figure
-may allow the remaining prose in its current top-level section to flow first.
-Ordinary prose is neither required nor forbidden between callout and drawing,
-and no named semantic heading is a placement barrier.
+The active placement model is source-order eligibility plus a Word-native
+floating container. After the first callout, each drawing and its editable
+caption occupy one non-splitting floating-table row. The container is outside
+the main text flow, so later ordinary prose is not trapped behind a drawing
+that cannot fit at the anchor location. Figure 1 uses the supervisor-governed
+page-top/full-width invariant; Figures 2 and 3 use column-relative placement.
+Ordinary prose is neither required nor forbidden between callout and floating
+block, and no named semantic heading is a placement barrier.
+
+The scientific drawing remains an inline DrawingML payload *inside* the
+floating table. This nested `wp:inline` is not treated as the float mechanism;
+`w:tblpPr` is the governing non-blocking container. The drawing and caption
+remain editable, adjacent, and inseparable through a single `w:cantSplit` row.

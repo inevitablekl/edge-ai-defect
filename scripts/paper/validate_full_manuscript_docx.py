@@ -23,6 +23,11 @@ T3_TITLE = "表3　"
 MARKER = "FULL_BODY_SECTION_START"
 
 
+def is_figure_float(table: ET.Element) -> bool:
+    marker = attr(table.find("w:tblPr/w:tblCaption", NS), "val") or ""
+    return marker.startswith("HFUT_FIGURE_FLOAT_")
+
+
 def attr(node: ET.Element | None, local: str, namespace: str = W) -> str | None:
     return node.get(f"{{{namespace}}}{local}") if node is not None else None
 
@@ -174,7 +179,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         if len(used_relationships & image_relationships) != 3:
             fail(errors, "three embedded figure image relationships are not all used")
     for caption in ("图1　", "图2　", "图3　"):
-        if sum(text.startswith(caption) for text in (text_of(p) for p in body_paragraphs)) != 1:
+        if sum(text.startswith(caption) for text in (text_of(p) for p in document.findall(".//w:p", NS))) != 1:
             fail(errors, f"missing or duplicated figure caption: {caption}")
     for title, label in ((T1_TITLE, "Table 1"), (T2_TITLE, "Table 2"), (T3_TITLE, "Table 3")):
         captions = [paragraph for paragraph in body_paragraphs if text_of(paragraph).startswith(title)]
@@ -183,7 +188,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         elif captions[0].find("w:pPr/w:pageBreakBefore", NS) is not None:
             fail(errors, f"Full {label} caption has unauthorized pageBreakBefore")
 
-    tables = body.findall("w:tbl", NS)
+    tables = [table for table in body.findall("w:tbl", NS) if not is_figure_float(table)]
     details["table_count"] = len(tables)
     if len(tables) != 3:
         fail(errors, f"expected three manuscript tables, found {len(tables)}")

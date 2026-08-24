@@ -1,5 +1,5 @@
 {
-  "phase": "PAPER_PHASE_6_3R6",
+  "phase": "PAPER_PHASE_6_3R7",
   "verdict": "PASS",
   "scientific_nonregression": "PASS",
   "source_details": {
@@ -17,37 +17,47 @@
   },
   "docx_details": {
     "docs/paper/manuscript/output/draft_full.docx": {
-      "figure1_boundary_section": {
-        "columns": "2",
-        "type": "continuous"
-      },
       "figure1_section": {
-        "columns": "1",
-        "type": "continuous",
+        "columns": null,
+        "type": null,
         "width_emu": "5759999",
-        "drawing_page_break_before": true,
+        "drawing_page_break_before": false,
         "drawing_keep_next": true,
-        "first_callout_precedes_drawing": true
+        "first_callout_precedes_drawing": true,
+        "placement_type": "FLOATING_TABLE",
+        "page_top_position": [
+          "margin",
+          "margin",
+          "center",
+          "top"
+        ],
+        "caption_association": "SINGLE_CANT_SPLIT_ROW"
       },
       "drawing_count": 3,
-      "table_count": 3,
+      "figure_float_count": 1,
+      "manuscript_table_count": 3,
       "display_equation_count": 3
     },
     "docs/paper/manuscript/output/draft_anonymous.docx": {
-      "figure1_boundary_section": {
-        "columns": "2",
-        "type": "continuous"
-      },
       "figure1_section": {
-        "columns": "1",
-        "type": "continuous",
+        "columns": null,
+        "type": null,
         "width_emu": "5759999",
-        "drawing_page_break_before": true,
+        "drawing_page_break_before": false,
         "drawing_keep_next": true,
-        "first_callout_precedes_drawing": true
+        "first_callout_precedes_drawing": true,
+        "placement_type": "FLOATING_TABLE",
+        "page_top_position": [
+          "margin",
+          "margin",
+          "center",
+          "top"
+        ],
+        "caption_association": "SINGLE_CANT_SPLIT_ROW"
       },
       "drawing_count": 3,
-      "table_count": 3,
+      "figure_float_count": 1,
+      "manuscript_table_count": 3,
       "display_equation_count": 3
     }
   },
