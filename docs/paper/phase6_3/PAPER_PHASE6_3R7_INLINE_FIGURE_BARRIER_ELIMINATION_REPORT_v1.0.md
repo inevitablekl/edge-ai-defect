@@ -9,6 +9,11 @@ table containers. Each container holds the scientific drawing and editable
 caption in one non-splitting row. Microsoft Word visual acceptance remains
 external and pending.
 
+Superseding Phase 6.3R8 clarification: the containers support text wrapping,
+but Microsoft Word review established that backfill before a logical float
+anchor is not guaranteed. Any earlier statement implying guaranteed backfill
+is retired.
+
 ## 2. Baseline
 
 - Repository branch: `main`.
@@ -175,7 +180,8 @@ layout remain unchanged and are not part of this remediation.
 - requires one inline drawing inside the float and no unexpected `wp:anchor`;
 - requires the editable caption immediately after the drawing in one
   `w:cantSplit` row;
-- reports that later prose can structurally pass the figure;
+- reports structural text-wrap support without inferring that Microsoft Word
+  will backfill space before every logical float anchor;
 - emits only `IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW` for Pages 3, 5, and 6.
 
 The Full, Anonymous, Phase 5.9C, final-reference, and Phase 6.1
@@ -184,11 +190,11 @@ floating figure-container tables from the three scientific manuscript tables.
 
 Global Full-DOCX figure-flow audit:
 
-| Figure | First callout / float child | Placement / anchor paragraph | Association | Size / width mode | Later prose can pass | Section / break | Mechanism authority |
+| Figure | First callout / float child | Placement / anchor paragraph | Association | Size / width mode | Text wrapping / earlier-space backfill | Section / break | Mechanism authority |
 |---|---|---|---|---|---|---|---|
-| F1 | 39 / 40 | Floating table; next regular anchor begins “性能响应进入路径比较之前…”; page-margin top/center | Drawing then editable caption in one `cantSplit` row | 5759999 × 2851093 EMU; 16.0 cm full width | yes | no figure section; no `pageBreakBefore` | Supervisor page-top/full-width invariant; project implementation |
-| F2 | 76 / 77 | Floating table; next regular anchor begins “从结构上看…”; text-column relative/centered | Drawing then editable caption in one `cantSplit` row | 2699999 × 5575190 EMU; 7.50 cm single column | yes | none; no `pageBreakBefore` | HFUT width/caption invariants; project implementation |
-| F3 | 85 / 86 | Floating table; next regular anchor begins “进程级均值范围均不重叠…”; text-column relative/centered | Drawing then editable caption in one `cantSplit` row | 2699999 × 4380468 EMU; 7.50 cm single column | yes | none; no `pageBreakBefore` | HFUT width/caption invariants; project implementation |
+| F1 | 39 / 40 | Floating table; next regular anchor begins “性能响应进入路径比较之前…”; page-margin top/center | Drawing then editable caption in one `cantSplit` row | 5759999 × 2851093 EMU; 16.0 cm full width | supported / not guaranteed | no figure section; no `pageBreakBefore` | Supervisor page-top/full-width invariant; project implementation |
+| F2 | 76 / 77 | Floating table; next regular anchor begins “从结构上看…”; text-column relative/centered | Drawing then editable caption in one `cantSplit` row | 2699999 × 5575190 EMU; 7.50 cm single column | supported / not guaranteed | none; no `pageBreakBefore` | HFUT width/caption invariants; project implementation |
+| F3 | 85 / 86 | Floating table; next regular anchor begins “进程级均值范围均不重叠…”; text-column relative/centered | Drawing then editable caption in one `cantSplit` row | 2699999 × 4380468 EMU; 7.50 cm single column | supported / not guaranteed | none; no `pageBreakBefore` | HFUT width/caption invariants; project implementation |
 
 Full/Anonymous image hashes, float properties, caption association, widths,
 and relationship targets are identical. Anonymous child positions differ only

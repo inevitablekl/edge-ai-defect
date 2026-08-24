@@ -27,18 +27,22 @@ or supervisor requirement without new recorded authority.
 | One-row `w:tblpPr` floating table containing editable drawing plus caption | Paper Phase 6.3R7 production implementation | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
 | Figure 1 page-margin-top floating-table position | Supervisor page-top invariant implemented by the project | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
 | Figure 2/3 text-column-relative floating-table position | Project implementation | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| `w:tblpPr` proves that earlier column space will be backfilled | Retired Paper Phase 6.3R7 inference, disproved by Microsoft Word pagination | RETIRED_INCORRECT_IMPLEMENTATION_ASSUMPTION |
+| `TEXT_WRAP_AROUND_FLOAT = SUPPORTED` | OOXML structural capability; actual pagination remains Word-dependent | ACTIVE_PROJECT_IMPLEMENTATION_NOT_A_JOURNAL_RULE |
+| `BACKFILL_BEFORE_LOGICAL_FLOAT_ANCHOR = NOT_GUARANTEED` | Microsoft Word review of the exact R7 Full DOCX | ACTIVE_WORD_BEHAVIOR_MODEL |
 | Figure 1 placement before the next `HFUTHeading1` | Retired project structural heuristic | REMOVED |
 | Figure 1 `pageBreakBefore` | Retired project implementation mechanism | REMOVED |
 | Figure-only continuous two-column → one-column section transition | Retired project implementation mechanism | REMOVED |
 
 The active placement model is source-order eligibility plus a Word-native
 floating container. After the first callout, each drawing and its editable
-caption occupy one non-splitting floating-table row. The container is outside
-the main text flow, so later ordinary prose is not trapped behind a drawing
-that cannot fit at the anchor location. Figure 1 uses the supervisor-governed
+caption occupy one non-splitting floating-table row. The container supports
+text wrapping, but its presence does not prove that Word will backfill space
+before the float's logical story anchor. Figure 1 uses the supervisor-governed
 page-top/full-width invariant; Figures 2 and 3 use column-relative placement.
 Ordinary prose is neither required nor forbidden between callout and floating
-block, and no named semantic heading is a placement barrier.
+block, and no named semantic heading is a placement barrier. Actual use of
+page/column space requires Microsoft Word pagination evidence.
 
 The scientific drawing remains an inline DrawingML payload *inside* the
 floating table. This nested `wp:inline` is not treated as the float mechanism;

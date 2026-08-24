@@ -58,6 +58,13 @@ TABLE_CAPTIONS = (
 REFERENCE_STYLE_IDS = ("HFUTReferenceEntry", "Bibliography")
 REFERENCE_TEXT_SHA256 = "cc271cc81cc89342ef7652d8a51f81f25c431617d1da6b235faa72cca0c5ccef"
 ACCENTED_SURNAME = "Sánchez-González"
+PAGINATION_QA_CATEGORIES = (
+    "ACCEPTABLE_TYPOGRAPHIC_RESERVE",
+    "WIDOW_ORPHAN_RESERVE",
+    "HEADING_KEEP_WITH_NEXT_RESERVE",
+    "FLOAT_ANCHOR_FLOW_DEFECT",
+    "UNKNOWN_LAYOUT_DEFECT",
+)
 
 
 def qn(namespace: str, local: str) -> str:
@@ -136,6 +143,104 @@ def paragraph_style_id(paragraph: ET.Element) -> str | None:
     return attr(paragraph.find("w:pPr/w:pStyle", NS), "val")
 
 
+def on_off_value(node: ET.Element | None) -> bool | None:
+    if node is None:
+        return None
+    return attr(node, "val") not in {"0", "false", "off"}
+
+
+def paragraph_pagination_audit(
+    document: ET.Element, styles: ET.Element
+) -> tuple[list[str], dict[str, object]]:
+    """Audit effective body/heading pagination without changing Word defaults."""
+
+    errors: list[str] = []
+    properties = ("widowControl", "keepNext", "keepLines", "pageBreakBefore")
+    style_map = {
+        attr(style, "styleId"): style for style in styles.findall("w:style", NS)
+    }
+
+    def direct_values(parent: ET.Element | None) -> dict[str, bool | None]:
+        ppr = None if parent is None else parent.find("w:pPr", NS)
+        return {
+            name: on_off_value(None if ppr is None else ppr.find(f"w:{name}", NS))
+            for name in properties
+        }
+
+    default_values = direct_values(styles.find("w:docDefaults/w:pPrDefault", NS))
+    # ISO/IEC 29500 defines widow/orphan prevention as on when widowControl is
+    # never specified in the hierarchy. The other omitted pagination controls
+    # are not promoted to enabled project rules.
+    terminal_defaults = {
+        "widowControl": True,
+        "keepNext": False,
+        "keepLines": False,
+        "pageBreakBefore": False,
+    }
+
+    def style_chain(style_id: str) -> list[dict[str, object]]:
+        chain: list[dict[str, object]] = []
+        seen: set[str] = set()
+        current: str | None = style_id
+        while current and current not in seen:
+            seen.add(current)
+            style = style_map.get(current)
+            chain.append({"style_id": current, "direct": direct_values(style)})
+            current = attr(None if style is None else style.find("w:basedOn", NS), "val")
+        return chain
+
+    def effective(style_id: str, name: str) -> bool:
+        for item in style_chain(style_id):
+            value = item["direct"][name]  # type: ignore[index]
+            if value is not None:
+                return bool(value)
+        value = default_values[name]
+        return terminal_defaults[name] if value is None else value
+
+    style_details: dict[str, object] = {}
+    for style_id in ("HFUTBody", "HFUTHeading1", "HFUTHeading2", "HFUTHeading3"):
+        effective_values = {name: effective(style_id, name) for name in properties}
+        style_details[style_id] = {
+            "chain": style_chain(style_id),
+            "effective": effective_values,
+        }
+
+    body_paragraphs = [
+        paragraph for paragraph in document.findall(".//w:p", NS)
+        if paragraph_style_id(paragraph) == "HFUTBody"
+    ]
+    direct_body_enabled = {
+        name: sum(
+            on_off_value(paragraph.find(f"w:pPr/w:{name}", NS)) is True
+            for paragraph in body_paragraphs
+        )
+        for name in properties
+    }
+    if direct_body_enabled["keepNext"] or direct_body_enabled["keepLines"]:
+        errors.append(
+            "HFUTBody contains a direct keep-with-next/keep-lines pagination chain"
+        )
+    if effective("HFUTBody", "keepNext") or effective("HFUTBody", "keepLines"):
+        errors.append("HFUTBody style hierarchy enables an accidental keep chain")
+    if not effective("HFUTBody", "widowControl"):
+        errors.append("HFUTBody widow/orphan protection is disabled")
+    for style_id in ("HFUTHeading1", "HFUTHeading2", "HFUTHeading3"):
+        if not effective(style_id, "keepNext"):
+            errors.append(f"{style_id} does not preserve keep-with-next")
+        if not effective(style_id, "keepLines"):
+            errors.append(f"{style_id} does not preserve keep-lines")
+        if effective(style_id, "pageBreakBefore"):
+            errors.append(f"{style_id} unexpectedly forces pageBreakBefore")
+
+    return errors, {
+        "document_defaults": default_values,
+        "terminal_ooxml_defaults": terminal_defaults,
+        "styles": style_details,
+        "hfut_body_paragraph_count": len(body_paragraphs),
+        "hfut_body_direct_enabled_counts": direct_body_enabled,
+    }
+
+
 def image_content_geometry(path: Path) -> dict[str, object]:
     """Measure non-background content with antialiasing noise suppressed."""
 
@@ -187,6 +292,10 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         rel.get("Id"): rel.get("Target") for rel in relationships
         if rel.get("Type", "").endswith("/image")
     }
+
+    pagination_errors, pagination_details = paragraph_pagination_audit(document, styles)
+    errors.extend(pagination_errors)
+    details["paragraph_pagination_audit"] = pagination_details
 
     no_break_count = text.count(GOVERNED_NO_BREAK_PHRASE)
     if no_break_count != 1:
@@ -336,7 +445,9 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
             "callout_precedes": bool(prior_callouts),
             "inline_inside_floating_container": inline_count == 1,
             "wp_anchor_count": anchor_count,
-            "later_prose_can_structurally_pass": table_position is not None,
+            "text_wrap_around_float_supported": table_position is not None,
+            "backfill_before_logical_float_anchor_guaranteed": False,
+            "microsoft_word_pagination_status": "PENDING",
             "horizontal_reference": attr(table_position, "horzAnchor"),
             "horizontal_centered": attr(table_position, "tblpXSpec") == "center",
             "vertical_reference": attr(table_position, "vertAnchor"),
@@ -559,7 +670,8 @@ def main() -> int:
             "FIGURE_FLOW "
             f"label={contract['label']} placement_type={contract['placement_type']} "
             f"container={contract['floating_container']} "
-            f"later_prose_can_pass={contract['later_prose_can_structurally_pass']} "
+            "text_wrap_around_float=SUPPORTED "
+            "backfill_before_logical_float_anchor=NOT_GUARANTEED "
             f"caption_association={contract['caption_association']}"
         )
     for metric in details.get("figure_callout_proximity", []):
@@ -575,7 +687,9 @@ def main() -> int:
         "SINGLE_COLUMN_HEIGHT_15_5_CM="
         "PROJECT_QA_ADVISORY_NOT_PUBLICATION_REQUIREMENT"
     )
-    print("MICROSOFT_WORD_VISUAL_QA=PENDING")
+    print("PAGINATION_QA_TAXONOMY=" + ",".join(PAGINATION_QA_CATEGORIES))
+    print("PAGINATION_QA_EVIDENCE_BOUNDARY=OOXML_CANNOT_CLASSIFY_PAGE_SPACE")
+    print("MICROSOFT_WORD_PAGINATION_STATUS=PENDING")
     print("WORD_ARTIFACT_VISUAL_REVIEW_REQUIRED=YES")
     print("PAGE3_FLOW=IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW")
     print("PAGE5_FLOW=IMPLEMENTED_PENDING_MICROSOFT_WORD_REVIEW")
