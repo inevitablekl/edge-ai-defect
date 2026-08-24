@@ -65,6 +65,9 @@ PAGINATION_QA_CATEGORIES = (
     "FLOAT_ANCHOR_FLOW_DEFECT",
     "UNKNOWN_LAYOUT_DEFECT",
 )
+FIGURE1_EARLY_CALLOUT = "三条路径的总体结构及层级受控比较关系见图1。"
+FIGURE1_SOURCE = MANUSCRIPT / "sections/02_problem_definition.md"
+FIGURE3_PRODUCTION_RELATED_BODY_OFFSET = 1
 
 
 def qn(namespace: str, local: str) -> str:
@@ -111,6 +114,12 @@ def load_manifest_errors() -> list[str]:
         errors.append("equation manifest visible-number sequence mismatch")
     if any(row["mathtype_required"] != "DEFERRED_FINAL_MATHTYPE" for row in equations):
         errors.append("MathType must remain explicitly deferred for final submission adaptation")
+    figure1_source = FIGURE1_SOURCE.read_text(encoding="utf-8")
+    if figure1_source.count(FIGURE1_EARLY_CALLOUT) != 1:
+        errors.append(
+            "authoritative Section 1.2 source must contain exactly one governed "
+            "Figure 1 early overview callout"
+        )
     return errors
 
 
@@ -304,6 +313,17 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
         )
     details["governed_lexical_no_break_count"] = no_break_count
 
+    figure1_early_callouts = [
+        node for node in children
+        if node.tag == qn(W, "p") and FIGURE1_EARLY_CALLOUT in text_of(node)
+    ]
+    if len(figure1_early_callouts) != 1:
+        errors.append(
+            "Figure 1 governed Section 1.2 early overview callout count is "
+            f"{len(figure1_early_callouts)}, expected 1"
+        )
+    details["figure1_early_callout_count"] = len(figure1_early_callouts)
+
     final_section = body.find("w:sectPr", NS)
     if final_section is None:
         errors.append("document has no final section properties")
@@ -380,6 +400,32 @@ def validate_docx(path: Path) -> tuple[list[str], dict[str, object]]:
                 "intervening_body_paragraph_count": len(intervening_body),
                 "intervening_headings": [text_of(node) for node in intervening_headings],
             })
+            if label == "图1" and (
+                len(figure1_early_callouts) != 1
+                or children.index(figure1_early_callouts[0]) >= float_position
+            ):
+                errors.append(
+                    "Figure 1 governed Section 1.2 early overview callout is not "
+                    "logically before its floating block"
+                )
+            if label == "图3" and (
+                len(intervening_body) != FIGURE3_PRODUCTION_RELATED_BODY_OFFSET
+                or intervening_headings
+            ):
+                errors.append(
+                    "PROJECT_MANUSCRIPT_PRODUCTION_LOCK Figure 3 requires first callout "
+                    "-> exactly one related HFUTBody paragraph -> float"
+                )
+            if label == "图3":
+                details["project_manuscript_production_lock"] = {
+                    "label": label,
+                    "related_body_offset": len(intervening_body),
+                    "intervening_heading_count": len(intervening_headings),
+                    "callout_position": callout_position + 1,
+                    "figure_position": float_position + 1,
+                    "authority": "PROJECT_MANUSCRIPT_PRODUCTION_LOCK",
+                    "hfut_requirement": False,
+                }
         drawing_ppr = drawing.find("w:pPr", NS)
         if drawing_ppr is None or drawing_ppr.find("w:keepNext", NS) is None:
             errors.append(f"Figure {index + 1} drawing is not kept with its caption")
@@ -655,6 +701,22 @@ def main() -> int:
             errors.append("Full/Anonymous reference-style parity mismatch")
         if details.get("reference_texts") != full_details.get("reference_texts"):
             errors.append("Full/Anonymous rendered-reference parity mismatch")
+        if (
+            details.get("figure1_early_callout_count")
+            != full_details.get("figure1_early_callout_count")
+        ):
+            errors.append("Full/Anonymous Figure 1 early-callout parity mismatch")
+        anonymous_lock = details.get("project_manuscript_production_lock", {})
+        full_lock = full_details.get("project_manuscript_production_lock", {})
+        lock_parity_fields = (
+            "label", "related_body_offset", "intervening_heading_count",
+            "authority", "hfut_requirement",
+        )
+        if any(
+            anonymous_lock.get(field) != full_lock.get(field)
+            for field in lock_parity_fields
+        ):
+            errors.append("Full/Anonymous Figure 3 production-lock parity mismatch")
     if errors:
         for error in errors:
             print(f"PHASE63_FORMAT_ERROR: {error}")
@@ -663,6 +725,15 @@ def main() -> int:
         return 1
     print(f"MANUSCRIPT_BUILD_PASS docx={args.docx}")
     print("STRUCTURAL_FORMAT_VALIDATION=PASS")
+    print("FIGURE1_EARLY_CALLOUT_STRUCTURAL=PASS")
+    print("FIGURE1_VISUAL_FIRST_CALLOUT_ORDER=PENDING_MICROSOFT_WORD_REVIEW")
+    figure3_lock = details.get("project_manuscript_production_lock", {})
+    print(
+        "PROJECT_MANUSCRIPT_PRODUCTION_LOCK=PASS "
+        "figure=3 "
+        f"related_body_offset={figure3_lock.get('related_body_offset')} "
+        "scope=THIS_MANUSCRIPT_NOT_HFUT_REQUIREMENT"
+    )
     print("EQUATION_NUMBERING_COMPLETE E1=（1） E2=（2） E3=（3）")
     print("FIGURE_LIFECYCLE_VALID scientific=FROZEN review=PNG submission=OPEN")
     for contract in details.get("figure_layout_contract", []):

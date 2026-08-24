@@ -60,6 +60,9 @@ FIGURE_FLOAT_MARKERS = {
     "图2": "HFUT_FIGURE_FLOAT_F2",
     "图3": "HFUT_FIGURE_FLOAT_F3",
 }
+# Selected production behavior for this manuscript only. This is not an HFUT
+# rule and must not be generalized to other figures or manuscripts.
+FIGURE3_PRODUCTION_RELATED_BODY_OFFSET = 1
 
 
 def qn(local: str) -> str:
@@ -68,6 +71,11 @@ def qn(local: str) -> str:
 
 def paragraph_text(paragraph: ET.Element) -> str:
     return "".join(node.text or "" for node in paragraph.findall(".//w:t", NS)).strip()
+
+
+def paragraph_style(paragraph: ET.Element) -> str | None:
+    style = paragraph.find("w:pPr/w:pStyle", NS)
+    return None if style is None else style.get(qn("val"))
 
 
 def insert_in_schema_order(parent: ET.Element, node: ET.Element, order: tuple[str, ...]) -> None:
@@ -387,9 +395,36 @@ def schedule_publication_figures(root: ET.Element) -> None:
         if caption_section is not None:
             caption_ppr.remove(caption_section)
 
-        insertion_index = list(body).index(drawing)
+        original_insertion_index = list(body).index(drawing)
         body.remove(drawing)
         body.remove(caption)
+        if label == "图3":
+            # Candidate B is the manuscript-specific production selection:
+            # first callout -> one related HFUTBody paragraph -> Figure 3.
+            # Count from the first callout and stop at the next heading; do not
+            # bind placement to a named section such as 4.5.
+            current_children = list(body)
+            first_callout = callouts[0]
+            callout_index = current_children.index(first_callout)
+            related_body: list[ET.Element] = []
+            for node in current_children[callout_index + 1 :]:
+                style = paragraph_style(node) if node.tag == qn("p") else None
+                if style == "HFUTBody" and paragraph_text(node):
+                    related_body.append(node)
+                    if len(related_body) == FIGURE3_PRODUCTION_RELATED_BODY_OFFSET:
+                        break
+                elif (style or "").startswith("HFUTHeading"):
+                    break
+            if len(related_body) != FIGURE3_PRODUCTION_RELATED_BODY_OFFSET:
+                raise ValueError(
+                    "Figure 3 production offset exceeds related HFUTBody paragraphs "
+                    "before the next heading: "
+                    f"requested={FIGURE3_PRODUCTION_RELATED_BODY_OFFSET} "
+                    f"found={len(related_body)}"
+                )
+            insertion_index = list(body).index(related_body[-1]) + 1
+        else:
+            insertion_index = original_insertion_index
         body.insert(insertion_index, floating_figure_table(label, drawing, caption))
 
 
