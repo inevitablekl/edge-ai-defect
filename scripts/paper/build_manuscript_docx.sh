@@ -77,6 +77,8 @@ build_full() {
   python3 scripts/paper/validate_full_manuscript_docx.py "$full_docx"
   python3 scripts/paper/validate_phase59c_integration.py --docx "$full_docx"
   python3 scripts/paper/validate_phase63_format.py --docx "$full_docx"
+  python3 scripts/paper/validate_phase71r2_heading_instances.py "$full_docx" \
+    --inventory docs/paper/phase7/PAPER_PHASE7_1R2_ACTUAL_MANUSCRIPT_HEADING_INVENTORY_v1.0.csv
   printf 'FULL_BUILD_OUTPUT=%s\n' "$full_docx"
   sha256sum "$full_docx"
 }
@@ -152,11 +154,14 @@ build_anonymous() {
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx"
     python3 scripts/paper/validate_phase63_format.py \
       --docx "$anonymous_docx" --compare-full "$output_dir/draft_full.docx"
+    python3 scripts/paper/validate_phase71r2_heading_instances.py \
+      "$output_dir/draft_full.docx" --compare "$anonymous_docx"
   else
     python3 scripts/paper/validate_final_references.py --docx "$anonymous_docx" --write-audit
     python3 scripts/paper/validate_anonymous_manuscript_docx.py "$anonymous_docx"
     python3 scripts/paper/validate_phase59c_integration.py --docx "$anonymous_docx"
     python3 scripts/paper/validate_phase63_format.py --docx "$anonymous_docx"
+    python3 scripts/paper/validate_phase71r2_heading_instances.py "$anonymous_docx"
   fi
   printf 'ANONYMOUS_BUILD_OUTPUT=%s\n' "$anonymous_docx"
   sha256sum "$anonymous_docx"

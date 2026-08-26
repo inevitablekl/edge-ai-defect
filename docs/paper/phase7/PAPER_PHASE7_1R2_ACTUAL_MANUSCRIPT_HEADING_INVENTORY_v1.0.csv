@@ -1,0 +1,22 @@
+section_source_file,heading_level,source_text,visible_number,visible_separator,visible_title,number_font,number_size_pt,number_bold,title_font,title_size_pt,title_bold,alignment,left_indent,space_preservation,actual_docx_run_count,source_authority,pass_fail
+docs/paper/manuscript/sections/01_introduction.md,Introduction,0  引  言,0,two literal spaces,引  言,黑体,14,TRUE,黑体,14,TRUE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P012,PASS
+docs/paper/manuscript/sections/02_problem_definition.md,H1,1  输入数据路径模型与问题表述,1,two literal spaces,输入数据路径模型与问题表述,黑体,14,TRUE,黑体,14,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P015,PASS
+docs/paper/manuscript/sections/02_problem_definition.md,H2,1.1  固定推理对象与系统边界,1.1,two literal spaces,固定推理对象与系统边界,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/02_problem_definition.md,H2,1.2  路径描述符与名义复制载荷,1.2,two literal spaces,路径描述符与名义复制载荷,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/02_problem_definition.md,H2,1.3  层级受控比较、正确性条件与评价问题,1.3,two literal spaces,层级受控比较、正确性条件与评价问题,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/03_method.md,H1,2  受控输入数据路径重构,2,two literal spaces,受控输入数据路径重构,黑体,14,TRUE,黑体,14,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P015,PASS
+docs/paper/manuscript/sections/03_method.md,H2,2.1  V0基线路径,2.1,two literal spaces,V0基线路径,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/03_method.md,H2,2.2  V2R路径级重构,2.2,two literal spaces,V2R路径级重构,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/03_method.md,H2,2.3  V3R暂存策略细化,2.3,two literal spaces,V3R暂存策略细化,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/03_method.md,H2,2.4  共同控制与正确性约束,2.4,two literal spaces,共同控制与正确性约束,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/04_experiment.md,H1,3  实验协议,3,two literal spaces,实验协议,黑体,14,TRUE,黑体,14,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P015,PASS
+docs/paper/manuscript/sections/04_experiment.md,H2,3.1  实验平台与模型配置,3.1,two literal spaces,实验平台与模型配置,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/04_experiment.md,H2,3.2  运行与正确性协议,3.2,two literal spaces,运行与正确性协议,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/04_experiment.md,H2,3.3  E2E、FPS与尾延迟指标,3.3,two literal spaces,E2E、FPS与尾延迟指标,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/05_results.md,H1,4  结果与分析,4,two literal spaces,结果与分析,黑体,14,TRUE,黑体,14,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P015,PASS
+docs/paper/manuscript/sections/05_results.md,H2,4.1  正确性约束验证,4.1,two literal spaces,正确性约束验证,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/05_results.md,H2,4.2  路径级重构的E2E响应,4.2,two literal spaces,路径级重构的E2E响应,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/05_results.md,H2,4.3  暂存策略的增量响应,4.3,two literal spaces,暂存策略的增量响应,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/05_results.md,H2,4.4  平均性能与尾延迟响应,4.4,two literal spaces,平均性能与尾延迟响应,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/05_results.md,H2,4.5  解释边界与局限性,4.5,two literal spaces,解释边界与局限性,黑体,10.5,TRUE,黑体,10.5,FALSE,left,0,xml:space=preserve,3,HFUT_FMT_DOC P016,PASS
+docs/paper/manuscript/sections/06_conclusion.md,H1,5  结  论,5,two literal spaces,结  论,黑体,14,TRUE,黑体,14,FALSE,left,0,xml:space=preserve,5,HFUT_FMT_DOC P094,PASS

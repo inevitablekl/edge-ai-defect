@@ -26,7 +26,7 @@ def main() -> int:
     # separator rendering is now deterministic in the DOCX filter.  Retain
     # the historical Phase 7.1 two-token allowance for replaying that commit.
     if not changed:
-        print("PHASE7_1R1_SCIENTIFIC_NONREGRESSION=PASS")
+        print("PHASE7_1R2_SCIENTIFIC_NONREGRESSION=PASS")
         print("MANUSCRIPT_PROSE_DELTA=0; FORMAT_TEXT_LEDGER_DELTA=0")
         return 0
     if sorted(changed) != sorted(ALLOWED):

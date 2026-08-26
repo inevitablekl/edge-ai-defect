@@ -32,13 +32,16 @@ REQUIRED_HEADINGS = {
     "2.3  V3R暂存策略细化": "HFUTHeading2",
     "2.4  共同控制与正确性约束": "HFUTHeading2",
     "3  实验协议": "HFUTHeading1",
+    "3.1  实验平台与模型配置": "HFUTHeading2",
+    "3.2  运行与正确性协议": "HFUTHeading2",
+    "3.3  E2E、FPS与尾延迟指标": "HFUTHeading2",
     "4  结果与分析": "HFUTHeading1",
     "4.1  正确性约束验证": "HFUTHeading2",
     "4.2  路径级重构的E2E响应": "HFUTHeading2",
     "4.3  暂存策略的增量响应": "HFUTHeading2",
     "4.4  平均性能与尾延迟响应": "HFUTHeading2",
     "4.5  解释边界与局限性": "HFUTHeading2",
-    "5  结论": "HFUTHeading1",
+    "5  结  论": "HFUTHeading1",
 }
 
 

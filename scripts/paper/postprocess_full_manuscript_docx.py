@@ -61,8 +61,18 @@ FIGURE_FLOAT_MARKERS = {
     "图3": "HFUT_FIGURE_FLOAT_F3",
 }
 # Selected production behavior for this manuscript only. This is not an HFUT
-# rule and must not be generalized to other figures or manuscripts.
+# rule and must not be generalized to other figures or manuscripts.  The CLI
+# override exists solely to emit bounded Phase 7.1R2 Word QA candidates.
 FIGURE3_PRODUCTION_RELATED_BODY_OFFSET = 1
+FIGURE3_RELATED_BODY_OFFSET = FIGURE3_PRODUCTION_RELATED_BODY_OFFSET
+
+HEADING_FORMATS = {
+    "HFUTIntroHeading": ("0", "引  言", "HFUTHeadingNumber1Char", None),
+    "HFUTHeading1": (None, None, "HFUTHeadingNumber1Char", "HFUTHeadingTitle1Char"),
+    "HFUTHeading2": (None, None, "HFUTHeadingNumber2Char", "HFUTHeadingTitle2Char"),
+    "HFUTHeading3": (None, None, "HFUTHeadingNumber3Char", "HFUTHeadingTitle3Char"),
+}
+REFERENCE_HEADING_LITERAL = "[参 考 文 献]"
 
 
 def qn(local: str) -> str:
@@ -105,6 +115,148 @@ def set_paragraph_style(paragraph: ET.Element, style_id: str) -> ET.Element:
         ppr.insert(0, pstyle)
     pstyle.set(qn("val"), style_id)
     return ppr
+
+
+def text_run(
+    text: str,
+    *,
+    character_style: str | None = None,
+    bold: bool | None = None,
+) -> ET.Element:
+    """Build one literal Word run, preserving every leading/trailing space."""
+
+    run = ET.Element(qn("r"))
+    properties: ET.Element | None = None
+    if character_style is not None or bold is not None:
+        properties = ET.SubElement(run, qn("rPr"))
+    if character_style is not None:
+        ET.SubElement(properties, qn("rStyle"), {qn("val"): character_style})
+    if bold is not None:
+        ET.SubElement(properties, qn("b"), {qn("val"): "1" if bold else "0"})
+    text_node = ET.SubElement(run, qn("t"))
+    if text.startswith(" ") or text.endswith(" ") or "  " in text:
+        text_node.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+    text_node.text = text
+    return run
+
+
+def replace_paragraph_runs(paragraph: ET.Element, runs: list[ET.Element]) -> None:
+    """Replace simple Pandoc runs with the source-auditable run contract."""
+
+    paragraph_properties = paragraph.find("w:pPr", NS)
+    for child in list(paragraph):
+        if child is not paragraph_properties:
+            paragraph.remove(child)
+    paragraph.extend(runs)
+
+
+def configure_heading_styles(parts: dict[str, bytes]) -> None:
+    """Freeze flush-left heading and source-exact reference-heading styles."""
+
+    root = ET.fromstring(parts["word/styles.xml"])
+    style_ids = (*HEADING_FORMATS.keys(), "HFUTReferenceHeading")
+    for style_id in style_ids:
+        style = next(
+            (node for node in root.findall("w:style", NS)
+             if node.get(qn("styleId")) == style_id),
+            None,
+        )
+        if style is None:
+            raise ValueError(f"{style_id} style is missing")
+        ppr = style.find("w:pPr", NS)
+        if ppr is None:
+            ppr = ET.SubElement(style, qn("pPr"))
+        alignment = ppr.find("w:jc", NS)
+        if alignment is None:
+            alignment = ET.Element(qn("jc"))
+            insert_in_schema_order(ppr, alignment, PPR_ORDER)
+        alignment.set(qn("val"), "center" if style_id == "HFUTReferenceHeading" else "left")
+        indent = ppr.find("w:ind", NS)
+        if indent is None:
+            indent = ET.Element(qn("ind"))
+            insert_in_schema_order(ppr, indent, PPR_ORDER)
+        indent.set(qn("left"), "0")
+        indent.set(qn("firstLine"), "0")
+        indent.set(qn("hanging"), "0")
+
+        if style_id == "HFUTReferenceHeading":
+            run_properties = style.find("w:rPr", NS)
+            if run_properties is None:
+                run_properties = ET.SubElement(style, qn("rPr"))
+            fonts = run_properties.find("w:rFonts", NS)
+            if fonts is None:
+                fonts = ET.SubElement(run_properties, qn("rFonts"))
+            for family in ("ascii", "hAnsi", "eastAsia"):
+                fonts.set(qn(family), "Times New Roman" if family != "eastAsia" else "黑体")
+            size = run_properties.find("w:sz", NS)
+            if size is None:
+                size = ET.SubElement(run_properties, qn("sz"))
+            size.set(qn("val"), "21")
+            bold = run_properties.find("w:b", NS)
+            if bold is not None:
+                run_properties.remove(bold)
+    parts["word/styles.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
+def apply_heading_run_contract(root: ET.Element) -> None:
+    """Materialize each actual heading as deterministic source-format runs."""
+
+    body = root.find("w:body", NS)
+    if body is None:
+        raise ValueError("word/document.xml has no w:body")
+    for paragraph in body.findall("w:p", NS):
+        style_id = paragraph_style(paragraph)
+        if style_id not in HEADING_FORMATS:
+            continue
+        source = paragraph_text(paragraph)
+        fixed_number, fixed_title, number_style, title_style = HEADING_FORMATS[style_id]
+        if style_id == "HFUTIntroHeading":
+            if source != "0  引  言":
+                raise ValueError(f"unexpected Introduction heading literal: {source!r}")
+            replace_paragraph_runs(paragraph, [
+                text_run(fixed_number or "0", character_style=number_style),
+                text_run("  "),
+                text_run(fixed_title or "引  言", bold=True),
+            ])
+            continue
+
+        match = re.fullmatch(r"(\d+(?:\.\d+)*)\s{2}(.+)", source)
+        if match is None:
+            raise ValueError(f"unexpected {style_id} heading literal: {source!r}")
+        number, title = match.groups()
+        runs = [
+            text_run(number, character_style=number_style),
+            text_run("  "),
+        ]
+        if style_id == "HFUTHeading1" and number == "5" and title == "结  论":
+            runs.extend((
+                text_run("结", character_style=title_style),
+                text_run("  "),
+                text_run("论", character_style=title_style),
+            ))
+        else:
+            runs.append(text_run(title, character_style=title_style))
+        replace_paragraph_runs(paragraph, runs)
+
+    reference_headings = [
+        paragraph for paragraph in body.findall("w:p", NS)
+        if paragraph_style(paragraph) == "HFUTReferenceHeading"
+    ]
+    if len(reference_headings) != 1:
+        raise ValueError(
+            f"expected one HFUTReferenceHeading paragraph, found {len(reference_headings)}"
+        )
+    reference_heading = reference_headings[0]
+    if paragraph_text(reference_heading) != REFERENCE_HEADING_LITERAL:
+        raise ValueError(
+            "unexpected reference heading literal: "
+            f"{paragraph_text(reference_heading)!r}"
+        )
+    replace_paragraph_runs(reference_heading, [
+        text_run("[", bold=False),
+        text_run("参 考 文 献", bold=True),
+        text_run("]", bold=True),
+    ])
 
 
 def normalize_equation_paragraphs(root: ET.Element) -> None:
@@ -411,18 +563,21 @@ def schedule_publication_figures(root: ET.Element) -> None:
                 style = paragraph_style(node) if node.tag == qn("p") else None
                 if style == "HFUTBody" and paragraph_text(node):
                     related_body.append(node)
-                    if len(related_body) == FIGURE3_PRODUCTION_RELATED_BODY_OFFSET:
-                        break
+                if len(related_body) == FIGURE3_RELATED_BODY_OFFSET:
+                    break
                 elif (style or "").startswith("HFUTHeading"):
                     break
-            if len(related_body) != FIGURE3_PRODUCTION_RELATED_BODY_OFFSET:
+            if FIGURE3_RELATED_BODY_OFFSET == 0:
+                insertion_index = current_children.index(first_callout) + 1
+            elif len(related_body) != FIGURE3_RELATED_BODY_OFFSET:
                 raise ValueError(
                     "Figure 3 production offset exceeds related HFUTBody paragraphs "
                     "before the next heading: "
-                    f"requested={FIGURE3_PRODUCTION_RELATED_BODY_OFFSET} "
+                    f"requested={FIGURE3_RELATED_BODY_OFFSET} "
                     f"found={len(related_body)}"
                 )
-            insertion_index = list(body).index(related_body[-1]) + 1
+            else:
+                insertion_index = list(body).index(related_body[-1]) + 1
         else:
             insertion_index = original_insertion_index
         body.insert(insertion_index, floating_figure_table(label, drawing, caption))
@@ -713,11 +868,21 @@ def insert_continuous_boundary(root: ET.Element) -> None:
     insert_in_schema_order(ppr, section, PPR_ORDER)
 
 
-def rewrite(input_path: Path, output_path: Path) -> None:
+def rewrite(
+    input_path: Path,
+    output_path: Path,
+    *,
+    figure3_related_body_offset: int = FIGURE3_PRODUCTION_RELATED_BODY_OFFSET,
+) -> None:
+    global FIGURE3_RELATED_BODY_OFFSET
+    if figure3_related_body_offset not in {0, 1, 2}:
+        raise ValueError("Figure 3 related-body offset must be one of: 0, 1, 2")
+    FIGURE3_RELATED_BODY_OFFSET = figure3_related_body_offset
     with zipfile.ZipFile(input_path) as archive:
         parts = {name: archive.read(name) for name in archive.namelist()}
     root = ET.fromstring(parts["word/document.xml"])
     deduplicate_styles(parts)
+    configure_heading_styles(parts)
     apply_phase5_equation_style(parts)
     configure_reference_styles(parts)
     remove_biography_custom_property(parts)
@@ -729,6 +894,7 @@ def rewrite(input_path: Path, output_path: Path) -> None:
     protect_cross_column_lexical_unit(root)
     normalize_equation_paragraphs(root)
     apply_visible_equation_numbers(root)
+    apply_heading_run_contract(root)
     move_biography_to_first_footer(root, parts)
     parts["word/document.xml"] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
 
@@ -751,9 +917,23 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--figure3-related-body-offset",
+        type=int,
+        default=FIGURE3_PRODUCTION_RELATED_BODY_OFFSET,
+        choices=(0, 1, 2),
+        help="Phase 7.1R2 candidate-only Figure 3 logical anchor offset.",
+    )
     args = parser.parse_args()
-    rewrite(args.input, args.output)
-    print(f"full_docx_postprocess=PASS output={args.output}")
+    rewrite(
+        args.input,
+        args.output,
+        figure3_related_body_offset=args.figure3_related_body_offset,
+    )
+    print(
+        "full_docx_postprocess=PASS "
+        f"figure3_related_body_offset={args.figure3_related_body_offset} output={args.output}"
+    )
     return 0
 
 

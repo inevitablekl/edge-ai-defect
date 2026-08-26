@@ -115,7 +115,17 @@ local function heading_inlines(block, level)
   -- P015–P017 use two preserved literal spaces, not a tab, between number
   -- and title.  The separate runs ensure the number-only bold distinction.
   add_spaces(inlines, 2)
-  inlines:insert(styled_span(title, title_style))
+  -- HFUT_FMT_DOC P094 is an actual conclusion specimen.  Its two spaces
+  -- inside the title are distinct from the number/title separator above.
+  -- Keep this literal at the format-token boundary; the final DOCX
+  -- postprocessor makes each preserved-space run explicit in OOXML.
+  if number == "5" and title == "结论" then
+    inlines:insert(styled_span("结", title_style))
+    add_spaces(inlines, 2)
+    inlines:insert(styled_span("论", title_style))
+  else
+    inlines:insert(styled_span(title, title_style))
+  end
   return inlines
 end
 
@@ -267,7 +277,10 @@ function Pandoc(doc)
         output:insert(styled_block(block, "HFUTBody"))
       end
     elseif block.t == "Div" and block.identifier == "refs" then
-      output:insert(styled_text("参考文献", "HFUTReferenceHeading"))
+      -- HFUT_FMT_DOC P097 is a manuscript-tail specimen, not the format
+      -- document's own heading: the literal brackets and inter-character
+      -- spaces are therefore source-bearing output tokens.
+      output:insert(styled_text("[参 考 文 献]", "HFUTReferenceHeading"))
       output:insert(block)
     else
       output:insert(block)

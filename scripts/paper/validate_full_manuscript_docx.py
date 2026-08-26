@@ -164,7 +164,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
         fail(errors, "EN title is duplicated or missing")
     if "通信作者：" in body_text or "Corresponding author:" in body_text:
         fail(errors, "unsupported inline corresponding-author line remains")
-    if body_text.count("参考文献") != 1:
+    if body_text.count("[参 考 文 献]") != 1:
         fail(errors, "reference heading is duplicated or missing")
 
     drawings = document.findall(".//w:drawing", NS)
@@ -260,7 +260,7 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
                     )
         validate_t2_paragraphs(errors, t2_rows)
 
-    reference_heading_index = next((index for index, p in enumerate(body_paragraphs) if text_of(p) == "参考文献"), None)
+    reference_heading_index = next((index for index, p in enumerate(body_paragraphs) if text_of(p) == "[参 考 文 献]"), None)
     rendered_references = 0
     if reference_heading_index is not None:
         for paragraph in body_paragraphs[reference_heading_index + 1:]:

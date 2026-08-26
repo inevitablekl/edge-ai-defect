@@ -45,7 +45,7 @@ REQUIRED_SECTIONS = (
     "2  受控输入数据路径重构",
     "3  实验协议",
     "4  结果与分析",
-    "5  结论",
+    "5  结  论",
 )
 FROZEN_VALUES = (
     "2.24×",
@@ -139,7 +139,7 @@ def table_signature(table: ET.Element) -> tuple[tuple[str, ...], ...]:
 
 def reference_paragraphs(body: ET.Element) -> list[str]:
     paragraphs = body.findall("w:p", NS)
-    heading = next((i for i, node in enumerate(paragraphs) if text_of(node) == "参考文献"), None)
+    heading = next((i for i, node in enumerate(paragraphs) if text_of(node) == "[参 考 文 献]"), None)
     if heading is None:
         return []
     return [text_of(node) for node in paragraphs[heading + 1:] if paragraph_style(node) == "Bibliography"]
@@ -338,7 +338,7 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
         "CN keywords label": "关键词",
         "EN keywords label": "Key words",
         "document code": "文献标识码：A",
-        "reference heading": "参考文献",
+        "reference heading": "[参 考 文 献]",
     }
     for label, value in required_text.items():
         if value not in all_text:
