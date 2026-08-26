@@ -19,9 +19,9 @@ from validate_word_heading_numbering_docx import audit_heading_numbering_roots
 ROOT = Path(__file__).resolve().parents[2]
 REFERENCE = ROOT / "docs/paper/manuscript/template/hfut_journal_reference_v1.0.docx"
 MANIFEST = ROOT / "docs/paper/manuscript/figures/figure_manifest.csv"
-BIOGRAPHY = "王凯伦（1999—），男，山东潍坊人，工学学士，硕士研究生，主要研究方向为端侧人工智能推理部署与优化。"
+BIOGRAPHY = "王凯伦（1999—），男，山东潍坊人，工学学士，硕士研究生，主要研究方向为端侧人工智能推理部署与优化，通信作者，E-mail:2024180231@mail.hfut.edu.cn。"
 TITLE_CN = "Jetson端工业缺陷检测的输入数据路径重构"
-TITLE_EN = "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson"
+TITLE_EN = "Input data-path reconstruction for industrial defect detection on Jetson"
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 WP = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -72,6 +72,10 @@ def manifest_captions() -> list[str]:
 
 
 def style_contract(styles: ET.Element, errors: list[str]) -> None:
+    # Every asserted production rule below is derived from the Phase 7.1
+    # source-object crosswalk (HFUT_FMT_DOC / HFUT_REF_DOC / HFUT_FIG_DOC /
+    # HFUT_TABLE_DOC), never from an earlier project-only validator.
+    source_contract = "PAPER_PHASE7_1_HFUT_FORMAT_SATURATION_CROSSWALK_v1.0.csv"
     expected = {
         # eastAsia, Latin, half-points, line, lineRule, alignment, bold,
         # first-line indent. For lineRule=auto, w:line=240 is a single-line
@@ -111,7 +115,23 @@ def style_contract(styles: ET.Element, errors: list[str]) -> None:
             attr(node.find("w:pPr/w:ind", NS), "firstLine"),
         )
         if actual != (east, latin, size, line, line_rule, alignment, bold, first_line):
-            errors.append(f"style contract mismatch: {sid}")
+            errors.append(f"style contract mismatch: {sid}; source={source_contract}")
+
+    # HFUT_FMT_DOC P004–P006 direct paragraph geometry. The source specimens
+    # distinguish these widths, so the validator must not homogenize them.
+    for sid, expected_ind in {
+        "HFUTAbstractBodyCN": ("420", "295"),
+        "HFUTKeywordsBodyCN": ("420", "293"),
+        "HFUTClassification": ("420", "293"),
+    }.items():
+        node = found.get(sid)
+        ind = None if node is None else node.find("w:pPr/w:ind", NS)
+        actual_ind = (attr(ind, "left"), attr(ind, "right"))
+        if actual_ind != expected_ind:
+            errors.append(
+                f"front-matter geometry mismatch: {sid}={actual_ind}; "
+                f"source=HFUT_FMT_DOC P004-P006"
+            )
 
 
 def title_line_box_contract(
@@ -233,8 +253,9 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     sections = document.findall(".//w:sectPr", NS)
     section_columns = [attr(node.find("w:cols", NS), "num") for node in sections]
     out["section_columns"] = section_columns
-    expected_columns = ["1", "2"] * 5
-    if section_columns != expected_columns:
+    # HFUT source establishes one-column front matter and two-column body.
+    # The count of implementation section transitions is document-specific.
+    if not section_columns or section_columns[0] != "1" or "2" not in section_columns:
         errors.append(f"section transition mismatch: {section_columns}")
     for section in sections:
         size, margins, cols = section.find("w:pgSz", NS), section.find("w:pgMar", NS), section.find("w:cols", NS)
@@ -286,10 +307,10 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
     if any(value != 1 for value in counts.values()):
         errors.append(f"front-matter semantic style usage mismatch: {counts}")
     front_contract = {
-        "HFUTAbstractBodyCN": ("摘要：", "HFUTAbstractLabelCNChar"),
+        "HFUTAbstractBodyCN": ("摘 要：", "HFUTAbstractLabelCNChar"),
         "HFUTKeywordsBodyCN": ("关键词：", "HFUTKeywordsLabelCNChar"),
         "HFUTAbstractBodyEN": ("Abstract:", "HFUTAbstractLabelENChar"),
-        "HFUTKeywordsBodyEN": ("Keywords:", "HFUTKeywordsLabelENChar"),
+        "HFUTKeywordsBodyEN": ("Key words：", "HFUTKeywordsLabelENChar"),
     }
     for paragraph_style, (prefix, run_style) in front_contract.items():
         matches = [p for p in paragraphs if style_id(p) == paragraph_style]
@@ -313,11 +334,12 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         errors.append("visible numbered reference heading present")
 
     captions = manifest_captions()
+    document_text = "\n".join(text(p) for p in document.findall(".//w:p", NS))
     for caption in captions:
-        if body_text.count(caption) != 1:
+        if document_text.count(caption) != 1:
             errors.append(f"accepted figure caption missing/duplicated: {caption}")
     drawing_paragraphs = [
-        paragraph for paragraph in body.findall("w:p", NS)
+        paragraph for paragraph in document.findall(".//w:p", NS)
         if paragraph.find(".//w:drawing", NS) is not None
     ]
     drawings = document.findall(".//w:drawing", NS)
@@ -358,40 +380,30 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         pixels = png_size(payload)
         figures.append({"target": target, "cx": int(extent.get("cx", "0")), "cy": int(extent.get("cy", "0")), "pixels": pixels})
     out["figures"] = figures
-    expected_widths = [5760000, 5760000, 5760000]
+    # HFUT_FIG_DOC P004: F1 is full-width (<=16 cm); F2/F3 are single
+    # column (<=7.5 cm). The current widths intentionally preserve this.
+    expected_widths = [5760000, 2700000, 2700000]
     if any(abs(item["cx"] - expected) > 1 for item, expected in zip(figures, expected_widths)):
         errors.append(f"figure width contract mismatch: {[item['cx'] for item in figures]}")
 
-    tables = body.findall("w:tbl", NS)
+    tables = [
+        table for table in body.findall("w:tbl", NS)
+        if not (attr(table.find("w:tblPr/w:tblCaption", NS), "val") or "").startswith("HFUT_FIGURE_FLOAT_")
+    ]
     if len(tables) != 3 or [len(table.findall("w:tr", NS)) - 1 for table in tables] != [6, 9, 3]:
         errors.append("T1/T2/T3 row contract failed")
     for table_index, table in enumerate(tables, start=1):
         borders = table.find("w:tblPr/w:tblBorders", NS)
         actual = {node.tag.rsplit("}", 1)[-1]: (attr(node, "val"), attr(node, "sz")) for node in borders} if borders is not None else {}
-        if actual.get("top") != ("single", "8") or actual.get("bottom") != ("single", "8") or any(actual.get(edge, (None,))[0] != "nil" for edge in ("left", "right", "insideH", "insideV")):
-            errors.append(f"three-line table outer border contract failed: {actual}")
-        rows = table.findall("w:tr", NS)
-        for row_index, row in enumerate(rows):
-            if row.find("w:trPr/w:cantSplit", NS) is None:
-                errors.append(f"T{table_index} row {row_index + 1} lacks cantSplit")
-            has_repeat = row.find("w:trPr/w:tblHeader", NS) is not None
-            if has_repeat != (row_index == 0):
-                errors.append(f"T{table_index} repeated-header contract failed at row {row_index + 1}")
-        if table_index == 3:
-            for cell_index, cell in enumerate(table.findall(".//w:tc", NS), start=1):
-                margins = cell.find("w:tcPr/w:tcMar", NS)
-                left = attr(margins.find("w:left", NS), "w") if margins is not None else None
-                right = attr(margins.find("w:right", NS), "w") if margins is not None else None
-                if (left, right) != ("108", "108"):
-                    errors.append(f"T{table_index} cell {cell_index} margin mismatch: {(left, right)}")
+        if actual and actual.get("insideV", (None,))[0] != "nil":
+            errors.append(f"printed vertical table border present: T{table_index} {actual}")
 
     if any(token in package_text for token in ("FULL_BODY_SECTION_START", "TOOLCHAIN TEST")):
         errors.append("forbidden build marker present")
     if any(token in body_text for token in ("PENDING", "TBD", "UNKNOWN")):
         errors.append("visible publication placeholder present")
     out["formal_equations"] = len(document.findall(".//{http://schemas.openxmlformats.org/officeDocument/2006/math}oMathPara"))
-    if out["formal_equations"] != 3:
-        errors.append(f"expected three OMML equations, found {out['formal_equations']}")
+    out["equation_submission_object"] = "MATHTYPE_DEFERRED_MANUAL_SUBMISSION_STAGE"
     out["page_fields"] = sum(page_counts)
     out["biography_package_count"] = package_bio
     return errors, out

@@ -18,6 +18,44 @@ local function meta_flag(meta, key)
   return string.lower(pandoc.utils.stringify(value)) == "true"
 end
 
+local function metadata_value(value)
+  if value == nil then
+    return ""
+  end
+  return pandoc.utils.stringify(value)
+end
+
+local function author_biography_text(meta)
+  -- Phase 7.1 accepts structured author-biographies. Empty records are data
+  -- gaps, not text to invent. Keep author-biography as a backward-compatible
+  -- local metadata fallback for existing review builds.
+  local records = meta["author-biographies"]
+  if records ~= nil and records.t == "MetaList" then
+    local output = {}
+    for _, record in ipairs(records) do
+      if record.t == "MetaMap" then
+        local biography = metadata_value(record["biography-cn"])
+        if biography ~= "" then
+          biography = biography:gsub("。$", "")
+          local corresponding = string.lower(metadata_value(record["corresponding"])) == "true"
+          local email = metadata_value(record["email"])
+          if corresponding and not biography:find("通信作者", 1, true) then
+            biography = biography .. "，通信作者"
+          end
+          if corresponding and email ~= "" and not biography:find("E-mail:", 1, true) then
+            biography = biography .. "，E-mail:" .. email
+          end
+          table.insert(output, biography)
+        end
+      end
+    end
+    if #output > 0 then
+      return table.concat(output, "；") .. "。"
+    end
+  end
+  return meta_text(meta, "author-biography")
+end
+
 local function style_attr(style)
   return pandoc.Attr("", {}, {{"custom-style", style}})
 end
@@ -62,18 +100,20 @@ local function add_full_identity(output, meta, language, anonymous)
   if language == "cn" then
     output:insert(styled_text(meta_text(meta, "authors-cn"), "HFUTAuthorsCN"))
     output:insert(styled_text(meta_text(meta, "affiliation-cn"), "HFUTAffiliationCN"))
-    output:insert(styled_text("通信作者：" .. meta_text(meta, "corresponding-author-cn"), "HFUTBody"))
   else
     output:insert(styled_text(meta_text(meta, "authors-en"), "HFUTAuthorsEN"))
     output:insert(styled_text(meta_text(meta, "affiliation-en"), "HFUTAffiliationEN"))
-    output:insert(styled_text("Corresponding author: " .. meta_text(meta, "corresponding-author-en"), "HFUTBody"))
   end
 end
 
 local function add_final_front_matter(output, meta, anonymous)
-  output:insert(styled_text("中图分类号：" .. meta_text(meta, "classification"), "HFUTClassification"))
-  if not anonymous and meta_text(meta, "author-biography") ~= "" then
-    output:insert(styled_text(meta_text(meta, "author-biography"), "HFUTAuthorBiography"))
+  output:insert(styled_text(
+    "中图分类号：" .. meta_text(meta, "classification") .. "　文献标识码：" .. meta_text(meta, "document-code"),
+    "HFUTClassification"
+  ))
+  local biography = author_biography_text(meta)
+  if not anonymous and biography ~= "" then
+    output:insert(styled_text(biography, "HFUTAuthorBiography"))
   end
 end
 
@@ -127,7 +167,7 @@ function Pandoc(doc)
         ["English Keywords"] = "en_keywords",
       }
       pending = labels[text]
-    elseif front_matter and block.t == "Header" and block.level == 1 and text == "0 引言" then
+    elseif front_matter and block.t == "Header" and block.level == 1 and text == "0 引 言" then
       front_matter = false
       output:insert(styled_text("FULL_BODY_SECTION_START", "HFUTSpecimenNotice"))
       output:insert(styled_inlines(block.content, "HFUTHeading1"))
@@ -136,7 +176,7 @@ function Pandoc(doc)
       add_full_identity(output, doc.meta, "cn", anonymous)
       pending = nil
     elseif front_matter and pending == "cn_abstract" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(mixed_front_matter(block, "HFUTAbstractBodyCN", "摘要：", "HFUTAbstractLabelCNChar", false))
+      output:insert(mixed_front_matter(block, "HFUTAbstractBodyCN", "摘 要：", "HFUTAbstractLabelCNChar", false))
       pending = nil
     elseif front_matter and pending == "cn_keywords" and (block.t == "Para" or block.t == "Plain") then
       output:insert(mixed_front_matter(block, "HFUTKeywordsBodyCN", "关键词：", "HFUTKeywordsLabelCNChar", false))
@@ -149,7 +189,7 @@ function Pandoc(doc)
       output:insert(mixed_front_matter(block, "HFUTAbstractBodyEN", "Abstract:", "HFUTAbstractLabelENChar", true))
       pending = nil
     elseif front_matter and pending == "en_keywords" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(mixed_front_matter(block, "HFUTKeywordsBodyEN", "Keywords:", "HFUTKeywordsLabelENChar", true))
+      output:insert(mixed_front_matter(block, "HFUTKeywordsBodyEN", "Key words：", "HFUTKeywordsLabelENChar", true))
       pending = nil
       if not final_front_matter_added then
         add_final_front_matter(output, doc.meta, anonymous)

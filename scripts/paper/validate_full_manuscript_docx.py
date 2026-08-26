@@ -133,20 +133,23 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
 
     required_text = {
         "CN title": "Jetson端工业缺陷检测的输入数据路径重构",
-        "EN title": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
+        "EN title": "Input data-path reconstruction for industrial defect detection on Jetson",
         "CN keywords": "Jetson；工业缺陷检测；输入数据路径；端到端推理；受控比较",
         "EN keywords": "Jetson; industrial defect detection; input data path; end-to-end inference; controlled comparison",
         "authors CN": "王凯伦，王琦",
         "authors EN": "WANG Kailun, WANG Qi",
-        "affiliation CN": "合肥工业大学数学学院，安徽 合肥 230601",
-        "affiliation EN": "School of Mathematics, Hefei University of Technology, Hefei 230601, China",
+        "affiliation CN": "(合肥工业大学数学学院，安徽 合肥 230601)",
+        "affiliation EN": "(School of Mathematics, Hefei University of Technology, Hefei 230601, China)",
         "CLC": "TP391.41",
-        "corresponding CN": "通信作者：王琦",
-        "corresponding EN": "Corresponding author: WANG Qi",
+        "document code": "文献标识码：A",
     }
     for label, value in required_text.items():
         if value not in all_text:
             fail(errors, f"missing {label}: {value}")
+    expected_biography = "王凯伦（1999—），男，山东潍坊人，工学学士，硕士研究生，主要研究方向为端侧人工智能推理部署与优化，通信作者，E-mail:2024180231@mail.hfut.edu.cn。"
+    package_visible_text = "\n".join(text_of(node) for node in parsed.values())
+    if expected_biography not in package_visible_text:
+        fail(errors, "corresponding-author biography/email is missing from the first-page footer")
 
     forbidden = ("PENDING", "TBD", "UNKNOWN", "example@example.com", "[NO_SUBTITLE_PLANNED]", "NONE")
     for value in forbidden:
@@ -157,8 +160,10 @@ def validate(path: Path) -> tuple[bool, list[str], dict[str, object]]:
 
     if body_text.count("Jetson端工业缺陷检测的输入数据路径重构") != 1:
         fail(errors, "CN title is duplicated or missing")
-    if body_text.count("Input Data-Path Reconstruction for Industrial Defect Detection on Jetson") != 1:
+    if body_text.count("Input data-path reconstruction for industrial defect detection on Jetson") != 1:
         fail(errors, "EN title is duplicated or missing")
+    if "通信作者：" in body_text or "Corresponding author:" in body_text:
+        fail(errors, "unsupported inline corresponding-author line remains")
     if body_text.count("参考文献") != 1:
         fail(errors, "reference heading is duplicated or missing")
 

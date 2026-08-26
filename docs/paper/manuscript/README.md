@@ -32,7 +32,7 @@ the interim.
 ## Fixed section order
 
 1. `sections/00_title_abstract.md` — 题名与摘要
-2. `sections/01_introduction.md` — 0 引言
+2. `sections/01_introduction.md` — 0 引 言
 3. `sections/02_problem_definition.md` — 1 输入数据路径模型与问题表述
 4. `sections/03_method.md` — 2 受控输入数据路径重构
 5. `sections/04_experiment.md` — 3 实验协议

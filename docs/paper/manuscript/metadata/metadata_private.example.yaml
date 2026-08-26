@@ -6,6 +6,19 @@ affiliations:
   - "[AFFILIATION_1_PLACEHOLDER]"
 corresponding-author: "[CORRESPONDING_AUTHOR_PLACEHOLDER]"
 email: "[EMAIL_PLACEHOLDER]"
+document-code: "A"
 funding: "[FUNDING_PLACEHOLDER_OR_OMIT_IF_NONE]"
+# The second-author schema is intentionally present even if verified facts are
+# unavailable. Only a non-empty, verified biography is emitted in a submission
+# build; missing values must never be inferred.
+author-biographies:
+  - name-cn: "[AUTHOR_1_NAME_PLACEHOLDER]"
+    biography-cn: "[AUTHOR_1_BIOGRAPHY_PLACEHOLDER]"
+    corresponding: true
+    email: "[EMAIL_PLACEHOLDER]"
+  - name-cn: "[AUTHOR_2_NAME_PLACEHOLDER]"
+    biography-cn: ""
+    corresponding: false
+    email: ""
 author-biography: "[AUTHOR_BIOGRAPHY_PLACEHOLDER]"
 acknowledgements: "[ACKNOWLEDGEMENTS_PLACEHOLDER]"

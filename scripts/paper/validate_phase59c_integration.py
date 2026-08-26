@@ -19,7 +19,7 @@ M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 NS = {"w": W, "m": M}
 
 TITLE_CN = "Jetson端工业缺陷检测的输入数据路径重构"
-TITLE_EN = "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson"
+TITLE_EN = "Input data-path reconstruction for industrial defect detection on Jetson"
 
 CAPTIONS = (
     "图1　输入数据路径抽象及层级受控比较。图中层级表示结构变量的干预范围，不表示收益大小或组件级因果关系。",

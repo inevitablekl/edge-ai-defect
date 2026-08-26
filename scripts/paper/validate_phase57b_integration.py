@@ -20,7 +20,7 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 NS = {"w": W, "m": M}
 TITLE_CN = "Jetson端工业缺陷检测的输入数据路径重构"
-TITLE_EN = "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson"
+TITLE_EN = "Input data-path reconstruction for industrial defect detection on Jetson"
 
 CAPTIONS = (
     "图1　V0、V2R和V3R三条受控数据路径。图中数值为完整路径E2E观测，输入复制载荷为名义值。",

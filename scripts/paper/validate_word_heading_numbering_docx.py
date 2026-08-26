@@ -20,7 +20,7 @@ HEADING_STYLES = {
     "Heading3",
 }
 REQUIRED_HEADINGS = {
-    "0 引言": "HFUTHeading1",
+    "0 引 言": "HFUTHeading1",
     "1 输入数据路径模型与问题表述": "HFUTHeading1",
     "1.1 固定推理对象与系统边界": "HFUTHeading2",
     "1.2 路径描述符与名义复制载荷": "HFUTHeading2",

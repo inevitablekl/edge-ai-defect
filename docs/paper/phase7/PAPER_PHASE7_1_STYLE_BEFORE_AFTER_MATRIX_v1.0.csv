@@ -1,0 +1,22 @@
+style_id,official_source_value,old_project_value,new_production_value,authority,status
+HFUTTitleCN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTTitleEN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTAuthorsCN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTAuthorsEN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTAffiliationCN,outer parentheses,missing source value,outer parentheses,HFUT source inventory/crosswalk,REMEDIATED
+HFUTAffiliationEN,outer parentheses,missing source value,outer parentheses,HFUT source inventory/crosswalk,REMEDIATED
+HFUTAbstractBodyCN,L420/R295,missing source value,L420/R295,HFUT source inventory/crosswalk,REMEDIATED
+HFUTAbstractBodyEN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTKeywordsBodyCN,L420/R293,missing source value,L420/R293,HFUT source inventory/crosswalk,REMEDIATED
+HFUTKeywordsBodyEN,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTClassification,L420/R293,missing source value,L420/R293,HFUT source inventory/crosswalk,REMEDIATED
+HFUTBody,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTHeading1,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTHeading2,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTHeading3,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTFigureCaption,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTTableCaption,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTTableContent,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTReferenceEntry,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+Bibliography,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH
+HFUTAuthorBiography,Source-confirmed existing value,PROJECT_CANDIDATE,HFUT_SOURCE_DERIVED_PRODUCTION_STYLE,HFUT source inventory/crosswalk,MATCH

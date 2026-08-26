@@ -1,0 +1,8 @@
+ledger_id,old_text,new_text,source_authority,scientific_semantic_change
+L001,摘要：,摘 要：,HFUT_FMT_DOC P004,NO
+L002,Keywords:,Key words：,HFUT_FMT_DOC P011,NO
+L003,Input Data-Path Reconstruction for Industrial Defect Detection on Jetson,Input data-path reconstruction for industrial defect detection on Jetson,HFUT_FMT_DOC P007,NO
+L004,0 引言,0 引 言,HFUT_FMT_DOC P012,NO
+L005,bare CN affiliation,(CN affiliation),HFUT_FMT_DOC P003,NO
+L006,bare EN affiliation,(EN affiliation),HFUT_FMT_DOC P009,NO
+L007,inline corresponding-author lines,removed; footer biography used,HFUT_FMT_DOC P003-P004/footer,NO

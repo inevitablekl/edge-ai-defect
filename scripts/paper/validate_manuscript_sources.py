@@ -12,7 +12,7 @@ MANUSCRIPT = ROOT / "docs/paper/manuscript"
 EXPECTED_HASH = "416e881fbd6c79963a0b18fc6bcbd490134d12a5b8e88fe5deb91146803ca1a7"
 CHAPTERS = [
     ("00_title_abstract.md", "# 题名与摘要"),
-    ("01_introduction.md", "# 0 引言"),
+    ("01_introduction.md", "# 0 引 言"),
     ("02_problem_definition.md", "# 1 系统对象与问题定义"),
     ("03_method.md", "# 2 数据路径优化方法"),
     ("04_experiment.md", "# 3 实验设计"),

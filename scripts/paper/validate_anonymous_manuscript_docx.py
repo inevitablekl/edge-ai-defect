@@ -40,7 +40,7 @@ IDENTITY_PROPERTY_NAMES = (
     "contact",
 )
 REQUIRED_SECTIONS = (
-    "0 引言",
+    "0 引 言",
     "1 输入数据路径模型与问题表述",
     "2 受控输入数据路径重构",
     "3 实验协议",
@@ -323,14 +323,15 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
 
     required_text = {
         "CN title": "Jetson端工业缺陷检测的输入数据路径重构",
-        "EN title": "Input Data-Path Reconstruction for Industrial Defect Detection on Jetson",
+        "EN title": "Input data-path reconstruction for industrial defect detection on Jetson",
         "CN keywords": "Jetson；工业缺陷检测；输入数据路径；端到端推理；受控比较",
         "EN keywords": "Jetson; industrial defect detection; input data path; end-to-end inference; controlled comparison",
         "CLC": "TP391.41",
-        "CN abstract label": "摘要",
+        "CN abstract label": "摘 要",
         "EN abstract label": "Abstract",
         "CN keywords label": "关键词",
-        "EN keywords label": "Keywords",
+        "EN keywords label": "Key words",
+        "document code": "文献标识码：A",
         "reference heading": "参考文献",
     }
     for label, value in required_text.items():
@@ -489,8 +490,10 @@ def validate_parity(
         if identity_paragraph(style, text)
     ]
     details["full_identity_paragraphs_removed"] = len(full_identity)
-    if len(full_identity) != 6:
-        errors.append(f"expected six Full body identity-only paragraphs, found {len(full_identity)}")
+    # Four identity paragraphs remain after Phase 7.1 removed the unsupported
+    # inline Chinese/English corresponding-author lines.
+    if len(full_identity) != 4:
+        errors.append(f"expected four Full body identity-only paragraphs, found {len(full_identity)}")
 
     if parity_signature(full_body) != parity_signature(anonymous_body):
         errors.append("scientific body paragraph/table sequence differs between Full and Anonymous")

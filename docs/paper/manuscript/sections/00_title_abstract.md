@@ -16,7 +16,7 @@ Jetson；工业缺陷检测；输入数据路径；端到端推理；受控比�
 
 ## English Title
 
-Input Data-Path Reconstruction for Industrial Defect Detection on Jetson
+Input data-path reconstruction for industrial defect detection on Jetson
 
 ## English Abstract
 
