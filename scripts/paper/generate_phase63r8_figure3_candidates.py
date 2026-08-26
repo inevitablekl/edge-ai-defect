@@ -82,13 +82,14 @@ def relocate_figure3(document_xml: bytes, body_paragraph_offset: int) -> bytes:
     children = list(body)
     callout_index = children.index(first_callout)
     related_body = []
-    for node in children[callout_index + 1 :]:
-        if node.tag == qn("p") and paragraph_style(node) == "HFUTBody" and paragraph_text(node):
-            related_body.append(node)
-            if len(related_body) == body_paragraph_offset:
+    if body_paragraph_offset:
+        for node in children[callout_index + 1 :]:
+            if node.tag == qn("p") and paragraph_style(node) == "HFUTBody" and paragraph_text(node):
+                related_body.append(node)
+                if len(related_body) == body_paragraph_offset:
+                    break
+            elif node.tag == qn("p") and (paragraph_style(node) or "").startswith("HFUTHeading"):
                 break
-        elif node.tag == qn("p") and (paragraph_style(node) or "").startswith("HFUTHeading"):
-            break
 
     if len(related_body) != body_paragraph_offset:
         raise ValueError(
@@ -102,11 +103,6 @@ def relocate_figure3(document_xml: bytes, body_paragraph_offset: int) -> bytes:
 
 
 def rewrite(input_path: Path, output_path: Path, body_paragraph_offset: int) -> None:
-    if body_paragraph_offset == 0:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(input_path, output_path)
-        return
-
     with zipfile.ZipFile(input_path) as source:
         document_xml = relocate_figure3(
             source.read("word/document.xml"), body_paragraph_offset

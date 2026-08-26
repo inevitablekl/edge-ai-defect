@@ -1,0 +1,5 @@
+contract_id,source_runs,implementation,validator,status,notes
+CN_LABELS_NOT_BOLD,HFUT_FMT_DOC P004 r1/P005 r1,HFUTAbstractLabelCNChar/HFUTKeywordsLabelCNChar,validate_journal_format_docx.py,MATCH,Heiti is not w:b.
+CLC_MIXED_RUNS,HFUT_FMT_DOC P006 r1-r10,classification_front_matter,validate_journal_format_docx.py,MATCH,Red instruction runs excluded.
+HEADING_NUMBER_TITLE_DISTINCTION,HFUT_FMT_DOC P015-P017,heading_inlines,validate_journal_format_docx.py,MATCH,H1/H2 number-only bold; H3 non-bold.
+REFERENCE_GEOMETRY,HFUT_REF_DOC P006-P041,HFUTReferenceEntry,validate_final_references.py,PROJECT_STABLE,360 twips is not claimed source-exact.

@@ -12,6 +12,7 @@ from xml.etree import ElementTree as ET
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 NS = {"w": W}
 HEADING_STYLES = {
+    "HFUTIntroHeading",
     "HFUTHeading1",
     "HFUTHeading2",
     "HFUTHeading3",
@@ -20,24 +21,24 @@ HEADING_STYLES = {
     "Heading3",
 }
 REQUIRED_HEADINGS = {
-    "0 引 言": "HFUTHeading1",
-    "1 输入数据路径模型与问题表述": "HFUTHeading1",
-    "1.1 固定推理对象与系统边界": "HFUTHeading2",
-    "1.2 路径描述符与名义复制载荷": "HFUTHeading2",
-    "1.3 层级受控比较、正确性条件与评价问题": "HFUTHeading2",
-    "2 受控输入数据路径重构": "HFUTHeading1",
-    "2.1 V0基线路径": "HFUTHeading2",
-    "2.2 V2R路径级重构": "HFUTHeading2",
-    "2.3 V3R暂存策略细化": "HFUTHeading2",
-    "2.4 共同控制与正确性约束": "HFUTHeading2",
-    "3 实验协议": "HFUTHeading1",
-    "4 结果与分析": "HFUTHeading1",
-    "4.1 正确性约束验证": "HFUTHeading2",
-    "4.2 路径级重构的E2E响应": "HFUTHeading2",
-    "4.3 暂存策略的增量响应": "HFUTHeading2",
-    "4.4 平均性能与尾延迟响应": "HFUTHeading2",
-    "4.5 解释边界与局限性": "HFUTHeading2",
-    "5 结论": "HFUTHeading1",
+    "0  引  言": "HFUTIntroHeading",
+    "1  输入数据路径模型与问题表述": "HFUTHeading1",
+    "1.1  固定推理对象与系统边界": "HFUTHeading2",
+    "1.2  路径描述符与名义复制载荷": "HFUTHeading2",
+    "1.3  层级受控比较、正确性条件与评价问题": "HFUTHeading2",
+    "2  受控输入数据路径重构": "HFUTHeading1",
+    "2.1  V0基线路径": "HFUTHeading2",
+    "2.2  V2R路径级重构": "HFUTHeading2",
+    "2.3  V3R暂存策略细化": "HFUTHeading2",
+    "2.4  共同控制与正确性约束": "HFUTHeading2",
+    "3  实验协议": "HFUTHeading1",
+    "4  结果与分析": "HFUTHeading1",
+    "4.1  正确性约束验证": "HFUTHeading2",
+    "4.2  路径级重构的E2E响应": "HFUTHeading2",
+    "4.3  暂存策略的增量响应": "HFUTHeading2",
+    "4.4  平均性能与尾延迟响应": "HFUTHeading2",
+    "4.5  解释边界与局限性": "HFUTHeading2",
+    "5  结论": "HFUTHeading1",
 }
 
 
@@ -46,7 +47,13 @@ def attr(node: ET.Element | None, local: str) -> str | None:
 
 
 def paragraph_text(node: ET.Element) -> str:
-    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).strip()
+    parts: list[str] = []
+    for child in node.iter():
+        if child.tag == f"{{{W}}}t":
+            parts.append(child.text or "")
+        elif child.tag == f"{{{W}}}tab":
+            parts.append("\t")
+    return "".join(parts).strip()
 
 
 def paragraph_style(node: ET.Element) -> str:

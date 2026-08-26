@@ -34,6 +34,10 @@ def text(node: ET.Element) -> str:
     return "".join(item.text or "" for item in node.findall(".//w:t", NS)).strip()
 
 
+def raw_text(node: ET.Element) -> str:
+    return "".join(item.text or "" for item in node.findall(".//w:t", NS))
+
+
 def attr(node: ET.Element | None, name: str, namespace: str = W) -> str | None:
     return None if node is None else node.get(f"{{{namespace}}}{name}")
 
@@ -85,18 +89,29 @@ def style_contract(styles: ET.Element, errors: list[str]) -> None:
         "HFUTTitleEN": ("Times New Roman", "Times New Roman", "28", None, None, "center", True, None),
         "HFUTAuthorsEN": ("Times New Roman", "Times New Roman", "21", None, None, "center", True, None),
         "HFUTBody": ("宋体", "Times New Roman", "21", "320", "exact", "both", False, "438"),
-        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320", "exact", "left", True, None),
-        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320", "exact", "left", True, None),
+        "HFUTIntroHeading": ("黑体", "Times New Roman", "28", "320", "exact", "left", True, None),
+        "HFUTHeading1": ("黑体", "Times New Roman", "28", "320", "exact", "left", False, None),
+        "HFUTHeading2": ("黑体", "Times New Roman", "21", "320", "exact", "left", False, None),
         "HFUTHeading3": ("楷体", "Times New Roman", "21", "320", "exact", "left", False, None),
         "HFUTAuthorBiography": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
         "HFUTFigureCaption": ("黑体", "Times New Roman", "15", "320", "exact", "center", True, None),
         "HFUTTableContent": ("宋体", "Times New Roman", "15", "240", "exact", "center", False, None),
         "HFUTReferenceEntry": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
         "Bibliography": ("宋体", "Times New Roman", "15", "280", "exact", "left", False, None),
-        "HFUTAbstractLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, True, None),
-        "HFUTKeywordsLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, True, None),
+        "HFUTAbstractLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, False, None),
+        "HFUTKeywordsLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, False, None),
         "HFUTAbstractLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, None, True, None),
         "HFUTKeywordsLabelENChar": ("Times New Roman", "Times New Roman", "21", None, None, None, True, None),
+        "HFUTClassificationLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, False, None),
+        "HFUTClassificationValueChar": ("宋体", "Times New Roman", "18", None, None, None, False, None),
+        "HFUTDocumentCodeLabelCNChar": ("黑体", "Times New Roman", "18", None, None, None, True, None),
+        "HFUTDocumentCodeValueChar": ("宋体", "Times New Roman", "18", None, None, None, False, None),
+        "HFUTHeadingNumber1Char": ("黑体", "Times New Roman", "28", None, None, None, True, None),
+        "HFUTHeadingTitle1Char": ("黑体", "Times New Roman", "28", None, None, None, False, None),
+        "HFUTHeadingNumber2Char": ("黑体", "Times New Roman", "21", None, None, None, True, None),
+        "HFUTHeadingTitle2Char": ("黑体", "Times New Roman", "21", None, None, None, False, None),
+        "HFUTHeadingNumber3Char": ("楷体", "Times New Roman", "21", None, None, None, False, None),
+        "HFUTHeadingTitle3Char": ("楷体", "Times New Roman", "21", None, None, None, False, None),
     }
     found = {node.get(Q("styleId")): node for node in styles.findall("w:style", NS)}
     for sid, (east, latin, size, line, line_rule, alignment, bold, first_line) in expected.items():
@@ -320,6 +335,76 @@ def validate_variant(path: Path, variant: str) -> tuple[list[str], dict[str, obj
         first_run_style = attr(matches[0].find("w:r/w:rPr/w:rStyle", NS), "val")
         if first_run_style != run_style:
             errors.append(f"inline label character style mismatch: {paragraph_style}={first_run_style}")
+
+    # The official specimen is not a paragraph-level font contract.  These
+    # checks bind each semantic front-matter token to its source-derived run.
+    classification = [p for p in paragraphs if style_id(p) == "HFUTClassification"]
+    if len(classification) != 1:
+        errors.append("classification paragraph count mismatch")
+    else:
+        classification_runs = classification[0].findall("w:r", NS)
+        observed = [
+            (raw_text(run), attr(run.find("w:rPr/w:rStyle", NS), "val"))
+            for run in classification_runs
+            if raw_text(run) or run.find("w:tab", NS) is not None
+        ]
+        # Pandoc writes each requested space as its own unstyled run.  Treat
+        # that mechanically split sequence as the one three-space source
+        # separator while preserving style-token checks either side of it.
+        normalized_observed: list[tuple[str, str | None]] = []
+        for value, run_style in observed:
+            if run_style is None and value == " " and normalized_observed and normalized_observed[-1] == ("   ", None):
+                continue
+            if run_style is None and value == " " and len(normalized_observed) >= 2 and normalized_observed[-1] == (" ", None):
+                normalized_observed[-1] = ("  ", None)
+            elif run_style is None and value == " " and normalized_observed and normalized_observed[-1] == ("  ", None):
+                normalized_observed[-1] = ("   ", None)
+            else:
+                normalized_observed.append((value, run_style))
+        expected = [
+            ("中图分类号：", "HFUTClassificationLabelCNChar"),
+            ("TP391.41", "HFUTClassificationValueChar"),
+            ("   ", None),
+            ("文献标识码：", "HFUTDocumentCodeLabelCNChar"),
+            ("A", "HFUTDocumentCodeValueChar"),
+        ]
+        if normalized_observed != expected:
+            errors.append(f"classification mixed-run contract mismatch: {observed}")
+
+    heading_contract = {
+        "HFUTIntroHeading": ("HFUTHeading1", "HFUTHeading1"),
+        "HFUTHeading1": ("HFUTHeadingNumber1Char", "HFUTHeadingTitle1Char"),
+        "HFUTHeading2": ("HFUTHeadingNumber2Char", "HFUTHeadingTitle2Char"),
+        "HFUTHeading3": ("HFUTHeadingNumber3Char", "HFUTHeadingTitle3Char"),
+    }
+    for heading_style, (number_style, title_style) in heading_contract.items():
+        for paragraph in [p for p in paragraphs if style_id(p) == heading_style]:
+            if heading_style == "HFUTIntroHeading":
+                # P012 uses bold number and title; it is intentionally not a
+                # generic H1 specimen.  Its literal number/tab is checked by
+                # the heading-numbering validator.
+                continue
+            runs = [run for run in paragraph.findall("w:r", NS) if text(run)]
+            styled = [attr(run.find("w:rPr/w:rStyle", NS), "val") for run in runs]
+            if len(styled) != 2 or styled != [number_style, title_style]:
+                errors.append(
+                    f"heading mixed-run contract mismatch: {heading_style}={styled}"
+                )
+
+    required_front_order = [
+        "HFUTTitleCN", "HFUTAbstractBodyCN", "HFUTKeywordsBodyCN",
+        "HFUTClassification", "HFUTTitleEN", "HFUTAbstractBodyEN",
+        "HFUTKeywordsBodyEN",
+    ]
+    positions = {
+        current: next((index for index, p in enumerate(paragraphs) if style_id(p) == current), -1)
+        for current in required_front_order
+    }
+    if any(positions[current] < 0 for current in required_front_order) or (
+        [positions[current] for current in required_front_order]
+        != sorted(positions[current] for current in required_front_order)
+    ):
+        errors.append(f"front-matter order mismatch: {positions}")
     cn_abstract = next((text(p) for p in paragraphs if style_id(p) == "HFUTAbstractBodyCN"), "")
     cn_keywords = next((text(p) for p in paragraphs if style_id(p) == "HFUTKeywordsBodyCN"), "")
     en_keywords = next((text(p) for p in paragraphs if style_id(p) == "HFUTKeywordsBodyEN"), "")

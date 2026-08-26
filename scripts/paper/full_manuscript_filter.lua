@@ -79,6 +79,59 @@ local function mixed_front_matter(block, body_style, label, label_style, add_spa
   return styled_inlines(inlines, body_style)
 end
 
+local function styled_span(value, style)
+  return pandoc.Span({pandoc.Str(value)}, style_attr(style))
+end
+
+local function add_spaces(inlines, count)
+  for _ = 1, count do
+    inlines:insert(pandoc.Space())
+  end
+end
+
+local function classification_front_matter(meta)
+  -- HFUT_FMT_DOC P006: each black specimen token has its own run contract.
+  -- The three spaces reproduce the source separator; red instruction text is
+  -- intentionally excluded.
+  local inlines = pandoc.Inlines{
+    styled_span("中图分类号：", "HFUTClassificationLabelCNChar"),
+    styled_span(meta_text(meta, "classification"), "HFUTClassificationValueChar"),
+  }
+  add_spaces(inlines, 3)
+  inlines:insert(styled_span("文献标识码：", "HFUTDocumentCodeLabelCNChar"))
+  inlines:insert(styled_span(meta_text(meta, "document-code"), "HFUTDocumentCodeValueChar"))
+  return styled_inlines(inlines, "HFUTClassification")
+end
+
+local function heading_inlines(block, level)
+  local source = pandoc.utils.stringify(block.content)
+  local number, title = source:match("^(%d+[%.%d]*)%s+(.+)$")
+  if number == nil then
+    return block.content
+  end
+  local number_style = "HFUTHeadingNumber" .. tostring(level) .. "Char"
+  local title_style = "HFUTHeadingTitle" .. tostring(level) .. "Char"
+  local inlines = pandoc.Inlines{styled_span(number, number_style)}
+  -- P015–P017 use two preserved literal spaces, not a tab, between number
+  -- and title.  The separate runs ensure the number-only bold distinction.
+  add_spaces(inlines, 2)
+  inlines:insert(styled_span(title, title_style))
+  return inlines
+end
+
+local function introduction_inlines()
+  -- P012 uses Word numbering with default tab follow behavior. This Pandoc
+  -- version cannot emit a native Tab inline, so two literal spaces reproduce
+  -- the source's 420-twip tab geometry more robustly than raw OOXML injection.
+  -- The two spaces between 引 and 言 are source literal spaces as well.
+  local inlines = pandoc.Inlines{pandoc.Str("0")}
+  add_spaces(inlines, 2)
+  inlines:insert(pandoc.Str("引"))
+  add_spaces(inlines, 2)
+  inlines:insert(pandoc.Str("言"))
+  return inlines
+end
+
 local function block_text(block)
   if block.t == "Para" or block.t == "Plain" or block.t == "Header" then
     return pandoc.utils.stringify(block.content)
@@ -107,10 +160,7 @@ local function add_full_identity(output, meta, language, anonymous)
 end
 
 local function add_final_front_matter(output, meta, anonymous)
-  output:insert(styled_text(
-    "中图分类号：" .. meta_text(meta, "classification") .. "　文献标识码：" .. meta_text(meta, "document-code"),
-    "HFUTClassification"
-  ))
+  output:insert(classification_front_matter(meta))
   local biography = author_biography_text(meta)
   if not anonymous and biography ~= "" then
     output:insert(styled_text(biography, "HFUTAuthorBiography"))
@@ -170,7 +220,7 @@ function Pandoc(doc)
     elseif front_matter and block.t == "Header" and block.level == 1 and text == "0 引 言" then
       front_matter = false
       output:insert(styled_text("FULL_BODY_SECTION_START", "HFUTSpecimenNotice"))
-      output:insert(styled_inlines(block.content, "HFUTHeading1"))
+      output:insert(styled_inlines(introduction_inlines(), "HFUTIntroHeading"))
     elseif front_matter and pending == "cn_title" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTTitleCN"))
       add_full_identity(output, doc.meta, "cn", anonymous)
@@ -181,6 +231,11 @@ function Pandoc(doc)
     elseif front_matter and pending == "cn_keywords" and (block.t == "Para" or block.t == "Plain") then
       output:insert(mixed_front_matter(block, "HFUTKeywordsBodyCN", "关键词：", "HFUTKeywordsLabelCNChar", false))
       pending = nil
+      if not final_front_matter_added then
+        -- HFUT_FMT_DOC P006 is between P005 CN keywords and P007 EN title.
+        add_final_front_matter(output, doc.meta, anonymous)
+        final_front_matter_added = true
+      end
     elseif front_matter and pending == "en_title" and (block.t == "Para" or block.t == "Plain") then
       output:insert(styled_block(block, "HFUTTitleEN"))
       add_full_identity(output, doc.meta, "en", anonymous)
@@ -189,12 +244,10 @@ function Pandoc(doc)
       output:insert(mixed_front_matter(block, "HFUTAbstractBodyEN", "Abstract:", "HFUTAbstractLabelENChar", true))
       pending = nil
     elseif front_matter and pending == "en_keywords" and (block.t == "Para" or block.t == "Plain") then
-      output:insert(mixed_front_matter(block, "HFUTKeywordsBodyEN", "Key words：", "HFUTKeywordsLabelENChar", true))
+      local en_label = pandoc.Inlines{styled_span("Key words", "HFUTKeywordsLabelENChar"), pandoc.Str("："), pandoc.Space()}
+      en_label:extend(block.content)
+      output:insert(styled_inlines(en_label, "HFUTKeywordsBodyEN"))
       pending = nil
-      if not final_front_matter_added then
-        add_final_front_matter(output, doc.meta, anonymous)
-        final_front_matter_added = true
-      end
     elseif not front_matter and block.t == "Header" then
       local style = "HFUTHeading3"
       if block.level == 1 then
@@ -202,7 +255,7 @@ function Pandoc(doc)
       elseif block.level == 2 then
         style = "HFUTHeading2"
       end
-      output:insert(styled_inlines(block.content, style))
+      output:insert(styled_inlines(heading_inlines(block, block.level), style))
     elseif not front_matter and block.t == "Para" then
       local figure = figure_for_caption(text)
       if figure ~= nil then

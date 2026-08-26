@@ -240,21 +240,27 @@ def styles_xml() -> str:
         para_style("HFUTAffiliationEN", "HFUT Affiliation EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="15", align="center", line=240, exact=True),
         # HFUT_FMT_DOC P004: the Chinese abstract is narrower than the body
         # and has an asymmetric right inset. These are source values.
-        para_style("HFUTAbstractLabelCN", "HFUT Abstract Label CN", based_on="Normal", east="黑体", size="18", bold=True, align="both", left=420, right=295, line=280, exact=True),
+        para_style("HFUTAbstractLabelCN", "HFUT Abstract Label CN", based_on="Normal", east="黑体", size="18", align="both", left=420, right=295, line=280, exact=True),
         para_style("HFUTAbstractBodyCN", "HFUT Abstract Body CN", based_on="Normal", east="宋体", size="18", align="both", left=420, right=295, line=280, exact=True),
         para_style("HFUTAbstractLabelEN", "HFUT Abstract Label EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="18", bold=True, align="both", line=280, exact=True),
         para_style("HFUTAbstractBodyEN", "HFUT Abstract Body EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="21", align="both", line=280, exact=True),
         # HFUT_FMT_DOC P005/P006: keywords and classification use a
         # slightly different right inset from the Chinese abstract.
-        para_style("HFUTKeywordsLabelCN", "HFUT Keywords Label CN", based_on="Normal", east="黑体", size="18", bold=True, align="both", left=420, right=293, line=280, exact=True),
+        para_style("HFUTKeywordsLabelCN", "HFUT Keywords Label CN", based_on="Normal", east="黑体", size="18", align="both", left=420, right=293, line=280, exact=True),
         para_style("HFUTKeywordsBodyCN", "HFUT Keywords Body CN", based_on="Normal", east="宋体", size="18", align="both", left=420, right=293, line=280, exact=True),
         para_style("HFUTKeywordsLabelEN", "HFUT Keywords Label EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="18", bold=True, align="both", line=280, exact=True),
         para_style("HFUTKeywordsBodyEN", "HFUT Keywords Body EN", based_on="Normal", east="Times New Roman", ascii_font="Times New Roman", size="21", align="both", line=280, exact=True),
         para_style("HFUTClassification", "HFUT Classification", based_on="Normal", east="宋体", size="18", align="left", left=420, right=293, line=280, exact=True),
-        para_style("HFUTHeading1", "HFUT Heading 1", based_on="Normal", east="黑体", size="28", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0),
-        para_style("HFUTHeading2", "HFUT Heading 2", based_on="Normal", east="黑体", size="21", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=1),
+        # P015/P016 are mixed runs: only the numeric prefix has w:b.  The
+        # paragraph style deliberately carries geometry/font only; the filter
+        # supplies number/title character styles deterministically.
+        para_style("HFUTHeading1", "HFUT Heading 1", based_on="Normal", east="黑体", size="28", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0),
+        para_style("HFUTHeading2", "HFUT Heading 2", based_on="Normal", east="黑体", size="21", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=1),
         para_style("HFUTHeading3", "HFUT Heading 3", based_on="Normal", east="楷体", size="21", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=2),
-        para_style("HFUTIntroHeading", "HFUT Introduction Heading", based_on="HFUTHeading1", east="黑体", size="28", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0, num_id=2, ilvl=0),
+        # P012 has a separately numbered source paragraph, but uses an
+        # explicit bold treatment for both the numeral and 引/言 specimen.
+        # The manuscript renders an equivalent literal number/tab sequence.
+        para_style("HFUTIntroHeading", "HFUT Introduction Heading", based_on="HFUTHeading1", east="黑体", size="28", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0),
         para_style(
             "HFUTEquation", "HFUT Equation", based_on="Normal",
             east="Times New Roman", ascii_font="Times New Roman", size="21",
@@ -274,16 +280,26 @@ def styles_xml() -> str:
         para_style("Subtitle", "Subtitle", based_on="HFUTTitleEN", east="Times New Roman", ascii_font="Times New Roman", size="28", bold=True, align="center", keep_next=True),
         para_style("Author", "Author", based_on="HFUTAuthorsEN", east="Times New Roman", ascii_font="Times New Roman", size="21", bold=True, align="center"),
         para_style("Abstract", "Abstract", based_on="HFUTAbstractBodyEN", east="Times New Roman", ascii_font="Times New Roman", size="21", align="both", line=280, exact=True),
-        para_style("Heading1", "Heading 1", based_on="HFUTHeading1", east="黑体", size="28", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0),
-        para_style("Heading2", "Heading 2", based_on="HFUTHeading2", east="黑体", size="21", bold=True, align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=1),
+        para_style("Heading1", "Heading 1", based_on="HFUTHeading1", east="黑体", size="28", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=0),
+        para_style("Heading2", "Heading 2", based_on="HFUTHeading2", east="黑体", size="21", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=1),
         para_style("Heading3", "Heading 3", based_on="HFUTHeading3", east="楷体", size="21", align="left", line=320, exact=True, keep_next=True, keep_lines=True, outline=2),
         para_style("Caption", "Caption", based_on="HFUTFigureCaption", east="黑体", size="15", bold=True, align="center", line=320, exact=True, keep_lines=True),
         para_style("Table", "Table", based_on="HFUTTableContent", east="宋体", size="15", align="center", line=240, exact=True, keep_lines=True),
         para_style("Bibliography", "Bibliography", based_on="HFUTReferenceEntry", east="宋体", size="15", align="left", left=360, first=-360, line=280, exact=True, keep_lines=True),
-        char_style("HFUTAbstractLabelCNChar", "HFUT Abstract Label CN Char", east="黑体", ascii_font="Times New Roman", size="18", bold=True),
-        char_style("HFUTKeywordsLabelCNChar", "HFUT Keywords Label CN Char", east="黑体", ascii_font="Times New Roman", size="18", bold=True),
+        char_style("HFUTAbstractLabelCNChar", "HFUT Abstract Label CN Char", east="黑体", ascii_font="Times New Roman", size="18"),
+        char_style("HFUTKeywordsLabelCNChar", "HFUT Keywords Label CN Char", east="黑体", ascii_font="Times New Roman", size="18"),
         char_style("HFUTAbstractLabelENChar", "HFUT Abstract Label EN Char", east="Times New Roman", ascii_font="Times New Roman", size="21", bold=True),
         char_style("HFUTKeywordsLabelENChar", "HFUT Keywords Label EN Char", east="Times New Roman", ascii_font="Times New Roman", size="21", bold=True),
+        char_style("HFUTClassificationLabelCNChar", "HFUT Classification Label CN Char", east="黑体", ascii_font="Times New Roman", size="18"),
+        char_style("HFUTClassificationValueChar", "HFUT Classification Value Char", east="宋体", ascii_font="Times New Roman", size="18"),
+        char_style("HFUTDocumentCodeLabelCNChar", "HFUT Document Code Label CN Char", east="黑体", ascii_font="Times New Roman", size="18", bold=True),
+        char_style("HFUTDocumentCodeValueChar", "HFUT Document Code Value Char", east="宋体", ascii_font="Times New Roman", size="18"),
+        char_style("HFUTHeadingNumber1Char", "HFUT Heading Number 1 Char", east="黑体", ascii_font="Times New Roman", size="28", bold=True),
+        char_style("HFUTHeadingTitle1Char", "HFUT Heading Title 1 Char", east="黑体", ascii_font="Times New Roman", size="28"),
+        char_style("HFUTHeadingNumber2Char", "HFUT Heading Number 2 Char", east="黑体", ascii_font="Times New Roman", size="21", bold=True),
+        char_style("HFUTHeadingTitle2Char", "HFUT Heading Title 2 Char", east="黑体", ascii_font="Times New Roman", size="21"),
+        char_style("HFUTHeadingNumber3Char", "HFUT Heading Number 3 Char", east="楷体", ascii_font="Times New Roman", size="21"),
+        char_style("HFUTHeadingTitle3Char", "HFUT Heading Title 3 Char", east="楷体", ascii_font="Times New Roman", size="21"),
         char_style("HFUTLatin", "HFUT Latin", east="Times New Roman", ascii_font="Times New Roman", size="21"),
         table_style(),
     ]
@@ -533,7 +549,7 @@ def style_map_rows() -> list[dict[str, str]]:
     add("HFUTAuthorsEN", "HFUT Authors EN", "English authors", "author", "Normal", "Times New Roman", "Times New Roman", "10.5", "TRUE", "center", "0", "0", "", "", "FALSE", "", "OOXML named style", "HFUT-FMT-009", "official attachment P012: centered, bold, effective Normal 10.5 pt TNR", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "no real author information")
     add("HFUTAffiliationCN", "HFUT Affiliation CN", "Chinese affiliation", "author", "Normal", "宋体", "Times New Roman", "7.5", "FALSE", "center", "0", "0", "exact", "12", "FALSE", "", "OOXML named style", "HFUT-FMT-002", "7.5 pt affiliation evidence", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "province/city/postcode are content fields")
     add("HFUTAffiliationEN", "HFUT Affiliation EN", "English affiliation", "author", "Normal", "Times New Roman", "Times New Roman", "7.5", "FALSE", "center", "0", "0", "exact", "12", "FALSE", "", "OOXML named style", "HFUT-FMT-009", "7.5 pt affiliation evidence", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "province/city/postcode are content fields")
-    add("HFUTAbstractLabelCN", "HFUT Abstract Label CN", "Chinese abstract label", "abstract", "Normal", "黑体", "Times New Roman", "9", "TRUE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-003", "9 pt Heiti; exact 14 pt", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "label can share paragraph with body only when needed")
+    add("HFUTAbstractLabelCN", "HFUT Abstract Label CN", "Chinese abstract label", "abstract", "Normal", "黑体", "Times New Roman", "9", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT_FMT_DOC P004 black specimen run 1", "9 pt Heiti; no explicit Word bold; exact 14 pt", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "label can share paragraph with body only when needed")
     rows[-1]["left_indent_twips"] = "420"
     rows[-1]["right_indent_twips"] = "295"
     add("HFUTAbstractBodyCN", "HFUT Abstract Body CN", "Chinese abstract body", "abstract", "Normal", "宋体", "Times New Roman", "9", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-003", "9 pt Song; exact 14 pt", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "minimum/target length is source writing")
@@ -541,7 +557,7 @@ def style_map_rows() -> list[dict[str, str]]:
     rows[-1]["right_indent_twips"] = "295"
     add("HFUTAbstractLabelEN", "HFUT Abstract Label EN", "English abstract label", "abstract", "Normal", "Times New Roman", "Times New Roman", "9", "TRUE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-010", "mixed-format source; label candidate", "PROJECT_DERIVED_CANDIDATE", "PENDING_POC", "YES", "English abstract label size needs Word check")
     add("HFUTAbstractBodyEN", "HFUT Abstract Body EN", "English abstract body", "abstract", "Normal", "Times New Roman", "Times New Roman", "10.5", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-010", "Step 2 five-size TNR", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "semantic equivalence is manual")
-    add("HFUTKeywordsLabelCN", "HFUT Keywords Label CN", "Chinese keyword label", "keywords", "Normal", "黑体", "Times New Roman", "9", "TRUE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-005", "9 pt Heiti", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "keyword count is source validation")
+    add("HFUTKeywordsLabelCN", "HFUT Keywords Label CN", "Chinese keyword label", "keywords", "Normal", "黑体", "Times New Roman", "9", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT_FMT_DOC P005 black specimen run 1", "9 pt Heiti; no explicit Word bold", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "keyword count is source validation")
     rows[-1]["left_indent_twips"] = "420"
     rows[-1]["right_indent_twips"] = "293"
     add("HFUTKeywordsBodyCN", "HFUT Keywords Body CN", "Chinese keywords", "keywords", "Normal", "宋体", "Times New Roman", "9", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-005", "9 pt Song", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "keyword count/order is source validation")
@@ -549,16 +565,16 @@ def style_map_rows() -> list[dict[str, str]]:
     rows[-1]["right_indent_twips"] = "293"
     add("HFUTKeywordsLabelEN", "HFUT Keywords Label EN", "English keyword label", "keywords", "Normal", "Times New Roman", "Times New Roman", "9", "TRUE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-011", "label candidate", "PROJECT_DERIVED_CANDIDATE", "PENDING_POC", "YES", "English keyword label needs Word check")
     add("HFUTKeywordsBodyEN", "HFUT Keywords Body EN", "English keywords", "keywords", "Normal", "Times New Roman", "Times New Roman", "10.5", "FALSE", "both", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-011", "five-size TNR", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "keyword count/order is source validation")
-    add("HFUTAbstractLabelCNChar", "HFUT Abstract Label CN Char", "Chinese abstract inline label", "abstract label span", "DefaultParagraphFont", "黑体", "Times New Roman", "9", "TRUE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT-FMT-003", "official label and body share one paragraph; label is 9 pt Heiti bold", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTAbstractBodyCN")
-    add("HFUTKeywordsLabelCNChar", "HFUT Keywords Label CN Char", "Chinese keywords inline label", "keyword label span", "DefaultParagraphFont", "黑体", "Times New Roman", "9", "TRUE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT-FMT-005", "official label and body share one paragraph; label is 9 pt Heiti bold", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTKeywordsBodyCN")
+    add("HFUTAbstractLabelCNChar", "HFUT Abstract Label CN Char", "Chinese abstract inline label", "abstract label span", "DefaultParagraphFont", "黑体", "Times New Roman", "9", "FALSE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT_FMT_DOC P004 run 1", "black specimen is 9 pt Heiti without w:b", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTAbstractBodyCN")
+    add("HFUTKeywordsLabelCNChar", "HFUT Keywords Label CN Char", "Chinese keywords inline label", "keyword label span", "DefaultParagraphFont", "黑体", "Times New Roman", "9", "FALSE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT_FMT_DOC P005 run 1", "black specimen is 9 pt Heiti without w:b", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTKeywordsBodyCN")
     add("HFUTAbstractLabelENChar", "HFUT Abstract Label EN Char", "English abstract inline label", "abstract label span", "DefaultParagraphFont", "Times New Roman", "Times New Roman", "10.5", "TRUE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT-FMT-010", "official label and body share one paragraph", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTAbstractBodyEN")
     add("HFUTKeywordsLabelENChar", "HFUT Keywords Label EN Char", "English keywords inline label", "keyword label span", "DefaultParagraphFont", "Times New Roman", "Times New Roman", "10.5", "TRUE", "", "0", "0", "", "", "FALSE", "", "OOXML character style", "HFUT-FMT-011", "official label and body share one paragraph", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "run-level distinction inside HFUTKeywordsBodyEN")
     add("HFUTClassification", "HFUT Classification", "Chinese Library Classification", "metadata", "Normal", "宋体", "Times New Roman", "9", "FALSE", "left", "0", "0", "exact", "14", "FALSE", "", "OOXML named style", "HFUT-FMT-006", "front-matter field evidence", "TEXTUALLY_CONFIRMED", "PENDING_POC", "YES", "do not copy sample TU 411.01")
     rows[-1]["left_indent_twips"] = "420"
     rows[-1]["right_indent_twips"] = "293"
     add("HFUTBody", "HFUT Body", "main body", "paragraph", "Normal", "宋体", "Times New Roman", "10.5", "FALSE", "both", "438", "0", "exact", "16", "FALSE", "", "OOXML named style", "HFUT-FMT-012; HFUT-FMT-028", "official attachment P020/P021 direct firstLine=438; current compatible exact 16 pt line spacing retained", "OFFICIAL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "official first-line indent with existing body line-spacing contract")
-    add("HFUTHeading1", "HFUT Heading 1", "level-1 heading", "heading", "Normal", "黑体", "Times New Roman", "14", "TRUE", "left", "0", "0", "exact", "16", "TRUE", "", "OOXML named style; explicit number in source text", "HFUT-FMT-013; HFUT-FMT-016", "14 pt Heiti; keep-next candidate", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic Word numbering disabled; Markdown supplies the visible number")
-    add("HFUTHeading2", "HFUT Heading 2", "level-2 heading", "heading", "Normal", "黑体", "Times New Roman", "10.5", "TRUE", "left", "0", "0", "exact", "16", "TRUE", "", "OOXML named style; explicit number in source text", "HFUT-FMT-014; HFUT-FMT-016", "10.5 pt Heiti", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic Word numbering disabled; Markdown supplies the visible number")
+    add("HFUTHeading1", "HFUT Heading 1", "level-1 heading", "heading", "Normal", "黑体", "Times New Roman", "14", "FALSE", "left", "0", "0", "exact", "16", "TRUE", "", "OOXML named style; explicit number in source text", "HFUT_FMT_DOC P015", "paragraph geometry/font; number-only w:b is a character-run contract", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "automatic Word numbering disabled; filter supplies explicit number/title runs")
+    add("HFUTHeading2", "HFUT Heading 2", "level-2 heading", "heading", "Normal", "黑体", "Times New Roman", "10.5", "FALSE", "left", "0", "0", "exact", "16", "TRUE", "", "OOXML named style; explicit number in source text", "HFUT_FMT_DOC P016", "paragraph geometry/font; number-only w:b is a character-run contract", "RUN_LEVEL_SOURCE_IMPLEMENTATION", "PENDING_WORD_DESKTOP_QA", "YES", "automatic Word numbering disabled; filter supplies explicit number/title runs")
     add("HFUTHeading3", "HFUT Heading 3", "level-3 heading", "heading", "Normal", "楷体", "Times New Roman", "10.5", "FALSE", "left", "0", "0", "exact", "16", "TRUE", "", "OOXML named style; explicit number in source text", "HFUT-FMT-015; HFUT-FMT-016", "10.5 pt Kaiti", "STYLE_EVIDENCE_CONFIRMED", "PENDING_POC", "YES", "automatic Word numbering disabled; Markdown supplies the visible number")
     add("HFUTEquation", "HFUT Equation", "equation paragraph", "math", "Normal", "Times New Roman", "Times New Roman", "10.5", "FALSE", "center", "0", "0", "atLeast", "24", "FALSE", "", "OOXML named style", "HFUT-FMT-017; HFUT-FMT-023", "Word POC validated 480-twip minimum line with 80-twip before/after spacing", "VALIDATED_PROJECT_DERIVED_CANDIDATE", "WORD_POC_VALIDATED", "YES", "Microsoft Word POC-derived spacing; not a textual journal line-spacing rule; does not create or replace MathType; never auto-restore exact 16 pt")
     rows[-1]["space_before_pt"] = "4"

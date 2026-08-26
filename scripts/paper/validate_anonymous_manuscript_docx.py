@@ -40,12 +40,12 @@ IDENTITY_PROPERTY_NAMES = (
     "contact",
 )
 REQUIRED_SECTIONS = (
-    "0 引 言",
-    "1 输入数据路径模型与问题表述",
-    "2 受控输入数据路径重构",
-    "3 实验协议",
-    "4 结果与分析",
-    "5 结论",
+    "0  引  言",
+    "1  输入数据路径模型与问题表述",
+    "2  受控输入数据路径重构",
+    "3  实验协议",
+    "4  结果与分析",
+    "5  结论",
 )
 FROZEN_VALUES = (
     "2.24×",
@@ -77,7 +77,13 @@ def attr(node: ET.Element | None, local: str, namespace: str = W) -> str | None:
 
 
 def text_of(node: ET.Element) -> str:
-    return "".join(child.text or "" for child in node.findall(".//w:t", NS)).replace("\u00a0", " ").strip()
+    parts: list[str] = []
+    for child in node.iter():
+        if child.tag == qn("t"):
+            parts.append(child.text or "")
+        elif child.tag == qn("tab"):
+            parts.append("\t")
+    return "".join(parts).replace("\u00a0", " ").strip()
 
 
 def paragraph_style(node: ET.Element) -> str:
@@ -340,7 +346,10 @@ def validate_anonymous(path: Path) -> tuple[bool, list[str], dict[str, object], 
     for style in ("HFUTAbstractBodyCN", "HFUTAbstractBodyEN"):
         if not any(current_style == style and text for current_style, text in paragraphs):
             errors.append(f"missing non-empty {style}")
-    headings = {text for style, text in paragraphs if style.startswith("HFUTHeading")}
+    headings = {
+        text for style, text in paragraphs
+        if style.startswith("HFUTHeading") or style == "HFUTIntroHeading"
+    }
     for section in REQUIRED_SECTIONS:
         if section not in headings:
             errors.append(f"missing section heading: {section}")
