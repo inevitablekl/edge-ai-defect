@@ -1,0 +1,3 @@
+figure_id,manuscript_title,workbook,submission_object,sheets,native_chart_objects,scientific_authorities,visual_reference,status,manual_insertion_required
+F2,三条路径的端到端性能,Figure2_E2E_performance.xlsx,NATIVE_EXCEL_CHART_WORKBOOK,RawRuns;DisplayValues;Figure,3,docs/paper/phase5_6/phase56b_run_level_metrics.csv;docs/paper/phase5_6/phase56b_publication_display_values.json,docs/paper/phase5_6/visual/production/figures/fig3_main_e2e_phase56.svg,READY,YES
+F3,运行级分布与尾延迟,Figure3_run_level_distribution.xlsx,NATIVE_EXCEL_CHART_WORKBOOK,RawRuns;DisplayValues;Figure,2,docs/paper/phase5_6/phase56b_run_level_metrics.csv;docs/paper/phase5_6/phase56b_publication_display_values.json,docs/paper/phase5_6/visual/production/figures/fig4_run_level_distribution_phase56.svg,READY,YES
