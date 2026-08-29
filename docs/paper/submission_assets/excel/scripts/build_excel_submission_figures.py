@@ -376,9 +376,10 @@ def chart_base(chart: Any, y_title: str, y_min: float, y_max: float,
 
 
 def native_axis_caption(caption: str,
-                        tick_font_name: str = "Times New Roman") -> dict[str, Any]:
+                        tick_font_name: str = "Times New Roman",
+                        caption_layout: dict[str, float] | None = None) -> dict[str, Any]:
     """Return shared native X-axis title styling for below-panel captions."""
-    return {
+    axis = {
         "name": caption,
         "name_font": {
             "name": "Microsoft YaHei", "size": 9,
@@ -388,6 +389,9 @@ def native_axis_caption(caption: str,
         "line": {"color": "#111827", "width": 1.0},
         "major_tick_mark": "inside",
     }
+    if caption_layout:
+        axis["name_layout"] = caption_layout
+    return axis
 
 
 def add_native_scatter_axis_labels(chart: Any, source_range: tuple[int, int, int, int],
@@ -460,11 +464,14 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         fps, "FPS", 0, 170,
         f'V0→V2R  {summary["publication_display_precision"]["v2r_v0_fps_ratio"]}；'
         f'V2R→V3R  {summary["publication_display_precision"]["v3r_v2r_fps"]}',
-        plot_layout={"x": 0.13, "y": 0.18, "width": 0.82, "height": 0.57},
+        plot_layout={"x": 0.10, "y": 0.16, "width": 0.87, "height": 0.62},
     )
-    fps.set_x_axis(native_axis_caption("(a) FPS（均值±样本SD；每路径5进程）", "Times New Roman"))
+    fps.set_x_axis(native_axis_caption(
+        "(a) FPS（均值±样本SD；每路径5进程）", "Times New Roman",
+        {"x": 0.34, "y": 0.88},
+    ))
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 350})
+    fps.set_size({"width": 680, "height": 335})
 
     mean_latency = workbook.add_chart({"type": "column"})
     mean_latency.add_series({
@@ -481,11 +488,14 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         mean_latency, "E2E 延迟 / ms", 0, 27,
         f'V0→V2R  −{summary["publication_display_precision"]["v2r_v0_mean_latency_reduction"]}；'
         f'V2R→V3R  {typographic_sign(summary["publication_display_precision"]["v3r_v2r_mean_latency"])}',
-        plot_layout={"x": 0.13, "y": 0.18, "width": 0.82, "height": 0.57},
+        plot_layout={"x": 0.10, "y": 0.16, "width": 0.87, "height": 0.62},
     )
-    mean_latency.set_x_axis(native_axis_caption("(b) 合并样本平均 E2E 延迟（n=5400/路径）"))
+    mean_latency.set_x_axis(native_axis_caption(
+        "(b) 合并样本平均 E2E 延迟（n=5400/路径）",
+        caption_layout={"x": 0.33, "y": 0.88},
+    ))
     mean_latency.set_style(10)
-    mean_latency.set_size({"width": 680, "height": 350})
+    mean_latency.set_size({"width": 680, "height": 335})
 
     tails = workbook.add_chart({"type": "column"})
     for column, variant in enumerate(VARIANTS, start=1):
@@ -501,26 +511,29 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         })
     chart_base(
         tails, "延迟 / ms", 0, 21, None, legend=True,
-        plot_layout={"x": 0.13, "y": 0.08, "width": 0.82, "height": 0.56},
+        plot_layout={"x": 0.10, "y": 0.06, "width": 0.87, "height": 0.62},
     )
-    tails.set_x_axis(native_axis_caption("(c) 合并样本 P95 / P99（n=5400/路径）", "Times New Roman"))
+    tails.set_x_axis(native_axis_caption(
+        "(c) 合并样本 P95 / P99（n=5400/路径）", "Times New Roman",
+        {"x": 0.34, "y": 0.75},
+    ))
     tails.set_legend({
         "position": "bottom",
         "font": {"name": "Times New Roman", "size": 9},
     })
     tails.set_style(10)
-    tails.set_size({"width": 680, "height": 370})
+    tails.set_size({"width": 680, "height": 355})
 
     figure.insert_chart("B1", fps, {
         "description": "Panel a: V0, V2R, V3R process-level FPS mean with sample SD error bars.",
     })
-    figure.insert_chart("B19", mean_latency, {
+    figure.insert_chart("B18", mean_latency, {
         "description": "Panel b: pooled mean end-to-end latency for 5400 samples per path.",
     })
-    figure.insert_chart("B37", tails, {
+    figure.insert_chart("B35", tails, {
         "description": "Panel c: pooled P95 and P99 latency for V0, V2R, and V3R.",
     })
-    figure.print_area("A1:J55")
+    figure.print_area("A1:J52")
     figure.fit_to_pages(1, 2)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
@@ -580,9 +593,12 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     chart_base(
         fps, "进程级 FPS", 50, 132,
         None,
-        plot_layout={"x": 0.15, "y": 0.07, "width": 0.80, "height": 0.68},
+        plot_layout={"x": 0.11, "y": 0.05, "width": 0.86, "height": 0.73},
     )
-    fps_axis = native_axis_caption("(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）")
+    fps_axis = native_axis_caption(
+        "(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）",
+        caption_layout={"x": 0.26, "y": 0.88},
+    )
     fps_axis.update({
         "min": 0.5, "max": 3.5, "major_unit": 1,
         "num_format": "0",
@@ -590,7 +606,7 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     })
     fps.set_x_axis(fps_axis)
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 390})
+    fps.set_size({"width": 680, "height": 370})
 
     latency = workbook.add_chart({"type": "scatter", "subtype": "straight_with_markers"})
     for variant in ("V2R", "V3R"):
@@ -628,9 +644,12 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     chart_base(
         latency, "进程级延迟 / ms", 7.45, 12.05,
         None, legend=True, y_num_format="0.0",
-        plot_layout={"x": 0.15, "y": 0.13, "width": 0.80, "height": 0.60},
+        plot_layout={"x": 0.11, "y": 0.11, "width": 0.86, "height": 0.65},
     )
-    latency_axis = native_axis_caption("(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）")
+    latency_axis = native_axis_caption(
+        "(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）",
+        caption_layout={"x": 0.28, "y": 0.87},
+    )
     latency_axis.update({
         "min": 0.5, "max": 3.5, "major_unit": 1,
         "num_format": "0",
@@ -643,15 +662,15 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         "delete_series": [2, 3],
     })
     latency.set_style(10)
-    latency.set_size({"width": 680, "height": 410})
+    latency.set_size({"width": 680, "height": 390})
 
     figure.insert_chart("B1", fps, {
         "description": "Panel a: five independent process-level FPS points per path with mean and sample SD.",
     })
-    figure.insert_chart("B21", latency, {
+    figure.insert_chart("B20", latency, {
         "description": "Panel b: process-level mean, P95, and P99 latency points for V2R and V3R; pooled tail changes have opposite directions.",
     })
-    figure.print_area("A1:J41")
+    figure.print_area("A1:J39")
     figure.fit_to_pages(1, 2)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
@@ -717,7 +736,11 @@ def validate_workbook(path: Path, expected_chart_count: int,
         top_titles: list[str] = []
         x_axis_captions: list[str] = []
         y_axis_formats: list[str] = []
+        plot_area_lefts: list[float] = []
+        plot_area_rights: list[float] = []
         plot_area_bottoms: list[float] = []
+        caption_positions: list[dict[str, float]] = []
+        caption_clearances: list[float] = []
         for index, (part, expected_caption) in enumerate(
                 zip(chart_parts, expected_x_axis_captions)):
             chart_root = ElementTree.fromstring(archive.read(part))
@@ -736,14 +759,25 @@ def validate_workbook(path: Path, expected_chart_count: int,
                     f"STOP_PANEL_CAPTION_CLEARANCE_FAILURE: no manual plot layout in {part}"
                 )
             plot_y = plot_layout.find("c:y", chart_namespace)
+            plot_x = plot_layout.find("c:x", chart_namespace)
+            plot_width = plot_layout.find("c:w", chart_namespace)
             plot_height = plot_layout.find("c:h", chart_namespace)
-            if plot_y is None or plot_height is None:
+            if any(value is None for value in (plot_x, plot_y, plot_width, plot_height)):
                 raise RuntimeError(f"incomplete plot-area layout in {part}")
+            plot_left = float(plot_x.attrib["val"])
+            plot_right = plot_left + float(plot_width.attrib["val"])
             plot_bottom = float(plot_y.attrib["val"]) + float(plot_height.attrib["val"])
-            if plot_bottom > 0.76:
+            if plot_left > 0.111 or plot_right < 0.969:
+                raise RuntimeError(
+                    f"STOP_CHART_CANVAS_TIGHTENING_FAILURE: horizontal plot bounds "
+                    f"{plot_left}, {plot_right} in {part}"
+                )
+            if plot_bottom > 0.79:
                 raise RuntimeError(
                     f"STOP_PANEL_CAPTION_CLEARANCE_FAILURE: plot bottom {plot_bottom} in {part}"
                 )
+            plot_area_lefts.append(plot_left)
+            plot_area_rights.append(plot_right)
             plot_area_bottoms.append(plot_bottom)
 
             axes = [
@@ -762,12 +796,36 @@ def validate_workbook(path: Path, expected_chart_count: int,
             ]
             if len(bottom_axes) != 1 or len(left_axes) != 1:
                 raise RuntimeError(f"axis structure mismatch in {part}")
-            caption = xml_visible_text(bottom_axes[0].find("c:title", chart_namespace))
+            axis_title = bottom_axes[0].find("c:title", chart_namespace)
+            caption = xml_visible_text(axis_title)
             if caption != expected_caption:
                 raise RuntimeError(
                     f"STOP_PANEL_CAPTION_NATIVE_PLACEMENT_FAILURE: {part}: {caption!r} != {expected_caption!r}"
                 )
             x_axis_captions.append(caption)
+            caption_layout = axis_title.find(
+                "c:layout/c:manualLayout", chart_namespace
+            ) if axis_title is not None else None
+            if caption_layout is None:
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_SEPARATION_FAILURE: no native caption layout in {part}"
+                )
+            caption_x = caption_layout.find("c:x", chart_namespace)
+            caption_y = caption_layout.find("c:y", chart_namespace)
+            if caption_x is None or caption_y is None:
+                raise RuntimeError(f"incomplete native caption layout in {part}")
+            caption_position = {
+                "x": float(caption_x.attrib["val"]),
+                "y": float(caption_y.attrib["val"]),
+            }
+            caption_clearance = caption_position["y"] - plot_bottom
+            if caption_clearance < 0.065 or caption_position["y"] > 0.89:
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_SEPARATION_FAILURE: caption y/clearance "
+                    f"{caption_position['y']}, {caption_clearance} in {part}"
+                )
+            caption_positions.append(caption_position)
+            caption_clearances.append(caption_clearance)
             if hide_numeric_x_labels:
                 tick_position = bottom_axes[0].find("c:tickLblPos", chart_namespace)
                 if tick_position is None or tick_position.attrib.get("val") != "none":
@@ -834,7 +892,11 @@ def validate_workbook(path: Path, expected_chart_count: int,
         "top_titles": top_titles,
         "x_axis_panel_captions": x_axis_captions,
         "y_axis_number_formats": y_axis_formats,
+        "plot_area_left_fractions": plot_area_lefts,
+        "plot_area_right_fractions": plot_area_rights,
         "plot_area_bottom_fractions": plot_area_bottoms,
+        "caption_positions": caption_positions,
+        "caption_clearance_fractions": caption_clearances,
         "anchor_start_rows": anchor_start_rows,
         "anchor_end_rows": anchor_end_rows,
         "inter_panel_row_gaps": inter_panel_row_gaps,
