@@ -308,7 +308,7 @@ def write_figure3_display(worksheet: Any, grouped: dict[str, list[dict[str, Any]
     worksheet.write(63, 0, "Accepted pooled-tail annotation", formats["section"])
     worksheet.write_row(64, 0, ("x", "y", "annotation"), formats["header"])
     worksheet.write_number(65, 0, 2.0, formats["number"])
-    worksheet.write_number(65, 1, 7.55, formats["number"])
+    worksheet.write_number(65, 1, 7.72, formats["number"])
     annotation = (
         f'P95 {typographic_sign(display["v3r_v2r_p95"])}; '
         f'P99 {typographic_sign(display["v3r_v2r_p99"])}\n方向相反'
@@ -341,7 +341,8 @@ def write_figure3_display(worksheet: Any, grouped: dict[str, list[dict[str, Any]
 
 def chart_base(chart: Any, y_title: str, y_min: float, y_max: float,
                title: str | None, legend: bool = False,
-               y_num_format: str = "0") -> None:
+               y_num_format: str = "0",
+               plot_layout: dict[str, float] | None = None) -> None:
     if title:
         chart.set_title({
             "name": title,
@@ -366,7 +367,10 @@ def chart_base(chart: Any, y_title: str, y_min: float, y_max: float,
         "major_tick_mark": "inside",
     })
     chart.set_chartarea({"border": {"none": True}, "fill": {"color": "#FFFFFF"}})
-    chart.set_plotarea({"border": {"none": True}, "fill": {"color": "#FFFFFF"}})
+    plotarea = {"border": {"none": True}, "fill": {"color": "#FFFFFF"}}
+    if plot_layout:
+        plotarea["layout"] = plot_layout
+    chart.set_plotarea(plotarea)
     if not legend:
         chart.set_legend({"none": True})
 
@@ -456,10 +460,11 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         fps, "FPS", 0, 170,
         f'V0→V2R  {summary["publication_display_precision"]["v2r_v0_fps_ratio"]}；'
         f'V2R→V3R  {summary["publication_display_precision"]["v3r_v2r_fps"]}',
+        plot_layout={"x": 0.13, "y": 0.18, "width": 0.82, "height": 0.57},
     )
     fps.set_x_axis(native_axis_caption("(a) FPS（均值±样本SD；每路径5进程）", "Times New Roman"))
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 370})
+    fps.set_size({"width": 680, "height": 350})
 
     mean_latency = workbook.add_chart({"type": "column"})
     mean_latency.add_series({
@@ -476,10 +481,11 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         mean_latency, "E2E 延迟 / ms", 0, 27,
         f'V0→V2R  −{summary["publication_display_precision"]["v2r_v0_mean_latency_reduction"]}；'
         f'V2R→V3R  {typographic_sign(summary["publication_display_precision"]["v3r_v2r_mean_latency"])}',
+        plot_layout={"x": 0.13, "y": 0.18, "width": 0.82, "height": 0.57},
     )
     mean_latency.set_x_axis(native_axis_caption("(b) 合并样本平均 E2E 延迟（n=5400/路径）"))
     mean_latency.set_style(10)
-    mean_latency.set_size({"width": 680, "height": 370})
+    mean_latency.set_size({"width": 680, "height": 350})
 
     tails = workbook.add_chart({"type": "column"})
     for column, variant in enumerate(VARIANTS, start=1):
@@ -493,26 +499,29 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
                 "font": {"name": "Times New Roman", "size": 8, "rotation": -90},
             },
         })
-    chart_base(tails, "延迟 / ms", 0, 21, None, legend=True)
+    chart_base(
+        tails, "延迟 / ms", 0, 21, None, legend=True,
+        plot_layout={"x": 0.13, "y": 0.08, "width": 0.82, "height": 0.56},
+    )
     tails.set_x_axis(native_axis_caption("(c) 合并样本 P95 / P99（n=5400/路径）", "Times New Roman"))
     tails.set_legend({
         "position": "bottom",
         "font": {"name": "Times New Roman", "size": 9},
     })
     tails.set_style(10)
-    tails.set_size({"width": 680, "height": 390})
+    tails.set_size({"width": 680, "height": 370})
 
     figure.insert_chart("B1", fps, {
         "description": "Panel a: V0, V2R, V3R process-level FPS mean with sample SD error bars.",
     })
-    figure.insert_chart("B26", mean_latency, {
+    figure.insert_chart("B19", mean_latency, {
         "description": "Panel b: pooled mean end-to-end latency for 5400 samples per path.",
     })
-    figure.insert_chart("B51", tails, {
+    figure.insert_chart("B37", tails, {
         "description": "Panel c: pooled P95 and P99 latency for V0, V2R, and V3R.",
     })
-    figure.print_area("A1:J77")
-    figure.fit_to_pages(1, 3)
+    figure.print_area("A1:J55")
+    figure.fit_to_pages(1, 2)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
     workbook.close()
@@ -571,6 +580,7 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     chart_base(
         fps, "进程级 FPS", 50, 132,
         None,
+        plot_layout={"x": 0.15, "y": 0.07, "width": 0.80, "height": 0.68},
     )
     fps_axis = native_axis_caption("(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）")
     fps_axis.update({
@@ -580,7 +590,7 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     })
     fps.set_x_axis(fps_axis)
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 420})
+    fps.set_size({"width": 680, "height": 390})
 
     latency = workbook.add_chart({"type": "scatter", "subtype": "straight_with_markers"})
     for variant in ("V2R", "V3R"):
@@ -618,6 +628,7 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     chart_base(
         latency, "进程级延迟 / ms", 7.45, 12.05,
         None, legend=True, y_num_format="0.0",
+        plot_layout={"x": 0.15, "y": 0.13, "width": 0.80, "height": 0.60},
     )
     latency_axis = native_axis_caption("(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）")
     latency_axis.update({
@@ -632,15 +643,15 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
         "delete_series": [2, 3],
     })
     latency.set_style(10)
-    latency.set_size({"width": 680, "height": 430})
+    latency.set_size({"width": 680, "height": 410})
 
     figure.insert_chart("B1", fps, {
         "description": "Panel a: five independent process-level FPS points per path with mean and sample SD.",
     })
-    figure.insert_chart("B30", latency, {
+    figure.insert_chart("B21", latency, {
         "description": "Panel b: process-level mean, P95, and P99 latency points for V2R and V3R; pooled tail changes have opposite directions.",
     })
-    figure.print_area("A1:J59")
+    figure.print_area("A1:J41")
     figure.fit_to_pages(1, 2)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
@@ -706,6 +717,7 @@ def validate_workbook(path: Path, expected_chart_count: int,
         top_titles: list[str] = []
         x_axis_captions: list[str] = []
         y_axis_formats: list[str] = []
+        plot_area_bottoms: list[float] = []
         for index, (part, expected_caption) in enumerate(
                 zip(chart_parts, expected_x_axis_captions)):
             chart_root = ElementTree.fromstring(archive.read(part))
@@ -715,6 +727,24 @@ def validate_workbook(path: Path, expected_chart_count: int,
                     f"STOP_PANEL_CAPTION_NATIVE_PLACEMENT_FAILURE: top title still contains panel label: {part}"
                 )
             top_titles.append(top_title or "NONE")
+
+            plot_layout = chart_root.find(
+                "./c:chart/c:plotArea/c:layout/c:manualLayout", chart_namespace
+            )
+            if plot_layout is None:
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_CLEARANCE_FAILURE: no manual plot layout in {part}"
+                )
+            plot_y = plot_layout.find("c:y", chart_namespace)
+            plot_height = plot_layout.find("c:h", chart_namespace)
+            if plot_y is None or plot_height is None:
+                raise RuntimeError(f"incomplete plot-area layout in {part}")
+            plot_bottom = float(plot_y.attrib["val"]) + float(plot_height.attrib["val"])
+            if plot_bottom > 0.76:
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_CLEARANCE_FAILURE: plot bottom {plot_bottom} in {part}"
+                )
+            plot_area_bottoms.append(plot_bottom)
 
             axes = [
                 *chart_root.findall(".//c:catAx", chart_namespace),
@@ -768,6 +798,28 @@ def validate_workbook(path: Path, expected_chart_count: int,
         graphic_frames = drawing_xml.count("<xdr:graphicFrame")
         if graphic_frames != expected_chart_count:
             raise RuntimeError(f"drawing/chart object count mismatch in {path}: {graphic_frames}")
+        drawing_namespace = {
+            "xdr": "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing",
+        }
+        drawing_root = ElementTree.fromstring(archive.read(drawing_parts[0]))
+        anchors = drawing_root.findall("xdr:twoCellAnchor", drawing_namespace)
+        anchor_start_rows = [
+            int(anchor.find("xdr:from/xdr:row", drawing_namespace).text)
+            for anchor in anchors
+        ]
+        anchor_end_rows = [
+            int(anchor.find("xdr:to/xdr:row", drawing_namespace).text)
+            for anchor in anchors
+        ]
+        inter_panel_row_gaps = [
+            anchor_start_rows[index + 1] - anchor_end_rows[index]
+            for index in range(len(anchors) - 1)
+        ]
+        if len(anchors) != expected_chart_count or any(
+                gap < 0 or gap > 1 for gap in inter_panel_row_gaps):
+            raise RuntimeError(
+                f"STOP_EXCESSIVE_SPACING_REMEDIATION_FAILURE: anchor gaps {inter_panel_row_gaps}"
+            )
     return {
         "path": str(path),
         "bytes": path.stat().st_size,
@@ -782,6 +834,10 @@ def validate_workbook(path: Path, expected_chart_count: int,
         "top_titles": top_titles,
         "x_axis_panel_captions": x_axis_captions,
         "y_axis_number_formats": y_axis_formats,
+        "plot_area_bottom_fractions": plot_area_bottoms,
+        "anchor_start_rows": anchor_start_rows,
+        "anchor_end_rows": anchor_end_rows,
+        "inter_panel_row_gaps": inter_panel_row_gaps,
     }
 
 
