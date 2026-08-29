@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "figure_id": "F2",
+  "authority": {
+    "generator": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_statistical.py",
+    "reference_svg": "figure2_reference.svg",
+    "reference_png": "figure2_reference.png",
+    "data": "figure2_data.csv",
+    "display_values": "figure2_display_values.json"
+  },
+  "page": {
+    "width_mm": 66.4942232611111,
+    "height_mm": 137.4044446611111,
+    "submission_max_width_mm": 75.0,
+    "background": "none/transparent for copied graph; white preview export",
+    "orientation": "portrait"
+  },
+  "layers": [
+    {
+      "id":"panel_a","index":1,"panel_label":"(a)",
+      "frame_mm":{"left":10.03002361388889,"bottom":108.91468339984984,"width":55.4482,"height":27.473761261261266},
+      "plot_type":"clustered_column_with_y_error",
+      "x":{"categorical":true,"categories":["V0","V2R","V3R"],"range":[-0.5,2.5],"major_ticks":"category centers","title":null},
+      "y":{"title":"FPS","range":[0,170],"major_step":50,"minor_ticks":0},
+      "series":[
+        {"variant":"V0","x_index":0,"y_column":"mean_fps","error_column":"sample_sd_fps","error_semantics":"sample SD across 5 independent processes"},
+        {"variant":"V2R","x_index":1,"y_column":"mean_fps","error_column":"sample_sd_fps","error_semantics":"sample SD across 5 independent processes"},
+        {"variant":"V3R","x_index":2,"y_column":"mean_fps","error_column":"sample_sd_fps","error_semantics":"sample SD across 5 independent processes"}
+      ],
+      "bar_width_fraction":0.8,"error_caps_pt":3.2,
+      "data_labels":{"column":"panel_a.bar_labels","position":"above","offset_data_units":5.0,"rotation_deg":0},
+      "annotations":[
+        {"text":"均值±样本SD；每路径5进程","coordinates":"layer_fraction","x":0.98,"y":0.98,"horizontal_alignment":"right","vertical_alignment":"top"},
+        {"text":"V0→V2R  2.24×\nV2R→V3R  +4.07%","coordinates":"layer_fraction","x":0.03,"y":0.84,"horizontal_alignment":"left","vertical_alignment":"top"},
+        {"text":"(a)","coordinates":"layer_fraction","x":0.5,"y":-0.25,"horizontal_alignment":"center","vertical_alignment":"top"}
+      ],
+      "legend":{"visible":false}
+    },
+    {
+      "id":"panel_b","index":2,"panel_label":"(b)",
+      "frame_mm":{"left":10.03002361388889,"bottom":61.659814030480476,"width":55.4482,"height":27.473761261261252},
+      "plot_type":"clustered_column",
+      "x":{"categorical":true,"categories":["V0","V2R","V3R"],"range":[-0.5,2.5],"major_ticks":"category centers","title":null},
+      "y":{"title":"E2E 延迟 / ms","range":[0,27],"major_step":10,"minor_ticks":0},
+      "series":[
+        {"variant":"V0","x_index":0,"y_column":"pooled_mean_latency_ms","aggregation":"pooled 5400 latency samples"},
+        {"variant":"V2R","x_index":1,"y_column":"pooled_mean_latency_ms","aggregation":"pooled 5400 latency samples"},
+        {"variant":"V3R","x_index":2,"y_column":"pooled_mean_latency_ms","aggregation":"pooled 5400 latency samples"}
+      ],
+      "bar_width_fraction":0.8,
+      "data_labels":{"column":"panel_b.bar_labels","position":"above","offset_data_units":0.55,"rotation_deg":0},
+      "annotations":[
+        {"text":"合并 n=5400/路径","coordinates":"layer_fraction","x":0.98,"y":0.73,"horizontal_alignment":"right","vertical_alignment":"top"},
+        {"text":"V0→V2R  −55.45%\nV2R→V3R  −4.03%","coordinates":"layer_fraction","x":0.05,"y":0.98,"horizontal_alignment":"left","vertical_alignment":"top"},
+        {"text":"(b)","coordinates":"layer_fraction","x":0.5,"y":-0.25,"horizontal_alignment":"center","vertical_alignment":"top"}
+      ],
+      "legend":{"visible":false}
+    },
+    {
+      "id":"panel_c","index":3,"panel_label":"(c)",
+      "frame_mm":{"left":10.03002361388889,"bottom":14.40494466111109,"width":55.4482,"height":27.473761261261266},
+      "plot_type":"grouped_column",
+      "x":{"categorical":true,"categories":["P95","P99"],"range":[-0.5,1.5],"major_ticks":"category centers","title":null},
+      "y":{"title":"延迟 / ms","range":[0,21],"major_step":5,"minor_ticks":0},
+      "series":[
+        {"variant":"V0","columns":["pooled_p95_ms","pooled_p99_ms"],"within_group_offset":-0.23},
+        {"variant":"V2R","columns":["pooled_p95_ms","pooled_p99_ms"],"within_group_offset":0.0},
+        {"variant":"V3R","columns":["pooled_p95_ms","pooled_p99_ms"],"within_group_offset":0.23}
+      ],
+      "bar_width_fraction":0.23,
+      "data_labels":{"column":"panel_c.bar_labels","position":"above","offset_data_units":0.22,"rotation_deg":90},
+      "annotations":[{"text":"(c)","coordinates":"layer_fraction","x":0.5,"y":-0.40,"horizontal_alignment":"center","vertical_alignment":"top"}],
+      "legend":{"visible":true,"entries":["V0","V2R","V3R"],"location":"lower_center_outside","columns":3}
+    }
+  ],
+  "series_style": {
+    "order":["V0","V2R","V3R"],
+    "V0":{"fill":"#C5CBD1","edge":"#30363C","hatch":"dots","marker":"square"},
+    "V2R":{"fill":"#B9D8EB","edge":"#356B8B","hatch":"forward_diagonal","marker":"circle"},
+    "V3R":{"fill":"#EFC9A8","edge":"#9A5B2D","hatch":"backward_diagonal","marker":"triangle_up"},
+    "edge_width_pt":1.0,"grayscale_distinction":"distinct hatch plus edge tone; color is not the sole encoder"
+  },
+  "typography": {
+    "default_size_pt":7.5,"Chinese_font":"SimSun","Latin_font":"Times New Roman","panel_label_font":"Times New Roman","bold":false,
+    "minus_sign":"U+2212 for displayed negative annotations"
+  },
+  "axes_style":{"top_spine":false,"right_spine":false,"axis_width_pt":0.8,"tick_direction":"in","tick_length_pt":3,"grid_axis":"y","grid_color":"#D8DDE2","grid_width_pt":0.55},
+  "panel_spacing":{"source_hspace":0.72,"layout":"three vertically stacked layers","preserve_reference_alignment":true},
+  "scientific_semantics":{"fps":"mean and sample SD over 5 independent processes per path","mean_latency":"pooled mean over 5400 frame samples per path","tails":"pooled variant-level P95/P99; not mean process-level percentiles","path_order":["V0","V2R","V3R"]}
+}

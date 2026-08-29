@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "figure_id": "F3",
+  "title_cn": "运行级分布与尾延迟",
+  "path_order": ["V0", "V2R", "V3R"],
+  "panel_a": {
+    "axis_title": "进程级 FPS",
+    "annotation_lines": ["点：独立进程", "横线/误差：均值±样本SD"],
+    "mean_fps": {"V0":54.59997635740052,"V2R":122.12219222215381,"V3R":127.09725845097027},
+    "sample_sd_fps": {"V0":0.2233775769280029,"V2R":0.4918299468125864,"V3R":1.2792256600642773}
+  },
+  "panel_b": {
+    "axis_title": "进程级延迟 / ms",
+    "metric_order": ["均值", "P95", "P99"],
+    "series_order": ["V2R", "V3R"],
+    "annotation_line_1": "P95 +0.15%; P99 −0.12%",
+    "annotation_line_2": "方向相反",
+    "publication_changes": {"P95":"+0.15%","P99":"-0.12%"},
+    "authority_precision_changes_percent": {"P95":0.1514,"P99":-0.1184}
+  },
+  "aggregation": {
+    "processes_per_variant": 5,
+    "samples_per_process": 1080,
+    "pooled_samples_per_variant": 5400,
+    "process_semantics": "15 independent processes; not paired or matched repeated measures",
+    "tail_interpretation": "P95 and P99 pooled relative changes are both below 0.2% and have opposite directions."
+  }
+}

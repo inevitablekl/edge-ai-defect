@@ -1,0 +1,25 @@
+object_id,text,semantic_role,Chinese_or_Latin,font_family_target,font_size_pt,bold,italic,horizontal_alignment,vertical_alignment
+host_domain_text,主机域,domain_label,Chinese,SimSun,8,true,false,center,middle
+device_domain_text,设备域,domain_label,Chinese,SimSun,8,true,false,center,middle
+boundary_text,主机—设备边界,boundary_label,mixed,SimSun / Times New Roman,8,false,false,center,middle
+p0_label_text,P₀ / V0,path_identifier,Latin,Times New Roman,8,true,true,center,middle
+p0_host_text,"CPU输入形成\nFP32 NCHW",host_formation,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p0_staging_text,M = 无,staging_policy,mixed,Times New Roman / SimSun,8,false,false,center,middle
+p0_representation_text,R = FP32 NCHW,h2d_representation,Latin,Times New Roman,8,true,false,center,middle
+p0_device_text,"TensorRT输入\nF = 主机",device_formation,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p0_topology_text,E = 单帧顺序,execution_topology,mixed,Times New Roman / SimSun,8,false,false,center,middle
+p2_label_text,P₂ / V2R,path_identifier,Latin,Times New Roman,8,true,true,center,middle
+p2_host_text,"Pageable暂存\npacked BGR uint8",host_staging,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p2_staging_text,M = Pageable,staging_policy,Latin,Times New Roman,8,false,false,center,middle
+p2_representation_text,R = packed BGR uint8,h2d_representation,Latin,Times New Roman,8,true,false,center,middle
+p2_device_text,"GPU融合输入形成\nF = 设备",device_formation,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p2_topology_text,E = 单帧顺序,execution_topology,mixed,Times New Roman / SimSun,8,false,false,center,middle
+p3_label_text,P₃ / V3R,path_identifier,Latin,Times New Roman,8,true,true,center,middle
+p3_host_text,"Pinned暂存\npacked BGR uint8",host_staging,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p3_staging_text,M = Pinned,staging_policy,Latin,Times New Roman,8,false,false,center,middle
+p3_representation_text,R = packed BGR uint8,h2d_representation,Latin,Times New Roman,8,true,false,center,middle
+p3_device_text,"GPU融合输入形成\nF = 设备",device_formation,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p3_topology_text,E = 单帧顺序,execution_topology,mixed,Times New Roman / SimSun,8,false,false,center,middle
+p0_p2_scope_text,"P₀ → P₂：路径级重构\n改变 R、F、M；E 保持不变",hierarchy_semantics,mixed,SimSun / Times New Roman,8,true,false,center,middle
+p2_p3_scope_text,"P₂ → P₃：暂存策略级细化\n仅改变 M：Pageable → Pinned",hierarchy_semantics,mixed,SimSun / Times New Roman,8,true,false,center,middle
+scope_warning_text,干预层级表示结构变量范围，不表示收益大小或组件级因果关系,scope_warning,Chinese,SimSun,8,false,false,center,middle

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "figure_id": "F3",
+  "authority": {
+    "generator": "docs/paper/phase5_6/visual/scripts/generate_phase56d_production_statistical.py",
+    "reference_svg": "figure3_reference.svg",
+    "reference_png": "figure3_reference.png",
+    "data": "figure3_data.csv",
+    "display_values": "figure3_display_values.json"
+  },
+  "page": {
+    "width_mm": 64.9956232611111,
+    "height_mm": 105.47856024444444,
+    "submission_max_width_mm": 75.0,
+    "background": "none/transparent for copied graph; white preview export",
+    "orientation": "portrait"
+  },
+  "layers": [
+    {
+      "id":"panel_a","index":1,"panel_label":"(a)",
+      "frame_mm":{"left":10.03002361388889,"bottom":69.61872565797827,"width":53.9496,"height":34.84383458646617},
+      "plot_type":"grouped_scatter_plus_mean_sample_sd",
+      "x":{"categorical":true,"categories":["V0","V2R","V3R"],"range":[-0.45,2.45],"centers":[0,1,2],"fixed_jitter":[-0.12,-0.06,0.0,0.06,0.12]},
+      "y":{"title":"进程级 FPS","range":[50,132],"major_step":20,"minor_ticks":0},
+      "points":[
+        {"variant":"V0","filter":"variant == V0","y_column":"fps","marker":"square"},
+        {"variant":"V2R","filter":"variant == V2R","y_column":"fps","marker":"circle"},
+        {"variant":"V3R","filter":"variant == V3R","y_column":"fps","marker":"triangle_up"}
+      ],
+      "summary":[
+        {"variant":"V0","x":0,"mean":54.59997635740052,"sample_sd":0.2233775769280029,"render":"horizontal mean marker with capped sample-SD error"},
+        {"variant":"V2R","x":1,"mean":122.12219222215381,"sample_sd":0.4918299468125864,"render":"horizontal mean marker with capped sample-SD error"},
+        {"variant":"V3R","x":2,"mean":127.09725845097027,"sample_sd":1.2792256600642773,"render":"horizontal mean marker with capped sample-SD error"}
+      ],
+      "annotations":[
+        {"text":"点：独立进程\n横线/误差：均值±样本SD","coordinates":"layer_fraction","x":0.02,"y":0.70,"horizontal_alignment":"left","vertical_alignment":"top"},
+        {"text":"(a)","coordinates":"layer_fraction","x":0.5,"y":-0.24,"horizontal_alignment":"center","vertical_alignment":"top"}
+      ],
+      "legend":{"visible":false}
+    },
+    {
+      "id":"panel_b","index":2,"panel_label":"(b)",
+      "frame_mm":{"left":10.03002361388889,"bottom":11.777960244444436,"width":53.9496,"height":34.84383458646617},
+      "plot_type":"grouped_process_level_scatter",
+      "x":{"categorical":true,"categories":["均值","P95","P99"],"range":[-0.55,2.55],"centers":[0,1,2],"variant_center_shift":{"V2R":-0.16,"V3R":0.16},"within_variant_jitter_multiplier":0.55,"fixed_jitter":[-0.12,-0.06,0.0,0.06,0.12]},
+      "y":{"title":"进程级延迟 / ms","range":[7.45,12.05],"major_step":1,"minor_ticks":0},
+      "series":[
+        {"variant":"V2R","columns":{"均值":"mean_latency_ms","P95":"process_p95_ms","P99":"process_p99_ms"},"marker":"circle"},
+        {"variant":"V3R","columns":{"均值":"mean_latency_ms","P95":"process_p95_ms","P99":"process_p99_ms"},"marker":"triangle_up"}
+      ],
+      "annotations":[
+        {"text":"P95 +0.15%; P99 −0.12%\n方向相反","coordinates":"layer_fraction","x":0.5,"y":0.04,"horizontal_alignment":"center","vertical_alignment":"bottom","box":{"fill":"#FAF7EA","edge":"#6B7280","edge_width_pt":0.7,"corner":"round","padding_fraction":0.16}},
+        {"text":"(b)","coordinates":"layer_fraction","x":0.5,"y":-0.24,"horizontal_alignment":"center","vertical_alignment":"top"}
+      ],
+      "legend":{"visible":true,"entries":["V2R","V3R"],"location":"upper_left","columns":2}
+    }
+  ],
+  "series_style": {
+    "order":["V0","V2R","V3R"],
+    "V0":{"fill":"#C5CBD1","edge":"#30363C","marker":"square","hatch":"dots"},
+    "V2R":{"fill":"#B9D8EB","edge":"#356B8B","marker":"circle","hatch":"forward_diagonal"},
+    "V3R":{"fill":"#EFC9A8","edge":"#9A5B2D","marker":"triangle_up","hatch":"backward_diagonal"},
+    "point_size_pt2":27,"marker_edge_width_pt":0.9,"mean_marker":"horizontal_line","mean_marker_size_pt":15,"mean_error_color":"#111111","mean_error_width_pt":1.2,"mean_error_caps_pt":4,
+    "grayscale_distinction":"shape plus edge tone; color is not the sole encoder"
+  },
+  "typography":{"default_size_pt":7.5,"Chinese_font":"SimSun","Latin_font":"Times New Roman","panel_label_font":"Times New Roman","bold":false,"minus_sign":"U+2212 in displayed annotation"},
+  "axes_style":{"top_spine":false,"right_spine":false,"axis_width_pt":0.8,"tick_direction":"in","tick_length_pt":3,"grid_axis":"y","grid_color":"#D8DDE2","grid_width_pt":0.55},
+  "panel_spacing":{"source_hspace":0.66,"layout":"two vertically stacked layers","preserve_reference_alignment":true},
+  "scientific_semantics":{"all_points":"independent process-level descriptors; horizontal offsets only distinguish points and do not encode pairing","fps_summary":"mean and sample SD over five independent processes","panel_b":"V2R and V3R process-level mean/P95/P99 descriptors","pooled_tail_annotation":"P95 +0.15%, P99 −0.12%, opposite directions at accepted publication precision"}
+}

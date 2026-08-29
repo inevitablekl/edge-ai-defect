@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "figure_id": "F2",
+  "title_cn": "三条路径的端到端性能",
+  "path_order": ["V0", "V2R", "V3R"],
+  "absolute_fps_decimals": 3,
+  "absolute_latency_ms_decimals": 3,
+  "panel_a": {
+    "bar_labels": {"V0":"54.600","V2R":"122.122","V3R":"127.097"},
+    "summary_label": "均值±样本SD；每路径5进程",
+    "annotations": ["V0→V2R  2.24×", "V2R→V3R  +4.07%"]
+  },
+  "panel_b": {
+    "bar_labels": {"V0":"18.273","V2R":"8.140","V3R":"7.812"},
+    "summary_label": "合并 n=5400/路径",
+    "annotations": ["V0→V2R  −55.45%", "V2R→V3R  −4.03%"]
+  },
+  "panel_c": {
+    "metric_order": ["P95", "P99"],
+    "bar_labels": {
+      "P95": {"V0":"18.854","V2R":"9.827","V3R":"9.842"},
+      "P99": {"V0":"19.068","V2R":"11.529","V3R":"11.515"}
+    },
+    "legend_order": ["V0", "V2R", "V3R"]
+  },
+  "aggregation": {
+    "processes_per_variant": 5,
+    "samples_per_process": 1080,
+    "pooled_samples_per_variant": 5400,
+    "p95_p99_semantics": "pooled variant-level latency samples; not mean(process-level percentile)"
+  },
+  "publication_change_strings": {
+    "v2r_v0_fps_ratio": "2.24×",
+    "v2r_v0_mean_latency_reduction": "55.45%",
+    "v3r_v2r_fps": "+4.07%",
+    "v3r_v2r_mean_latency": "-4.03%"
+  },
+  "source_authority_precision": {
+    "v2r_v0_fps_ratio": 2.236671,
+    "v2r_v0_mean_latency_reduction_percent": 55.4519,
+    "v3r_v2r_fps_change_percent": 4.0738,
+    "v3r_v2r_mean_latency_change_percent": -4.0349
+  }
+}

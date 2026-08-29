@@ -1,0 +1,4 @@
+variant,series_order,accepted_independent_processes,samples_per_process,pooled_latency_samples,mean_fps,sample_sd_fps,pooled_mean_latency_ms,pooled_p95_ms,pooled_p99_ms,source_csv,source_json
+V0,1,5,1080,5400,54.59997635740052,0.2233775769280029,18.272991810925923,18.8541178,19.06830438,docs/paper/phase5_6/phase56b_run_level_metrics.csv,docs/paper/phase5_6/phase56b_publication_display_values.json
+V2R,2,5,1080,5400,122.12219222215381,0.4918299468125864,8.14027878962963,9.82713435,11.52898548,docs/paper/phase5_6/phase56b_run_level_metrics.csv,docs/paper/phase5_6/phase56b_publication_display_values.json
+V3R,3,5,1080,5400,127.09725845097027,1.2792256600642773,7.8118285627777775,9.842011300000001,11.5153358,docs/paper/phase5_6/phase56b_run_level_metrics.csv,docs/paper/phase5_6/phase56b_publication_display_values.json
