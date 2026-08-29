@@ -20,7 +20,7 @@ from typing import Any
 from xml.etree import ElementTree
 
 import xlsxwriter
-from xlsxwriter.utility import xl_range_abs
+from xlsxwriter.utility import xl_range_abs, xl_rowcol_to_cell
 
 
 ROOT = Path(__file__).resolve().parents[5]
@@ -315,24 +315,46 @@ def write_figure3_display(worksheet: Any, grouped: dict[str, list[dict[str, Any]
     )
     worksheet.write(65, 2, annotation, formats["text"])
 
+    worksheet.write(68, 0, "Panel (a): native category-label helper", formats["section"])
+    worksheet.write_row(69, 0, ("x", "y", "category_label"), formats["header"])
+    for row_index, (x_value, label) in enumerate(zip((1, 2, 3), VARIANTS), start=70):
+        worksheet.write_number(row_index, 0, x_value, formats["integer"])
+        worksheet.write_number(row_index, 1, 50.5, formats["number"])
+        worksheet.write(row_index, 2, label, formats["text"])
+
+    worksheet.write(74, 0, "Panel (b): native metric-label helper", formats["section"])
+    worksheet.write_row(75, 0, ("x", "y", "metric_label"), formats["header"])
+    for row_index, (x_value, label) in enumerate(zip((1, 2, 3), ("均值", "P95", "P99")), start=76):
+        worksheet.write_number(row_index, 0, x_value, formats["integer"])
+        worksheet.write_number(row_index, 1, 7.55, formats["number"])
+        worksheet.write(row_index, 2, label, formats["text"])
+
     return {
         **{f"fps_{key}": value for key, value in fps_ranges.items()},
         **{f"latency_{key}": value for key, value in latency_ranges.items()},
         "fps_summary": (24, 1, 26, 3),
         "annotation": (65, 0, 65, 2),
+        "fps_axis_labels": (70, 0, 72, 2),
+        "latency_axis_labels": (76, 0, 78, 2),
     }
 
 
 def chart_base(chart: Any, y_title: str, y_min: float, y_max: float,
-               title: str, legend: bool = False) -> None:
-    chart.set_title({
-        "name": title,
-        "name_font": {"name": "Microsoft YaHei", "size": 10, "bold": True, "color": "#111827"},
-    })
+               title: str | None, legend: bool = False,
+               y_num_format: str = "0") -> None:
+    if title:
+        chart.set_title({
+            "name": title,
+            "name_font": {
+                "name": "Microsoft YaHei", "size": 9,
+                "bold": False, "color": "#111827",
+            },
+        })
     chart.set_y_axis({
         "name": y_title,
         "name_font": {"name": "Microsoft YaHei", "size": 10},
         "num_font": {"name": "Times New Roman", "size": 9},
+        "num_format": y_num_format,
         "min": y_min, "max": y_max,
         "major_gridlines": {"visible": True, "line": {"color": "#D8DDE2", "width": 0.75}},
         "line": {"color": "#111827", "width": 1.0},
@@ -347,6 +369,42 @@ def chart_base(chart: Any, y_title: str, y_min: float, y_max: float,
     chart.set_plotarea({"border": {"none": True}, "fill": {"color": "#FFFFFF"}})
     if not legend:
         chart.set_legend({"none": True})
+
+
+def native_axis_caption(caption: str,
+                        tick_font_name: str = "Times New Roman") -> dict[str, Any]:
+    """Return shared native X-axis title styling for below-panel captions."""
+    return {
+        "name": caption,
+        "name_font": {
+            "name": "Microsoft YaHei", "size": 9,
+            "bold": False, "color": "#111827",
+        },
+        "num_font": {"name": tick_font_name, "size": 10},
+        "line": {"color": "#111827", "width": 1.0},
+        "major_tick_mark": "inside",
+    }
+
+
+def add_native_scatter_axis_labels(chart: Any, source_range: tuple[int, int, int, int],
+                                   font_name: str) -> None:
+    """Add worksheet-backed text labels to a numeric scatter X-axis."""
+    first_row, x_col, last_row, label_col = source_range
+    custom_labels = []
+    for row in range(first_row, last_row + 1):
+        cell = xl_rowcol_to_cell(row, label_col, row_abs=True, col_abs=True)
+        custom_labels.append({
+            "value": f"=DisplayValues!{cell}",
+            "font": {"name": font_name, "size": 10, "color": "#111827"},
+        })
+    chart.add_series({
+        "name": "原生横轴标签",
+        "categories": ["DisplayValues", first_row, x_col, last_row, x_col],
+        "values": ["DisplayValues", first_row, 1, last_row, 1],
+        "line": {"none": True},
+        "marker": {"type": "none"},
+        "data_labels": {"position": "below", "custom": custom_labels},
+    })
 
 
 def patterned_point(variant: str) -> dict[str, Any]:
@@ -375,8 +433,6 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     figure.set_zoom(85)
     figure.set_column("A:A", 2)
     figure.set_column("B:J", 12)
-    figure.write("B1", "图2　三条路径的端到端性能（原生 Excel 图表组合）", formats["title"])
-    figure.write("B2", "三个图表均为可编辑的 Excel 原生图表；数值表见 DisplayValues。", formats["note"])
 
     fps = workbook.add_chart({"type": "column"})
     fps.add_series({
@@ -398,12 +454,12 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     })
     chart_base(
         fps, "FPS", 0, 170,
-        f'(a) FPS（均值±样本SD；每路径5进程）\nV0→V2R  {summary["publication_display_precision"]["v2r_v0_fps_ratio"]}；'
+        f'V0→V2R  {summary["publication_display_precision"]["v2r_v0_fps_ratio"]}；'
         f'V2R→V3R  {summary["publication_display_precision"]["v3r_v2r_fps"]}',
     )
-    fps.set_x_axis({"num_font": {"name": "Times New Roman", "size": 10}})
+    fps.set_x_axis(native_axis_caption("(a) FPS（均值±样本SD；每路径5进程）", "Times New Roman"))
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 340})
+    fps.set_size({"width": 680, "height": 370})
 
     mean_latency = workbook.add_chart({"type": "column"})
     mean_latency.add_series({
@@ -418,12 +474,12 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     })
     chart_base(
         mean_latency, "E2E 延迟 / ms", 0, 27,
-        f'(b) 合并样本平均 E2E 延迟（n=5400/路径）\nV0→V2R  −{summary["publication_display_precision"]["v2r_v0_mean_latency_reduction"]}；'
+        f'V0→V2R  −{summary["publication_display_precision"]["v2r_v0_mean_latency_reduction"]}；'
         f'V2R→V3R  {typographic_sign(summary["publication_display_precision"]["v3r_v2r_mean_latency"])}',
     )
-    mean_latency.set_x_axis({"num_font": {"name": "Times New Roman", "size": 10}})
+    mean_latency.set_x_axis(native_axis_caption("(b) 合并样本平均 E2E 延迟（n=5400/路径）"))
     mean_latency.set_style(10)
-    mean_latency.set_size({"width": 680, "height": 340})
+    mean_latency.set_size({"width": 680, "height": 370})
 
     tails = workbook.add_chart({"type": "column"})
     for column, variant in enumerate(VARIANTS, start=1):
@@ -437,26 +493,26 @@ def build_figure2(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
                 "font": {"name": "Times New Roman", "size": 8, "rotation": -90},
             },
         })
-    chart_base(tails, "延迟 / ms", 0, 21, "(c) 合并样本 P95 / P99（n=5400/路径）", legend=True)
-    tails.set_x_axis({"num_font": {"name": "Times New Roman", "size": 10}})
+    chart_base(tails, "延迟 / ms", 0, 21, None, legend=True)
+    tails.set_x_axis(native_axis_caption("(c) 合并样本 P95 / P99（n=5400/路径）", "Times New Roman"))
     tails.set_legend({
         "position": "bottom",
         "font": {"name": "Times New Roman", "size": 9},
     })
     tails.set_style(10)
-    tails.set_size({"width": 680, "height": 355})
+    tails.set_size({"width": 680, "height": 390})
 
-    figure.insert_chart("B4", fps, {
+    figure.insert_chart("B1", fps, {
         "description": "Panel a: V0, V2R, V3R process-level FPS mean with sample SD error bars.",
     })
     figure.insert_chart("B26", mean_latency, {
         "description": "Panel b: pooled mean end-to-end latency for 5400 samples per path.",
     })
-    figure.insert_chart("B48", tails, {
+    figure.insert_chart("B51", tails, {
         "description": "Panel c: pooled P95 and P99 latency for V0, V2R, and V3R.",
     })
-    figure.print_area("A1:J72")
-    figure.fit_to_pages(1, 2)
+    figure.print_area("A1:J77")
+    figure.fit_to_pages(1, 3)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
     workbook.close()
@@ -477,8 +533,6 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     figure.set_zoom(85)
     figure.set_column("A:A", 2)
     figure.set_column("B:J", 12)
-    figure.write("B1", "图3　运行级分布与尾延迟（原生 Excel 图表组合）", formats["title"])
-    figure.write("B2", "两个图表均为可编辑的 Excel 原生图表；各点为独立进程。", formats["note"])
 
     fps = workbook.add_chart({"type": "scatter", "subtype": "straight_with_markers"})
     for variant in VARIANTS:
@@ -513,19 +567,20 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
             "end_style": 1,
         },
     })
+    add_native_scatter_axis_labels(fps, ranges["fps_axis_labels"], "Times New Roman")
     chart_base(
         fps, "进程级 FPS", 50, 132,
-        "(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）",
+        None,
     )
-    fps.set_x_axis({
+    fps_axis = native_axis_caption("(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）")
+    fps_axis.update({
         "min": 0.5, "max": 3.5, "major_unit": 1,
-        "num_format": '[=1]"V0";[=2]"V2R";"V3R"',
-        "num_font": {"name": "Times New Roman", "size": 10},
-        "major_tick_mark": "inside",
-        "line": {"color": "#111827", "width": 1.0},
+        "num_format": "0",
+        "label_position": "none",
     })
+    fps.set_x_axis(fps_axis)
     fps.set_style(10)
-    fps.set_size({"width": 680, "height": 400})
+    fps.set_size({"width": 680, "height": 420})
 
     latency = workbook.add_chart({"type": "scatter", "subtype": "straight_with_markers"})
     for variant in ("V2R", "V3R"):
@@ -541,6 +596,7 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
                 "fill": {"color": COLORS[variant]},
             },
         })
+    add_native_scatter_axis_labels(latency, ranges["latency_axis_labels"], "Microsoft YaHei")
     annotation_row, annotation_x_col, _, annotation_text_col = ranges["annotation"]
     latency.add_series({
         "name": "尾延迟说明",
@@ -561,38 +617,52 @@ def build_figure3(rows: list[dict[str, str]], grouped: dict[str, list[dict[str, 
     del annotation_text_col
     chart_base(
         latency, "进程级延迟 / ms", 7.45, 12.05,
-        "(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）", legend=True,
+        None, legend=True, y_num_format="0.0",
     )
-    latency.set_x_axis({
+    latency_axis = native_axis_caption("(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）")
+    latency_axis.update({
         "min": 0.5, "max": 3.5, "major_unit": 1,
-        "num_format": '[=1]"均值";[=2]"P95";"P99"',
-        "num_font": {"name": "Microsoft YaHei", "size": 10},
-        "major_tick_mark": "inside",
-        "line": {"color": "#111827", "width": 1.0},
+        "num_format": "0",
+        "label_position": "none",
     })
+    latency.set_x_axis(latency_axis)
     latency.set_legend({
         "position": "top",
         "font": {"name": "Times New Roman", "size": 9},
-        "delete_series": [2],
+        "delete_series": [2, 3],
     })
     latency.set_style(10)
-    latency.set_size({"width": 680, "height": 410})
+    latency.set_size({"width": 680, "height": 430})
 
-    figure.insert_chart("B4", fps, {
+    figure.insert_chart("B1", fps, {
         "description": "Panel a: five independent process-level FPS points per path with mean and sample SD.",
     })
     figure.insert_chart("B30", latency, {
         "description": "Panel b: process-level mean, P95, and P99 latency points for V2R and V3R; pooled tail changes have opposite directions.",
     })
-    figure.print_area("A1:J58")
+    figure.print_area("A1:J59")
     figure.fit_to_pages(1, 2)
     figure.set_margins(0.25, 0.25, 0.3, 0.3)
     figure.set_landscape()
     workbook.close()
 
 
+def xml_visible_text(element: ElementTree.Element | None) -> str:
+    if element is None:
+        return ""
+    text_tags = {
+        "{http://schemas.openxmlformats.org/drawingml/2006/main}t",
+        "{http://schemas.openxmlformats.org/drawingml/2006/chart}v",
+    }
+    return "".join(node.text or "" for node in element.iter() if node.tag in text_tags)
+
+
 def validate_workbook(path: Path, expected_chart_count: int,
-                      required_chart_tokens: tuple[str, ...]) -> dict[str, Any]:
+                      required_chart_tokens: tuple[str, ...],
+                      expected_x_axis_captions: tuple[str, ...],
+                      expected_y_axis_formats: tuple[str, ...] | None = None,
+                      hide_numeric_x_labels: bool = False,
+                      required_per_chart_tokens: dict[int, tuple[str, ...]] | None = None) -> dict[str, Any]:
     if not path.is_file() or path.stat().st_size < 10_000:
         raise RuntimeError(f"workbook missing or unexpectedly small: {path}")
     if not zipfile.is_zipfile(path):
@@ -628,6 +698,72 @@ def validate_workbook(path: Path, expected_chart_count: int,
         missing_tokens = [token for token in required_chart_tokens if token not in chart_xml]
         if missing_tokens:
             raise RuntimeError(f"accepted chart labels missing in {path}: {missing_tokens}")
+
+        chart_namespace = {
+            "c": "http://schemas.openxmlformats.org/drawingml/2006/chart",
+            "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+        }
+        top_titles: list[str] = []
+        x_axis_captions: list[str] = []
+        y_axis_formats: list[str] = []
+        for index, (part, expected_caption) in enumerate(
+                zip(chart_parts, expected_x_axis_captions)):
+            chart_root = ElementTree.fromstring(archive.read(part))
+            top_title = xml_visible_text(chart_root.find("./c:chart/c:title", chart_namespace))
+            if any(panel in top_title for panel in ("(a)", "(b)", "(c)")):
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_NATIVE_PLACEMENT_FAILURE: top title still contains panel label: {part}"
+                )
+            top_titles.append(top_title or "NONE")
+
+            axes = [
+                *chart_root.findall(".//c:catAx", chart_namespace),
+                *chart_root.findall(".//c:valAx", chart_namespace),
+            ]
+            bottom_axes = [
+                axis for axis in axes
+                if axis.find("c:axPos", chart_namespace) is not None
+                and axis.find("c:axPos", chart_namespace).attrib.get("val") == "b"
+            ]
+            left_axes = [
+                axis for axis in axes
+                if axis.find("c:axPos", chart_namespace) is not None
+                and axis.find("c:axPos", chart_namespace).attrib.get("val") == "l"
+            ]
+            if len(bottom_axes) != 1 or len(left_axes) != 1:
+                raise RuntimeError(f"axis structure mismatch in {part}")
+            caption = xml_visible_text(bottom_axes[0].find("c:title", chart_namespace))
+            if caption != expected_caption:
+                raise RuntimeError(
+                    f"STOP_PANEL_CAPTION_NATIVE_PLACEMENT_FAILURE: {part}: {caption!r} != {expected_caption!r}"
+                )
+            x_axis_captions.append(caption)
+            if hide_numeric_x_labels:
+                tick_position = bottom_axes[0].find("c:tickLblPos", chart_namespace)
+                if tick_position is None or tick_position.attrib.get("val") != "none":
+                    raise RuntimeError(f"numeric scatter X-axis labels remain visible in {part}")
+            number_format = left_axes[0].find("c:numFmt", chart_namespace)
+            y_axis_formats.append(number_format.attrib.get("formatCode", "General") if number_format is not None else "General")
+
+            if required_per_chart_tokens and index in required_per_chart_tokens:
+                part_xml = archive.read(part).decode("utf-8")
+                missing = [token for token in required_per_chart_tokens[index] if token not in part_xml]
+                if missing:
+                    raise RuntimeError(
+                        f"STOP_FIGURE3_CATEGORY_MAPPING_FAILURE: {part} missing {missing}"
+                    )
+
+        if len(expected_x_axis_captions) != len(chart_parts):
+            raise RuntimeError("panel-caption validation count mismatch")
+        if expected_y_axis_formats and tuple(y_axis_formats) != expected_y_axis_formats:
+            raise RuntimeError(
+                f"axis number-format mismatch in {path}: {y_axis_formats} != {expected_y_axis_formats}"
+            )
+
+        figure_sheet = ElementTree.fromstring(archive.read("xl/worksheets/sheet3.xml"))
+        figure_cells = figure_sheet.findall(".//main:c", namespace)
+        if figure_cells:
+            raise RuntimeError(f"Figure worksheet contains non-chart cell content: {path}")
         drawing_xml = "\n".join(archive.read(name).decode("utf-8") for name in drawing_parts)
         graphic_frames = drawing_xml.count("<xdr:graphicFrame")
         if graphic_frames != expected_chart_count:
@@ -642,6 +778,10 @@ def validate_workbook(path: Path, expected_chart_count: int,
         "drawing_xml_parts": len(drawing_parts),
         "native_chart_objects": graphic_frames,
         "embedded_media_parts": len(media_parts),
+        "figure_sheet_cells": len(figure_cells),
+        "top_titles": top_titles,
+        "x_axis_panel_captions": x_axis_captions,
+        "y_axis_number_formats": y_axis_formats,
     }
 
 
@@ -663,10 +803,31 @@ def main() -> int:
             validate_workbook(
                 FIGURE2_OUTPUT, 3,
                 ("均值±样本SD", "V0→V2R", "V2R→V3R", "P95", "P99", "E2E 延迟 / ms"),
+                (
+                    "(a) FPS（均值±样本SD；每路径5进程）",
+                    "(b) 合并样本平均 E2E 延迟（n=5400/路径）",
+                    "(c) 合并样本 P95 / P99（n=5400/路径）",
+                ),
             ),
             validate_workbook(
                 FIGURE3_OUTPUT, 2,
                 ("独立进程", "V2R", "V3R", "P95 +0.15%; P99 −0.12%", "方向相反"),
+                (
+                    "(a) 进程级 FPS（点：独立进程；横线/误差：均值±样本SD）",
+                    "(b) 进程级延迟比较（独立进程；横向偏移仅用于区分）",
+                ),
+                expected_y_axis_formats=("0", "0.0"),
+                hide_numeric_x_labels=True,
+                required_per_chart_tokens={
+                    0: (
+                        "DisplayValues!$C$71", "DisplayValues!$C$72", "DisplayValues!$C$73",
+                        "<c:v>V0</c:v>", "<c:v>V2R</c:v>", "<c:v>V3R</c:v>",
+                    ),
+                    1: (
+                        "DisplayValues!$C$77", "DisplayValues!$C$78", "DisplayValues!$C$79",
+                        "<c:v>均值</c:v>", "<c:v>P95</c:v>", "<c:v>P99</c:v>",
+                    ),
+                },
             ),
         ],
     }
