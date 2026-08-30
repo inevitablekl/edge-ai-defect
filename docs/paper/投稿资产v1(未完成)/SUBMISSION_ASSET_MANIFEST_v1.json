@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0",
+  "audit_id": "PAPER_PHASE_7_4_J_SUBMISSION_ASSET_FREEZE_V1",
+  "audit_timestamp": "2026-08-30T23:32:24+08:00",
+  "package_path": "docs/paper/投稿资产v1(未完成)",
+  "verdict": "PASS_WITH_WARNINGS",
+  "freeze_status": "FROZEN_FOR_GIT_ARCHIVAL",
+  "scientific_content_modified": false,
+  "git_baseline": {
+    "branch": "main",
+    "head_before_freeze_commit": "0dc52eb45dc6be843f255250899b8dbc0cdd41e2",
+    "origin_main_before_freeze_commit": "adc787cfbe8bf7ae1f874295d65e79f7a3bd99bc",
+    "ahead": 3,
+    "behind": 0
+  },
+  "canonical_assets": {
+    "FULL_MANUSCRIPT": "Jetson端工业缺陷检测的输入数据路径重构.doc",
+    "FIGURE_1": "Figure1_input_data_path_model.vsdx",
+    "FIGURE_2": "Figure2_MASTER_WORKING.opju",
+    "FIGURE_3": "Figure3_MASTER_WORKING.opju",
+    "PDF": null,
+    "ANONYMOUS_MANUSCRIPT": null
+  },
+  "canonical_designation": {
+    "figure_2": "USER_CONFIRMED_FINAL_ADOPTED_SOURCE",
+    "figure_3": "USER_CONFIRMED_FINAL_ADOPTED_SOURCE",
+    "confirmation_date": "2026-08-30"
+  },
+  "class_status": {
+    "A_FINAL_MANUSCRIPT": "PASS",
+    "B_ANONYMOUS_MANUSCRIPT": "NOT_YET_INCLUDED_EXPECTED_LATER_SUBMISSION_DERIVATIVE",
+    "C_FIGURE_1_NATIVE_VISIO": "PASS",
+    "D_FIGURE_2_NATIVE_EDITABLE": "PASS",
+    "E_FIGURE_3_NATIVE_EDITABLE": "PASS",
+    "F_FIGURE_PREVIEWS": "PASS_FIGURE_1_WARNING_FIGURE_2_AND_3_EXTERNAL_PREVIEWS_NOT_INCLUDED",
+    "G_MATHTYPE": "MANUAL_WINDOWS_VALIDATION_PREVIOUSLY_REQUIRED_STRUCTURAL_OLE_PRESENT",
+    "H_TABLE_ASSETS": "PASS_WORD_NATIVE_NO_SEPARATE_SOURCE_REQUIRED",
+    "I_REFERENCES": "PASS_FINAL_LIST_PRESENT",
+    "J_FINAL_PDF": "WARNING_NOT_INCLUDED",
+    "K_AUDIT_METADATA": "PASS"
+  },
+  "validation_summary": {
+    "full_manuscript_format": "OLE_COMPOUND_FILE_WORD_97_2003",
+    "word_metadata_page_count": 7,
+    "word_native_table_count": 3,
+    "reference_entries_observed": 22,
+    "mathtype_7_equation_object_count": 54,
+    "embedded_visio_object_count": 1,
+    "embedded_origin_object_count": 2,
+    "figure_1_vsdx_zip_integrity": "PASS",
+    "figure_1_vsdx_ooxml_xml_parse": "PASS",
+    "figure_1_vsdx_native_shape_count": 47,
+    "figure_1_vsdx_nonempty_text_node_count": 24,
+    "figure_2_opju_signature_and_marker_check": "PASS",
+    "figure_3_opju_signature_and_marker_check": "PASS",
+    "duplicate_payload_hashes": 0
+  },
+  "warnings": [
+    "Anonymous/review manuscript is not yet included and remains an expected later submission derivative.",
+    "No external PNG/PDF/SVG preview is included for Figure 2 or Figure 3.",
+    "No final PDF is included; the manually validated Word manuscript remains the submission authority.",
+    "The package directory name retains the user-provided suffix '(未完成)'; package status is governed by this manifest, not the directory label."
+  ],
+  "payload_assets": [
+    {
+      "relative_path": "Figure1_input_data_path_model.vsdx",
+      "extension": ".vsdx",
+      "type": "Microsoft Visio 2013+ OOXML",
+      "size_bytes": 22693,
+      "sha256": "4c7e714c20e14baf0e992e9e93ab019137c5af7e2f8af4bb2aad81fa1b5e7468",
+      "modified_timestamp": "2026-08-30 23:30:31.855489842 +0800",
+      "classification": "FINAL"
+    },
+    {
+      "relative_path": "Figure2_MASTER_WORKING.opju",
+      "extension": ".opju",
+      "type": "Origin project with CPYUA/PrvwOPJU signature",
+      "size_bytes": 216801,
+      "sha256": "69549a0f60c72982a43d03db5a2299c9d84a79b2799c93b2bd051660144d608d",
+      "modified_timestamp": "2026-08-30 23:14:59.898705098 +0800",
+      "classification": "FINAL_USER_CONFIRMED"
+    },
+    {
+      "relative_path": "Figure3_MASTER_WORKING.opju",
+      "extension": ".opju",
+      "type": "Origin project with CPYUA/PrvwOPJU signature",
+      "size_bytes": 278308,
+      "sha256": "a1123bd4a1279092048d27673f92a1501ea9b11d8b125bfbe3f549c8fdb9b157",
+      "modified_timestamp": "2026-08-30 23:14:48.355333027 +0800",
+      "classification": "FINAL_USER_CONFIRMED"
+    },
+    {
+      "relative_path": "Jetson端工业缺陷检测的输入数据路径重构.doc",
+      "extension": ".doc",
+      "type": "Microsoft Word 97-2003 OLE Compound File",
+      "size_bytes": 1070592,
+      "sha256": "b1e1adb609931c56a9ac53cf20103ace6238f631a944ad72030d3905fe485635",
+      "modified_timestamp": "2026-08-30 23:14:27.080538808 +0800",
+      "classification": "FINAL"
+    },
+    {
+      "relative_path": "build_figure1_visio.ps1",
+      "extension": ".ps1",
+      "type": "UTF-8 PowerShell source",
+      "size_bytes": 6846,
+      "sha256": "56511bdd7bb020ece55876ce0bb32b25374c34e04247e5cdace2a149822fd523",
+      "modified_timestamp": "2026-08-30 23:15:24.429429973 +0800",
+      "classification": "SUPPORTING_BUILD_SOURCE"
+    },
+    {
+      "relative_path": "figure1_geometry.json",
+      "extension": ".json",
+      "type": "JSON geometry specification",
+      "size_bytes": 14575,
+      "sha256": "416cb5ce0aacc92c4df685b5415e0b5968222bcd1dbec87195b60cd78d6551d4",
+      "modified_timestamp": "2026-08-30 23:15:24.453428764 +0800",
+      "classification": "SUPPORTING_AUTHORITY"
+    },
+    {
+      "relative_path": "figure1_reference.png",
+      "extension": ".png",
+      "type": "PNG 1893x937 RGB",
+      "size_bytes": 189922,
+      "sha256": "c562d5a3f1b930177ccacf90cfb467470bca7dd6c2d7597d92b7fe58292537c7",
+      "modified_timestamp": "2026-08-30 23:15:24.373432793 +0800",
+      "classification": "FINAL_REFERENCE_PREVIEW"
+    },
+    {
+      "relative_path": "figure1_reference.svg",
+      "extension": ".svg",
+      "type": "SVG 160mm x 79mm",
+      "size_bytes": 9848,
+      "sha256": "464ec447d0b86b363c338274ba4f583de876b08aa30e7458481972bd0669c119",
+      "modified_timestamp": "2026-08-30 23:15:24.393431786 +0800",
+      "classification": "FINAL_REFERENCE_PREVIEW"
+    },
+    {
+      "relative_path": "figure1_text_manifest.csv",
+      "extension": ".csv",
+      "type": "CSV text manifest with 24 records",
+      "size_bytes": 2838,
+      "sha256": "3d6885dd5519ea001a724cc831a219717d79d84ab601dc995a320ed37c65c5d2",
+      "modified_timestamp": "2026-08-30 23:15:24.409430980 +0800",
+      "classification": "SUPPORTING_AUTHORITY"
+    },
+    {
+      "relative_path": "figure1_visio_spec.md",
+      "extension": ".md",
+      "type": "UTF-8 Markdown specification",
+      "size_bytes": 3077,
+      "sha256": "910f6b6bbe095ffbe349deaafc9cd73064aeaab4a1fd3aac5291dbb72e978eb3",
+      "modified_timestamp": "2026-08-30 23:15:24.417430577 +0800",
+      "classification": "SUPPORTING_AUTHORITY"
+    }
+  ],
+  "audit_metadata": [
+    "SUBMISSION_ASSET_MANIFEST_v1.json",
+    "SUBMISSION_ASSET_AUDIT_REPORT_v1.md",
+    "SHA256SUMS.txt"
+  ],
+  "checksum_policy": "SHA256SUMS.txt covers every payload asset plus the manifest and audit report; SHA256SUMS.txt excludes itself to avoid self-reference."
+}
