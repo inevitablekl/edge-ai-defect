@@ -13,7 +13,31 @@ as 0.5; it is an engineering approximation for manual Word pagination, not an
 exact Word page count. Citation keys are included equally before and after and
 their occurrence sequence is unchanged.
 
-## 2. Change summary
+## 2. Word direct-application citation numbers
+
+The `ORIGINAL TEXT` and `REVISED TEXT` fields retain Markdown citation keys for
+source traceability. **Do not enter those keys in Word.** For C01–C03, use the
+additional `MANUAL WORD ... (NUMERIC CITATIONS)` fields, whose reference-number
+format was verified against the current rendered Full DOCX. C04–C16 contain no
+citations and can be applied directly from `REVISED TEXT`.
+
+| Change | Markdown citation group | Final Word reference number |
+|---|---|---|
+| C01 | `shao; chu; zhang` | `[3–5]` |
+| C01 | `ultralytics` | `[6]` |
+| C02 | `stacker` | `[7]` |
+| C02 | `lee` | `[8]` |
+| C02 | `weiss` | `[9]` |
+| C02 | `jacob; nagel` | `[10,11]` |
+| C02 | `nvidia_tensorrt` | `[12]` |
+| C02 | `kim_lee_kim` | `[13]` |
+| C03 | `tang_qian` | `[14]` |
+| C03 | `nvidia_cuda_best_practices` | `[15]` |
+| C03 | `bateni; rodriguez` | `[16,17]` |
+| C03 | `nvidia_cuda_programming_guide` | `[18]` |
+| C03 | `kim_et_al` | `[19]` |
+
+## 3. Change summary
 
 | ID | Section | Before chars | After chars | Saved chars | CJK-weighted saved | Risk | Manual priority |
 |---|---|---:|---:|---:|---:|---|---|
@@ -39,7 +63,7 @@ The summary total covers only the 16 replaced text units. Whole-body counts,
 which also include unchanged headings, equations, captions and tables, are in
 the validation report.
 
-## 3. Complete change ledger
+## 4. Complete change ledger
 
 ### C01
 
@@ -53,12 +77,20 @@ the validation report.
 
   检测模型通过轻量化骨干、注意力机制和多尺度特征融合改善精度与复杂度权衡 [@shao_et_al_2024_td_net; @chu_yu_rong_2024_strip_steel_yolov8; @zhang_pang_jiang_2024_gdm_yolo]，YOLOv8也提供训练、推理和导出链路 [@ultralytics_2023_yolov8_docs]；这些工作为边缘执行提供推理基础，但不能描述模型入口前的数据组织。
 
+- **MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS):**
+
+  检测模型研究通过轻量化骨干、注意力机制和多尺度特征融合改善精度与复杂度权衡[3–5]，YOLOv8也提供了训练、推理和导出链路[6]。这类工作定义了检测器及其网络结构，为边缘执行提供推理基础，却不能单独描述模型入口之前的数据组织。
+
+- **MANUAL WORD REVISED TEXT (NUMERIC CITATIONS):**
+
+  检测模型通过轻量化骨干、注意力机制和多尺度特征融合改善精度与复杂度权衡[3–5]，YOLOv8也提供训练、推理和导出链路[6]；这些工作为边缘执行提供推理基础，但不能描述模型入口前的数据组织。
+
 - **NET CHARACTER REDUCTION:** 19 source characters; 19.0 CJK-weighted equivalents.
 - **CHANGE TYPE:** `NARRATIVE_COMPRESSION`
 - **RATIONALE:** Merge detector-background and inference-basis statements while retaining the research gap at the model entrance.
 - **SCIENTIFIC FACTS PRESERVED:** Lightweight/model research role, YOLOv8 toolchain, and inability to determine pre-model data organization.
 - **CITATIONS PRESERVED:** YES — all four keys remain in the same order and support the same claims.
-- **MANUAL WORD ACTION:** `REPLACE ORIGINAL WITH REVISED`
+- **MANUAL WORD ACTION:** In Word, replace `MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS)` with `MANUAL WORD REVISED TEXT (NUMERIC CITATIONS)`.
 
 ### C02
 
@@ -72,12 +104,20 @@ the validation report.
 
   完整边缘检测链涵盖数据获取、预处理、模型执行、后处理与数据管理 [@stacker_et_al_2021_edge_runtime]；CPU与GPU间的预处理调度会改变运行时路径 [@lee_han_kim_2025_presto]，现场应用也要求在设备附近完成端到端处理 [@weiss_et_al_2024_realtime_component_inspection]。低精度虽可压缩网络侧开销，量化误差仍须受任务正确性约束 [@jacob_et_al_2018_integer_inference; @nagel_et_al_2020_adaround]。因此本文固定检测器、输入、TensorRT INT8混合精度Engine、工作负载与后处理语义；TensorRT 10.3传统隐式INT8量化及calibrator接口存在版本边界 [@nvidia_tensorrt_10_3_release_notes]，性能比较应维持任务行为 [@kim_lee_kim_2024_hyq]。但固定网络与Engine仍不唯一决定输入数据路径。
 
+- **MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS):**
+
+  完整边缘检测链同时包含数据获取、预处理、模型执行、后处理与数据管理[7]，CPU与GPU之间的预处理调度会改变运行时路径[8]，工业现场应用也要求在设备附近完成端到端处理[9]。低精度部署可进一步压缩网络侧计算与存储开销，但量化误差仍须受到任务正确性约束[10,11]。本文据此固定检测器、输入、TensorRT INT8混合精度Engine、工作负载与后处理语义；TensorRT 10.3的传统隐式INT8量化及calibrator接口具有明确版本边界[12]，相关部署研究也强调性能比较应维持任务行为[13]。然而，固定网络与Engine只定义了推理对象，并不唯一决定其输入数据路径。
+
+- **MANUAL WORD REVISED TEXT (NUMERIC CITATIONS):**
+
+  完整边缘检测链涵盖数据获取、预处理、模型执行、后处理与数据管理[7]；CPU与GPU间的预处理调度会改变运行时路径[8]，现场应用也要求在设备附近完成端到端处理[9]。低精度虽可压缩网络侧开销，量化误差仍须受任务正确性约束[10,11]。因此本文固定检测器、输入、TensorRT INT8混合精度Engine、工作负载与后处理语义；TensorRT 10.3传统隐式INT8量化及calibrator接口存在版本边界[12]，性能比较应维持任务行为[13]。但固定网络与Engine仍不唯一决定输入数据路径。
+
 - **NET CHARACTER REDUCTION:** 40 source characters; 40.0 CJK-weighted equivalents.
 - **CHANGE TYPE:** `NARRATIVE_COMPRESSION`
 - **RATIONALE:** Remove repeated modifiers and compress transitions without deleting any literature-supported concept.
 - **SCIENTIFIC FACTS PRESERVED:** Complete edge chain, CPU/GPU scheduling relevance, E2E requirement, low-precision correctness constraint, frozen inference object, TensorRT 10.3 boundary, and non-uniqueness of the input path.
 - **CITATIONS PRESERVED:** YES — all eight keys remain in identical occurrence order.
-- **MANUAL WORD ACTION:** `REPLACE ORIGINAL WITH REVISED`
+- **MANUAL WORD ACTION:** In Word, replace `MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS)` with `MANUAL WORD REVISED TEXT (NUMERIC CITATIONS)`.
 
 ### C03
 
@@ -91,12 +131,20 @@ the validation report.
 
   推理对象固定后，输入路径仍需决定跨边界表示、输入张量形成位置、额外打包原始图像的主机暂存组织和执行拓扑。Jetson检测部署已有多种端到端组织 [@tang_qian_2024_yolov8_jetson_orin]；主机内存与异步复制有特定适用条件 [@nvidia_cuda_best_practices_12_6]，内存策略响应取决于平台、工作负载和访问方式 [@bateni_et_al_2020_integrated_memory; @rodriguez_et_al_2025_gpu_memory_allocation]，并受流与复制规则约束 [@nvidia_cuda_programming_guide_12_6]；并发或流水化研究还表明执行拓扑本身是系统选择 [@kim_et_al_2025_concurrent_edge_detection]。
 
+- **MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS):**
+
+  在推理对象固定后，输入路径仍须作出四类结构决策：以何种表示跨越主机—设备边界，模型输入张量在何处形成，额外打包原始图像采用何种主机暂存组织，以及各处理阶段采用何种执行拓扑。Jetson检测部署已有多种端到端组织[14]；主机内存类型与异步复制具有特定适用条件[15]，集成CPU-GPU系统和GPU内存分配研究表明内存策略响应取决于平台、工作负载和访问方式[16,17]，其执行语义还受流与复制规则约束[18]。并发或流水化研究则说明执行拓扑本身构成另一类系统选择[19]。
+
+- **MANUAL WORD REVISED TEXT (NUMERIC CITATIONS):**
+
+  推理对象固定后，输入路径仍需决定跨边界表示、输入张量形成位置、额外打包原始图像的主机暂存组织和执行拓扑。Jetson检测部署已有多种端到端组织[14]；主机内存与异步复制有特定适用条件[15]，内存策略响应取决于平台、工作负载和访问方式[16,17]，并受流与复制规则约束[18]；并发或流水化研究还表明执行拓扑本身是系统选择[19]。
+
 - **NET CHARACTER REDUCTION:** 69 source characters; 64.0 CJK-weighted equivalents.
 - **CHANGE TYPE:** `NARRATIVE_COMPRESSION`
 - **RATIONALE:** Replace four parallel interrogative clauses and repeated attribution language with the same four-variable statement.
 - **SCIENTIFIC FACTS PRESERVED:** All four structural decisions, platform/workload/access dependence, stream/copy constraints, and execution topology as a separate choice.
 - **CITATIONS PRESERVED:** YES — all six keys remain in the same order and claim locations.
-- **MANUAL WORD ACTION:** `REPLACE ORIGINAL WITH REVISED`
+- **MANUAL WORD ACTION:** In Word, replace `MANUAL WORD ORIGINAL TEXT (NUMERIC CITATIONS)` with `MANUAL WORD REVISED TEXT (NUMERIC CITATIONS)`.
 
 ### C04
 
@@ -355,7 +403,7 @@ the validation report.
 - **CITATIONS PRESERVED:** N/A — neither version contains citations.
 - **MANUAL WORD ACTION:** `REPLACE ORIGINAL WITH REVISED`
 
-## 4. Recommended manual application order
+## 5. Recommended manual application order
 
 Apply edits in the exact order below, then inspect the manually formatted HFUT
 Word manuscript after each group. Stop as soon as the final reference column
